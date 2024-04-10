@@ -1,26 +1,24 @@
-const {Schema, model} = require('mongoose');
+const { Schema, model, Types } = require('mongoose');
 const {isEmail} = require('../utils/validators');
 const dateFormat = require('../utils/dateFormat');
 
-const SupplierSchema = new Schema({
-    supplierId: {
+const QuoteSchema = new Schema({
+    quoteId: {
         type: Schema.Types.ObjectId,
         default: () => new Types.ObjectId
     },
-    contactName: {
+    name: {
+        type: String,
+        unique: true,
+        required: true
+    },
+    description: {
+        type: String
+    },
+    email: {
         type: String,
         required: true,
-        // unique: true
-    },
-    companyName: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    phoneNumber: {
-        type: Number,
-        // add phone number validation
-
+        validate: [isEmail, 'Wrong email format']
     },
     products: [
         {
@@ -34,22 +32,11 @@ const SupplierSchema = new Schema({
             ref: 'Service'
         }
     ],
-    email: {
-        type: String,
-        required: true,
-        validate: [isEmail, 'Wrong email format']
-    },
-    ingredients: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'Ingredient'
-        }
-    ],
     createdAt: {
         type: Date,
         default: Date.now(),
         get: createdAtVal => dateFormat(createdAtVal)
-    }
+    },
 }, {
     toJSON: {
         // enable getters to format timestamps
@@ -58,6 +45,6 @@ const SupplierSchema = new Schema({
     id: false
 });
 
-const Supplier = model('Supplier', SupplierSchema);
+const Quote = model('Quote', QuoteSchema);
 
-module.exports = Supplier;
+module.exports = Quote;
