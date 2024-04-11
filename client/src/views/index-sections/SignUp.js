@@ -20,9 +20,72 @@ import {
 // core components
 
 function SignUp() {
-  const [firstFocus, setFirstFocus] = React.useState(false);
+  const [firstName, setFirstName] = React.useState(false);
   const [lastFocus, setLastFocus] = React.useState(false);
   const [emailFocus, setEmailFocus] = React.useState(false);
+  const [usernameFocus, setUsernameFocus] = React.useState(false);
+
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+
+    if (firstName && lastFocus && emailFocus && usernameFocus) {
+      const response = await fetch('http://localhost:3001/api/users', {
+        method: 'post',
+        mode: 'no-cors',
+        body: JSON.stringify({
+          firstName,
+          lastFocus
+        }),
+        headers: {'Content-Type': 'application/json'}
+      });
+
+      if (response.ok) {
+        fetch('/index');
+        document.location.replace('/index');
+      } else {
+        alert(response.statusText);
+      }
+    }
+  }
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    // console.log(event.target);
+    // console.log(name);
+    if (name === "firstName") {
+
+      setFirstName({
+      
+        [name]: value,
+      });
+    }
+    if (name === "lastName") {
+
+      setLastFocus({
+      
+        [name]: value
+      });
+    }
+    if (name === "email") {
+
+      setEmailFocus({
+      
+        [name]: value
+      });
+    }
+    if (name === "username") {
+
+      setUsernameFocus({
+      
+        [name]: value
+      })
+    }
+    console.log(firstName);
+    console.log(lastFocus);
+    console.log(emailFocus);
+    console.log(usernameFocus);
+  };
+  
   return (
     <>
       <div
@@ -43,7 +106,7 @@ function SignUp() {
                     Sign Up
                   </CardTitle>
                   <div className="social-line">
-                    <Button
+                    {/* <Button
                       className="btn-neutral btn-icon btn-round"
                       color="facebook"
                       href="#pablo"
@@ -67,13 +130,13 @@ function SignUp() {
                       onClick={(e) => e.preventDefault()}
                     >
                       <i className="fab fa-google-plus"></i>
-                    </Button>
+                    </Button> */}
                   </div>
                 </CardHeader>
                 <CardBody>
                   <InputGroup
                     className={
-                      "no-border" + (firstFocus ? " input-group-focus" : "")
+                      "no-border" + (firstName ? " input-group-focus" : "")
                     }
                   >
                     <InputGroupAddon addonType="prepend">
@@ -82,10 +145,12 @@ function SignUp() {
                       </InputGroupText>
                     </InputGroupAddon>
                     <Input
-                      placeholder="First Name..."
+                      placeholder="First Name"
                       type="text"
-                      onFocus={() => setFirstFocus(true)}
-                      onBlur={() => setFirstFocus(false)}
+                      id="firstName"
+                      name="firstName"
+                      onFocus={(e) => handleChange(e)}
+                      onBlur={(e) => handleChange(e)}
                     ></Input>
                   </InputGroup>
                   <InputGroup
@@ -99,10 +164,12 @@ function SignUp() {
                       </InputGroupText>
                     </InputGroupAddon>
                     <Input
-                      placeholder="Last Name..."
+                      placeholder="Last Name"
                       type="text"
-                      onFocus={() => setLastFocus(true)}
-                      onBlur={() => setLastFocus(false)}
+                      id="lastName"
+                      name="lastName"
+                      onFocus={(e) => handleChange(e)}
+                      onBlur={(e) => handleChange(e)}
                     ></Input>
                   </InputGroup>
                   <InputGroup
@@ -116,10 +183,31 @@ function SignUp() {
                       </InputGroupText>
                     </InputGroupAddon>
                     <Input
-                      placeholder="Email..."
+                      placeholder="Email"
                       type="text"
-                      onFocus={() => setEmailFocus(true)}
-                      onBlur={() => setEmailFocus(false)}
+                      id="email"
+                      name="email"
+                      onFocus={(e) => handleChange(e)}
+                      onBlur={(e) => handleChange(e)}
+                    ></Input>
+                  </InputGroup>
+                  <InputGroup
+                    className={
+                      "no-border" + (usernameFocus ? " input-group-focus" : "")
+                    }
+                  >
+                    <InputGroupAddon addonType="prepend">
+                      <InputGroupText>
+                        <i className="now-ui-icons users_single-02"></i>
+                      </InputGroupText>
+                    </InputGroupAddon>
+                    <Input
+                      placeholder="Username"
+                      type="text"
+                      id="username"
+                      name="username"
+                      onFocus={(e) => handleChange(e)}
+                      onBlur={(e) => handleChange(e)}
                     ></Input>
                   </InputGroup>
                 </CardBody>
@@ -128,7 +216,7 @@ function SignUp() {
                     className="btn-neutral btn-round"
                     color="info"
                     href="#pablo"
-                    onClick={(e) => e.preventDefault()}
+                    onClick={(e) => handleFormSubmit(e)}
                     size="lg"
                   >
                     Get Started
