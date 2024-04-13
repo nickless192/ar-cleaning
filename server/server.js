@@ -1,9 +1,11 @@
 const express = require('express');
+const cors = require('cors');
 const mongoose = require('mongoose');
 
 app = express();
 const PORT = process.env.PORT || 3001;
 
+app.use(cors());
 // setting up middleware for url encoded, json and to serve static files
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
@@ -20,6 +22,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/ar-cleani
 
 // logs MongoDB statements that are executed
 mongoose.set('debug',true);
+
 
 
 // listening to port

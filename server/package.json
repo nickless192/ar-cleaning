@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/nickless192/chelito-authentic#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.18.1",
     "mongoose": "^6.6.1"
   },

@@ -29,22 +29,43 @@ function SignUp() {
     event.preventDefault();
 
     if (firstName && lastFocus && emailFocus && usernameFocus) {
-      const response = await fetch('http://localhost:3001/api/users', {
+      // const response = await 
+      const body = {
+        firstName: firstName.firstName,
+        lastName: lastFocus.lastName,
+        email: emailFocus.email,
+        userName: usernameFocus.userName
+      };
+      // console.log(body);
+      fetch('http://localhost:3001/api/users/', {
         method: 'post',
-        mode: 'no-cors',
-        body: JSON.stringify({
-          firstName,
-          lastFocus
-        }),
-        headers: {'Content-Type': 'application/json'}
-      });
-
-      if (response.ok) {
-        fetch('/index');
-        document.location.replace('/index');
-      } else {
-        alert(response.statusText);
+        // mode: 'no-cors',
+        body: JSON.stringify(body),
+        headers: { 'Content-Type': 'application/json',
+        // 'Access-Control-Allow-Credentials': 'true',
+        // 'accept': 'application/json',
+        // 'Access-Control-Allow-Origin': 'http://localhost:3000'
+        // 'Access-Control-Allow-Origin': '*' 
       }
+      })
+      .then(response => {
+        if (response.ok) {
+          fetch('/index');
+        document.location.replace('/index');
+        }
+        else {
+          alert(response.statusText)
+          // console.log(response)
+        }
+      })
+      .catch(err => console.log(err))
+
+      // if (response.ok) {
+      //   fetch('/index');
+      //   document.location.replace('/index');
+      // } else {
+      //   alert(response.statusText);
+      // }
     }
   }
 
@@ -55,37 +76,37 @@ function SignUp() {
     if (name === "firstName") {
 
       setFirstName({
-      
+
         [name]: value,
       });
     }
     if (name === "lastName") {
 
       setLastFocus({
-      
+
         [name]: value
       });
     }
     if (name === "email") {
 
       setEmailFocus({
-      
+
         [name]: value
       });
     }
-    if (name === "username") {
+    if (name === "userName") {
 
       setUsernameFocus({
-      
+
         [name]: value
       })
     }
-    console.log(firstName);
-    console.log(lastFocus);
-    console.log(emailFocus);
-    console.log(usernameFocus);
+    console.log(firstName.firstName);
+    console.log(lastFocus.lastName);
+    console.log(emailFocus.email);
+    console.log(usernameFocus.userName);
   };
-  
+
   return (
     <>
       <div
@@ -149,7 +170,7 @@ function SignUp() {
                       type="text"
                       id="firstName"
                       name="firstName"
-                      onFocus={(e) => handleChange(e)}
+                      // onFocus={(e) => handleChange(e)}
                       onBlur={(e) => handleChange(e)}
                     ></Input>
                   </InputGroup>
@@ -168,7 +189,7 @@ function SignUp() {
                       type="text"
                       id="lastName"
                       name="lastName"
-                      onFocus={(e) => handleChange(e)}
+                      // onFocus={(e) => handleChange(e)}
                       onBlur={(e) => handleChange(e)}
                     ></Input>
                   </InputGroup>
@@ -187,7 +208,7 @@ function SignUp() {
                       type="text"
                       id="email"
                       name="email"
-                      onFocus={(e) => handleChange(e)}
+                      // onFocus={(e) => handleChange(e)}
                       onBlur={(e) => handleChange(e)}
                     ></Input>
                   </InputGroup>
@@ -204,9 +225,9 @@ function SignUp() {
                     <Input
                       placeholder="Username"
                       type="text"
-                      id="username"
-                      name="username"
-                      onFocus={(e) => handleChange(e)}
+                      id="userName"
+                      name="userName"
+                      // onFocus={(e) => handleChange(e)}
                       onBlur={(e) => handleChange(e)}
                     ></Input>
                   </InputGroup>
