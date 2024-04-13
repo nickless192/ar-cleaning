@@ -1,6 +1,7 @@
-const {Schema, model} = require('mongoose');
-const {isEmail} = require('../utils/validators');
+const { Schema, model } = require('mongoose');
+const { isEmail } = require('../utils/validators');
 const dateFormat = require('../utils/dateFormat');
+const bcrypt = require('bcrypt');
 
 const UserSchema = new Schema({
     userName: {
@@ -15,6 +16,10 @@ const UserSchema = new Schema({
         unique: true,
         // run email validation
         validate: [isEmail, 'Wrong email format']
+    },
+    password: {
+        type: String,
+        required: true
     },
     firstName: {
         type: String,
@@ -37,6 +42,21 @@ const UserSchema = new Schema({
     },
     // id: false
 });
+
+// set up pre-save middleware to create password
+userSchema.pre('save', async function (next) {
+    if (this.isNew || this.isModified('password')) {
+        const saltRounds = await bcrypt.genSalt();
+        this.password = await bcrypt.hash(this.password, saltRounds);
+    }
+
+    next();
+});
+
+// compare the incoming password with the hashed password
+userSchema.methods.isCorrectPassword = async function (password) {
+    return await bcrypt.compare(password, this.password);
+};
 
 const User = model('User', UserSchema);
 

@@ -1,4 +1,5 @@
 const { User } = require('../models');
+const {signToken} = require('../utils/auth');
 
 const userControllers = {
     // get all users
@@ -11,7 +12,7 @@ const userControllers = {
     },
     // get user by id
     getUserById({ params }, res) {
-        User.findById({ _id: params.userId })            
+        User.findOne({ userName: params.userName })            
             .select('-__v')
             .then(dbUserData => {
                 if (!dbUserData) {
@@ -27,7 +28,8 @@ const userControllers = {
         User.create(body).
             then(dbUserData => {
                 console.log(dbUserData);
-                res.json(dbUserData);
+                const token = signToken(dbUserData);
+                res.json({token, dbUserData});
             } )
             .catch(err => {
                 console.log(err);
@@ -40,7 +42,7 @@ const userControllers = {
             .select('-__v')
             .then(dbUserData => {
                 if (!dbUserData) {
-                    res.status(404).json({ message: 'No user found with this id' });
+                    res.status(404).json({ message: 'No user found by this userName' });
                     return;
                 }
                 res.json(dbUserData);
@@ -51,12 +53,27 @@ const userControllers = {
         User.findByIdAndDelete({ _id: params.userId })
             .then(dbUserData => {
                 if (!dbUserData) {
-                    res.status(404).json({ message: 'No user found with this id' });
+                    res.status(404).json({ message: 'No user found by this userName' });
                     return;
                 }
                 res.json(dbUserData);
             })
             .catch(err => res.status(500).json(err));
+    },
+    login({body}, res) {
+        User.findOne({userName: body.userName})
+        .then (dbUserData => {
+            if(!dbUserData) {
+                res.status(404).json({message: 'No user found by this userName'});
+                return;
+            }
+            const correctPassword = dbUserData.isCorrectPassword(body.password);
+            if (!correctPassword) {
+                return res.status(400).json({message: 'Wrong password!'});
+            }
+            const token = signToken(dbUserData);
+            res.json({token, dbUserData});
+        })
     }
 };
 
