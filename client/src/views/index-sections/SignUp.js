@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Auth from "../../utils/auth";
 // reactstrap components
 import {
   Button,
@@ -17,48 +18,62 @@ import {
   Row
 } from "reactstrap";
 
+import IndexNavbar from "components/Navbars/IndexNavbar";
+
 // core components
 
 function SignUp() {
   const [firstName, setFirstName] = React.useState(false);
-  const [lastFocus, setLastFocus] = React.useState(false);
-  const [emailFocus, setEmailFocus] = React.useState(false);
-  const [usernameFocus, setUsernameFocus] = React.useState(false);
+  const [lastName, setLastName] = React.useState(false);
+  const [email, setEmail] = React.useState(false);
+  const [username, setUsername] = React.useState(false);
+  const [password, setPassword] = React.useState(false);
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
-    if (firstName && lastFocus && emailFocus && usernameFocus) {
+    if (firstName && lastName && email && username && password) {
       // const response = await 
       const body = {
         firstName: firstName.firstName,
-        lastName: lastFocus.lastName,
-        email: emailFocus.email,
-        userName: usernameFocus.userName
+        lastName: lastName.lastName,
+        email: email.email,
+        username: username.username,
+        password: password.password
       };
       // console.log(body);
       fetch('http://localhost:3001/api/users/', {
         method: 'post',
         // mode: 'no-cors',
         body: JSON.stringify(body),
-        headers: { 'Content-Type': 'application/json',
-        // 'Access-Control-Allow-Credentials': 'true',
-        // 'accept': 'application/json',
-        // 'Access-Control-Allow-Origin': 'http://localhost:3000'
-        // 'Access-Control-Allow-Origin': '*' 
-      }
-      })
-      .then(response => {
-        if (response.ok) {
-          fetch('/index');
-        document.location.replace('/index');
-        }
-        else {
-          alert(response.statusText)
-          // console.log(response)
+        headers: {
+          'Content-Type': 'application/json',
+          // 'Access-Control-Allow-Credentials': 'true',
+          // 'accept': 'application/json',
+          // 'Access-Control-Allow-Origin': 'http://localhost:3000'
+          // 'Access-Control-Allow-Origin': '*' 
         }
       })
-      .catch(err => console.log(err))
+        .then(response => {
+          if (response.ok) {
+            console.log(response)
+            console.log("new account created!");
+            response.json()
+            .then(data => {
+              console.log(data);
+              console.log(data.token);
+              Auth.login(data.token);
+          });
+            // console.log(response2json);
+            // fetch('/index');
+            // document.location.replace('/index');
+          }
+          else {
+            alert(response.statusText)
+            // console.log(response)
+          }
+        })
+        .catch(err => console.log(err))
 
       // if (response.ok) {
       //   fetch('/index');
@@ -82,37 +97,42 @@ function SignUp() {
     }
     if (name === "lastName") {
 
-      setLastFocus({
+      setLastName({
 
         [name]: value
       });
     }
     if (name === "email") {
 
-      setEmailFocus({
+      setEmail({
 
         [name]: value
       });
     }
-    if (name === "userName") {
-
-      setUsernameFocus({
-
+    if (name === "username") {
+      setUsername({
+        [name]: value
+      })
+    }
+    if (name === "password") {
+      setPassword({
         [name]: value
       })
     }
     console.log(firstName.firstName);
-    console.log(lastFocus.lastName);
-    console.log(emailFocus.email);
-    console.log(usernameFocus.userName);
+    console.log(lastName.lastName);
+    console.log(email.email);
+    console.log(username.username);
+    console.log(password.password);
   };
 
   return (
     <>
+    <IndexNavbar />
       <div
         className="section section-signup"
         style={{
-          backgroundImage: "url(" + require("assets/img/bg11.jpg") + ")",
+          backgroundImage: "url(" + require("assets/img/bg8.jpg") + ")",
           backgroundSize: "cover",
           backgroundPosition: "top center",
           minHeight: "700px"
@@ -176,7 +196,7 @@ function SignUp() {
                   </InputGroup>
                   <InputGroup
                     className={
-                      "no-border" + (lastFocus ? " input-group-focus" : "")
+                      "no-border" + (lastName ? " input-group-focus" : "")
                     }
                   >
                     <InputGroupAddon addonType="prepend">
@@ -195,7 +215,7 @@ function SignUp() {
                   </InputGroup>
                   <InputGroup
                     className={
-                      "no-border" + (emailFocus ? " input-group-focus" : "")
+                      "no-border" + (email ? " input-group-focus" : "")
                     }
                   >
                     <InputGroupAddon addonType="prepend">
@@ -214,7 +234,7 @@ function SignUp() {
                   </InputGroup>
                   <InputGroup
                     className={
-                      "no-border" + (usernameFocus ? " input-group-focus" : "")
+                      "no-border" + (username ? " input-group-focus" : "")
                     }
                   >
                     <InputGroupAddon addonType="prepend">
@@ -225,8 +245,27 @@ function SignUp() {
                     <Input
                       placeholder="Username"
                       type="text"
-                      id="userName"
-                      name="userName"
+                      id="username"
+                      name="username"
+                      // onFocus={(e) => handleChange(e)}
+                      onBlur={(e) => handleChange(e)}
+                    ></Input>
+                  </InputGroup>
+                  <InputGroup
+                    className={
+                      "no-border" + (password ? " input-group-focus" : "")
+                    }
+                  >
+                    <InputGroupAddon addonType="prepend">
+                      <InputGroupText>
+                        <i className="now-ui-icons objects_key-25"></i>
+                      </InputGroupText>
+                    </InputGroupAddon>
+                    <Input
+                      placeholder="Password"
+                      type="password"
+                      id="password"
+                      name="password"
                       // onFocus={(e) => handleChange(e)}
                       onBlur={(e) => handleChange(e)}
                     ></Input>

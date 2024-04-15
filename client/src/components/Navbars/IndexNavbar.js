@@ -16,6 +16,7 @@ import {
   Container,
   UncontrolledTooltip,
 } from "reactstrap";
+import Auth from "../../utils/auth";
 
 function IndexNavbar() {
   const [navbarColor, setNavbarColor] = React.useState("navbar-transparent");
@@ -39,6 +40,54 @@ function IndexNavbar() {
       window.removeEventListener("scroll", updateNavbarColor);
     };
   });
+
+  function showLogin() {
+    if (Auth.loggedIn()) {
+      return (
+        <NavItem>
+          <NavLink
+            // className="nav-link btn-neutral"
+            // color="info"
+            href="/api/logout"
+            id="logout-btn"
+            onClick={() => Auth.logout()}
+          >
+            <i className="now-ui-icons arrows-1_share-66 mr-1"></i>
+            <p>Log Out</p>
+          </NavLink>
+          <UncontrolledTooltip target="#logout-btn">
+            Log out
+          </UncontrolledTooltip>
+        </NavItem>
+      )
+    }
+    else {
+      return (
+        <>
+          <NavItem>
+            <NavLink
+              // className="nav-link btn-neutral"
+              // color="info"
+              href="/signup-page"
+            >
+              <i className="now-ui-icons objects_spaceship mr-1"></i>
+              <p>Sign Up</p>
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink
+              // className="nav-link btn-neutral"
+              // color="info"
+              href="/login-page"
+            >
+              <i className="now-ui-icons sport_user-run mr-1"></i>
+              <p>Log In</p>
+            </NavLink>
+          </NavItem>
+        </>
+      )
+    }
+  }
   return (
     <>
       {collapseOpen ? (
@@ -54,15 +103,11 @@ function IndexNavbar() {
         <Container>
           <div className="navbar-translate">
             <NavbarBrand
-              href="https://demos.creative-tim.com/now-ui-kit-react/#/index?ref=nukr-index-navbar"
-              target="_blank"
+              href="/index"
               id="navbar-brand"
             >
-              Now UI Kit React
+              AR Eco-Clean SOlutions
             </NavbarBrand>
-            <UncontrolledTooltip target="#navbar-brand">
-              Designed by Invision. Coded by Creative Tim
-            </UncontrolledTooltip>
             <button
               className="navbar-toggler navbar-toggler"
               onClick={() => {
@@ -97,7 +142,7 @@ function IndexNavbar() {
                   <p>Download</p>
                 </NavLink>
               </NavItem>
-              <UncontrolledDropdown nav>
+              {/* <UncontrolledDropdown nav>
                 <DropdownToggle
                   caret
                   color="default"
@@ -121,51 +166,27 @@ function IndexNavbar() {
                     Documentation
                   </DropdownItem>
                 </DropdownMenu>
-              </UncontrolledDropdown>
-              <NavItem>
+              </UncontrolledDropdown> */}
+              {showLogin()}
+              {/* <NavItem>
                 <Button
                   className="nav-link btn-neutral"
                   color="info"
-                  href="https://www.creative-tim.com/product/now-ui-kit-pro-react?ref=nukr-index-navbar"
-                  id="upgrade-to-pro"
+                  href="/api/logout"
+                  id="logout-btn"
+                  onClick={() => Auth.logout()}
                   target="_blank"
                 >
                   <i className="now-ui-icons arrows-1_share-66 mr-1"></i>
-                  <p>Upgrade to PRO</p>
+                  <p>Log Out</p>
                 </Button>
-                <UncontrolledTooltip target="#upgrade-to-pro">
-                  Cooming soon!
+                <UncontrolledTooltip target="#logout-btn">
+                  Log out
                 </UncontrolledTooltip>
-              </NavItem>
+              </NavItem> */}
               <NavItem>
                 <NavLink
-                  href="https://twitter.com/CreativeTim?ref=creativetim"
-                  target="_blank"
-                  id="twitter-tooltip"
-                >
-                  <i className="fab fa-twitter"></i>
-                  <p className="d-lg-none d-xl-none">Twitter</p>
-                </NavLink>
-                <UncontrolledTooltip target="#twitter-tooltip">
-                  Follow us on Twitter
-                </UncontrolledTooltip>
-              </NavItem>
-              <NavItem>
-                <NavLink
-                  href="https://www.facebook.com/CreativeTim?ref=creativetim"
-                  target="_blank"
-                  id="facebook-tooltip"
-                >
-                  <i className="fab fa-facebook-square"></i>
-                  <p className="d-lg-none d-xl-none">Facebook</p>
-                </NavLink>
-                <UncontrolledTooltip target="#facebook-tooltip">
-                  Like us on Facebook
-                </UncontrolledTooltip>
-              </NavItem>
-              <NavItem>
-                <NavLink
-                  href="https://www.instagram.com/CreativeTimOfficial?ref=creativetim"
+                  href="https://www.instagram.com/chelitoMexicanFood"
                   target="_blank"
                   id="instagram-tooltip"
                 >

@@ -1,4 +1,5 @@
 import React from "react";
+import Auth from "../../utils/auth";
 
 // reactstrap components
 import {
@@ -17,12 +18,89 @@ import {
 } from "reactstrap";
 
 // core components
-import ExamplesNavbar from "components/Navbars/ExamplesNavbar.js";
+// import ExamplesNavbar from "components/Navbars/ExamplesNavbar.js";
+import IndexNavbar from "components/Navbars/IndexNavbar";
 import TransparentFooter from "components/Footers/TransparentFooter.js";
 
 function LoginPage() {
-  const [firstFocus, setFirstFocus] = React.useState(false);
-  const [lastFocus, setLastFocus] = React.useState(false);
+  const [username, setUsername] = React.useState(false);
+  const [password, setPassword] = React.useState(false);
+
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+
+    if (username && password) {
+      // const response = await 
+      const body = {
+        username: username.username,
+        password: password.password
+      };
+      // console.log(body);
+      fetch('http://localhost:3001/api/users/login/', {
+        method: 'post',
+        // mode: 'no-cors',
+        body: JSON.stringify(body),
+        headers: {
+          'Content-Type': 'application/json',
+          // 'Access-Control-Allow-Credentials': 'true',
+          // 'accept': 'application/json',
+          // 'Access-Control-Allow-Origin': 'http://localhost:3000'
+          // 'Access-Control-Allow-Origin': '*' 
+        }
+      })
+        .then(response => {
+          if (response.ok) {
+            console.log("you're logged!");
+            response.json()
+            .then(data => {
+              console.log(data);
+              console.log(data.token);
+              Auth.login(data.token);
+          });
+            // fetch('/index');
+            // document.location.replace('/index');
+          }
+          else {
+            // alert(response.statusText)
+            if (response.status === 404) {
+              alert("User not found")
+            }
+            else if (response.status === 401) {
+              alert("Wrong password!")
+            }
+            console.log(response)
+          }
+        })
+        .catch(err => console.log(err))
+
+      // if (response.ok) {
+      //   fetch('/index');
+      //   document.location.replace('/index');
+      // } else {
+      //   alert(response.statusText);
+      // }
+    }
+  } 
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    // console.log(event.target);
+    // console.log(name);
+    if (name === "username") {
+      setUsername({
+        [name]: value
+      })
+    }
+    if (name === "password") {
+      setPassword({
+        [name]: value
+      })
+    }
+    console.log(username.username);
+    console.log(password.password);
+  };
+
+
   React.useEffect(() => {
     document.body.classList.add("login-page");
     document.body.classList.add("sidebar-collapse");
@@ -36,7 +114,7 @@ function LoginPage() {
   }, []);
   return (
     <>
-      <ExamplesNavbar />
+      <IndexNavbar />
       <div className="page-header clear-filter" filter-color="blue">
         <div
           className="page-header-image"
@@ -61,37 +139,39 @@ function LoginPage() {
                     <InputGroup
                       className={
                         "no-border input-lg" +
-                        (firstFocus ? " input-group-focus" : "")
+                        (username ? " input-group-focus" : "")
                       }
                     >
                       <InputGroupAddon addonType="prepend">
                         <InputGroupText>
-                          <i className="now-ui-icons users_circle-08"></i>
+                          <i className="now-ui-icons users_single-02"></i>
                         </InputGroupText>
                       </InputGroupAddon>
                       <Input
-                        placeholder="First Name..."
+                        placeholder="Username..."
                         type="text"
-                        onFocus={() => setFirstFocus(true)}
-                        onBlur={() => setFirstFocus(false)}
+                        id="username"
+                        name="username"
+                        onBlur={(e) => handleChange(e)}
                       ></Input>
                     </InputGroup>
                     <InputGroup
                       className={
                         "no-border input-lg" +
-                        (lastFocus ? " input-group-focus" : "")
+                        (password ? " input-group-focus" : "")
                       }
                     >
                       <InputGroupAddon addonType="prepend">
                         <InputGroupText>
-                          <i className="now-ui-icons text_caps-small"></i>
+                          <i className="now-ui-icons objects_key-25"></i>
                         </InputGroupText>
                       </InputGroupAddon>
                       <Input
-                        placeholder="Last Name..."
-                        type="text"
-                        onFocus={() => setLastFocus(true)}
-                        onBlur={() => setLastFocus(false)}
+                        placeholder="Password..."
+                        type="password"
+                        id="password"
+                      name="password"
+                        onBlur={(e) => handleChange(e)}
                       ></Input>
                     </InputGroup>
                   </CardBody>
@@ -101,16 +181,16 @@ function LoginPage() {
                       className="btn-round"
                       color="info"
                       href="#pablo"
-                      onClick={(e) => e.preventDefault()}
+                      onClick={(e) => handleFormSubmit(e)}
                       size="lg"
                     >
                       Get Started
                     </Button>
-                    <div className="pull-left">
+                    {/* <div className="pull-left">
                       <h6>
                         <a
                           className="link"
-                          href="#pablo"
+                          href="/signup-page"
                           onClick={(e) => e.preventDefault()}
                         >
                           Create Account
@@ -127,7 +207,7 @@ function LoginPage() {
                           Need Help?
                         </a>
                       </h6>
-                    </div>
+                    </div> */}
                   </CardFooter>
                 </Form>
               </Card>
