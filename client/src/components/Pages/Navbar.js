@@ -51,8 +51,8 @@ function IndexNavbar() {
               // color="info"
               href="/view-quotes"
             >
-              <i className="now-ui-icons objects_spaceship mr-1"></i>
-              <p>Views Quotes</p>
+              <i className="now-ui-icons files_single-copy-04 mr-1"></i>
+              <p>View Quotes</p>
             </NavLink>
           </NavItem>
         <NavItem>
@@ -66,9 +66,9 @@ function IndexNavbar() {
             <i className="now-ui-icons arrows-1_share-66 mr-1"></i>
             <p>Log Out</p>
           </NavLink>
-          <UncontrolledTooltip target="#logout-btn">
+          {/* <UncontrolledTooltip target="#logout-btn">
             Log out
-          </UncontrolledTooltip>
+          </UncontrolledTooltip> */}
         </NavItem>
       </>
       )
@@ -160,7 +160,7 @@ function IndexNavbar() {
               // color="info"
               href="/about-us"
             >
-              <i className="now-ui-icons objects_spaceship mr-1"></i>
+              <i className="now-ui-icons business_globe mr-1"></i>
               <p>About Us</p>
             </NavLink>
           </NavItem>
@@ -170,7 +170,7 @@ function IndexNavbar() {
               // color="info"
               href="/products-and-services"
             >
-              <i className="now-ui-icons objects_spaceship mr-1"></i>
+              <i className="now-ui-icons business_bulb-63 mr-1"></i>
               <p>Our Products and Services</p>
             </NavLink>
           </NavItem>
@@ -180,7 +180,7 @@ function IndexNavbar() {
               // color="info"
               href="/request-quote"
             >
-              <i className="now-ui-icons objects_spaceship mr-1"></i>
+              <i className="now-ui-icons design-2_ruler-pencil mr-1"></i>
               <p>Request Quote</p>
             </NavLink>
           </NavItem>
