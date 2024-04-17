@@ -4,7 +4,7 @@ import React from "react";
 // reactstrap components
 import { Container } from "reactstrap";
 
-function DarkFooter() {
+function Footer() {
   return (
     <footer className="footer" data-background-color="black">
       <Container>
@@ -58,4 +58,4 @@ function DarkFooter() {
   );
 }
 
-export default DarkFooter;
+export default Footer;

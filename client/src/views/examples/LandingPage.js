@@ -33,7 +33,7 @@ function LandingPage() {
   }, []);
   return (
     <>
-      <ExamplesNavbar />
+      {/* <ExamplesNavbar /> */}
       <div className="wrapper">
         <LandingPageHeader />
         <div className="section section-about-us">
