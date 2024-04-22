@@ -16,6 +16,7 @@ import LandingPage from "./examples/LandingPage";
 import RequestQuote from "components/Pages/RequestQuote";
 import ViewQuotes from "components/Pages/ViewQuotes";
 import ProductsAndServices from "components/Pages/ProductsAndServices";
+import AboutUsPage from "components/Pages/AboutUsPage";
 
 // sections for this page
 // import Images from "./index-sections/Images.js";
@@ -49,7 +50,8 @@ function Index() {
     <>
       <Navbar />
       <div className="wrapper">
-        <AboutUs />
+        {/* <AboutUs /> */}
+        <AboutUsPage />
         <div className="main">
           {/* <Images />
           <BasicElements />
@@ -64,9 +66,9 @@ function Index() {
           <CompleteExamples />
           <SignUp />
           <Examples />
-          <Download /> */}
+        <Download /> */}
+        <RequestQuote />
           <LandingPage />
-          <RequestQuote />
           <ViewQuotes />
           <ProductsAndServices />
           {/* <ProfilePage /> */}

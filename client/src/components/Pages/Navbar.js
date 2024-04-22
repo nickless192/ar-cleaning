@@ -118,7 +118,7 @@ function IndexNavbar() {
                             href="/index"
                             id="navbar-brand"
                         >
-                            AR Eco-Clean SOlutions
+                            AR Pro Clean Solutions
                         </NavbarBrand>
                         {/* <button
                             className="navbar-toggler navbar-toggler"
@@ -140,7 +140,7 @@ function IndexNavbar() {
                         navbar
                     >
                         <Nav navbar>
-                            <NavItem>
+                            {/* <NavItem>
                                 <NavLink
                                     href="#pablo"
                                     onClick={(e) => {
@@ -153,7 +153,7 @@ function IndexNavbar() {
                                     <i className="now-ui-icons arrows-1_cloud-download-93"></i>
                                     <p>Download</p>
                                 </NavLink>
-                            </NavItem>
+                            </NavItem> */}
                             <NavItem>
                                 <NavLink
                                     // className="nav-link btn-neutral"

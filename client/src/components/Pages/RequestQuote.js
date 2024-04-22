@@ -15,8 +15,10 @@ const RequestQuote = () => {
         name: '',
         description: '',
         email: '',
-        products: [],
-        services: []
+        // products: [{ "product": "", "productamount": "", "productcostperquantity": "" }],
+        // services: [{ "service": "", "serviceamount": "", "servicecostperquantity": "" }]
+        services: [],
+        products: []
     });
 
     const [costs, setCosts] = useState({
@@ -69,16 +71,20 @@ const RequestQuote = () => {
     };
 
     const handleProductChange = (e, index) => {
-        const { value } = e.target;
+        const { name, value } = e.target;
+        console.log(name);
         const updatedProducts = [...formData.products];
-        updatedProducts[index] = value;
+        updatedProducts[index][name] = value ;
+        console.log(updatedProducts);
         setFormData({ ...formData, products: updatedProducts });
     };
 
     const handleServiceChange = (e, index) => {
-        const { value } = e.target;
+        const { name, value } = e.target;
         const updatedServices = [...formData.services];
-        updatedServices[index] = value;
+        console.log(updatedServices);
+        // updatedServices[index].service = value;
+        updatedServices[index][name] = value;
         setFormData({ ...formData, services: updatedServices });
     };
 
@@ -142,13 +148,14 @@ const RequestQuote = () => {
                                     />
                                 </div>
                                 {/* Product Selector */}
-                                <div className="product-selector">
+                                {/* <div className="product-selector">
                                     <h5>Select Products:</h5>
                                     {formData.products.map((product, index) => (
                                         <InputGroup key={index}>
                                             <Input
                                                 type="select"
                                                 value={product}
+                                                name='product'
                                                 onChange={(e) => handleProductChange(e, index)}
                                             >
                                                 <option value="">Select Product...</option>
@@ -162,22 +169,24 @@ const RequestQuote = () => {
                                                 placeholder="Amount..."
                                                 type="number"
                                                 value={product.amount}
+                                                name='productamount'
                                                 onChange={(e) =>
-                                                    handleChange({
+                                                    handleProductChange({
                                                         target: {
-                                                            name: 'products',
+                                                            name: 'productamount',
                                                             value: formData.products.map((p, i) =>
                                                                 i === index
                                                                     ? { ...p, amount: e.target.value }
                                                                     : p
                                                             )
                                                         }
-                                                    })
+                                                    }, index)
                                                 }
                                             />
                                             <Input
                                                 placeholder="Cost per Quantity: $..."
                                                 type="text"
+                                                name='productcostperquantity'
                                                 value={costs.productCosts[product]}
                                                 readOnly
                                             />
@@ -194,7 +203,7 @@ const RequestQuote = () => {
                                     >
                                         Add Product
                                     </Button>
-                                </div>
+                                </div> */}
                                 {/* Service Selector */}
                                 <div className="service-selector">
                                     <h5>Select Services:</h5>
@@ -202,7 +211,8 @@ const RequestQuote = () => {
                                         <InputGroup key={index}>
                                             <Input
                                                 type="select"
-                                                value={service}
+                                                value={service.service}
+                                                name='service'
                                                 onChange={(e) => handleServiceChange(e, index)}
                                             >
                                                 <option value="">Select Service...</option>
@@ -214,24 +224,20 @@ const RequestQuote = () => {
                                             </Input>
                                             <Input
                                                 placeholder="Amount..."
-                                                type="number"
+                                                type="text"
                                                 value={service.amount}
+                                                name='serviceamount'
                                                 onChange={(e) =>
-                                                    handleChange({
-                                                        target: {
-                                                            name: 'services',
-                                                            value: formData.services.map((s, i) =>
-                                                                i === index
-                                                                    ? { ...s, amount: e.target.value }
-                                                                    : s
-                                                            )
-                                                        }
-                                                    })
+                                                    // handleChange(e)
+                                                    handleServiceChange(e,index)
                                                 }
+
+
                                             />
                                             <Input
                                                 placeholder="Cost per Quantity: $..."
                                                 type="text"
+                                                name='servicecostperquantity'
                                                 value={costs.serviceCosts[service]}
                                                 readOnly
                                             />
@@ -242,7 +248,7 @@ const RequestQuote = () => {
                                         onClick={() =>
                                             setFormData((prevData) => ({
                                                 ...prevData,
-                                                services: [...prevData.services, '']
+                                                services: [...prevData.services, {}]
                                             }))
                                         }
                                     >
