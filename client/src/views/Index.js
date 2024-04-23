@@ -8,7 +8,7 @@ import React from "react";
 // import IndexNavbar from "components/Navbars/IndexNavbar.js";
 // import IndexHeader from "components/Headers/IndexHeader.js";
 import Navbar from "components/Pages/Navbar.js";
-import AboutUs from "components/Pages/AboutUs.js";
+// import AboutUs from "components/Pages/AboutUs.js";
 import Footer from "components/Pages/Footer.js";
 
 // import ProfilePage from "./examples/ProfilePage";
@@ -17,6 +17,7 @@ import RequestQuote from "components/Pages/RequestQuote";
 import ViewQuotes from "components/Pages/ViewQuotes";
 import ProductsAndServices from "components/Pages/ProductsAndServices";
 import AboutUsPage from "components/Pages/AboutUsPage";
+import AddService from "components/Pages/AddService";
 
 // sections for this page
 // import Images from "./index-sections/Images.js";
@@ -67,6 +68,7 @@ function Index() {
           <SignUp />
           <Examples />
         <Download /> */}
+        <AddService />
         <RequestQuote />
           <LandingPage />
           <ViewQuotes />

@@ -79,10 +79,34 @@ const RequestQuote = () => {
         setFormData({ ...formData, products: updatedProducts });
     };
 
-    const handleServiceChange = (e, index) => {
+    const handleServiceChange = async (e, index) => {
         const { name, value } = e.target;
         const updatedServices = [...formData.services];
         console.log(updatedServices);
+        if (name === 'service') {
+            // retrieve cost from API call
+            // TO DO: call function to handleCost specifically
+            console.log(value);
+            // fetch(`http://localhost:3001/api/services/?name=Deep%20cleaning`)
+            fetch(`http://localhost:3001/api/services/?name=${value}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data);
+                    console.log(data[0].serviceCost);
+                    updatedServices[index].servicecostperquantity = data[0].serviceCost;
+                    setFormData({ ...formData, services: updatedServices });
+                }
+                )
+                .catch(error => {
+                    console.error('There has been a problem with your fetch operation:', error);
+                });
+        }
         // updatedServices[index].service = value;
         updatedServices[index][name] = value;
         setFormData({ ...formData, services: updatedServices });
@@ -216,7 +240,7 @@ const RequestQuote = () => {
                                                 onChange={(e) => handleServiceChange(e, index)}
                                             >
                                                 <option value="">Select Service...</option>
-                                                <option value="Deep Cleaning">Deep Cleaning</option>
+                                                <option value="Deep cleaning">Deep Cleaning</option>
                                                 <option value="Spot Cleaning">Spot Cleaning</option>
                                                 <option value="Stain Removal">Stain Removal</option>
                                                 <option value="Odor Removal">Odor Removal</option>
@@ -225,7 +249,7 @@ const RequestQuote = () => {
                                             <Input
                                                 placeholder="Amount..."
                                                 type="text"
-                                                value={service.amount}
+                                                value={service.serviceamount}
                                                 name='serviceamount'
                                                 onChange={(e) =>
                                                     // handleChange(e)
@@ -238,7 +262,7 @@ const RequestQuote = () => {
                                                 placeholder="Cost per Quantity: $..."
                                                 type="text"
                                                 name='servicecostperquantity'
-                                                value={costs.serviceCosts[service]}
+                                                value={service.servicecostperquantity}
                                                 readOnly
                                             />
                                         </InputGroup>
