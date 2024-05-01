@@ -1,4 +1,6 @@
 import React from "react";
+import { useState } from "react";
+
 
 // reactstrap components
 // import {
@@ -18,6 +20,8 @@ import ViewQuotes from "components/Pages/ViewQuotes";
 import ProductsAndServices from "components/Pages/ProductsAndServices";
 import AboutUsPage from "components/Pages/AboutUsPage";
 import AddService from "components/Pages/AddService";
+// import { set } from "mongoose";
+import AddProduct from "components/Pages/AddProduct";
 
 // sections for this page
 // import Images from "./index-sections/Images.js";
@@ -36,17 +40,63 @@ import AddService from "components/Pages/AddService";
 // import Download from "./index-sections/Download.js";
 
 function Index() {
+
+  const [services, setServices] = useState([]);
+
+  
+  
+  
+  // const [services, setServices] = useState(localServices);
+  // console.log(services);
+  // setServices(localServices);
+  
+  
   React.useEffect(() => {
-    document.body.classList.add("index-page");
-    document.body.classList.add("sidebar-collapse");
-    document.documentElement.classList.remove("nav-open");
-    window.scrollTo(0, 0);
-    document.body.scrollTop = 0;
+    
+    const initializeServices = () => {
+        const localServices = [];
+
+        fetch('http://localhost:3001/api/services')
+          .then(response => {
+            if (response.ok) {
+              response.json()
+                .then(data => {
+                  console.log(data);
+                  for (let i = 0; i < data.length; i++) {
+                    console.log(data[i].name);
+                    localServices.push({ name: data[i].name, id: data[i]._id, serviceCost: data[i].serviceCost });
+                    // setServices(...services, { name: data[i].name, id: data[i]._id, serviceCost: data[i].serviceCost });
+                  }
+                  setServices(localServices);
+                  return localServices;
+    
+                })
+                .then(localServices => {
+                  setServices(localServices);
+                  // console.log(services);
+                  console.log(localServices);
+      
+                },)
+            } else {
+              console.log(response.statusText);
+            }
+          })
+      }
+      document.body.classList.add("index-page");
+      document.body.classList.add("sidebar-collapse");
+      document.documentElement.classList.remove("nav-open");
+      window.scrollTo(0, 0);
+      document.body.scrollTop = 0;
+      initializeServices();
     return function cleanup() {
       document.body.classList.remove("index-page");
       document.body.classList.remove("sidebar-collapse");
     };
-  });
+  }, []);
+
+
+
+
   return (
     <>
       <Navbar />
@@ -68,8 +118,11 @@ function Index() {
           <SignUp />
           <Examples />
         <Download /> */}
-        <AddService />
-        <RequestQuote />
+          {/* <AddService />
+          <AddProduct /> */}
+          <RequestQuote
+            services={services}
+          />
           <LandingPage />
           <ViewQuotes />
           <ProductsAndServices />

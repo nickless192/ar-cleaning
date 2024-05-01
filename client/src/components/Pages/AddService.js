@@ -37,6 +37,7 @@ const AddService = () => {
                         response.json()
                             .then(data => {
                                 console.log(data);
+                                alert(`Service ${data.name} added!`);
                             });
                     } else {
                         alert(response.statusText);

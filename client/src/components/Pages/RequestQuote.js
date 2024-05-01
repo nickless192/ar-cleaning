@@ -10,7 +10,7 @@ import {
     InputGroupText
 } from 'reactstrap'; // Importing required components from reactstrap
 
-const RequestQuote = () => {
+const RequestQuote = ({services}) => {
     const [formData, setFormData] = useState({
         name: '',
         description: '',
@@ -26,58 +26,96 @@ const RequestQuote = () => {
         serviceCosts: {}
     });
 
-    useEffect(() => {
-        // Fetch costs for products and services
-        const fetchCosts = async () => {
-            try {
-                const productCostsResponse = await fetch(`/api/products/:byName`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ names: formData.products })
-                });
-                const productCostsData = await productCostsResponse.json();
-                setCosts((prevCosts) => ({
-                    ...prevCosts,
-                    productCosts: productCostsData
-                }));
+    // console.log(services);
 
-                const serviceCostsResponse = await fetch(`/api/services/:byName`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ names: formData.services })
-                });
-                const serviceCostsData = await serviceCostsResponse.json();
-                setCosts((prevCosts) => ({
-                    ...prevCosts,
-                    serviceCosts: serviceCostsData
-                }));
-            } catch (error) {
-                console.error('Error fetching costs:', error);
-            }
-        };
+//     useEffect(() => {
+//         // Fetch costs for products and services
+//         const fetchCosts = async () => {
+//             try {
+//                 // const productCostsResponse = await fetch(`/api/products/:byName`, {
+//                 //     method: 'POST',
+//                 //     headers: {
+//                 //         'Content-Type': 'application/json'
+//                 //     },
+//                 //     body: JSON.stringify({ names: formData.products })
+//                 // });
+//                 // const productCostsData = await productCostsResponse.json();
+//                 // setCosts((prevCosts) => ({
+//                 //     ...prevCosts,
+//                 //     productCosts: productCostsData
+//                 // }));
 
-        if (formData.products.length > 0 || formData.services.length > 0) {
-            fetchCosts();
-        }
-    }, [formData.products, formData.services]);
+//                 const serviceCostsResponse = await fetch(`/api/services/:byName`, {
+//                     method: 'POST',
+//                     headers: {
+//                         'Content-Type': 'application/json'
+//                     },
+//                     body: JSON.stringify({ names: formData.services })
+//                 });
+//                 const serviceCostsData = await serviceCostsResponse.json();
+//                 setCosts((prevCosts) => ({
+//                     ...prevCosts,
+//                     serviceCosts: serviceCostsData
+//                 }));
+//             } catch (error) {
+//                 console.error('Error fetching costs:', error);
+//             }
+//         };
+
+//         // if (formData.products.length > 0 || formData.services.length > 0) {
+//             if (formData.services.length > 0) {
+//             fetchCosts();
+//         }
+//     // }, [formData.products, formData.services]);
+// }, [formData.services]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleProductChange = (e, index) => {
-        const { name, value } = e.target;
-        console.log(name);
-        const updatedProducts = [...formData.products];
-        updatedProducts[index][name] = value ;
-        console.log(updatedProducts);
-        setFormData({ ...formData, products: updatedProducts });
-    };
+    const handleServiceCost = (e,index) => {
+        const { value } = e.target;
+        const updatedServices = [...formData.services];
+        // console.log(value);
+        // fetch(`http://localhost:3001/api/services/?name=Deep%20cleaning`)
+
+        for (let i = 0; i < services.length; i++) {
+            if (services[i].name === value) {
+                updatedServices[index].servicecostperquantity = services[i].serviceCost;
+                setFormData({ ...formData, services: updatedServices });
+                return;
+            }
+        }
+
+        // fetch(`http://localhost:3001/api/services/?name=${value}`)
+        //     .then(response => {
+        //         if (!response.ok) {
+        //             throw new Error('Network response was not ok');
+
+        //         }
+        //         return response.json();
+        //     })
+        //     .then(data => {
+        //         console.log(data);
+        //         console.log(data[0].serviceCost);
+        //         updatedServices[index].servicecostperquantity = data[0].serviceCost;
+        //         setFormData({ ...formData, services: updatedServices });
+        //     }
+        //     )
+        //     .catch(error => {
+        //         console.error('There has been a problem with your fetch operation:', error);
+        //     });
+        }
+
+    // const handleProductChange = (e, index) => {
+    //     const { name, value } = e.target;
+    //     console.log(name);
+    //     const updatedProducts = [...formData.products];
+    //     updatedProducts[index][name] = value ;
+    //     console.log(updatedProducts);
+    //     setFormData({ ...formData, products: updatedProducts });
+    // };
 
     const handleServiceChange = async (e, index) => {
         const { name, value } = e.target;
@@ -86,26 +124,27 @@ const RequestQuote = () => {
         if (name === 'service') {
             // retrieve cost from API call
             // TO DO: call function to handleCost specifically
-            console.log(value);
-            // fetch(`http://localhost:3001/api/services/?name=Deep%20cleaning`)
-            fetch(`http://localhost:3001/api/services/?name=${value}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
+            handleServiceCost(e,index);
+            // console.log(value);
+            // // fetch(`http://localhost:3001/api/services/?name=Deep%20cleaning`)
+            // fetch(`http://localhost:3001/api/services/?name=${value}`)
+            //     .then(response => {
+            //         if (!response.ok) {
+            //             throw new Error('Network response was not ok');
 
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log(data);
-                    console.log(data[0].serviceCost);
-                    updatedServices[index].servicecostperquantity = data[0].serviceCost;
-                    setFormData({ ...formData, services: updatedServices });
-                }
-                )
-                .catch(error => {
-                    console.error('There has been a problem with your fetch operation:', error);
-                });
+            //         }
+            //         return response.json();
+            //     })
+            //     .then(data => {
+            //         console.log(data);
+            //         console.log(data[0].serviceCost);
+            //         updatedServices[index].servicecostperquantity = data[0].serviceCost;
+            //         setFormData({ ...formData, services: updatedServices });
+            //     }
+            //     )
+            //     .catch(error => {
+            //         console.error('There has been a problem with your fetch operation:', error);
+            //     });
         }
         // updatedServices[index].service = value;
         updatedServices[index][name] = value;
@@ -240,11 +279,16 @@ const RequestQuote = () => {
                                                 onChange={(e) => handleServiceChange(e, index)}
                                             >
                                                 <option value="">Select Service...</option>
-                                                <option value="Deep cleaning">Deep Cleaning</option>
-                                                <option value="Spot Cleaning">Spot Cleaning</option>
+                                                {services.map((service) => (
+                                                    <option key={service._id} value={service.name}>
+                                                        {service.name}
+                                                    </option>
+                                                ))}
+                                                {/* <option value="Deep cleaning">Deep Cleaning</option>
+                                                <option value="Spot cleaning">Spot Cleaning</option>
                                                 <option value="Stain Removal">Stain Removal</option>
                                                 <option value="Odor Removal">Odor Removal</option>
-                                                <option value="Area Rug Cleaning">Area Rug Cleaning</option>
+                                                <option value="Area Rug Cleaning">Area Rug Cleaning</option> */}
                                             </Input>
                                             <Input
                                                 placeholder="Amount..."
