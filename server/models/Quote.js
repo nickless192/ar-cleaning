@@ -20,6 +20,14 @@ const QuoteSchema = new Schema({
         required: true,
         validate: [isEmail, 'Wrong email format']
     },
+    phonenumber: {
+        type: String,
+        required: true
+    },
+    howDidYouHearAboutUs: {
+        type: String,
+        required: true
+    },
     products: [
         {
             type: Schema.Types.ObjectId,

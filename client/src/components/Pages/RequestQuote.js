@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
     Button,
     Container,
@@ -10,71 +10,40 @@ import {
     InputGroupText
 } from 'reactstrap'; // Importing required components from reactstrap
 
-const RequestQuote = ({services}) => {
+const RequestQuote = ({ services, products }) => {
     const [formData, setFormData] = useState({
         name: '',
         description: '',
         email: '',
-        // products: [{ "product": "", "productamount": "", "productcostperquantity": "" }],
-        // services: [{ "service": "", "serviceamount": "", "servicecostperquantity": "" }]
         services: [],
         products: []
     });
 
-    const [costs, setCosts] = useState({
-        productCosts: {},
-        serviceCosts: {}
-    });
-
-    // console.log(services);
-
-//     useEffect(() => {
-//         // Fetch costs for products and services
-//         const fetchCosts = async () => {
-//             try {
-//                 // const productCostsResponse = await fetch(`/api/products/:byName`, {
-//                 //     method: 'POST',
-//                 //     headers: {
-//                 //         'Content-Type': 'application/json'
-//                 //     },
-//                 //     body: JSON.stringify({ names: formData.products })
-//                 // });
-//                 // const productCostsData = await productCostsResponse.json();
-//                 // setCosts((prevCosts) => ({
-//                 //     ...prevCosts,
-//                 //     productCosts: productCostsData
-//                 // }));
-
-//                 const serviceCostsResponse = await fetch(`/api/services/:byName`, {
-//                     method: 'POST',
-//                     headers: {
-//                         'Content-Type': 'application/json'
-//                     },
-//                     body: JSON.stringify({ names: formData.services })
-//                 });
-//                 const serviceCostsData = await serviceCostsResponse.json();
-//                 setCosts((prevCosts) => ({
-//                     ...prevCosts,
-//                     serviceCosts: serviceCostsData
-//                 }));
-//             } catch (error) {
-//                 console.error('Error fetching costs:', error);
-//             }
-//         };
-
-//         // if (formData.products.length > 0 || formData.services.length > 0) {
-//             if (formData.services.length > 0) {
-//             fetchCosts();
-//         }
-//     // }, [formData.products, formData.services]);
-// }, [formData.services]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleServiceCost = (e,index) => {
+    const handleProductCost = (e, index) => {
+        const { value } = e.target;
+        const updatedProducts = [...formData.products];
+        // console.log(value);
+        // console.log(updatedProducts);
+        // fetch(`http://localhost:3001/api/services/?name=Deep%20cleaning`)
+
+        for (let i = 0; i < products.length; i++) {
+            if (products[i].name === value) {
+                // console.log(updatedProducts[index])
+                // console.log(products[i].productCost);
+                updatedProducts[index].productcostperquantity = products[i].productCost;
+                setFormData({ ...formData, products: updatedProducts });
+                return;
+            }
+        }
+    }
+
+    const handleServiceCost = (e, index) => {
         const { value } = e.target;
         const updatedServices = [...formData.services];
         // console.log(value);
@@ -87,65 +56,30 @@ const RequestQuote = ({services}) => {
                 return;
             }
         }
+    }
 
-        // fetch(`http://localhost:3001/api/services/?name=${value}`)
-        //     .then(response => {
-        //         if (!response.ok) {
-        //             throw new Error('Network response was not ok');
-
-        //         }
-        //         return response.json();
-        //     })
-        //     .then(data => {
-        //         console.log(data);
-        //         console.log(data[0].serviceCost);
-        //         updatedServices[index].servicecostperquantity = data[0].serviceCost;
-        //         setFormData({ ...formData, services: updatedServices });
-        //     }
-        //     )
-        //     .catch(error => {
-        //         console.error('There has been a problem with your fetch operation:', error);
-        //     });
+    const handleProductChange = async (e, index) => {
+        const { name, value } = e.target;
+        const updatedProducts = [...formData.products];
+        if (name === 'product') {
+            // retrieve cost from API call
+            handleProductCost(e, index);
         }
 
-    // const handleProductChange = (e, index) => {
-    //     const { name, value } = e.target;
-    //     console.log(name);
-    //     const updatedProducts = [...formData.products];
-    //     updatedProducts[index][name] = value ;
-    //     console.log(updatedProducts);
-    //     setFormData({ ...formData, products: updatedProducts });
-    // };
+        // console.log(updatedProducts); 
+        updatedProducts[index][name] = value;
+        setFormData({ ...formData, products: updatedProducts });
+    };
 
     const handleServiceChange = async (e, index) => {
         const { name, value } = e.target;
         const updatedServices = [...formData.services];
-        console.log(updatedServices);
+        // console.log(updatedServices);
+        // retrieve cost from API call
         if (name === 'service') {
-            // retrieve cost from API call
-            // TO DO: call function to handleCost specifically
-            handleServiceCost(e,index);
-            // console.log(value);
-            // // fetch(`http://localhost:3001/api/services/?name=Deep%20cleaning`)
-            // fetch(`http://localhost:3001/api/services/?name=${value}`)
-            //     .then(response => {
-            //         if (!response.ok) {
-            //             throw new Error('Network response was not ok');
-
-            //         }
-            //         return response.json();
-            //     })
-            //     .then(data => {
-            //         console.log(data);
-            //         console.log(data[0].serviceCost);
-            //         updatedServices[index].servicecostperquantity = data[0].serviceCost;
-            //         setFormData({ ...formData, services: updatedServices });
-            //     }
-            //     )
-            //     .catch(error => {
-            //         console.error('There has been a problem with your fetch operation:', error);
-            //     });
+            handleServiceCost(e, index);
         }
+        // console.log(value);
         // updatedServices[index].service = value;
         updatedServices[index][name] = value;
         setFormData({ ...formData, services: updatedServices });
@@ -199,7 +133,22 @@ const RequestQuote = ({services}) => {
                                         required
                                     />
                                 </InputGroup>
-                                <div className="textarea-container">
+                                <InputGroup className="input-lg">
+                                    <InputGroupAddon addonType="prepend">
+                                        <InputGroupText>
+                                            <i className="now-ui-icons tech_headphones"></i>
+                                        </InputGroupText>
+                                    </InputGroupAddon>
+                                    <Input
+                                        placeholder="Your Phone Number..."
+                                        type="phonenumber"
+                                        name="phonenumber"
+                                        value={formData.phonenumber}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </InputGroup>
+                                <InputGroup className="input-lg">
                                     <Input
                                         cols="80"
                                         name="description"
@@ -209,48 +158,66 @@ const RequestQuote = ({services}) => {
                                         value={formData.description}
                                         onChange={handleChange}
                                     />
-                                </div>
+                                </InputGroup>
+                                <InputGroup className="input-lg">
+                                    <Input
+                                        type="select"
+                                        value={formData.howDidYouHearAboutUs}
+                                        name='howDidYouHearAboutUs'
+                                        onChange={(e) => handleChange(e)}
+                                    >
+                                        <option value="">How Did You Hear About Us?...</option>
+                                        <option value="Google">Google</option>
+                                        <option value="Facebook">Facebook</option>
+                                        <option value="Instagram">Instagram</option>
+                                        <option value="Referral">Referral</option>
+                                        <option value="Other">Other</option>
+                                    </Input>
+                                </InputGroup>
                                 {/* Product Selector */}
-                                {/* <div className="product-selector">
+                                <div className="product-selector">
                                     <h5>Select Products:</h5>
                                     {formData.products.map((product, index) => (
                                         <InputGroup key={index}>
                                             <Input
                                                 type="select"
-                                                value={product}
+                                                value={product.product}
                                                 name='product'
                                                 onChange={(e) => handleProductChange(e, index)}
                                             >
                                                 <option value="">Select Product...</option>
-                                                <option value="Shampoo">Shampoo</option>
+                                                {products.map((product) => (
+                                                    <option key={product._id} value={product.name}>
+                                                        {product.name}
+                                                    </option>
+                                                ))}
+                                                {/* <option value="Shampoo">Shampoo</option>
                                                 <option value="Spot Remover">Spot Remover</option>
                                                 <option value="Carpet Deodorizer">Carpet Deodorizer</option>
                                                 <option value="Stain Protector">Stain Protector</option>
-                                                <option value="Carpet Cleaning Machine Rental">Carpet Cleaning Machine Rental</option>
+                                                <option value="Carpet Cleaning Machine Rental">Carpet Cleaning Machine Rental</option> */}
                                             </Input>
                                             <Input
                                                 placeholder="Amount..."
-                                                type="number"
-                                                value={product.amount}
+                                                type="text"
+                                                value={product.productamount}
                                                 name='productamount'
                                                 onChange={(e) =>
-                                                    handleProductChange({
-                                                        target: {
-                                                            name: 'productamount',
-                                                            value: formData.products.map((p, i) =>
-                                                                i === index
-                                                                    ? { ...p, amount: e.target.value }
-                                                                    : p
-                                                            )
-                                                        }
-                                                    }, index)
+                                                    handleProductChange(e, index)
                                                 }
                                             />
                                             <Input
                                                 placeholder="Cost per Quantity: $..."
                                                 type="text"
                                                 name='productcostperquantity'
-                                                value={costs.productCosts[product]}
+                                                value={product.productcostperquantity}
+                                                readOnly
+                                            />
+                                            <Input
+                                                placeholder="Total Cost: $..."
+                                                type="text"
+                                                name='producttotalcost'
+                                                value={product.productamount * product.productcostperquantity}
                                                 readOnly
                                             />
                                         </InputGroup>
@@ -260,13 +227,15 @@ const RequestQuote = ({services}) => {
                                         onClick={() =>
                                             setFormData((prevData) => ({
                                                 ...prevData,
-                                                products: [...prevData.products, '']
+                                                products: [...prevData.products, {}]
                                             }))
                                         }
                                     >
                                         Add Product
                                     </Button>
-                                </div> */}
+                                </div>
+
+
                                 {/* Service Selector */}
                                 <div className="service-selector">
                                     <h5>Select Services:</h5>
@@ -297,7 +266,7 @@ const RequestQuote = ({services}) => {
                                                 name='serviceamount'
                                                 onChange={(e) =>
                                                     // handleChange(e)
-                                                    handleServiceChange(e,index)
+                                                    handleServiceChange(e, index)
                                                 }
 
 
@@ -307,6 +276,13 @@ const RequestQuote = ({services}) => {
                                                 type="text"
                                                 name='servicecostperquantity'
                                                 value={service.servicecostperquantity}
+                                                readOnly
+                                            />
+                                            <Input
+                                                placeholder="Total Cost: $..."
+                                                type="text"
+                                                name='servicetotalcost'
+                                                value={service.serviceamount * service.servicecostperquantity}
                                                 readOnly
                                             />
                                         </InputGroup>
@@ -322,6 +298,52 @@ const RequestQuote = ({services}) => {
                                     >
                                         Add Service
                                     </Button>
+                                    <InputGroup>
+                                        <Input
+                                            placeholder='Subtotal Cost: $...'
+                                            type='text'
+                                            name='subtotalCost'
+                                            value={formData.services.reduce((acc, service) => acc + service.serviceamount * service.servicecostperquantity, 0) +
+                                                formData.products.reduce((acc, product) => acc + product.productamount * product.productcostperquantity, 0)}
+                                            readOnly
+                                        />
+                                                                                <Input
+                                            placeholder='Tax: $...'
+                                            type='text'
+                                            value={(formData.services.reduce((acc, service) => acc + service.serviceamount * service.servicecostperquantity, 0) +
+                                                formData.products.reduce((acc, product) => acc + product.productamount * product.productcostperquantity, 0)) * 0.13}
+                                            readOnly
+                                        />
+                                        {/* <Input
+                                            placeholder='Discount Code'
+                                            type='text'
+                                            value={formData.discountCode}
+                                            onChange={handleChange}
+                                        />
+                                        <Input
+                                            placeholder='Discount Amount: $...'
+                                            type='text'
+                                            value={formData.discountAmount}
+                                            readOnly
+                                        /> */}
+                                        <Input
+                                            placeholder='Grand Total: $...'
+                                            type='text'
+                                            value={formData.services.reduce((acc, service) => acc + service.serviceamount * service.servicecostperquantity, 0) +
+                                                formData.products.reduce((acc, product) => acc + product.productamount * product.productcostperquantity, 0)*1.13}
+                                                // formData.products.reduce((acc, product) => acc + product.productamount * product.productcostperquantity, 0) - formData.discountAmount}
+                                            readOnly
+                                        />
+                                        {/* <Input
+                                            placeholder='Payment Method'
+                                            type='select'
+                                            value={formData.paymentMethod}
+                                            name='paymentMethod'
+                                            onChange={handleChange}
+                                        /> */}
+
+
+                                    </InputGroup>
                                 </div>
                                 <div className="send-button">
                                     <Button

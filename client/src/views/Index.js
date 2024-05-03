@@ -20,8 +20,8 @@ import ViewQuotes from "components/Pages/ViewQuotes";
 import ProductsAndServices from "components/Pages/ProductsAndServices";
 import AboutUsPage from "components/Pages/AboutUsPage";
 import AddService from "components/Pages/AddService";
-// import { set } from "mongoose";
 import AddProduct from "components/Pages/AddProduct";
+// import { set } from "mongoose";
 
 // sections for this page
 // import Images from "./index-sections/Images.js";
@@ -33,7 +33,7 @@ import AddProduct from "components/Pages/AddProduct";
 // import Typography from "./index-sections/Typography.js";
 // import Javascript from "./index-sections/Javascript.js";
 // import Carousel from "./index-sections/Carousel.js";
-// import NucleoIcons from "./index-sections/NucleoIcons.js";
+import NucleoIcons from "./index-sections/NucleoIcons.js";
 // import CompleteExamples from "./index-sections/CompleteExamples.js";
 // import SignUp from "./index-sections/SignUp.js";
 // import Examples from "./index-sections/Examples.js";
@@ -42,6 +42,7 @@ import AddProduct from "components/Pages/AddProduct";
 function Index() {
 
   const [services, setServices] = useState([]);
+  const [products, setProducts] = useState([]);
 
   
   
@@ -55,6 +56,7 @@ function Index() {
     
     const initializeServices = () => {
         const localServices = [];
+        const localProducts = [];
 
         fetch('http://localhost:3001/api/services')
           .then(response => {
@@ -75,6 +77,32 @@ function Index() {
                   setServices(localServices);
                   // console.log(services);
                   console.log(localServices);
+      
+                },)
+            } else {
+              console.log(response.statusText);
+            }
+          })
+
+          fetch('http://localhost:3001/api/products')
+          .then(response => {
+            if (response.ok) {
+              response.json()
+                .then(data => {
+                  console.log(data);
+                  for (let i = 0; i < data.length; i++) {
+                    console.log(data[i].name);
+                    localProducts.push({ name: data[i].name, id: data[i]._id, productCost: data[i].productCost });
+                    // setServices(...services, { name: data[i].name, id: data[i]._id, serviceCost: data[i].serviceCost });
+                  }
+                  setProducts(localProducts);
+                  return localProducts;
+    
+                })
+                .then(localProducts => {
+                  setProducts(localProducts);
+                  // console.log(services);
+                  console.log(localProducts);
       
                 },)
             } else {
@@ -112,16 +140,17 @@ function Index() {
           <Notifications />
           <Typography />
           <Javascript />
-          <Carousel />
+  <Carousel />*/}
           <NucleoIcons />
-          <CompleteExamples />
+          {/*<CompleteExamples />
           <SignUp />
           <Examples />
         <Download /> */}
-          {/* <AddService />
-          <AddProduct /> */}
+          <AddService />
+          <AddProduct />
           <RequestQuote
             services={services}
+            products={products}
           />
           <LandingPage />
           <ViewQuotes />
