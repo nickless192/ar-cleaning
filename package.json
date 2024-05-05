@@ -2,7 +2,8 @@
   "name": "ar-cleaning",
   "version": "1.0.0",
   "engines": {
-    "node": "18.x"
+    "node": "18.x",
+    "npm": "9.x"
   },
   "description": "",
   "main": "server/server.js",
