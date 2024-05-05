@@ -23,7 +23,7 @@ const AddService = () => {
                 description: formData.description,
                 serviceCost: formData.serviceCost
             };
-            fetch('http://localhost:3001/api/services', {
+            fetch(`${process.env.PORT}/api/services`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
