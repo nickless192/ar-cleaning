@@ -1,5 +1,5 @@
 {
-  "name": "chelito-authentic",
+  "name": "ar-cleaning",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
@@ -10,15 +10,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nickless192/chelito-authentic.git"
+    "url": "git+https://github.com/nickless192/ar-cleaning.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/nickless192/chelito-authentic/issues"
+    "url": "https://github.com/nickless192/ar-cleaning/issues"
   },
-  "homepage": "https://github.com/nickless192/chelito-authentic#readme",
+  "homepage": "https://github.com/nickless192/ar-cleaning#readme",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
