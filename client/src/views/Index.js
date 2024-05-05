@@ -58,7 +58,7 @@ function Index() {
         const localServices = [];
         const localProducts = [];
 
-        fetch('http://localhost:3001/api/services')
+        fetch('/api/services')
           .then(response => {
             if (response.ok) {
               response.json()
@@ -84,7 +84,7 @@ function Index() {
             }
           })
 
-          fetch('http://localhost:3001/api/products')
+          fetch('/api/products')
           .then(response => {
             if (response.ok) {
               response.json()

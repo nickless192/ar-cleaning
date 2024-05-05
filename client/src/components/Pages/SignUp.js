@@ -42,7 +42,7 @@ function SignUp() {
         password: password.password
       };
       // console.log(body);
-      fetch(`${process.env.PORT}/api/users/`, {
+      fetch(`/api/users/`, {
         method: 'post',
         // mode: 'no-cors',
         body: JSON.stringify(body),

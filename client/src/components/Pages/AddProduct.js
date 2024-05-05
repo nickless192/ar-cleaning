@@ -25,7 +25,7 @@ const AddProduct = () => {
                 productCost: productData.productCost,
                 quantityAtHand: productData.quantityAtHand
             };
-            fetch('http://localhost:3001/api/products', {
+            fetch('/api/products', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

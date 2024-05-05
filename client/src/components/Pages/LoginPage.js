@@ -36,7 +36,7 @@ function LoginPage() {
         password: password.password
       };
       // console.log(body);
-      fetch('http://localhost:3001/api/users/login/', {
+      fetch('/api/users/login/', {
         method: 'post',
         // mode: 'no-cors',
         body: JSON.stringify(body),
