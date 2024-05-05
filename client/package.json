@@ -3,7 +3,6 @@
   "version": "1.5.2",
   "private": true,
   "dependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@babel/preset-env": "^7.24.5",
     "html2pdf.js": "^0.10.1",
     "jwt-decode": "^4.0.0",
@@ -54,8 +53,5 @@
     "svgo": "3.0.2",
     "fsevents": "2.3.2",
     "chokidar": "3.5.3"
-  },
-  "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
   }
 }
