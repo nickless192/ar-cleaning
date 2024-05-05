@@ -10,11 +10,22 @@ import {
     InputGroupText
 } from 'reactstrap'; // Importing required components from reactstrap
 
+import html2pdf from 'html2pdf.js'; // Importing html2pdf library
+
 const RequestQuote = ({ services, products }) => {
     const [formData, setFormData] = useState({
         name: '',
         description: '',
+        companyName: '',
         email: '',
+        phonenumber: '',
+        howDidYouHearAboutUs: '',
+        subtotalCost: 0,
+        tax: 0,
+        // discountCode: '',
+        // discountAmount: 0,
+        grandTotal: 0,
+        // paymentMethod: '',        
         services: [],
         products: []
     });
@@ -22,6 +33,7 @@ const RequestQuote = ({ services, products }) => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+        console.log(name, value);
         setFormData({ ...formData, [name]: value });
     };
 
@@ -87,8 +99,47 @@ const RequestQuote = ({ services, products }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log(formData);
         try {
             // Your fetch logic here
+            // const response = await fetch('http://localhost:3001/api/quotes', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     },
+            //     body: JSON.stringify(formData)
+            // });
+            // if (response.ok) {
+            //     alert('Quote submitted successfully!');
+            //     setFormData({
+            //         name: '',
+            //         description: '',
+            //         email: '',
+            //         phonenumber: '',
+            //         howDidYouHearAboutUs: '',
+            //         subtotalCost: 0,
+            //         tax: 0,
+            //         // discountCode: '',
+            //         // discountAmount: 0,
+            //         grandTotal: 0,
+            //         // paymentMethod: '',        
+            //         services: [],
+            //         products: []
+            //     });
+            // }
+
+                // Generate PDF
+                const element = document.getElementById('quote-form'); // Replace 'quote-form' with the ID of the form element
+                const opt = {
+                    margin: 0.5,
+                    filename: 'quote.pdf', // parametarize the filename with the quote ID
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2 },
+                    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+                };
+                html2pdf().set(opt).from(element).save(); // Generate and save the PDF
+
+
         } catch (error) {
             console.error('Error submitting quote:', error);
         }
@@ -102,7 +153,9 @@ const RequestQuote = ({ services, products }) => {
                         <h2 className="title">Request a Quote</h2>
                         <p className="description">Please fill out the form below:</p>
                         <Row>
-                            <Col className="text-center ml-auto mr-auto" lg="6" md="8">
+                            <Col className="text-center ml-auto mr-auto" lg="6" md="8"
+                                id='quote-form'
+                            >
                                 <InputGroup className="input-lg">
                                     <InputGroupAddon addonType="prepend">
                                         <InputGroupText>
@@ -116,6 +169,20 @@ const RequestQuote = ({ services, products }) => {
                                         value={formData.name}
                                         onChange={handleChange}
                                         required
+                                    />
+                                </InputGroup>
+                                <InputGroup className="input-lg">
+                                    <InputGroupAddon addonType="prepend">
+                                        <InputGroupText>
+                                            <i className="now-ui-icons shopping_shop"></i>
+                                        </InputGroupText>
+                                    </InputGroupAddon>
+                                    <Input
+                                        placeholder="Your Company Name..."
+                                        type="text"
+                                        name="companyName"
+                                        value={formData.companyName}
+                                        onChange={handleChange}
                                     />
                                 </InputGroup>
                                 <InputGroup className="input-lg">
@@ -220,6 +287,19 @@ const RequestQuote = ({ services, products }) => {
                                                 value={product.productamount * product.productcostperquantity}
                                                 readOnly
                                             />
+                                            <Button
+                                                color="danger"
+                                                onClick={() =>
+                                                    setFormData((prevData) => ({
+                                                        ...prevData,
+                                                        products: prevData.products.filter(
+                                                            (product, i) => i !== index
+                                                        )
+                                                    }))
+                                                }
+                                            >
+                                                Remove Product
+                                            </Button>
                                         </InputGroup>
                                     ))}
                                     <Button
@@ -259,6 +339,7 @@ const RequestQuote = ({ services, products }) => {
                                                 <option value="Odor Removal">Odor Removal</option>
                                                 <option value="Area Rug Cleaning">Area Rug Cleaning</option> */}
                                             </Input>
+
                                             <Input
                                                 placeholder="Amount..."
                                                 type="text"
@@ -282,9 +363,26 @@ const RequestQuote = ({ services, products }) => {
                                                 placeholder="Total Cost: $..."
                                                 type="text"
                                                 name='servicetotalcost'
+                                                onChange={(e) =>
+                                                    // handleChange(e)
+                                                    handleChange(e)
+                                                }
                                                 value={service.serviceamount * service.servicecostperquantity}
                                                 readOnly
                                             />
+                                            <Button
+                                                color="danger"
+                                                onClick={() =>
+                                                    setFormData((prevData) => ({
+                                                        ...prevData,
+                                                        services: prevData.services.filter(
+                                                            (service, i) => i !== index
+                                                        )
+                                                    }))
+                                                }
+                                            >
+                                                Remove Service
+                                            </Button>
                                         </InputGroup>
                                     ))}
                                     <Button
@@ -303,13 +401,16 @@ const RequestQuote = ({ services, products }) => {
                                             placeholder='Subtotal Cost: $...'
                                             type='text'
                                             name='subtotalCost'
+                                            onChange={(e) => handleChange(e)}
                                             value={formData.services.reduce((acc, service) => acc + service.serviceamount * service.servicecostperquantity, 0) +
                                                 formData.products.reduce((acc, product) => acc + product.productamount * product.productcostperquantity, 0)}
                                             readOnly
                                         />
-                                                                                <Input
+                                        <Input
                                             placeholder='Tax: $...'
                                             type='text'
+                                            name='tax'
+                                            onChange={(e) => handleChange(e)}
                                             value={(formData.services.reduce((acc, service) => acc + service.serviceamount * service.servicecostperquantity, 0) +
                                                 formData.products.reduce((acc, product) => acc + product.productamount * product.productcostperquantity, 0)) * 0.13}
                                             readOnly
@@ -329,9 +430,18 @@ const RequestQuote = ({ services, products }) => {
                                         <Input
                                             placeholder='Grand Total: $...'
                                             type='text'
+                                            name='grandTotal'
+                                            onChange={() => handleChange(
+                                                {
+                                                    target: {
+                                                        name: 'grandTotal',
+                                                        value: formData.services.reduce((acc, service) => acc + service.serviceamount * service.servicecostperquantity, 0) +
+                                                            formData.products.reduce((acc, product) => acc + product.productamount * product.productcostperquantity, 0) * 1.13                                                            
+                                                }}
+                                            )}
                                             value={formData.services.reduce((acc, service) => acc + service.serviceamount * service.servicecostperquantity, 0) +
-                                                formData.products.reduce((acc, product) => acc + product.productamount * product.productcostperquantity, 0)*1.13}
-                                                // formData.products.reduce((acc, product) => acc + product.productamount * product.productcostperquantity, 0) - formData.discountAmount}
+                                                formData.products.reduce((acc, product) => acc + product.productamount * product.productcostperquantity, 0) * 1.13}
+                                            // formData.products.reduce((acc, product) => acc + product.productamount * product.productcostperquantity, 0) - formData.discountAmount}
                                             readOnly
                                         />
                                         {/* <Input

@@ -3,6 +3,7 @@
   "version": "1.5.2",
   "private": true,
   "dependencies": {
+    "html2pdf.js": "^0.10.1",
     "jwt-decode": "^4.0.0",
     "moment": "2.29.4",
     "nouislider": "15.4.0",
