@@ -23,7 +23,7 @@ const AddService = () => {
                 description: formData.description,
                 serviceCost: formData.serviceCost
             };
-            fetch(`${process.env.PORT}/api/services`, {
+            fetch(`/api/services`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

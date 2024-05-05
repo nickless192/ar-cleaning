@@ -20,6 +20,11 @@ const QuoteSchema = new Schema({
         required: true,
         validate: [isEmail, 'Wrong email format']
     },
+    companyNumber: {
+        type: String,
+        required: true
+    },
+
     phonenumber: {
         type: String,
         required: true
@@ -40,6 +45,18 @@ const QuoteSchema = new Schema({
             ref: 'Service'
         }
     ],
+    subtotalCost: {
+        type: Number,
+        required: true
+    },
+    grandTotal: {
+        type: Number,
+        required: true
+    },
+    tax: {
+        type: Number,
+        required: true
+    },
     createdAt: {
         type: Date,
         default: Date.now(),
