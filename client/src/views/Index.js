@@ -58,8 +58,15 @@ function Index() {
         const localServices = [];
         const localProducts = [];
 
-        fetch('/api/services')
+        fetch('/api/services', {
+          headers : { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+           }
+    
+        })
           .then(response => {
+            console.log(response);
             if (response.ok) {
               response.json()
                 .then(data => {
@@ -84,7 +91,13 @@ function Index() {
             }
           })
 
-          fetch('/api/products')
+          fetch('/api/products', {
+            headers : { 
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+             }
+      
+          })
           .then(response => {
             if (response.ok) {
               response.json()

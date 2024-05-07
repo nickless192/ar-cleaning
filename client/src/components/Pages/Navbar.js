@@ -1,13 +1,13 @@
 import React from "react";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 // reactstrap components
 import {
-    // Button,
+    Button,
     Collapse,
-    // DropdownToggle,
-    // DropdownMenu,
-    // DropdownItem,
-    // UncontrolledDropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem,
+    UncontrolledDropdown,
     NavbarBrand,
     Navbar,
     NavItem,
@@ -66,9 +66,6 @@ function IndexNavbar() {
                             <i className="now-ui-icons arrows-1_share-66 mr-1"></i>
                             <p>Log Out</p>
                         </NavLink>
-                        {/* <UncontrolledTooltip target="#logout-btn">
-            Log out
-          </UncontrolledTooltip> */}
                     </NavItem>
                 </>
             )
@@ -102,7 +99,7 @@ function IndexNavbar() {
     }
     return (
         <>
-            {/* {collapseOpen ? (
+            {collapseOpen ? (
                 <div
                     id="bodyClick"
                     onClick={() => {
@@ -110,7 +107,7 @@ function IndexNavbar() {
                         setCollapseOpen(false);
                     }}
                 />
-            ) : null} */}
+            ) : null}
             <Navbar className={"fixed-top " + navbarColor} expand="lg" color="info">
                 <Container>
                     <div className="navbar-translate">
@@ -120,7 +117,7 @@ function IndexNavbar() {
                         >
                             AR Pro Clean Solutions
                         </NavbarBrand>
-                        {/* <button
+                        <button
                             className="navbar-toggler navbar-toggler"
                             onClick={() => {
                                 document.documentElement.classList.toggle("nav-open");
@@ -132,7 +129,7 @@ function IndexNavbar() {
                             <span className="navbar-toggler-bar top-bar"></span>
                             <span className="navbar-toggler-bar middle-bar"></span>
                             <span className="navbar-toggler-bar bottom-bar"></span>
-                        </button> */}
+                        </button>
                     </div>
                     <Collapse
                         className="justify-content-end"
@@ -184,48 +181,32 @@ function IndexNavbar() {
                                     <p>Request Quote</p>
                                 </NavLink>
                             </NavItem>
-                            {/* <UncontrolledDropdown nav>
-                <DropdownToggle
-                  caret
-                  color="default"
-                  href="#pablo"
-                  nav
-                  onClick={(e) => e.preventDefault()}
-                >
-                  <i className="now-ui-icons design_app mr-1"></i>
-                  <p>Components</p>
-                </DropdownToggle>
-                <DropdownMenu>
-                  <DropdownItem to="/index" tag={Link}>
-                    <i className="now-ui-icons business_chart-pie-36 mr-1"></i>
-                    All components
-                  </DropdownItem>
-                  <DropdownItem
-                    href="https://demos.creative-tim.com/now-ui-kit-react/#/documentation/introduction?ref=nukr-index-navbar"
-                    target="_blank"
-                  >
-                    <i className="now-ui-icons design_bullet-list-67 mr-1"></i>
-                    Documentation
-                  </DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown> */}
+                            <UncontrolledDropdown nav>
+                                <DropdownToggle
+                                    caret
+                                    color="default"
+                                    href="#pablo"
+                                    nav
+                                    onClick={(e) => e.preventDefault()}
+                                >
+                                    <i className="now-ui-icons design_app mr-1"></i>
+                                    <p>Components</p>
+                                </DropdownToggle>
+                                <DropdownMenu>
+                                    <DropdownItem to="/index" tag={Link}>
+                                        <i className="now-ui-icons business_chart-pie-36 mr-1"></i>
+                                        All components
+                                    </DropdownItem>
+                                    <DropdownItem
+                                        href="https://demos.creative-tim.com/now-ui-kit-react/#/documentation/introduction?ref=nukr-index-navbar"
+                                        target="_blank"
+                                    >
+                                        <i className="now-ui-icons design_bullet-list-67 mr-1"></i>
+                                        Documentation
+                                    </DropdownItem>
+                                </DropdownMenu>
+                            </UncontrolledDropdown>
                             {showLogin()}
-                            {/* <NavItem>
-                <Button
-                  className="nav-link btn-neutral"
-                  color="info"
-                  href="/api/logout"
-                  id="logout-btn"
-                  onClick={() => Auth.logout()}
-                  target="_blank"
-                >
-                  <i className="now-ui-icons arrows-1_share-66 mr-1"></i>
-                  <p>Log Out</p>
-                </Button>
-                <UncontrolledTooltip target="#logout-btn">
-                  Log out
-                </UncontrolledTooltip>
-              </NavItem> */}
                             <NavItem>
                                 <NavLink
                                     href="https://www.instagram.com/chelitoMexicanFood"
@@ -235,9 +216,6 @@ function IndexNavbar() {
                                     <i className="fab fa-instagram"></i>
                                     <p className="d-lg-none d-xl-none">Instagram</p>
                                 </NavLink>
-                                <UncontrolledTooltip target="#instagram-tooltip">
-                                    Follow us on Instagram
-                                </UncontrolledTooltip>
                             </NavItem>
                         </Nav>
                     </Collapse>

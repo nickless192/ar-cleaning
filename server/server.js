@@ -7,7 +7,7 @@ require('dotenv').config();
 app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(cors());
+// app.use(cors());
 // setting up middleware for url encoded, json and to serve static files
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
