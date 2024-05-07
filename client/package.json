@@ -2,7 +2,6 @@
   "name": "now-ui-kit-react",
   "version": "1.5.2",
   "private": true,
-  "proxy": "http://localhost:3001",
   "dependencies": {
     "@babel/preset-env": "^7.24.5",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
@@ -55,5 +54,6 @@
     "svgo": "3.0.2",
     "fsevents": "2.3.2",
     "chokidar": "3.5.3"
-  }
+  },
+  "proxy": "http://localhost:3001"
 }

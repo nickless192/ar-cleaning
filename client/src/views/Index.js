@@ -44,99 +44,93 @@ function Index() {
   const [services, setServices] = useState([]);
   const [products, setProducts] = useState([]);
 
-  
-  
-  
   // const [services, setServices] = useState(localServices);
   // console.log(services);
   // setServices(localServices);
-  
-  
+
+
   React.useEffect(() => {
-    
+
     const initializeServices = () => {
-        const localServices = [];
-        const localProducts = [];
+      const localServices = [];
+      const localProducts = [];
 
-        fetch('/api/services', {
-          headers : { 
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-           }
-    
-        })
-          .then(response => {
-            console.log(response);
-            if (response.ok) {
-              response.json()
-                .then(data => {
-                  console.log(data);
-                  for (let i = 0; i < data.length; i++) {
-                    console.log(data[i].name);
-                    localServices.push({ name: data[i].name, id: data[i]._id, serviceCost: data[i].serviceCost });
-                    // setServices(...services, { name: data[i].name, id: data[i]._id, serviceCost: data[i].serviceCost });
-                  }
-                  setServices(localServices);
-                  return localServices;
-    
-                })
-                .then(localServices => {
-                  setServices(localServices);
-                  // console.log(services);
-                  console.log(localServices);
-      
-                },)
-            } else {
-              console.log(response.statusText);
-            }
-          })
-
-          fetch('/api/products', {
-            headers : { 
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-             }
-      
-          })
-          .then(response => {
-            if (response.ok) {
-              response.json()
-                .then(data => {
-                  console.log(data);
-                  for (let i = 0; i < data.length; i++) {
-                    console.log(data[i].name);
-                    localProducts.push({ name: data[i].name, id: data[i]._id, productCost: data[i].productCost });
-                    // setServices(...services, { name: data[i].name, id: data[i]._id, serviceCost: data[i].serviceCost });
-                  }
-                  setProducts(localProducts);
-                  return localProducts;
-    
-                })
-                .then(localProducts => {
-                  setProducts(localProducts);
-                  // console.log(services);
-                  console.log(localProducts);
-      
-                },)
-            } else {
-              console.log(response.statusText);
-            }
-          })
+      fetch(`/api/services`, {
+        method: 'get',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
       }
-      document.body.classList.add("index-page");
-      document.body.classList.add("sidebar-collapse");
-      document.documentElement.classList.remove("nav-open");
-      window.scrollTo(0, 0);
-      document.body.scrollTop = 0;
-      initializeServices();
+      )
+        .then(response => {
+          if (response.ok) {
+            response.json()
+              .then(data => {
+                console.log(data);
+                for (let i = 0; i < data.length; i++) {
+                  console.log(data[i].name);
+                  localServices.push({ name: data[i].name, id: data[i]._id, serviceCost: data[i].serviceCost });
+                  // setServices(...services, { name: data[i].name, id: data[i]._id, serviceCost: data[i].serviceCost });
+                }
+                setServices(localServices);
+                return localServices;
+
+              })
+              .then(localServices => {
+                setServices(localServices);
+                // console.log(services);
+                console.log(localServices);
+
+              },)
+          } else {
+            console.log(response.statusText);
+          }
+        })
+
+      fetch('/api/products', {
+        method: 'get',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      })
+        .then(response => {
+          if (response.ok) {
+            response.json()
+              .then(data => {
+                console.log(data);
+                for (let i = 0; i < data.length; i++) {
+                  console.log(data[i].name);
+                  localProducts.push({ name: data[i].name, id: data[i]._id, productCost: data[i].productCost });
+                  // setServices(...services, { name: data[i].name, id: data[i]._id, serviceCost: data[i].serviceCost });
+                }
+                setProducts(localProducts);
+                return localProducts;
+
+              })
+              .then(localProducts => {
+                setProducts(localProducts);
+                // console.log(services);
+                console.log(localProducts);
+
+              },)
+          } else {
+            console.log(response.statusText);
+          }
+        })
+    }
+    document.body.classList.add("index-page");
+    document.body.classList.add("sidebar-collapse");
+    document.documentElement.classList.remove("nav-open");
+    window.scrollTo(0, 0);
+    document.body.scrollTop = 0;
+    initializeServices();
     return function cleanup() {
       document.body.classList.remove("index-page");
       document.body.classList.remove("sidebar-collapse");
     };
   }, []);
-
-
-
 
   return (
     <>
