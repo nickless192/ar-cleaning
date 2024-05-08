@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const AddService = () => {
+const ManageService = () => {
     const [formData, setFormData] = useState({
         serviceName: '',
         description: '',
@@ -87,4 +87,4 @@ const AddService = () => {
     );
 };
 
-export default AddService;
+export default ManageService;

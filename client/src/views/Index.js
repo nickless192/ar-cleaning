@@ -19,8 +19,8 @@ import RequestQuote from "components/Pages/RequestQuote";
 import ViewQuotes from "components/Pages/ViewQuotes";
 import ProductsAndServices from "components/Pages/ProductsAndServices";
 import AboutUsPage from "components/Pages/AboutUsPage";
-import AddService from "components/Pages/AddService";
-import AddProduct from "components/Pages/AddProduct";
+import ManageService from "components/Pages/ManageService";
+import ManageProduct from "components/Pages/ManageProduct";
 // import { set } from "mongoose";
 
 // sections for this page
@@ -148,19 +148,19 @@ function Index() {
           <Typography />
           <Javascript />
   <Carousel />*/}
-          <NucleoIcons />
+          {/* <NucleoIcons /> */}
           {/*<CompleteExamples />
           <SignUp />
           <Examples />
         <Download /> */}
-          <AddService />
-          <AddProduct />
+          {/* <ManageService />
+          <ManageProduct /> */}
           <RequestQuote
             services={services}
             products={products}
           />
-          <LandingPage />
-          <ViewQuotes />
+          {/* <LandingPage /> */}
+          {/* <ViewQuotes /> */}
           <ProductsAndServices />
           {/* <ProfilePage /> */}
         </div>

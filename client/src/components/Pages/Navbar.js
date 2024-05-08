@@ -45,6 +45,27 @@ function IndexNavbar() {
         if (Auth.loggedIn()) {
             return (
                 <>
+                <NavItem>
+                    <NavLink
+                        // className="nav-link btn-neutral"
+                        // color="info"
+                        href="/manage-service"
+                    >
+                        <i className="now-ui-icons ui-1_settings-gear-63 mr-1"></i>
+                        <p>Manage Services</p>
+                    </NavLink>
+                </NavItem>
+                <NavItem>
+                    <NavLink
+                        // className="nav-link btn-neutral"
+                        // color="info"
+                        href="/manage-product"
+                    >
+                        <i className="now-ui-icons shopping_shop mr-1"></i>
+                        <p>Manage Products</p>
+                    </NavLink>
+                </NavItem>
+
                     <NavItem>
                         <NavLink
                             // className="nav-link btn-neutral"

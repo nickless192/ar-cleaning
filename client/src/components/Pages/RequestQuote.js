@@ -7,12 +7,17 @@ import {
     Input,
     InputGroup,
     InputGroupAddon,
-    InputGroupText
+    InputGroupText,
+    Form, FormGroup, Label
 } from 'reactstrap'; // Importing required components from reactstrap
 
 import html2pdf from 'html2pdf.js'; // Importing html2pdf library
 
 const RequestQuote = ({ services, products }) => {
+
+    const [selectedOptions, setSelectedOptions] = useState([]);
+
+
     const [formData, setFormData] = useState({
         name: '',
         description: '',
@@ -20,6 +25,7 @@ const RequestQuote = ({ services, products }) => {
         email: '',
         phonenumber: '',
         howDidYouHearAboutUs: '',
+        serviceType: '',
         subtotalCost: 0,
         tax: 0,
         // discountCode: '',
@@ -70,6 +76,33 @@ const RequestQuote = ({ services, products }) => {
         }
     }
 
+    // const toggleOption = (productId) => {
+    //     const index = selectedOptions.indexOf(productId);
+    //     if (index === -1) {
+    //         setSelectedOptions([...selectedOptions, productId]);
+    //     } else {
+    //         const newSelectedOptions = [...selectedOptions];
+    //         newSelectedOptions.splice(index, 1);
+    //         setSelectedOptions(newSelectedOptions);
+
+    //         // console.log(selectedOptions.includes(productId));
+    //     }
+    // };
+
+    const toggleOption = (productId) => {
+        if (selectedOptions.includes(productId)) {
+          setSelectedOptions(selectedOptions.filter(id => id !== productId));
+
+          setFormData({ ...formData, products: selectedOptions });
+          console.log(formData);
+        } else {
+          setSelectedOptions([...selectedOptions, productId]);
+
+          setFormData({ ...formData, products: selectedOptions });
+          console.log(formData);
+        }
+      };
+
     const handleProductChange = async (e, index) => {
         const { name, value } = e.target;
         const updatedProducts = [...formData.products];
@@ -102,32 +135,32 @@ const RequestQuote = ({ services, products }) => {
         console.log(formData);
         try {
             // Your fetch logic here
-            // const response = await fetch('http://localhost:3001/api/quotes', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json'
-            //     },
-            //     body: JSON.stringify(formData)
-            // });
-            // if (response.ok) {
-            //     alert('Quote submitted successfully!');
-            //     setFormData({
-            //         name: '',
-            //         description: '',
-            //         email: '',
-            //         phonenumber: '',
-            //         howDidYouHearAboutUs: '',
-            //         subtotalCost: 0,
-            //         tax: 0,
-            //         // discountCode: '',
-            //         // discountAmount: 0,
-            //         grandTotal: 0,
-            //         // paymentMethod: '',        
-            //         services: [],
-            //         products: []
-            //     });
-            // }
-
+            const response = await fetch('/api/quotes', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+            if (response.ok) {
+                alert('Quote submitted successfully!');
+                setFormData({
+                    name: '',
+                    description: '',
+                    email: '',
+                    phonenumber: '',
+                    howDidYouHearAboutUs: '',
+                    subtotalCost: 0,
+                    tax: 0,
+                    serviceType: '',                    
+                    // discountCode: '',
+                    // discountAmount: 0,
+                    grandTotal: 0,
+                    // paymentMethod: '',        
+                    services: [],
+                    products: []
+                });
                 // Generate PDF
                 const element = document.getElementById('quote-form'); // Replace 'quote-form' with the ID of the form element
                 const opt = {
@@ -138,6 +171,8 @@ const RequestQuote = ({ services, products }) => {
                     jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
                 };
                 html2pdf().set(opt).from(element).save(); // Generate and save the PDF
+            }
+
 
 
         } catch (error) {
@@ -243,8 +278,22 @@ const RequestQuote = ({ services, products }) => {
                                 </InputGroup>
                                 {/* Product Selector */}
                                 <div className="product-selector">
+                                    <h5>Select Service Type:</h5>
+                                    <Input
+                                        type="select"
+                                        value={formData.serviceType}
+                                        name='serviceType'
+                                        onChange={(e) => handleChange(e)}
+                                    >
+                                        <option value="">Select Service Type...</option>
+                                        <option value="Residential">Residential</option>
+                                        <option value="Commercial">Commercial</option>
+                                        <option value="Industrial">Industrial</option>
+                                        {/* <option value="Automotive">Automotive</option> */}
+                                        <option value="Other">Other</option>
+                                    </Input>
                                     <h5>Select Products:</h5>
-                                    {formData.products.map((product, index) => (
+                                    {/* {formData.products.map((product, index) => (
                                         <InputGroup key={index}>
                                             <Input
                                                 type="select"
@@ -258,11 +307,7 @@ const RequestQuote = ({ services, products }) => {
                                                         {product.name}
                                                     </option>
                                                 ))}
-                                                {/* <option value="Shampoo">Shampoo</option>
-                                                <option value="Spot Remover">Spot Remover</option>
-                                                <option value="Carpet Deodorizer">Carpet Deodorizer</option>
-                                                <option value="Stain Protector">Stain Protector</option>
-                                                <option value="Carpet Cleaning Machine Rental">Carpet Cleaning Machine Rental</option> */}
+                                                
                                             </Input>
                                             <Input
                                                 placeholder="Amount..."
@@ -301,8 +346,24 @@ const RequestQuote = ({ services, products }) => {
                                                 Remove Product
                                             </Button>
                                         </InputGroup>
+                                    ))} */}
+                                    
+                                    {/* map each product from the array and a checkmark to add them to the quote */}
+                                    {products.map((product) => (
+                                        <FormGroup key={product.id}>
+                                        <Label check for={product.id}>
+                                            <Input
+                                                type="checkbox"
+                                                id={product.id}
+                                                checked={selectedOptions.includes(product.id)}
+                                                onChange={() => toggleOption(product.id)}
+                                            />{' '}
+                                            {product.name}
+                                        </Label>
+                                    </FormGroup>
                                     ))}
-                                    <Button
+                                    
+                                    {/* <Button
                                         color="primary"
                                         onClick={() =>
                                             setFormData((prevData) => ({
@@ -312,14 +373,14 @@ const RequestQuote = ({ services, products }) => {
                                         }
                                     >
                                         Add Product
-                                    </Button>
+                                    </Button> */}
                                 </div>
 
 
                                 {/* Service Selector */}
                                 <div className="service-selector">
                                     <h5>Select Services:</h5>
-                                    {formData.services.map((service, index) => (
+                                    {/* {formData.services.map((service, index) => (
                                         <InputGroup key={index}>
                                             <Input
                                                 type="select"
@@ -333,11 +394,6 @@ const RequestQuote = ({ services, products }) => {
                                                         {service.name}
                                                     </option>
                                                 ))}
-                                                {/* <option value="Deep cleaning">Deep Cleaning</option>
-                                                <option value="Spot cleaning">Spot Cleaning</option>
-                                                <option value="Stain Removal">Stain Removal</option>
-                                                <option value="Odor Removal">Odor Removal</option>
-                                                <option value="Area Rug Cleaning">Area Rug Cleaning</option> */}
                                             </Input>
 
                                             <Input
@@ -384,6 +440,19 @@ const RequestQuote = ({ services, products }) => {
                                                 Remove Service
                                             </Button>
                                         </InputGroup>
+                                    ))} */}
+                                    {services.map((service) => (
+                                        <FormGroup key={service.id}>
+                                        <Label check for={service.id}>
+                                            <Input
+                                                type="checkbox"
+                                                id={service.id}
+                                                checked={selectedOptions.includes(service.id)}
+                                                onChange={() => toggleOption(service.id)}
+                                            />{' '}
+                                            {service.name}
+                                        </Label>
+                                    </FormGroup>
                                     ))}
                                     <Button
                                         color="primary"
@@ -436,8 +505,9 @@ const RequestQuote = ({ services, products }) => {
                                                     target: {
                                                         name: 'grandTotal',
                                                         value: formData.services.reduce((acc, service) => acc + service.serviceamount * service.servicecostperquantity, 0) +
-                                                            formData.products.reduce((acc, product) => acc + product.productamount * product.productcostperquantity, 0) * 1.13                                                            
-                                                }}
+                                                            formData.products.reduce((acc, product) => acc + product.productamount * product.productcostperquantity, 0) * 1.13
+                                                    }
+                                                }
                                             )}
                                             value={formData.services.reduce((acc, service) => acc + service.serviceamount * service.servicecostperquantity, 0) +
                                                 formData.products.reduce((acc, product) => acc + product.productamount * product.productcostperquantity, 0) * 1.13}

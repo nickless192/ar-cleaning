@@ -20,7 +20,7 @@ const QuoteSchema = new Schema({
         required: true,
         validate: [isEmail, 'Wrong email format']
     },
-    companyNumber: {
+    companyName: {
         type: String,
         required: true
     },
@@ -30,6 +30,10 @@ const QuoteSchema = new Schema({
         required: true
     },
     howDidYouHearAboutUs: {
+        type: String,
+        required: true
+    },
+    serviceType: {
         type: String,
         required: true
     },

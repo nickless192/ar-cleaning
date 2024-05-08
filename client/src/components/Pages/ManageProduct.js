@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const AddProduct = () => {
+const ManageProduct = () => {
     const [productData, setProductData] = useState({
         productName: '',
         productDescription: '',
@@ -98,4 +98,4 @@ const AddProduct = () => {
     );
 };
 
-export default AddProduct;
+export default ManageProduct;
