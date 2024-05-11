@@ -34,6 +34,7 @@ import ManageProduct from "components/Pages/ManageProduct";
 // import Javascript from "./index-sections/Javascript.js";
 // import Carousel from "./index-sections/Carousel.js";
 import NucleoIcons from "./index-sections/NucleoIcons.js";
+import { set } from "mongoose";
 // import CompleteExamples from "./index-sections/CompleteExamples.js";
 // import SignUp from "./index-sections/SignUp.js";
 // import Examples from "./index-sections/Examples.js";
@@ -41,8 +42,10 @@ import NucleoIcons from "./index-sections/NucleoIcons.js";
 
 function Index() {
 
-  const [services, setServices] = useState([]);
-  const [products, setProducts] = useState([]);
+  // const [services, setServices] = useState([]);
+  // const [products, setProducts] = useState([]);
+  // const [adminFlag, setAdminFlag] = useState(false);
+  // const adminFlag = localStorage.getItem('adminFlag');
 
   // const [services, setServices] = useState(localServices);
   // console.log(services);
@@ -51,81 +54,83 @@ function Index() {
 
   React.useEffect(() => {
 
-    const initializeServices = () => {
-      const localServices = [];
-      const localProducts = [];
+    // const initializeServices = () => {
+    //   const localServices = [];
+    //   const localProducts = [];
 
-      fetch(`/api/services`, {
-        method: 'get',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }
-      }
-      )
-        .then(response => {
-          if (response.ok) {
-            response.json()
-              .then(data => {
-                console.log(data);
-                for (let i = 0; i < data.length; i++) {
-                  console.log(data[i].name);
-                  localServices.push({ name: data[i].name, id: data[i]._id, serviceCost: data[i].serviceCost });
-                  // setServices(...services, { name: data[i].name, id: data[i]._id, serviceCost: data[i].serviceCost });
-                }
-                setServices(localServices);
-                return localServices;
+    //   fetch(`/api/services`, {
+    //     method: 'get',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       'Accept': 'application/json'
+    //     }
+    //   }
+    //   )
+    //     .then(response => {
+    //       if (response.ok) {
+    //         response.json()
+    //           .then(data => {
+    //             console.log(data);
+    //             for (let i = 0; i < data.length; i++) {
+    //               console.log(data[i].name);
+    //               localServices.push({ name: data[i].name, id: data[i]._id, serviceCost: data[i].serviceCost });
+    //               // setServices(...services, { name: data[i].name, id: data[i]._id, serviceCost: data[i].serviceCost });
+    //             }
+    //             setServices(localServices);
+    //             return localServices;
 
-              })
-              .then(localServices => {
-                setServices(localServices);
-                // console.log(services);
-                console.log(localServices);
+    //           })
+    //           .then(localServices => {
+    //             setServices(localServices);
+    //             // console.log(services);
+    //             console.log(localServices);
 
-              },)
-          } else {
-            console.log(response.statusText);
-          }
-        })
+    //           },)
+    //       } else {
+    //         console.log(response.statusText);
+    //       }
+    //     })
 
-      fetch('/api/products', {
-        method: 'get',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }
-      })
-        .then(response => {
-          if (response.ok) {
-            response.json()
-              .then(data => {
-                console.log(data);
-                for (let i = 0; i < data.length; i++) {
-                  console.log(data[i].name);
-                  localProducts.push({ name: data[i].name, id: data[i]._id, productCost: data[i].productCost });
-                  // setServices(...services, { name: data[i].name, id: data[i]._id, serviceCost: data[i].serviceCost });
-                }
-                setProducts(localProducts);
-                return localProducts;
+    //   fetch('/api/products', {
+    //     method: 'get',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       'Accept': 'application/json'
+    //     }
+    //   })
+    //     .then(response => {
+    //       if (response.ok) {
+    //         response.json()
+    //           .then(data => {
+    //             console.log(data);
+    //             for (let i = 0; i < data.length; i++) {
+    //               console.log(data[i].name);
+    //               localProducts.push({ name: data[i].name, id: data[i]._id, productCost: data[i].productCost });
+    //               // setServices(...services, { name: data[i].name, id: data[i]._id, serviceCost: data[i].serviceCost });
+    //             }
+    //             setProducts(localProducts);
+    //             return localProducts;
 
-              })
-              .then(localProducts => {
-                setProducts(localProducts);
-                // console.log(services);
-                console.log(localProducts);
+    //           })
+    //           .then(localProducts => {
+    //             setProducts(localProducts);
+    //             // console.log(services);
+    //             console.log(localProducts);
 
-              },)
-          } else {
-            console.log(response.statusText);
-          }
-        })
-    }
+    //           },)
+    //       } else {
+    //         console.log(response.statusText);
+    //       }
+    //     })
+
+    //     // setAdminFlag(localStorage.getItem('adminFlag'));
+    // }
     document.body.classList.add("index-page");
     document.body.classList.add("sidebar-collapse");
     document.documentElement.classList.remove("nav-open");
     window.scrollTo(0, 0);
     document.body.scrollTop = 0;
-    initializeServices();
+    // initializeServices();
     return function cleanup() {
       document.body.classList.remove("index-page");
       document.body.classList.remove("sidebar-collapse");
@@ -134,7 +139,7 @@ function Index() {
 
   return (
     <>
-      <Navbar />
+      <Navbar  />
       <div className="wrapper">
         {/* <AboutUs /> */}
         <AboutUsPage />
@@ -156,8 +161,8 @@ function Index() {
           {/* <ManageService />
           <ManageProduct /> */}
           <RequestQuote
-            services={services}
-            products={products}
+            // services={services}
+            // products={products}
           />
           {/* <LandingPage /> */}
           {/* <ViewQuotes /> */}

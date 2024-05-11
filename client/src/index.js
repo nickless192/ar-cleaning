@@ -27,12 +27,13 @@ import "assets/demo/nucleo-icons-page-styles.css?v=1.5.0";
 // pages for this kit
 import Index from "views/Index.js";
 import NucleoIcons from "views/NucleoIcons.js";
-import LoginPage from "views/examples/LoginPage.js";
+import LoginPage from "../src/components/Pages/LoginPage";
 import LandingPage from "views/examples/LandingPage.js";
 import ProfilePage from "views/examples/ProfilePage.js";
 import SignUp from "views/index-sections/SignUp";
 import ManageService from "../src/components/Pages/ManageService";
 import ManageProduct from "../src/components/Pages/ManageProduct";
+import RequestQuote from "../src/components/Pages/RequestQuote";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -47,6 +48,9 @@ root.render(
       <Route path="/manage-product" element={<ManageProduct />} />
       <Route path="/login-page" element={<LoginPage />} />
       <Route path="/signup-page" element={<SignUp />} />
+      <Route path='/request-quote' element={<RequestQuote
+            
+      />} />
       <Route path="/" element={<Navigate to="/index" />} />
 
 

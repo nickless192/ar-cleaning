@@ -12,10 +12,15 @@ import {
 } from 'reactstrap'; // Importing required components from reactstrap
 
 import html2pdf from 'html2pdf.js'; // Importing html2pdf library
+import IndexNavbar from "components/Navbars/IndexNavbar";
+import TransparentFooter from "components/Footers/TransparentFooter";
 
-const RequestQuote = ({ services, products }) => {
+const RequestQuote = () => {
 
     const [selectedOptions, setSelectedOptions] = useState([]);
+
+    const [services, setServices] = useState([]);
+    const [products, setProducts] = useState([]);
 
 
     const [formData, setFormData] = useState({
@@ -180,10 +185,105 @@ const RequestQuote = ({ services, products }) => {
         }
     };
 
+    React.useEffect(() => {
+        const initializeServices = () => {
+            const localServices = [];
+            const localProducts = [];
+      
+            fetch(`/api/services`, {
+              method: 'get',
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+              }
+            }
+            )
+              .then(response => {
+                if (response.ok) {
+                  response.json()
+                    .then(data => {
+                      console.log(data);
+                      for (let i = 0; i < data.length; i++) {
+                        console.log(data[i].name);
+                        localServices.push({ name: data[i].name, id: data[i]._id, serviceCost: data[i].serviceCost });
+                        // setServices(...services, { name: data[i].name, id: data[i]._id, serviceCost: data[i].serviceCost });
+                      }
+                      setServices(localServices);
+                      return localServices;
+      
+                    })
+                    .then(localServices => {
+                      setServices(localServices);
+                      // console.log(services);
+                      console.log(localServices);
+      
+                    },)
+                } else {
+                  console.log(response.statusText);
+                }
+              })
+      
+            fetch('/api/products', {
+              method: 'get',
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+              }
+            })
+              .then(response => {
+                if (response.ok) {
+                  response.json()
+                    .then(data => {
+                      console.log(data);
+                      for (let i = 0; i < data.length; i++) {
+                        console.log(data[i].name);
+                        localProducts.push({ name: data[i].name, id: data[i]._id, productCost: data[i].productCost });
+                        // setServices(...services, { name: data[i].name, id: data[i]._id, serviceCost: data[i].serviceCost });
+                      }
+                      setProducts(localProducts);
+                      return localProducts;
+      
+                    })
+                    .then(localProducts => {
+                      setProducts(localProducts);
+                      // console.log(services);
+                      console.log(localProducts);
+      
+                    },)
+                } else {
+                  console.log(response.statusText);
+                }
+              })
+      
+              // setAdminFlag(localStorage.getItem('adminFlag'));
+          }
+
+          initializeServices();
+          document.body.classList.add("request-quote");
+        document.body.classList.add("sidebar-collapse");
+        document.documentElement.classList.remove("nav-open");
+        window.scrollTo(0, 0);
+        document.body.scrollTop = 0;
+        return function cleanup() {
+          document.body.classList.remove("request-quote");
+          document.body.classList.remove("sidebar-collapse");
+    };
+    }
+    , []);
+
+    
+
     return (
         <>
-            <div className="wrapper">
-                <div className="section section-contact-us text-center">
+        <IndexNavbar />
+            <div className="page-header clear-filter" filter-color="blue">
+            <div
+          className="page-header-image"
+          style={{
+            backgroundImage: "url(" + require("assets/img/login.jpg") + ")"
+          }}
+        ></div>
+                <div className="text-center content">
                     <Container>
                         <h2 className="title">Request a Quote</h2>
                         <p className="description">Please fill out the form below:</p>
@@ -198,9 +298,10 @@ const RequestQuote = ({ services, products }) => {
                                         </InputGroupText>
                                     </InputGroupAddon>
                                     <Input
-                                        placeholder="Your Name..."
+                                        placeholder="Your Name..."                                        
                                         type="text"
-                                        name="name"
+                                        // name="name"
+                                        // // className='whiteBackground'
                                         value={formData.name}
                                         onChange={handleChange}
                                         required
@@ -541,6 +642,7 @@ const RequestQuote = ({ services, products }) => {
                         </Row>
                     </Container>
                 </div>
+                <TransparentFooter />
             </div>
         </>
     );

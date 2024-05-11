@@ -62,7 +62,7 @@ function SignUp() {
             .then(data => {
               console.log(data);
               console.log(data.token);
-              Auth.login(data.token);
+              Auth.login(data);
           });
             // console.log(response2json);
             // fetch('/index');

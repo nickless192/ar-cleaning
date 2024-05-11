@@ -29,6 +29,10 @@ const UserSchema = new Schema({
         type: String,
         required: true
     },
+    adminFlag: {
+        type: Boolean,
+        default: false
+    },
     createdAt: {
         type: Date,
         default: Date.now(),

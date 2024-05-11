@@ -21,6 +21,12 @@ import Auth from "../../utils/auth";
 function IndexNavbar() {
     const [navbarColor, setNavbarColor] = React.useState("navbar-transparent");
     const [collapseOpen, setCollapseOpen] = React.useState(false);
+    // const [adminFlag, setAdminFlag] = React.useState(localStorage.getItem('adminFlag'));
+
+    // setAdminFlag(localStorage.getItem('adminFlag'));
+    // console.log(adminFlag);
+    // console.log(Auth.loggedIn());
+
     React.useEffect(() => {
         const updateNavbarColor = () => {
             if (
@@ -35,37 +41,48 @@ function IndexNavbar() {
                 setNavbarColor("navbar-transparent");
             }
         };
+
+        // const initializeAdminFlag = () => {
+        //     setAdminFlag(localStorage.getItem('adminFlag'));
+        // }
+
+        
         window.addEventListener("scroll", updateNavbarColor);
         return function cleanup() {
+            // initializeAdminFlag();
             window.removeEventListener("scroll", updateNavbarColor);
         };
     });
 
     function showLogin() {
+        // console.log(Auth.getProfile().data.adminFlag);
         if (Auth.loggedIn()) {
             return (
                 <>
-                <NavItem>
-                    <NavLink
-                        // className="nav-link btn-neutral"
-                        // color="info"
-                        href="/manage-service"
-                    >
-                        <i className="now-ui-icons ui-1_settings-gear-63 mr-1"></i>
-                        <p>Manage Services</p>
-                    </NavLink>
-                </NavItem>
-                <NavItem>
-                    <NavLink
-                        // className="nav-link btn-neutral"
-                        // color="info"
-                        href="/manage-product"
-                    >
-                        <i className="now-ui-icons shopping_shop mr-1"></i>
-                        <p>Manage Products</p>
-                    </NavLink>
-                </NavItem>
-
+                {Auth.getProfile().data.adminFlag === true ? (
+                                <NavItem>
+                                    <NavLink
+                                        // className="nav-link btn-neutral"
+                                        // color="info"
+                                        href="/manage-service"
+                                    >
+                                        <i className="now-ui-icons ui-1_settings-gear-63 mr-1"></i>
+                                        <p>Manage Services</p>
+                                    </NavLink>
+                                </NavItem>
+                            ) : console.log("Not an admin")}
+                            {Auth.getProfile().data.adminFlag === true ? (
+                                <NavItem>
+                                    <NavLink
+                                        // className="nav-link btn-neutral"
+                                        // color="info"
+                                        href="/manage-products"
+                                    >
+                                        <i className="now-ui-icons ui-1_settings-gear-63 mr-1"></i>
+                                        <p>Manage Products</p>
+                                    </NavLink>
+                                </NavItem>
+                            ) : null}
                     <NavItem>
                         <NavLink
                             // className="nav-link btn-neutral"
@@ -226,7 +243,7 @@ function IndexNavbar() {
                                         Documentation
                                     </DropdownItem>
                                 </DropdownMenu>
-                            </UncontrolledDropdown>
+                            </UncontrolledDropdown>                            
                             {showLogin()}
                             <NavItem>
                                 <NavLink

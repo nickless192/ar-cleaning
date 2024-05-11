@@ -44,18 +44,18 @@ function LoginPage() {
           'Content-Type': 'application/json',
           // 'Access-Control-Allow-Credentials': 'true',
           // 'accept': 'application/json',
-          // 'Access-Control-Allow-Origin': 'http://localhost:3000'
-          // 'Access-Control-Allow-Origin': '*' 
         }
       })
         .then(response => {
           if (response.ok) {
-            console.log("you're logged!");
+            // console.log("you're logged!");
             response.json()
             .then(data => {
               console.log(data);
-              console.log(data.token);
-              Auth.login(data.token);
+              console.log(data.dbUserData.adminFlag);  
+              Auth.login(data.token, data.dbUserData.adminFlag);
+              
+
           });
             // fetch('/index');
             // document.location.replace('/index');

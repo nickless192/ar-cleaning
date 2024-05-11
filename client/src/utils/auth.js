@@ -27,9 +27,11 @@ class AuthService {
     return localStorage.getItem('id_token');
   }
 
-  login(idToken) {
+  async login(id_token, adminFlag) {
     // Saves user token to localStorage
-    localStorage.setItem('id_token', idToken);
+    console.log(id_token, adminFlag);
+    localStorage.setItem('id_token', id_token);
+    localStorage.setItem('adminFlag', adminFlag);
 
     window.location.assign('/index');
   }
@@ -37,8 +39,9 @@ class AuthService {
   logout() {
     // Clear user token and profile data from localStorage
     localStorage.removeItem('id_token');
+    localStorage.removeItem('adminFlag');
     // this will reload the page and reset the state of the application
-    window.location.assign('/index');
+    // window.location.assign('/index');
   }
 }
 
