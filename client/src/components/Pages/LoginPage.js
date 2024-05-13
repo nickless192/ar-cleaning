@@ -23,23 +23,28 @@ import IndexNavbar from "components/Navbars/IndexNavbar";
 import TransparentFooter from "components/Footers/TransparentFooter.js";
 
 function LoginPage() {
-  const [username, setUsername] = React.useState(false);
-  const [password, setPassword] = React.useState(false);
+  // const [username, setUsername] = React.useState(false);
+  // const [password, setPassword] = React.useState(false);
+
+  const [formData, setFormData] = React.useState({
+    username: "",
+    password: ""
+  });
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
-    if (username && password) {
+    if (formData.username && formData.password) {
       // const response = await 
-      const body = {
-        username: username.username,
-        password: password.password
-      };
+      // const body = {
+      //   username: username.username,
+      //   password: password.password
+      // };
       // console.log(body);
       fetch('/api/users/login/', {
         method: 'post',
         // mode: 'no-cors',
-        body: JSON.stringify(body),
+        body: JSON.stringify(formData),
         headers: {
           'Content-Type': 'application/json',
           // 'Access-Control-Allow-Credentials': 'true',
@@ -54,7 +59,7 @@ function LoginPage() {
               console.log(data);
               console.log(data.dbUserData.adminFlag);  
               Auth.login(data.token, data.dbUserData.adminFlag);
-              
+
 
           });
             // fetch('/index');
@@ -83,21 +88,25 @@ function LoginPage() {
   } 
 
   const handleChange = (event) => {
+    event.preventDefault();
     const { name, value } = event.target;
     // console.log(event.target);
     // console.log(name);
-    if (name === "username") {
-      setUsername({
-        [name]: value
-      })
-    }
-    if (name === "password") {
-      setPassword({
-        [name]: value
-      })
-    }
-    console.log(username.username);
-    console.log(password.password);
+    // if (name === "username") {
+    //   setUsername({
+    //     [name]: value
+    //   })
+    // }
+    // if (name === "password") {
+    //   setPassword({
+    //     [name]: value
+    //   })
+    // }
+    // console.log(username.username);
+    // console.log(password.password);
+    console.log(name, value);
+    console.log(formData);
+    setFormData({ ...formData, [name]: value });
   };
 
 
@@ -139,7 +148,7 @@ function LoginPage() {
                     <InputGroup
                       className={
                         "no-border input-lg" +
-                        (username ? " input-group-focus" : "")
+                        (formData.username ? " input-group-focus" : "")
                       }
                     >
                       <InputGroupAddon addonType="prepend">
@@ -152,13 +161,13 @@ function LoginPage() {
                         type="text"
                         id="username"
                         name="username"
-                        onBlur={(e) => handleChange(e)}
+                        onChange={(e) => handleChange(e)}
                       ></Input>
                     </InputGroup>
                     <InputGroup
                       className={
                         "no-border input-lg" +
-                        (password ? " input-group-focus" : "")
+                        (formData.password ? " input-group-focus" : "")
                       }
                     >
                       <InputGroupAddon addonType="prepend">
@@ -171,7 +180,7 @@ function LoginPage() {
                         type="password"
                         id="password"
                       name="password"
-                        onBlur={(e) => handleChange(e)}
+                        onChange={(e) => handleChange(e)}
                       ></Input>
                     </InputGroup>
                   </CardBody>

@@ -23,29 +23,36 @@ import IndexNavbar from "components/Navbars/IndexNavbar";
 // core components
 
 function SignUp() {
-  const [firstName, setFirstName] = React.useState(false);
-  const [lastName, setLastName] = React.useState(false);
-  const [email, setEmail] = React.useState(false);
-  const [username, setUsername] = React.useState(false);
-  const [password, setPassword] = React.useState(false);
+  // const [firstName, setFirstName] = React.useState(false);
+  // const [lastName, setLastName] = React.useState(false);
+  // const [email, setEmail] = React.useState(false);
+  // const [username, setUsername] = React.useState(false);
+  // const [password, setPassword] = React.useState(false);
+  const [formData, setFormData] = React.useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    username: "",
+    password: ""
+  });
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-
-    if (firstName && lastName && email && username && password) {
+    if (formData.firstName && formData.lastName && formData.email && formData.username && formData.password) {
+    // if (firstName && lastName && email && username && password) {
       // const response = await 
-      const body = {
-        firstName: firstName.firstName,
-        lastName: lastName.lastName,
-        email: email.email,
-        username: username.username,
-        password: password.password
-      };
+      // const body = {
+      //   firstName: firstName.firstName,
+      //   lastName: lastName.lastName,
+      //   email: email.email,
+      //   username: username.username,
+      //   password: password.password
+      // };
       // console.log(body);
       fetch(`/api/users/`, {
         method: 'post',
         // mode: 'no-cors',
-        body: JSON.stringify(body),
+        body: JSON.stringify(formData),
         headers: {
           'Content-Type': 'application/json',
           // 'Access-Control-Allow-Credentials': 'true',
@@ -86,44 +93,47 @@ function SignUp() {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
+    console.log(name, value);
+        console.log(formData);
+        setFormData({ ...formData, [name]: value });
     // console.log(event.target);
     // console.log(name);
-    if (name === "firstName") {
+    // if (name === "firstName") {
 
-      setFirstName({
+    //   setFirstName({
 
-        [name]: value,
-      });
-    }
-    if (name === "lastName") {
+    //     [name]: value,
+    //   });
+    // }
+    // if (name === "lastName") {
 
-      setLastName({
+    //   setLastName({
 
-        [name]: value
-      });
-    }
-    if (name === "email") {
+    //     [name]: value
+    //   });
+    // }
+    // if (name === "email") {
 
-      setEmail({
+    //   setEmail({
 
-        [name]: value
-      });
-    }
-    if (name === "username") {
-      setUsername({
-        [name]: value
-      })
-    }
-    if (name === "password") {
-      setPassword({
-        [name]: value
-      })
-    }
-    console.log(firstName.firstName);
-    console.log(lastName.lastName);
-    console.log(email.email);
-    console.log(username.username);
-    console.log(password.password);
+    //     [name]: value
+    //   });
+    // }
+    // if (name === "username") {
+    //   setUsername({
+    //     [name]: value
+    //   })
+    // }
+    // if (name === "password") {
+    //   setPassword({
+    //     [name]: value
+    //   })
+    // }
+    // console.log(firstName.firstName);
+    // console.log(lastName.lastName);
+    // console.log(email.email);
+    // console.log(username.username);
+    // console.log(password.password);
   };
 
   return (
@@ -177,7 +187,7 @@ function SignUp() {
                 <CardBody>
                   <InputGroup
                     className={
-                      "no-border" + (firstName ? " input-group-focus" : "")
+                      "no-border" + (formData.firstName ? " input-group-focus" : "")
                     }
                   >
                     <InputGroupAddon addonType="prepend">
@@ -191,12 +201,12 @@ function SignUp() {
                       id="firstName"
                       name="firstName"
                       // onFocus={(e) => handleChange(e)}
-                      onBlur={(e) => handleChange(e)}
+                      onChange={(e) => handleChange(e)}
                     ></Input>
                   </InputGroup>
                   <InputGroup
                     className={
-                      "no-border" + (lastName ? " input-group-focus" : "")
+                      "no-border" + (formData.lastName ? " input-group-focus" : "")
                     }
                   >
                     <InputGroupAddon addonType="prepend">
@@ -210,12 +220,12 @@ function SignUp() {
                       id="lastName"
                       name="lastName"
                       // onFocus={(e) => handleChange(e)}
-                      onBlur={(e) => handleChange(e)}
+                      onChange={(e) => handleChange(e)}
                     ></Input>
                   </InputGroup>
                   <InputGroup
                     className={
-                      "no-border" + (email ? " input-group-focus" : "")
+                      "no-border" + (formData.email ? " input-group-focus" : "")
                     }
                   >
                     <InputGroupAddon addonType="prepend">
@@ -229,12 +239,12 @@ function SignUp() {
                       id="email"
                       name="email"
                       // onFocus={(e) => handleChange(e)}
-                      onBlur={(e) => handleChange(e)}
+                      onChange={(e) => handleChange(e)}
                     ></Input>
                   </InputGroup>
                   <InputGroup
                     className={
-                      "no-border" + (username ? " input-group-focus" : "")
+                      "no-border" + (formData.username ? " input-group-focus" : "")
                     }
                   >
                     <InputGroupAddon addonType="prepend">
@@ -248,12 +258,12 @@ function SignUp() {
                       id="username"
                       name="username"
                       // onFocus={(e) => handleChange(e)}
-                      onBlur={(e) => handleChange(e)}
+                      onChange={(e) => handleChange(e)}
                     ></Input>
                   </InputGroup>
                   <InputGroup
                     className={
-                      "no-border" + (password ? " input-group-focus" : "")
+                      "no-border" + (formData.password ? " input-group-focus" : "")
                     }
                   >
                     <InputGroupAddon addonType="prepend">
@@ -267,7 +277,7 @@ function SignUp() {
                       id="password"
                       name="password"
                       // onFocus={(e) => handleChange(e)}
-                      onBlur={(e) => handleChange(e)}
+                      onChange={(e) => handleChange(e)}
                     ></Input>
                   </InputGroup>
                 </CardBody>

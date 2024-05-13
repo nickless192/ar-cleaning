@@ -160,10 +160,10 @@ function Index() {
         <Download /> */}
           {/* <ManageService />
           <ManageProduct /> */}
-          <RequestQuote
+          {/* <RequestQuote
             // services={services}
             // products={products}
-          />
+          /> */}
           {/* <LandingPage /> */}
           {/* <ViewQuotes /> */}
           <ProductsAndServices />
