@@ -5,7 +5,7 @@ router.get('/index', (req, res) => {
     res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
   });
 
-  router.get('request-quote', (req, res) => {
+  router.get('/request-quote', (req, res) => {
     res.render('request-quote');
     // res.sendFile(path.join(__dirname, '../client/src/components/Pages', 'index.html'));
   });
