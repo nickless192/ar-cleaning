@@ -51,38 +51,38 @@ const RequestQuote = () => {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleProductCost = (e, index) => {
-        const { value } = e.target;
-        const updatedProducts = [...formData.products];
-        // console.log(value);
-        // console.log(updatedProducts);
-        // fetch(`http://localhost:3001/api/services/?name=Deep%20cleaning`)
+    // const handleProductCost = (e, index) => {
+    //     const { value } = e.target;
+    //     const updatedProducts = [...formData.products];
+    //     // console.log(value);
+    //     // console.log(updatedProducts);
+    //     // fetch(`http://localhost:3001/api/services/?name=Deep%20cleaning`)
 
-        for (let i = 0; i < products.length; i++) {
-            if (products[i].name === value) {
-                // console.log(updatedProducts[index])
-                // console.log(products[i].productCost);
-                updatedProducts[index].productcostperquantity = products[i].productCost;
-                setFormData({ ...formData, products: updatedProducts });
-                return;
-            }
-        }
-    }
+    //     for (let i = 0; i < products.length; i++) {
+    //         if (products[i].name === value) {
+    //             // console.log(updatedProducts[index])
+    //             // console.log(products[i].productCost);
+    //             updatedProducts[index].productcostperquantity = products[i].productCost;
+    //             setFormData({ ...formData, products: updatedProducts });
+    //             return;
+    //         }
+    //     }
+    // }
 
-    const handleServiceCost = (e, index) => {
-        const { value } = e.target;
-        const updatedServices = [...formData.services];
-        // console.log(value);
-        // fetch(`http://localhost:3001/api/services/?name=Deep%20cleaning`)
+    // const handleServiceCost = (e, index) => {
+    //     const { value } = e.target;
+    //     const updatedServices = [...formData.services];
+    //     // console.log(value);
+    //     // fetch(`http://localhost:3001/api/services/?name=Deep%20cleaning`)
 
-        for (let i = 0; i < services.length; i++) {
-            if (services[i].name === value) {
-                updatedServices[index].servicecostperquantity = services[i].serviceCost;
-                setFormData({ ...formData, services: updatedServices });
-                return;
-            }
-        }
-    }
+    //     for (let i = 0; i < services.length; i++) {
+    //         if (services[i].name === value) {
+    //             updatedServices[index].servicecostperquantity = services[i].serviceCost;
+    //             setFormData({ ...formData, services: updatedServices });
+    //             return;
+    //         }
+    //     }
+    // }
 
     // const toggleOption = (productId) => {
     //     const index = selectedOptions.indexOf(productId);
@@ -121,32 +121,32 @@ const RequestQuote = () => {
         setFormData({ ...formData, services: updatedServices });
     };
 
-    const handleProductChange = async (e, index) => {
-        const { name, value } = e.target;
-        const updatedProducts = [...formData.products];
-        if (name === 'product') {
-            // retrieve cost from API call
-            handleProductCost(e, index);
-        }
+    // const handleProductChange = async (e, index) => {
+    //     const { name, value } = e.target;
+    //     const updatedProducts = [...formData.products];
+    //     if (name === 'product') {
+    //         // retrieve cost from API call
+    //         handleProductCost(e, index);
+    //     }
 
-        // console.log(updatedProducts); 
-        updatedProducts[index][name] = value;
-        setFormData({ ...formData, products: updatedProducts });
-    };
+    //     // console.log(updatedProducts); 
+    //     updatedProducts[index][name] = value;
+    //     setFormData({ ...formData, products: updatedProducts });
+    // };
 
-    const handleServiceChange = async (e, index) => {
-        const { name, value } = e.target;
-        const updatedServices = [...formData.services];
-        // console.log(updatedServices);
-        // retrieve cost from API call
-        if (name === 'service') {
-            handleServiceCost(e, index);
-        }
-        // console.log(value);
-        // updatedServices[index].service = value;
-        updatedServices[index][name] = value;
-        setFormData({ ...formData, services: updatedServices });
-    };
+    // const handleServiceChange = async (e, index) => {
+    //     const { name, value } = e.target;
+    //     const updatedServices = [...formData.services];
+    //     // console.log(updatedServices);
+    //     // retrieve cost from API call
+    //     if (name === 'service') {
+    //         handleServiceCost(e, index);
+    //     }
+    //     // console.log(value);
+    //     // updatedServices[index].service = value;
+    //     updatedServices[index][name] = value;
+    //     setFormData({ ...formData, services: updatedServices });
+    // };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -304,135 +304,137 @@ const RequestQuote = () => {
                         backgroundImage: "url(" + require("assets/img/login.jpg") + ")"
                     }}
                 ></div>
-                <Container>
-                    <h2 className="title">Request a Quote</h2>
-                    <p className="description">Please fill out the form below:</p>
-                    <Row>
-                        <Col className="text-center ml-auto mr-auto" lg="6" md="8"
-                            id='quote-form'
-                        >
-                            <InputGroup className={
-                                "no-border" + (formData.name ? " input-group-focus" : "")
-                            }>
-                                <InputGroupAddon addonType="prepend">
-                                    <InputGroupText>
-                                        <i className="now-ui-icons users_circle-08"></i>
-                                    </InputGroupText>
-                                </InputGroupAddon>
-                                <Input
-                                    placeholder="Your Name..."
-                                    type="text"
-                                    // className='input-group-text'
-                                    // color='light'
-                                    name="name"
-                                    // className='input-lg'
-                                    value={formData.name}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </InputGroup>
-                            <InputGroup className={
-                                "no-border" + (formData.companyName ? " input-group-focus" : "")
-                            }>
-                                <InputGroupAddon addonType="prepend">
-                                    <InputGroupText>
-                                        <i className="now-ui-icons shopping_shop"></i>
-                                    </InputGroupText>
-                                </InputGroupAddon>
-                                <Input
-                                    placeholder="Your Company Name..."
-                                    type="text"
-                                    name="companyName"
-                                    value={formData.companyName}
-                                    onChange={handleChange}
-                                />
-                            </InputGroup>
-                            <InputGroup className={
-                                "no-border" + (formData.email ? " input-group-focus" : "")
-                            }>
-                                <InputGroupAddon addonType="prepend">
-                                    <InputGroupText>
-                                        <i className="now-ui-icons ui-1_email-85"></i>
-                                    </InputGroupText>
-                                </InputGroupAddon>
-                                <Input
-                                    placeholder="Your Email..."
-                                    type="email"
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </InputGroup>
-                            <InputGroup className={
-                                "no-border" + (formData.phonenumber ? " input-group-focus" : "")
-                            }>
-                                <InputGroupAddon addonType="prepend">
-                                    <InputGroupText>
-                                        <i className="now-ui-icons tech_headphones"></i>
-                                    </InputGroupText>
-                                </InputGroupAddon>
-                                <Input
-                                    placeholder="Your Phone Number..."
-                                    type="phonenumber"
-                                    name="phonenumber"
-                                    value={formData.phonenumber}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </InputGroup>
-                            <InputGroup className={
-                                "no-border" + (formData.description ? " input-group-focus" : "")
-                            }>
-                                <Input
-                                    cols="80"
-                                    name="description"
-                                    placeholder="Message..."
-                                    rows="4"
-                                    type="textarea"
-                                    value={formData.description}
-                                    onChange={handleChange}
-                                />
-                            </InputGroup>
-                            <InputGroup className={
-                                "no-border" + (formData.howDidYouHearAboutUs ? " input-group-focus" : "")
-                            }>
-                                <Input
-                                    type="select"
-                                    value={formData.howDidYouHearAboutUs}
-                                    name='howDidYouHearAboutUs'
-                                    onChange={(e) => handleChange(e)}
+                <div className="content">
+                    <Form onSubmit={(e) => handleSubmit(e)} className='form'>
+                        <Container>
+                            <h2 className="title">Request a Quote</h2>
+                            <p className="description">Please fill out the form below:</p>
+                            <Row>
+                                <Col className="text-center ml-auto mr-auto" lg="6" md="8"
+                                    id='quote-form'
                                 >
-                                    <option value="">How Did You Hear About Us?...</option>
-                                    <option value="Google">Google</option>
-                                    <option value="Facebook">Facebook</option>
-                                    <option value="Instagram">Instagram</option>
-                                    <option value="Referral">Referral</option>
-                                    <option value="Other">Other</option>
-                                </Input>
-                            </InputGroup>
-                            <InputGroup className={
-                                "no-border" + (formData.serviceType ? " input-group-focus" : "")
-                            }>
-                                {/* <h5>Select Service Type:</h5> */}
-                                <Input
-                                    type="select"
-                                    value={formData.serviceType}
-                                    name='serviceType'
-                                    onChange={(e) => handleChange(e)}
-                                >
-                                    <option value="">Select Service Type...</option>
-                                    <option value="Residential">Residential</option>
-                                    <option value="Commercial">Commercial</option>
-                                    <option value="Industrial">Industrial</option>
-                                    {/* <option value="Automotive">Automotive</option> */}
-                                    <option value="Other">Other</option>
-                                </Input>
-                            </InputGroup>
-                            {/* Product Selector */}
-                            <div className='product-selector'>
-                                <h5>Select Products:</h5>
-                                {/* {formData.products.map((product, index) => (
+                                    <InputGroup className={
+                                        "no-border" + (formData.name ? " input-group-focus" : "")
+                                    }>
+                                        <InputGroupAddon addonType="prepend">
+                                            <InputGroupText>
+                                                <i className="now-ui-icons users_circle-08"></i>
+                                            </InputGroupText>
+                                        </InputGroupAddon>
+                                        <Input
+                                            placeholder="Your Name..."
+                                            type="text"
+                                            // className='input-group-text'
+                                            // color='light'
+                                            name="name"
+                                            // className='input-lg'
+                                            value={formData.name}
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                    </InputGroup>
+                                    <InputGroup className={
+                                        "no-border" + (formData.companyName ? " input-group-focus" : "")
+                                    }>
+                                        <InputGroupAddon addonType="prepend">
+                                            <InputGroupText>
+                                                <i className="now-ui-icons shopping_shop"></i>
+                                            </InputGroupText>
+                                        </InputGroupAddon>
+                                        <Input
+                                            placeholder="Your Company Name..."
+                                            type="text"
+                                            name="companyName"
+                                            value={formData.companyName}
+                                            onChange={handleChange}
+                                        />
+                                    </InputGroup>
+                                    <InputGroup className={
+                                        "no-border" + (formData.email ? " input-group-focus" : "")
+                                    }>
+                                        <InputGroupAddon addonType="prepend">
+                                            <InputGroupText>
+                                                <i className="now-ui-icons ui-1_email-85"></i>
+                                            </InputGroupText>
+                                        </InputGroupAddon>
+                                        <Input
+                                            placeholder="Your Email..."
+                                            type="email"
+                                            name="email"
+                                            value={formData.email}
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                    </InputGroup>
+                                    <InputGroup className={
+                                        "no-border" + (formData.phonenumber ? " input-group-focus" : "")
+                                    }>
+                                        <InputGroupAddon addonType="prepend">
+                                            <InputGroupText>
+                                                <i className="now-ui-icons tech_headphones"></i>
+                                            </InputGroupText>
+                                        </InputGroupAddon>
+                                        <Input
+                                            placeholder="Your Phone Number..."
+                                            type="phonenumber"
+                                            name="phonenumber"
+                                            value={formData.phonenumber}
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                    </InputGroup>
+                                    <InputGroup className={
+                                        "no-border" + (formData.description ? " input-group-focus" : "")
+                                    }>
+                                        <Input
+                                            cols="80"
+                                            name="description"
+                                            placeholder="Message..."
+                                            rows="4"
+                                            type="textarea"
+                                            value={formData.description}
+                                            onChange={handleChange}
+                                        />
+                                    </InputGroup>
+                                    <InputGroup className={
+                                        "no-border" + (formData.howDidYouHearAboutUs ? " input-group-focus" : "")
+                                    }>
+                                        <Input
+                                            type="select"
+                                            value={formData.howDidYouHearAboutUs}
+                                            name='howDidYouHearAboutUs'
+                                            onChange={(e) => handleChange(e)}
+                                        >
+                                            <option value="">How Did You Hear About Us?...</option>
+                                            <option value="Google">Google</option>
+                                            <option value="Facebook">Facebook</option>
+                                            <option value="Instagram">Instagram</option>
+                                            <option value="Referral">Referral</option>
+                                            <option value="Other">Other</option>
+                                        </Input>
+                                    </InputGroup>
+                                    <InputGroup className={
+                                        "no-border" + (formData.serviceType ? " input-group-focus" : "")
+                                    }>
+                                        {/* <h5>Select Service Type:</h5> */}
+                                        <Input
+                                            type="select"
+                                            value={formData.serviceType}
+                                            name='serviceType'
+                                            onChange={(e) => handleChange(e)}
+                                        >
+                                            <option value="">Select Service Type...</option>
+                                            <option value="Residential">Residential</option>
+                                            <option value="Commercial">Commercial</option>
+                                            <option value="Industrial">Industrial</option>
+                                            {/* <option value="Automotive">Automotive</option> */}
+                                            <option value="Other">Other</option>
+                                        </Input>
+                                    </InputGroup>
+                                    {/* Product Selector */}
+                                    <div className='product-selector'>
+                                        <h5>Select Products:</h5>
+                                        {/* {formData.products.map((product, index) => (
                                         <InputGroup key={index}>
                                             <Input
                                                 type="select"
@@ -487,28 +489,28 @@ const RequestQuote = () => {
                                         </InputGroup>
                                     ))} */}
 
-                                {/* map each product from the array and a checkmark to add them to the quote */}
-                                <Row>
-                                    {products.map((product) => (
-                                        <Col>
-                                            <FormGroup key={product.id}>
+                                        {/* map each product from the array and a checkmark to add them to the quote */}
+                                        <Row>
+                                            {products.map((product) => (
+                                                <Col>
+                                                    <FormGroup key={product.id}>
 
-                                                <Label check for={product.id}>
-                                                    <Input
-                                                        type="checkbox"
-                                                        id={product.id}
-                                                        checked={formData.products.includes(product)}
-                                                        onChange={(e) => toggleProduct(e, product)}
-                                                    />{' '}
-                                                    {product.name}
-                                                </Label>
+                                                        <Label check for={product.id}>
+                                                            <Input
+                                                                type="checkbox"
+                                                                id={product.id}
+                                                                checked={formData.products.includes(product)}
+                                                                onChange={(e) => toggleProduct(e, product)}
+                                                            />{' '}
+                                                            {product.name}
+                                                        </Label>
 
-                                            </FormGroup>
-                                        </Col>
-                                    ))}
-                                </Row>
+                                                    </FormGroup>
+                                                </Col>
+                                            ))}
+                                        </Row>
 
-                                {/* <Button
+                                        {/* <Button
                                         color="primary"
                                         onClick={() =>
                                             setFormData((prevData) => ({
@@ -519,13 +521,13 @@ const RequestQuote = () => {
                                     >
                                         Add Product
                                     </Button> */}
-                            </div>
+                                    </div>
 
 
-                            {/* Service Selector */}
-                            <div className="service-selector">
-                                <h5>Select Services:</h5>
-                                {/* {formData.services.map((service, index) => (
+                                    {/* Service Selector */}
+                                    <div className="service-selector">
+                                        <h5>Select Services:</h5>
+                                        {/* {formData.services.map((service, index) => (
                                         <InputGroup key={index}>
                                             <Input
                                                 type="select"
@@ -586,25 +588,25 @@ const RequestQuote = () => {
                                             </Button>
                                         </InputGroup>
                                     ))} */}
-                                <Row>
+                                        <Row>
 
-                                    {services.map((service) => (
-                                        <Col>
-                                            <FormGroup key={service.id}>
-                                                <Label check for={service.id}>
-                                                    <Input
-                                                        type="checkbox"
-                                                        id={service.id}
-                                                        checked={formData.services.includes(service)}
-                                                        onChange={(e) => toogleService(e,service)}
-                                                    />{' '}
-                                                    {service.name}
-                                                </Label>
-                                            </FormGroup>
-                                        </Col>
-                                    ))}
-                                </Row>
-                                {/* <Button
+                                            {services.map((service) => (
+                                                <Col>
+                                                    <FormGroup key={service.id}>
+                                                        <Label check for={service.id}>
+                                                            <Input
+                                                                type="checkbox"
+                                                                id={service.id}
+                                                                checked={formData.services.includes(service)}
+                                                                onChange={(e) => toogleService(e, service)}
+                                                            />{' '}
+                                                            {service.name}
+                                                        </Label>
+                                                    </FormGroup>
+                                                </Col>
+                                            ))}
+                                        </Row>
+                                        {/* <Button
                                     color="primary"
                                     onClick={() =>
                                         setFormData((prevData) => ({
@@ -615,26 +617,26 @@ const RequestQuote = () => {
                                 >
                                     Add Service
                                 </Button> */}
-                                <InputGroup>
-                                    <Input
-                                        placeholder='Subtotal Cost: $...'
-                                        type='text'
-                                        name='subtotalCost'
-                                        onChange={(e) => handleChange(e)}
-                                        value={formData.services.reduce((acc, service) => acc + service.serviceCost, 0) +
-                                            formData.products.reduce((acc, product) => acc + product.productCost, 0)}
-                                        readOnly
-                                    />
-                                    <Input
-                                        placeholder='Tax: $...'
-                                        type='text'
-                                        name='tax'
-                                        onChange={(e) => handleChange(e)}
-                                        value={(formData.services.reduce((acc, service) => acc + service.serviceCost, 0) +
-                                            formData.products.reduce((acc, product) => acc + product.productCost, 0)) * 0.13}
-                                        readOnly
-                                    />
-                                    {/* <Input
+                                        <InputGroup>
+                                            <Input
+                                                placeholder='Subtotal Cost: $...'
+                                                type='text'
+                                                name='subtotalCost'
+                                                onChange={(e) => handleChange(e)}
+                                                value={formData.services.reduce((acc, service) => acc + service.serviceCost, 0) +
+                                                    formData.products.reduce((acc, product) => acc + product.productCost, 0)}
+                                                readOnly
+                                            />
+                                            <Input
+                                                placeholder='Tax: $...'
+                                                type='text'
+                                                name='tax'
+                                                onChange={(e) => handleChange(e)}
+                                                value={(formData.services.reduce((acc, service) => acc + service.serviceCost, 0) +
+                                                    formData.products.reduce((acc, product) => acc + product.productCost, 0)) * 0.13}
+                                                readOnly
+                                            />
+                                            {/* <Input
                                             placeholder='Discount Code'
                                             type='text'
                                             value={formData.discountCode}
@@ -646,7 +648,7 @@ const RequestQuote = () => {
                                             value={formData.discountAmount}
                                             readOnly
                                         /> */}
-                                    {/* <Input
+                                            {/* <Input
                                         placeholder='Grand Total: $...'
                                         type='text'
                                         name='grandTotal'
@@ -664,7 +666,7 @@ const RequestQuote = () => {
                                         // formData.products.reduce((acc, product) => acc + product.productamount * product.productcostperquantity, 0) - formData.discountAmount}
                                         readOnly
                                     /> */}
-                                    {/* <Input
+                                            {/* <Input
                                             placeholder='Payment Method'
                                             type='select'
                                             value={formData.paymentMethod}
@@ -673,23 +675,27 @@ const RequestQuote = () => {
                                         /> */}
 
 
-                                </InputGroup>
-                            </div>
-                            <div className="send-button">
-                                <Button
-                                    block
-                                    className="btn-round"
-                                    color="info"
-                                    type="submit"
-                                    size="lg"
-                                    onClick={handleSubmit}
-                                >
-                                    Submit
-                                </Button>
-                            </div>
-                        </Col>
-                    </Row>
-                </Container>
+                                        </InputGroup>
+                                    </div>
+                                    <div className="send-button">
+                                        <Button
+                                            block
+                                            className="btn-round"
+                                            color="info"
+                                            type="submit"
+                                            size="lg"
+                                        // onClick={handleSubmit}
+                                        >
+                                            Submit
+                                        </Button>
+                                    </div>
+                                </Col>
+                            </Row>
+                        </Container>
+                    </Form>
+                </div>
+
+
                 {/* <div className="content">
                 </div> */}
                 <div className="footer register-footer text-center">

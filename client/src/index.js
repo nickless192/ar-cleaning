@@ -30,7 +30,7 @@ import NucleoIcons from "views/NucleoIcons.js";
 import LoginPage from "../src/components/Pages/LoginPage";
 import LandingPage from "views/examples/LandingPage.js";
 import ProfilePage from "views/examples/ProfilePage.js";
-import SignUp from "views/index-sections/SignUp";
+import SignUp from "../src/components/Pages/SignUp";
 import ManageService from "../src/components/Pages/ManageService";
 import ManageProduct from "../src/components/Pages/ManageProduct";
 import RequestQuote from "../src/components/Pages/RequestQuote";

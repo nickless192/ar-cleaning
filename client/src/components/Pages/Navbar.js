@@ -76,7 +76,7 @@ function IndexNavbar() {
                                     <NavLink
                                         // className="nav-link btn-neutral"
                                         // color="info"
-                                        href="/manage-products"
+                                        href="/manage-product"
                                     >
                                         <i className="now-ui-icons ui-1_settings-gear-63 mr-1"></i>
                                         <p>Manage Products</p>

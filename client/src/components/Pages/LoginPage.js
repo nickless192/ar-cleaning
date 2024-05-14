@@ -118,7 +118,7 @@ function LoginPage() {
     document.body.scrollTop = 0;
     return function cleanup() {
       document.body.classList.remove("login-page");
-      document.body.classList.remove("sidebar-collapse");
+      document.body.classList.remove("sidebar-collapse");      
     };
   }, []);
   return (
@@ -135,7 +135,7 @@ function LoginPage() {
           <Container>
             <Col className="ml-auto mr-auto" md="4">
               <Card className="card-login card-plain">
-                <Form action="" className="form" method="">
+                <Form onSubmit={(e) => handleFormSubmit(e)} className="form">
                   <CardHeader className="text-center">
                     <div className="logo-container">
                       <img
@@ -188,9 +188,10 @@ function LoginPage() {
                     <Button
                       block
                       className="btn-round"
+                      type="submit"
                       color="info"
-                      href="#pablo"
-                      onClick={(e) => handleFormSubmit(e)}
+                      // onClick={(e) => handleFormSubmit(e)}
+                      // onSubmit={(e) => handleFormSubmit(e)}
                       size="lg"
                     >
                       Get Started

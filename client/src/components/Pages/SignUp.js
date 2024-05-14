@@ -68,8 +68,7 @@ function SignUp() {
             response.json()
             .then(data => {
               console.log(data);
-              console.log(data.token);
-              Auth.login(data);
+              Auth.login(data.token, data.dbUserData.adminFlag);
           });
             // console.log(response2json);
             // fetch('/index');
@@ -92,6 +91,7 @@ function SignUp() {
   }
 
   const handleChange = (event) => {
+    event.preventDefault();
     const { name, value } = event.target;
     console.log(name, value);
         console.log(formData);
@@ -151,7 +151,7 @@ function SignUp() {
         <Container>
           <Row>
             <Card className="card-signup" data-background-color="blue">
-              <Form action="" className="form" method="">
+              <Form className="form" onSubmit={(e) => handleFormSubmit(e)}>
                 <CardHeader className="text-center">
                   <CardTitle className="title-up" tag="h3">
                     Sign Up
@@ -285,8 +285,8 @@ function SignUp() {
                   <Button
                     className="btn-neutral btn-round"
                     color="info"
-                    href="#pablo"
-                    onClick={(e) => handleFormSubmit(e)}
+                    type="submit"
+                    // onClick={(e) => handleFormSubmit(e)}
                     size="lg"
                   >
                     Get Started
