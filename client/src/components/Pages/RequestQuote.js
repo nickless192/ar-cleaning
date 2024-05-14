@@ -97,20 +97,28 @@ const RequestQuote = () => {
     //     }
     // };
 
-    const toggleOption = (e, productId) => {
+    const toggleProduct = (e, product) => {
         // e.preventDefault();
         console.log(selectedOptions);
-        if (selectedOptions.includes(productId)) {
-            setSelectedOptions(selectedOptions.filter(id => id !== productId));
-
-            setFormData({ ...formData, products: selectedOptions });
-            console.log(formData);
+        const updatedProducts = [...formData.products];
+        if (updatedProducts.includes(product)) {
+            updatedProducts.pop(product);
+            console.log('product removed');
         } else {
-            setSelectedOptions([...selectedOptions, productId]);
-
-            setFormData({ ...formData, products: selectedOptions });
-            console.log(formData);
+            updatedProducts.push(product);
+            console.log('product added');
         }
+        setFormData({ ...formData, products: updatedProducts });
+    };
+
+    const toogleService = (e, service) => {
+        const updatedServices = [...formData.services];
+        if (updatedServices.includes(service)) {
+            updatedServices.pop(service);
+        } else {
+            updatedServices.push(service);
+        }
+        setFormData({ ...formData, services: updatedServices });
     };
 
     const handleProductChange = async (e, index) => {
@@ -489,8 +497,8 @@ const RequestQuote = () => {
                                                     <Input
                                                         type="checkbox"
                                                         id={product.id}
-                                                        checked={selectedOptions.includes(product.id)}
-                                                        onChange={(e) => toggleOption(e, product.id)}
+                                                        checked={formData.products.includes(product)}
+                                                        onChange={(e) => toggleProduct(e, product)}
                                                     />{' '}
                                                     {product.name}
                                                 </Label>
@@ -587,8 +595,8 @@ const RequestQuote = () => {
                                                     <Input
                                                         type="checkbox"
                                                         id={service.id}
-                                                        checked={selectedOptions.includes(service.id)}
-                                                        onChange={(e) => toggleOption(e,service.id)}
+                                                        checked={formData.services.includes(service)}
+                                                        onChange={(e) => toogleService(e,service)}
                                                     />{' '}
                                                     {service.name}
                                                 </Label>
@@ -608,13 +616,13 @@ const RequestQuote = () => {
                                     Add Service
                                 </Button> */}
                                 <InputGroup>
-                                    {/* <Input
+                                    <Input
                                         placeholder='Subtotal Cost: $...'
                                         type='text'
                                         name='subtotalCost'
                                         onChange={(e) => handleChange(e)}
-                                        value={formData.services.reduce((acc, service) => acc + service.serviceamount * service.servicecostperquantity, 0) +
-                                            formData.products.reduce((acc, product) => acc + product.productamount * product.productcostperquantity, 0)}
+                                        value={formData.services.reduce((acc, service) => acc + service.serviceCost, 0) +
+                                            formData.products.reduce((acc, product) => acc + product.productCost, 0)}
                                         readOnly
                                     />
                                     <Input
@@ -622,10 +630,10 @@ const RequestQuote = () => {
                                         type='text'
                                         name='tax'
                                         onChange={(e) => handleChange(e)}
-                                        value={(formData.services.reduce((acc, service) => acc + service.serviceamount * service.servicecostperquantity, 0) +
-                                            formData.products.reduce((acc, product) => acc + product.productamount * product.productcostperquantity, 0)) * 0.13}
+                                        value={(formData.services.reduce((acc, service) => acc + service.serviceCost, 0) +
+                                            formData.products.reduce((acc, product) => acc + product.productCost, 0)) * 0.13}
                                         readOnly
-                                    /> */}
+                                    />
                                     {/* <Input
                                             placeholder='Discount Code'
                                             type='text'
