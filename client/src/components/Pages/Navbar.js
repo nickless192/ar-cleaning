@@ -213,11 +213,12 @@ function IndexNavbar() {
                                 <NavLink
                                     // className="nav-link btn-neutral"
                                     // color="info"
-                                    to="/request-quote"
+                                    href="/request-quote"
                                 >
                                     <i className="now-ui-icons design-2_ruler-pencil mr-1"></i>
                                     <p>Request Quote</p>
                                 </NavLink>
+                                
                             </NavItem>
                             <UncontrolledDropdown nav>
                                 <DropdownToggle
