@@ -153,7 +153,9 @@ const RequestQuote = () => {
         console.log(formData);
         try {
             // Your fetch logic here
-            if ((formData.services.length !== 0 || formData.products.length !== 0) && formData.serviceType !== '' && formData.name !== '' && formData.email !== '' && formData.phonenumber !== '' && formData.howDidYouHearAboutUs !== '' && formData.description !== '' && formData.companyName !== '') {
+            if (formData.serviceType !== '' && formData.name !== '' && formData.email !== '' && formData.phonenumber !== '' && formData.howDidYouHearAboutUs !== '' && formData.description !== '' && formData.companyName !== '') {
+            
+            // if ((formData.services.length !== 0 || formData.products.length !== 0) && formData.serviceType !== '' && formData.name !== '' && formData.email !== '' && formData.phonenumber !== '' && formData.howDidYouHearAboutUs !== '' && formData.description !== '' && formData.companyName !== '') {
                 const response = await fetch('/api/quotes', {
                     method: 'POST',
                     headers: {
@@ -182,16 +184,31 @@ const RequestQuote = () => {
                         services: [],
                         products: selectedOptions
                     });
-                    // Generate PDF
-                    const element = document.getElementById('quote-form'); // Replace 'quote-form' with the ID of the form element
-                    const opt = {
-                        margin: 0.5,
-                        filename: 'quote.pdf', // parametarize the filename with the quote ID
-                        image: { type: 'jpeg', quality: 0.98 },
-                        html2canvas: { scale: 2 },
-                        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-                    };
-                    html2pdf().set(opt).from(element).save(); // Generate and save the PDF
+                    // // Generate PDF
+                    // const element = document.getElementById('quote-form'); // Replace 'quote-form' with the ID of the form element
+                    // const opt = {
+                    //     margin: 0.5,
+                    //     filename: 'quote.pdf', // parametarize the filename with the quote ID
+                    //     image: { type: 'jpeg', quality: 0.98 },
+                    //     html2canvas: { scale: 2 },
+                    //     jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+                    // };
+                    // html2pdf().set(opt).from(element).save(); // Generate and save the PDF
+
+                    // send email calling api
+                    const emailResponse = await fetch('/api/quotes/send-email', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Accept: 'application/json'
+                        },
+                        body: JSON.stringify({ email: formData.email, quote: formData })
+                    });
+                    if (emailResponse.ok) {
+                        alert('Email sent successfully!');
+                    } else {
+                        alert('Error sending email');
+                    }
                 }
             }
             else {
