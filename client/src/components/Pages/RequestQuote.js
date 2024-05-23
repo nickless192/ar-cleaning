@@ -12,7 +12,7 @@ import {
 } from 'reactstrap'; // Importing required components from reactstrap
 
 import html2pdf from 'html2pdf.js'; // Importing html2pdf library
-import IndexNavbar from "components/Navbars/IndexNavbar";
+import Navbar from "components/Pages/Navbar.js";
 import TransparentFooter from "components/Footers/TransparentFooter";
 
 
@@ -313,7 +313,7 @@ const RequestQuote = () => {
 
     return (
         <>
-            <IndexNavbar />
+            <Navbar />
             <div className="page-header clear-filter" filter-color="blue">
                 <div
                     className="page-header-image"

@@ -46,7 +46,7 @@ function IndexNavbar() {
         //     setAdminFlag(localStorage.getItem('adminFlag'));
         // }
 
-        
+
         window.addEventListener("scroll", updateNavbarColor);
         return function cleanup() {
             // initializeAdminFlag();
@@ -59,30 +59,55 @@ function IndexNavbar() {
         if (Auth.loggedIn()) {
             return (
                 <>
-                {Auth.getProfile().data.adminFlag === true ? (
-                                <NavItem>
-                                    <NavLink
-                                        // className="nav-link btn-neutral"
-                                        // color="info"
-                                        href="/manage-service"
-                                    >
-                                        <i className="now-ui-icons ui-1_settings-gear-63 mr-1"></i>
-                                        <p>Manage Services</p>
-                                    </NavLink>
-                                </NavItem>
-                            ) : console.log("Not an admin")}
-                            {Auth.getProfile().data.adminFlag === true ? (
-                                <NavItem>
-                                    <NavLink
-                                        // className="nav-link btn-neutral"
-                                        // color="info"
-                                        href="/manage-product"
-                                    >
-                                        <i className="now-ui-icons ui-1_settings-gear-63 mr-1"></i>
-                                        <p>Manage Products</p>
-                                    </NavLink>
-                                </NavItem>
-                            ) : null}
+                    {Auth.getProfile().data.adminFlag === true ? (
+                        <UncontrolledDropdown nav>
+                            <DropdownToggle
+                                caret
+                                color="default"
+                                href="#pablo"
+                                nav
+                                onClick={(e) => e.preventDefault()}
+                            >
+                                <i className="now-ui-icons ui-1_settings-gear-63 mr-1"></i>
+                                <p>Configure</p>
+                            </DropdownToggle>
+                            <DropdownMenu>
+                                <DropdownItem to="/manage-product" tag={Link}>
+                                    <i className="now-ui-icons ui-1_settings-gear-63 mr-1"></i>
+                                    Manage Products
+                                </DropdownItem>
+                                <DropdownItem to="/manage-service" tag={Link}>
+                                    <i className="now-ui-icons ui-1_settings-gear-63 mr-1"></i>
+                                    Manage Services
+                                </DropdownItem>
+                            </DropdownMenu>
+                        </UncontrolledDropdown>
+
+                    ) : null}
+                    {/* {Auth.getProfile().data.adminFlag === true ? (
+                        <NavItem>
+                            <NavLink
+                                // className="nav-link btn-neutral"
+                                // color="info"
+                                href="/manage-service"
+                            >
+                                <i className="now-ui-icons ui-1_settings-gear-63 mr-1"></i>
+                                <p>Manage Services</p>
+                            </NavLink>
+                        </NavItem>
+                    ) : null}
+                    {Auth.getProfile().data.adminFlag === true ? (
+                        <NavItem>
+                            <NavLink
+                                // className="nav-link btn-neutral"
+                                // color="info"
+                                href="/manage-product"
+                            >
+                                <i className="now-ui-icons ui-1_settings-gear-63 mr-1"></i>
+                                <p>Manage Products</p>
+                            </NavLink>
+                        </NavItem>
+                    ) : null} */}
                     <NavItem>
                         <NavLink
                             // className="nav-link btn-neutral"
@@ -218,33 +243,8 @@ function IndexNavbar() {
                                     <i className="now-ui-icons design-2_ruler-pencil mr-1"></i>
                                     <p>Request Quote</p>
                                 </NavLink>
-                                
+
                             </NavItem>
-                            <UncontrolledDropdown nav>
-                                <DropdownToggle
-                                    caret
-                                    color="default"
-                                    href="#pablo"
-                                    nav
-                                    onClick={(e) => e.preventDefault()}
-                                >
-                                    <i className="now-ui-icons design_app mr-1"></i>
-                                    <p>Components</p>
-                                </DropdownToggle>
-                                <DropdownMenu>
-                                    <DropdownItem to="/index" tag={Link}>
-                                        <i className="now-ui-icons business_chart-pie-36 mr-1"></i>
-                                        All components
-                                    </DropdownItem>
-                                    <DropdownItem
-                                        href="https://demos.creative-tim.com/now-ui-kit-react/#/documentation/introduction?ref=nukr-index-navbar"
-                                        target="_blank"
-                                    >
-                                        <i className="now-ui-icons design_bullet-list-67 mr-1"></i>
-                                        Documentation
-                                    </DropdownItem>
-                                </DropdownMenu>
-                            </UncontrolledDropdown>                            
                             {showLogin()}
                             <NavItem>
                                 <NavLink
