@@ -66,39 +66,48 @@ const ManageService = () => {
         <>
             <Navbar />
             <div className="page-header clear-filter" filter-color="blue">
-            <div
-                className="page-header-image"
-                style={{
-                    backgroundImage: "url(" + require("assets/img/login.jpg") + ")"
-                }}
-            ></div>
-            <div className='content'>
-                <Form onSubmit={handleSubmit}>
-                    <Container>
-                        <h2 className='title'>Add Service</h2>
-                        <p className='description'>Add a new service to the list of services</p>
+                <div
+                    className="page-header-image"
+                    style={{
+                        backgroundImage: "url(" + require("assets/img/login.jpg") + ")"
+                    }}
+                ></div>
+                <div className='content'>
+                    <Form onSubmit={handleSubmit} className='form'>
+                        <Container>
+                            <h2 className='title'>Add Service</h2>
+                            <p className='description'>Add a new service to the list of services</p>
 
-                        <Row>
-                            <Col>
-                                <FormGroup>
-                                    <Label for="serviceName">Service Name</Label>
-                                    <Input
-                                        type="text"
-                                        id="serviceName"
-                                        name="serviceName"
-                                        value={formData.serviceName}
-                                        onChange={handleChange}
-                                    />
-                                </FormGroup>
-                            </Col>
-                            <Col>
-                                <FormGroup>
-                                    <Label for="serviceCost">Cost per Quantity</Label>
-                                    <InputGroup>
+                            <Row>
+                                <Col className="text-center ml-auto mr-auto" lg="6" md="8"
+                                    id='service-form'>
+                                    <InputGroup className={
+                                        "no-border" + (formData.name ? " input-group-focus" : "")
+                                    }>
                                         <InputGroupAddon addonType="prepend">
-                                            <InputGroupText>$</InputGroupText>
+                                            <InputGroupText>
+                                                <i className="now-ui-icons users_circle-08"></i>
+                                            </InputGroupText>
                                         </InputGroupAddon>
                                         <Input
+                                            placeholder='Service Name...'
+                                            type="text"
+                                            id="serviceName"
+                                            name="serviceName"
+                                            value={formData.serviceName}
+                                            onChange={handleChange}
+                                        />
+                                    </InputGroup>
+                                    <InputGroup className={
+                                        "no-border" + (formData.serviceCost ? " input-group-focus" : "")
+                                    }>
+                                        <InputGroupAddon addonType="prepend">
+                                            <InputGroupText>
+                                                <i className="now-ui-icons business_money-coins"></i>
+                                            </InputGroupText>
+                                        </InputGroupAddon>
+                                        <Input
+                                            placeholder='Cost per Quantity...'
                                             type="text"
                                             id="serviceCost"
                                             name="serviceCost"
@@ -106,25 +115,29 @@ const ManageService = () => {
                                             onChange={handleChange}
                                         />
                                     </InputGroup>
-                                </FormGroup>
-                            </Col>
-                            <Col>
-                                <FormGroup>
-                                    <Label for="description">Description</Label>
-                                    <Input
-                                        type="textarea"
-                                        id="description"
-                                        name="description"
-                                        value={formData.description}
-                                        onChange={handleChange}
-                                    />
-                                </FormGroup>
-                            </Col>
+                                    <InputGroup className={
+                                        "no-border" + (formData.description ? " input-group-focus" : "")
+                                    }>
+                                        <InputGroupAddon addonType="prepend">
+                                            <InputGroupText>
 
-                        </Row>
-                    </Container>
+                                                <i className="now-ui-icons ui-2_chat-round"></i>
+                                            </InputGroupText>
+                                        </InputGroupAddon>
+                                        <Input
+                                            placeholder='Description...'
+                                            type="textarea"
+                                            id="description"
+                                            name="description"
+                                            value={formData.description}
+                                            onChange={handleChange}
+                                        />
+                                    </InputGroup>
+                                </Col>
+                            </Row>
+                        </Container>
 
-                    {/* <div>
+                        {/* <div>
                     <label htmlFor="serviceName">Service Name:</label>
                     <input
                         type="text"
@@ -153,15 +166,15 @@ const ManageService = () => {
                         onChange={handleChange}
                     />
                 </div> */}
-                    <Button type="submit">Add Service</Button>
-                    {/* <button type="submit">Add Service</button> */}
-                </Form>
-            </div>
-            <div className="footer register-footer text-center">
+                        <Button type="submit">Add Service</Button>
+                        {/* <button type="submit">Add Service</button> */}
+                    </Form>
+                </div>
+                <div className="footer register-footer text-center">
                     <TransparentFooter />
-                </div>    
+                </div>
             </div>
-            
+
         </>
 
     );

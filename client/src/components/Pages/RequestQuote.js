@@ -42,6 +42,8 @@ const RequestQuote = () => {
         products: selectedOptions
     });
 
+    const [sendEmail, setSendEmail] = useState(false);
+
 
     const handleChange = (e) => {
         e.preventDefault();
@@ -108,7 +110,9 @@ const RequestQuote = () => {
             updatedProducts.push(product);
             console.log('product added');
         }
+
         setFormData({ ...formData, products: updatedProducts });
+        // setFormData({ ...formData, grandTotal: formData.services.reduce((acc, service) => acc + service.serviceCost, 0) + formData.products.reduce((acc, product) => acc + product.productCost, 0) * 1.13});
     };
 
     const toogleService = (e, service) => {
@@ -119,6 +123,9 @@ const RequestQuote = () => {
             updatedServices.push(service);
         }
         setFormData({ ...formData, services: updatedServices });
+
+
+        // setFormData({ ...formData, grandTotal: formData.services.reduce((acc, service) => acc + service.serviceCost, 0) + formData.products.reduce((acc, product) => acc + product.productCost, 0) * 1.13});
     };
 
     // const handleProductChange = async (e, index) => {
@@ -151,11 +158,12 @@ const RequestQuote = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(formData);
+
         try {
             // Your fetch logic here
-            if (formData.serviceType !== '' && formData.name !== '' && formData.email !== '' && formData.phonenumber !== '' && formData.howDidYouHearAboutUs !== '' && formData.description !== '' && formData.companyName !== '') {
-            
-            // if ((formData.services.length !== 0 || formData.products.length !== 0) && formData.serviceType !== '' && formData.name !== '' && formData.email !== '' && formData.phonenumber !== '' && formData.howDidYouHearAboutUs !== '' && formData.description !== '' && formData.companyName !== '') {
+            // if (formData.serviceType !== '' && formData.name !== '' && formData.email !== '' && formData.phonenumber !== '' && formData.howDidYouHearAboutUs !== '' && formData.description !== '' && formData.companyName !== '') {
+
+                if ((formData.services.length !== 0 || formData.products.length !== 0) && formData.serviceType !== '' && formData.name !== '' && formData.email !== '' && formData.phonenumber !== '' && formData.howDidYouHearAboutUs !== '' && formData.description !== '' && formData.companyName !== '') {
                 const response = await fetch('/api/quotes', {
                     method: 'POST',
                     headers: {
@@ -184,7 +192,28 @@ const RequestQuote = () => {
                         services: [],
                         products: selectedOptions
                     });
-                    // // Generate PDF
+                    // Generate PDF
+                    if (window.confirm('Would you like to download the quote as a PDF?')) {
+
+                        try {
+                            // if (printFormFlag) {
+                            const element = document.getElementById('quote-form'); // Replace 'quote-form' with the ID of the form element
+                            const opt = {
+                                margin: 0.5,
+                                filename: 'quote.pdf', // parametarize the filename with the quote ID
+                                image: { type: 'jpeg', quality: 0.98 },
+                                html2canvas: { scale: 2 },
+                                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+                            };
+                            // console.log(html2pdf().set(opt).from(element));
+                            html2pdf().set(opt).from(element).save(); // Generate and save the PDF
+                            // }
+
+                        }
+                        catch (error) {
+                            console.error('Error generating PDF:', error);
+                        }
+                    }
                     // const element = document.getElementById('quote-form'); // Replace 'quote-form' with the ID of the form element
                     // const opt = {
                     //     margin: 0.5,
@@ -196,18 +225,21 @@ const RequestQuote = () => {
                     // html2pdf().set(opt).from(element).save(); // Generate and save the PDF
 
                     // send email calling api
-                    const emailResponse = await fetch('/api/quotes/send-email', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            Accept: 'application/json'
-                        },
-                        body: JSON.stringify({ email: formData.email, quote: formData })
-                    });
-                    if (emailResponse.ok) {
-                        alert('Email sent successfully!');
-                    } else {
-                        alert('Error sending email');
+                    if (sendEmail) {
+
+                        const emailResponse = await fetch('/api/quotes/send-email', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                Accept: 'application/json'
+                            },
+                            body: JSON.stringify({ email: formData.email, quote: formData })
+                        });
+                        if (emailResponse.ok) {
+                            alert('Email sent successfully!');
+                        } else {
+                            alert('Error sending email');
+                        }
                     }
                 }
             }
@@ -665,7 +697,7 @@ const RequestQuote = () => {
                                             value={formData.discountAmount}
                                             readOnly
                                         /> */}
-                                            {/* <Input
+                                            <Input
                                         placeholder='Grand Total: $...'
                                         type='text'
                                         name='grandTotal'
@@ -673,16 +705,16 @@ const RequestQuote = () => {
                                             {
                                                 target: {
                                                     name: 'grandTotal',
-                                                    value: formData.services.reduce((acc, service) => acc + service.serviceamount * service.servicecostperquantity, 0) +
-                                                        formData.products.reduce((acc, product) => acc + product.productamount * product.productcostperquantity, 0) * 1.13
+                                                    value: formData.services.reduce((acc, service) => acc + service.serviceCost, 0) +
+                                                        formData.products.reduce((acc, product) => acc + product.productCost, 0) * 1.13
+                                                    // value:formData.grandTotal
                                                 }
                                             }
                                         )}
-                                        value={formData.services.reduce((acc, service) => acc + service.serviceamount * service.servicecostperquantity, 0) +
-                                            formData.products.reduce((acc, product) => acc + product.productamount * product.productcostperquantity, 0) * 1.13}
+                                        value={formData.grandTotal}
                                         // formData.products.reduce((acc, product) => acc + product.productamount * product.productcostperquantity, 0) - formData.discountAmount}
                                         readOnly
-                                    /> */}
+                                    />
                                             {/* <Input
                                             placeholder='Payment Method'
                                             type='select'
@@ -694,13 +726,22 @@ const RequestQuote = () => {
 
                                         </InputGroup>
                                     </div>
+                                    <div>
+
+                                    </div>
                                     <div className="send-button">
+                                        <Input
+                                            type='checkbox'
+                                            name='sendEmail'
+                                            value={sendEmail}
+                                            onChange={() => setSendEmail(!sendEmail)}
+                                        />
+                                        <Label for='sendEmail'>Email Form</Label>
                                         <Button
                                             block
                                             className="btn-round"
                                             color="info"
                                             type="submit"
-                                            size="lg"
                                         // onClick={handleSubmit}
                                         >
                                             Submit

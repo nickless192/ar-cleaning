@@ -39,14 +39,39 @@ const QuoteSchema = new Schema({
     },
     products: [
         {
-            type: Schema.Types.ObjectId,
-            ref: 'Product'
+            // type: Schema.Types.ObjectId,
+            // ref: 'Product'
+            name: {
+                type: String,
+                required: true
+            },
+            productCost: {
+                type: Number,
+                required: true
+            },
+            id: {
+                type: String,
+                required: true
+            
+            }
         }
     ],
     services: [
         {
-            type: Schema.Types.ObjectId,
-            ref: 'Service'
+            // type: Schema.Types.ObjectId,
+            // ref: 'Service'
+            name: {
+                type: String,
+                required: true
+            },
+            serviceCost: {
+                type: Number,
+                required: true
+            },
+            id: {
+                type: String,
+                required: true
+            }
         }
     ],
     subtotalCost: {
