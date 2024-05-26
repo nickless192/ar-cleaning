@@ -20,6 +20,7 @@ import ViewQuotes from "components/Pages/ViewQuotes";
 import ProductsAndServices from "components/Pages/ProductsAndServices";
 import AboutUsPage from "components/Pages/AboutUsPage";
 import ManageService from "components/Pages/ManageService";
+// import ViewServices from "components/Pages/ViewServices";
 import ManageProduct from "components/Pages/ManageProduct";
 // import { set } from "mongoose";
 
@@ -165,7 +166,8 @@ function Index() {
             // products={products}
           /> */}
           {/* <LandingPage /> */}
-          {/* <ViewQuotes /> */}
+          {/* <ViewServices /> */}
+           <ViewQuotes />
           <ProductsAndServices />
           {/* <ProfilePage /> */}
         </div>

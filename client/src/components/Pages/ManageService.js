@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Button,
     Container,
@@ -8,7 +8,7 @@ import {
     InputGroup,
     InputGroupAddon,
     InputGroupText,
-    Form, FormGroup, Label
+    Form, Card, CardBody, CardTitle, CardText
 } from 'reactstrap'; // Importing required components from reactstrap
 
 import Navbar from "components/Pages/Navbar.js";
@@ -20,6 +20,8 @@ const ManageService = () => {
         description: '',
         serviceCost: ''
     });
+
+    const [services, setServices] = useState([]);
 
     const handleChange = (e) => {
         setFormData({
@@ -52,6 +54,12 @@ const ManageService = () => {
                             .then(data => {
                                 console.log(data);
                                 alert(`Service ${data.name} added!`);
+                                setServices([...services, data]);
+                                setFormData({
+                                    serviceName: '',
+                                    description: '',
+                                    serviceCost: ''
+                                });
                             });
                     } else {
                         alert(response.statusText);
@@ -62,6 +70,20 @@ const ManageService = () => {
 
     };
 
+
+    useEffect(() => {
+        fetch('/api/services', {
+            method: 'get',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        })
+            .then(response => response.json())
+            .then(data => setServices(data))
+            .catch(error => console.log(error));
+    }, []);
+
     return (
         <>
             <Navbar />
@@ -69,10 +91,35 @@ const ManageService = () => {
                 <div
                     className="page-header-image"
                     style={{
-                        backgroundImage: "url(" + require("assets/img/login.jpg") + ")"
+                        backgroundImage: "url(" + require("assets/img/login.jpg") + ")",
+                        backgroundRepeat: "repeat",
+                        backgroundSize: "auto"
                     }}
                 ></div>
                 <div className='content'>
+
+                    <Container>
+                        <h2>All Services</h2>
+                        <Row>
+                            {services.map(service => (
+                                <Col key={service.id} className="text-center ml-auto mr-auto" lg="6" md="8">
+                                    <Card className='shadow-sm mb-4 border-0'>
+                                        <CardBody className='p-4'>
+                                            <CardTitle tag='h5' className='text-primary mb-3'>
+                                                {service.name}
+                                            </CardTitle>
+                                            <CardText className='text-secondary'>
+                                                {service.description.toUpperCase()}
+                                            </CardText>
+                                            <CardText className='font-weight-bold text-secondary'>
+                                                Cost per Quantity: <span className='text-success'>{service.serviceCost}</span>
+                                            </CardText>
+                                        </CardBody>
+                                    </Card>
+                                </Col>
+                            ))}
+                        </Row>
+                    </Container>
                     <Form onSubmit={handleSubmit} className='form'>
                         <Container>
                             <h2 className='title'>Add Service</h2>
@@ -169,6 +216,7 @@ const ManageService = () => {
                         <Button type="submit">Add Service</Button>
                         {/* <button type="submit">Add Service</button> */}
                     </Form>
+
                 </div>
                 <div className="footer register-footer text-center">
                     <TransparentFooter />
