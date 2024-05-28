@@ -18,7 +18,8 @@ import {
   Row
 } from "reactstrap";
 
-import IndexNavbar from "components/Navbars/IndexNavbar";
+import Navbar from "components/Pages/Navbar.js";
+import Footer from "components/Pages/Footer.js";
 
 // core components
 
@@ -138,7 +139,7 @@ function SignUp() {
 
   return (
     <>
-    <IndexNavbar />
+    <Navbar />
       <div
         className="section section-signup"
         style={{
@@ -148,6 +149,7 @@ function SignUp() {
           minHeight: "700px"
         }}
       >
+        <div>
         <Container>
           <Row>
             <Card className="card-signup" data-background-color="blue">
@@ -308,7 +310,9 @@ function SignUp() {
             </Button>
           </div>
         </Container>
+        </div>
       </div>
+        <Footer />
     </>
   );
 }

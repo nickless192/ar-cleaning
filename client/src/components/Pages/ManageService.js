@@ -12,7 +12,7 @@ import {
 } from 'reactstrap'; // Importing required components from reactstrap
 
 import Navbar from "components/Pages/Navbar.js";
-import TransparentFooter from "components/Footers/TransparentFooter";
+import Footer from "components/Pages/Footer.js";
 
 const ManageService = () => {
     const [formData, setFormData] = useState({
@@ -219,7 +219,7 @@ const ManageService = () => {
 
                 </div>
                 <div className="footer register-footer text-center">
-                    <TransparentFooter />
+                    <Footer />
                 </div>
             </div>
 

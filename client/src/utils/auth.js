@@ -32,6 +32,8 @@ class AuthService {
     console.log(id_token, adminFlag);
     localStorage.setItem('id_token', id_token);
     localStorage.setItem('adminFlag', adminFlag);
+    sessionStorage.setItem('id_token', id_token);
+    sessionStorage.setItem('adminFlag', adminFlag);
 
     window.location.assign('/index');
   }
@@ -40,6 +42,8 @@ class AuthService {
     // Clear user token and profile data from localStorage
     localStorage.removeItem('id_token');
     localStorage.removeItem('adminFlag');
+    sessionStorage.removeItem('id_token');
+    sessionStorage.removeItem('adminFlag');
     // this will reload the page and reset the state of the application
     // window.location.assign('/index');
   }

@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 // reactstrap components
 import {
-    Button,
+    
     Collapse,
     DropdownToggle,
     DropdownMenu,
@@ -14,7 +14,7 @@ import {
     NavLink,
     Nav,
     Container,
-    UncontrolledTooltip,
+    
 } from "reactstrap";
 import Auth from "../../utils/auth";
 
@@ -218,16 +218,6 @@ function IndexNavbar() {
                                 <NavLink
                                     // className="nav-link btn-neutral"
                                     // color="info"
-                                    href="/about-us"
-                                >
-                                    <i className="now-ui-icons business_globe mr-1"></i>
-                                    <p>About Us</p>
-                                </NavLink>
-                            </NavItem>
-                            <NavItem>
-                                <NavLink
-                                    // className="nav-link btn-neutral"
-                                    // color="info"
                                     href="/products-and-services"
                                 >
                                     <i className="now-ui-icons business_bulb-63 mr-1"></i>
@@ -244,6 +234,16 @@ function IndexNavbar() {
                                     <p>Request Quote</p>
                                 </NavLink>
 
+                            </NavItem>
+                                                        <NavItem>
+                                <NavLink
+                                    // className="nav-link btn-neutral"
+                                    // color="info"
+                                    href="/view-quotes"
+                                >
+                                    <i className="now-ui-icons business_globe mr-1"></i>
+                                    <p>View Quotes</p>
+                                </NavLink>
                             </NavItem>
                             {showLogin()}
                             <NavItem>

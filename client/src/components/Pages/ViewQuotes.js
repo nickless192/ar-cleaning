@@ -10,6 +10,9 @@ import {
   Button
 } from 'reactstrap'; // Importing required components from reactstrap
 
+import Navbar from "components/Pages/Navbar.js";
+import Footer from "components/Pages/Footer.js";
+
 const ViewQuote = () => {
   // Stubbed quote object
   const stubbedQuote = {
@@ -51,6 +54,16 @@ const ViewQuote = () => {
 
   return (
     <>
+    <Navbar />
+    <div
+        className="section section-signup"
+        style={{
+          backgroundImage: "url(" + require("assets/img/bg8.jpg") + ")",
+          backgroundSize: "cover",
+          backgroundPosition: "top center",
+          minHeight: "700px"
+        }}
+      >
       <div className="wrapper">
         <div className="section section-contact-us text-center">
           <Container>
@@ -180,6 +193,8 @@ const ViewQuote = () => {
           </Container>
         </div>
       </div>
+    </div>
+        <Footer />
     </>
   );
 };

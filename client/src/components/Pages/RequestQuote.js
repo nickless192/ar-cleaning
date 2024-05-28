@@ -13,7 +13,7 @@ import {
 
 import html2pdf from 'html2pdf.js'; // Importing html2pdf library
 import Navbar from "components/Pages/Navbar.js";
-import TransparentFooter from "components/Footers/TransparentFooter";
+import Footer from "components/Pages/Footer.js";
 
 
 const RequestQuote = () => {
@@ -757,7 +757,7 @@ const RequestQuote = () => {
                 {/* <div className="content">
                 </div> */}
                 <div className="footer register-footer text-center">
-                    <TransparentFooter />
+                    <Footer />
                 </div>
             </div>
         </>

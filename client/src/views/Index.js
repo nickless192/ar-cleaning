@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+// import { useState } from "react";
 
 
 // reactstrap components
@@ -14,14 +14,14 @@ import Navbar from "components/Pages/Navbar.js";
 import Footer from "components/Pages/Footer.js";
 
 // import ProfilePage from "./examples/ProfilePage";
-import LandingPage from "./examples/LandingPage";
-import RequestQuote from "components/Pages/RequestQuote";
-import ViewQuotes from "components/Pages/ViewQuotes";
-import ProductsAndServices from "components/Pages/ProductsAndServices";
+// import LandingPage from "./examples/LandingPage";
+// import RequestQuote from "components/Pages/RequestQuote";
+// import ViewQuotes from "components/Pages/ViewQuotes";
+// import ProductsAndServices from "components/Pages/ProductsAndServices";
 import AboutUsPage from "components/Pages/AboutUsPage";
-import ManageService from "components/Pages/ManageService";
+// import ManageService from "components/Pages/ManageService";
 // import ViewServices from "components/Pages/ViewServices";
-import ManageProduct from "components/Pages/ManageProduct";
+// import ManageProduct from "components/Pages/ManageProduct";
 // import { set } from "mongoose";
 
 // sections for this page
@@ -34,8 +34,8 @@ import ManageProduct from "components/Pages/ManageProduct";
 // import Typography from "./index-sections/Typography.js";
 // import Javascript from "./index-sections/Javascript.js";
 // import Carousel from "./index-sections/Carousel.js";
-import NucleoIcons from "./index-sections/NucleoIcons.js";
-import { set } from "mongoose";
+// import NucleoIcons from "./index-sections/NucleoIcons.js";
+// import { set } from "mongoose";
 // import CompleteExamples from "./index-sections/CompleteExamples.js";
 // import SignUp from "./index-sections/SignUp.js";
 // import Examples from "./index-sections/Examples.js";
@@ -167,8 +167,8 @@ function Index() {
           /> */}
           {/* <LandingPage /> */}
           {/* <ViewServices /> */}
-           <ViewQuotes />
-          <ProductsAndServices />
+           {/* <ViewQuotes /> */}
+          {/* <ProductsAndServices /> */}
           {/* <ProfilePage /> */}
         </div>
         <Footer />

@@ -13,7 +13,7 @@ import {
 } from 'reactstrap';
 
 import Navbar from "components/Pages/Navbar.js";
-import TransparentFooter from "components/Footers/TransparentFooter";
+import Footer from "components/Pages/Footer.js";
 
 
 const ManageProduct = () => {
@@ -237,7 +237,7 @@ const ManageProduct = () => {
 
                 </div>
                 <div className="footer register-footer text-center">
-                    <TransparentFooter />
+                <Footer />
                     </div>
             </div>
         </>

@@ -34,6 +34,7 @@ import SignUp from "../src/components/Pages/SignUp";
 import ManageService from "../src/components/Pages/ManageService";
 import ManageProduct from "../src/components/Pages/ManageProduct";
 import RequestQuote from "../src/components/Pages/RequestQuote";
+import ViewQuotes from "../src/components/Pages/ViewQuotes";
 // import Switch from "react-bootstrap-switch";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -47,6 +48,7 @@ root.render(
       <Route path="/profile-page" element={<ProfilePage />} />
       <Route path="/manage-service" element={<ManageService />} />
       <Route path="/manage-product" element={<ManageProduct />} />
+      <Route path="/view-quotes" element={<ViewQuotes />} />
       <Route path="/login-page" element={<LoginPage />} />
       <Route path="/signup-page" element={<SignUp />} />
       <Route path='/request-quote' element={<RequestQuote

@@ -19,8 +19,8 @@ import {
 
 // core components
 // import ExamplesNavbar from "components/Navbars/ExamplesNavbar.js";
-import IndexNavbar from "components/Navbars/IndexNavbar";
-import TransparentFooter from "components/Footers/TransparentFooter.js";
+import Navbar from "components/Pages/Navbar.js";
+import Footer from "components/Pages/Footer.js";
 
 function LoginPage() {
   // const [username, setUsername] = React.useState(false);
@@ -123,7 +123,7 @@ function LoginPage() {
   }, []);
   return (
     <>
-      <IndexNavbar />
+      <Navbar />
       <div className="page-header clear-filter" filter-color="blue">
         <div
           className="page-header-image"
@@ -224,7 +224,7 @@ function LoginPage() {
             </Col>
           </Container>
         </div>
-        <TransparentFooter />
+        <Footer />
       </div>
     </>
   );
