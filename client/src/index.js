@@ -17,7 +17,7 @@
 */
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter, Route, Routes,Router, Navigate } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 
 // styles for this kit
 import "assets/css/bootstrap.min.css";
@@ -35,6 +35,7 @@ import ManageService from "../src/components/Pages/ManageService";
 import ManageProduct from "../src/components/Pages/ManageProduct";
 import RequestQuote from "../src/components/Pages/RequestQuote";
 import ViewQuotes from "../src/components/Pages/ViewQuotes";
+import ProductsAndServices from "../src/components/Pages/ProductsAndServices";
 // import Switch from "react-bootstrap-switch";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -51,27 +52,12 @@ root.render(
       <Route path="/view-quotes" element={<ViewQuotes />} />
       <Route path="/login-page" element={<LoginPage />} />
       <Route path="/signup-page" element={<SignUp />} />
-      <Route path='/request-quote' element={<RequestQuote
-            
-      />} />
+      <Route path='/request-quote' element={<RequestQuote/>} />
+      <Route path="/products-and-services" element={<ProductsAndServices />} />
       <Route path="/" element={<Navigate to="/index" />} />
 
 
       <Route path="*" element={<Navigate to="/index" replace />} />
     </Routes>
   </BrowserRouter>
-  // <Router>
-  //   <Switch>
-  //     <Route path="/index" component={Index} />
-  //     <Route path="/nucleo-icons" component={NucleoIcons} />
-  //     <Route path="/landing-page" component={LandingPage} />
-  //     <Route path="/profile-page" component={ProfilePage} />
-  //     <Route path="/manage-service" component={ManageService} />
-  //     <Route path="/manage-product" component={ManageProduct} />
-  //     <Route path="/login-page" component={LoginPage} />
-  //     <Route path="/signup-page" component={SignUp} />
-  //     <Route path='/request-quote' component={RequestQuote} />
-  //     <Route path="/" component={Index} />
-  //   </Switch>
-  // </Router>
 );
