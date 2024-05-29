@@ -83,7 +83,7 @@ function IndexNavbar() {
                             </DropdownMenu>
                         </UncontrolledDropdown>
 
-                    ) : null}
+                    ) : console.log("Not an admin")}
                     {/* {Auth.getProfile().data.adminFlag === true ? (
                         <NavItem>
                             <NavLink
