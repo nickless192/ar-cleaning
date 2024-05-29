@@ -35,7 +35,6 @@ class AuthService {
     sessionStorage.setItem('id_token', id_token);
     sessionStorage.setItem('adminFlag', adminFlag);
 
-    window.location.replace('/index');
     // window.location.assign('/index');
 
   }
