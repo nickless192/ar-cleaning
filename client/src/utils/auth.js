@@ -25,7 +25,7 @@ class AuthService {
 
   getToken() {
     // Retrieves the user token from localStorage
-    return localStorage.getItem('id_token');
+    return sessionStorage.getItem('id_token');
   }
 
   async login(id_token, adminFlag) {
