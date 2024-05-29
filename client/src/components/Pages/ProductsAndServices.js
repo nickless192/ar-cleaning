@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Button,
   Container,
   Row,
   Col,
@@ -58,14 +57,6 @@ const ProductsAndServices = () => {
                     </InputGroup>
                   </div>
                   <div className="send-button">
-                    <Button
-                      block
-                      className="btn-round"
-                      color="info"
-                      size="lg"
-                    >
-                      Add to Cart
-                    </Button>
                   </div>
                 </Col>
               </Row>
