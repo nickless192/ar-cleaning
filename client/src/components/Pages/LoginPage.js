@@ -53,7 +53,7 @@ function LoginPage() {
       })
         .then(response => {
           if (response.ok) {
-            // console.log("you're logged!");
+            console.log("you're logged!");
             response.json()
             .then(data => {
               console.log(data);

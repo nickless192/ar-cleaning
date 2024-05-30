@@ -5,9 +5,7 @@ import {
   Row,
   Col,
   Input,
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText
+  InputGroup
 } from 'reactstrap'; // Importing required components from reactstrap
 
 const ProductsAndServices = () => {
