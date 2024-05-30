@@ -21,6 +21,8 @@ import Auth from "../../utils/auth";
 function IndexNavbar() {
     const [navbarColor, setNavbarColor] = React.useState("navbar-transparent");
     const [collapseOpen, setCollapseOpen] = React.useState(false);
+
+    const [isLogged, setIsLogged] = React.useState(Auth.loggedIn());
     // const [adminFlag, setAdminFlag] = React.useState(localStorage.getItem('adminFlag'));
 
     // setAdminFlag(localStorage.getItem('adminFlag'));
@@ -56,7 +58,7 @@ function IndexNavbar() {
 
     function showLogin() {
         // console.log(Auth.getProfile().data.adminFlag);
-        if (Auth.loggedIn()) {
+        if (isLogged) {
             return (
                 <>
                     {Auth.getProfile().data.adminFlag === true ? (
