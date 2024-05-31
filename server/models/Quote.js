@@ -10,7 +10,7 @@ const QuoteSchema = new Schema({
     name: {
         type: String,
         unique: true,
-        required: true
+        // required: true
     },
     description: {
         type: String
