@@ -37,7 +37,7 @@ const ViewQuote = () => {
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [quotes, setQuotes] = useState([]); // State to hold the quote object
-  const [displayedQuote, setDisplayedQuote] = useState({}); // State to hold the displayed quotes
+  const [displayedQuote, setDisplayedQuote] = useState({products:[], services: []}); // State to hold the displayed quotes
 
   const toggle = () => setDropdownOpen(prevState => !prevState);
 
