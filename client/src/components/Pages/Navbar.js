@@ -17,13 +17,13 @@ import {
     
 } from "reactstrap";
 import Auth from "../../utils/auth";
-import { set } from "mongoose";
+// import { set } from "mongoose";
 
 function IndexNavbar() {
     const [navbarColor, setNavbarColor] = React.useState("navbar-transparent");
     const [collapseOpen, setCollapseOpen] = React.useState(false);
 
-    const [isLogged, setIsLogged] = React.useState(Auth.loggedIn());
+    const [isLogged] = React.useState(Auth.loggedIn());
     // const [adminFlag, setAdminFlag] = React.useState(localStorage.getItem('adminFlag'));
 
     // setAdminFlag(localStorage.getItem('adminFlag'));
@@ -31,17 +31,17 @@ function IndexNavbar() {
     // console.log(Auth.loggedIn());
 
     React.useEffect(() => {
-
+        const scrollTopVal = 90;
         
         const updateNavbarColor = () => {
             if (
-                document.documentElement.scrollTop > 99 ||
-                document.body.scrollTop > 99
+                document.documentElement.scrollTop > (scrollTopVal-1) ||
+                document.body.scrollTop > (scrollTopVal-1)
             ) {
                 setNavbarColor("");
             } else if (
-                document.documentElement.scrollTop < 100 ||
-                document.body.scrollTop < 100
+                document.documentElement.scrollTop < scrollTopVal ||
+                document.body.scrollTop < scrollTopVal
             ) {
                 setNavbarColor("navbar-transparent");
             }
