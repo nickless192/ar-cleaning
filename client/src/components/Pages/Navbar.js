@@ -17,6 +17,7 @@ import {
     
 } from "reactstrap";
 import Auth from "../../utils/auth";
+import { set } from "mongoose";
 
 function IndexNavbar() {
     const [navbarColor, setNavbarColor] = React.useState("navbar-transparent");
@@ -30,15 +31,17 @@ function IndexNavbar() {
     // console.log(Auth.loggedIn());
 
     React.useEffect(() => {
+
+        
         const updateNavbarColor = () => {
             if (
-                document.documentElement.scrollTop > 399 ||
-                document.body.scrollTop > 399
+                document.documentElement.scrollTop > 199 ||
+                document.body.scrollTop > 199
             ) {
                 setNavbarColor("");
             } else if (
-                document.documentElement.scrollTop < 400 ||
-                document.body.scrollTop < 400
+                document.documentElement.scrollTop < 200 ||
+                document.body.scrollTop < 200
             ) {
                 setNavbarColor("navbar-transparent");
             }
