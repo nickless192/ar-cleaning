@@ -1,0 +1,17 @@
+.scrollable-dropdown-menu {
+    max-height: 300px; /* Default for larger screens */
+    overflow-y: auto;
+  }
+  
+  /* Adjust for smaller screens */
+  @media (max-width: 768px) {
+    .scrollable-dropdown-menu {
+      max-height: 200px; /* Slightly smaller for tablets and small screens */
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .scrollable-dropdown-menu {
+      max-height: 100px; /* Smaller height for mobile devices */
+    }
+  }

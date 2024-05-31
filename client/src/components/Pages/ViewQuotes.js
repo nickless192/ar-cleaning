@@ -1,3 +1,4 @@
+import './../../assets/css/quote-dropdown.css';
 import React, { useState, useEffect } from 'react';
 import {
   Container,
@@ -7,7 +8,12 @@ import {
   InputGroup,
   InputGroupAddon,
   InputGroupText,
-  Button
+  // Button,
+  DropdownMenu,
+  DropdownItem,
+  // UncontrolledDropdown,
+  Dropdown,
+  DropdownToggle
 } from 'reactstrap'; // Importing required components from reactstrap
 
 import Navbar from "components/Pages/Navbar.js";
@@ -29,9 +35,11 @@ const ViewQuote = () => {
   //   ]
   // };
 
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [quotes, setQuotes] = useState([]); // State to hold the quote object
-  const [searchTerm, setSearchTerm] = useState(''); // State to hold the search term
   const [displayedQuote, setDisplayedQuote] = useState({}); // State to hold the displayed quotes
+
+  const toggle = () => setDropdownOpen(prevState => !prevState);
 
   // const handleSearch = () => {
   //   // Simulate fetching quote based on search term
@@ -64,12 +72,12 @@ const ViewQuote = () => {
         console.error('Error:', error);
       });
   }
-  , []); // Empty dependency array to run the effect only once
+    , []); // Empty dependency array to run the effect only once
 
   return (
     <>
-    <Navbar />
-    <div
+      <Navbar />
+      <div
         className="section section-signup"
         style={{
           backgroundImage: "url(" + require("assets/img/bg8.jpg") + ")",
@@ -78,118 +86,186 @@ const ViewQuote = () => {
           minHeight: "700px"
         }}
       >
-      <div className="wrapper">
-        <div className="section section-contact-us text-center">
-          <Container>
-            <h2 className="title">View Quote</h2>
-            <p className="description">Search for a quote:</p>
-            <Row>
-              <Col className="text-center ml-auto mr-auto" lg="6" md="8">
-                <InputGroup className="input-lg">
-                  <InputGroupAddon addonType="prepend">
-                    <InputGroupText>
-                      <i className="now-ui-icons ui-1_zoom-bold"></i>
-                    </InputGroupText>
-                  </InputGroupAddon>
-                  <Input
-                    placeholder="Search..."
-                    type="text"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </InputGroup>
-                {quotes.length === 0 && (
-                  <p className="text-danger">No quotes found!</p>
-                )}
-                {quotes.map((quote, index) => (
-                  <Row key={index}>
-                    <Col className="text-center ml-auto mr-auto" lg="6" md="8">
-                      {/* <h3 className='mt-5'>Quote Information:</h3> */}
-                      <Button
-                        color="primary"
-                        onClick={() => setDisplayedQuote(quotes[index])}
-                        // disabled={!searchTerm} // Disable button if search term is empty
-                        id={quote._id}
-                        name={quote.name}
-                        size='sm'
+        <div className="wrapper">
+          <div className="section section-contact-us text-center">
+            <Container>
+              <h2 className="title">Search for a quote:</h2>
+              {/* <p className="description">Search for a quote:</p> */}
+              <Dropdown isOpen={dropdownOpen} toggle={toggle}>
+                    <DropdownToggle caret>
+                      {`Selected Quote: ${displayedQuote.name || 'Select Quote...'}`}
+                    </DropdownToggle>
+                    <DropdownMenu className='scrollable-dropdown-menu'>
+                      {quotes.map((quote) => (
+                        <DropdownItem key={quote._id} onClick={() => setDisplayedQuote(quote)}>
+                          {quote.name}
+                        </DropdownItem>
+                      ))}
+                    </DropdownMenu>
+                  </Dropdown>
+              <Row>
+                <Col className="text-center ml-auto mr-auto" lg="6" md="8">
+                  
+                  {/* <InputGroup className="input-lg">
+                    <InputGroupAddon addonType="prepend">
+                      <InputGroupText>
+                        <i className="now-ui-icons ui-1_zoom-bold"></i>
+                      </InputGroupText>
+                    </InputGroupAddon>
+                    <Input
+                      placeholder="Search..."
+                      type="text"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </InputGroup> */}
+                  {quotes.length === 0 && (
+                    <p className="text-danger">No quotes found!</p>
+                  )}
+                  {/* <UncontrolledDropdown className="button-dropdown">
+                    <DropdownToggle
+                      caret
+                      data-toggle="dropdown"
+                      href="#pablo"
+                      id="navbarDropdown"
+                      tag="a"
+                      onClick={(e) => e.preventDefault()}
+                    >                      
+                      <i className="now-ui-icons users_single-02"></i>
+                  Select Quote
+                    </DropdownToggle>
+                    <DropdownMenu aria-labelledby="navbarDropdown">                     
+                      {quotes.map((quote, index) => (
+                        <DropdownItem key={quote._id} onClick={(e) => setDisplayedQuote(quotes[index])}>
+                          {quote.name}
+                        </DropdownItem>
+                      ))}
 
-                      >
-                        {quote.name} {quote._id}
-                      </Button>
-                      {/* <InputGroup className="input-lg">
-                        <InputGroupAddon addonType="prepend">
-                          <InputGroupText>
-                            <i className="now-ui-icons users_circle-08"></i>
-                          </InputGroupText>
-                        </InputGroupAddon>
+                    </DropdownMenu>
+                  </UncontrolledDropdown> */}
+                  {/* <Input
+                    type="select"
+                    value=""
+                    name='service'
+                    // onChange={(e) => setDisplayedQuote(quotes[index])}
+                  > */}
+                  {/* <option value="">Select Quote...</option>
+                    {quotes.map((quote, index) => (
+                      { index === 0 && (
                         <Input
-                          placeholder="Your Name..."
-                          type="text"
-                          value={quote._id}
-                          readOnly
-                        />
-                      </InputGroup> */}
-                      </Col>
-                  </Row>  
-                ) )}
+                      type="select"
+                      value=""
+                      name='service'
+                      // onChange={(e) => setDisplayedQuote(quotes[index])}
+                    >) : null}
 
-                
-                {/* <Button
+                      <option value={quote._id} key={quote._id} onChange={(e) => setDisplayedQuote(quotes[index])}>
+                        {quote.name}
+                      </option>
+                    ))}
+                  </Input> */}
+
+
+
+
+                  {/* <Button
                   color="primary"
                   onClick={handleSearch}
                   disabled={!searchTerm} // Disable button if search term is empty
                 >
                   Search
                 </Button> */}
-              </Col>
-            </Row>
-            {displayedQuote && (
-              
-              <Row>
-                <Col className="text-center ml-auto mr-auto" lg="6" md="8">
-                  {/* Render quote details if quote state is not null */}
-                  <h3 className="mt-5">Quote Information:</h3>
-                  <InputGroup className="input-lg">
-                    <InputGroupAddon addonType="prepend">
-                      <InputGroupText>
-                        <i className="now-ui-icons users_circle-08"></i>
-                      </InputGroupText>
-                    </InputGroupAddon>
-                    <Input
-                      placeholder="Your Name..."
-                      type="text"
-                      value={displayedQuote.name}
-                      readOnly
-                    />
-                  </InputGroup>
-                  <InputGroup className="input-lg">
-                    <InputGroupAddon addonType="prepend">
-                      <InputGroupText>
-                        <i className="now-ui-icons ui-1_email-85"></i>
-                      </InputGroupText>
-                    </InputGroupAddon>
-                    <Input
-                      placeholder="Your Email..."
-                      type="email"
-                      value={displayedQuote.email}
-                      readOnly
-                    />
-                  </InputGroup>
-                  <div className="textarea-container">
-                    <Input
-                      cols="80"
-                      name="description"
-                      placeholder="Message..."
-                      rows="4"
-                      type="textarea"
-                      value={displayedQuote.description}
-                      readOnly
-                    />
-                  </div>
-                  {/* Product Selector */}
-                  <div className="product-selector">
-                    <h5>Products:</h5>
-                    {/* {displayedQuote.products.map((product, index) => (
+                </Col>
+              </Row>
+              {displayedQuote && (
+
+                <Row>
+                  <Col className="text-center ml-auto mr-auto" lg="6" md="8">
+                    {/* Render quote details if quote state is not null */}
+                    <h3 className="mt-5">Quote Information:</h3>
+                    <InputGroup className="input-lg">
+                      <InputGroupAddon addonType="prepend">
+                        <InputGroupText>
+                          <i className="now-ui-icons users_circle-08"></i>
+                        </InputGroupText>
+                      </InputGroupAddon>
+                      <Input
+                        placeholder="Your Name..."
+                        type="text"
+                        value={displayedQuote.name}
+                        readOnly
+                      />
+                      <Input
+                        placeholder="Phone Number..."
+                        type="text"
+                        value={displayedQuote.phonenumber}
+                        readOnly
+                      />
+                    </InputGroup>
+                    <InputGroup className="input-lg">
+                      <InputGroupAddon addonType="prepend">
+                        <InputGroupText>
+                          <i className="now-ui-icons tech_mobile"></i>
+                        </InputGroupText>
+                      </InputGroupAddon>
+                      <Input
+                        placeholder="Company Name..."
+                        type="text"
+                        value={displayedQuote.companyName}
+                        readOnly
+                      />
+                    </InputGroup>
+                    <InputGroup className="input-lg">
+                      <InputGroupAddon addonType="prepend">
+                        <InputGroupText>
+                          <i className="now-ui-icons ui-1_email-85"></i>
+                        </InputGroupText>
+                      </InputGroupAddon>
+                      <Input
+                        placeholder="Your Email..."
+                        type="email"
+                        value={displayedQuote.email}
+                        readOnly
+                      />
+                    </InputGroup>
+                    <InputGroup className="textarea-container">
+                      <Input
+                        cols="80"
+                        name="description"
+                        placeholder="Message..."
+                        rows="4"
+                        type="textarea"
+                        value={displayedQuote.description}
+                        readOnly
+                      />
+                    </InputGroup>
+
+                    <InputGroup className="input-lg">
+                      <InputGroupAddon addonType="prepend">
+                        <InputGroupText>
+                          <i className="now-ui-icons shopping_tag-content"></i>
+                        </InputGroupText>
+                      </InputGroupAddon>
+                      <Input
+                        placeholder="Service Type..."
+                        type="text"
+                        value={displayedQuote.serviceType}
+                        readOnly
+                      />
+                      <Input
+                        placeholder="How did you hear about us..."
+                        type="text"
+                        value={displayedQuote.howDidYouHearAboutUs}
+                        readOnly
+                      />
+                    </InputGroup>
+                    {/* Product Selector */}
+                    <div className="product-selector">
+                      <h5>Products:</h5>
+                      {displayedQuote.products.length === 0 && (
+                        <p className="text-danger">No products selected!</p>
+                      )}
+                      {displayedQuote.products.length !== 0 && displayedQuote.products.map((product, index) => (
                       <InputGroup key={index}>
                         <Input
                           placeholder="Product..."
@@ -198,24 +274,28 @@ const ViewQuote = () => {
                           readOnly
                         />
                         <Input
-                          placeholder="Amount..."
+                          placeholder="Product Cost..."
                           type="number"
-                          value={product.amount}
+                          value={product.productCost}
                           readOnly
                         />
                         <Input
-                          placeholder="Cost per Quantity: $..."
+                          placeholder="Id..."
                           type="text"
-                          value={product.costPerQuantity}
+                          value={product.id}
                           readOnly
                         />
                       </InputGroup>
-                    ))} */}
-                  </div>
-                  {/* Service Selector */}
-                  <div className="service-selector">
-                    <h5>Services:</h5>
-                    {/* {displayedQuote.services.map((service, index) => (
+                    ))}
+                    </div>
+                    {/* Service Selector */}
+                    <div className="service-selector">
+                      <h5>Services:</h5>
+                      {displayedQuote.services.length === 0 && (
+                        <p className="text-danger">No services selected!</p>
+                      )}
+
+                      {displayedQuote.services.length !== 0 && displayedQuote.services.map((service, index) => (
                       <InputGroup key={index}>
                         <Input
                           placeholder="Service..."
@@ -224,31 +304,62 @@ const ViewQuote = () => {
                           readOnly
                         />
                         <Input
-                          placeholder="Amount..."
+                          placeholder="Service cost..."
                           type="number"
-                          value={service.amount}
+                          value={service.serviceCost}
                           readOnly
                         />
                         <Input
-                          placeholder="Cost per Quantity: $..."
+                          placeholder="Id..."
                           type="text"
-                          value={service.costPerQuantity}
+                          value={service.id}
                           readOnly
                         />
                       </InputGroup>
-                    ))} */}
-                  </div>
-                </Col>
-              </Row>
-            )}
-                  
-            
-           
-          </Container>
+                    ))}
+                    
+
+
+                    </div>
+                    <div>
+                    <h5>Costs:</h5>
+                    <InputGroup className="input-lg">
+                      <InputGroupAddon addonType="prepend">
+                        <InputGroupText>
+                          <i className="now-ui-icons shopping_tag-content"></i>
+                        </InputGroupText>
+                      </InputGroupAddon>
+                      <Input
+                        placeholder="Subtotal Cost..."
+                        type="number"
+                        value={displayedQuote.subtotalCost}
+                        readOnly
+                      />
+                      <Input
+                        placeholder="Tax..."
+                        type="number"
+                        value={displayedQuote.tax}
+                        readOnly
+                      />
+                      <Input
+                        placeholder="Total Cost..."
+                        type="number"
+                        value={displayedQuote.grandTotal}
+                        readOnly
+                      />
+                    </InputGroup>
+                    </div>
+                  </Col>
+                </Row>
+              )}
+
+
+
+            </Container>
+          </div>
         </div>
       </div>
-    </div>
-        <Footer />
+      <Footer />
     </>
   );
 };
