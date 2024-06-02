@@ -28,8 +28,7 @@ import "assets/demo/nucleo-icons-page-styles.css?v=1.5.0";
 import Index from "views/Index.js";
 import NucleoIcons from "views/NucleoIcons.js";
 import LoginPage from "../src/components/Pages/LoginPage";
-import LandingPage from "views/examples/LandingPage.js";
-import ProfilePage from "views/examples/ProfilePage.js";
+import ProfilePage from "../src/components/Pages/ProfilePage";
 import SignUp from "../src/components/Pages/SignUp";
 import ManageService from "../src/components/Pages/ManageService";
 import ManageProduct from "../src/components/Pages/ManageProduct";
@@ -45,7 +44,6 @@ root.render(
     <Routes>
       <Route path="/index" element={<Index />} />
       <Route path="/nucleo-icons" element={<NucleoIcons />} />
-      <Route path="/landing-page" element={<LandingPage />} />
       <Route path="/profile-page" element={<ProfilePage />} />
       <Route path="/manage-service" element={<ManageService />} />
       <Route path="/manage-product" element={<ManageProduct />} />

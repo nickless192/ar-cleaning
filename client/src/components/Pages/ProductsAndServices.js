@@ -11,6 +11,19 @@ import Navbar from "components/Pages/Navbar.js";
 import Footer from "components/Pages/Footer.js";
 
 const ProductsAndServices = () => {
+
+  React.useEffect(() => {
+    document.body.classList.add("products-services-page");
+    document.body.classList.add("sidebar-collapse");
+    document.documentElement.classList.remove("nav-open");
+    window.scrollTo(0, 0);
+    document.body.scrollTop = 0;
+    return function cleanup() {
+      document.body.classList.remove("products-services-page");
+      document.body.classList.remove("sidebar-collapse");      
+    };
+  }, []);
+
   return (
     <>
       <Navbar />

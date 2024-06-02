@@ -3,6 +3,7 @@ import React from "react";
 import Navbar from "components/Pages/Navbar.js";
 import Footer from "components/Pages/Footer.js";
 import AboutUsPage from "components/Pages/AboutUsPage";
+import ProfilePage from "components/Pages/ProfilePage";
 
 function Index() {
 
@@ -24,8 +25,10 @@ function Index() {
     <>
       <Navbar  />
       <div className="wrapper">
-        <AboutUsPage />
         <div className="main">
+        <AboutUsPage />
+        {/* <LandingPage /> */}
+        <ProfilePage />
         </div>
         <Footer />
       </div>

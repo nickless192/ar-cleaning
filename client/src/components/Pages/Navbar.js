@@ -117,6 +117,16 @@ function IndexNavbar() {
                         <NavLink
                             // className="nav-link btn-neutral"
                             // color="info"
+                            href="/profile-page"
+                        >
+                            <i className="now-ui-icons users_circle-08 mr-1"></i>
+                            <p>Profile</p>
+                        </NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink
+                            // className="nav-link btn-neutral"
+                            // color="info"
                             href="/view-quotes"
                         >
                             <i className="now-ui-icons files_single-copy-04 mr-1"></i>
@@ -226,7 +236,7 @@ function IndexNavbar() {
                                     href="/products-and-services"
                                 >
                                     <i className="now-ui-icons business_bulb-63 mr-1"></i>
-                                    <p>Our Products and Services</p>
+                                    <p>Products and Services</p>
                                 </NavLink>
                             </NavItem>
                             <NavItem>

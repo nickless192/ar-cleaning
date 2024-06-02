@@ -15,7 +15,6 @@ import {
 import Navbar from "components/Pages/Navbar.js";
 import Footer from "components/Pages/Footer.js";
 
-
 const ManageProduct = () => {
     const [formData, setFormData] = useState({
         productName: '',
@@ -86,7 +85,19 @@ const ManageProduct = () => {
             .then(response => response.json())
             .then(data => setProducts(data))
             .catch(error => console.log(error));
+
+            document.body.classList.add("manage-product-page");
+            document.body.classList.add("sidebar-collapse");
+            document.documentElement.classList.remove("nav-open");
+            window.scrollTo(0, 0);
+            document.body.scrollTop = 0;
+            return function cleanup() {
+              document.body.classList.remove("manage-product-page");
+              document.body.classList.remove("sidebar-collapse");      
+            };
     }, []);
+
+    
 
     return (
         <>

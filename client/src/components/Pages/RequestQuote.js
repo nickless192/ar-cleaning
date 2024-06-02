@@ -53,51 +53,6 @@ const RequestQuote = () => {
         setFormData({ ...formData, [name]: value });
     };
 
-    // const handleProductCost = (e, index) => {
-    //     const { value } = e.target;
-    //     const updatedProducts = [...formData.products];
-    //     // console.log(value);
-    //     // console.log(updatedProducts);
-    //     // fetch(`http://localhost:3001/api/services/?name=Deep%20cleaning`)
-
-    //     for (let i = 0; i < products.length; i++) {
-    //         if (products[i].name === value) {
-    //             // console.log(updatedProducts[index])
-    //             // console.log(products[i].productCost);
-    //             updatedProducts[index].productcostperquantity = products[i].productCost;
-    //             setFormData({ ...formData, products: updatedProducts });
-    //             return;
-    //         }
-    //     }
-    // }
-
-    // const handleServiceCost = (e, index) => {
-    //     const { value } = e.target;
-    //     const updatedServices = [...formData.services];
-    //     // console.log(value);
-    //     // fetch(`http://localhost:3001/api/services/?name=Deep%20cleaning`)
-
-    //     for (let i = 0; i < services.length; i++) {
-    //         if (services[i].name === value) {
-    //             updatedServices[index].servicecostperquantity = services[i].serviceCost;
-    //             setFormData({ ...formData, services: updatedServices });
-    //             return;
-    //         }
-    //     }
-    // }
-
-    // const toggleOption = (productId) => {
-    //     const index = selectedOptions.indexOf(productId);
-    //     if (index === -1) {
-    //         setSelectedOptions([...selectedOptions, productId]);
-    //     } else {
-    //         const newSelectedOptions = [...selectedOptions];
-    //         newSelectedOptions.splice(index, 1);
-    //         setSelectedOptions(newSelectedOptions);
-
-    //         // console.log(selectedOptions.includes(productId));
-    //     }
-    // };
 
     const toggleProduct = (e, product) => {
         // e.preventDefault();
@@ -127,33 +82,6 @@ const RequestQuote = () => {
 
         // setFormData({ ...formData, grandTotal: formData.services.reduce((acc, service) => acc + service.serviceCost, 0) + formData.products.reduce((acc, product) => acc + product.productCost, 0) * 1.13});
     };
-
-    // const handleProductChange = async (e, index) => {
-    //     const { name, value } = e.target;
-    //     const updatedProducts = [...formData.products];
-    //     if (name === 'product') {
-    //         // retrieve cost from API call
-    //         handleProductCost(e, index);
-    //     }
-
-    //     // console.log(updatedProducts); 
-    //     updatedProducts[index][name] = value;
-    //     setFormData({ ...formData, products: updatedProducts });
-    // };
-
-    // const handleServiceChange = async (e, index) => {
-    //     const { name, value } = e.target;
-    //     const updatedServices = [...formData.services];
-    //     // console.log(updatedServices);
-    //     // retrieve cost from API call
-    //     if (name === 'service') {
-    //         handleServiceCost(e, index);
-    //     }
-    //     // console.log(value);
-    //     // updatedServices[index].service = value;
-    //     updatedServices[index][name] = value;
-    //     setFormData({ ...formData, services: updatedServices });
-    // };
 
     const handleSubmit = async (e) => {
         e.preventDefault();

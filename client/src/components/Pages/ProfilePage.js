@@ -15,9 +15,9 @@ import {
 } from "reactstrap";
 
 // core components
-import ExamplesNavbar from "components/Navbars/ExamplesNavbar.js";
+import Navbar from "components/Pages/Navbar.js";
 import ProfilePageHeader from "components/Headers/ProfilePageHeader.js";
-import DefaultFooter from "components/Footers/DefaultFooter.js";
+import Footer from "components/Pages/Footer.js";
 
 function ProfilePage() {
   const [pills, setPills] = React.useState("2");
@@ -34,7 +34,7 @@ function ProfilePage() {
   }, []);
   return (
     <>
-      <ExamplesNavbar />
+      <Navbar />
       <div className="wrapper">
         <ProfilePageHeader />
         <div className="section">
@@ -216,7 +216,7 @@ function ProfilePage() {
             </Row>
           </Container>
         </div>
-        <DefaultFooter />
+        <Footer />
       </div>
     </>
   );

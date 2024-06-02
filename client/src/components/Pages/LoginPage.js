@@ -138,10 +138,10 @@ function LoginPage() {
                 <Form onSubmit={(e) => handleFormSubmit(e)} className="form">
                   <CardHeader className="text-center">
                     <div className="logo-container">
-                      <img
+                      {/* <img
                         alt="..."
                         src={require("assets/img/now-logo.png")}
-                      ></img>
+                      ></img> */}
                     </div>
                   </CardHeader>
                   <CardBody>

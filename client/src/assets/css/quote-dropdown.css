@@ -1,17 +1,40 @@
 .scrollable-dropdown-menu {
-    max-height: 300px; /* Default for larger screens */
-    overflow-y: auto;
+  max-height: 300px;
+  /* Default for larger screens */
+  overflow-y: auto;
+}
+
+/* Adjust for smaller screens */
+@media (max-width: 768px) {
+  .scrollable-dropdown-menu {
+    max-height: 200px;
+    /* Slightly smaller for tablets and small screens */
   }
-  
-  /* Adjust for smaller screens */
-  @media (max-width: 768px) {
-    .scrollable-dropdown-menu {
-      max-height: 200px; /* Slightly smaller for tablets and small screens */
-    }
+}
+
+@media (max-width: 576px) {
+  .scrollable-dropdown-menu {
+    max-height: 100px;
+    /* Smaller height for mobile devices */
   }
-  
-  @media (max-width: 576px) {
-    .scrollable-dropdown-menu {
-      max-height: 100px; /* Smaller height for mobile devices */
-    }
-  }
+}
+
+.text-light {
+  color: #ffffff !important;
+  /* Set text color to white */
+}
+
+.dropdown-menu .dropdown-item {
+  color: #000000;
+  /* Ensure dropdown items are visible against a white background */
+}
+
+.input-group-text,
+.form-control {
+  background-color: rgba(255, 255, 255, 0.1);
+  /* Slightly transparent background */
+  border: none;
+  /* Remove borders for a cleaner look */
+  color: #ffffff;
+  /* Set input text color to white */
+}

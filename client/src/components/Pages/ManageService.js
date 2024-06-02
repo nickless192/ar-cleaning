@@ -82,6 +82,16 @@ const ManageService = () => {
             .then(response => response.json())
             .then(data => setServices(data))
             .catch(error => console.log(error));
+
+            document.body.classList.add("manage-service-page");
+            document.body.classList.add("sidebar-collapse");
+            document.documentElement.classList.remove("nav-open");
+            window.scrollTo(0, 0);
+            document.body.scrollTop = 0;
+            return function cleanup() {
+              document.body.classList.remove("manage-service-page");
+              document.body.classList.remove("sidebar-collapse");      
+            };
     }, []);
 
     return (
