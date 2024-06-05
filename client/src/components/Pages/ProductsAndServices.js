@@ -32,7 +32,7 @@ const ProductsAndServices = () => {
       <div
         className="page-header-image"
         style={{
-          backgroundImage: "url(" + require("assets/img/bg8.jpg") + ")",
+          backgroundImage: "url(" + require("assets/img/stock-photo-professional-cleaners-safety-protocols-wearing-protection-suits-while-sanitizing-furniture.jpg") + ")",
           backgroundSize: "cover",
           backgroundPosition: "top center",
           // minHeight: "700px"

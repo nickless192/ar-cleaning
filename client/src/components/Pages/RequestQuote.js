@@ -279,7 +279,7 @@ const RequestQuote = () => {
                 <div
                     className="page-header-image"
                     style={{
-                        backgroundImage: "url(" + require("assets/img/login.jpg") + ")",
+                        backgroundImage: "url(" + require("assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg") + ")",
                         backgroundSize: "cover",
           backgroundPosition: "top center",
           minHeight: "700px"

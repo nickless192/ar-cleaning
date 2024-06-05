@@ -52,10 +52,11 @@ const ViewQuote = () => {
   return (
     <>
       <Navbar />
+      
       <div
         className="section section-signup"
         style={{
-          backgroundImage: "url(" + require("assets/img/bg8.jpg") + ")",
+          backgroundImage: "url(" + require("assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg") + ")",
           backgroundSize: "cover",
           backgroundPosition: "top center",
           minHeight: "700px"

@@ -133,7 +133,7 @@ function LoginPage() {
         <div
           className="page-header-image"
           style={{
-            backgroundImage: "url(" + require("assets/img/login.jpg") + ")"
+            backgroundImage: "url(" + require("assets/img/stock-photo-cropped-photo-responsible-cleaner-safety-protocols-placing-yellow-caution-sign.jpg") + ")"
           }}
         ></div>
         <div className="content">

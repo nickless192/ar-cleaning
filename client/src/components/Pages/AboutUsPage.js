@@ -34,7 +34,7 @@ function AboutUsPage() {
       <div
         className="page-header-image"
         style={{
-          backgroundImage: "url(" + require("assets/img/login.jpg") + ")",
+          backgroundImage: "url(" + require("assets/img/stock-photo-professional-cleaners-safety-protocols-wearing-protection-suits-while-sanitizing-furniture.jpg") + ")",
           // backgroundRepeat: "repeat",
           // backgroundSize: "auto"
         }}
@@ -160,6 +160,7 @@ function AboutUsPage() {
         </div>
           <Footer />
       </div>
+      {/* </div> */}
     </>
   );
 }
