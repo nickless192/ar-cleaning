@@ -27,18 +27,23 @@ const ProductsAndServices = () => {
   return (
     <>
       <Navbar />
+      
+      <div className="page-header clear-filter" filter-color="blue">
       <div
-        className="section section-signup"
+        className="page-header-image"
         style={{
           backgroundImage: "url(" + require("assets/img/bg8.jpg") + ")",
           backgroundSize: "cover",
           backgroundPosition: "top center",
-          minHeight: "700px"
+          // minHeight: "700px"
         }}
-      >
-        <div className="wrapper">
-          <div className="section section-contact-us text-center">
-            <Container>
+      > 
+        <div className="container">        
+            <Row>
+              <Col className="ml-auto mr-auto text-center" md="8">
+                <h1 className="title"> </h1>
+                </Col>
+            </Row>
               <h2 className="title">Products and Services</h2>
               <p className="description">Explore our offerings below:</p>
               <Row>
@@ -69,14 +74,16 @@ const ProductsAndServices = () => {
                       </Input>
                     </InputGroup>
                   </div>
-                  <div className="send-button">
-                  </div>
+                  {/* <div className="send-button">
+                  </div> */}
                 </Col>
               </Row>
-            </Container>
-          </div>
+            
+          
         </div>
       </div>
+      </div>
+      
       <Footer />
 
     </>

@@ -127,16 +127,6 @@ function IndexNavbar() {
                         <NavLink
                             // className="nav-link btn-neutral"
                             // color="info"
-                            href="/view-quotes"
-                        >
-                            <i className="now-ui-icons files_single-copy-04 mr-1"></i>
-                            <p>View Quotes</p>
-                        </NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink
-                            // className="nav-link btn-neutral"
-                            // color="info"
                             href="/api/logout"
                             id="logout-btn"
                             onClick={() => Auth.logout()}
@@ -193,7 +183,7 @@ function IndexNavbar() {
                             href="/index"
                             id="navbar-brand"
                         >
-                            AR Pro Clean Solutions
+                            KleanMart Services
                         </NavbarBrand>
                         <button
                             className="navbar-toggler navbar-toggler"
@@ -236,7 +226,7 @@ function IndexNavbar() {
                                     href="/products-and-services"
                                 >
                                     <i className="now-ui-icons business_bulb-63 mr-1"></i>
-                                    <p>Products and Services</p>
+                                    <p>Products & Services</p>
                                 </NavLink>
                             </NavItem>
                             <NavItem>
@@ -256,7 +246,7 @@ function IndexNavbar() {
                                     // color="info"
                                     href="/view-quotes"
                                 >
-                                    <i className="now-ui-icons business_globe mr-1"></i>
+                                    <i className="now-ui-icons files_single-copy-04 mr-1"></i>
                                     <p>View Quotes</p>
                                 </NavLink>
                             </NavItem>

@@ -1,27 +1,60 @@
-import React from 'react';
+import React from "react";
 import {
-  Container,
+  // Container,
   Row,
   Col
-} from 'reactstrap'; // Importing required components from reactstrap
+} from "reactstrap";
+import "./../../assets/css/our-palette.css";
 
-const AboutUsPage = () => {
+import Navbar from "components/Pages/Navbar.js";
+import Footer from "components/Pages/Footer.js";
+// import AboutUsPage from "components/Pages/AboutUsPage";
+// import ProfilePage from "components/Pages/ProfilePage";
+
+function AboutUsPage() {
+
+
+  React.useEffect(() => {
+    document.body.classList.add("index-page");
+    document.body.classList.add("sidebar-collapse");
+    document.documentElement.classList.remove("nav-open");
+    window.scrollTo(0, 0);
+    document.body.scrollTop = 0;
+    // initializeServices();
+    return function cleanup() {
+      document.body.classList.remove("index-page");
+      document.body.classList.remove("sidebar-collapse");
+    };
+  }, []);
+
   return (
     <>
-      <div className="wrapper">
-        <div className="section section-about-us bg-info">
-          <Container>
+      <Navbar />
+      {/* <div className="page-header clear-filter" filter-color="blue"> */}
+      <div
+        className="page-header-image"
+        style={{
+          backgroundImage: "url(" + require("assets/img/login.jpg") + ")",
+          // backgroundRepeat: "repeat",
+          // backgroundSize: "auto"
+        }}
+      >
+        <div className="">
+          {/* <div className="content"> */}
+          <div className="section section-about-us bg-info">
+            {/* <Container> */}
             <Row>
-              <Col className="ml-auto mr-auto text-center" md="8">
-                <p className="description text-dark">
-                  At AR Pro Clean Solutions, we are dedicated to providing professional and reliable cleaning services in Toronto and the GTA area. With a focus on excellence and customer satisfaction, we strive to exceed expectations on every project, delivering impeccable results and exceptional service.
+              <Col className="ml-auto mr-auto text-center" md="8" lg="6">
+                <h2 className="title text-dark"> </h2>
+                <p className="description test-secondary">
+                  At KleanMart Services, we are dedicated to providing professional and reliable cleaning services in Toronto and the GTA area. With a focus on excellence and customer satisfaction, we strive to exceed expectations on every project, delivering impeccable results and exceptional service.
                 </p>
               </Col>
             </Row>
-          </Container>
-        </div>
-        <div className="section section-industries bg-warning">
-          <Container>
+            {/* </Container> */}
+          </div>
+          <div className="section section-industries ">
+
             <h2 className="title text-center text-dark">Industries We Serve</h2>
             <Row>
               <Col md="4">
@@ -78,10 +111,10 @@ const AboutUsPage = () => {
               </Col>
               {/* Add more industries as needed */}
             </Row>
-          </Container>
-        </div>
-        <div className="section section-services bg-success">
-          <Container>
+
+          </div>
+          <div className="section section-services bg-success">
+
             <h2 className="title text-center text-dark">Our Services</h2>
             <Row>
               <Col md="4">
@@ -109,19 +142,26 @@ const AboutUsPage = () => {
                 </ul>
               </Col>
             </Row>
-          </Container>
-        </div>
-        <div className="section section-additional-info bg-primary">
-          <Container>
+
+          </div>
+          <div className="section section-additional-info ">
+
             {/* <h2 className="title text-center text-dark">Additional Information</h2> */}
-            <p className="text-dark">
-              Our services are designed to meet the unique needs of our clients, providing personalized solutions and exceptional results on every project. At AR Pro Clean Solutions, we take pride in offering reliable and high-quality service that ensures the impeccable cleanliness and maintenance of any space.
+            <p className="test-primary">
+              Our services are designed to meet the unique needs of our clients, providing personalized solutions and exceptional results on every project. At KleanMart Services, we take pride in offering reliable and high-quality service that ensures the impeccable cleanliness and maintenance of any space.
             </p>
-          </Container>
+
+          </div>
+          {/* <LandingPage /> */}
+          {/* <ProfilePage /> */}
+          {/* </div> */}
+
+
         </div>
+          <Footer />
       </div>
     </>
   );
-};
+}
 
 export default AboutUsPage;

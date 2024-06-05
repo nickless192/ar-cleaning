@@ -83,15 +83,15 @@ const ManageService = () => {
             .then(data => setServices(data))
             .catch(error => console.log(error));
 
-            document.body.classList.add("manage-service-page");
-            document.body.classList.add("sidebar-collapse");
-            document.documentElement.classList.remove("nav-open");
-            window.scrollTo(0, 0);
-            document.body.scrollTop = 0;
-            return function cleanup() {
-              document.body.classList.remove("manage-service-page");
-              document.body.classList.remove("sidebar-collapse");      
-            };
+        document.body.classList.add("manage-service-page");
+        document.body.classList.add("sidebar-collapse");
+        document.documentElement.classList.remove("nav-open");
+        window.scrollTo(0, 0);
+        document.body.scrollTop = 0;
+        return function cleanup() {
+            document.body.classList.remove("manage-service-page");
+            document.body.classList.remove("sidebar-collapse");
+        };
     }, []);
 
     return (
@@ -102,34 +102,35 @@ const ManageService = () => {
                     className="page-header-image"
                     style={{
                         backgroundImage: "url(" + require("assets/img/login.jpg") + ")",
-                        backgroundRepeat: "repeat",
-                        backgroundSize: "auto"
+                        backgroundSize: "cover",
+                        backgroundPosition: "top center",
+                        minHeight: "700px"
                     }}
                 ></div>
-                <div className='content'>
+                <div className='container'>
 
-                    <Container>
-                        <h2>All Services</h2>
-                        <Row>
-                            {services.map(service => (
-                                <Col key={service.id} className="text-center ml-auto mr-auto" lg="6" md="8">
-                                    <Card className='shadow-sm mb-4 border-0'>
-                                        <CardBody className='p-4'>
-                                            <CardTitle tag='h5' className='text-primary mb-3'>
-                                                {service.name}
-                                            </CardTitle>
-                                            <CardText className='text-secondary'>
-                                                {service.description.toUpperCase()}
-                                            </CardText>
-                                            <CardText className='font-weight-bold text-secondary'>
-                                                Cost per Quantity: <span className='text-success'>{service.serviceCost}</span>
-                                            </CardText>
-                                        </CardBody>
-                                    </Card>
-                                </Col>
-                            ))}
-                        </Row>
-                    </Container>
+                    {/* <Container> */}
+                    <h2>All Services</h2>
+                    <Row>
+                        {services.map(service => (
+                            <Col key={service.id} className="text-center ml-auto mr-auto" lg="6" md="8">
+                                <Card className='shadow-sm mb-4 border-0'>
+                                    <CardBody className='p-4'>
+                                        <CardTitle tag='h5' className='text-primary mb-3'>
+                                            {service.name}
+                                        </CardTitle>
+                                        <CardText className='text-secondary'>
+                                            {service.description.toUpperCase()}
+                                        </CardText>
+                                        <CardText className='font-weight-bold text-secondary'>
+                                            Cost per Quantity: <span className='text-success'>{service.serviceCost}</span>
+                                        </CardText>
+                                    </CardBody>
+                                </Card>
+                            </Col>
+                        ))}
+                    </Row>
+                    {/* </Container> */}
                     <Form onSubmit={handleSubmit} className='form'>
                         <Container>
                             <h2 className='title'>Add Service</h2>
@@ -228,11 +229,8 @@ const ManageService = () => {
                     </Form>
 
                 </div>
-                <div className="footer register-footer text-center">
-                    <Footer />
-                </div>
             </div>
-
+            <Footer />
         </>
 
     );

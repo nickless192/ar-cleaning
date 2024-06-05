@@ -1,9 +1,15 @@
 import React from "react";
+import {
+  Container,
+  Row,
+  Col
+} from "reactstrap";
 
 import Navbar from "components/Pages/Navbar.js";
 import Footer from "components/Pages/Footer.js";
-import AboutUsPage from "components/Pages/AboutUsPage";
+// import AboutUsPage from "components/Pages/AboutUsPage";
 import ProfilePage from "components/Pages/ProfilePage";
+import AboutUsPage from "components/Pages/AboutUsPage";
 
 function Index() {
 
@@ -23,15 +29,7 @@ function Index() {
 
   return (
     <>
-      <Navbar  />
-      <div className="wrapper">
-        <div className="main">
-        <AboutUsPage />
-        {/* <LandingPage /> */}
-        <ProfilePage />
-        </div>
-        <Footer />
-      </div>
+      <AboutUsPage />
     </>
   );
 }

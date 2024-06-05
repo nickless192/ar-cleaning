@@ -86,18 +86,18 @@ const ManageProduct = () => {
             .then(data => setProducts(data))
             .catch(error => console.log(error));
 
-            document.body.classList.add("manage-product-page");
-            document.body.classList.add("sidebar-collapse");
-            document.documentElement.classList.remove("nav-open");
-            window.scrollTo(0, 0);
-            document.body.scrollTop = 0;
-            return function cleanup() {
-              document.body.classList.remove("manage-product-page");
-              document.body.classList.remove("sidebar-collapse");      
-            };
+        document.body.classList.add("manage-product-page");
+        document.body.classList.add("sidebar-collapse");
+        document.documentElement.classList.remove("nav-open");
+        window.scrollTo(0, 0);
+        document.body.scrollTop = 0;
+        return function cleanup() {
+            document.body.classList.remove("manage-product-page");
+            document.body.classList.remove("sidebar-collapse");
+        };
     }, []);
 
-    
+
 
     return (
         <>
@@ -107,36 +107,39 @@ const ManageProduct = () => {
                     className="page-header-image"
                     style={{
                         backgroundImage: "url(" + require("assets/img/login.jpg") + ")",
-                        backgroundRepeat: "repeat",
-                        backgroundSize: "auto"
+                        backgroundSize: "cover",
+                        backgroundPosition: "top center",
+                        minHeight: "700px"
                     }}
-                ></div>
-                <div className="content">
-                    <Container>
-                        <h2>All Products`</h2>
-                        <Row>
-                            {products.map(product => (
-                                <Col key={product.id} className="text-center ml-auto mr-auto" lg="6" md="8">
-                                    <Card className='shadow-sm mb-4 border-0'>
-                                        <CardBody className='p-4'>
-                                            <CardTitle tag='h5' className='text-primary mb-3'>
-                                                {product.name}
-                                            </CardTitle>
-                                            <CardText className='text-secondary'>
-                                                {product.description.toUpperCase()}
-                                            </CardText>
-                                            <CardText className='font-weight-bold text-secondary'>
-                                                Cost per Quantity: <span className='text-success'>{product.productCost}</span>
-                                            </CardText>
-                                            <CardText className='font-weight-bold text-info'>
-                                                Quantity at Hand: <span className='text-success'>{product.quantityAtHand}</span>
-                                            </CardText>
-                                        </CardBody>
-                                    </Card>
-                                </Col>
-                            ))}
-                        </Row>
-                    </Container>
+                >
+
+                </div>
+                <div className="container">
+                    {/* <Container> */}
+                    <h2>All Products</h2>
+                    <Row>
+                        {products.map(product => (
+                            <Col key={product.id} className="text-center ml-auto mr-auto" lg="6" md="8">
+                                <Card className='shadow-sm mb-4 border-0'>
+                                    <CardBody className='p-4'>
+                                        <CardTitle tag='h5' className='text-primary mb-3'>
+                                            {product.name}
+                                        </CardTitle>
+                                        <CardText className='text-secondary'>
+                                            {product.description.toUpperCase()}
+                                        </CardText>
+                                        <CardText className='font-weight-bold text-secondary'>
+                                            Cost per Quantity: <span className='text-success'>{product.productCost}</span>
+                                        </CardText>
+                                        <CardText className='font-weight-bold text-info'>
+                                            Quantity at Hand: <span className='text-success'>{product.quantityAtHand}</span>
+                                        </CardText>
+                                    </CardBody>
+                                </Card>
+                            </Col>
+                        ))}
+                    </Row>
+                    {/* </Container> */}
 
                     <Form onSubmit={handleSubmit} className='form'>
                         <Container>
@@ -202,7 +205,7 @@ const ManageProduct = () => {
                                 </Col>
                             </Row>
                         </Container>
-{/* 
+                        {/* 
                             <div>
                                 <label htmlFor="productName">Product Name:</label>
                                 <input
@@ -247,10 +250,8 @@ const ManageProduct = () => {
                     </Form>
 
                 </div>
-                <div className="footer register-footer text-center">
-                <Footer />
-                    </div>
             </div>
+            <Footer />
         </>
 
     );

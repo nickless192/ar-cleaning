@@ -1,5 +1,9 @@
 import React from "react";
 import Auth from "../../utils/auth";
+import Logo from "../../assets/svg/cleanmart-blue.svg";
+import Logo2 from "../../assets/svg/cleanmart-circles.svg";
+import Logo3 from "../../assets/svg/clean&co-green.svg";
+import Logo4 from "../../assets/svg/cleanmart-outline.svg";
 
 // reactstrap components
 import {
@@ -14,6 +18,7 @@ import {
   InputGroupText,
   InputGroup,
   Container,
+  Row,
   Col
 } from "reactstrap";
 
@@ -137,12 +142,59 @@ function LoginPage() {
               <Card className="card-login card-plain">
                 <Form onSubmit={(e) => handleFormSubmit(e)} className="form">
                   <CardHeader className="text-center">
-                    <div className="logo-container">
-                      {/* <img
+                    <Row >
+                      <Col>
+                      <div className="logo-container">
+                      <img
                         alt="..."
-                        src={require("assets/img/now-logo.png")}
-                      ></img> */}
-                    </div>
+                        src={Logo}
+                      ></img>
+                      </div>
+                      </Col>
+                      {/* <Col>
+                      <div className="logo-container">
+                      <img
+                        alt="..."
+                        src={Logo2}
+                      ></img>
+                      </div>
+                      </Col> */}
+                      <Col>
+                      <div className="logo-container">
+                      <img
+                        alt="..."
+                        src={Logo3}
+                      ></img>
+                      </div>
+                      </Col>
+                      <Col>
+                      <div className="logo-container">
+                      <img
+                        alt="..."
+                        src={Logo4}
+                      ></img>
+                      </div>
+                      </Col>
+                    
+                    </Row>
+                    {/* <div className="logo-container">
+                      <img
+                        alt="..."
+                        src={Logo}
+                      ></img>
+                      <img
+                        alt="..."
+                        src={Logo2}
+                      ></img>
+                      <img
+                        alt="..."
+                        src={Logo3}
+                      ></img>
+                      <img
+                        alt="..."
+                        src={Logo4}
+                      ></img>
+                    </div> */}
                   </CardHeader>
                   <CardBody>
                     <InputGroup

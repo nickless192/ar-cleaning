@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import "./../../assets/css/our-palette.css";
 import {
     Button,
     Container,
@@ -278,19 +279,21 @@ const RequestQuote = () => {
                 <div
                     className="page-header-image"
                     style={{
-                        backgroundImage: "url(" + require("assets/img/login.jpg") + ")"
+                        backgroundImage: "url(" + require("assets/img/login.jpg") + ")",
+                        backgroundSize: "cover",
+          backgroundPosition: "top center",
+          minHeight: "700px"
                     }}
                 ></div>
-                <div className="content">
+
+                <div className='container'> 
                     <Form onSubmit={(e) => handleSubmit(e)} className='form'>
-                        <Container>
-                            <h2 className="title">Request a Quote</h2>
-                            <p className="description">Please fill out the form below:</p>
+                        {/* <Container> */}
+                            <h2 className="title test-primary text-center">Request a Quote</h2>
+                            <p className="test-secondary description text-center">Please fill out the form below:</p>
                             <Row>
-                                <Col className="text-center ml-auto mr-auto" lg="6" md="8"
-                                    id='quote-form'
-                                >
-                                    <InputGroup className={
+                                <Col className="text-center ml-auto mr-auto test-accent" lg="6" md="8" id='quote-form'>
+                                    <InputGroup  className={
                                         "no-border" + (formData.name ? " input-group-focus" : "")
                                     }>
                                         <InputGroupAddon addonType="prepend">
@@ -301,7 +304,7 @@ const RequestQuote = () => {
                                         <Input
                                             placeholder="Your Name..."
                                             type="text"
-                                            // className='input-group-text'
+                                            // className='test-secondary'
                                             // color='light'
                                             name="name"
                                             // className='input-lg'
@@ -369,6 +372,7 @@ const RequestQuote = () => {
                                             placeholder="Message..."
                                             rows="4"
                                             type="textarea"
+                                            className='rounded-lg'
                                             value={formData.description}
                                             onChange={handleChange}
                                         />
@@ -409,67 +413,12 @@ const RequestQuote = () => {
                                         </Input>
                                     </InputGroup>
                                     {/* Product Selector */}
-                                    <div className='product-selector'>
-                                        <h5>Select Products:</h5>
-                                        {/* {formData.products.map((product, index) => (
-                                        <InputGroup key={index}>
-                                            <Input
-                                                type="select"
-                                                value={product.product}
-                                                name='product'
-                                                onChange={(e) => handleProductChange(e, index)}
-                                            >
-                                                <option value="">Select Product...</option>
-                                                {products.map((product) => (
-                                                    <option key={product._id} value={product.name}>
-                                                        {product.name}
-                                                    </option>
-                                                ))}
-                                                
-                                            </Input>
-                                            <Input
-                                                placeholder="Amount..."
-                                                type="text"
-                                                value={product.productamount}
-                                                name='productamount'
-                                                onChange={(e) =>
-                                                    handleProductChange(e, index)
-                                                }
-                                            />
-                                            <Input
-                                                placeholder="Cost per Quantity: $..."
-                                                type="text"
-                                                name='productcostperquantity'
-                                                value={product.productcostperquantity}
-                                                readOnly
-                                            />
-                                            <Input
-                                                placeholder="Total Cost: $..."
-                                                type="text"
-                                                name='producttotalcost'
-                                                value={product.productamount * product.productcostperquantity}
-                                                readOnly
-                                            />
-                                            <Button
-                                                color="danger"
-                                                onClick={() =>
-                                                    setFormData((prevData) => ({
-                                                        ...prevData,
-                                                        products: prevData.products.filter(
-                                                            (product, i) => i !== index
-                                                        )
-                                                    }))
-                                                }
-                                            >
-                                                Remove Product
-                                            </Button>
-                                        </InputGroup>
-                                    ))} */}
-
+                                    <div className='product-selector '>
+                                        <h5>Select Products:</h5> 
                                         {/* map each product from the array and a checkmark to add them to the quote */}
                                         <Row>
                                             {products.map((product) => (
-                                                <Col>
+                                                <Col className=''>
                                                     <FormGroup key={product.id}>
 
                                                         <Label check for={product.id}>
@@ -487,86 +436,13 @@ const RequestQuote = () => {
                                             ))}
                                         </Row>
 
-                                        {/* <Button
-                                        color="primary"
-                                        onClick={() =>
-                                            setFormData((prevData) => ({
-                                                ...prevData,
-                                                products: [...prevData.products, {}]
-                                            }))
-                                        }
-                                    >
-                                        Add Product
-                                    </Button> */}
                                     </div>
 
 
                                     {/* Service Selector */}
-                                    <div className="service-selector">
-                                        <h5>Select Services:</h5>
-                                        {/* {formData.services.map((service, index) => (
-                                        <InputGroup key={index}>
-                                            <Input
-                                                type="select"
-                                                value={service.service}
-                                                name='service'
-                                                onChange={(e) => handleServiceChange(e, index)}
-                                            >
-                                                <option value="">Select Service...</option>
-                                                {services.map((service) => (
-                                                    <option key={service._id} value={service.name}>
-                                                        {service.name}
-                                                    </option>
-                                                ))}
-                                            </Input>
-
-                                            <Input
-                                                placeholder="Amount..."
-                                                type="text"
-                                                value={service.serviceamount}
-                                                name='serviceamount'
-                                                onChange={(e) =>
-                                                    // handleChange(e)
-                                                    handleServiceChange(e, index)
-                                                }
-
-
-                                            />
-                                            <Input
-                                                placeholder="Cost per Quantity: $..."
-                                                type="text"
-                                                name='servicecostperquantity'
-                                                value={service.servicecostperquantity}
-                                                readOnly
-                                            />
-                                            <Input
-                                                placeholder="Total Cost: $..."
-                                                type="text"
-                                                name='servicetotalcost'
-                                                onChange={(e) =>
-                                                    // handleChange(e)
-                                                    handleChange(e)
-                                                }
-                                                value={service.serviceamount * service.servicecostperquantity}
-                                                readOnly
-                                            />
-                                            <Button
-                                                color="danger"
-                                                onClick={() =>
-                                                    setFormData((prevData) => ({
-                                                        ...prevData,
-                                                        services: prevData.services.filter(
-                                                            (service, i) => i !== index
-                                                        )
-                                                    }))
-                                                }
-                                            >
-                                                Remove Service
-                                            </Button>
-                                        </InputGroup>
-                                    ))} */}
+                                    <div className="service-selector ">
+                                        <h5>Select Services:</h5>                                       
                                         <Row>
-
                                             {services.map((service) => (
                                                 <Col>
                                                     <FormGroup key={service.id}>
@@ -583,17 +459,7 @@ const RequestQuote = () => {
                                                 </Col>
                                             ))}
                                         </Row>
-                                        {/* <Button
-                                    color="primary"
-                                    onClick={() =>
-                                        setFormData((prevData) => ({
-                                            ...prevData,
-                                            services: [...prevData.services, {}]
-                                        }))
-                                    }
-                                >
-                                    Add Service
-                                </Button> */}
+                                        
                                         <InputGroup>
                                             <Input
                                                 placeholder='Subtotal Cost: $...'
@@ -677,17 +543,11 @@ const RequestQuote = () => {
                                     </div>
                                 </Col>
                             </Row>
-                        </Container>
+                        {/* </Container> */}
                     </Form>
-                </div>
-
-
-                {/* <div className="content">
-                </div> */}
-                <div className="footer register-footer text-center">
-                    <Footer />
-                </div>
+                    </div>
             </div>
+                    <Footer />
         </>
     );
 };
