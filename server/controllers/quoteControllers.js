@@ -34,11 +34,24 @@ const quoteController = {
     },
     getQuoteById: async (req, res) => {
         try {
+            console.log('Getting quote by id: ', req.params.quoteId);
             const quote = await Quote.findById(req.params.quoteId);
-            res.json(quote);
+            if (!quote) {
+                return res.status(404).json({ message: 'Quote not found' });
+            }
+            res.status(200).json(quote);
         } catch (error) {
             console.error('Error getting quote by id: ', error);
-            res.status(500).json({message: 'Error getting quote by id'});
+            res.status(500).json({ message: 'Error getting quote by id' });
+        }
+    },
+    getUserQuotes: async (req, res) => {
+        try {
+            const quotes = await Quote.find({userId: req.params.userId});
+            res.json(quotes);
+        } catch (error) {
+            console.error('Error getting user quotes: ', error);
+            res.status(500).json({message: 'Error getting user quotes'});
         }
     },
     updateQuote: async (req, res) => {

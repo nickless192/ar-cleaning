@@ -9,8 +9,8 @@ const QuoteSchema = new Schema({
     },
     name: {
         type: String,
-        unique: true,
-        // required: true
+        // unique: true,
+        required: true
     },
     description: {
         type: String
@@ -74,6 +74,10 @@ const QuoteSchema = new Schema({
             }
         }
     ],
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
     subtotalCost: {
         type: Number,
         required: true

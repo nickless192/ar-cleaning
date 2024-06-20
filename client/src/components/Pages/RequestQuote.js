@@ -14,12 +14,15 @@ import html2pdf from 'html2pdf.js';
 import Navbar from "components/Pages/Navbar.js";
 import Footer from "components/Pages/Footer.js";
 
+import Auth from "../../utils/auth";
+
 const RequestQuote = () => {
     const [selectedOptions, setSelectedOptions] = useState([]);
     const [services, setServices] = useState([]);
     const [products, setProducts] = useState([]);
     const [formData, setFormData] = useState({
         name: '',
+        userId: '',
         description: '',
         companyName: '',
         email: '',
@@ -33,6 +36,8 @@ const RequestQuote = () => {
         products: selectedOptions
     });
     const [sendEmail, setSendEmail] = useState(false);
+
+    const [isLogged] = React.useState(Auth.loggedIn());
 
     useEffect(() => {
         const initializeServices = async () => {
@@ -62,7 +67,24 @@ const RequestQuote = () => {
             }
         };
 
+        const prepopulateForm = async () => {
+            console.log('isLogged:', isLogged);
+            if (isLogged) {
+                const data = Auth.getProfile().data;
+                console.log('name:', data);
+                setFormData(prevFormData => ({
+                    ...prevFormData,
+                    name: data.firstName+" "+data.lastName,
+                    email: data.email,
+                    userId: data._id
+
+                }));
+                console.log('formData:', formData);
+            }
+        }  
+
         initializeServices();
+        prepopulateForm();
         document.body.classList.add("request-quote", "sidebar-collapse");
         document.documentElement.classList.remove("nav-open");
         window.scrollTo(0, 0);
@@ -87,6 +109,7 @@ const RequestQuote = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log('formData:', formData);
 
         if (!formData.name || !formData.email || !formData.phonenumber || !formData.howDidYouHearAboutUs || !formData.description || !formData.companyName || (!formData.services.length && !formData.products.length)) {
             alert('Please fill out all required fields');
@@ -108,6 +131,7 @@ const RequestQuote = () => {
                 setSelectedOptions([]);
                 setFormData({
                     name: '',
+                    userId: '',
                     description: '',
                     email: '',
                     phonenumber: '',
@@ -178,6 +202,8 @@ const RequestQuote = () => {
         }));
     }, [formData.services, formData.products]);
 
+    
+
     return (
         <>
             <Navbar />
@@ -216,6 +242,7 @@ const RequestQuote = () => {
                                     value={formData[field]}
                                     onChange={handleChange}
                                     required={field !== 'companyName'}
+                                    readOnly={(isLogged && (field === "name" || field === "email")) ? true : false}
                                 />
                             </InputGroup>
                         ))}

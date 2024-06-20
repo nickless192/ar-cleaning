@@ -15,30 +15,88 @@ import {
   Dropdown,
   DropdownToggle,
   FormGroup,
-  Label
+  Label,
+  Button
 } from 'reactstrap';
 
 import Navbar from "components/Pages/Navbar.js";
 import Footer from "components/Pages/Footer.js";
+import { f } from 'html2pdf.js';
 
 const ViewQuote = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [quotes, setQuotes] = useState([]);
-  const [displayedQuote, setDisplayedQuote] = useState({ products: [], services: [] });
+  const [displayedQuote, setDisplayedQuote] = useState({ products: [], services: [], name: '', phonenumber: '', companyName: '', email: '', description: '', serviceType: '', howDidYouHearAboutUs: '', subtotalCost: 0, tax: 0, grandTotal: 0});
+  const [isLogged] = React.useState(Auth.loggedIn());
   
 
   const toggle = () => setDropdownOpen(prevState => !prevState);
 
-  useEffect(() => {
-    fetch('/api/quotes')
-      .then((response) => response.json())
-      .then((data) => {
+  const searchQuote = () => {
+    if (!document.getElementById('search').value) {
+      console.error('No search term provided!');
+      return;
+    }
+    else if ((document.getElementById('search').value.trim().length !== 12 && document.getElementById('search').value.trim().length !== 24)) {
+      console.error('Invalid search term provided!');
+      return;
+    } 
+    
+    fetch(`/api/quotes/${document.getElementById('search').value}`)
+    .then((response) => {
+        if (!response.ok) {
+            throw new Error('Quote not found');
+        }
+        return response.json();
+    })
+    .then((data) => {
         console.log(data);
-        setQuotes(data);
-      })
-      .catch((error) => {
+        setDisplayedQuote(data);
+    })
+    .catch((error) => {
+      setDisplayedQuote({ products: [], services: [], name: '', phonenumber: '', companyName: '', email: '', description: '', serviceType: '', howDidYouHearAboutUs: '', subtotalCost: 0, tax: 0, grandTotal: 0});
         console.error('Error:', error);
-      });
+        // Optionally display an error message to the user
+    });
+    
+    
+  };
+
+  useEffect(() => {
+    // fetch('/api/quotes')
+    //   .then((response) => response.json())
+    //   .then((data) => {
+    //     // console.log(data);
+    //     setQuotes(data);
+    //   })
+    //   .catch((error) => {
+    //     console.error('Error:', error);
+    //   });
+
+
+      const prepopulateQuotes = async () => {
+        console.log('isLogged: ', isLogged);
+        if (isLogged) {
+          console.log('Auth.getProfile(): ', Auth.getProfile());
+          if (Auth.getProfile().data.adminFlag) {
+            const response = await fetch('/api/quotes');
+            const data = await response.json();
+            // console.log(data);
+            setQuotes(data);
+          }
+          else {
+            const response = await fetch(`/api/quotes/user/${Auth.getProfile().data._id}`);
+            const data = await response.json();
+            setQuotes(data);
+          }
+        }
+        else {
+          // not logged in, so need to setQuotes to empty array
+          setQuotes([]);
+        }
+      };
+
+      prepopulateQuotes();
 
       document.body.classList.add("view-quote-page");
       document.body.classList.add("sidebar-collapse");
@@ -49,7 +107,7 @@ const ViewQuote = () => {
         document.body.classList.remove("view-quote-page");
         document.body.classList.remove("sidebar-collapse");      
       };
-  }, []);
+  }, [isLogged]);
 
   return (
     <>
@@ -67,6 +125,22 @@ const ViewQuote = () => {
         <div className="content">
           <Container>
             <h2 className="title text-light">Search for a quote:</h2>
+            {/* add a search bar for users to input a quote Id to search for */}
+            <InputGroup>
+              <Input
+                className="text-light"
+                id="search"
+                placeholder="Search for a quote..."
+                type="text"
+              />
+              <InputGroupAddon addonType="append">
+                <InputGroupText className="text-light bg-secondary" onClick={searchQuote}>
+                  <i className="now-ui-icons ui-1_zoom-bold"></i>
+                </InputGroupText>
+              </InputGroupAddon>
+            </InputGroup>
+            {/* <Button className="mt-3" color="primary">Search</Button> */}
+
             <Dropdown isOpen={dropdownOpen} toggle={toggle}>
               <DropdownToggle caret>
                 {`Selected Quote: ${displayedQuote.name || 'Select Quote...'}`}
