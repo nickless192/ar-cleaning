@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import "./../../assets/css/our-palette.css";
 // reactstrap components
 import {
     
@@ -38,7 +39,7 @@ function IndexNavbar() {
                 document.documentElement.scrollTop > (scrollTopVal-1) ||
                 document.body.scrollTop > (scrollTopVal-1)
             ) {
-                setNavbarColor("");
+                setNavbarColor("navbar-color");
             } else if (
                 document.documentElement.scrollTop < scrollTopVal ||
                 document.body.scrollTop < scrollTopVal
@@ -176,14 +177,15 @@ function IndexNavbar() {
                     }}
                 />
             ) : null}
-            <Navbar className={"fixed-top " + navbarColor} expand="lg" color="info">
+            <Navbar className={"fixed-top navbar-color " + navbarColor} expand="lg" >
                 <Container>
                     <div className="navbar-translate">
                         <NavbarBrand
                             href="/index"
                             id="navbar-brand"
+                            className="text-capitalize font-weight-bold"
                         >
-                            KleanMart Services
+                            CleanAR Solutions
                         </NavbarBrand>
                         <button
                             className="navbar-toggler navbar-toggler"
@@ -235,7 +237,7 @@ function IndexNavbar() {
                                     // color="info"
                                     href="/request-quote"
                                 >
-                                    <i className="now-ui-icons design-2_ruler-pencil mr-1"></i>
+                                    <i className="now-ui-icons shopping_cart-simple mr-1"></i>
                                     <p>Request Quote</p>
                                 </NavLink>
 
@@ -253,7 +255,7 @@ function IndexNavbar() {
                             {showLogin()}
                             <NavItem>
                                 <NavLink
-                                    href="https://www.instagram.com/chelitoMexicanFood"
+                                    href="https://www.instagram.com/cleanARsolutions/"
                                     target="_blank"
                                     id="instagram-tooltip"
                                 >

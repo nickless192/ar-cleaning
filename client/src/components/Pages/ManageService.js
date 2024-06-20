@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import "assets/css/our-palette.css";
 import {
     Button,
     Container,
@@ -8,7 +9,8 @@ import {
     InputGroup,
     InputGroupAddon,
     InputGroupText,
-    Form, Card, CardBody, CardTitle, CardText
+    Form, Card, CardBody, CardTitle, CardText,
+    CardHeader
 } from 'reactstrap'; // Importing required components from reactstrap
 
 import Navbar from "components/Pages/Navbar.js";
@@ -97,31 +99,31 @@ const ManageService = () => {
     return (
         <>
             <Navbar />
-            <div className="page-header clear-filter" filter-color="blue">
+            {/* <div className="page-header clear-filter" filter-color="blue"> */}
                 <div
-                    className="page-header-image"
+                    className="section page-header-image"
                     style={{
                         backgroundImage: "url(" + require("assets/img/stock-photo-cropped-shot-woman-rubber-gloves-cleaning-office-table.jpg") + ")",
                         backgroundSize: "cover",
                         backgroundPosition: "top center",
                         minHeight: "700px"
                     }}
-                ></div>
-                <div className='container'>
+                >
+                <div className='content'>
 
-                    {/* <Container> */}
+                    <Container>
                     <h2>All Services</h2>
                     <Row>
                         {services.map(service => (
                             <Col key={service.id} className="text-center ml-auto mr-auto" lg="6" md="8">
-                                <Card className='shadow-sm mb-4 border-0'>
-                                    <CardBody className='p-4'>
-                                        <CardTitle tag='h5' className='text-primary mb-3'>
+                                <Card>
+                                        <CardHeader tag='h5' className='text-primary '>
                                             {service.name}
-                                        </CardTitle>
-                                        <CardText className='text-secondary'>
+                                        </CardHeader>
+                                    <CardBody>
+                                        <CardTitle className='text-secondary'>
                                             {service.description.toUpperCase()}
-                                        </CardText>
+                                        </CardTitle>
                                         <CardText className='font-weight-bold text-secondary'>
                                             Cost per Quantity: <span className='text-success'>{service.serviceCost}</span>
                                         </CardText>
@@ -130,9 +132,9 @@ const ManageService = () => {
                             </Col>
                         ))}
                     </Row>
-                    {/* </Container> */}
+                    
                     <Form onSubmit={handleSubmit} className='form'>
-                        <Container>
+                        {/* <Container> */}
                             <h2 className='title'>Add Service</h2>
                             <p className='description'>Add a new service to the list of services</p>
 
@@ -187,13 +189,14 @@ const ManageService = () => {
                                             type="textarea"
                                             id="description"
                                             name="description"
+                                            className='rounded'
                                             value={formData.description}
                                             onChange={handleChange}
                                         />
                                     </InputGroup>
                                 </Col>
                             </Row>
-                        </Container>
+                        {/* </Container> */}
 
                         {/* <div>
                     <label htmlFor="serviceName">Service Name:</label>
@@ -227,9 +230,10 @@ const ManageService = () => {
                         <Button type="submit">Add Service</Button>
                         {/* <button type="submit">Add Service</button> */}
                     </Form>
-
+</Container>
                 </div>
             </div>
+            {/* </div> */}
             <Footer />
         </>
 

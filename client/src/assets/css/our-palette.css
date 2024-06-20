@@ -3,18 +3,19 @@
     --primary-color: #86c129;
     --secondary-color: #003393;
     --accent-color: #0081e9;
-    --light-color: #899dc9;
+    --light-color: #2e6164;
+    --test-color: #778c8f;
 }
 
 /* Use the color variables in your styles */
-body {
+/* body {
     background-color: var(--primary-color);
     color: var(--secondary-color);
-}
+} */
 
-h1 {
+/* h1 {
     color: var(--accent-color);
-}
+} */
 
 /* Test classes */
 .test-primary {
@@ -39,4 +40,68 @@ h1 {
     color: var(--light-color);
     font-weight: bold;
     /* color: black; */
+}
+
+.transparent {
+    background-color: transparent;
+}
+
+.km-bg-primary {
+    background-color: var(--primary-color)!important;
+}
+
+.km-text-primary {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+.km-text-accent {
+    color: var(--accent-color);
+    font-weight: bold;
+}
+.km-text-secondary {
+   color: var(--secondary-color);
+   font-weight: bold;
+}
+.km-text-light {
+    color: var(--light-color);
+    font-weight: bold;
+ }
+
+.km-bg-light {
+    background-color: var(--light-color)!important;
+}
+
+.km-bg-test {
+    background-color: var(--secondary-color)!important;
+}
+
+.navbar-color {
+    background-color: #1c4274;
+}
+
+/* Placeholder styles */
+::-webkit-input-placeholder {
+    color: white !important;
+}
+:-moz-placeholder {
+    color: white !important;
+    opacity: 1 !important;
+}
+::-moz-placeholder {
+    color: white !important;
+    opacity: 1 !important;
+}
+:-ms-input-placeholder {
+    color: white !important;
+}
+::placeholder {
+    color: white !important;
+}
+
+.placeholder-white::placeholder {
+    color: white !important;
+    /* font-weight: bold; */
+    /* background-color: blue!important; */
+    /* font-weight: bold; */
+    opacity: 1 !important; /* Ensure the color is fully opaque */
 }

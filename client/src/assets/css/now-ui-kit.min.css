@@ -2541,6 +2541,7 @@ fieldset[disabled] .btn-link.active {
 }
 .input-group-focus .input-group-text {
   background-color: #fff;
+  color: #fff;
   border-color: #f96332;
 }
 .has-success .input-group-text,
@@ -3974,7 +3975,7 @@ body {
   background-color: #888 !important;
 }
 .bg-primary {
-  background-color: #f96332 !important;
+  background-color: #0d6efd !important;
 }
 .bg-info {
   background-color: #2ca8ff !important;

@@ -9,7 +9,8 @@ import {
     InputGroup,
     InputGroupAddon,
     InputGroupText,
-    Form, Card, CardBody, CardTitle, CardText
+    Form, Card, CardBody, CardTitle, CardText,
+    CardFooter
 } from 'reactstrap';
 
 import Navbar from "components/Pages/Navbar.js";
@@ -114,26 +115,24 @@ const ManageProduct = () => {
                 >
 
                 </div>
-                <div className="container">
+                <div className="container ">
                     {/* <Container> */}
                     <h2>All Products</h2>
-                    <Row>
+                    <Row className='ml-auto mr-auto'>
                         {products.map(product => (
-                            <Col key={product.id} className="text-center ml-auto mr-auto" lg="6" md="8">
-                                <Card className='shadow-sm mb-4 border-0'>
-                                    <CardBody className='p-4'>
-                                        <CardTitle tag='h5' className='text-primary mb-3'>
+                            <Col key={product.id} className="text-center " lg="6" md="8">
+                                <Card className='shadow-sm border-0'>
+                                    <CardBody className=''>
+                                        <CardTitle tag='h5' className='text-primary '>
                                             {product.name}
                                         </CardTitle>
                                         <CardText className='text-secondary'>
                                             {product.description.toUpperCase()}
                                         </CardText>
-                                        <CardText className='font-weight-bold text-secondary'>
-                                            Cost per Quantity: <span className='text-success'>{product.productCost}</span>
-                                        </CardText>
-                                        <CardText className='font-weight-bold text-info'>
+                                        <CardFooter className='font-weight-bold text-secondary'>
+                                            Cost per Quantity: <span className='text-success'>{product.productCost}</span><br />
                                             Quantity at Hand: <span className='text-success'>{product.quantityAtHand}</span>
-                                        </CardText>
+                                        </CardFooter>
                                     </CardBody>
                                 </Card>
                             </Col>

@@ -1,4 +1,6 @@
 import './../../assets/css/quote-dropdown.css';
+import './../../assets/css/our-palette.css';
+import Auth from "../../utils/auth";
 import React, { useState, useEffect } from 'react';
 import {
   Container,
@@ -85,7 +87,7 @@ const ViewQuote = () => {
                 )}
               </Col>
             </Row>
-            {displayedQuote && <QuoteDetails displayedQuote={displayedQuote} />}
+            {displayedQuote && <QuoteDetails displayedQuote={displayedQuote}/>}
           </Container>
         </div>
       </div>
@@ -107,21 +109,24 @@ const QuoteDetails = ({ displayedQuote }) => {
 
   return (
     <Col className="text-center ml-auto mr-auto" lg="6" md="8">
-      <h3 className="mt-5 text-light">Quote Information:</h3>
+      <h3 className="mt-5">Quote Information:</h3>
+      <div className=' rounded p-2'>
+
       {Object.keys(fieldMapping).map(displayLabel => (
         <FormGroup key={displayLabel} className="text-light">
           <Label for={fieldMapping[displayLabel]} className="text-light">{displayLabel}</Label>
           <InputGroup className="no-border">
             <InputGroupAddon addonType="prepend">
-              <InputGroupText className="text-light">
+              <InputGroupText className="text-light bg-secondary">
                 <i className={`now-ui-icons ${iconClassMap[displayLabel]}`}></i>
               </InputGroupText>
             </InputGroupAddon>
             <Input
               id={fieldMapping[displayLabel]}
-              className="text-light"
+              className="text-light no-cursor bg-secondary"
               placeholder={`${displayLabel}...`}
               type="text"
+              alt={`${displayLabel}...`}
               value={displayedQuote[fieldMapping[displayLabel]]}
               readOnly
             />
@@ -131,6 +136,7 @@ const QuoteDetails = ({ displayedQuote }) => {
       <ProductList products={displayedQuote.products} />
       <ServiceList services={displayedQuote.services} />
       <CostDetails displayedQuote={displayedQuote} />
+      </div>
     </Col>
   );
 };
@@ -181,7 +187,7 @@ const CostDetails = ({ displayedQuote }) => (
     {['subtotalCost', 'tax', 'grandTotal'].map(field => (
       <FormGroup key={field} className="text-light">
         <Label for={field} className="text-light">{capitalize(field)}</Label>
-        <InputGroup className="input-lg">
+        <InputGroup className="no-border">
           <InputGroupAddon addonType="prepend">
             <InputGroupText className="text-light">
               <i className="now-ui-icons shopping_tag-content"></i>

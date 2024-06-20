@@ -5,6 +5,11 @@ import {
   Col,
   Input,
   InputGroup,
+  Card,
+  CardHeader,
+  ListGroup,
+  ListGroupItem
+  
 } from 'reactstrap'; // Importing required components from reactstrap
 
 import Navbar from "components/Pages/Navbar.js";
@@ -37,17 +42,17 @@ const ProductsAndServices = () => {
           backgroundPosition: "top center",
           // minHeight: "700px"
         }}
-      > 
+      ></div> 
         <div className="container">        
-            <Row>
+            {/* <Row>
               <Col className="ml-auto mr-auto text-center" md="8">
                 <h1 className="title"> </h1>
                 </Col>
-            </Row>
+            </Row> */}
               <h2 className="title">Products and Services</h2>
               <p className="description">Explore our offerings below:</p>
               <Row>
-                <Col className="text-center ml-auto mr-auto" lg="6" md="8">
+                <Col className="text-center ml-auto mr-auto">
                   <div className="product-selector">
                     <h5>Products:</h5>
                     <InputGroup>
@@ -63,7 +68,7 @@ const ProductsAndServices = () => {
                   </div>
                   <div className="service-selector">
                     <h5>Services:</h5>
-                    <InputGroup>
+                    {/* <InputGroup>
                       <Input type="select" defaultValue="">
                         <option value="" disabled>Select Service...</option>
                         <option value="Deep Cleaning">Deep Cleaning</option>
@@ -72,7 +77,93 @@ const ProductsAndServices = () => {
                         <option value="Odor Removal">Odor Removal</option>
                         <option value="Area Rug Cleaning">Area Rug Cleaning</option>
                       </Input>
-                    </InputGroup>
+                    </InputGroup> */}
+                    <div className="section-services ml-auto mr-auto ">
+            <Row className="px-5">
+              <Col>
+                <Card className="km-bg-light"
+                  // color="primary"
+                  inverse
+                // style={{
+                //   width: '18rem'
+                // }}
+                >
+                  <CardHeader tag="h3" className="mx-2">
+                    {/* <h3 className="text-dark"> */}
+                    Residential Cleaning
+                    {/* </h3> */}
+                  </CardHeader>
+                  <ListGroup>
+                    <ListGroupItem className="text-dark">
+                      Complete cleaning of homes, apartments, and condominiums.
+                    </ListGroupItem>
+                    <ListGroupItem className="text-dark">
+                      Carpet Cleaning to revitalize and maintain the freshness of carpets.
+                    </ListGroupItem>
+                    <ListGroupItem className="text-dark">
+                      Furniture cleaning to preserve its beauty and prolong its lifespan.
+                    </ListGroupItem>
+                  </ListGroup>
+                </Card>
+              </Col>
+              <Col>
+                <Card className="km-bg-light"
+                  // color="primary"
+                  inverse
+                // style={{
+                //   width: '18rem'
+                // }}
+                >
+                  <CardHeader tag="h3" className="mx-2">
+                    {/* <h3 className="text-dark"> */}
+                    Commercial Cleaning
+                    {/* </h3> */}
+                  </CardHeader>
+                  <ListGroup>
+                    <ListGroupItem className="text-dark">
+                      Regular maintenance of offices and commercial spaces.
+                    </ListGroupItem>
+                    <ListGroupItem className="text-dark">
+                      Cleaning of shopping centers and supermarkets.
+                    </ListGroupItem>
+                    <ListGroupItem className="text-dark">
+                      Specialized services for the film industry and special events.
+                    </ListGroupItem>
+                  </ListGroup>
+                </Card>
+              </Col>
+              <Col>
+                <Card className="km-bg-light"
+                  // color="primary"
+                  inverse
+                // style={{
+                //   width: '18rem'
+                // }}
+                >
+                  <CardHeader tag="h3" className="mx-2">
+                    {/* <h3 className="text-dark"> */}
+                    Specialized Cleaning
+
+                    {/* </h3> */}
+                  </CardHeader>
+                  <ListGroup>
+                    <ListGroupItem className="text-dark">
+                      Cleaning contracts for real estate developers and condominiums.
+                    </ListGroupItem>
+                    <ListGroupItem className="text-dark">
+                      Carpet Cleaning at large events and festivals.
+                    </ListGroupItem>
+                    <ListGroupItem className="text-dark">
+                      High-end furniture cleaning in residences and commercial spaces.
+                    </ListGroupItem>
+                  </ListGroup>
+                </Card>
+
+              </Col>
+
+            </Row>
+
+          </div>
                   </div>
                   {/* <div className="send-button">
                   </div> */}
@@ -81,7 +172,7 @@ const ProductsAndServices = () => {
             
           
         </div>
-      </div>
+      {/* </div> */}
       </div>
       
       <Footer />

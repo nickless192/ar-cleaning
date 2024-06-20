@@ -2777,7 +2777,8 @@ fieldset[disabled] .btn-link.active {
 
 .form-group.no-border.input-group-focus.no-border .input-group-text,
 .input-group.no-border.input-group-focus.no-border .input-group-text {
-  background-color: rgba(222, 222, 222, 0.5);
+  /* background-color: rgba(222, 222, 222, 0.5); */
+  background-color: #fff;
 }
 
 .has-error .form-control-feedback,
@@ -4494,7 +4495,7 @@ Created using IcoMoon - icomoon.io
 }
 
 .bg-primary {
-  background-color: #f96332 !important;
+  background-color: #0d6efd !important;
 }
 
 .bg-info {
@@ -6119,6 +6120,7 @@ img {
   background-color: transparent;
   border-color: #ffffff;
   color: #ffffff;
+  /* color: #ffffff; */
 }
 [data-background-color]:not([data-background-color="gray"])
   .form-group.no-border
