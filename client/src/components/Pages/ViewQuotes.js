@@ -37,10 +37,6 @@ const ViewQuote = () => {
       console.error('No search term provided!');
       return;
     }
-    else if ((document.getElementById('search').value.trim().length !== 12 && document.getElementById('search').value.trim().length !== 24)) {
-      console.error('Invalid search term provided!');
-      return;
-    } 
     
     fetch(`/api/quotes/${document.getElementById('search').value}`)
     .then((response) => {
@@ -57,6 +53,7 @@ const ViewQuote = () => {
       setDisplayedQuote({ products: [], services: [], name: '', phonenumber: '', companyName: '', email: '', description: '', serviceType: '', howDidYouHearAboutUs: '', subtotalCost: 0, tax: 0, grandTotal: 0});
         console.error('Error:', error);
         // Optionally display an error message to the user
+        window.alert('Quote not found!');
     });
     
     
@@ -141,7 +138,10 @@ const ViewQuote = () => {
             </InputGroup>
             {/* <Button className="mt-3" color="primary">Search</Button> */}
 
-            <Dropdown isOpen={dropdownOpen} toggle={toggle}>
+{/* display the dropdown button if the user is logged */}
+{/* if the user is not logged in, display a message to log in */} 
+            {isLogged ? (
+              <Dropdown isOpen={dropdownOpen} toggle={toggle}>
               <DropdownToggle caret>
                 {`Selected Quote: ${displayedQuote.name || 'Select Quote...'}`}
               </DropdownToggle>
@@ -154,6 +154,10 @@ const ViewQuote = () => {
                 ))}
               </DropdownMenu>
             </Dropdown>
+            ) : (
+              <h3 className="text-light">Please log in to view all your quotes</h3>
+            )}
+            
             <Row>
               <Col className="text-center ml-auto mr-auto" lg="6" md="8">
                 {quotes.length === 0 && (

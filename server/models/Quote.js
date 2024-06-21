@@ -99,6 +99,7 @@ const QuoteSchema = new Schema({
     toJSON: {
         // enable getters to format timestamps
         getters: true
+
     },
     id: false
 });

@@ -111,7 +111,7 @@ const RequestQuote = () => {
         e.preventDefault();
         console.log('formData:', formData);
 
-        if (!formData.name || !formData.email || !formData.phonenumber || !formData.howDidYouHearAboutUs || !formData.description || !formData.companyName || (!formData.services.length && !formData.products.length)) {
+        if (!formData.name || !formData.email || !formData.phonenumber || !formData.description || !formData.companyName || !formData.serviceType || !formData.howDidYouHearAboutUs || (!formData.services.length && !formData.products.length)) {
             alert('Please fill out all required fields');
             return;
         }

@@ -25,8 +25,19 @@ const quoteController = {
     },
     createQuote: async (req, res) => {
         try {
-            const quote = await Quote.create(req.body);
-            res.json(quote);
+            const newQuote = new Quote({
+                ...req.body,
+                userId: req.body.userId || null // Ensure userId is null if not provided
+            });
+    
+            const savedQuote = await newQuote.save();
+    
+            if (!req.body.userId) {
+                savedQuote.userId = savedQuote.quoteId;
+                await savedQuote.save();
+            }
+    
+            res.status(200).json(savedQuote);
         } catch (error) {
             console.error('Error creating quote: ', error);
             res.status(500).json({message: 'Error creating quote'});
