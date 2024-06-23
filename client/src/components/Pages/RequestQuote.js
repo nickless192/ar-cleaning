@@ -165,7 +165,8 @@ const RequestQuote = () => {
                         console.error('Error generating PDF:', error);
                     }
                 }
-
+                const quoteResponse = await response.json();
+                console.log('quoteResponse:', quoteResponse);
                 if (sendEmail) {
                     const emailResponse = await fetch('/api/quotes/send-email', {
                         method: 'POST',
@@ -173,7 +174,7 @@ const RequestQuote = () => {
                             'Content-Type': 'application/json',
                             Accept: 'application/json'
                         },
-                        body: JSON.stringify({ email: formData.email, quote: formData })
+                        body: JSON.stringify({ email: formData.email, quote: quoteResponse })
                     });
 
                     if (emailResponse.ok) {
