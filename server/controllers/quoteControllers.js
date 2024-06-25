@@ -36,7 +36,8 @@ const quoteController = {
     getQuoteById: async (req, res) => {
         try {
             console.log('Getting quote by id: ', req.params.quoteId);
-            const quote = await Quote.findById(req.params.quoteId);
+            const quote = await Quote.findOne({ quoteId: req.params.quoteId });
+            // const quote = await Quote.findById(req.params.quoteId);
             if (!quote) {
                 return res.status(404).json({ message: 'Quote not found' });
             }
