@@ -55,16 +55,20 @@ function AboutUsPage() {
             <Row className="pt-5">
                       {/* <Col> */}
                       <div className="logo-container">
-                      <img
+                      {/* <img
                         alt="..."
                         src={Logo}
                         
-                      ></img>
+                      ></img> */}
                       </div>
                       {/* </Col> */}
               <Col className="ml-auto mr-auto text-center" md="8" lg="6">
-                <p className="text-black text-bold text-dark pt-5">
-                  At CleanAR Solutions, we are dedicated to providing professional and reliable cleaning services in Toronto and the GTA area. With a focus on excellence and customer satisfaction, we strive to exceed expectations on every project, delivering impeccable results and exceptional service.
+                <p className="text-bold pt-5 km-text-secondary">
+                At CleanAR Solutions, we are dedicated to providing professional and reliable cleaning services in Toronto and the Greater Toronto Area. With a steadfast focus on excellence and customer satisfaction, we strive to exceed expectations on every project, delivering impeccable results and exceptional service. Our team of experienced and skilled professionals is committed to ensuring your space is not only clean but also a healthy and pleasant environment.
+                <br />
+                <br />
+
+Whether you need residential, commercial, or specialized cleaning services, we tailor our approach to meet your unique needs and ensure your complete satisfaction. Ready to experience the CleanAR difference? Click on "Request Quote" from the top navigation bar to get started. Still have questions? Feel free to contact us via email or phone. Our friendly team is here to answer any questions and help you find the perfect cleaning solution for your needs.
                 </p>
               </Col>
             </Row>
@@ -72,8 +76,8 @@ function AboutUsPage() {
           </div>
           <div className="bg-white section-industries bg-primary">
 
-            <h2 className="title text-center text-dark">Industries We Serve</h2>
-            <Row className="p-5 ml-auto mr-auto">
+            <h2 className="title text-center text-dark my-0">Industries We Serve</h2>
+            <Row className="p-5 ml-auto mr-auto my-0">
               <Col>
                 <Card className="bg-primary"
                   // color="primary"
@@ -219,7 +223,7 @@ function AboutUsPage() {
 
             {/* <h2 className="title text-center text-dark">Additional Information</h2> */}
             <p className="test-primary ">
-              Our services are designed to meet the unique needs of our clients, providing personalized solutions and exceptional results on every project. At CleanAR Solutions, we take pride in offering reliable and high-quality service that ensures the impeccable cleanliness and maintenance of any space.
+              Our services are designed to meet the unique needs of our clients, providing personalized solutions and exceptional results on every project. At CleanAR Solutions, we take pride in offering reliable and high-quality service that ensures the impeccable cleanliness and maintenance of any space. Get started by requesting a quote, or log in to your account to manage your existing quotes and services. Have questions? Contact us today to speak with a member of our team. We are here to help you find the perfect cleaning solution for your needs.
             </p>
 
           </div>
