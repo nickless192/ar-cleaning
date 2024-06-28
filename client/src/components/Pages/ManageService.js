@@ -25,11 +25,41 @@ const ManageService = () => {
 
     const [services, setServices] = useState([]);
 
+    const [editingServiceId, setEditingServiceId] = useState(null);
+    const [editedService, setEditedService] = useState({});
+
+    const handleEditClick = (service) => {
+        console.log(service);
+        setEditingServiceId(service._id);
+        setEditedService({ ...service });
+    };
+
+    const handleSaveClick = () => {
+        // onSave(editedService);
+        // api call to update service
+        setEditingServiceId(null);
+    };
+
+    const handleCancelClick = () => {
+        setEditingServiceId(null);
+        setEditedService({});
+    };
+
+    const handleDeleteClick = (serviceId) => {
+        // onDelete(serviceId);
+        // api call to delete service
+    };
+
     const handleChange = (e) => {
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
         });
+    };
+
+    const handleEditChange = (e) => {
+        const { name, value } = e.target;
+        setEditedService(prevState => ({ ...prevState, [name]: value }));
     };
 
     const handleSubmit = (e) => {
@@ -114,24 +144,56 @@ const ManageService = () => {
                     <Container>
                     <h2>All Services</h2>
                     <Row>
-                        {services.map(service => (
-                            <Col key={service.id} className="text-center ml-auto mr-auto" lg="6" md="8">
-                                <Card>
-                                        <CardHeader tag='h5' className='text-primary '>
-                                            {service.name}
-                                        </CardHeader>
-                                    <CardBody>
-                                        <CardTitle className='text-secondary'>
-                                            {service.description.toUpperCase()}
-                                        </CardTitle>
-                                        <CardText className='font-weight-bold text-secondary'>
-                                            Cost per Quantity: <span className='text-success'>{service.serviceCost}</span>
-                                        </CardText>
-                                    </CardBody>
-                                </Card>
-                            </Col>
-                        ))}
-                    </Row>
+            {services.map(service => (
+                <Col key={service._id} className="text-center ml-auto mr-auto" lg="6" md="8">
+                    <Card>
+                        {editingServiceId === service._id ? (
+                            <CardBody>
+                                <Input 
+                                    type="text"
+                                    name="name"
+                                    value={editedService.name}
+                                    onChange={handleEditChange}
+                                    placeholder="Service Name"
+                                />
+                                <Input 
+                                    type="text"
+                                    name="description"
+                                    value={editedService.description}
+                                    onChange={handleEditChange}
+                                    placeholder="Description"
+                                />
+                                <Input 
+                                    type="text"
+                                    name="serviceCost"
+                                    value={editedService.serviceCost}
+                                    onChange={handleEditChange}
+                                    placeholder="Cost per Quantity"
+                                />
+                                <Button color="primary" onClick={handleSaveClick}>Save</Button>
+                                <Button color="secondary" onClick={handleCancelClick}>Cancel</Button>
+                                <Button color="danger" onClick={() => handleDeleteClick(service._id)}>Delete</Button>
+                            </CardBody>
+                        ) : (
+                            <>
+                                <CardHeader tag='h5' className='text-primary '>
+                                    {service.name}
+                                </CardHeader>
+                                <CardBody>
+                                    <CardTitle className='text-secondary'>
+                                        {service.description.toUpperCase()}
+                                    </CardTitle>
+                                    <CardText className='font-weight-bold text-secondary'>
+                                        Cost per Quantity: <span className='text-success'>{service.serviceCost}</span>
+                                    </CardText>
+                                    <Button color="primary" onClick={() => handleEditClick(service)}>Edit</Button>
+                                </CardBody>
+                            </>
+                        )}
+                    </Card>
+                </Col>
+            ))}
+        </Row>
                     
                     <Form onSubmit={handleSubmit} className='form'>
                         {/* <Container> */}
