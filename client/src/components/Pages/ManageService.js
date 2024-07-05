@@ -34,9 +34,46 @@ const ManageService = () => {
         setEditedService({ ...service });
     };
 
-    const handleSaveClick = () => {
+    // the handleSaveClick function is called when the save button is clicked and the edited service is saved so the function needs to receive a service.id as an argument
+    const handleSaveClick = () => {    
         // onSave(editedService);
-        // api call to update service
+        // api call to update service        
+        const { name, description, serviceCost } = editedService;
+        if (!name || !description || !serviceCost) {
+            alert('Please provide all fields');
+            return;
+        }
+        const body = JSON.stringify({
+            name,
+            description,
+            serviceCost
+        });
+        
+        fetch(`/api/services/${editingServiceId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: body
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log(response);
+                    console.log('Service updated!');
+                    response.json()
+                        .then(data => {
+                            console.log(data);
+                            alert(`Service ${data.name} updated!`);
+                            setServices(services.map(service => service._id === editingServiceId ? data : service));
+                            setEditedService({});
+                            setEditingServiceId(null);
+                        });
+                } else {
+                    alert(response.statusText);
+                }
+            })
+            .catch(err => console.log(err));
+        setEditedService({});
         setEditingServiceId(null);
     };
 
@@ -45,9 +82,35 @@ const ManageService = () => {
         setEditedService({});
     };
 
-    const handleDeleteClick = (serviceId) => {
+    const handleDeleteClick = () => {
         // onDelete(serviceId);
         // api call to delete service
+        fetch(`/api/services/${editingServiceId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log(response);
+                    console.log('Service deleted!');
+                    response.json()
+                        .then(data => {
+                            console.log(data);
+                            alert(`Service ${data.name} deleted!`);
+                            setServices(services.filter(service => service._id !== editingServiceId));
+                            setEditedService({});
+                            setEditingServiceId(null);
+                        });
+                } else {
+                    alert(response.statusText);
+                }
+            })
+            .catch(err => console.log(err));
+        setEditedService({});
+        setEditingServiceId(null);
+        
     };
 
     const handleChange = (e) => {
@@ -144,55 +207,62 @@ const ManageService = () => {
                     <Container>
                     <h2>All Services</h2>
                     <Row>
-            {services.map(service => (
-                <Col key={service._id} className="text-center ml-auto mr-auto" lg="6" md="8">
-                    <Card>
-                        {editingServiceId === service._id ? (
-                            <CardBody>
-                                <Input 
-                                    type="text"
-                                    name="name"
-                                    value={editedService.name}
-                                    onChange={handleEditChange}
-                                    placeholder="Service Name"
-                                />
-                                <Input 
-                                    type="text"
-                                    name="description"
-                                    value={editedService.description}
-                                    onChange={handleEditChange}
-                                    placeholder="Description"
-                                />
-                                <Input 
-                                    type="text"
-                                    name="serviceCost"
-                                    value={editedService.serviceCost}
-                                    onChange={handleEditChange}
-                                    placeholder="Cost per Quantity"
-                                />
-                                <Button color="primary" onClick={handleSaveClick}>Save</Button>
-                                <Button color="secondary" onClick={handleCancelClick}>Cancel</Button>
-                                <Button color="danger" onClick={() => handleDeleteClick(service._id)}>Delete</Button>
-                            </CardBody>
-                        ) : (
-                            <>
-                                <CardHeader tag='h5' className='text-primary '>
-                                    {service.name}
-                                </CardHeader>
-                                <CardBody>
-                                    <CardTitle className='text-secondary'>
-                                        {service.description.toUpperCase()}
-                                    </CardTitle>
-                                    <CardText className='font-weight-bold text-secondary'>
-                                        Cost per Quantity: <span className='text-success'>{service.serviceCost}</span>
-                                    </CardText>
-                                    <Button color="primary" onClick={() => handleEditClick(service)}>Edit</Button>
-                                </CardBody>
-                            </>
-                        )}
-                    </Card>
-                </Col>
-            ))}
+                    {services.map(service => (
+    <Col key={service._id} className="text-center ml-auto mr-auto" lg="6" md="8">
+        <Card className='km-bg-test'>
+            {editingServiceId === service._id ? (
+                <CardBody>
+                    <Input 
+                        type="text"
+                        name="name"
+                        value={editedService.name}
+                        onChange={handleEditChange}
+                        placeholder="Service Name"
+                    />
+                    <Input 
+                        type="text"
+                        name="description"
+                        value={editedService.description}
+                        onChange={handleEditChange}
+                        placeholder="Description"
+                    />
+                    <Input 
+                        type="text"
+                        name="serviceCost"
+                        value={editedService.serviceCost}
+                        onChange={handleEditChange}
+                        placeholder="Cost per Quantity"
+                    />
+                    <Button color="primary" onClick={handleSaveClick}>Save</Button>
+                    <Button color="secondary" onClick={handleCancelClick}>Cancel</Button>
+                    <Button color="danger" onClick={handleDeleteClick}>Delete</Button>
+                </CardBody>
+            ) : (
+                <>
+                    <CardHeader tag='h5' className='text-primary '>
+                        {service.name}
+                    </CardHeader>
+                    <CardBody>
+                        <CardTitle className='text-secondary'>
+                            {service.description.toUpperCase()}
+                        </CardTitle>
+                        <CardText className='font-weight-bold text-secondary'>
+                            Cost per Quantity: <span className='text-success'>{service.serviceCost}</span>
+                        </CardText>
+                        <Button
+                            color="primary"
+                            onClick={() => handleEditClick(service)}
+                            disabled={editingServiceId !== null && editingServiceId !== service._id}
+                        >
+                            Edit
+                        </Button>
+                    </CardBody>
+                </>
+            )}
+        </Card>
+    </Col>
+))}
+
         </Row>
                     
                     <Form onSubmit={handleSubmit} className='form'>

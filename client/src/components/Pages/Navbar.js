@@ -86,6 +86,10 @@ function IndexNavbar() {
                                     <i className="now-ui-icons ui-1_settings-gear-63 mr-1"></i>
                                     Manage Services
                                 </DropdownItem>
+                                <DropdownItem to="/manage-user" tag={Link}>
+                                    <i className="now-ui-icons ui-1_settings-gear-63 mr-1"></i>
+                                    Manage Users
+                                </DropdownItem>
                             </DropdownMenu>
                         </UncontrolledDropdown>
 

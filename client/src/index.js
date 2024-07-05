@@ -34,6 +34,7 @@ import ProfilePage from "../src/components/Pages/ProfilePage";
 import SignUp from "../src/components/Pages/SignUp";
 import ManageService from "../src/components/Pages/ManageService";
 import ManageProduct from "../src/components/Pages/ManageProduct";
+import ManageUser from "../src/components/Pages/ManageUser";
 import RequestQuote from "../src/components/Pages/RequestQuote";
 import ViewQuotes from "../src/components/Pages/ViewQuotes";
 import ProductsAndServices from "../src/components/Pages/ProductsAndServices";
@@ -49,6 +50,7 @@ root.render(
       <Route path="/profile-page" element={<ProfilePage />} />
       <Route path="/manage-service" element={<ManageService />} />
       <Route path="/manage-product" element={<ManageProduct />} />
+      <Route path="/manage-user" element={<ManageUser />} />
       <Route path="/view-quotes" element={<ViewQuotes />} />
       <Route path="/login-page" element={<LoginPage />} />
       <Route path="/signup-page" element={<SignUp />} />

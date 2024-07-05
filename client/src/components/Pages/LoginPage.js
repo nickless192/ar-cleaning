@@ -1,9 +1,6 @@
 import React from "react";
 import Auth from "../../utils/auth";
 import Logo from "../../assets/svg/cleanmart-blue.svg";
-import Logo2 from "../../assets/svg/cleanmart-circles.svg";
-import Logo3 from "../../assets/svg/clean&co-green.svg";
-import Logo4 from "../../assets/svg/cleanmart-outline.svg";
 
 // reactstrap components
 import {
@@ -28,8 +25,6 @@ import Navbar from "components/Pages/Navbar.js";
 import Footer from "components/Pages/Footer.js";
 
 function LoginPage() {
-  // const [username, setUsername] = React.useState(false);
-  // const [password, setPassword] = React.useState(false);
 
   const [formData, setFormData] = React.useState({
     username: "",
@@ -40,11 +35,6 @@ function LoginPage() {
     event.preventDefault();
 
     if (formData.username && formData.password) {
-      // const response = await 
-      // const body = {
-      //   username: username.username,
-      //   password: password.password
-      // };
       // console.log(body);
       fetch('/api/users/login/', {
         method: 'post',
@@ -52,8 +42,6 @@ function LoginPage() {
         body: JSON.stringify(formData),
         headers: {
           'Content-Type': 'application/json',
-          // 'Access-Control-Allow-Credentials': 'true',
-          // 'accept': 'application/json',
         }
       })
         .then(response => {
@@ -67,8 +55,6 @@ function LoginPage() {
 
 
           });
-            // fetch('/index');
-            // document.location.replace('/index');
           }
           else {
             // alert(response.statusText)
@@ -83,32 +69,13 @@ function LoginPage() {
         })
         .catch(err => console.log(err))
 
-      // if (response.ok) {
-      //   fetch('/index');
-      //   document.location.replace('/index');
-      // } else {
-      //   alert(response.statusText);
-      // }
+    
     }
   } 
 
   const handleChange = (event) => {
     event.preventDefault();
     const { name, value } = event.target;
-    // console.log(event.target);
-    // console.log(name);
-    // if (name === "username") {
-    //   setUsername({
-    //     [name]: value
-    //   })
-    // }
-    // if (name === "password") {
-    //   setPassword({
-    //     [name]: value
-    //   })
-    // }
-    // console.log(username.username);
-    // console.log(password.password);
     console.log(name, value);
     console.log(formData);
     setFormData({ ...formData, [name]: value });
@@ -142,59 +109,9 @@ function LoginPage() {
               <Card className="card-login card-plain">
                 <Form onSubmit={(e) => handleFormSubmit(e)} className="form">
                   <CardHeader className="text-center">
-                    <Row >
-                      <Col>
-                      <div className="logo-container">
-                      <img
-                        alt="..."
-                        src={Logo}
-                      ></img>
-                      </div>
-                      </Col>
-                      {/* <Col>
-                      <div className="logo-container">
-                      <img
-                        alt="..."
-                        src={Logo2}
-                      ></img>
-                      </div>
-                      </Col> */}
-                      <Col>
-                      <div className="logo-container">
-                      <img
-                        alt="..."
-                        src={Logo3}
-                      ></img>
-                      </div>
-                      </Col>
-                      <Col>
-                      <div className="logo-container">
-                      <img
-                        alt="..."
-                        src={Logo4}
-                      ></img>
-                      </div>
-                      </Col>
-                    
-                    </Row>
-                    {/* <div className="logo-container">
-                      <img
-                        alt="..."
-                        src={Logo}
-                      ></img>
-                      <img
-                        alt="..."
-                        src={Logo2}
-                      ></img>
-                      <img
-                        alt="..."
-                        src={Logo3}
-                      ></img>
-                      <img
-                        alt="..."
-                        src={Logo4}
-                      ></img>
-                    </div> */}
+                    <div className="logo-container">
+                      <img src={Logo} alt="CleanAR Solutions Logo" />
+                    </div>
                   </CardHeader>
                   <CardBody>
                     <InputGroup
@@ -242,34 +159,10 @@ function LoginPage() {
                       className="btn-round"
                       type="submit"
                       color="info"
-                      // onClick={(e) => handleFormSubmit(e)}
-                      // onSubmit={(e) => handleFormSubmit(e)}
                       size="lg"
                     >
                       Get Started
                     </Button>
-                    {/* <div className="pull-left">
-                      <h6>
-                        <a
-                          className="link"
-                          href="/signup-page"
-                          onClick={(e) => e.preventDefault()}
-                        >
-                          Create Account
-                        </a>
-                      </h6>
-                    </div>
-                    <div className="pull-right">
-                      <h6>
-                        <a
-                          className="link"
-                          href="#pablo"
-                          onClick={(e) => e.preventDefault()}
-                        >
-                          Need Help?
-                        </a>
-                      </h6>
-                    </div> */}
                   </CardFooter>
                 </Form>
               </Card>

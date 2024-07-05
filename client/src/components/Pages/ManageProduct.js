@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-
 import {
     Button,
     Container,
@@ -25,6 +24,77 @@ const ManageProduct = () => {
     });
 
     const [products, setProducts] = useState([]);
+    const [editingProductId, setEditingProductId] = useState(null);
+    const [editedProduct, setEditedProduct] = useState({});
+
+    const handleEditClick = (product) => {
+        setEditingProductId(product._id);
+        setEditedProduct({ ...product });
+    };
+
+    const handleSaveClick = () => {
+        const { name, description, productCost, quantityAtHand } = editedProduct;
+        if (!name || !description || !productCost || !quantityAtHand) {
+            alert('Please provide all fields');
+            return;
+        }
+        const body = JSON.stringify({
+            name,
+            description,
+            productCost,
+            quantityAtHand
+        });
+
+        fetch(`/api/products/${editingProductId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: body
+        })
+            .then(response => {
+                if (response.ok) {
+                    response.json()
+                        .then(data => {
+                            alert(`Product ${data.name} updated!`);
+                            setProducts(products.map(product => product._id === editingProductId ? data : product));
+                            setEditedProduct({});
+                            setEditingProductId(null);
+                        });
+                } else {
+                    alert(response.statusText);
+                }
+            })
+            .catch(err => console.log(err));
+    };
+
+    const handleCancelClick = () => {
+        setEditingProductId(null);
+        setEditedProduct({});
+    };
+
+    const handleDeleteClick = () => {
+        fetch(`/api/products/${editingProductId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    response.json()
+                        .then(data => {
+                            alert(`Product ${data.name} deleted!`);
+                            setProducts(products.filter(product => product._id !== editingProductId));
+                            setEditedProduct({});
+                            setEditingProductId(null);
+                        });
+                } else {
+                    alert(response.statusText);
+                }
+            })
+            .catch(err => console.log(err));
+    };
 
     const handleChange = (e) => {
         setFormData({
@@ -33,9 +103,13 @@ const ManageProduct = () => {
         });
     };
 
+    const handleEditChange = (e) => {
+        const { name, value } = e.target;
+        setEditedProduct(prevState => ({ ...prevState, [name]: value }));
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(formData);
         if (formData.productName && formData.description && formData.productCost && formData.quantityAtHand) {
             const body = {
                 name: formData.productName,
@@ -52,20 +126,16 @@ const ManageProduct = () => {
             })
                 .then(response => {
                     if (response.ok) {
-                        console.log(response);
-                        console.log('Product added!');
                         response.json()
                             .then(data => {
-                                console.log(data);
                                 alert(`Product ${data.name} added!`);
                                 setProducts([...products, data]);
                                 setFormData({
-                                    name: '',
+                                    productName: '',
                                     description: '',
                                     productCost: '',
                                     quantityAtHand: ''
                                 });
-
                             });
                     } else {
                         alert(response.statusText);
@@ -98,8 +168,6 @@ const ManageProduct = () => {
         };
     }, []);
 
-
-
     return (
         <>
             <Navbar />
@@ -113,41 +181,79 @@ const ManageProduct = () => {
                         minHeight: "700px"
                     }}
                 >
-
                 </div>
-                <div className="container ">
-                    {/* <Container> */}
+                <div className="container">
                     <h2>All Products</h2>
                     <Row className='ml-auto mr-auto'>
                         {products.map(product => (
-                            <Col key={product.id} className="text-center " lg="6" md="8">
-                                <Card className='shadow-sm border-0'>
-                                    <CardBody className=''>
-                                        <CardTitle tag='h5' className='text-primary '>
-                                            {product.name}
-                                        </CardTitle>
-                                        <CardText className='text-secondary'>
-                                            {product.description.toUpperCase()}
-                                        </CardText>
-                                        <CardFooter className='font-weight-bold text-secondary'>
-                                            Cost per Quantity: <span className='text-success'>{product.productCost}</span><br />
-                                            Quantity at Hand: <span className='text-success'>{product.quantityAtHand}</span>
-                                        </CardFooter>
-                                    </CardBody>
+                            <Col key={product._id} className="text-center " lg="6" md="8">
+                                <Card className='shadow-sm border-0 km-bg-test'>
+                                    {editingProductId === product._id ? (
+                                        <CardBody>
+                                            <Input
+                                                type="text"
+                                                name="name"
+                                                value={editedProduct.name}
+                                                onChange={handleEditChange}
+                                                placeholder="Product Name"
+                                            />
+                                            <Input
+                                                type="text"
+                                                name="description"
+                                                value={editedProduct.description}
+                                                onChange={handleEditChange}
+                                                placeholder="Description"
+                                            />
+                                            <Input
+                                                type="text"
+                                                name="productCost"
+                                                value={editedProduct.productCost}
+                                                onChange={handleEditChange}
+                                                placeholder="Cost per Quantity"
+                                            />
+                                            <Input
+                                                type="text"
+                                                name="quantityAtHand"
+                                                value={editedProduct.quantityAtHand}
+                                                onChange={handleEditChange}
+                                                placeholder="Quantity at Hand"
+                                            />
+                                            <Button color="primary" onClick={handleSaveClick}>Save</Button>
+                                            <Button color="secondary" onClick={handleCancelClick}>Cancel</Button>
+                                            <Button color="danger" onClick={handleDeleteClick}>Delete</Button>
+                                        </CardBody>
+                                    ) : (
+                                        <>
+                                            <CardTitle tag='h5' className='text-primary '>
+                                                {product.name}
+                                            </CardTitle>
+                                            <CardText className='text-secondary'>
+                                                {product.description.toUpperCase()}
+                                            </CardText>
+                                            <CardFooter className='font-weight-bold text-secondary'>
+                                                Cost per Quantity: <span className='text-success'>{product.productCost}</span><br />
+                                                Quantity at Hand: <span className='text-success'>{product.quantityAtHand}</span>
+                                            </CardFooter>
+                                            <Button
+                                                color="primary"
+                                                onClick={() => handleEditClick(product)}
+                                                disabled={editingProductId !== null && editingProductId !== product._id}
+                                            >
+                                                Edit
+                                            </Button>
+                                        </>
+                                    )}
                                 </Card>
                             </Col>
                         ))}
                     </Row>
-                    {/* </Container> */}
 
                     <Form onSubmit={handleSubmit} className='form'>
                         <Container>
-
                             <h2>Add Product</h2>
                             <p className='text-muted'>Please fill in the form to add a new product</p>
                             <Row>
-                                <Col className="text-center ml-auto mr-auto" lg="6" md="8"
-                                    id='product-form'>
+                                <Col className="text-center ml-auto mr-auto" lg="6" md="8">
                                     <InputGroup className={
                                         "no-border" + (formData.productName ? " input-group-focus" : "")
                                     }>
@@ -156,11 +262,17 @@ const ManageProduct = () => {
                                                 <i className="now-ui-icons shopping_tag-content"></i>
                                             </InputGroupText>
                                         </InputGroupAddon>
-                                        <Input placeholder="Product Name" type="text" id="productName" name="productName" value={formData.productName} onChange={handleChange} />
+                                        <Input
+                                            placeholder="Product Name"
+                                            type="text"
+                                            id="productName"
+                                            name="productName"
+                                            value={formData.productName}
+                                            onChange={handleChange}
+                                        />
                                     </InputGroup>
                                 </Col>
-                                <Col className="text-center ml-auto mr-auto" lg="6" md="8"
-                                    id='product-form'>
+                                <Col className="text-center ml-auto mr-auto" lg="6" md="8">
                                     <InputGroup className={
                                         "no-border" + (formData.description ? " input-group-focus" : "")
                                     }>
@@ -169,11 +281,17 @@ const ManageProduct = () => {
                                                 <i className="now-ui-icons shopping_box"></i>
                                             </InputGroupText>
                                         </InputGroupAddon>
-                                        <Input placeholder="Description" type="text" id="description" name="description" value={formData.description} onChange={handleChange} />
+                                        <Input
+                                            placeholder="Description"
+                                            type="text"
+                                            id="description"
+                                            name="description"
+                                            value={formData.description}
+                                            onChange={handleChange}
+                                        />
                                     </InputGroup>
                                 </Col>
-                                <Col className="text-center ml-auto mr-auto" lg="6" md="8"
-                                    id='product-form'>
+                                <Col className="text-center ml-auto mr-auto" lg="6" md="8">
                                     <InputGroup className={
                                         "no-border" + (formData.productCost ? " input-group-focus" : "")
                                     }>
@@ -182,11 +300,17 @@ const ManageProduct = () => {
                                                 <i className="now-ui-icons shopping_cart-simple"></i>
                                             </InputGroupText>
                                         </InputGroupAddon>
-                                        <Input placeholder="Cost per Quantity" type="text" id="productCost" name="productCost" value={formData.productCost} onChange={handleChange} />
+                                        <Input
+                                            placeholder="Cost per Quantity"
+                                            type="text"
+                                            id="productCost"
+                                            name="productCost"
+                                            value={formData.productCost}
+                                            onChange={handleChange}
+                                        />
                                     </InputGroup>
                                 </Col>
-                                <Col className="text-center ml-auto mr-auto" lg="6" md="8"
-                                    id='product-form'>
+                                <Col className="text-center ml-auto mr-auto" lg="6" md="8">
                                     <InputGroup className={
                                         "no-border" + (formData.quantityAtHand ? " input-group-focus" : "")
                                     }>
@@ -195,64 +319,26 @@ const ManageProduct = () => {
                                                 <i className="now-ui-icons shopping_delivery-fast"></i>
                                             </InputGroupText>
                                         </InputGroupAddon>
-                                        <Input placeholder="Quantity at Hand" type="text" id="quantityAtHand" name="quantityAtHand" value={formData.quantityAtHand} onChange={handleChange} />
+                                        <Input
+                                            placeholder="Quantity at Hand"
+                                            type="text"
+                                            id="quantityAtHand"
+                                            name="quantityAtHand"
+                                            value={formData.quantityAtHand}
+                                            onChange={handleChange}
+                                        />
                                     </InputGroup>
                                 </Col>
-                                <Col className="text-center ml-auto mr-auto" lg="6" md="8"
-                                    id='product-form'>
+                                <Col className="text-center ml-auto mr-auto" lg="6" md="8">
                                     <Button type='submit' color='primary'>Add Product</Button>
                                 </Col>
                             </Row>
                         </Container>
-                        {/* 
-                            <div>
-                                <label htmlFor="productName">Product Name:</label>
-                                <input
-                                    type="text"
-                                    id="productName"
-                                    name="productName"
-                                    value={formData.productName}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor="productDescription">Description:</label>
-                                <textarea
-                                    id="productDescription"
-                                    name="productDescription"
-                                    value={formData.productDescription}
-                                    onChange={handleChange}
-                                ></textarea>
-                            </div>
-                            <div>
-                                <label htmlFor="productCost">Cost per Quantity:</label>
-                                <input
-                                    type="text"
-                                    id="productCost"
-                                    name="productCost"
-                                    value={formData.productCost}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor="quantityAtHand">Quantity at Hand:</label>
-                                <input
-                                    type="text"
-                                    id="quantityAtHand"
-                                    name="quantityAtHand"
-                                    value={formData.quantityAtHand}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <button type="submit">Add Product</button> */}
-
                     </Form>
-
                 </div>
             </div>
             <Footer />
         </>
-
     );
 };
 
