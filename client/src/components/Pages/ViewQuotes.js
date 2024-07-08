@@ -21,7 +21,6 @@ import {
 
 import Navbar from "components/Pages/Navbar.js";
 import Footer from "components/Pages/Footer.js";
-import { f } from 'html2pdf.js';
 
 const ViewQuote = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -125,7 +124,7 @@ const ViewQuote = () => {
             {/* add a search bar for users to input a quote Id to search for */}
             <InputGroup>
               <Input
-                className="text-light"
+                className="text-light bg-secondary"
                 id="search"
                 placeholder="Search for a quote..."
                 type="text"
@@ -149,7 +148,7 @@ const ViewQuote = () => {
                 <DropdownItem onClick={() => setDisplayedQuote({ products: [], services: [] })}>Quotes</DropdownItem>
                 {quotes.map((quote) => (
                   <DropdownItem key={quote._id} onClick={() => setDisplayedQuote(quote)}>
-                    {quote.name}
+                    {quote.quoteId} - {quote.name}
                   </DropdownItem>
                 ))}
               </DropdownMenu>
@@ -186,6 +185,7 @@ const QuoteDetails = ({ displayedQuote }) => {
   };
 
   return (
+
     <Col className="text-center ml-auto mr-auto" lg="6" md="8">
       <h3 className="mt-5">Quote Information:</h3>
       <div className=' rounded p-2'>
@@ -229,9 +229,9 @@ const ProductList = ({ products }) => (
         <FormGroup key={index} className="text-light">
           <Label for={`product-${index}`} className="text-light">Product</Label>
           <InputGroup>
-            <Input id={`product-${index}`} className="text-light" placeholder="Product..." type="text" value={product.name} readOnly />
-            <Input className="text-light" placeholder="Product Cost..." type="number" value={product.productCost} readOnly />
-            <Input className="text-light" placeholder="Id..." type="text" value={product.id} readOnly />
+            <Input id={`product-${index}`} className="text-light bg-secondary" placeholder="Product..." type="text" value={product.name} readOnly />
+            <Input className="text-light bg-secondary" placeholder="Product Cost..." type="number" value={product.productCost} readOnly />
+            <Input className="text-light bg-secondary" placeholder="Id..." type="text" value={product.id} readOnly />
           </InputGroup>
         </FormGroup>
       ))
@@ -249,9 +249,9 @@ const ServiceList = ({ services }) => (
         <FormGroup key={index} className="text-light">
           <Label for={`service-${index}`} className="text-light">Service</Label>
           <InputGroup>
-            <Input id={`service-${index}`} className="text-light" placeholder="Service..." type="text" value={service.name} readOnly />
-            <Input className="text-light" placeholder="Service cost..." type="number" value={service.serviceCost} readOnly />
-            <Input className="text-light" placeholder="Id..." type="text" value={service.id} readOnly />
+            <Input id={`service-${index}`} className="text-light bg-secondary" placeholder="Service..." type="text" value={service.name} readOnly />
+            <Input className="text-light bg-secondary" placeholder="Service cost..." type="number" value={service.serviceCost} readOnly />
+            <Input className="text-light bg-secondary" placeholder="Id..." type="text" value={service.id} readOnly />
           </InputGroup>
         </FormGroup>
       ))
@@ -267,20 +267,18 @@ const CostDetails = ({ displayedQuote }) => (
         <Label for={field} className="text-light">{capitalize(field)}</Label>
         <InputGroup className="no-border">
           <InputGroupAddon addonType="prepend">
-            <InputGroupText className="text-light">
+            <InputGroupText className="bg-secondary">
               <i className="now-ui-icons shopping_tag-content"></i>
             </InputGroupText>
           </InputGroupAddon>
           <Input
             id={field}
-            className="text-light"
+            className="text-light bg-secondary"
             placeholder={`${capitalize(field)}...`}
             type="number"
             value={displayedQuote[field]}
             readOnly
           />
-
-
         </InputGroup>
       </FormGroup>
     ))}

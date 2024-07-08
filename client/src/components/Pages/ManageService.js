@@ -268,7 +268,7 @@ const ManageService = () => {
                     <Form onSubmit={handleSubmit} className='form'>
                         {/* <Container> */}
                             <h2 className='title'>Add Service</h2>
-                            <p className='description'>Add a new service to the list of services</p>
+                            <p className='description '>Add a new service to the list of services</p>
 
                             <Row>
                                 <Col className="text-center ml-auto mr-auto" lg="6" md="8"
@@ -277,13 +277,14 @@ const ManageService = () => {
                                         "no-border" + (formData.name ? " input-group-focus" : "")
                                     }>
                                         <InputGroupAddon addonType="prepend">
-                                            <InputGroupText>
+                                            <InputGroupText className='km-bg-test'>
                                                 <i className="now-ui-icons users_circle-08"></i>
                                             </InputGroupText>
                                         </InputGroupAddon>
                                         <Input
                                             placeholder='Service Name...'
                                             type="text"
+                                            className='km-bg-test'
                                             id="serviceName"
                                             name="serviceName"
                                             value={formData.serviceName}
@@ -294,7 +295,7 @@ const ManageService = () => {
                                         "no-border" + (formData.serviceCost ? " input-group-focus" : "")
                                     }>
                                         <InputGroupAddon addonType="prepend">
-                                            <InputGroupText>
+                                            <InputGroupText className='km-bg-test'>
                                                 <i className="now-ui-icons business_money-coins"></i>
                                             </InputGroupText>
                                         </InputGroupAddon>
@@ -303,6 +304,7 @@ const ManageService = () => {
                                             type="text"
                                             id="serviceCost"
                                             name="serviceCost"
+                                            className='km-bg-test'
                                             value={formData.serviceCost}
                                             onChange={handleChange}
                                         />
@@ -311,7 +313,7 @@ const ManageService = () => {
                                         "no-border" + (formData.description ? " input-group-focus" : "")
                                     }>
                                         <InputGroupAddon addonType="prepend">
-                                            <InputGroupText>
+                                            <InputGroupText className='km-bg-test'>
 
                                                 <i className="now-ui-icons ui-2_chat-round"></i>
                                             </InputGroupText>
@@ -321,7 +323,7 @@ const ManageService = () => {
                                             type="textarea"
                                             id="description"
                                             name="description"
-                                            className='rounded'
+                                            className='rounded km-bg-test'
                                             value={formData.description}
                                             onChange={handleChange}
                                         />

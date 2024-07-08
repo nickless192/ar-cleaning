@@ -151,7 +151,7 @@ const ManageUser = () => {
             <Navbar />
             {/* <div className="page-header clear-filter" filter-color="blue"> */}
                 <div
-                    className="page-header-image"
+                    className="section page-header-image"
                     style={{
                         backgroundImage: "url(" + require("assets/img/stock-photo-cropped-shot-woman-rubber-gloves-cleaning-office-table.jpg") + ")",
                         backgroundSize: "cover",

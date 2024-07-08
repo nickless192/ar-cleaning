@@ -1,3 +1,9 @@
+// /**
+//  * ManageProduct component for managing products.
+//  *
+//  * @component
+//  * @returns {JSX.Element} ManageProduct component
+//  */
 import React, { useState, useEffect } from 'react';
 import {
     Button,
