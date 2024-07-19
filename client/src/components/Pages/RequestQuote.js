@@ -13,11 +13,10 @@ import {
 import html2pdf from 'html2pdf.js';
 import Navbar from "components/Pages/Navbar.js";
 import Footer from "components/Pages/Footer.js";
-
 import Auth from "../../utils/auth";
 
 const RequestQuote = () => {
-    const [selectedOptions, setSelectedOptions] = useState([]);
+    // const [selectedOptions, setSelectedOptions] = useState([]);
     const [services, setServices] = useState([]);
     const [products, setProducts] = useState([]);
     const [formData, setFormData] = useState({
@@ -28,16 +27,16 @@ const RequestQuote = () => {
         email: '',
         phonenumber: '',
         howDidYouHearAboutUs: '',
-        serviceType: '',
         subtotalCost: 0,
         tax: 0,
         grandTotal: 0,
         services: [],
-        products: selectedOptions
+        products: [],
+        serviceLevel: '', // New field for service level
     });
+    const [addedServices, setAddedServices] = useState([]);
     const [sendEmail, setSendEmail] = useState(false);
-
-    const [isLogged] = React.useState(Auth.loggedIn());
+    const [isLogged] = useState(Auth.loggedIn());
 
     useEffect(() => {
         const initializeServices = async () => {
@@ -68,20 +67,16 @@ const RequestQuote = () => {
         };
 
         const prepopulateForm = async () => {
-            console.log('isLogged:', isLogged);
             if (isLogged) {
                 const data = Auth.getProfile().data;
-                console.log('name:', data);
                 setFormData(prevFormData => ({
                     ...prevFormData,
-                    name: data.firstName+" "+data.lastName,
+                    name: data.firstName + " " + data.lastName,
                     email: data.email,
                     userId: data._id
-
                 }));
-                console.log('formData:', formData);
             }
-        }  
+        };
 
         initializeServices();
         prepopulateForm();
@@ -92,7 +87,7 @@ const RequestQuote = () => {
         return () => {
             document.body.classList.remove("request-quote", "sidebar-collapse");
         };
-    }, []);
+    }, [isLogged]);
 
     const handleChange = ({ target: { name, value } }) => {
         setFormData(prevFormData => ({ ...prevFormData, [name]: value }));
@@ -107,11 +102,29 @@ const RequestQuote = () => {
         });
     };
 
+    const handleAddService = () => {
+        if (formData.serviceType && !addedServices.find(s => s.type === formData.serviceType)) {
+            setAddedServices([...addedServices, { type: formData.serviceType, customOptions: {} }]);
+            setFormData(prevFormData => ({ ...prevFormData, serviceType: '' }));
+        }
+    };
+
+    const handleRemoveService = (type) => {
+        setAddedServices(addedServices.filter(s => s.type !== type));
+        setFormData(prevFormData => ({ ...prevFormData, services: addedServices }));
+    };
+
+    const handleCustomOptionChange = (type, option, value) => {
+        setAddedServices(addedServices.map(s =>
+            s.type === type ? { ...s, customOptions: { ...s.customOptions, [option]: value } } : s
+        ));
+        setFormData(prevFormData => ({ ...prevFormData, services: addedServices }));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('formData:', formData);
-
-        if (!formData.name || !formData.email || !formData.phonenumber || !formData.description || !formData.companyName || !formData.serviceType || !formData.howDidYouHearAboutUs || (!formData.services.length && !formData.products.length)) {
+        console.log('Form data:', formData);
+        if (!formData.name || !formData.email || !formData.phonenumber || !formData.description || !formData.companyName || !formData.howDidYouHearAboutUs || (!formData.services.length && !formData.products.length)) {
             alert('Please fill out all required fields');
             return;
         }
@@ -128,7 +141,7 @@ const RequestQuote = () => {
 
             if (response.ok) {
                 alert('Quote submitted successfully!');
-                setSelectedOptions([]);
+                // setSelectedOptions([]);
                 setFormData({
                     name: '',
                     userId: '',
@@ -139,34 +152,26 @@ const RequestQuote = () => {
                     howDidYouHearAboutUs: '',
                     subtotalCost: 0,
                     tax: 0,
-                    serviceType: '',
                     grandTotal: 0,
                     services: [],
-                    products: selectedOptions
+                    products: [],
+                    serviceLevel: '' // Reset service level
                 });
+                setAddedServices([]);
 
                 if (window.confirm('Would you like to download the quote as a PDF?')) {
-                    try {
-                        // if (printFormFlag) {
-                        const element = document.getElementById('quote-form'); // Replace 'quote-form' with the ID of the form element
-                        const opt = {
-                            margin: 0.5,
-                            filename: 'quote.pdf', // parametarize the filename with the quote ID
-                            image: { type: 'jpeg', quality: 0.98 },
-                            html2canvas: { scale: 2 },
-                            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-                        };
-                        // console.log(html2pdf().set(opt).from(element));
-                        html2pdf().set(opt).from(element).save(); // Generate and save the PDF
-                        // }
-
-                    }
-                    catch (error) {
-                        console.error('Error generating PDF:', error);
-                    }
+                    const element = document.getElementById('quote-form');
+                    const opt = {
+                        margin: 0.5,
+                        filename: 'quote.pdf',
+                        image: { type: 'jpeg', quality: 0.98 },
+                        html2canvas: { scale: 2 },
+                        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+                    };
+                    html2pdf().set(opt).from(element).save();
                 }
+
                 const quoteResponse = await response.json();
-                console.log('quoteResponse:', quoteResponse);
                 if (sendEmail) {
                     const emailResponse = await fetch('/api/quotes/send-email', {
                         method: 'POST',
@@ -194,174 +199,305 @@ const RequestQuote = () => {
     const tax = subtotalCost * 0.13;
     const grandTotal = subtotalCost + tax;
 
-    useEffect(() => {
-        setFormData(prevFormData => ({
-            ...prevFormData,
-            subtotalCost,
-            tax,
-            grandTotal
-        }));
-    }, [formData.services, formData.products]);
-
-    
-
-    return (
-        <>
-            <Navbar />
-            {/* <div className="page-header"> */}
-                <div
-                    className="section page-header-image"
-                    style={{
-                        backgroundImage: "url(" + require("assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg") + ")",
-                        backgroundSize: "cover",
-                        backgroundPosition: "top center",
-                        minHeight: "700px",
-                        opacity: 0.8
-                    }}
-                >
-
-                <div className='content  mt-5'>                    
-                    <Container>
-                <h2 className="title text-center">Request a Quote</h2>
-                    <p className="description text-center">Please fill out the form below:</p>
-                    <Form onSubmit={handleSubmit} className='form text-center ml-auto mr-auto  p-2 col-6 form-switch' id='quote-form'>
-                        {['name', 'companyName', 'email', 'phonenumber'].map((field, idx) => (
-                            <InputGroup key={idx} className={`no-border ${formData[field] ? "input-group-focus" : ""}`}>
-                                {/* <input type={field === 'email' ? 'email' : 'text'} className='form-control' placeholder={`Your ${field.charAt(0).toUpperCase() + field.slice(1)}...`} name={field} value={formData[field]} onChange={handleChange} required={field !== 'companyName'} id={field} />
-                                <label for={field} className='placeholder-white'>{field.charAt(0).toUpperCase() + field.slice(1)}</label> */}
-                                <InputGroupAddon addonType="prepend">
-                                    <InputGroupText className='km-bg-test'>
-                                        <i className={`now-ui-icons ${field === 'name' ? 'users_circle-08' : field === 'companyName' ? 'shopping_shop' : field === 'email' ? 'ui-1_email-85' : 'tech_headphones'}`}></i>
-                                    </InputGroupText>
-                                </InputGroupAddon>
-                                
-                                <Input
-                                    placeholder={`Your ${field.charAt(0).toUpperCase() + field.slice(1)}...`}
-                                    type={field === 'email' ? 'email' : 'text'}
-                                    name={field}
-                                    className='placeholder-white km-bg-test km-text-accent'
-                                    value={formData[field]}
-                                    onChange={handleChange}
-                                    required={field !== 'companyName'}
-                                    readOnly={(isLogged && (field === "name" || field === "email")) ? true : false}
-                                />
-                            </InputGroup>
-                        ))}
-                        <InputGroup className={`no-border ${formData.howDidYouHearAboutUs ? "input-group-focus" : ""}`}>
-                            <InputGroupAddon addonType="prepend">
-                                <InputGroupText className='km-bg-test'>
-                                    <i className="now-ui-icons objects_globe"></i>
-                                </InputGroupText>
-                            </InputGroupAddon>
-                            <Input
-                                type="select"
-                                value={formData.howDidYouHearAboutUs}
-                                name='howDidYouHearAboutUs'
-                                className='font-weight-bold km-bg-test'
-                                onChange={handleChange}
-                            >
-                                <option value="">How Did You Hear About Us?...</option>
-                                <option value="Google">Google</option>
-                                <option value="Facebook">Facebook</option>
-                                <option value="Instagram">Instagram</option>
-                                <option value="Referral">Referral</option>
-                                <option value="Other">Other</option>
+    const renderCustomOptions = (type) => {
+        switch (type) {
+            case 'Residential':
+                return (
+                    <>
+                        <FormGroup>
+                            <Label>Select Service Level</Label>
+                            <Input type="select" name="serviceLevel" value={formData.serviceLevel} onChange={handleChange}>
+                                <option value="">Select Service Level...</option>
+                                <option value="Basic Cleaning">Basic Cleaning</option>
+                                <option value="Deep Cleaning">Deep Cleaning</option>
+                                <option value="Special Deal">Special Deal</option>
                             </Input>
-                        </InputGroup>
-                        <InputGroup className={`no-border ${formData.serviceType ? "input-group-focus" : ""}`}>
-                            <InputGroupAddon addonType="prepend">
-                                <InputGroupText className='km-bg-test'>
-                                    <i className="now-ui-icons shopping_tag-content"></i>
-                                </InputGroupText>
-                            </InputGroupAddon>
-                            <Input
-                                type="select"
-                                value={formData.serviceType}
-                                className='font-weight-bold km-bg-test'
-                                name='serviceType'
-                                onChange={handleChange}
-                            >
-                                <option value="">Select Service Type...</option>
-                                <option value="Residential">Residential</option>
-                                <option value="Commercial">Commercial</option>
-                                <option value="Industrial">Industrial</option>
-                                <option value="Other">Other</option>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label>Unit Size</Label>
+                            <Input type="select" onChange={(e) => handleCustomOptionChange(type, 'unitSize', e.target.value)} disabled={formData.serviceLevel === 'Deep Cleaning'}>
+                                <option value="">Select Unit Size...</option>
+                                <option value="0-499 sqft">0-499 sqft</option>
+                                <option value="500-999 sqft">500-999 sqft</option>
+                                <option value="1000-1499 sqft">1000-1499 sqft</option>
+                                <option value="1500-1999 sqft">1500-1999 sqft</option>
+                                <option value="2000+ sqft">2000+ sqft</option>
                             </Input>
-                        </InputGroup>
-                        <InputGroup className={`no-border ${formData.description ? "input-group-focus" : ""}`}>
-                            <Input
-                                cols="80"
-                                name="description"
-                                placeholder="Tell us a bit about your project..."
-                                rows="4"
-                                className='km-bg-test placeholder-white font-weight-bold rounded'
-                                type="textarea"
-                                value={formData.description}
-                                onChange={handleChange}
-                                required
+                        </FormGroup>
+                        <FormGroup>
+                            <Label>Number of Bedrooms</Label>
+                            <Input type="number" min="0" onChange={(e) => handleCustomOptionChange(type, 'bedrooms', e.target.value)}
+                                disabled={formData.serviceLevel === 'Deep Cleaning'}
                             />
-                        </InputGroup>
-                        <h4 className='title text-center'>Select Your Services</h4>
-                        <Row>
-                            {services.map((service) => (
-                                <Col key={service.id} md="4">
-                                    <FormGroup check >
-                                        <Label check>
-                                            <Input
-                                                type="checkbox"
-                                                role='switch'
-                                                checked={formData.services.includes(service)}
-                                                onChange={() => toggleSelection('services', service)}
-                                            />
-                                            <span className="form-check-sign"></span>
-                                            {service.name} - ${service.serviceCost}
-                                        </Label>
-                                    </FormGroup>
-                                </Col>
-                            ))}
-                        </Row>
-                        <h4 className='title text-center'>Select Your Products</h4>
-                        <Row>
-                            {products.map((product) => (
-                                <Col key={product.id} md="4">
-                                    <FormGroup check>
-                                        <Label check>
-                                            <Input
-                                                type="checkbox"
-                                                checked={formData.products.includes(product)}
-                                                onChange={() => toggleSelection('products', product)}
-                                            />
-                                            <span className="form-check-sign"></span>
-                                            {product.name} - ${product.productCost}
-                                        </Label>
-                                    </FormGroup>
-                                </Col>
-                            ))}
-                        </Row>
-                        <h4 className='title text-center'>Summary</h4>
-                        <ul>
-                            <li>Subtotal: ${subtotalCost.toFixed(2)}</li>
-                            <li>Tax (13%): ${tax.toFixed(2)}</li>
-                            <li>Grand Total: ${grandTotal.toFixed(2)}</li>
-                        </ul>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label>Number of Bathrooms</Label>
+                            <Input type="number" min="0" onChange={(e) => handleCustomOptionChange(type, 'bathrooms', e.target.value)}
+                                disabled={formData.serviceLevel === 'Deep Cleaning'}
+                            />
+                        </FormGroup>
                         <FormGroup check>
                             <Label check>
                                 <Input
                                     type="checkbox"
-                                    checked={sendEmail}
-                                    onChange={() => setSendEmail(!sendEmail)}
+                                    onChange={(e) => handleCustomOptionChange(type, 'fridge', e.target.checked)}
+                                    disabled={formData.serviceLevel === 'Deep Cleaning'}
                                 />
                                 <span className="form-check-sign"></span>
-                                Email me a copy of the quote
+                                Fridge
                             </Label>
                         </FormGroup>
-                        <Button className="btn-round" color="primary" size="lg" type="submit">Submit Quote</Button>
-                    </Form>
+                        <FormGroup check>
+                            <Label check>
+                                <Input
+                                    type="checkbox"
+                                    onChange={(e) => handleCustomOptionChange(type, 'parking', e.target.checked)}
+                                    disabled={formData.serviceLevel === 'Deep Cleaning'}
+                                />
+                                <span className="form-check-sign"></span>
+                                Parking
+                            </Label>
+                        </FormGroup>
+                    </>
+                );
+            case 'Commercial':
+                return (
+                    <>
+                        <FormGroup>
+                            <Label>Square Footage</Label>
+                            <Input type="select" onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e.target.value)}
+                                disabled={formData.serviceLevel === 'Deep Cleaning'}
+                            >
+                                <option value="">Select Square Footage...</option>
+                                <option value="0-999 sqft">0-999 sqft</option>
+                                <option value="1000-4999 sqft">1000-4999 sqft</option>
+                                <option value="5000-9999 sqft">5000-9999 sqft</option>
+                                <option value="10000+ sqft">10000+ sqft</option>
+                            </Input>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label>Number of Rooms</Label>
+                            <Input type="number" min="0" onChange={(e) => handleCustomOptionChange(type, 'rooms', e.target.value)}
+                                disabled={formData.serviceLevel === 'Deep Cleaning'}
+                            />
+                        </FormGroup>
+                        <FormGroup check>
+                            <Label check>
+                                <Input
+                                    type="checkbox"
+                                    onChange={(e) => handleCustomOptionChange(type, 'windows', e.target.checked)}
+                                    disabled={formData.serviceLevel === 'Deep Cleaning'}
+                                />
+                                <span className="form-check-sign"></span>
+                                Windows
+                            </Label>
+                        </FormGroup>
+                    </>
+                );
+            case 'Industrial':
+                return (
+                    <>
+                        <FormGroup>
+                            <Label>Square Footage</Label>
+                            <Input type="select" onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e.target.value)}
+                                disabled={formData.serviceLevel === 'Deep Cleaning'}
+                            >
+                                <option value="">Select Square Footage...</option>
+                                <option value="0-999 sqft">0-999 sqft</option>
+                                <option value="1000-4999 sqft">1000-4999 sqft</option>
+                                <option value="5000-9999 sqft">5000-9999 sqft</option>
+                                <option value="10000+ sqft">10000+ sqft</option>
+                            </Input>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label>Number of Employees</Label>
+                            <Input type="number" min="0" onChange={(e) => handleCustomOptionChange(type, 'employees', e.target.value)}
+                                disabled={formData.serviceLevel === 'Deep Cleaning'}
+                            />
+                        </FormGroup>
+                        <FormGroup check>
+                            <Label check>
+                                <Input
+                                    type="checkbox"
+                                    onChange={(e) => handleCustomOptionChange(type, 'highDusting', e.target.checked)}
+                                    disabled={formData.serviceLevel === 'Deep Cleaning'}
+                                />
+                                <span className="form-check-sign"></span>
+                                High Dusting
+                            </Label>
+                        </FormGroup>
+                        <FormGroup check>
+                            <Label check>
+                                <Input
+                                    type="checkbox"
+                                    onChange={(e) => handleCustomOptionChange(type, 'machineryCleaning', e.target.checked)}
+                                    disabled={formData.serviceLevel === 'Deep Cleaning'}
+                                />
+                                <span className="form-check-sign"></span>
+                                Machinery Cleaning
+                            </Label>
+                        </FormGroup>
+                    </>
+                );
+            default:
+                return null;
+        }
+    };
+
+    return (
+        <>
+            <Navbar />
+            <div
+                className="section page-header-image km-bg-primary"
+                style={{
+                    // backgroundImage: "url(" + require("assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg") + ")",
+                    backgroundSize: "cover",
+                    backgroundColor: "green",
+                    backgroundPosition: "top center",
+                    minHeight: "700px",
+                    // opacity: 0.8
+                }}
+            >
+
+                <div className="content">
+                    <Container>
+                        <h2 className="text-center">Request a Quote</h2>
+                        <Form onSubmit={handleSubmit} id="quote-form">
+                            <FormGroup>
+                                <Label>Full Name</Label>
+                                <Input
+                                    type="text"
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label>Email</Label>
+                                <Input
+                                    type="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label>Phone Number</Label>
+                                <Input
+                                    type="text"
+                                    name="phonenumber"
+                                    value={formData.phonenumber}
+                                    onChange={handleChange}
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label>Company Name</Label>
+                                <Input
+                                    type="text"
+                                    name="companyName"
+                                    value={formData.companyName}
+                                    onChange={handleChange}
+                                />
+                            </FormGroup>
+                            <InputGroup className={`no-border ${formData.howDidYouHearAboutUs ? "input-group-focus" : ""}`}>
+                                <InputGroupAddon addonType="prepend">
+                                    <InputGroupText className=''>
+                                        <i className="now-ui-icons objects_globe"></i>
+                                    </InputGroupText>
+                                </InputGroupAddon>
+                                <Input
+                                    type="select"
+                                    value={formData.howDidYouHearAboutUs}
+                                    name='howDidYouHearAboutUs'
+                                    className=''
+                                    onChange={handleChange}
+                                >
+                                    <option value="">How Did You Hear About Us?...</option>
+                                    <option value="Google">Google</option>
+                                    <option value="Facebook">Facebook</option>
+                                    <option value="Instagram">Instagram</option>
+                                    <option value="Referral">Referral</option>
+                                    <option value="Other">Other</option>
+                                </Input>
+                            </InputGroup>
+                            <FormGroup>
+                                <Label>Description</Label>
+                                <Input
+                                    type="textarea"
+                                    name="description"
+                                    value={formData.description}
+                                    onChange={handleChange}
+                                />
+                            </FormGroup>
+
+                            <Row>
+                                <Col md="12">
+                                    <FormGroup>
+                                        <Label>Select Services</Label>
+                                        <Input
+                                            type="select"
+                                            name="serviceType"
+                                            value={formData.serviceType}
+                                            onChange={handleChange}
+                                        >
+                                            <option value="">Select Service...</option>
+                                            <option value="Residential" disabled={addedServices.some(service => service.type === 'Residential')}>Residential</option>
+                                            <option value="Commercial" disabled={addedServices.some(service => service.type === 'Commercial')}>Commercial</option>
+                                            <option value="Industrial" disabled={addedServices.some(service => service.type === 'Industrial')}>Industrial</option>
+                                        </Input>
+                                        <Button onClick={handleAddService} color="primary">Add Service</Button>
+                                    </FormGroup>
+
+                                </Col>
+                            </Row>
+                            {addedServices.map(service => (
+                                <div key={service.type} className="mb-3">
+                                    <h5>{service.type} Options</h5>
+                                    {renderCustomOptions(service.type)}
+                                    <Button onClick={() => handleRemoveService(service.type)} color="danger">Remove</Button>
+                                </div>
+                            ))}
+                            <Row>
+                                <Col >
+                                    <FormGroup>
+                                        <Label>Subtotal</Label>
+                                        <Input
+                                            type="text"
+                                            value={`$${subtotalCost.toFixed(2)}`}
+                                            readOnly
+                                        />
+                                    </FormGroup>
+                                </Col>
+                                <Col >
+                                    <FormGroup>
+                                        <Label>Tax</Label>
+                                        <Input
+                                            type="text"
+                                            value={`$${tax.toFixed(2)}`}
+                                            readOnly
+                                        />
+                                    </FormGroup>
+                                </Col>
+                                <Col >
+                                    <FormGroup>
+                                        <Label>Grand Total</Label>
+                                        <Input
+                                            type="text"
+                                            value={`$${grandTotal.toFixed(2)}`}
+                                            readOnly
+                                        />
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col md="12" className="text-center">
+                                    <Button type="submit" color="primary">Submit Quote</Button>
+                                </Col>
+                            </Row>
+                        </Form>
                     </Container>
-                    
                 </div>
             </div>
-            {/* </div> */}
             <Footer />
         </>
     );

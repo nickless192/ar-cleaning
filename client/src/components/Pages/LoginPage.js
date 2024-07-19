@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardBody,
   CardFooter,
-  Form,
+  // Form,
   Input,
   InputGroupAddon,
   InputGroupText,
@@ -18,6 +18,11 @@ import {
   Row,
   Col
 } from "reactstrap";
+
+import {
+  FloatingLabel,
+  Form
+} from 'react-bootstrap';
 
 // core components
 // import ExamplesNavbar from "components/Navbars/ExamplesNavbar.js";
@@ -48,13 +53,13 @@ function LoginPage() {
           if (response.ok) {
             console.log("you're logged!");
             response.json()
-            .then(data => {
-              console.log(data);
-              console.log(data.dbUserData.adminFlag);  
-              Auth.login(data.token, data.dbUserData.adminFlag);
+              .then(data => {
+                console.log(data);
+                console.log(data.dbUserData.adminFlag);
+                Auth.login(data.token, data.dbUserData.adminFlag);
 
 
-          });
+              });
           }
           else {
             // alert(response.statusText)
@@ -69,9 +74,9 @@ function LoginPage() {
         })
         .catch(err => console.log(err))
 
-    
+
     }
-  } 
+  }
 
   const handleChange = (event) => {
     event.preventDefault();
@@ -90,12 +95,13 @@ function LoginPage() {
     document.body.scrollTop = 0;
     return function cleanup() {
       document.body.classList.remove("login-page");
-      document.body.classList.remove("sidebar-collapse");      
+      document.body.classList.remove("sidebar-collapse");
     };
   }, []);
   return (
     <>
       <Navbar />
+
       <div className="page-header clear-filter" filter-color="blue">
         <div
           className="page-header-image"
@@ -103,69 +109,87 @@ function LoginPage() {
             backgroundImage: "url(" + require("assets/img/stock-photo-cropped-photo-responsible-cleaner-safety-protocols-placing-yellow-caution-sign.jpg") + ")"
           }}
         ></div>
+
         <div className="content">
           <Container>
+            <h2 className="title">Welcome to CleanAR Solutions</h2>
+            <p className="description">
+              Log in to access your account
+            </p>
+
+              <FloatingLabel
+                controlId="floatingInput"
+                label="Username"
+                className="mb-3"
+              >
+                <Form.Control type="text" placeholder="" onChange={(e) => handleChange(e)} name="username" />
+              </FloatingLabel>
+              <FloatingLabel controlId="floatingPassword" label="Password">
+                <Form.Control type="password" placeholder="" onChange={(e) => handleChange(e)} name="password" />
+              </FloatingLabel>
             <Col className="ml-auto mr-auto" md="4">
-              <Card className="card-login card-plain">
-                <Form onSubmit={(e) => handleFormSubmit(e)} className="form">
-                  <CardHeader className="text-center">
-                    <div className="logo-container">
+              {/* <Card className="card-plain"> */}
+              {/* <Form onSubmit={(e) => handleFormSubmit(e)} className="form"> */}
+              {/* <div className="logo-container">
                       <img src={Logo} alt="CleanAR Solutions Logo" />
-                    </div>
-                  </CardHeader>
-                  <CardBody>
-                    <InputGroup
-                      className={
-                        "no-border input-lg" +
-                        (formData.username ? " input-group-focus" : "")
-                      }
-                    >
-                      <InputGroupAddon addonType="prepend">
-                        <InputGroupText>
-                          <i className="now-ui-icons users_single-02"></i>
-                        </InputGroupText>
-                      </InputGroupAddon>
-                      <Input
-                        placeholder="Username..."
-                        type="text"
-                        id="username"
-                        name="username"
-                        onChange={(e) => handleChange(e)}
-                      ></Input>
-                    </InputGroup>
-                    <InputGroup
-                      className={
-                        "no-border input-lg" +
-                        (formData.password ? " input-group-focus" : "")
-                      }
-                    >
-                      <InputGroupAddon addonType="prepend">
-                        <InputGroupText>
-                          <i className="now-ui-icons objects_key-25"></i>
-                        </InputGroupText>
-                      </InputGroupAddon>
-                      <Input
-                        placeholder="Password..."
-                        type="password"
-                        id="password"
-                      name="password"
-                        onChange={(e) => handleChange(e)}
-                      ></Input>
-                    </InputGroup>
-                  </CardBody>
-                  <CardFooter className="text-center">
-                    <Button
-                      block
-                      className="btn-round"
-                      type="submit"
-                      color="info"
-                      size="lg"
-                    >
-                      Get Started
-                    </Button>
-                  </CardFooter>
-                </Form>
-              </Card>
+                    </div> */}
+
+              {/* <div>
+                <InputGroup
+                  className={
+                    "no-border input-lg" +
+                    (formData.username ? " input-group-focus" : "")
+                  }
+                >
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>
+                      <i className="now-ui-icons users_single-02"></i>
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    placeholder="Username..."
+                    type="text"
+                    id="username"
+                    name="username"
+                    onChange={(e) => handleChange(e)}
+                  ></Input>
+                </InputGroup>
+                <InputGroup
+                  className={
+                    "no-border input-lg" +
+                    (formData.password ? " input-group-focus" : "")
+                  }
+                >
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>
+                      <i className="now-ui-icons objects_key-25"></i>
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    placeholder="Password..."
+                    type="password"
+                    id="password"
+                    name="password"
+                    onChange={(e) => handleChange(e)}
+                  ></Input>
+                </InputGroup>
+
+
+
+              </div> */}
+              <div className="text-center">
+                <Button
+                  block
+                  className="btn-round"
+                  type="submit"
+                  color="info"
+                  size="lg"
+                >
+                  Log In
+                </Button>
+              </div>
+              {/* </Form> */}
+              {/* </Card> */}
             </Col>
           </Container>
         </div>

@@ -25,9 +25,9 @@ import Footer from "components/Pages/Footer.js";
 const ViewQuote = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [quotes, setQuotes] = useState([]);
-  const [displayedQuote, setDisplayedQuote] = useState({ products: [], services: [], name: '', phonenumber: '', companyName: '', email: '', description: '', serviceType: '', howDidYouHearAboutUs: '', subtotalCost: 0, tax: 0, grandTotal: 0});
+  const [displayedQuote, setDisplayedQuote] = useState({ products: [], services: [], name: '', phonenumber: '', companyName: '', email: '', description: '', serviceType: '', howDidYouHearAboutUs: '', subtotalCost: 0, tax: 0, grandTotal: 0 });
   const [isLogged] = React.useState(Auth.loggedIn());
-  
+
 
   const toggle = () => setDropdownOpen(prevState => !prevState);
 
@@ -36,26 +36,26 @@ const ViewQuote = () => {
       console.error('No search term provided!');
       return;
     }
-    
+
     fetch(`/api/quotes/${document.getElementById('search').value}`)
-    .then((response) => {
+      .then((response) => {
         if (!response.ok) {
-            throw new Error('Quote not found');
+          throw new Error('Quote not found');
         }
         return response.json();
-    })
-    .then((data) => {
+      })
+      .then((data) => {
         console.log(data);
         setDisplayedQuote(data);
-    })
-    .catch((error) => {
-      setDisplayedQuote({ products: [], services: [], name: '', phonenumber: '', companyName: '', email: '', description: '', serviceType: '', howDidYouHearAboutUs: '', subtotalCost: 0, tax: 0, grandTotal: 0});
+      })
+      .catch((error) => {
+        setDisplayedQuote({ products: [], services: [], name: '', phonenumber: '', companyName: '', email: '', description: '', serviceType: '', howDidYouHearAboutUs: '', subtotalCost: 0, tax: 0, grandTotal: 0 });
         console.error('Error:', error);
         // Optionally display an error message to the user
         window.alert('Quote not found!');
-    });
-    
-    
+      });
+
+
   };
 
   useEffect(() => {
@@ -70,50 +70,51 @@ const ViewQuote = () => {
     //   });
 
 
-      const prepopulateQuotes = async () => {
-        console.log('isLogged: ', isLogged);
-        if (isLogged) {
-          console.log('Auth.getProfile(): ', Auth.getProfile());
-          if (Auth.getProfile().data.adminFlag) {
-            const response = await fetch('/api/quotes');
-            const data = await response.json();
-            // console.log(data);
-            setQuotes(data);
-          }
-          else {
-            const response = await fetch(`/api/quotes/user/${Auth.getProfile().data._id}`);
-            const data = await response.json();
-            setQuotes(data);
-          }
+    const prepopulateQuotes = async () => {
+      console.log('isLogged: ', isLogged);
+      if (isLogged) {
+        console.log('Auth.getProfile(): ', Auth.getProfile());
+        if (Auth.getProfile().data.adminFlag) {
+          const response = await fetch('/api/quotes');
+          const data = await response.json();
+          // console.log(data);
+          setQuotes(data);
         }
         else {
-          // not logged in, so need to setQuotes to empty array
-          setQuotes([]);
+          const response = await fetch(`/api/quotes/user/${Auth.getProfile().data._id}`);
+          const data = await response.json();
+          setQuotes(data);
         }
-      };
+      }
+      else {
+        // not logged in, so need to setQuotes to empty array
+        setQuotes([]);
+      }
+    };
 
-      prepopulateQuotes();
+    prepopulateQuotes();
 
-      document.body.classList.add("view-quote-page");
-      document.body.classList.add("sidebar-collapse");
-      document.documentElement.classList.remove("nav-open");
-      window.scrollTo(0, 0);
-      document.body.scrollTop = 0;
-      return function cleanup() {
-        document.body.classList.remove("view-quote-page");
-        document.body.classList.remove("sidebar-collapse");      
-      };
+    document.body.classList.add("view-quote-page");
+    document.body.classList.add("sidebar-collapse");
+    document.documentElement.classList.remove("nav-open");
+    window.scrollTo(0, 0);
+    document.body.scrollTop = 0;
+    return function cleanup() {
+      document.body.classList.remove("view-quote-page");
+      document.body.classList.remove("sidebar-collapse");
+    };
   }, [isLogged]);
 
   return (
     <>
       <Navbar />
-      
+
       <div
-        className="section section-signup"
+        className="section section-signup km-bg-primary"
         style={{
-          backgroundImage: "url(" + require("assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg") + ")",
+          // backgroundImage: "url(" + require("assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg") + ")",
           backgroundSize: "cover",
+          backgroundColor: "green",
           backgroundPosition: "top center",
           minHeight: "700px"
         }}
@@ -124,47 +125,47 @@ const ViewQuote = () => {
             {/* add a search bar for users to input a quote Id to search for */}
             <InputGroup>
               <Input
-                className="text-light bg-secondary"
+                className="text-light "
                 id="search"
                 placeholder="Search for a quote..."
                 type="text"
               />
               <InputGroupAddon addonType="append">
-                <InputGroupText className="text-light bg-secondary" onClick={searchQuote}>
+                <InputGroupText className="text-light " onClick={searchQuote}>
                   <i className="now-ui-icons ui-1_zoom-bold"></i>
                 </InputGroupText>
               </InputGroupAddon>
             </InputGroup>
             {/* <Button className="mt-3" color="primary">Search</Button> */}
 
-{/* display the dropdown button if the user is logged */}
-{/* if the user is not logged in, display a message to log in */} 
+            {/* display the dropdown button if the user is logged */}
+            {/* if the user is not logged in, display a message to log in */}
             {isLogged ? (
               <Dropdown isOpen={dropdownOpen} toggle={toggle}>
-              <DropdownToggle caret>
-                {`Selected Quote: ${displayedQuote.name || 'Select Quote...'}`}
-              </DropdownToggle>
-              <DropdownMenu className='scrollable-dropdown-menu'>
-                <DropdownItem onClick={() => setDisplayedQuote({ products: [], services: [] })}>Quotes</DropdownItem>
-                {quotes.map((quote) => (
-                  <DropdownItem key={quote._id} onClick={() => setDisplayedQuote(quote)}>
-                    {quote.quoteId} - {quote.name}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown>
+                <DropdownToggle caret>
+                  {`${displayedQuote.name || 'Select Quote...'}`}
+                </DropdownToggle>
+                <DropdownMenu className='scrollable-dropdown-menu'>
+                  <DropdownItem onClick={() => setDisplayedQuote({ products: [], services: [] })}>Quotes</DropdownItem>
+                  {quotes.map((quote) => (
+                    <DropdownItem key={quote._id} onClick={() => setDisplayedQuote(quote)}>
+                      {quote.quoteId} - {quote.name}
+                    </DropdownItem>
+                  ))}
+                </DropdownMenu>
+              </Dropdown>
             ) : (
               <h3 className="text-light">Please log in to view all your quotes</h3>
             )}
-            
+
             <Row>
               <Col className="text-center ml-auto mr-auto" lg="6" md="8">
                 {quotes.length === 0 && (
-                  <p className="text-danger">No quotes found!</p>
+                  <p className='text-danger'>No quotes found!</p>
                 )}
               </Col>
             </Row>
-            {displayedQuote && <QuoteDetails displayedQuote={displayedQuote}/>}
+            {displayedQuote && <QuoteDetails displayedQuote={displayedQuote} />}
           </Container>
         </div>
       </div>
@@ -190,30 +191,30 @@ const QuoteDetails = ({ displayedQuote }) => {
       <h3 className="mt-5">Quote Information:</h3>
       <div className=' rounded p-2'>
 
-      {Object.keys(fieldMapping).map(displayLabel => (
-        <FormGroup key={displayLabel} className="text-light">
-          <Label for={fieldMapping[displayLabel]} className="text-light">{displayLabel}</Label>
-          <InputGroup className="no-border">
-            <InputGroupAddon addonType="prepend">
-              <InputGroupText className="text-light bg-secondary">
-                <i className={`now-ui-icons ${iconClassMap[displayLabel]}`}></i>
-              </InputGroupText>
-            </InputGroupAddon>
-            <Input
-              id={fieldMapping[displayLabel]}
-              className="text-light no-cursor bg-secondary"
-              placeholder={`${displayLabel}...`}
-              type="text"
-              alt={`${displayLabel}...`}
-              value={displayedQuote[fieldMapping[displayLabel]]}
-              readOnly
-            />
-          </InputGroup>
-        </FormGroup>
-      ))}
-      <ProductList products={displayedQuote.products} />
-      <ServiceList services={displayedQuote.services} />
-      <CostDetails displayedQuote={displayedQuote} />
+        {Object.keys(fieldMapping).map(displayLabel => (
+          <FormGroup key={displayLabel} className="text-light">
+            <Label for={fieldMapping[displayLabel]} className="text-light">{displayLabel}</Label>
+            <InputGroup className="no-border">
+              <InputGroupAddon addonType="prepend">
+                <InputGroupText className="text-light ">
+                  <i className={`now-ui-icons ${iconClassMap[displayLabel]}`}></i>
+                </InputGroupText>
+              </InputGroupAddon>
+              <Input
+                id={fieldMapping[displayLabel]}
+                className="text-light no-cursor "
+                placeholder={`${displayLabel}...`}
+                type="text"
+                alt={`${displayLabel}...`}
+                value={displayedQuote[fieldMapping[displayLabel]]}
+                readOnly
+              />
+            </InputGroup>
+          </FormGroup>
+        ))}
+        <ProductList products={displayedQuote.products} />
+        <ServiceList services={displayedQuote.services} />
+        <CostDetails displayedQuote={displayedQuote} />
       </div>
     </Col>
   );
@@ -229,9 +230,9 @@ const ProductList = ({ products }) => (
         <FormGroup key={index} className="text-light">
           <Label for={`product-${index}`} className="text-light">Product</Label>
           <InputGroup>
-            <Input id={`product-${index}`} className="text-light bg-secondary" placeholder="Product..." type="text" value={product.name} readOnly />
-            <Input className="text-light bg-secondary" placeholder="Product Cost..." type="number" value={product.productCost} readOnly />
-            <Input className="text-light bg-secondary" placeholder="Id..." type="text" value={product.id} readOnly />
+            <Input id={`product-${index}`} className="text-light " placeholder="Product..." type="text" value={product.name} readOnly />
+            <Input className="text-light " placeholder="Product Cost..." type="number" value={product.productCost} readOnly />
+            <Input className="text-light " placeholder="Id..." type="text" value={product.id} readOnly />
           </InputGroup>
         </FormGroup>
       ))
@@ -249,9 +250,9 @@ const ServiceList = ({ services }) => (
         <FormGroup key={index} className="text-light">
           <Label for={`service-${index}`} className="text-light">Service</Label>
           <InputGroup>
-            <Input id={`service-${index}`} className="text-light bg-secondary" placeholder="Service..." type="text" value={service.name} readOnly />
-            <Input className="text-light bg-secondary" placeholder="Service cost..." type="number" value={service.serviceCost} readOnly />
-            <Input className="text-light bg-secondary" placeholder="Id..." type="text" value={service.id} readOnly />
+            <Input id={`service-${index}`} className="text-light " placeholder="Service..." type="text" value={service.name} readOnly />
+            <Input className="text-light " placeholder="Service cost..." type="number" value={service.serviceCost} readOnly />
+            <Input className="text-light " placeholder="Id..." type="text" value={service.id} readOnly />
           </InputGroup>
         </FormGroup>
       ))
@@ -267,13 +268,13 @@ const CostDetails = ({ displayedQuote }) => (
         <Label for={field} className="text-light">{capitalize(field)}</Label>
         <InputGroup className="no-border">
           <InputGroupAddon addonType="prepend">
-            <InputGroupText className="bg-secondary">
+            <InputGroupText className="">
               <i className="now-ui-icons shopping_tag-content"></i>
             </InputGroupText>
           </InputGroupAddon>
           <Input
             id={field}
-            className="text-light bg-secondary"
+            className="text-light "
             placeholder={`${capitalize(field)}...`}
             type="number"
             value={displayedQuote[field]}

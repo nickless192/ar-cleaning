@@ -35,14 +35,15 @@ const ProductsAndServices = () => {
       
       <div className="page-header clear-filter" filter-color="blue">
       <div
-        className="page-header-image"
+        className="page-header-image section"
         style={{
-          backgroundImage: "url(" + require("assets/img/stock-photo-professional-cleaners-safety-protocols-wearing-protection-suits-while-sanitizing-furniture.jpg") + ")",
+          // backgroundImage: "url(" + require("assets/img/stock-photo-professional-cleaners-safety-protocols-wearing-protection-suits-while-sanitizing-furniture.jpg") + ")",
+          backgroundColor: "grey",
           backgroundSize: "cover",
           backgroundPosition: "top center",
           // minHeight: "700px"
         }}
-      ></div> 
+      > 
         <div className="container">        
             {/* <Row>
               <Col className="ml-auto mr-auto text-center" md="8">
@@ -173,10 +174,12 @@ const ProductsAndServices = () => {
           
         </div>
       {/* </div> */}
+      
       </div>
       
       <Footer />
 
+    </div>
     </>
   );
 };

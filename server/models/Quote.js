@@ -1,15 +1,51 @@
 const { Schema, model, Types } = require('mongoose');
-const {isEmail} = require('../utils/validators');
+const { isEmail } = require('../utils/validators');
 const dateFormat = require('../utils/dateFormat');
+
+const CustomOptionsSchema = new Schema({
+    unitSize: { type: String },
+    bedrooms: { type: Number },
+    bathrooms: { type: Number },
+    fridge: { type: Boolean },
+    parking: { type: Boolean },
+    squareFootage: { type: String },
+    rooms: { type: Number },
+    windows: { type: Boolean },
+    employees: { type: Number },
+    highDusting: { type: Boolean },
+    machineryCleaning: { type: Boolean }
+}, { _id: false });
+
+const ServiceSchema = new Schema({
+    type: {
+        type: String,
+        required: true
+    },
+    customOptions: CustomOptionsSchema
+}, { _id: false });
+
+const ProductSchema = new Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    productCost: {
+        type: Number,
+        required: true
+    },
+    id: {
+        type: String,
+        required: true
+    }
+}, { _id: false });
 
 const QuoteSchema = new Schema({
     quoteId: {
         type: Schema.Types.ObjectId,
-        default: () => new Types.ObjectId
+        default: () => new Types.ObjectId()
     },
     name: {
         type: String,
-        // unique: true,
         required: true
     },
     description: {
@@ -24,7 +60,6 @@ const QuoteSchema = new Schema({
         type: String,
         required: true
     },
-
     phonenumber: {
         type: String,
         required: true
@@ -33,47 +68,12 @@ const QuoteSchema = new Schema({
         type: String,
         required: true
     },
-    serviceType: {
+    serviceLevel: {
         type: String,
-        required: true
+        required: true // This is new
     },
-    products: [
-        {
-            // type: Schema.Types.ObjectId,
-            // ref: 'Product'
-            name: {
-                type: String,
-                required: true
-            },
-            productCost: {
-                type: Number,
-                required: true
-            },
-            id: {
-                type: String,
-                required: true
-            
-            }
-        }
-    ],
-    services: [
-        {
-            // type: Schema.Types.ObjectId,
-            // ref: 'Service'
-            name: {
-                type: String,
-                required: true
-            },
-            serviceCost: {
-                type: Number,
-                required: true
-            },
-            id: {
-                type: String,
-                required: true
-            }
-        }
-    ],
+    products: [ProductSchema],
+    services: [ServiceSchema],
     userId: {
         type: Schema.Types.ObjectId,
         ref: 'User'
@@ -92,14 +92,12 @@ const QuoteSchema = new Schema({
     },
     createdAt: {
         type: Date,
-        default: Date.now(),
+        default: Date.now,
         get: createdAtVal => dateFormat(createdAtVal)
-    },
+    }
 }, {
     toJSON: {
-        // enable getters to format timestamps
         getters: true
-
     },
     id: false
 });

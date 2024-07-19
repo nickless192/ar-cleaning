@@ -17,6 +17,10 @@ const UserSchema = new Schema({
         // run email validation
         validate: [isEmail, 'Wrong email format']
     },
+    howDidYouHearAboutUs: {
+        type: String,
+        // required: true
+    },
     password: {
         type: String,
         required: true
