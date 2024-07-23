@@ -184,6 +184,7 @@ function LoginPage() {
                   type="submit"
                   color="info"
                   size="lg"
+                  onClick={(e) => handleFormSubmit(e)}
                 >
                   Log In
                 </Button>

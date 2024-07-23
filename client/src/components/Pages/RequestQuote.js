@@ -490,6 +490,22 @@ const RequestQuote = () => {
                                 </Col>
                             </Row>
                             <Row>
+                                <Col>
+                                <FormGroup check className='km-bg-primary'>
+                            <Label check>
+                                <Input
+                                    type="checkbox"
+                                    checked={sendEmail}
+                                    onChange={() => setSendEmail(!sendEmail)}
+                                />
+                                <span className="form-check-sign"></span>
+                                Email me a copy of the quote
+                            </Label>
+                        </FormGroup>
+
+                                </Col>
+                            </Row>
+                            <Row>
                                 <Col md="12" className="text-center">
                                     <Button type="submit" color="primary">Submit Quote</Button>
                                 </Col>
