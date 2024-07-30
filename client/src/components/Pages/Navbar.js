@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { Link } from "react-router-dom";
 import "./../../assets/css/our-palette.css";
 // reactstrap components
@@ -21,7 +21,7 @@ import Auth from "../../utils/auth";
 // import { set } from "mongoose";
 
 function IndexNavbar() {
-    const [navbarColor, setNavbarColor] = React.useState("navbar-transparent");
+    const [navbarColor, setNavbarColor] = React.useState("navbar-color");
     const [collapseOpen, setCollapseOpen] = React.useState(false);
 
     const [isLogged] = React.useState(Auth.loggedIn());
@@ -31,8 +31,8 @@ function IndexNavbar() {
     // console.log(adminFlag);
     // console.log(Auth.loggedIn());
 
-    React.useEffect(() => {
-        const scrollTopVal = 90;
+    useEffect(() => {
+        const scrollTopVal = 0;
         
         const updateNavbarColor = () => {
             if (
@@ -192,7 +192,7 @@ function IndexNavbar() {
                             CleanAR Solutions
                         </NavbarBrand>
                         <button
-                            className="navbar-toggler navbar-toggler"
+                            className="navbar-toggler"
                             onClick={() => {
                                 document.documentElement.classList.toggle("nav-open");
                                 setCollapseOpen(!collapseOpen);

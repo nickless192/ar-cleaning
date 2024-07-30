@@ -10,6 +10,7 @@ import {
     Form, FormGroup, Label,
     Container
 } from 'reactstrap';
+import { ButtonGroup, ToggleButton } from 'react-bootstrap';
 import html2pdf from 'html2pdf.js';
 import Navbar from "components/Pages/Navbar.js";
 import Footer from "components/Pages/Footer.js";
@@ -49,7 +50,11 @@ const RequestQuote = () => {
                     setServices(serviceData.map(item => ({
                         name: item.name,
                         id: item._id,
-                        serviceCost: item.serviceCost
+                        serviceCost: item.serviceCost,
+                        isResidential: item.isResidential,
+                        isCommercial: item.isCommercial,
+                        isIndustrial: item.isIndustrial,
+                        serviceLevel: item.serviceLevel
                     })));
                 }
 
@@ -64,6 +69,8 @@ const RequestQuote = () => {
             } catch (error) {
                 console.error('Error fetching services or products:', error);
             }
+
+            console.log(services);
         };
 
         const prepopulateForm = async () => {
@@ -102,10 +109,19 @@ const RequestQuote = () => {
         });
     };
 
-    const handleAddService = () => {
-        if (formData.serviceType && !addedServices.find(s => s.type === formData.serviceType)) {
-            setAddedServices([...addedServices, { type: formData.serviceType, customOptions: {} }]);
+    const handleAddService = (e) => {
+        // e.preventDefault();
+        const serviceType = e.target.value;
+        // console.log(e.target)
+        // console.log(e.target.id)
+        // console.log('Service type:', serviceType);
+        if (!addedServices.find(s => s.type === serviceType)) {
+            // setAddedServices([...addedServices, { type: formData.serviceType, customOptions: {} }]);
+            setAddedServices([...addedServices, { type: serviceType, customOptions: {} }]);
             setFormData(prevFormData => ({ ...prevFormData, serviceType: '' }));
+        } else {
+            setAddedServices(addedServices.filter(s => s.type !== serviceType));
+            setFormData(prevFormData => ({ ...prevFormData, services: addedServices }));
         }
     };
 
@@ -204,15 +220,7 @@ const RequestQuote = () => {
             case 'Residential':
                 return (
                     <>
-                        <FormGroup>
-                            <Label>Select Service Level</Label>
-                            <Input type="select" name="serviceLevel" value={formData.serviceLevel} onChange={handleChange}>
-                                <option value="">Select Service Level...</option>
-                                <option value="Basic Cleaning">Basic Cleaning</option>
-                                <option value="Deep Cleaning">Deep Cleaning</option>
-                                <option value="Special Deal">Special Deal</option>
-                            </Input>
-                        </FormGroup>
+                        
                         <FormGroup>
                             <Label>Unit Size</Label>
                             <Input type="select" onChange={(e) => handleCustomOptionChange(type, 'unitSize', e.target.value)} disabled={formData.serviceLevel === 'Deep Cleaning'}>
@@ -236,8 +244,26 @@ const RequestQuote = () => {
                                 disabled={formData.serviceLevel === 'Deep Cleaning'}
                             />
                         </FormGroup>
+                        
                         <FormGroup check>
-                            <Label check>
+                        {services
+                        .filter(service => service.serviceLevel === formData.serviceLevel)
+                        .map((service, index) => {
+                            return (<>
+                                {service.isResidential ? (
+                                    <Label check>
+                                        <Input
+                                            type="checkbox"
+                                            onChange={(e) => handleCustomOptionChange(type, service.name, e.target.checked)}
+                                        // disabled={formData.serviceLevel !== service.serviceLevel}
+                                        />
+                                        <span className="form-check-sign"></span>
+                                        {service.name} - ${service.cost}
+                                    </Label>
+                                ) : null}
+                            </>)
+                        })}
+                            {/* <Label check>
                                 <Input
                                     type="checkbox"
                                     onChange={(e) => handleCustomOptionChange(type, 'fridge', e.target.checked)}
@@ -245,9 +271,9 @@ const RequestQuote = () => {
                                 />
                                 <span className="form-check-sign"></span>
                                 Fridge
-                            </Label>
+                            </Label> */}
                         </FormGroup>
-                        <FormGroup check>
+                        {/* <FormGroup check>
                             <Label check>
                                 <Input
                                     type="checkbox"
@@ -257,7 +283,7 @@ const RequestQuote = () => {
                                 <span className="form-check-sign"></span>
                                 Parking
                             </Label>
-                        </FormGroup>
+                        </FormGroup> */}
                     </>
                 );
             case 'Commercial':
@@ -282,7 +308,24 @@ const RequestQuote = () => {
                             />
                         </FormGroup>
                         <FormGroup check>
-                            <Label check>
+                        {services
+                        .filter(service => service.serviceLevel === formData.serviceLevel)
+                        .map((service, index) => {
+                            return (<>
+                                {service.isCommercial ? (
+                                    <Label check>
+                                        <Input
+                                            type="checkbox"
+                                            onChange={(e) => handleCustomOptionChange(type, service.name, e.target.checked)}
+                                        // disabled={formData.serviceLevel === 'Deep Cleaning'}
+                                        />
+                                        <span className="form-check-sign"></span>
+                                        {service.name} - ${service.cost}
+                                    </Label>
+                                ) : null}
+                            </>)
+                        })}
+                            {/* <Label check>
                                 <Input
                                     type="checkbox"
                                     onChange={(e) => handleCustomOptionChange(type, 'windows', e.target.checked)}
@@ -290,7 +333,7 @@ const RequestQuote = () => {
                                 />
                                 <span className="form-check-sign"></span>
                                 Windows
-                            </Label>
+                            </Label> */}
                         </FormGroup>
                     </>
                 );
@@ -316,7 +359,24 @@ const RequestQuote = () => {
                             />
                         </FormGroup>
                         <FormGroup check>
-                            <Label check>
+                        {services
+                        .filter(service => service.serviceLevel === formData.serviceLevel)
+                        .map((service, index) => {
+                            return (<>
+                                {service.isIndustrial ? (
+                                    <Label check>
+                                        <Input
+                                            type="checkbox"
+                                            onChange={(e) => handleCustomOptionChange(type, service.name, e.target.checked)}
+                                        // disabled={formData.serviceLevel === 'Deep Cleaning'}
+                                        />
+                                        <span className="form-check-sign"></span>
+                                        {service.name} - ${service.cost}
+                                    </Label>
+                                ) : null}
+                            </>)
+                        })}
+                            {/* <Label check>
                                 <Input
                                     type="checkbox"
                                     onChange={(e) => handleCustomOptionChange(type, 'highDusting', e.target.checked)}
@@ -324,9 +384,9 @@ const RequestQuote = () => {
                                 />
                                 <span className="form-check-sign"></span>
                                 High Dusting
-                            </Label>
+                            </Label> */}
                         </FormGroup>
-                        <FormGroup check>
+                        {/* <FormGroup check>
                             <Label check>
                                 <Input
                                     type="checkbox"
@@ -336,7 +396,7 @@ const RequestQuote = () => {
                                 <span className="form-check-sign"></span>
                                 Machinery Cleaning
                             </Label>
-                        </FormGroup>
+                        </FormGroup> */}
                     </>
                 );
             default:
@@ -433,8 +493,17 @@ const RequestQuote = () => {
                             <Row>
                                 <Col md="12">
                                     <FormGroup>
-                                        <Label>Select Services</Label>
-                                        <Input
+                                        <Label>Add Requested Services</Label>
+                                        <ButtonGroup>
+                                            <ToggleButton type="checkbox"
+                                                variant="outline-primary"
+                                                onClick={() => handleAddService({ target: { value: "Residential" } })} id="Residential" value="Residential" checked={addedServices.some(service => service.type === 'Residential')}>Residential</ToggleButton>
+                                            <ToggleButton type="checkbox"
+                                                variant="outline-primary" onClick={() => handleAddService({ target: { value: "Commercial" } })} value="Commercial" checked={addedServices.some(service => service.type === 'Commercial')}>Commercial</ToggleButton>
+                                            <ToggleButton type="checkbox"
+                                                variant="outline-primary" onClick={() => handleAddService({ target: { value: "Industrial" } })} value="Industrial" checked={addedServices.some(service => service.type === 'Industrial')}>Industrial</ToggleButton>
+                                        </ButtonGroup>
+                                        {/* <Input
                                             type="select"
                                             name="serviceType"
                                             value={formData.serviceType}
@@ -444,9 +513,18 @@ const RequestQuote = () => {
                                             <option value="Residential" disabled={addedServices.some(service => service.type === 'Residential')}>Residential</option>
                                             <option value="Commercial" disabled={addedServices.some(service => service.type === 'Commercial')}>Commercial</option>
                                             <option value="Industrial" disabled={addedServices.some(service => service.type === 'Industrial')}>Industrial</option>
-                                        </Input>
-                                        <Button onClick={handleAddService} color="primary">Add Service</Button>
+                                        </Input> */}
+                                        {/* <Button onClick={handleAddService} color="primary">Add Service</Button> */}
                                     </FormGroup>
+                                    <FormGroup>
+                            <Label>Select Service Level</Label>
+                            <Input type="select" name="serviceLevel" value={formData.serviceLevel} onChange={handleChange}>
+                                <option value="">Select Service Level...</option>
+                                <option value="Basic Cleaning">Basic Cleaning</option>
+                                <option value="Deep Cleaning">Deep Cleaning</option>
+                                <option value="Special Deal">Special Deal</option>
+                            </Input>
+                        </FormGroup>
 
                                 </Col>
                             </Row>
@@ -491,17 +569,17 @@ const RequestQuote = () => {
                             </Row>
                             <Row>
                                 <Col>
-                                <FormGroup check className='km-bg-primary'>
-                            <Label check>
-                                <Input
-                                    type="checkbox"
-                                    checked={sendEmail}
-                                    onChange={() => setSendEmail(!sendEmail)}
-                                />
-                                <span className="form-check-sign"></span>
-                                Email me a copy of the quote
-                            </Label>
-                        </FormGroup>
+                                    <FormGroup check className='km-bg-primary'>
+                                        <Label check>
+                                            <Input
+                                                type="checkbox"
+                                                checked={sendEmail}
+                                                onChange={() => setSendEmail(!sendEmail)}
+                                            />
+                                            <span className="form-check-sign"></span>
+                                            Email me a copy of the quote
+                                        </Label>
+                                    </FormGroup>
 
                                 </Col>
                             </Row>

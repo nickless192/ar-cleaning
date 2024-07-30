@@ -21,6 +21,21 @@ const ServiceSchema = new Schema({
         type: Date,
         default: Date.now(),
         get: createdAtVal => dateFormat(createdAtVal)
+    },
+    isResidential: {
+        type: Boolean,
+        default: false
+    },
+    isCommercial : {
+        type: Boolean,
+        default: false
+    },
+    isIndustrial: {
+        type: Boolean,
+        default: false
+    },
+    serviceLevel: {
+        type: String        
     }
 }, {
     toJSON: {

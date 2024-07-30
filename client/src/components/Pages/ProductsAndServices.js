@@ -55,17 +55,146 @@ const ProductsAndServices = () => {
               <Row>
                 <Col className="text-center ml-auto mr-auto">
                   <div className="product-selector">
-                    <h5>Products:</h5>
-                    <InputGroup>
-                      <Input type="select" defaultValue="">
-                        <option value="" disabled>Select Product...</option>
-                        <option value="Shampoo">Shampoo</option>
-                        <option value="Spot Remover">Spot Remover</option>
-                        <option value="Carpet Deodorizer">Carpet Deodorizer</option>
-                        <option value="Stain Protector">Stain Protector</option>
-                        <option value="Carpet Cleaning Machine Rental">Carpet Cleaning Machine Rental</option>
-                      </Input>
-                    </InputGroup>
+                  <h2 className="title text-center text-dark my-0">Industries We Serve</h2>
+            <Row className="p-5 ml-auto mr-auto my-0">
+              <Col>
+                <Card className="bg-primary"
+                  // color="primary"
+                  inverse
+                // style={{
+                //   width: '18rem'
+                // }}
+                >
+                  <CardHeader tag="h3" className="mx-2">
+                    {/* <h3 className="text-dark"> */}
+                    Residential Buildings
+                    {/* </h3> */}
+                  </CardHeader>
+                  <ListGroup>
+                    <ListGroupItem className="text-dark">
+                      General Cleaning: Complete cleaning of common areas such as lobbies, hallways, stairs, and recreational areas.
+                    </ListGroupItem>
+                    <ListGroupItem className="text-dark">
+                      Exterior Area Maintenance: Cleaning of sidewalks, courtyards, and parking areas.
+                    </ListGroupItem>
+                    <ListGroupItem className="text-dark">
+                      Trash Management: Collection and proper disposal of waste and garbage.
+                    </ListGroupItem>
+                  </ListGroup>
+                </Card>
+              </Col>
+              <Col>
+                <Card className="bg-primary"
+                  // color="primary"
+                  inverse
+                // style={{
+                //   width: '18rem'
+                // }}
+                >
+                  <CardHeader tag="h3" className="mx-2">
+                    {/* <h3 className="text-dark"> */}
+                    Offices
+                    {/* </h3> */}
+                  </CardHeader>
+                  <ListGroup>
+                    <ListGroupItem className="text-dark">
+                      Daily Cleaning: Cleaning of desks, tables, chairs, and break areas.
+                    </ListGroupItem>
+                    <ListGroupItem className="text-dark">
+                      Floor Maintenance: Sweeping, mopping, and polishing of floors.
+                    </ListGroupItem>
+                    <ListGroupItem className="text-dark">
+                      Bathroom Cleaning: Disinfection and deep cleaning of bathrooms and sanitary areas.
+                    </ListGroupItem>
+                  </ListGroup>
+                </Card>
+
+              </Col>
+              <Col>
+                <Card className="bg-primary"
+                  // color="primary"
+                  inverse
+                // style={{
+                //   width: '18rem'
+                // }}
+                >
+                  <CardHeader tag="h3" className="mx-2">
+                    {/* <h3 className="text-dark"> */}
+                    Shopping Centers
+                    {/* </h3> */}
+                  </CardHeader>
+                  <ListGroup>
+                    <ListGroupItem className="text-dark">
+                      Common Area Cleaning: Cleaning of corridors, escalators, and rest areas.
+                    </ListGroupItem>
+                    <ListGroupItem className="text-dark">
+                      Store Maintenance: Cleaning of shop windows, display areas, and customer service counters.
+                    </ListGroupItem>
+                    <ListGroupItem className="text-dark">
+                      Bathroom Cleaning: Disinfection and cleaning of public bathrooms and rest areas.
+                    </ListGroupItem>
+                  </ListGroup>
+                </Card>
+              </Col>
+            {/* </Row>
+            <Row className="px-5 ml-auto mr-auto"> */}
+              <Col>
+                <Card className="bg-primary"
+                  // color="primary"
+                  inverse
+                // style={{
+                //   width: '18rem'
+                // }}
+                >
+                  <CardHeader tag="h3" className="mx-2">
+                    {/* <h3 className="text-dark"> */}
+                    Festivals
+                    {/* </h3> */}
+                  </CardHeader>
+                  <ListGroup>
+                    <ListGroupItem className="text-dark">
+                      Pre-Event Cleaning: Cleaning of the event area before its start, including garbage collection and grounds cleaning.
+                    </ListGroupItem>
+                    <ListGroupItem className="text-dark">
+
+                      Event Maintenance: Continuous maintenance of bathrooms, rest areas, and food areas during the event.
+                    </ListGroupItem>
+                    <ListGroupItem className="text-dark">
+                      Post-Event Cleaning: Thorough cleaning of the event area after its conclusion, including garbage collection and site sanitation.
+                    </ListGroupItem>
+                  </ListGroup>
+                </Card>
+
+              </Col>
+              <Col>
+                <Card className="bg-primary"
+                  // color="primary"
+
+                  inverse
+                // style={{
+                //   width: '18rem'
+                // }}
+                >
+                  <CardHeader tag="h3" className="mx-2">
+                    {/* <h3 className="text-dark"> */}
+                    Film Industry
+                    {/* </h3> */}
+                  </CardHeader>
+                  <ListGroup>
+                    <ListGroupItem className="text-dark">
+                      Set Cleaning: Cleaning of filming sets before, during, and after production.
+                    </ListGroupItem>
+                    <ListGroupItem className="text-dark">
+                      Location Maintenance: Regular maintenance of filming locations, including cleaning of common and exterior areas.
+                    </ListGroupItem>
+                    <ListGroupItem className="text-dark">
+                      Waste Management: Proper disposal of waste and garbage generated during filming.
+                    </ListGroupItem>
+                  </ListGroup>
+                </Card>
+              </Col>
+              {/* Add more industries as needed */}
+            </Row>
                   </div>
                   <div className="service-selector">
                     <h5>Services:</h5>

@@ -1,10 +1,12 @@
 /* Define your color variables */
 :root {
-    --primary-color: #86c129;
-    --secondary-color: #003393;
-    --accent-color: #0081e9;
-    --light-color: #2e6164;
-    --test-color: #778c8f;
+    --primary-color: #00a5ce;
+    --secondary-color: #89c97f;
+    --accent-color: #4db1b3;
+    --light-color: #95d3c3;
+    --light-blue-color: #64acc4;
+    --brown-color: #5c5d60;
+    --text-cleanar-color: #374357;
 }
 
 /* Use the color variables in your styles */
@@ -18,28 +20,61 @@
 } */
 
 /* Test classes */
-.test-primary {
+.text-cleanar-color {
+    color: var(--text-cleanar-color);
+    font-weight: bold;
+    /* color: white; */
+}
+
+.text-cleanar-bg-color {
+    background-color: var(--text-cleanar-color);
+    /* font-weight: bold; */
+    /* color: white; */
+}
+.primary-color {
     color: var(--primary-color);
     font-weight: bold;
     /* color: white; */
 }
 
-.test-secondary {
+.primary-bg-color {
+    background-color: var(--primary-color);
+    /* font-weight: bold; */
+    /* color: white; */
+}
+
+.secondary-color {
     color: var(--secondary-color);
     font-weight: bold;
     /* color: white; */
 }
+.secondary-bg-color {
+    background-color: var(--secondary-color);
+    /* font-weight: bold; */
+    /* color: white; */
+}
 
-.test-accent {
+.accent-color {
     color: var(--accent-color);
     font-weight: bold;
     /* color: white; */
 }
+.accent-bg-color {
+    background-color: var(--accent-color);
+    /* font-weight: bold; */
+    /* color: white; */
+}
 
-.test-light {
+.light-color {
     color: var(--light-color);
     font-weight: bold;
     /* color: black; */
+}
+
+.light-bg-color {
+    background-color: var(--light-color);
+    /* font-weight: bold; */
+    /* color: white; */
 }
 
 .transparent {
@@ -76,7 +111,11 @@
 }
 
 .navbar-color {
-    background-color: #1c4274;
+    background-color: var(--primary-color);
+}
+
+.logo-size {
+    height: 450px;
 }
 
 /* Placeholder styles */

@@ -32,12 +32,16 @@ const ViewQuote = () => {
   const toggle = () => setDropdownOpen(prevState => !prevState);
 
   const searchQuote = () => {
-    if (!document.getElementById('search').value) {
+
+    const quoteSearchTerm = document.getElementById('search').value;
+    if (!quoteSearchTerm) {
       console.error('No search term provided!');
       return;
     }
 
-    fetch(`/api/quotes/${document.getElementById('search').value}`)
+    // if the user is logged, and if the quoteSearchTerm is one of the quotes in the quotes array, then perform the fetch
+    if ((isLogged && quotes.includes(quoteSearchTerm))|| !isLogged) {
+      fetch(`/api/quotes/${quoteSearchTerm}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error('Quote not found');
@@ -46,7 +50,41 @@ const ViewQuote = () => {
       })
       .then((data) => {
         console.log(data);
-        setDisplayedQuote(data);
+        // first confirm if the quote can be displayed.
+        if (((data.quoteId === data.userId)||isLogged)) {
+
+          setDisplayedQuote(data);
+        } else {
+          console.log('user cannot see this quote');
+        }
+
+      })
+      .catch((error) => {
+        setDisplayedQuote({ products: [], services: [], name: '', phonenumber: '', companyName: '', email: '', description: '', serviceType: '', howDidYouHearAboutUs: '', subtotalCost: 0, tax: 0, grandTotal: 0 });
+        console.error('Error:', error);
+        // Optionally display an error message to the user
+        window.alert('Quote not found!');
+      });
+    }
+    
+
+    fetch(`/api/quotes/${quoteSearchTerm}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Quote not found');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        // first confirm if the quote can be displayed.
+        if ((data.quoteId === data.userId)) {
+
+          setDisplayedQuote(data);
+        } else {
+          console.log('user cannot see this quote');
+        }
+
       })
       .catch((error) => {
         setDisplayedQuote({ products: [], services: [], name: '', phonenumber: '', companyName: '', email: '', description: '', serviceType: '', howDidYouHearAboutUs: '', subtotalCost: 0, tax: 0, grandTotal: 0 });

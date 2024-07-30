@@ -9,6 +9,8 @@ import {
     InputGroup,
     InputGroupAddon,
     InputGroupText,
+    FormGroup,
+    Label,
     Form, Card, CardBody, CardTitle, CardText,
     CardHeader
 } from 'reactstrap'; // Importing required components from reactstrap
@@ -20,7 +22,11 @@ const ManageService = () => {
     const [formData, setFormData] = useState({
         serviceName: '',
         description: '',
-        serviceCost: ''
+        serviceCost: '',
+        isResidential: false,
+        isCommercial: false,
+        isIndustrial: false,
+        serviceLevel: ''
     });
 
     const [services, setServices] = useState([]);
@@ -35,7 +41,7 @@ const ManageService = () => {
     };
 
     // the handleSaveClick function is called when the save button is clicked and the edited service is saved so the function needs to receive a service.id as an argument
-    const handleSaveClick = () => {    
+    const handleSaveClick = () => {
         // onSave(editedService);
         // api call to update service        
         const { name, description, serviceCost } = editedService;
@@ -48,7 +54,7 @@ const ManageService = () => {
             description,
             serviceCost
         });
-        
+
         fetch(`/api/services/${editingServiceId}`, {
             method: 'PUT',
             headers: {
@@ -110,14 +116,21 @@ const ManageService = () => {
             .catch(err => console.log(err));
         setEditedService({});
         setEditingServiceId(null);
-        
+
     };
 
     const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
+        // setFormData({
+        //     ...formData,
+        //     [e.target.name]: e.target.value
+        // });
+        const { name, value, type, checked } = e.target;
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            [name]: type === 'checkbox' ? checked : value,
+        }));
+
+        // console.log(formData);
     };
 
     const handleEditChange = (e) => {
@@ -128,11 +141,15 @@ const ManageService = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(formData);
-        if (formData.serviceName && formData.description && formData.serviceCost) {
+        if (formData.serviceName && formData.description && formData.serviceCost && (formData.isResidential || formData.isCommercial || formData.isIndustrial) && formData.serviceLevel) {
             const body = {
                 name: formData.serviceName,
                 description: formData.description,
-                serviceCost: formData.serviceCost
+                serviceCost: formData.serviceCost,
+                isResidential: formData.isResidential,
+                isCommercial: formData.isCommercial,
+                isIndustrial: formData.isIndustrial,
+                serviceLevel: formData.serviceLevel
             };
             fetch(`/api/services`, {
                 method: 'POST',
@@ -153,7 +170,11 @@ const ManageService = () => {
                                 setFormData({
                                     serviceName: '',
                                     description: '',
-                                    serviceCost: ''
+                                    serviceCost: '',
+                                    isResidential: false,
+                                    isCommercial: false,
+                                    isIndustrial: false,
+                                    serviceLevel: ''
                                 });
                             });
                     } else {
@@ -193,80 +214,80 @@ const ManageService = () => {
         <>
             <Navbar />
             {/* <div className="page-header clear-filter" filter-color="blue"> */}
-                <div
-                    className="section page-header-image"
-                    style={{
-                        backgroundImage: "url(" + require("assets/img/stock-photo-cropped-shot-woman-rubber-gloves-cleaning-office-table.jpg") + ")",
-                        backgroundSize: "cover",
-                        backgroundPosition: "top center",
-                        minHeight: "700px"
-                    }}
-                >
+            <div
+                className="section page-header-image"
+                style={{
+                    backgroundImage: "url(" + require("assets/img/stock-photo-cropped-shot-woman-rubber-gloves-cleaning-office-table.jpg") + ")",
+                    backgroundSize: "cover",
+                    backgroundPosition: "top center",
+                    minHeight: "700px"
+                }}
+            >
                 <div className='content'>
 
                     <Container>
-                    <h2>All Services</h2>
-                    <Row>
-                    {services.map(service => (
-    <Col key={service._id} className="text-center ml-auto mr-auto" lg="6" md="8">
-        <Card className='km-bg-test'>
-            {editingServiceId === service._id ? (
-                <CardBody>
-                    <Input 
-                        type="text"
-                        name="name"
-                        value={editedService.name}
-                        onChange={handleEditChange}
-                        placeholder="Service Name"
-                    />
-                    <Input 
-                        type="text"
-                        name="description"
-                        value={editedService.description}
-                        onChange={handleEditChange}
-                        placeholder="Description"
-                    />
-                    <Input 
-                        type="text"
-                        name="serviceCost"
-                        value={editedService.serviceCost}
-                        onChange={handleEditChange}
-                        placeholder="Cost per Quantity"
-                    />
-                    <Button color="primary" onClick={handleSaveClick}>Save</Button>
-                    <Button color="secondary" onClick={handleCancelClick}>Cancel</Button>
-                    <Button color="danger" onClick={handleDeleteClick}>Delete</Button>
-                </CardBody>
-            ) : (
-                <>
-                    <CardHeader tag='h5' className='text-primary '>
-                        {service.name}
-                    </CardHeader>
-                    <CardBody>
-                        <CardTitle className='text-secondary'>
-                            {service.description.toUpperCase()}
-                        </CardTitle>
-                        <CardText className='font-weight-bold text-secondary'>
-                            Cost per Quantity: <span className='text-success'>{service.serviceCost}</span>
-                        </CardText>
-                        <Button
-                            color="primary"
-                            onClick={() => handleEditClick(service)}
-                            disabled={editingServiceId !== null && editingServiceId !== service._id}
-                        >
-                            Edit
-                        </Button>
-                    </CardBody>
-                </>
-            )}
-        </Card>
-    </Col>
-))}
+                        <h2>All Services</h2>
+                        <Row>
+                            {services.map(service => (
+                                <Col key={service._id} className="text-center ml-auto mr-auto" lg="6" md="8">
+                                    <Card className='km-bg-test'>
+                                        {editingServiceId === service._id ? (
+                                            <CardBody>
+                                                <Input
+                                                    type="text"
+                                                    name="name"
+                                                    value={editedService.name}
+                                                    onChange={handleEditChange}
+                                                    placeholder="Service Name"
+                                                />
+                                                <Input
+                                                    type="text"
+                                                    name="description"
+                                                    value={editedService.description}
+                                                    onChange={handleEditChange}
+                                                    placeholder="Description"
+                                                />
+                                                <Input
+                                                    type="text"
+                                                    name="serviceCost"
+                                                    value={editedService.serviceCost}
+                                                    onChange={handleEditChange}
+                                                    placeholder="Cost per Quantity"
+                                                />
+                                                <Button color="primary" onClick={handleSaveClick}>Save</Button>
+                                                <Button color="secondary" onClick={handleCancelClick}>Cancel</Button>
+                                                <Button color="danger" onClick={handleDeleteClick}>Delete</Button>
+                                            </CardBody>
+                                        ) : (
+                                            <>
+                                                <CardHeader tag='h5' className='text-primary '>
+                                                    {service.name}
+                                                </CardHeader>
+                                                <CardBody>
+                                                    <CardTitle className='text-secondary'>
+                                                        {service.description.toUpperCase()}
+                                                    </CardTitle>
+                                                    <CardText className='font-weight-bold text-secondary'>
+                                                        Cost per Quantity: <span className='text-success'>{service.serviceCost}</span>
+                                                    </CardText>
+                                                    <Button
+                                                        color="primary"
+                                                        onClick={() => handleEditClick(service)}
+                                                        disabled={editingServiceId !== null && editingServiceId !== service._id}
+                                                    >
+                                                        Edit
+                                                    </Button>
+                                                </CardBody>
+                                            </>
+                                        )}
+                                    </Card>
+                                </Col>
+                            ))}
 
-        </Row>
-                    
-                    <Form onSubmit={handleSubmit} className='form'>
-                        {/* <Container> */}
+                        </Row>
+
+                        <Form onSubmit={handleSubmit} className='form'>
+                            {/* <Container> */}
                             <h2 className='title'>Add Service</h2>
                             <p className='description '>Add a new service to the list of services</p>
 
@@ -328,11 +349,80 @@ const ManageService = () => {
                                             onChange={handleChange}
                                         />
                                     </InputGroup>
+                                    <InputGroup className={
+                                        "no-border" + (formData.serviceLevel ? " input-group-focus" : "")
+                                    }>
+                                        {/* <InputGroupAddon addonType="prepend">
+                                            <InputGroupText className='km-bg-test'>
+
+                                                <i className="now-ui-icons ui-2_chat-round"></i>
+                                            </InputGroupText>
+                                        </InputGroupAddon> */}
+                                        <Label>Select Service Level</Label>
+                                        <Input type="select" name="serviceLevel" value={formData.serviceLevel} onChange={handleChange}>
+                                <option value="">Select Service Level...</option>
+                                <option value="Basic Cleaning">Basic Cleaning</option>
+                                <option value="Deep Cleaning">Deep Cleaning</option>
+                                <option value="Special Deal">Special Deal</option>
+                            </Input>
+                                        </InputGroup>
+                                    {/* need to add checkboxes to indicate if the service is applicable for residential, commercial and/or industrial */}
+                                    {/* <InputGroup>
+                                    <InputGroupAddon addonType='prepend'>
+                                        <InputGroupText className='km-bg-test'>
+                                            
+                                        </InputGroupText>
+                                    </InputGroupAddon>
+                                    </InputGroup> */}
+                                    <FormGroup check>
+                                        <p className='primary-color'>Applicable for Which Service Types?</p>
+                                        
+                                        {/* <div className="form-check form-check-inline"> */}
+                                            <Label spellCheck className="form-check-label">
+                                                <Input
+                                                    type="checkbox"
+                                                    name="isResidential"
+                                                    checked={formData.isResidential}
+                                                    onChange={handleChange}
+                                                />
+                                                <span className="form-check-sign"></span>
+                                                Residential
+                                            </Label>
+                                        {/* </div> */}
+                                        {/* <div className="form-check form-check-inline"> */}
+                                            <Label check className="form-check-label">
+                                                <Input
+                                                    type="checkbox"
+                                                    name="isCommercial"
+                                                    checked={formData.isCommercial}
+                                                    onChange={handleChange}
+                                                />
+                                                 <span className="form-check-sign"></span>
+                                                Commercial
+                                            </Label>
+                                        {/* </div> */}
+                                        {/* <div className="form-check form-check-inline"> */}
+                                            <Label className="form-check-label">
+                                                <Input
+                                                    type="checkbox"
+                                                    name="isIndustrial"
+                                                    checked={formData.isIndustrial}
+                                                    onChange={handleChange}
+                                                />
+                                                <span className="form-check-sign"></span>
+                                                Industrial
+                                            </Label>
+                                        {/* </div> */}
+                                    </FormGroup>
+
+
+
+
                                 </Col>
                             </Row>
-                        {/* </Container> */}
+                            {/* </Container> */}
 
-                        {/* <div>
+                            {/* <div>
                     <label htmlFor="serviceName">Service Name:</label>
                     <input
                         type="text"
@@ -361,10 +451,10 @@ const ManageService = () => {
                         onChange={handleChange}
                     />
                 </div> */}
-                        <Button type="submit">Add Service</Button>
-                        {/* <button type="submit">Add Service</button> */}
-                    </Form>
-</Container>
+                            <Button type="submit">Add Service</Button>
+                            {/* <button type="submit">Add Service</button> */}
+                        </Form>
+                    </Container>
                 </div>
             </div>
             {/* </div> */}
