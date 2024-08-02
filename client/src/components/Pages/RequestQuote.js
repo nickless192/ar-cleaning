@@ -1,16 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import {
     Button,
-    Row,
-    Col,
+    // Row,
+    // Col,
     Input,
     InputGroup,
     InputGroupAddon,
     InputGroupText,
-    Form, FormGroup, Label,
-    Container
+    FormGroup, Label,
+
 } from 'reactstrap';
-import { ButtonGroup, ToggleButton } from 'react-bootstrap';
+import {
+    FloatingLabel,
+    Container,
+    Form,
+    Row,
+    Card,
+    Col,
+    ButtonGroup,
+    Tabs,
+    Tab,
+    Collapse,
+    ToggleButton
+} from 'react-bootstrap';
+// import { ButtonGroup, ToggleButton } from 'react-bootstrap';
 import html2pdf from 'html2pdf.js';
 import Navbar from "components/Pages/Navbar.js";
 import Footer from "components/Pages/Footer.js";
@@ -38,6 +51,9 @@ const RequestQuote = () => {
     const [addedServices, setAddedServices] = useState([]);
     const [sendEmail, setSendEmail] = useState(false);
     const [isLogged] = useState(Auth.loggedIn());
+    // const [open, setOpen] = useState(false);
+    // const [openStates, setOpenStates] = useState({});
+    const [openService, setOpenService] = useState(null);
 
     useEffect(() => {
         const initializeServices = async () => {
@@ -100,6 +116,16 @@ const RequestQuote = () => {
         setFormData(prevFormData => ({ ...prevFormData, [name]: value }));
     };
 
+    // const handleToggle = (type) => {
+    //     setOpenStates((prev) => ({
+    //         ...prev,
+    //         [type]: !prev[type],
+    //     }));
+    // };
+    const handleToggle = (type) => {
+        setOpenService((prev) => (prev === type ? null : type));
+    };
+
     const toggleSelection = (type, item) => {
         setFormData(prevFormData => {
             const updatedItems = prevFormData[type].includes(item)
@@ -117,8 +143,9 @@ const RequestQuote = () => {
         // console.log('Service type:', serviceType);
         if (!addedServices.find(s => s.type === serviceType)) {
             // setAddedServices([...addedServices, { type: formData.serviceType, customOptions: {} }]);
-            setAddedServices([...addedServices, { type: serviceType, customOptions: {} }]);
+            setAddedServices([...addedServices, { type: serviceType, customOptions: {}, serviceLevel: '' }]);
             setFormData(prevFormData => ({ ...prevFormData, serviceType: '' }));
+            setOpenService(serviceType);
         } else {
             setAddedServices(addedServices.filter(s => s.type !== serviceType));
             setFormData(prevFormData => ({ ...prevFormData, services: addedServices }));
@@ -130,17 +157,19 @@ const RequestQuote = () => {
         setFormData(prevFormData => ({ ...prevFormData, services: addedServices }));
     };
 
-    const handleCustomOptionChange = (type, option, value) => {
+    const handleCustomOptionChange = (type, option, value, cost) => {
         setAddedServices(addedServices.map(s =>
-            s.type === type ? { ...s, customOptions: { ...s.customOptions, [option]: value } } : s
+            s.type === type ? { ...s, customOptions: { ...s.customOptions, [option]: value, serviceCost: cost } } : s
         ));
         setFormData(prevFormData => ({ ...prevFormData, services: addedServices }));
+        console.log(addedServices);
+        console.log(formData);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log('Form data:', formData);
-        if (!formData.name || !formData.email || !formData.phonenumber || !formData.description || !formData.companyName || !formData.howDidYouHearAboutUs || (!formData.services.length && !formData.products.length)) {
+        if (!formData.name || !formData.email || !formData.phonenumber || !formData.description || !formData.companyName || (!formData.services.length && !formData.products.length)) {
             alert('Please fill out all required fields');
             return;
         }
@@ -210,136 +239,165 @@ const RequestQuote = () => {
         }
     };
 
-    const calculateCost = (items, costField) => items.reduce((acc, item) => acc + item[costField], 0);
-    const subtotalCost = calculateCost(formData.services, 'serviceCost') + calculateCost(formData.products, 'productCost');
+    const calculateCost = (items, costField) => items.reduce((acc, item) => acc + item.customOptions[costField], 0);
+    // const subtotalCost = calculateCost(formData.services, 'serviceCost') + calculateCost(formData.products, 'productCost');
+    const subtotalCost = calculateCost(formData.services, 'serviceCost');
     const tax = subtotalCost * 0.13;
     const grandTotal = subtotalCost + tax;
 
-    const renderCustomOptions = (type) => {
+
+    const renderCustomOptions = (type, serviceLevel) => {
         switch (type) {
             case 'Residential':
                 return (
+                    // <Tab>
                     <>
-                        
-                        <FormGroup>
-                            <Label>Unit Size</Label>
-                            <Input type="select" onChange={(e) => handleCustomOptionChange(type, 'unitSize', e.target.value)} disabled={formData.serviceLevel === 'Deep Cleaning'}>
-                                <option value="">Select Unit Size...</option>
-                                <option value="0-499 sqft">0-499 sqft</option>
-                                <option value="500-999 sqft">500-999 sqft</option>
-                                <option value="1000-1499 sqft">1000-1499 sqft</option>
-                                <option value="1500-1999 sqft">1500-1999 sqft</option>
-                                <option value="2000+ sqft">2000+ sqft</option>
-                            </Input>
-                        </FormGroup>
-                        <FormGroup>
-                            <Label>Number of Bedrooms</Label>
-                            <Input type="number" min="0" onChange={(e) => handleCustomOptionChange(type, 'bedrooms', e.target.value)}
-                                disabled={formData.serviceLevel === 'Deep Cleaning'}
-                            />
-                        </FormGroup>
-                        <FormGroup>
-                            <Label>Number of Bathrooms</Label>
-                            <Input type="number" min="0" onChange={(e) => handleCustomOptionChange(type, 'bathrooms', e.target.value)}
-                                disabled={formData.serviceLevel === 'Deep Cleaning'}
-                            />
-                        </FormGroup>
-                        
-                        <FormGroup check>
-                        {services
-                        .filter(service => service.serviceLevel === formData.serviceLevel)
-                        .map((service, index) => {
-                            return (<>
-                                {service.isResidential ? (
-                                    <Label check>
-                                        <Input
-                                            type="checkbox"
-                                            onChange={(e) => handleCustomOptionChange(type, service.name, e.target.checked)}
-                                        // disabled={formData.serviceLevel !== service.serviceLevel}
-                                        />
-                                        <span className="form-check-sign"></span>
-                                        {service.name} - ${service.cost}
-                                    </Label>
-                                ) : null}
-                            </>)
-                        })}
-                            {/* <Label check>
-                                <Input
-                                    type="checkbox"
-                                    onChange={(e) => handleCustomOptionChange(type, 'fridge', e.target.checked)}
-                                    disabled={formData.serviceLevel === 'Deep Cleaning'}
-                                />
-                                <span className="form-check-sign"></span>
-                                Fridge
-                            </Label> */}
-                        </FormGroup>
-                        {/* <FormGroup check>
-                            <Label check>
-                                <Input
-                                    type="checkbox"
-                                    onChange={(e) => handleCustomOptionChange(type, 'parking', e.target.checked)}
-                                    disabled={formData.serviceLevel === 'Deep Cleaning'}
-                                />
-                                <span className="form-check-sign"></span>
-                                Parking
-                            </Label>
-                        </FormGroup> */}
+                        <Row className='g-2'>
+                            <Col md>
+                                <FloatingLabel controlId={`floatingServiceLevel${type}`} label="Select Service Level...">
+                                    <Form.Select aria-label="Service level" name="serviceLevel" onChange={(e) => handleCustomOptionChange(type, 'serviceLevel', e.target.value)} >
+                                        <option value="">Select Service Level...</option>
+                                        <option value="Basic Cleaning">Basic Cleaning</option>
+                                        <option value="Deep Cleaning">Deep Cleaning</option>
+                                        <option value="Special Deal">Special Deal</option>
+                                    </Form.Select>
+                                </FloatingLabel>
+                            </Col>
+                            <Col md>
+
+                                <FloatingLabel controlId="floatingUnitSize" label="Unit Size">
+                                    <Form.Select aria-label="Unit Size" onChange={(e) => handleCustomOptionChange(type, 'unitSize', e.target.value)}>
+                                        <option value="">Select Unit Size...</option>
+                                        <option value="0-499 sqft">0-499 sqft</option>
+                                        <option value="500-999 sqft">500-999 sqft</option>
+                                        <option value="1000-1499 sqft">1000-1499 sqft</option>
+                                        <option value="1500-1999 sqft">1500-1999 sqft</option>
+                                        <option value="2000+ sqft">2000+ sqft</option>
+                                    </Form.Select>
+                                </FloatingLabel>
+                            </Col>
+                            <Col md>
+                                <FloatingLabel controlId="floatingBedrooms" label="Number of Bedrooms">
+                                    <Form.Control type="number" min="0" onChange={(e) => handleCustomOptionChange(type, 'bedrooms', e.target.value)}
+                                    // disabled={formData.serviceLevel === 'Deep Cleaning'}
+                                    />
+                                </FloatingLabel>
+                            </Col>
+                            <Col md>
+                                <FloatingLabel controlId="floatingBathrooms" label="Number of Bathrooms">
+                                    <Form.Control type="number" min="0" onChange={(e) => handleCustomOptionChange(type, 'bathrooms', e.target.value)}
+                                    // disabled={formData.serviceLevel === 'Deep Cleaning'}
+                                    />
+                                </FloatingLabel>
+                            </Col>
+                        </Row>
+                        {serviceLevel !== "" ? (
+
+                            <Row className='g-2'>
+                                <Col md>
+                                    <FormGroup check>
+                                        {services
+                                            .filter(service => service.serviceLevel === serviceLevel)
+                                            .map((service, index) => {
+                                                return (<>
+                                                    {service.isResidential ? (
+                                                        <Label check>
+                                                            <Input
+                                                                type="checkbox"
+                                                                onChange={(e) => handleCustomOptionChange(type, service.name, e.target.checked, service.serviceCost)}
+                                                            // disabled={formData.serviceLevel !== service.serviceLevel}
+                                                            />
+                                                            <span className="form-check-sign"></span>
+                                                            {service.name} - ${service.serviceCost}
+                                                        </Label>
+                                                    ) : null}
+                                                </>)
+                                            })}
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+                        ) : null}
+                        <Button onClick={() => handleRemoveService(type)} color="danger">Remove</Button>
+                        {/* </Tab> */}
                     </>
                 );
             case 'Commercial':
                 return (
                     <>
-                        <FormGroup>
-                            <Label>Square Footage</Label>
-                            <Input type="select" onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e.target.value)}
-                                disabled={formData.serviceLevel === 'Deep Cleaning'}
-                            >
-                                <option value="">Select Square Footage...</option>
-                                <option value="0-999 sqft">0-999 sqft</option>
-                                <option value="1000-4999 sqft">1000-4999 sqft</option>
-                                <option value="5000-9999 sqft">5000-9999 sqft</option>
-                                <option value="10000+ sqft">10000+ sqft</option>
-                            </Input>
-                        </FormGroup>
-                        <FormGroup>
-                            <Label>Number of Rooms</Label>
-                            <Input type="number" min="0" onChange={(e) => handleCustomOptionChange(type, 'rooms', e.target.value)}
-                                disabled={formData.serviceLevel === 'Deep Cleaning'}
-                            />
-                        </FormGroup>
-                        <FormGroup check>
-                        {services
-                        .filter(service => service.serviceLevel === formData.serviceLevel)
-                        .map((service, index) => {
-                            return (<>
-                                {service.isCommercial ? (
-                                    <Label check>
-                                        <Input
-                                            type="checkbox"
-                                            onChange={(e) => handleCustomOptionChange(type, service.name, e.target.checked)}
-                                        // disabled={formData.serviceLevel === 'Deep Cleaning'}
-                                        />
-                                        <span className="form-check-sign"></span>
-                                        {service.name} - ${service.cost}
-                                    </Label>
-                                ) : null}
-                            </>)
-                        })}
-                            {/* <Label check>
-                                <Input
-                                    type="checkbox"
-                                    onChange={(e) => handleCustomOptionChange(type, 'windows', e.target.checked)}
-                                    disabled={formData.serviceLevel === 'Deep Cleaning'}
-                                />
-                                <span className="form-check-sign"></span>
-                                Windows
-                            </Label> */}
-                        </FormGroup>
+                        <Row className='g-2'>
+                            <Col md>
+                                <FloatingLabel controlId={`floatingServiceLevel${type}`} label="Select Service Level...">
+                                    <Form.Select aria-label="Service level" name="serviceLevel" onChange={(e) => handleCustomOptionChange(type, 'serviceLevel', e.target.value)} >
+                                        <option value="">Select Service Level...</option>
+                                        <option value="Basic Cleaning">Basic Cleaning</option>
+                                        <option value="Deep Cleaning">Deep Cleaning</option>
+                                        <option value="Special Deal">Special Deal</option>
+                                    </Form.Select>
+                                </FloatingLabel>
+                            </Col>
+                            <Col md>
+                                <FormGroup>
+                                    <Label>Square Footage</Label>
+                                    <Input type="select" onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e.target.value)}
+                                    // disabled={formData.serviceLevel === 'Deep Cleaning'}
+                                    >
+                                        <option value="">Select Square Footage...</option>
+                                        <option value="0-999 sqft">0-999 sqft</option>
+                                        <option value="1000-4999 sqft">1000-4999 sqft</option>
+                                        <option value="5000-9999 sqft">5000-9999 sqft</option>
+                                        <option value="10000+ sqft">10000+ sqft</option>
+                                    </Input>
+                                </FormGroup>
+                            </Col>
+                        </Row>
+                        <Row className='g-2'>
+                            <Col md>
+                                <FormGroup>
+                                    <Label>Number of Rooms</Label>
+                                    <Input type="number" min="0" onChange={(e) => handleCustomOptionChange(type, 'rooms', e.target.value)}
+                                    // disabled={formData.serviceLevel === 'Deep Cleaning'}
+                                    />
+                                </FormGroup>
+                            </Col>
+                            <Col md>
+                                <FormGroup check>
+                                    {services
+                                        .filter(service => service.serviceLevel === serviceLevel)
+                                        .map((service, index) => {
+                                            return (<>
+                                                {service.isCommercial ? (
+                                                    <Label check>
+                                                        <Input
+                                                            type="checkbox"
+                                                            onChange={(e) => handleCustomOptionChange(type, service.name, e.target.checked, service.serviceCost)}
+                                                        // disabled={formData.serviceLevel === 'Deep Cleaning'}
+                                                        />
+                                                        <span className="form-check-sign"></span>
+                                                        {service.name} - ${service.serviceCost}
+                                                    </Label>
+                                                ) : null}
+                                            </>)
+                                        })}
+                                </FormGroup>
+                            </Col>
+                        </Row>
+                        <Button onClick={() => handleRemoveService(type)} color="danger">Remove</Button>
                     </>
                 );
             case 'Industrial':
                 return (
-                    <>
+                    <> <Row className='g-2'>
+                        <Col md>
+                                <FloatingLabel controlId={`floatingServiceLevel${type}`} label="Select Service Level...">
+                                    <Form.Select aria-label="Service level" name="serviceLevel" onChange={(e) => handleCustomOptionChange(type, 'serviceLevel', e.target.value)} >
+                                        <option value="">Select Service Level...</option>
+                                        <option value="Basic Cleaning">Basic Cleaning</option>
+                                        <option value="Deep Cleaning">Deep Cleaning</option>
+                                        <option value="Special Deal">Special Deal</option>
+                                    </Form.Select>
+                                </FloatingLabel>
+                            </Col>
+                        <Col md>
                         <FormGroup>
                             <Label>Square Footage</Label>
                             <Input type="select" onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e.target.value)}
@@ -352,30 +410,36 @@ const RequestQuote = () => {
                                 <option value="10000+ sqft">10000+ sqft</option>
                             </Input>
                         </FormGroup>
+                        </Col>
+                        <Col md>
                         <FormGroup>
                             <Label>Number of Employees</Label>
                             <Input type="number" min="0" onChange={(e) => handleCustomOptionChange(type, 'employees', e.target.value)}
                                 disabled={formData.serviceLevel === 'Deep Cleaning'}
                             />
                         </FormGroup>
+                        </Col>
+                        </Row>
+                        <Row className='g-2'>
+                            <Col md>
                         <FormGroup check>
-                        {services
-                        .filter(service => service.serviceLevel === formData.serviceLevel)
-                        .map((service, index) => {
-                            return (<>
-                                {service.isIndustrial ? (
-                                    <Label check>
-                                        <Input
-                                            type="checkbox"
-                                            onChange={(e) => handleCustomOptionChange(type, service.name, e.target.checked)}
-                                        // disabled={formData.serviceLevel === 'Deep Cleaning'}
-                                        />
-                                        <span className="form-check-sign"></span>
-                                        {service.name} - ${service.cost}
-                                    </Label>
-                                ) : null}
-                            </>)
-                        })}
+                            {services
+                                .filter(service => service.serviceLevel === serviceLevel)
+                                .map((service, index) => {
+                                    return (<>
+                                        {service.isIndustrial ? (
+                                            <Label check>
+                                                <Input
+                                                    type="checkbox"
+                                                    onChange={(e) => handleCustomOptionChange(type, service.name, e.target.checked, service.serviceCost)}
+                                                // disabled={formData.serviceLevel === 'Deep Cleaning'}
+                                                />
+                                                <span className="form-check-sign"></span>
+                                                {service.name} - ${service.serviceCost}
+                                            </Label>
+                                        ) : null}
+                                    </>)
+                                })}
                             {/* <Label check>
                                 <Input
                                     type="checkbox"
@@ -386,17 +450,9 @@ const RequestQuote = () => {
                                 High Dusting
                             </Label> */}
                         </FormGroup>
-                        {/* <FormGroup check>
-                            <Label check>
-                                <Input
-                                    type="checkbox"
-                                    onChange={(e) => handleCustomOptionChange(type, 'machineryCleaning', e.target.checked)}
-                                    disabled={formData.serviceLevel === 'Deep Cleaning'}
-                                />
-                                <span className="form-check-sign"></span>
-                                Machinery Cleaning
-                            </Label>
-                        </FormGroup> */}
+                        </Col>
+                        </Row>
+                        <Button onClick={() => handleRemoveService(type)} color="danger">Remove</Button>
                     </>
                 );
             default:
@@ -423,63 +479,155 @@ const RequestQuote = () => {
                     <Container>
                         <h2 className="text-center">Request a Quote</h2>
                         <Form onSubmit={handleSubmit} id="quote-form">
-                            <FormGroup>
-                                <Label>Full Name</Label>
-                                <Input
-                                    type="text"
-                                    name="name"
-                                    value={formData.name}
-                                    onChange={handleChange}
-                                />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label>Email</Label>
-                                <Input
-                                    type="email"
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label>Phone Number</Label>
-                                <Input
-                                    type="text"
-                                    name="phonenumber"
-                                    value={formData.phonenumber}
-                                    onChange={handleChange}
-                                />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label>Company Name</Label>
-                                <Input
-                                    type="text"
-                                    name="companyName"
-                                    value={formData.companyName}
-                                    onChange={handleChange}
-                                />
-                            </FormGroup>
-                            <InputGroup className={`no-border ${formData.howDidYouHearAboutUs ? "input-group-focus" : ""}`}>
-                                <InputGroupAddon addonType="prepend">
-                                    <InputGroupText className=''>
-                                        <i className="now-ui-icons objects_globe"></i>
-                                    </InputGroupText>
-                                </InputGroupAddon>
-                                <Input
-                                    type="select"
-                                    value={formData.howDidYouHearAboutUs}
-                                    name='howDidYouHearAboutUs'
-                                    className=''
-                                    onChange={handleChange}
-                                >
-                                    <option value="">How Did You Hear About Us?...</option>
-                                    <option value="Google">Google</option>
-                                    <option value="Facebook">Facebook</option>
-                                    <option value="Instagram">Instagram</option>
-                                    <option value="Referral">Referral</option>
-                                    <option value="Other">Other</option>
-                                </Input>
-                            </InputGroup>
+                            <Row className='g-2'>
+
+                                <Col md>
+                                    <Form.Floating className="mb-3">
+                                        <Form.Control
+                                            type="text"
+                                            id=" floatingFullName"
+                                            placeholder="Full Name"
+                                            name="name"
+                                            value={formData.name}
+                                            onChange={handleChange}
+                                        />
+                                        <label htmlFor="floatingFullName">Full Name</label>
+                                    </Form.Floating>
+                                </Col>
+                                <Col md>
+                                    <Form.Floating className="mb-3">
+                                        <Form.Control
+                                            type="text"
+                                            id="floatingEmail"
+                                            placeholder="Email"
+                                            name="email"
+                                            value={formData.email}
+                                            onChange={handleChange}
+                                        />
+                                        <label htmlFor="floatingEmail">Email</label>
+                                    </Form.Floating>
+                                </Col>
+                                <Col md>
+                                    <Form.Floating className="mb-3">
+                                        <Form.Control
+                                            type="text"
+                                            id="floatingPhoneNumber"
+                                            placeholder="Phone Number"
+                                            name="phonenumber"
+                                            value={formData.phonenumber}
+                                            onChange={handleChange}
+                                        />
+                                        <label htmlFor="floatingPhoneNumber">Phone Number</label>
+                                    </Form.Floating>
+                                </Col>
+                            </Row>
+                            <Row className='g-2'>
+                                <Col md>
+                                    <Form.Floating className="mb-3">
+                                        <Form.Control
+                                            type="text"
+                                            id="floatingAddress"
+                                            placeholder="Address"
+                                            name="address"
+                                            value={formData.address}
+                                            onChange={handleChange}
+                                        />
+                                        <label htmlFor="floatingAddress">Address</label>
+                                    </Form.Floating>
+                                </Col>
+                                <Col md>
+                                    <Form.Floating className="mb-3">
+                                        <Form.Control
+                                            type="text"
+                                            id="floatingCity"
+                                            placeholder="City"
+                                            name="city"
+                                            value={formData.city}
+                                            onChange={handleChange}
+                                        />
+                                        <label htmlFor="floatingCity">City</label>
+                                    </Form.Floating>
+                                </Col>
+                                <Col md>
+                                    <Form.Floating className="mb-3">
+                                        <Form.Control
+                                            type="text"
+                                            id="floatingProvince"
+                                            placeholder="Province"
+                                            name="province"
+                                            value={formData.province}
+                                            onChange={handleChange}
+                                        />
+                                        <label htmlFor="floatingState">Province</label>
+                                    </Form.Floating>
+                                </Col>
+                            </Row>
+                            <Row className='g-2'>
+                                <Col md>
+                                    <Form.Floating className="mb-3">
+                                        <Form.Control
+                                            type="text"
+                                            id="floatingPostalCode"
+                                            placeholder="Postal Code"
+                                            name="postalCode"
+                                            value={formData.postalCode}
+                                            onChange={handleChange}
+                                        />
+                                        <label htmlFor="floatingPostalCode">Postal Code</label>
+                                    </Form.Floating>
+                                </Col>
+                                <Col md>
+                                    <Form.Floating className="mb-3">
+                                        <Form.Control
+                                            type="text"
+                                            id="floatingCompanyName"
+                                            placeholder="Company Name"
+                                            name="companyName"
+                                            value={formData.companyName}
+                                            onChange={handleChange}
+                                        />
+                                        <label htmlFor="floatingCompanyName">Company Name</label>
+                                    </Form.Floating>
+                                </Col>
+                                {isLogged ? null : (
+                                    <>
+                                        <Col md>
+                                            <FloatingLabel controlId="floatingServiceLevel" label="How Did You Hear About Us...">
+                                                <Form.Select aria-label="How Did You Hear About Us" value={formData.howDidYouHearAboutUs}
+                                                    name='howDidYouHearAboutUs' onChange={handleChange}>
+                                                    <option value="">How Did You Hear About Us?...</option>
+                                                    <option value="Google">Google</option>
+                                                    <option value="Facebook">Facebook</option>
+                                                    <option value="Instagram">Instagram</option>
+                                                    <option value="Referral">Referral</option>
+                                                    <option value="Other">Other</option>
+                                                </Form.Select>
+                                            </FloatingLabel>
+                                            {/* <InputGroup className={`no-border ${formData.howDidYouHearAboutUs ? "input-group-focus" : ""}`}>
+                                        <InputGroupAddon addonType="prepend">
+                                            <InputGroupText className=''>
+                                                <i className="now-ui-icons objects_globe"></i>
+                                            </InputGroupText>
+                                        </InputGroupAddon>
+                                        <Input
+                                            type="select"
+                                            value={formData.howDidYouHearAboutUs}
+                                            name='howDidYouHearAboutUs'
+                                            className=''
+                                            onChange={handleChange}
+                                        >
+                                            <option value="">How Did You Hear About Us?...</option>
+                                            <option value="Google">Google</option>
+                                            <option value="Facebook">Facebook</option>
+                                            <option value="Instagram">Instagram</option>
+                                            <option value="Referral">Referral</option>
+                                            <option value="Other">Other</option>
+                                        </Input>
+                                    </InputGroup> */}
+                                        </Col>
+                                    </>
+                                )}
+                            </Row>
                             <FormGroup>
                                 <Label>Description</Label>
                                 <Input
@@ -491,19 +639,19 @@ const RequestQuote = () => {
                             </FormGroup>
 
                             <Row>
-                                <Col md="12">
-                                    <FormGroup>
-                                        <Label>Add Requested Services</Label>
-                                        <ButtonGroup>
-                                            <ToggleButton type="checkbox"
-                                                variant="outline-primary"
-                                                onClick={() => handleAddService({ target: { value: "Residential" } })} id="Residential" value="Residential" checked={addedServices.some(service => service.type === 'Residential')}>Residential</ToggleButton>
-                                            <ToggleButton type="checkbox"
-                                                variant="outline-primary" onClick={() => handleAddService({ target: { value: "Commercial" } })} value="Commercial" checked={addedServices.some(service => service.type === 'Commercial')}>Commercial</ToggleButton>
-                                            <ToggleButton type="checkbox"
-                                                variant="outline-primary" onClick={() => handleAddService({ target: { value: "Industrial" } })} value="Industrial" checked={addedServices.some(service => service.type === 'Industrial')}>Industrial</ToggleButton>
-                                        </ButtonGroup>
-                                        {/* <Input
+                                <Col md>
+                                    {/* <FormGroup> */}
+                                    <Label>Add Requested Services</Label>
+                                    <ButtonGroup>
+                                        <ToggleButton type="checkbox"
+                                            variant="outline-primary"
+                                            onClick={() => handleAddService({ target: { value: "Residential" } })} id="Residential" value="Residential" checked={addedServices.some(service => service.type === 'Residential')}>Residential</ToggleButton>
+                                        <ToggleButton type="checkbox"
+                                            variant="outline-primary" onClick={() => handleAddService({ target: { value: "Commercial" } })} value="Commercial" checked={addedServices.some(service => service.type === 'Commercial')}>Commercial</ToggleButton>
+                                        <ToggleButton type="checkbox"
+                                            variant="outline-primary" onClick={() => handleAddService({ target: { value: "Industrial" } })} value="Industrial" checked={addedServices.some(service => service.type === 'Industrial')}>Industrial</ToggleButton>
+                                    </ButtonGroup>
+                                    {/* <Input
                                             type="select"
                                             name="serviceType"
                                             value={formData.serviceType}
@@ -514,27 +662,79 @@ const RequestQuote = () => {
                                             <option value="Commercial" disabled={addedServices.some(service => service.type === 'Commercial')}>Commercial</option>
                                             <option value="Industrial" disabled={addedServices.some(service => service.type === 'Industrial')}>Industrial</option>
                                         </Input> */}
-                                        {/* <Button onClick={handleAddService} color="primary">Add Service</Button> */}
-                                    </FormGroup>
-                                    <FormGroup>
-                            <Label>Select Service Level</Label>
-                            <Input type="select" name="serviceLevel" value={formData.serviceLevel} onChange={handleChange}>
-                                <option value="">Select Service Level...</option>
-                                <option value="Basic Cleaning">Basic Cleaning</option>
-                                <option value="Deep Cleaning">Deep Cleaning</option>
-                                <option value="Special Deal">Special Deal</option>
-                            </Input>
-                        </FormGroup>
-
+                                    {/* <Button onClick={handleAddService} color="primary">Add Service</Button> */}
+                                    {/* </FormGroup> */}
                                 </Col>
+                                {/* <Col md> */}
+                                {/* <FormGroup> */}
+                                {/* <FloatingLabel controlId="floatingServiceLevel" label="Select Service Level...">
+                                        <Form.Select aria-label="Service level" name="serviceLevel" value={formData.serviceLevel} onChange={handleChange}>
+                                            <option value="">Select Service Level...</option>
+                                            <option value="Basic Cleaning">Basic Cleaning</option>
+                                            <option value="Deep Cleaning">Deep Cleaning</option>
+                                            <option value="Special Deal">Special Deal</option>
+                                        </Form.Select>
+                                    </FloatingLabel> */}
+                                {/* <Label>Select Service Level</Label>
+                                        <Input type="select" name="serviceLevel" value={formData.serviceLevel} onChange={handleChange}>
+                                            <option value="">Select Service Level...</option>
+                                            <option value="Basic Cleaning">Basic Cleaning</option>
+                                            <option value="Deep Cleaning">Deep Cleaning</option>
+                                            <option value="Special Deal">Special Deal</option>
+                                        </Input> */}
+                                {/* </FormGroup> */}
+
+                                {/* </Col> */}
                             </Row>
-                            {addedServices.map(service => (
-                                <div key={service.type} className="mb-3">
-                                    <h5>{service.type} Options</h5>
-                                    {renderCustomOptions(service.type)}
-                                    <Button onClick={() => handleRemoveService(service.type)} color="danger">Remove</Button>
+                            {(addedServices.length === 0) ? (
+                                <div className="text-center">
+                                    <h4>Please add service type and level to customize your order</h4>
                                 </div>
-                            ))}
+                            ) : (
+                                <>
+                                    {addedServices.map(service => (
+                                        <>
+
+                                            <Button
+                                                onClick={() => handleToggle(service.type)}
+                                                aria-controls={service.type}
+                                                // aria-expanded={openStates[service.type]}
+                                                aria-expanded={openService === service.type}
+                                            >{service.type}
+                                            </Button>
+                                            {/* <Tab eventKey={service.type} title={service.type}>
+                                            {renderCustomOptions(service.type)}
+                                        </Tab> */}
+                                        </>
+
+                                        // <div key={service.type} className="mb-3">
+                                        // </div>
+                                    ))}
+                                </>
+                            )
+                            }
+                            {(addedServices.length === 0) ? null : (
+                                <>
+                                    {addedServices.map(service => (
+                                        <>
+                                            {/* <Collapse in={openStates[service.type]}> */}
+                                            <Collapse in={openService === service.type}>
+                                                <div id={service.type}>
+                                                    {renderCustomOptions(service.type, service.customOptions.serviceLevel)}
+                                                </div>
+                                            </Collapse>
+                                            {/* <Tab eventKey={service.type} title={service.type}>
+                                            {renderCustomOptions(service.type)}
+                                        </Tab> */}
+                                        </>
+
+                                        // <div key={service.type} className="mb-3">
+                                        // </div>
+                                    ))}
+                                </>
+                            )
+                            }
+
                             <Row>
                                 <Col >
                                     <FormGroup>
@@ -550,7 +750,7 @@ const RequestQuote = () => {
                                     <FormGroup>
                                         <Label>Tax</Label>
                                         <Input
-                                            type="text"
+                                            type="currency"
                                             value={`$${tax.toFixed(2)}`}
                                             readOnly
                                         />
@@ -560,7 +760,7 @@ const RequestQuote = () => {
                                     <FormGroup>
                                         <Label>Grand Total</Label>
                                         <Input
-                                            type="text"
+                                            type="currency"
                                             value={`$${grandTotal.toFixed(2)}`}
                                             readOnly
                                         />

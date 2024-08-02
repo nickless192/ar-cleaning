@@ -118,7 +118,7 @@
     height: 450px;
 }
 
-/* Placeholder styles */
+/* Placeholder styles
 ::-webkit-input-placeholder {
     color: white !important;
 }
@@ -139,8 +139,5 @@
 
 .placeholder-white::placeholder {
     color: white !important;
-    /* font-weight: bold; */
-    /* background-color: blue!important; */
-    /* font-weight: bold; */
     opacity: 1 !important; /* Ensure the color is fully opaque */
-}
+/* } */ 
