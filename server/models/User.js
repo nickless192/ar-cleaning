@@ -37,6 +37,10 @@ const UserSchema = new Schema({
         type: Boolean,
         default: false
     },
+    telephone: {
+        type: String,
+        required: true
+    },
     createdAt: {
         type: Date,
         default: Date.now(),

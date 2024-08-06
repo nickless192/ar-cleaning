@@ -33,8 +33,8 @@ module.exports = {
 
     return req;
   },
-  signToken: function ({ username, _id, adminFlag, firstName, lastName, email}) {
-    const payload = { username, _id, adminFlag, firstName, lastName, email };
+  signToken: function ({ username, _id, adminFlag, firstName, lastName, email, telephone, howDidYouHearAboutUs }) {
+    const payload = { username, _id, adminFlag, firstName, lastName, email, telephone, howDidYouHearAboutUs };
     // for testing
     // console.log(payload);
 

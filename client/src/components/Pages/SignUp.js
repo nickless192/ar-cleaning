@@ -34,13 +34,14 @@ function SignUp() {
     lastName: "",
     email: "",
     howDidYouHearAboutUs: "",
+    telephone: "",
     username: "",
     password: ""
   });
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    if (formData.firstName && formData.lastName && formData.email && formData.username && formData.password) {
+    if (formData.firstName && formData.lastName && formData.email && formData.username && formData.password && formData.telephone) {
       fetch(`/api/users/`, {
         method: 'post',
         // mode: 'no-cors',
@@ -186,6 +187,25 @@ function SignUp() {
                     type="text"
                     id="email"
                     name="email"
+                    // onFocus={(e) => handleChange(e)}
+                    onChange={(e) => handleChange(e)}
+                  ></Input>
+                </InputGroup>
+                <InputGroup
+                  className={
+                    "no-border" + (formData.telephone ? " input-group-focus" : "")
+                  }
+                >
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>
+                      <i className="now-ui-icons tech_mobile"></i>
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    placeholder="Telephone"
+                    type="text"
+                    id="telephone"
+                    name="telephone"
                     // onFocus={(e) => handleChange(e)}
                     onChange={(e) => handleChange(e)}
                   ></Input>

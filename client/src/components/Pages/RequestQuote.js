@@ -145,6 +145,8 @@ const RequestQuote = () => {
                     ...prevFormData,
                     name: data.firstName + " " + data.lastName,
                     email: data.email,
+                    phonenumber: data.telephone,
+                    howDidYouHearAboutUs: data.howDidYouHearAboutUs,
                     userId: data._id
                 }));
             }
