@@ -46,7 +46,7 @@ const RequestQuote = () => {
         grandTotal: 0,
         services: [],
         products: [],
-        serviceLevel: '', // New field for service level
+        // serviceLevel: '', // New field for service level
     });
     const [addedServices, setAddedServices] = useState([]);
     const [sendEmail, setSendEmail] = useState(false);
@@ -54,6 +54,55 @@ const RequestQuote = () => {
     // const [open, setOpen] = useState(false);
     // const [openStates, setOpenStates] = useState({});
     const [openService, setOpenService] = useState(null);
+
+    // mock pricing structure
+    const pricing = {
+        unitSize: {
+            '0-499 sqft': 50,
+            '500-999 sqft': 100,
+            '1000-1499 sqft': 150,
+            '1500-1999 sqft': 200,
+            '2000+ sqft': 250,
+        },
+        bedrooms: {
+            0: 0,
+            1: 20,
+            2: 40,
+            3: 60,
+            4: 80,
+            5: 100,
+        },
+        bathrooms: {
+            0: 0,
+            1: 30,
+            2: 60,
+            3: 90,
+            4: 120,
+            5: 150,
+        },
+        rooms: {
+            0: 0,
+            1: 50,
+            2: 100,
+            3: 150,
+            4: 200,
+            5: 250,
+        },
+        squareFootage: {
+            '0-999 sqft': 100,
+            '1000-4999 sqft': 200,
+            '5000-9999 sqft': 300,
+            '10000+ sqft': 400,
+        },
+        employees: {
+            0: 0,
+            1: 50,
+            2: 100,
+            3: 150,
+            4: 200,
+            5: 250,
+        }
+    };
 
     useEffect(() => {
         const initializeServices = async () => {
@@ -100,17 +149,38 @@ const RequestQuote = () => {
                 }));
             }
         };
+         // Calculate subtotal, tax, and grand total whenever services change
+    const subtotalCost = formData.services.reduce((total, service) => {
+        const serviceCost = Object.values(service.customOptions || {}).reduce((sum, option) => {
+            if (option.service) {
+                return sum + option.serviceCost;
+            }
+            return sum;
+        }, 0);
+        return total + serviceCost;
+    }, 0);
+
+    const tax = subtotalCost * 0.13;
+    const grandTotal = subtotalCost + tax;
+
+    // Update formData with calculated values
+    setFormData(prevFormData => ({
+        ...prevFormData,
+        subtotalCost,
+        tax,
+        grandTotal
+    }));
 
         initializeServices();
         prepopulateForm();
         document.body.classList.add("request-quote", "sidebar-collapse");
         document.documentElement.classList.remove("nav-open");
-        window.scrollTo(0, 0);
+        // window.scrollTo(0, 0);
 
         return () => {
             document.body.classList.remove("request-quote", "sidebar-collapse");
         };
-    }, [isLogged]);
+    }, [isLogged, formData.services]);
 
     const handleChange = ({ target: { name, value } }) => {
         setFormData(prevFormData => ({ ...prevFormData, [name]: value }));
@@ -135,40 +205,141 @@ const RequestQuote = () => {
         });
     };
 
+    // const handleAddService = (e) => {
+    //     // e.preventDefault();
+    //     const serviceType = e.target.value;
+    //     // console.log(e.target)
+    //     // console.log(e.target.id)
+    //     // console.log('Service type:', serviceType);
+    //     // if (!addedServices.find(s => s.type === serviceType)) {
+    //     //     setAddedServices([...addedServices, { type: serviceType,  serviceLevel: '' }]);
+    //     //     setFormData(prevFormData => ({ ...prevFormData, serviceType: '' }));
+    //     //     setOpenService(serviceType);
+    //     // } else {
+    //     //     setAddedServices(addedServices.filter(s => s.type !== serviceType));
+    //     //     setFormData(prevFormData => ({ ...prevFormData, services: addedServices }));
+    //     // }
+    //     setFormData(prevFormData => {
+    //         const serviceExists = prevFormData.services.find(s => s.type === serviceType);
+
+    //         if (!serviceExists) {
+    //             // Add the new service
+    //             return { 
+    //                 ...prevFormData, 
+    //                 services: [
+    //                     ...prevFormData.services, 
+    //                     { type: serviceType, serviceLevel: '' }
+    //                 ]
+    //             };
+    //         } else {
+    //             // Remove the existing service
+    //             return { 
+    //                 ...prevFormData, 
+    //                 services: prevFormData.services.filter(s => s.type !== serviceType)
+    //             };
+    //         }
+    //     });
+    // };
+
     const handleAddService = (e) => {
-        // e.preventDefault();
         const serviceType = e.target.value;
-        // console.log(e.target)
-        // console.log(e.target.id)
-        // console.log('Service type:', serviceType);
-        if (!addedServices.find(s => s.type === serviceType)) {
-            // setAddedServices([...addedServices, { type: formData.serviceType, customOptions: {} }]);
-            setAddedServices([...addedServices, { type: serviceType, customOptions: {}, serviceLevel: '' }]);
-            setFormData(prevFormData => ({ ...prevFormData, serviceType: '' }));
-            setOpenService(serviceType);
-        } else {
-            setAddedServices(addedServices.filter(s => s.type !== serviceType));
-            setFormData(prevFormData => ({ ...prevFormData, services: addedServices }));
-        }
+
+        setFormData(prevFormData => {
+            const serviceExists = prevFormData.services.find(s => s.type === serviceType);
+
+            if (!serviceExists) {
+                // Add the new service
+                const updatedFormData = {
+                    ...prevFormData,
+                    services: [
+                        ...prevFormData.services,
+                        { type: serviceType, serviceLevel: '' }
+                    ]
+                };
+
+                // Set the open service after updating the state
+                setOpenService(serviceType);
+
+                return updatedFormData;
+            } else {
+                // Remove the existing service
+                return {
+                    ...prevFormData,
+                    services: prevFormData.services.filter(s => s.type !== serviceType)
+                };
+            }
+        });
     };
+
 
     const handleRemoveService = (type) => {
-        setAddedServices(addedServices.filter(s => s.type !== type));
-        setFormData(prevFormData => ({ ...prevFormData, services: addedServices }));
+        // setAddedServices(addedServices.filter(s => s.type !== type));
+        // setFormData(prevFormData => ({ ...prevFormData, services: addedServices }));
+        setFormData(prevFormData => ({
+            ...prevFormData,
+            services: prevFormData.services.filter(s => s.type !== type)
+        }));
     };
 
+    // const handleCustomOptionChange = (type, option, value, cost) => {
+    //     setAddedServices(addedServices.map(s =>
+    //         // s.type === type ? { ...s, customOptions: { ...s.customOptions, [option]: value, serviceCost: cost } } : s
+    //         s.type === type ? { ...s, [option]: value, serviceCost: cost } : s
+    //     ));
+    //     setFormData(prevFormData => ({ ...prevFormData, services: addedServices }));
+    //     console.log(addedServices);
+    //     console.log(formData);
+    // };
     const handleCustomOptionChange = (type, option, value, cost) => {
-        setAddedServices(addedServices.map(s =>
-            s.type === type ? { ...s, customOptions: { ...s.customOptions, [option]: value, serviceCost: cost } } : s
-        ));
-        setFormData(prevFormData => ({ ...prevFormData, services: addedServices }));
-        console.log(addedServices);
+        // setAddedServices(addedServices.map(s => 
+        //     s.type === type 
+        //     ? { 
+        //         ...s, 
+        //         ...(option === "serviceLevel" 
+        //             ? { [option]: value }  // Add serviceLevel directly to the top level
+        //             : {
+        //                 customOptions: { 
+        //                     ...s.customOptions, 
+        //                     [option]: { service: value, serviceCost: cost }  // Group service and serviceCost
+        //                 }
+        //             }
+        //         )
+        //     } 
+        //     : s
+        // ));
+        setFormData(prevFormData => ({
+            ...prevFormData,
+            services: prevFormData.services.map(s =>
+                s.type === type
+                    ? {
+                        ...s,
+                        ...(option === "serviceLevel"
+                            ? { [option]: value }  // Add serviceLevel directly to the top level
+                            : {
+                                customOptions: {
+                                    ...s.customOptions,
+                                    [option]: { service: value, serviceCost: cost }  // Group service and serviceCost
+                                }
+                            }
+                        )
+                    }
+                    : s
+            )
+        }));
+
+        // setFormData(prevFormData => ({ 
+        //     ...prevFormData, 
+        //     services: addedServices 
+        // }));
+
+        // console.log(addedServices);
         console.log(formData);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log('Form data:', formData);
+
         if (!formData.name || !formData.email || !formData.phonenumber || !formData.description || !formData.companyName || (!formData.services.length && !formData.products.length)) {
             alert('Please fill out all required fields');
             return;
@@ -187,22 +358,23 @@ const RequestQuote = () => {
             if (response.ok) {
                 alert('Quote submitted successfully!');
                 // setSelectedOptions([]);
-                setFormData({
-                    name: '',
-                    userId: '',
-                    description: '',
-                    email: '',
-                    phonenumber: '',
-                    companyName: '',
-                    howDidYouHearAboutUs: '',
-                    subtotalCost: 0,
-                    tax: 0,
-                    grandTotal: 0,
-                    services: [],
-                    products: [],
-                    serviceLevel: '' // Reset service level
-                });
-                setAddedServices([]);
+                // disable for testing
+                // setFormData({
+                //     name: '',
+                //     userId: '',
+                //     description: '',
+                //     email: '',
+                //     phonenumber: '',
+                //     companyName: '',
+                //     howDidYouHearAboutUs: '',
+                //     subtotalCost: 0,
+                //     tax: 0,
+                //     grandTotal: 0,
+                //     services: [],
+                //     products: [],
+                //     serviceLevel: '' // Reset service level
+                // });
+                // setAddedServices([]);
 
                 if (window.confirm('Would you like to download the quote as a PDF?')) {
                     const element = document.getElementById('quote-form');
@@ -239,11 +411,21 @@ const RequestQuote = () => {
         }
     };
 
-    const calculateCost = (items, costField) => items.reduce((acc, item) => acc + item.customOptions[costField], 0);
-    // const subtotalCost = calculateCost(formData.services, 'serviceCost') + calculateCost(formData.products, 'productCost');
-    const subtotalCost = calculateCost(formData.services, 'serviceCost');
+
+
+    const subtotalCost = formData.services.reduce((total, service) => {
+        // Sum up all the costs of the services' custom options
+        const serviceCost = Object.values(service.customOptions || {}).reduce((sum, option) => {
+            if (option.service) {
+                return sum + option.serviceCost;
+            }
+            return sum;
+        }, 0);
+        return total + serviceCost;
+    }, 0);
     const tax = subtotalCost * 0.13;
     const grandTotal = subtotalCost + tax;
+
 
 
     const renderCustomOptions = (type, serviceLevel) => {
@@ -266,7 +448,7 @@ const RequestQuote = () => {
                             <Col md>
 
                                 <FloatingLabel controlId="floatingUnitSize" label="Unit Size">
-                                    <Form.Select aria-label="Unit Size" onChange={(e) => handleCustomOptionChange(type, 'unitSize', e.target.value)}>
+                                    <Form.Select aria-label="Unit Size" onChange={(e) => handleCustomOptionChange(type, 'unitSize', e.target.value, pricing.unitSize[e.target.value])}>
                                         <option value="">Select Unit Size...</option>
                                         <option value="0-499 sqft">0-499 sqft</option>
                                         <option value="500-999 sqft">500-999 sqft</option>
@@ -278,14 +460,14 @@ const RequestQuote = () => {
                             </Col>
                             <Col md>
                                 <FloatingLabel controlId="floatingBedrooms" label="Number of Bedrooms">
-                                    <Form.Control type="number" min="0" onChange={(e) => handleCustomOptionChange(type, 'bedrooms', e.target.value)}
+                                    <Form.Control type="number" min="0" onChange={(e) => handleCustomOptionChange(type, 'bedrooms', e.target.value, pricing.bedrooms[e.target.value])}
                                     // disabled={formData.serviceLevel === 'Deep Cleaning'}
                                     />
                                 </FloatingLabel>
                             </Col>
                             <Col md>
                                 <FloatingLabel controlId="floatingBathrooms" label="Number of Bathrooms">
-                                    <Form.Control type="number" min="0" onChange={(e) => handleCustomOptionChange(type, 'bathrooms', e.target.value)}
+                                    <Form.Control type="number" min="0" onChange={(e) => handleCustomOptionChange(type, 'bathrooms', e.target.value, pricing.bathrooms[e.target.value])}
                                     // disabled={formData.serviceLevel === 'Deep Cleaning'}
                                     />
                                 </FloatingLabel>
@@ -338,7 +520,7 @@ const RequestQuote = () => {
                             <Col md>
                                 <FormGroup>
                                     <Label>Square Footage</Label>
-                                    <Input type="select" onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e.target.value)}
+                                    <Input type="select" onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e.target.value, pricing.squareFootage[e.target.value])}
                                     // disabled={formData.serviceLevel === 'Deep Cleaning'}
                                     >
                                         <option value="">Select Square Footage...</option>
@@ -354,7 +536,7 @@ const RequestQuote = () => {
                             <Col md>
                                 <FormGroup>
                                     <Label>Number of Rooms</Label>
-                                    <Input type="number" min="0" onChange={(e) => handleCustomOptionChange(type, 'rooms', e.target.value)}
+                                    <Input type="number" min="0" onChange={(e) => handleCustomOptionChange(type, 'rooms', e.target.value, pricing.rooms[e.target.value])}
                                     // disabled={formData.serviceLevel === 'Deep Cleaning'}
                                     />
                                 </FormGroup>
@@ -388,59 +570,59 @@ const RequestQuote = () => {
                 return (
                     <> <Row className='g-2'>
                         <Col md>
-                                <FloatingLabel controlId={`floatingServiceLevel${type}`} label="Select Service Level...">
-                                    <Form.Select aria-label="Service level" name="serviceLevel" onChange={(e) => handleCustomOptionChange(type, 'serviceLevel', e.target.value)} >
-                                        <option value="">Select Service Level...</option>
-                                        <option value="Basic Cleaning">Basic Cleaning</option>
-                                        <option value="Deep Cleaning">Deep Cleaning</option>
-                                        <option value="Special Deal">Special Deal</option>
-                                    </Form.Select>
-                                </FloatingLabel>
-                            </Col>
-                        <Col md>
-                        <FormGroup>
-                            <Label>Square Footage</Label>
-                            <Input type="select" onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e.target.value)}
-                                disabled={formData.serviceLevel === 'Deep Cleaning'}
-                            >
-                                <option value="">Select Square Footage...</option>
-                                <option value="0-999 sqft">0-999 sqft</option>
-                                <option value="1000-4999 sqft">1000-4999 sqft</option>
-                                <option value="5000-9999 sqft">5000-9999 sqft</option>
-                                <option value="10000+ sqft">10000+ sqft</option>
-                            </Input>
-                        </FormGroup>
+                            <FloatingLabel controlId={`floatingServiceLevel${type}`} label="Select Service Level...">
+                                <Form.Select aria-label="Service level" name="serviceLevel" onChange={(e) => handleCustomOptionChange(type, 'serviceLevel', e.target.value)} >
+                                    <option value="">Select Service Level...</option>
+                                    <option value="Basic Cleaning">Basic Cleaning</option>
+                                    <option value="Deep Cleaning">Deep Cleaning</option>
+                                    <option value="Special Deal">Special Deal</option>
+                                </Form.Select>
+                            </FloatingLabel>
                         </Col>
                         <Col md>
-                        <FormGroup>
-                            <Label>Number of Employees</Label>
-                            <Input type="number" min="0" onChange={(e) => handleCustomOptionChange(type, 'employees', e.target.value)}
-                                disabled={formData.serviceLevel === 'Deep Cleaning'}
-                            />
-                        </FormGroup>
+                            <FormGroup>
+                                <Label>Square Footage</Label>
+                                <Input type="select" onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e.target.value, pricing.squareFootage[e.target.value])}
+                                    disabled={formData.serviceLevel === 'Deep Cleaning'}
+                                >
+                                    <option value="">Select Square Footage...</option>
+                                    <option value="0-999 sqft">0-999 sqft</option>
+                                    <option value="1000-4999 sqft">1000-4999 sqft</option>
+                                    <option value="5000-9999 sqft">5000-9999 sqft</option>
+                                    <option value="10000+ sqft">10000+ sqft</option>
+                                </Input>
+                            </FormGroup>
                         </Col>
-                        </Row>
+                        <Col md>
+                            <FormGroup>
+                                <Label>Number of Employees</Label>
+                                <Input type="number" min="0" onChange={(e) => handleCustomOptionChange(type, 'employees', e.target.value, pricing.employees[e.target.value])}
+                                    disabled={formData.serviceLevel === 'Deep Cleaning'}
+                                />
+                            </FormGroup>
+                        </Col>
+                    </Row>
                         <Row className='g-2'>
                             <Col md>
-                        <FormGroup check>
-                            {services
-                                .filter(service => service.serviceLevel === serviceLevel)
-                                .map((service, index) => {
-                                    return (<>
-                                        {service.isIndustrial ? (
-                                            <Label check>
-                                                <Input
-                                                    type="checkbox"
-                                                    onChange={(e) => handleCustomOptionChange(type, service.name, e.target.checked, service.serviceCost)}
-                                                // disabled={formData.serviceLevel === 'Deep Cleaning'}
-                                                />
-                                                <span className="form-check-sign"></span>
-                                                {service.name} - ${service.serviceCost}
-                                            </Label>
-                                        ) : null}
-                                    </>)
-                                })}
-                            {/* <Label check>
+                                <FormGroup check>
+                                    {services
+                                        .filter(service => service.serviceLevel === serviceLevel)
+                                        .map((service, index) => {
+                                            return (<>
+                                                {service.isIndustrial ? (
+                                                    <Label check>
+                                                        <Input
+                                                            type="checkbox"
+                                                            onChange={(e) => handleCustomOptionChange(type, service.name, e.target.checked, service.serviceCost)}
+                                                        // disabled={formData.serviceLevel === 'Deep Cleaning'}
+                                                        />
+                                                        <span className="form-check-sign"></span>
+                                                        {service.name} - ${service.serviceCost}
+                                                    </Label>
+                                                ) : null}
+                                            </>)
+                                        })}
+                                    {/* <Label check>
                                 <Input
                                     type="checkbox"
                                     onChange={(e) => handleCustomOptionChange(type, 'highDusting', e.target.checked)}
@@ -449,8 +631,8 @@ const RequestQuote = () => {
                                 <span className="form-check-sign"></span>
                                 High Dusting
                             </Label> */}
-                        </FormGroup>
-                        </Col>
+                                </FormGroup>
+                            </Col>
                         </Row>
                         <Button onClick={() => handleRemoveService(type)} color="danger">Remove</Button>
                     </>
@@ -464,23 +646,22 @@ const RequestQuote = () => {
         <>
             <Navbar />
             <div
-                className="section page-header-image km-bg-primary"
-                style={{
-                    // backgroundImage: "url(" + require("assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg") + ")",
-                    backgroundSize: "cover",
-                    backgroundColor: "green",
-                    backgroundPosition: "top center",
-                    minHeight: "700px",
-                    // opacity: 0.8
-                }}
+                className="section primary-bg-color pb-0"
+            // style={{
+            //     // backgroundImage: "url(" + require("assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg") + ")",
+            //     backgroundSize: "cover",
+            //     // backgroundColor: "green",
+            //     backgroundPosition: "top center",
+            //     minHeight: "700px",
+            //     // opacity: 0.8
+            // }}
             >
 
-                <div className="content">
+                <div className="content primary-bg-color">
                     <Container>
                         <h2 className="text-center">Request a Quote</h2>
                         <Form onSubmit={handleSubmit} id="quote-form">
                             <Row className='g-2'>
-
                                 <Col md>
                                     <Form.Floating className="mb-3">
                                         <Form.Control
@@ -645,54 +826,21 @@ const RequestQuote = () => {
                                     <ButtonGroup>
                                         <ToggleButton type="checkbox"
                                             variant="outline-primary"
-                                            onClick={() => handleAddService({ target: { value: "Residential" } })} id="Residential" value="Residential" checked={addedServices.some(service => service.type === 'Residential')}>Residential</ToggleButton>
+                                            onClick={() => handleAddService({ target: { value: "Residential" } })} id="Residential" value="Residential" checked={formData.services.some(service => service.type === 'Residential')}>Residential</ToggleButton>
                                         <ToggleButton type="checkbox"
-                                            variant="outline-primary" onClick={() => handleAddService({ target: { value: "Commercial" } })} value="Commercial" checked={addedServices.some(service => service.type === 'Commercial')}>Commercial</ToggleButton>
+                                            variant="outline-primary" onClick={() => handleAddService({ target: { value: "Commercial" } })} value="Commercial" checked={formData.services.some(service => service.type === 'Commercial')}>Commercial</ToggleButton>
                                         <ToggleButton type="checkbox"
-                                            variant="outline-primary" onClick={() => handleAddService({ target: { value: "Industrial" } })} value="Industrial" checked={addedServices.some(service => service.type === 'Industrial')}>Industrial</ToggleButton>
+                                            variant="outline-primary" onClick={() => handleAddService({ target: { value: "Industrial" } })} value="Industrial" checked={formData.services.some(service => service.type === 'Industrial')}>Industrial</ToggleButton>
                                     </ButtonGroup>
-                                    {/* <Input
-                                            type="select"
-                                            name="serviceType"
-                                            value={formData.serviceType}
-                                            onChange={handleChange}
-                                        >
-                                            <option value="">Select Service...</option>
-                                            <option value="Residential" disabled={addedServices.some(service => service.type === 'Residential')}>Residential</option>
-                                            <option value="Commercial" disabled={addedServices.some(service => service.type === 'Commercial')}>Commercial</option>
-                                            <option value="Industrial" disabled={addedServices.some(service => service.type === 'Industrial')}>Industrial</option>
-                                        </Input> */}
-                                    {/* <Button onClick={handleAddService} color="primary">Add Service</Button> */}
-                                    {/* </FormGroup> */}
                                 </Col>
-                                {/* <Col md> */}
-                                {/* <FormGroup> */}
-                                {/* <FloatingLabel controlId="floatingServiceLevel" label="Select Service Level...">
-                                        <Form.Select aria-label="Service level" name="serviceLevel" value={formData.serviceLevel} onChange={handleChange}>
-                                            <option value="">Select Service Level...</option>
-                                            <option value="Basic Cleaning">Basic Cleaning</option>
-                                            <option value="Deep Cleaning">Deep Cleaning</option>
-                                            <option value="Special Deal">Special Deal</option>
-                                        </Form.Select>
-                                    </FloatingLabel> */}
-                                {/* <Label>Select Service Level</Label>
-                                        <Input type="select" name="serviceLevel" value={formData.serviceLevel} onChange={handleChange}>
-                                            <option value="">Select Service Level...</option>
-                                            <option value="Basic Cleaning">Basic Cleaning</option>
-                                            <option value="Deep Cleaning">Deep Cleaning</option>
-                                            <option value="Special Deal">Special Deal</option>
-                                        </Input> */}
-                                {/* </FormGroup> */}
-
-                                {/* </Col> */}
                             </Row>
-                            {(addedServices.length === 0) ? (
+                            {(formData.services.length === 0) ? (
                                 <div className="text-center">
                                     <h4>Please add service type and level to customize your order</h4>
                                 </div>
                             ) : (
                                 <>
-                                    {addedServices.map(service => (
+                                    {formData.services.map(service => (
                                         <>
 
                                             <Button
@@ -700,6 +848,7 @@ const RequestQuote = () => {
                                                 aria-controls={service.type}
                                                 // aria-expanded={openStates[service.type]}
                                                 aria-expanded={openService === service.type}
+                                                className={`service-button-${service.type.toLowerCase()}`}
                                             >{service.type}
                                             </Button>
                                             {/* <Tab eventKey={service.type} title={service.type}>
@@ -713,14 +862,15 @@ const RequestQuote = () => {
                                 </>
                             )
                             }
-                            {(addedServices.length === 0) ? null : (
+                            {(formData.services.length === 0) ? null : (
                                 <>
-                                    {addedServices.map(service => (
+                                    {formData.services.map(service => (
                                         <>
                                             {/* <Collapse in={openStates[service.type]}> */}
                                             <Collapse in={openService === service.type}>
-                                                <div id={service.type}>
-                                                    {renderCustomOptions(service.type, service.customOptions.serviceLevel)}
+                                                <div id={service.type} className={`service-section-${service.type.toLowerCase()}`}>
+                                                    {/* {renderCustomOptions(service.type, service.customOptions.serviceLevel)} */}
+                                                    {renderCustomOptions(service.type, service.serviceLevel)}
                                                 </div>
                                             </Collapse>
                                             {/* <Tab eventKey={service.type} title={service.type}>
@@ -734,6 +884,12 @@ const RequestQuote = () => {
                                 </>
                             )
                             }
+                            <Row>
+                                {/* Add a message indicating that requesting products is coming soon */}
+                                <Col md>
+                                    <Label>Product selection coming soon!</Label>
+                                </Col>
+                            </Row>
 
                             <Row>
                                 <Col >

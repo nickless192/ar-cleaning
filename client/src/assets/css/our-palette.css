@@ -141,3 +141,30 @@
     color: white !important;
     opacity: 1 !important; /* Ensure the color is fully opaque */
 /* } */ 
+
+.service-button-residential {
+    background-color: var(--light-blue-color)!important; /* Green */
+    color: white;
+}
+
+.service-button-commercial {
+    background-color: var(--light-color)!important; /* Blue */
+    color: white;
+}
+
+.service-button-industrial {
+    background-color: var(--accent-color)!important; /* Red */
+    color: white;
+}
+
+.service-section-residential {
+    background-color: var(--light-blue-color); /* Light green */
+}
+
+.service-section-commercial {
+    background-color: var(--light-color); /* Light blue */
+}
+
+.service-section-industrial {
+    background-color: var(--accent-color); /* Light red */
+}

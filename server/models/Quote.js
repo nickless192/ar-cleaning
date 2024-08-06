@@ -2,27 +2,44 @@ const { Schema, model, Types } = require('mongoose');
 const { isEmail } = require('../utils/validators');
 const dateFormat = require('../utils/dateFormat');
 
+// const CustomOptionsSchema = new Schema({
+//     unitSize: { type: String },
+//     bedrooms: { type: Number },
+//     bathrooms: { type: Number },
+//     fridge: { type: Boolean },
+//     parking: { type: Boolean },
+//     squareFootage: { type: String },
+//     rooms: { type: Number },
+//     windows: { type: Boolean },
+//     employees: { type: Number },
+//     highDusting: { type: Boolean },
+//     machineryCleaning: { type: Boolean }
+// }, { _id: false });
 const CustomOptionsSchema = new Schema({
-    unitSize: { type: String },
-    bedrooms: { type: Number },
-    bathrooms: { type: Number },
-    fridge: { type: Boolean },
-    parking: { type: Boolean },
-    squareFootage: { type: String },
-    rooms: { type: Number },
-    windows: { type: Boolean },
-    employees: { type: Number },
-    highDusting: { type: Boolean },
-    machineryCleaning: { type: Boolean }
-}, { _id: false });
+    service: { type: Schema.Types.Mixed, required: true }, // Mixed type to handle string, boolean, or other types
+    serviceCost: { type: Number, required: true }
+});
 
+// const ServiceSchema = new Schema({
+//     type: {
+//         type: String,
+//         required: true
+//     },
+//     serviceLevel: {
+//         type: String,
+//         required: true // This is new
+//     },
+//     customOptions: CustomOptionsSchema
+// }, { _id: false });
 const ServiceSchema = new Schema({
-    type: {
-        type: String,
-        required: true
-    },
-    customOptions: CustomOptionsSchema
-}, { _id: false });
+    type: { type: String, required: true },
+    serviceLevel: { type: String, required: true },
+    customOptions: { 
+        type: Map, 
+        of: CustomOptionsSchema, 
+        required: true 
+    }
+});
 
 const ProductSchema = new Schema({
     name: {
@@ -68,10 +85,10 @@ const QuoteSchema = new Schema({
         type: String,
         required: true
     },
-    serviceLevel: {
-        type: String,
-        required: true // This is new
-    },
+    // serviceLevel: {
+    //     type: String,
+    //     required: true // This is new
+    // },
     products: [ProductSchema],
     services: [ServiceSchema],
     userId: {
