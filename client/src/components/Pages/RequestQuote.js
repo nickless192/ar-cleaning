@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-    Button,
+    // Button,
     // Row,
     // Col,
     Input,
@@ -13,6 +13,7 @@ import {
 import {
     FloatingLabel,
     Container,
+    Button,
     Form,
     Row,
     Card,
@@ -207,41 +208,6 @@ const RequestQuote = () => {
         });
     };
 
-    // const handleAddService = (e) => {
-    //     // e.preventDefault();
-    //     const serviceType = e.target.value;
-    //     // console.log(e.target)
-    //     // console.log(e.target.id)
-    //     // console.log('Service type:', serviceType);
-    //     // if (!addedServices.find(s => s.type === serviceType)) {
-    //     //     setAddedServices([...addedServices, { type: serviceType,  serviceLevel: '' }]);
-    //     //     setFormData(prevFormData => ({ ...prevFormData, serviceType: '' }));
-    //     //     setOpenService(serviceType);
-    //     // } else {
-    //     //     setAddedServices(addedServices.filter(s => s.type !== serviceType));
-    //     //     setFormData(prevFormData => ({ ...prevFormData, services: addedServices }));
-    //     // }
-    //     setFormData(prevFormData => {
-    //         const serviceExists = prevFormData.services.find(s => s.type === serviceType);
-
-    //         if (!serviceExists) {
-    //             // Add the new service
-    //             return { 
-    //                 ...prevFormData, 
-    //                 services: [
-    //                     ...prevFormData.services, 
-    //                     { type: serviceType, serviceLevel: '' }
-    //                 ]
-    //             };
-    //         } else {
-    //             // Remove the existing service
-    //             return { 
-    //                 ...prevFormData, 
-    //                 services: prevFormData.services.filter(s => s.type !== serviceType)
-    //             };
-    //         }
-    //     });
-    // };
 
     const handleAddService = (e) => {
         const serviceType = e.target.value;
@@ -283,15 +249,6 @@ const RequestQuote = () => {
         }));
     };
 
-    // const handleCustomOptionChange = (type, option, value, cost) => {
-    //     setAddedServices(addedServices.map(s =>
-    //         // s.type === type ? { ...s, customOptions: { ...s.customOptions, [option]: value, serviceCost: cost } } : s
-    //         s.type === type ? { ...s, [option]: value, serviceCost: cost } : s
-    //     ));
-    //     setFormData(prevFormData => ({ ...prevFormData, services: addedServices }));
-    //     console.log(addedServices);
-    //     console.log(formData);
-    // };
     const handleCustomOptionChange = (type, option, value, cost) => {
         // setAddedServices(addedServices.map(s => 
         //     s.type === type 
@@ -647,19 +604,8 @@ const RequestQuote = () => {
     return (
         <>
             <Navbar />
-            <div
-                className="section primary-bg-color pb-0"
-            // style={{
-            //     // backgroundImage: "url(" + require("assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg") + ")",
-            //     backgroundSize: "cover",
-            //     // backgroundColor: "green",
-            //     backgroundPosition: "top center",
-            //     minHeight: "700px",
-            //     // opacity: 0.8
-            // }}
-            >
-
-                <div className="content primary-bg-color">
+            <div className="section light-bg-color pb-0 mb-0">
+                <div className="content">
                     <Container>
                         <h2 className="text-center">Request a Quote</h2>
                         <Form onSubmit={handleSubmit} id="quote-form">
@@ -820,20 +766,23 @@ const RequestQuote = () => {
                                     onChange={handleChange}
                                 />
                             </FormGroup>
-
                             <Row>
                                 <Col md>
                                     {/* <FormGroup> */}
                                     <Label>Add Requested Services</Label>
-                                    <ButtonGroup>
+                                    <Button className='service-button-residential' variant="" onClick={() => handleAddService({ target: { value: "Residential" } })} value="Residential">Add Residential</Button>{' '}
+                                    <Button className='service-button-commercial' onClick={() => handleAddService({ target: { value: "Commercial" } })} value="Commercial">Add Commercial</Button>{' '}
+                                    <Button className='service-button-industrial' onClick={() => handleAddService({ target: { value: "Industrial" } })} value="Industrial">Add Industrial</Button>
+
+                                    {/* <ButtonGroup>
                                         <ToggleButton type="checkbox"
-                                            variant="outline-primary"
+                                            variant="primary"
                                             onClick={() => handleAddService({ target: { value: "Residential" } })} id="Residential" value="Residential" checked={formData.services.some(service => service.type === 'Residential')}>Residential</ToggleButton>
                                         <ToggleButton type="checkbox"
-                                            variant="outline-primary" onClick={() => handleAddService({ target: { value: "Commercial" } })} value="Commercial" checked={formData.services.some(service => service.type === 'Commercial')}>Commercial</ToggleButton>
+                                            variant="primary" onClick={() => handleAddService({ target: { value: "Commercial" } })} value="Commercial" checked={formData.services.some(service => service.type === 'Commercial')}>Commercial</ToggleButton>
                                         <ToggleButton type="checkbox"
-                                            variant="outline-primary" onClick={() => handleAddService({ target: { value: "Industrial" } })} value="Industrial" checked={formData.services.some(service => service.type === 'Industrial')}>Industrial</ToggleButton>
-                                    </ButtonGroup>
+                                            variant="primary" onClick={() => handleAddService({ target: { value: "Industrial" } })} value="Industrial" checked={formData.services.some(service => service.type === 'Industrial')}>Industrial</ToggleButton>
+                                    </ButtonGroup> */}
                                 </Col>
                             </Row>
                             {(formData.services.length === 0) ? (
@@ -870,7 +819,7 @@ const RequestQuote = () => {
                                         <>
                                             {/* <Collapse in={openStates[service.type]}> */}
                                             <Collapse in={openService === service.type}>
-                                                <div id={service.type} className={`service-section-${service.type.toLowerCase()}`}>
+                                                <div id={service.type} className={`service-section-${service.type.toLowerCase()} rounded`}>
                                                     {/* {renderCustomOptions(service.type, service.customOptions.serviceLevel)} */}
                                                     {renderCustomOptions(service.type, service.serviceLevel)}
                                                 </div>
@@ -889,7 +838,9 @@ const RequestQuote = () => {
                             <Row>
                                 {/* Add a message indicating that requesting products is coming soon */}
                                 <Col md>
-                                    <Label>Product selection coming soon!</Label>
+                                <div className="text-center">
+                                    <h4>Products coming soon!</h4>
+                                </div>                                    
                                 </Col>
                             </Row>
 
@@ -927,7 +878,7 @@ const RequestQuote = () => {
                             </Row>
                             <Row>
                                 <Col>
-                                    <FormGroup check className='km-bg-primary'>
+                                    <FormGroup check className=''>
                                         <Label check>
                                             <Input
                                                 type="checkbox"
@@ -941,9 +892,9 @@ const RequestQuote = () => {
 
                                 </Col>
                             </Row>
-                            <Row>
+                            <Row className='pb-3'>
                                 <Col md="12" className="text-center">
-                                    <Button type="submit" color="primary">Submit Quote</Button>
+                                    <Button type="submit" className='secondary-bg-color'>Submit Quote</Button>
                                 </Col>
                             </Row>
                         </Form>

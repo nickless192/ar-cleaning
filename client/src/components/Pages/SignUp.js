@@ -15,7 +15,8 @@ import {
   InputGroupText,
   InputGroup,
   Container,
-  Row
+  Row,
+  Col
 } from "reactstrap";
 
 import Navbar from "components/Pages/Navbar.js";
@@ -97,17 +98,8 @@ function SignUp() {
   return (
     <>
       <Navbar />
-      <div
-        className="section section-signup km-bg-primary"
-        style={{
-          // backgroundImage: "url(" + require("assets/img/bg8.jpg") + ")",
-          backgroundColor: "green",
-          backgroundSize: "cover",
-          backgroundPosition: "top center",
-          minHeight: "700px"
-        }}
-      >
-        <div>
+      <div className="section section-signup secondary-bg-color pb-0 mb-0">
+        <div className="content">
           <Container>
             <h2 className="title text-center">Sign Up</h2>
             <Form className="form" onSubmit={(e) => handleFormSubmit(e)}>
@@ -249,7 +241,10 @@ function SignUp() {
                   ></Input>
                 </InputGroup>
               </div>
-              <div className="text-center">
+              <div className="text-center py-3">
+                <Row>
+<Col>
+
               <Button
                   className="btn-neutral btn-round"
                   color="info"
@@ -259,6 +254,9 @@ function SignUp() {
                 >
                   Get Started
                 </Button>
+</Col>
+<Col>
+
                 <Button
                   className="btn-round btn-white"
                   color="default"
@@ -269,6 +267,10 @@ function SignUp() {
                 >
                   View Login Page
                 </Button>
+</Col>
+                
+                  
+                </Row>
                 </div>
             </Form>
 

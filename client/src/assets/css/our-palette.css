@@ -21,7 +21,7 @@
 
 /* Test classes */
 .text-cleanar-color {
-    color: var(--text-cleanar-color);
+    color: var(--text-cleanar-color)!important;
     font-weight: bold;
     /* color: white; */
 }
@@ -38,18 +38,18 @@
 }
 
 .primary-bg-color {
-    background-color: var(--primary-color);
+    background-color: var(--primary-color)!important;
     /* font-weight: bold; */
     /* color: white; */
 }
 
 .secondary-color {
-    color: var(--secondary-color);
+    color: var(--secondary-color)!important;
     font-weight: bold;
     /* color: white; */
 }
 .secondary-bg-color {
-    background-color: var(--secondary-color);
+    background-color: var(--secondary-color)!important;
     /* font-weight: bold; */
     /* color: white; */
 }
@@ -72,7 +72,7 @@
 }
 
 .light-bg-color {
-    background-color: var(--light-color);
+    background-color: var(--light-color)!important;
     /* font-weight: bold; */
     /* color: white; */
 }
@@ -116,6 +116,7 @@
 
 .logo-size {
     height: 450px;
+    width: auto;
 }
 
 /* Placeholder styles
@@ -148,7 +149,7 @@
 }
 
 .service-button-commercial {
-    background-color: var(--light-color)!important; /* Blue */
+    background-color: var(--primary-color)!important; /* Blue */
     color: white;
 }
 
@@ -162,9 +163,74 @@
 }
 
 .service-section-commercial {
-    background-color: var(--light-color); /* Light blue */
+    background-color: var(--primary-color); /* Light blue */
 }
 
 .service-section-industrial {
     background-color: var(--accent-color); /* Light red */
+}
+
+/* Contact Section */
+.contact-info i {
+    color: var(--accent-color);
+    margin-right: 10px;
+}
+
+.list-group-item {
+    background-color: var(--light-color);
+    border: none;
+    margin-bottom: 10px;
+}
+
+.list-group-item span {
+    color: var(--brown-color);
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+.section {
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+/* Card Styles */
+.card-plain {
+    border: none;
+    background-color: var(--light-color);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.card-title {
+    color: var(--brown-color);
+}
+
+/* Text Styles */
+.text-bold {
+    font-weight: bold;
+}
+
+.text-cleanar-color {
+    color: var(--text-cleanar-color);
+}
+
+/* Background Colors */
+.light-bg-color {
+    background-color: var(--light-blue-color);
+}
+
+.light-blue-bg-color {
+    background-color: var(--light-blue-color)!important;
+}
+
+/* Image
+.logo-size {
+    max-width: 150px;
+    height: auto;
+} */
+ .brown-bg-color {
+    background-color: var(--brown-color)!important;
 }

@@ -6,52 +6,61 @@ import { Container } from "reactstrap";
 
 function Footer() {
   return (
-    <footer className="footer" data-background-color="black">
+    <footer className="footer light-blue-bg-color" >
       <Container>
         <nav>
           <ul>
+            {/* <li>
+              <a href="/privacy-policy" target="_blank">
+                Privacy Policy
+              </a>
+            </li> */}
             <li>
-              <a
-                href="https://www.creative-tim.com?ref=nukr-dark-footer"
-                target="_blank"
-              >
-                Creative Tim
+              <a href="/terms-conditions" target="_blank">
+                Terms & Conditions
               </a>
             </li>
             <li>
-              <a
-                href="http://presentation.creative-tim.com?ref=nukr-dark-footer"
-                target="_blank"
-              >
-                About Us
+              <a href="/disclaimer" target="_blank">
+                Disclaimer
+              </a>
+            </li>
+            {/* <li>
+              <a href="/return-refund-policy" target="_blank">
+                Refund Policy
+              </a>
+            </li> */}
+            {/* <li>
+              <a href="/sitemap" target="_blank">
+                Sitemap
+              </a>
+            </li> */}
+            <li>
+              <a href="/accessibility-statement" target="_blank">
+                Accessibility Statement
               </a>
             </li>
             <li>
-              <a
-                href="http://blog.creative-tim.com?ref=nukr-dark-footer"
-                target="_blank"
-              >
-                Blog
+              <a href="/testimonials-reviews" target="_blank">
+                Testimonials/Reviews
               </a>
-            </li>
+            </li>            
+            {/* <li>
+              <a href="/newsletter-signup" target="_blank">
+                Newsletter Signup
+              </a>
+            </li> */}
           </ul>
         </nav>
+        {/* <div className="payment-methods">
+          <img src="/images/payment-method1.png" alt="Payment Method 1" />
+          <img src="/images/payment-method2.png" alt="Payment Method 2" />
+        </div> */}
         <div className="copyright" id="copyright">
-          © {new Date().getFullYear()}, Designed by{" "}
-          <a
-            href="https://www.invisionapp.com?ref=nukr-dark-footer"
-            target="_blank"
-          >
-            Invision
+          © {new Date().getFullYear()}, Designed and Coded by{" "}
+          <a href="_blank" target="_blank">
+            Nickless192
           </a>
-          . Coded by{" "}
-          <a
-            href="https://www.creative-tim.com?ref=nukr-dark-footer"
-            target="_blank"
-          >
-            Creative Tim
-          </a>
-          .
         </div>
       </Container>
     </footer>
