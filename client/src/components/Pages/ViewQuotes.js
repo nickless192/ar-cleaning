@@ -163,13 +163,13 @@ const ViewQuote = () => {
             {/* add a search bar for users to input a quote Id to search for */}
             <InputGroup>
               <Input
-                className="text-light "
+                className="accent-bg-color"
                 id="search"
                 placeholder="Search for a quote..."
                 type="text"
               />
               <InputGroupAddon addonType="append">
-                <InputGroupText className="text-light " onClick={searchQuote}>
+                <InputGroupText className="accent-bg-color" onClick={searchQuote}>
                   <i className="now-ui-icons ui-1_zoom-bold"></i>
                 </InputGroupText>
               </InputGroupAddon>

@@ -1,6 +1,6 @@
 {
-  "name": "now-ui-kit-react",
-  "version": "1.5.2",
+  "name": "cleanar-frontend",
+  "version": "0.1.0",
   "private": true,
   "dependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",

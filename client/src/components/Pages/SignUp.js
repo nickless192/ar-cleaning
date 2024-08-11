@@ -246,8 +246,9 @@ function SignUp() {
 <Col>
 
               <Button
-                  className="btn-neutral btn-round"
-                  color="info"
+                  className="btn-neutral btn-round btn-lg light-bg-color" 
+                  // color="info"
+                  
                   type="submit"
                   // onClick={(e) => handleFormSubmit(e)}
                   size="lg"
@@ -255,7 +256,7 @@ function SignUp() {
                   Get Started
                 </Button>
 </Col>
-<Col>
+{/* <Col>
 
                 <Button
                   className="btn-round btn-white"
@@ -267,7 +268,7 @@ function SignUp() {
                 >
                   View Login Page
                 </Button>
-</Col>
+</Col> */}
                 
                   
                 </Row>

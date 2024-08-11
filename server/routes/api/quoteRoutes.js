@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const {getQuotes, createQuote, getQuoteById, updateQuote, deleteQuote, emailQuote, getUserQuotes} = require('../../controllers/quoteControllers');
+const {getQuotes, createQuote, getQuoteById, updateQuote, deleteQuote, emailQuote, getUserQuotes, emailQuoteNotification} = require('../../controllers/quoteControllers');
 
 
 router.route('/')
@@ -16,6 +16,10 @@ router.route('/:quoteId')
 
 router.route('/send-email')
     .post(emailQuote);
+
+    router.route('/send-email-notification')
+    .post(emailQuoteNotification);
+
 
 
 module.exports = router;

@@ -38,6 +38,7 @@ import ManageUser from "../src/components/Pages/ManageUser";
 import RequestQuote from "../src/components/Pages/RequestQuote";
 import ViewQuotes from "../src/components/Pages/ViewQuotes";
 import ProductsAndServices from "../src/components/Pages/ProductsAndServices";
+import ProtectedRoute from "../src/components/Pages/ProtectedRoute";
 // import Switch from "react-bootstrap-switch";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -47,18 +48,16 @@ root.render(
     <Routes>
       <Route path="/index" element={<Index />} />
       <Route path="/nucleo-icons" element={<NucleoIcons />} />
-      <Route path="/profile-page" element={<ProfilePage />} />
-      <Route path="/manage-service" element={<ManageService />} />
-      <Route path="/manage-product" element={<ManageProduct />} />
-      <Route path="/manage-user" element={<ManageUser />} />
+      <Route path="/profile-page" element={<ProtectedRoute element={<ProfilePage />} />} />
+      <Route path="/manage-service" element={<ProtectedRoute element={<ManageService />} />} />
+      <Route path="/manage-product" element={<ProtectedRoute element={<ManageProduct />} />} />
+      <Route path="/manage-user" element={<ProtectedRoute element={<ManageUser />} />} />
       <Route path="/view-quotes" element={<ViewQuotes />} />
       <Route path="/login-page" element={<LoginPage />} />
       <Route path="/signup-page" element={<SignUp />} />
       <Route path='/request-quote' element={<RequestQuote/>} />
       <Route path="/products-and-services" element={<ProductsAndServices />} />
       <Route path="/" element={<Navigate to="/index" />} />
-
-
       <Route path="*" element={<Navigate to="/index" replace />} />
     </Routes>
   </BrowserRouter>

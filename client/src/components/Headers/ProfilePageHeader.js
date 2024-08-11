@@ -5,10 +5,12 @@ import { Container } from "reactstrap";
 
 // core components
 
-function ProfilePageHeader() {
+function ProfilePageHeader({name, email, phonenumber, address, city, province, postalcode, howDidYouHearAboutUs, companyName }) {
   let pageHeader = React.createRef();
 
   React.useEffect(() => {
+
+    console.log(name);
     if (window.innerWidth > 991) {
       const updateScroll = () => {
         let windowScrollTop = window.pageYOffset / 3;
@@ -38,20 +40,24 @@ function ProfilePageHeader() {
           <div className="photo-container">
             <img alt="..." src={require("assets/img/ryan.jpg")}></img>
           </div>
-          <h3 className="title">Ryan Scheinder</h3>
-          <p className="category">Photographer</p>
+          <h3 className="title">{name}</h3>
+          <p className="category">{
+          (address === undefined || city === undefined || postalcode === undefined || province === undefined ) 
+          ? 
+          "Add address" : 
+          (`${address}{", "}${city}{", "}${postalcode}{", "}${province}`) }</p>
           <div className="content">
             <div className="social-description">
-              <h2>26</h2>
-              <p>Comments</p>
+              <h4>Phone Number</h4>
+              <p>{(phonenumber === undefined) ? "Add phone number": phonenumber}</p>
             </div>
             <div className="social-description">
-              <h2>26</h2>
-              <p>Comments</p>
+              <h4>Email Address</h4>
+              <p>{(email === undefined)? "Add email" : email}</p>
             </div>
             <div className="social-description">
-              <h2>48</h2>
-              <p>Bookmarks</p>
+              <h4>Company Name</h4>
+              <p>{(companyName === undefined)? "Add company Name" : companyName}</p>
             </div>
           </div>
         </Container>

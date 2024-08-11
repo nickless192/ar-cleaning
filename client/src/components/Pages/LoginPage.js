@@ -110,8 +110,11 @@ function LoginPage() {
           }}
         ></div>
 
-        <div className="content">
-          <Container>
+        <div className="content ">
+          <Row className="content-row " >
+            <Col xs="12" md="6" className="content-center">
+
+          <Form onSubmit={handleFormSubmit}>
             <h2 className="title">Welcome to CleanAR Solutions</h2>
             <p className="description">
               Log in to access your account
@@ -127,56 +130,7 @@ function LoginPage() {
               <FloatingLabel controlId="floatingPassword" label="Password">
                 <Form.Control type="password" placeholder="" onChange={(e) => handleChange(e)} name="password" />
               </FloatingLabel>
-            <Col className="ml-auto mr-auto" md="4">
-              {/* <Card className="card-plain"> */}
-              {/* <Form onSubmit={(e) => handleFormSubmit(e)} className="form"> */}
-              {/* <div className="logo-container">
-                      <img src={Logo} alt="CleanAR Solutions Logo" />
-                    </div> */}
-
-              {/* <div>
-                <InputGroup
-                  className={
-                    "no-border input-lg" +
-                    (formData.username ? " input-group-focus" : "")
-                  }
-                >
-                  <InputGroupAddon addonType="prepend">
-                    <InputGroupText>
-                      <i className="now-ui-icons users_single-02"></i>
-                    </InputGroupText>
-                  </InputGroupAddon>
-                  <Input
-                    placeholder="Username..."
-                    type="text"
-                    id="username"
-                    name="username"
-                    onChange={(e) => handleChange(e)}
-                  ></Input>
-                </InputGroup>
-                <InputGroup
-                  className={
-                    "no-border input-lg" +
-                    (formData.password ? " input-group-focus" : "")
-                  }
-                >
-                  <InputGroupAddon addonType="prepend">
-                    <InputGroupText>
-                      <i className="now-ui-icons objects_key-25"></i>
-                    </InputGroupText>
-                  </InputGroupAddon>
-                  <Input
-                    placeholder="Password..."
-                    type="password"
-                    id="password"
-                    name="password"
-                    onChange={(e) => handleChange(e)}
-                  ></Input>
-                </InputGroup>
-
-
-
-              </div> */}
+            <Col className="ml-auto mr-auto" md="4">              
               <div className="text-center">
                 <Button
                   block
@@ -184,7 +138,7 @@ function LoginPage() {
                   type="submit"
                   color="info"
                   size="lg"
-                  onClick={(e) => handleFormSubmit(e)}
+                  // onClick={(e) => handleFormSubmit(e)}
                 >
                   Log In
                 </Button>
@@ -192,7 +146,10 @@ function LoginPage() {
               {/* </Form> */}
               {/* </Card> */}
             </Col>
-          </Container>
+          </Form>
+            </Col>
+
+            </Row>
         </div>
         <Footer />
       </div>

@@ -100,8 +100,6 @@ ClenanAR Solutions`;
                 text: emailText, // plain text body
 
             }
-
-           
             sgMail
                 .send(msg)
                 .then(() => {
@@ -111,11 +109,61 @@ ClenanAR Solutions`;
                     console.error(error);
                     res.status(500).json({ message: 'Error emailing quote' });
                 })
+
+            
+        } catch (error) {
+            console.error('Error emailing quote: ', error);
+            res.status(500).json({ message: 'Error emailing quote' });
+        }
+    },
+    emailQuoteNotification: async (req, res) => {
+
+        try {
+            // console.log('Emailing quote: ', req.body);
+            const { email, quote } = req.body;
+            const emailText = `This is an automated notification email from CleanAR Solutions.
+
+            A new quote has been created with the following details:
+            Quote ID: ${quote.quoteId}
+            User Id: ${quote.userId}
+            Name: ${quote.name}
+            Email: ${quote.email}
+            Phone: ${quote.phone}
+            Address: ${quote.address}
+            City: ${quote.city}
+            Postal Code: ${quote.postalCode}
+            Company Name: ${quote.companyName}
+
+            To view and manage this quote, please click on the link below and enter the quote ID above:
+            https://www.cleanARsolutions.ca/view-quotes
+
+Best regards,
+
+ClenanAR Solutions`;
+            const msg = {
+                to: ['omar.rguez26@gmail.com', 'filiberto_2305@outlook.com', 'info@cleanARsolutions.ca'], // Change to your recipient
+                from: 'info@cleanARsolutions.ca', // Change to your verified sender
+                subject: 'User Quote Notification: Your Quote from CleanAR Solutions',
+                text: emailText, // plain text body
+
+            }           
+
+            sgMail
+                .send(msg)
+                .then(() => {
+                    res.status(201).json({ message: 'Notification Email sent' });
+                })
+                .catch((error) => {
+                    console.error(error);
+                    res.status(500).json({ message: 'Error emailing Notification quote' });
+                })
         } catch (error) {
             console.error('Error emailing quote: ', error);
             res.status(500).json({ message: 'Error emailing quote' });
         }
     }
+
+    
 };
 
 module.exports = quoteController;

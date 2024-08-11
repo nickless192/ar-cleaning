@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
     // Button,
     // Row,
@@ -32,6 +33,7 @@ import Auth from "../../utils/auth";
 
 const RequestQuote = () => {
     // const [selectedOptions, setSelectedOptions] = useState([]);
+    const navigate = useNavigate();
     const [services, setServices] = useState([]);
     const [products, setProducts] = useState([]);
     const [formData, setFormData] = useState({
@@ -316,24 +318,24 @@ const RequestQuote = () => {
 
             if (response.ok) {
                 alert('Quote submitted successfully!');
-                // setSelectedOptions([]);
                 // disable for testing
-                // setFormData({
-                //     name: '',
-                //     userId: '',
-                //     description: '',
-                //     email: '',
-                //     phonenumber: '',
-                //     companyName: '',
-                //     howDidYouHearAboutUs: '',
-                //     subtotalCost: 0,
-                //     tax: 0,
-                //     grandTotal: 0,
-                //     services: [],
-                //     products: [],
-                //     serviceLevel: '' // Reset service level
-                // });
-                // setAddedServices([]);
+                setFormData({
+                    name: '',
+                    userId: '',
+                    description: '',
+                    companyName: '',
+                    email: '',
+                    phonenumber: '',
+                    howDidYouHearAboutUs: '',
+                    subtotalCost: 0,
+                    tax: 0,
+                    grandTotal: 0,
+                    services: [],
+                    products: [],
+                    // serviceLevel: '' // Reset service level
+                });
+                setAddedServices([]);
+                
 
                 if (window.confirm('Would you like to download the quote as a PDF?')) {
                     const element = document.getElementById('quote-form');
@@ -364,6 +366,22 @@ const RequestQuote = () => {
                         alert('Error sending email');
                     }
                 }
+
+                const emailNotification = await fetch('/api/quotes/send-email-notification', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Accept: 'application/json'
+                    },
+                    body: JSON.stringify({ email: formData.email, quote: quoteResponse })
+                });
+                if (emailNotification.ok) {
+                    alert('Email notification sent successfully!');
+                }
+                else {
+                    alert('Error sending email notification');
+                }
+                navigate('/index');
             }
         } catch (error) {
             console.error('Error submitting quote:', error);
