@@ -53,7 +53,7 @@ function ProfilePage() {
     const userInfo = async () => {
       try {
         const data = await Auth.getProfile().data;
-        console.log(Auth.getProfile());
+        // console.log(Auth.getProfile());
         setFormData({
           name: data.firstName + " " + data.lastName,
           email: data.email,

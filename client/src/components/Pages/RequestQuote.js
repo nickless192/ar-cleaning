@@ -149,7 +149,12 @@ const RequestQuote = () => {
                     name: data.firstName + " " + data.lastName,
                     email: data.email,
                     phonenumber: data.telephone,
-                    howDidYouHearAboutUs: data.howDidYouHearAboutUs,
+                    // howDidYouHearAboutUs: data.howDidYouHearAboutUs,
+                    address: data.address,
+                    city: data.city,
+                    province: data.province,
+                    postalcode: data.postalcode,
+                    companyName: data.companyName,
                     userId: data._id
                 }));
             }
@@ -717,7 +722,7 @@ const RequestQuote = () => {
                                             id="floatingPostalCode"
                                             placeholder="Postal Code"
                                             name="postalCode"
-                                            value={formData.postalCode}
+                                            value={formData.postalcode}
                                             onChange={handleChange}
                                         />
                                         <label htmlFor="floatingPostalCode">Postal Code</label>
@@ -736,9 +741,7 @@ const RequestQuote = () => {
                                         <label htmlFor="floatingCompanyName">Company Name</label>
                                     </Form.Floating>
                                 </Col>
-                                {isLogged ? null : (
-                                    <>
-                                        <Col md>
+                                <Col md>
                                             <FloatingLabel controlId="floatingServiceLevel" label="How Did You Hear About Us...">
                                                 <Form.Select aria-label="How Did You Hear About Us" value={formData.howDidYouHearAboutUs}
                                                     name='howDidYouHearAboutUs' onChange={handleChange}>
@@ -750,30 +753,8 @@ const RequestQuote = () => {
                                                     <option value="Other">Other</option>
                                                 </Form.Select>
                                             </FloatingLabel>
-                                            {/* <InputGroup className={`no-border ${formData.howDidYouHearAboutUs ? "input-group-focus" : ""}`}>
-                                        <InputGroupAddon addonType="prepend">
-                                            <InputGroupText className=''>
-                                                <i className="now-ui-icons objects_globe"></i>
-                                            </InputGroupText>
-                                        </InputGroupAddon>
-                                        <Input
-                                            type="select"
-                                            value={formData.howDidYouHearAboutUs}
-                                            name='howDidYouHearAboutUs'
-                                            className=''
-                                            onChange={handleChange}
-                                        >
-                                            <option value="">How Did You Hear About Us?...</option>
-                                            <option value="Google">Google</option>
-                                            <option value="Facebook">Facebook</option>
-                                            <option value="Instagram">Instagram</option>
-                                            <option value="Referral">Referral</option>
-                                            <option value="Other">Other</option>
-                                        </Input>
-                                    </InputGroup> */}
                                         </Col>
-                                    </>
-                                )}
+                                
                             </Row>
                             <FormGroup>
                                 <Label>Description</Label>
