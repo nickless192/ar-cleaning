@@ -41,7 +41,7 @@ function LoginPage() {
 
     if (formData.username && formData.password) {
       // console.log(body);
-      fetch('/api/users/login/', {
+      await fetch('/api/users/login/', {
         method: 'post',
         // mode: 'no-cors',
         body: JSON.stringify(formData),
