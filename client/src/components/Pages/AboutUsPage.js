@@ -98,14 +98,14 @@ function AboutUsPage() {
                   <CardText>
                     <p>Stay connected with us through our social media channels. Follow us for the latest updates, promotions, and more.</p>
                     <ListGroup className="contact-info">
-                      <ListGroupItem>
+                      {/* <ListGroupItem>
                         <i className="fab fa-facebook-square"></i> <strong>Facebook:</strong> @cleanarsolutions<br />
                         <span>Like our page and join our community to stay in the loop.</span>
                       </ListGroupItem>
                       <ListGroupItem>
                         <i className="fab fa-twitter"></i> <strong>Twitter:</strong> @cleanarsolutions<br />
                         <span>Follow us on Twitter for quick updates and customer support.</span>
-                      </ListGroupItem>
+                      </ListGroupItem> */}
                       <ListGroupItem>
                         <i className="fab fa-instagram"></i> <strong>Instagram:</strong> @cleanarsolutions<br />
                         <span>Check out our latest projects and behind-the-scenes on Instagram.</span>
