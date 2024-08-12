@@ -8,7 +8,7 @@ class AuthService {
   loggedIn() {
     // Checks if there is a saved token and it's still valid
     const token = this.getToken();
-    console.log("logged in token:",token);
+    // console.log("logged in token:",token);
     // return !!token && !this.isTokenExpired(token);
     return !!token;
   }
@@ -37,9 +37,9 @@ class AuthService {
     sessionStorage.setItem('id_token', id_token);
     sessionStorage.setItem('adminFlag', adminFlag);
 
-    console.log("login token:",id_token);
-    console.log(sessionStorage.getItem('id_token'));
-    // window.location.assign('/profile-page');
+    // console.log("login token:",id_token);
+    // console.log(sessionStorage.getItem('id_token'));
+    window.location.assign('/profile-page');
 
   }
 
