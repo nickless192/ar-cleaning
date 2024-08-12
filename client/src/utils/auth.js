@@ -8,11 +8,15 @@ class AuthService {
   loggedIn() {
     // Checks if there is a saved token and it's still valid
     const token = this.getToken();
+    const isTokenExpired = this.isTokenExpired(token);
+    
+    console.log("isTokenExpired:",isTokenExpired);
+    console.log("this.isTokenExpired:",this.isTokenExpired(token));
     // console.log("logged in token:",token);
     // return !!token && !this.isTokenExpired(token);
     return !!token;
   }
-
+// need to review this code
   isTokenExpired(token) {
     try {
       const decoded = jwtDecode(token);
