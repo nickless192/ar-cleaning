@@ -8,26 +8,26 @@ class AuthService {
   loggedIn() {
     // Checks if there is a saved token and it's still valid
     const token = this.getToken();
-    const isTokenExpired = this.isTokenExpired(token);
+    // const isTokenExpired = this.isTokenExpired(token);
     
-    console.log("isTokenExpired:",isTokenExpired);
-    console.log("this.isTokenExpired:",this.isTokenExpired(token));
+    // console.log("isTokenExpired:",isTokenExpired);
+    // console.log("this.isTokenExpired:",this.isTokenExpired(token));
     // console.log("logged in token:",token);
-    // return !!token && !this.isTokenExpired(token);
-    return !!token;
+    return !!token && !this.isTokenExpired(token);
+    // return !!token;
   }
 // need to review this code
   isTokenExpired(token) {
     try {
       const decoded = jwtDecode(token);
-      console.log("decoded:",decoded);
-      console.log("date now:",Date.now());
+      // console.log("decoded:",decoded);
+      // console.log("date now:",Date.now());
       if (decoded.exp < Date.now() / 1000) {
-        console.log("token expired");
+        // console.log("token expired");
         return true;
       } else return false;
     } catch (err) {
-      console.log("Token expired and cannot be decoded - error:",err);
+      // console.log("Token expired and cannot be decoded - error:",err);
       return false;
     }
   }
