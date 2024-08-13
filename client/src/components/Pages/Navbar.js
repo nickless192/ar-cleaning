@@ -1,9 +1,10 @@
-import React, {useEffect} from "react";
+import React from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./../../assets/css/our-palette.css";
 // reactstrap components
 import {
-    
+
     Collapse,
     DropdownToggle,
     DropdownMenu,
@@ -15,16 +16,16 @@ import {
     NavLink,
     Nav,
     Container,
-    
+
 } from "reactstrap";
 import Auth from "../../utils/auth";
 // import { set } from "mongoose";
 
 function IndexNavbar() {
-    const [navbarColor, setNavbarColor] = React.useState("navbar-color");
-    const [collapseOpen, setCollapseOpen] = React.useState(false);
+    const [navbarColor, setNavbarColor] = useState("navbar-color");
+    const [collapseOpen, setCollapseOpen] = useState(false);
 
-    const [isLogged] = React.useState(Auth.loggedIn());
+    const [isLogged] = useState(Auth.loggedIn());
     // const [adminFlag, setAdminFlag] = React.useState(localStorage.getItem('adminFlag'));
 
     // setAdminFlag(localStorage.getItem('adminFlag'));
@@ -33,11 +34,11 @@ function IndexNavbar() {
 
     useEffect(() => {
         const scrollTopVal = 0;
-        
+
         const updateNavbarColor = () => {
             if (
-                document.documentElement.scrollTop > (scrollTopVal-1) ||
-                document.body.scrollTop > (scrollTopVal-1)
+                document.documentElement.scrollTop > (scrollTopVal - 1) ||
+                document.body.scrollTop > (scrollTopVal - 1)
             ) {
                 setNavbarColor("navbar-color");
             } else if (
@@ -90,6 +91,20 @@ function IndexNavbar() {
                                     <i className="now-ui-icons ui-1_settings-gear-63 mr-1"></i>
                                     Manage Users
                                 </DropdownItem>
+                                <DropdownItem to="/view-quotes" tag={Link}>
+                                    <i className="now-ui-icons ui-1_settings-gear-63 mr-1"></i>
+                                    View Quotes
+                                </DropdownItem>
+                                {/* <NavItem>
+                                <NavLink
+                                    // className="nav-link btn-neutral"
+                                    // color="info"
+                                    href="/view-quotes/"
+                                >
+                                    <i className="now-ui-icons files_single-copy-04 mr-1"></i>
+                                    <p>View Quotes</p>
+                                </NavLink>
+                            </NavItem> */}
                             </DropdownMenu>
                         </UncontrolledDropdown>
 
@@ -132,7 +147,7 @@ function IndexNavbar() {
                         <NavLink
                             // className="nav-link btn-neutral"
                             // color="info"
-                            href="/api/logout"
+                            href="/index"
                             id="logout-btn"
                             onClick={() => Auth.logout()}
                         >
@@ -246,16 +261,16 @@ function IndexNavbar() {
                                 </NavLink>
 
                             </NavItem>
-                                                        <NavItem>
+                            {/* <NavItem>
                                 <NavLink
                                     // className="nav-link btn-neutral"
                                     // color="info"
-                                    href="/view-quotes"
+                                    href="/view-quotes/"
                                 >
                                     <i className="now-ui-icons files_single-copy-04 mr-1"></i>
                                     <p>View Quotes</p>
                                 </NavLink>
-                            </NavItem>
+                            </NavItem> */}
                             {showLogin()}
                             <NavItem>
                                 <NavLink

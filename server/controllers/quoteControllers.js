@@ -80,19 +80,19 @@ const quoteController = {
             const { email, quote } = req.body;
             const emailText = `Dear ${quote.name},
 
-Thanks for your quote request! Your new quote request has been created with the following details:
+            Thanks for your quote request! Your new quote request has been created with the following details:
 
-Quote ID: ${quote.quoteId}
+            Quote ID: ${quote.quoteId}
 
-To view and manage this quote, please click on the link below and enter the quote ID above:
+            To view and manage this quote, please click on the link below and enter the quote ID above:
 
-https://www.cleanARsolutions.ca/view-quotes
+            https://www.cleanARsolutions.ca/view-quotes
 
-We will be in touch with you shortly to discuss your quote further.
+            We will be in touch with you shortly to discuss your quote further.
 
-Best regards,
+            Best regards,
 
-ClenanAR Solutions`;
+            ClenanAR Solutions`;
             const msg = {
                 to: email, // Change to your recipient
                 from: 'info@cleanARsolutions.ca', // Change to your verified sender
@@ -110,7 +110,7 @@ ClenanAR Solutions`;
                     res.status(500).json({ message: 'Error emailing quote' });
                 })
 
-            
+
         } catch (error) {
             console.error('Error emailing quote: ', error);
             res.status(500).json({ message: 'Error emailing quote' });
@@ -128,10 +128,11 @@ ClenanAR Solutions`;
             User Id: ${quote.userId}
             Name: ${quote.name}
             Email: ${quote.email}
-            Phone: ${quote.phone}
+            Phone: ${quote.telephone}
             Address: ${quote.address}
             City: ${quote.city}
-            Postal Code: ${quote.postalCode}
+            Province: ${quote.province}
+            Postal Code: ${quote.postalcode}
             Company Name: ${quote.companyName}
 
             To view and manage this quote, please click on the link below and enter the quote ID above:
@@ -146,7 +147,7 @@ ClenanAR Solutions`;
                 subject: 'User Quote Notification: Your Quote from CleanAR Solutions',
                 text: emailText, // plain text body
 
-            }           
+            }
 
             sgMail
                 .send(msg)
@@ -163,7 +164,7 @@ ClenanAR Solutions`;
         }
     }
 
-    
+
 };
 
 module.exports = quoteController;

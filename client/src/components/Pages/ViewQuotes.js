@@ -2,6 +2,7 @@ import './../../assets/css/quote-dropdown.css';
 import './../../assets/css/our-palette.css';
 import Auth from "../../utils/auth";
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import {
   Container,
   Row,
@@ -18,6 +19,9 @@ import {
   Label,
   Button
 } from 'reactstrap';
+import { FloatingLabel,
+  Form
+ } from 'react-bootstrap';
 
 import Navbar from "components/Pages/Navbar.js";
 import Footer from "components/Pages/Footer.js";
@@ -26,7 +30,8 @@ const ViewQuote = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [quotes, setQuotes] = useState([]);
   const [displayedQuote, setDisplayedQuote] = useState({ products: [], services: [], name: '', phonenumber: '', companyName: '', email: '', description: '', serviceType: '', howDidYouHearAboutUs: '', subtotalCost: 0, tax: 0, grandTotal: 0 });
-  const [isLogged] = React.useState(Auth.loggedIn());
+  const [isLogged] = useState(Auth.loggedIn());
+  const {quoteId} = useParams();
 
 
   const toggle = () => setDropdownOpen(prevState => !prevState);
@@ -97,32 +102,63 @@ const ViewQuote = () => {
   };
 
   useEffect(() => {
-    // fetch('/api/quotes')
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     // console.log(data);
-    //     setQuotes(data);
-    //   })
-    //   .catch((error) => {
-    //     console.error('Error:', error);
-    //   });
-
 
     const prepopulateQuotes = async () => {
-      console.log('isLogged: ', isLogged);
+      // console.log('isLogged: ', isLogged);
+      
       if (isLogged) {
-        console.log('Auth.getProfile(): ', Auth.getProfile());
+        // console.log('Auth.getProfile(): ', Auth.getProfile());
         if (Auth.getProfile().data.adminFlag) {
           const response = await fetch('/api/quotes');
           const data = await response.json();
           // console.log(data);
           setQuotes(data);
+          if (quoteId) {
+            const quote = data.find(quote => quote.quoteId === quoteId);
+            if (quote) {
+              setDisplayedQuote(quote);
+            }
+          }
         }
         else {
           const response = await fetch(`/api/quotes/user/${Auth.getProfile().data._id}`);
           const data = await response.json();
           setQuotes(data);
+          // if the quoteId is in the quotes array, then setDisplayedQuote to the quoteId
+          if (quoteId) {
+            const quote = data.find(quote => quote.quoteId === quoteId);
+            if (quote) {
+              setDisplayedQuote(quote);
+            }
+          }
         }
+      }
+      else if (quoteId) {
+        fetch(`/api/quotes/${quoteId}`)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error('Quote not found');
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log(data);
+            // first confirm if the quote can be displayed.
+            if ((data.quoteId === data.userId)) {
+              setDisplayedQuote(data);
+            } 
+
+            else {
+              // console.log('user cannot see this quote');
+              alert('You are not authorized to view this quote, please log in to view your quotes');
+            }
+          })
+          .catch((error) => {
+            setDisplayedQuote({ products: [], services: [], name: '', phonenumber: '', companyName: '', email: '', description: '', serviceType: '', howDidYouHearAboutUs: '', subtotalCost: 0, tax: 0, grandTotal: 0 });
+            console.error('Error:', error);
+            // Optionally display an error message to the user
+            window.alert('Quote not found!');
+          });
       }
       else {
         // not logged in, so need to setQuotes to empty array
@@ -141,7 +177,7 @@ const ViewQuote = () => {
       document.body.classList.remove("view-quote-page");
       document.body.classList.remove("sidebar-collapse");
     };
-  }, [isLogged]);
+  }, [isLogged, quoteId]);
 
   return (
     <>
@@ -181,13 +217,13 @@ const ViewQuote = () => {
             {isLogged ? (
               <Dropdown isOpen={dropdownOpen} toggle={toggle}>
                 <DropdownToggle caret>
-                  {`${displayedQuote.name || 'Select Quote...'}`}
+                  {`Select Quote...`}
                 </DropdownToggle>
                 <DropdownMenu className='scrollable-dropdown-menu'>
                   <DropdownItem onClick={() => setDisplayedQuote({ products: [], services: [] })}>Quotes</DropdownItem>
                   {quotes.map((quote) => (
                     <DropdownItem key={quote._id} onClick={() => setDisplayedQuote(quote)}>
-                      {quote.quoteId} - {quote.name}
+                      {"Quote Id: "}{quote.quoteId} - {"Created on: "}{quote.createdAt} - {"Requested By: "}{quote.name} {quote.userId}
                     </DropdownItem>
                   ))}
                 </DropdownMenu>
@@ -196,13 +232,13 @@ const ViewQuote = () => {
               <h3 className="text-light">Please log in to view all your quotes</h3>
             )}
 
-            <Row>
-              <Col className="text-center ml-auto mr-auto" lg="6" md="8">
+            {/* <Row>
+              <Col className="text-center ml-auto mr-auto" lg="12" md="8">
                 {quotes.length === 0 && (
                   <p className='text-danger'>No quotes found!</p>
                 )}
               </Col>
-            </Row>
+            </Row> */}
             {displayedQuote && <QuoteDetails displayedQuote={displayedQuote} />}
           </Container>
         </div>
@@ -219,42 +255,58 @@ const QuoteDetails = ({ displayedQuote }) => {
     'Company Name': 'companyName',
     'Email': 'email',
     'Description': 'description',
-    'Service Type': 'serviceType',
+    'Address': 'address',
+    'City': 'city',
+    'Province': 'province',
+    'Postal Code': 'postalcode',
+    // 'Service Type': 'serviceType',
     'How Did You Hear About Us': 'howDidYouHearAboutUs'
   };
 
   return (
 
-    <Col className="text-center ml-auto mr-auto" lg="6" md="8">
+    <>
       <h3 className="mt-5">Quote Information:</h3>
       <div className=' rounded p-2'>
-
+<Row className="justify-content-center">
+    
         {Object.keys(fieldMapping).map(displayLabel => (
-          <FormGroup key={displayLabel} className="text-light">
-            <Label for={fieldMapping[displayLabel]} className="text-light">{displayLabel}</Label>
-            <InputGroup className="no-border">
-              <InputGroupAddon addonType="prepend">
-                <InputGroupText className="text-light ">
-                  <i className={`now-ui-icons ${iconClassMap[displayLabel]}`}></i>
-                </InputGroupText>
-              </InputGroupAddon>
-              <Input
-                id={fieldMapping[displayLabel]}
-                className="text-light no-cursor "
-                placeholder={`${displayLabel}...`}
-                type="text"
-                alt={`${displayLabel}...`}
-                value={displayedQuote[fieldMapping[displayLabel]]}
-                readOnly
-              />
-            </InputGroup>
-          </FormGroup>
+          <Col key={displayLabel} className="text-light" lg="4" md="12">
+          <FloatingLabel
+          controlId="floatingInput"
+          label={fieldMapping[displayLabel]}
+          className="mb-3"
+        >
+          <Form.Control type="text" placeholder={`${displayLabel}...`} alt={`${displayLabel}...`}
+                value={displayedQuote[fieldMapping[displayLabel]]} id={fieldMapping[displayLabel]} />
+          </FloatingLabel>
+          </Col>
+          // <FormGroup key={displayLabel} className="text-light">
+          //   <Label for={fieldMapping[displayLabel]} className="text-light">{displayLabel}</Label>
+          //   <InputGroup className="no-border">
+          //     <InputGroupAddon addonType="prepend">
+          //       <InputGroupText className="text-light ">
+          //         <i className={`now-ui-icons ${iconClassMap[displayLabel]}`}></i>
+          //       </InputGroupText>
+          //     </InputGroupAddon>
+          //     <Input
+          //       id={fieldMapping[displayLabel]}
+          //       className="text-light no-cursor "
+          //       placeholder={`${displayLabel}...`}
+          //       type="text"
+          //       alt={`${displayLabel}...`}
+          //       value={displayedQuote[fieldMapping[displayLabel]]}
+          //       readOnly
+          //     />
+          //   </InputGroup>
+          // </FormGroup>
         ))}
-        <ProductList products={displayedQuote.products} />
+        </Row>
+        {/* <ProductList products={displayedQuote.products} /> */}
         <ServiceList services={displayedQuote.services} />
-        <CostDetails displayedQuote={displayedQuote} />
+        {/* <CostDetails displayedQuote={displayedQuote} /> */}
       </div>
-    </Col>
+    </>
   );
 };
 
@@ -288,15 +340,57 @@ const ServiceList = ({ services }) => (
         <FormGroup key={index} className="text-light">
           <Label for={`service-${index}`} className="text-light">Service</Label>
           <InputGroup>
-            <Input id={`service-${index}`} className="text-light " placeholder="Service..." type="text" value={service.name} readOnly />
-            <Input className="text-light " placeholder="Service cost..." type="number" value={service.serviceCost} readOnly />
-            <Input className="text-light " placeholder="Id..." type="text" value={service.id} readOnly />
+            <Input
+              id={`service-type-${index}`}
+              className="text-light"
+              placeholder="Service Type..."
+              type="text"
+              value={service.type}
+              readOnly
+            />
+            <Input
+              id={`service-level-${index}`}
+              className="text-light"
+              placeholder="Service Level..."
+              type="text"
+              value={service.serviceLevel}
+              readOnly
+            />
+            <InputGroupAddon addonType="append" className="text-light">Custom Options:</InputGroupAddon>
           </InputGroup>
+          
+          {Array.from(service.customOptions).map(([key, option], optIndex) => (
+            <InputGroup key={optIndex} className="mb-2">
+              <Input
+                id={`option-${index}-${optIndex}`}
+                className="text-light"
+                placeholder="Option Name..."
+                type="text"
+                value={key}
+                readOnly
+              />
+              <Input
+                className="text-light"
+                placeholder="Option Value..."
+                type="text"
+                value={option.service}
+                readOnly
+              />
+              <Input
+                className="text-light"
+                placeholder="Service Cost..."
+                type="number"
+                value={option.serviceCost}
+                readOnly
+              />
+            </InputGroup>
+          ))}
         </FormGroup>
       ))
     )}
   </div>
 );
+
 
 const CostDetails = ({ displayedQuote }) => (
   <div>

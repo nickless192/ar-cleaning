@@ -192,7 +192,9 @@ const RequestQuote = () => {
         };
     }, [isLogged, formData.services]);
 
-    const handleChange = ({ target: { name, value } }) => {
+    const handleChange = (event) => {
+
+        const { name, value } = event.target;
         setFormData(prevFormData => ({ ...prevFormData, [name]: value }));
     };
 
@@ -306,7 +308,7 @@ const RequestQuote = () => {
         e.preventDefault();
         console.log('Form data:', formData);
 
-        if (!formData.name || !formData.email || !formData.phonenumber || !formData.description || !formData.companyName || (!formData.services.length && !formData.products.length)) {
+        if (!formData.name || !formData.email || !formData.phonenumber || !formData.description || !formData.companyName || (!formData.services.length && !formData.products.length) || !formData.howDidYouHearAboutUs || !formData.subtotalCost || !formData.tax || !formData.grandTotal ||!formData.address || !formData.city || !formData.province || !formData.postalcode) {
             alert('Please fill out all required fields');
             return;
         }
@@ -721,7 +723,7 @@ const RequestQuote = () => {
                                             type="text"
                                             id="floatingPostalCode"
                                             placeholder="Postal Code"
-                                            name="postalCode"
+                                            name="postalcode"
                                             value={formData.postalcode}
                                             onChange={handleChange}
                                         />
@@ -842,8 +844,8 @@ const RequestQuote = () => {
                                 </div>                                    
                                 </Col>
                             </Row>
-
-                            <Row>
+{/* disable price display in the initial release */}
+                            {/* <Row>
                                 <Col >
                                     <FormGroup>
                                         <Label>Subtotal</Label>
@@ -874,7 +876,7 @@ const RequestQuote = () => {
                                         />
                                     </FormGroup>
                                 </Col>
-                            </Row>
+                            </Row> */}
                             <Row>
                                 <Col>
                                     <FormGroup check className=''>

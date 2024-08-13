@@ -20,17 +20,6 @@ const CustomOptionsSchema = new Schema({
     serviceCost: { type: Number, required: true }
 });
 
-// const ServiceSchema = new Schema({
-//     type: {
-//         type: String,
-//         required: true
-//     },
-//     serviceLevel: {
-//         type: String,
-//         required: true // This is new
-//     },
-//     customOptions: CustomOptionsSchema
-// }, { _id: false });
 const ServiceSchema = new Schema({
     type: { type: String, required: true },
     serviceLevel: { type: String, required: true },
@@ -81,6 +70,22 @@ const QuoteSchema = new Schema({
         type: String,
         required: true
     },
+    address: {
+        type: String,
+        required: true
+    },
+    city: {
+        type: String,
+        required: true
+    },
+    province: {
+        type: String,
+        required: true
+    },
+    postalcode: {
+        type: String,
+        required: true
+    },    
     howDidYouHearAboutUs: {
         type: String,
         // required: true

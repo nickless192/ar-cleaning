@@ -17,6 +17,8 @@ import Auth from "../../utils/auth";
 import Navbar from "components/Pages/Navbar.js";
 import ProfilePageHeader from "components/Headers/ProfilePageHeader.js";
 import Footer from "components/Pages/Footer.js";
+// import './../../assets/css/quote-dropdown.css';
+// import './../../assets/css/our-palette.css';
 
 
 function ProfilePage() {
@@ -53,6 +55,10 @@ function ProfilePage() {
     const userInfo = async () => {
       try {
         const data = await Auth.getProfile().data;
+        const response = await fetch(`/api/quotes/user/${Auth.getProfile().data._id}`);
+        const quotesData = await response.json();
+        setQuotes(quotesData);
+        console.log(quotesData);
         // console.log(Auth.getProfile());
         setFormData({
           name: data.firstName + " " + data.lastName,
@@ -156,6 +162,18 @@ function ProfilePage() {
     }
   };
 
+  const handleQuoteClick = (e) => {
+    e.preventDefault();
+    const quoteId = e.target.value;
+    console.log(quoteId);
+    if (quoteId !== "") {
+      navigate(`/view-quotes/${quoteId}`);
+      // return;
+    }
+
+    // navigate("/quote");
+  }
+
   return (
     <>
       <Navbar />
@@ -174,7 +192,7 @@ function ProfilePage() {
 
             <Form onSubmit={handleSaveClick} >
               <div className="photo-container">
-                <img alt="..." src={require("assets/img/ryan.jpg")}></img>
+                <img alt="..." src={require("assets/img/default-avatar.png")}></img>
               </div>
               <h3 className="title">{formData.name}</h3>
               <p className="category">
@@ -253,8 +271,8 @@ function ProfilePage() {
 
               {/* <div className="content">
             </div> */}
-              <Container className="section">
-                <div className="button-container">
+              <Container className="section bg-transparent">
+                <div className="button-container ">
                   {isEditing ? (
                     <Button className="btn-round" color="success" size="lg" type="submit">
                       Save Profile
@@ -269,47 +287,26 @@ function ProfilePage() {
             </Form>
           </Container>
         </div>
-        <div className="section">
-          <Container>
-            {/* <div className="button-container">
-              {isEditing ? (
-                <Button className="btn-round" color="success" size="lg" type="submit">
-                  Save Profile
-                </Button>
-              ) : (
-                <Button className="btn-round" color="info" size="lg" onClick={handleEditClick}>
-                  Edit Profile
-                </Button>
-              )}
-            </div> */}
-            {/* <h3 className="title">About me</h3>
-            <h5 className="description">
-              An artist of considerable range, Ryan — the name taken by
-              Melbourne-raised, Brooklyn-based Nick Murphy — writes, performs
-              and records all of his own music, giving it a warm, intimate feel
-              with a solid groove structure. An artist of considerable range.
-            </h5> */}
-            {isLogged ? (
-              <Dropdown isOpen={dropdownOpen} toggle={toggle}>
+        <div className="container">
+          <h4 className="title text-left">Search your Quotes</h4>
+        <Dropdown isOpen={dropdownOpen} toggle={toggle}>
                 <DropdownToggle caret>
-                  {`${displayedQuote.name || 'Select Quote...'}`}
+                  {`Select Quote to View Details`}
                 </DropdownToggle>
                 <DropdownMenu className='scrollable-dropdown-menu'>
-                  <DropdownItem onClick={() => setDisplayedQuote({ products: [], services: [] })}>Quotes</DropdownItem>
+                  {/* <DropdownItem onClick={() => setDisplayedQuote({ products: [], services: [] })}>Quotes</DropdownItem> */}
+                  <DropdownItem onClick={(e) => handleQuoteClick(e)} value="">Quotes</DropdownItem>
                   {quotes.map((quote) => (
-                    <DropdownItem key={quote._id} onClick={() => setDisplayedQuote(quote)}>
-                      {quote.quoteId} - {quote.name}
+                    <DropdownItem key={quote._id} onClick={(e) => handleQuoteClick(e)} value={quote.quoteId}>
+                      {/* <DropdownItem key={quote._id} onClick={() => setDisplayedQuote(quote)}></DropdownItem> */}
+                      {"Quote Id:"}{quote.quoteId} - {"Created at:"}{quote.createdAt}
                     </DropdownItem>
                   ))}
                 </DropdownMenu>
               </Dropdown>
-            ) : (
-              <h3 className="text-light">Please log in to view all your quotes</h3>
-            )}
-          </Container>
         </div>
-        <Footer />
       </div>
+      <Footer />
     </>
   );
 }

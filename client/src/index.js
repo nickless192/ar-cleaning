@@ -52,7 +52,8 @@ root.render(
       <Route path="/manage-service" element={<ProtectedRoute element={<ManageService />} />} />
       <Route path="/manage-product" element={<ProtectedRoute element={<ManageProduct />} />} />
       <Route path="/manage-user" element={<ProtectedRoute element={<ManageUser />} />} />
-      <Route path="/view-quotes" element={<ViewQuotes />} />
+      <Route path="/view-quotes" element={<ProtectedRoute element={<ViewQuotes />} />} />
+      <Route path="/view-quotes/:quoteId" element={<ProtectedRoute element={<ViewQuotes />} />} />
       <Route path="/login-page" element={<LoginPage />} />
       <Route path="/signup-page" element={<SignUp />} />
       <Route path='/request-quote' element={<RequestQuote/>} />

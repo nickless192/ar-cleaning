@@ -1,4 +1,5 @@
 import React from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Auth from "../../utils/auth";
 // reactstrap components
@@ -25,12 +26,7 @@ import Footer from "components/Pages/Footer.js";
 // core components
 
 function SignUp() {
-  // const [firstName, setFirstName] = React.useState(false);
-  // const [lastName, setLastName] = React.useState(false);
-  // const [email, setEmail] = React.useState(false);
-  // const [username, setUsername] = React.useState(false);
-  // const [password, setPassword] = React.useState(false);
-  const [formData, setFormData] = React.useState({
+  const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
@@ -78,12 +74,12 @@ function SignUp() {
   const handleChange = (event) => {
     event.preventDefault();
     const { name, value } = event.target;
-    console.log(name, value);
-    console.log(formData);
+    // console.log(name, value);
+    // console.log(formData);
     setFormData({ ...formData, [name]: value });
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     document.body.classList.add("signup-page");
     document.body.classList.add("sidebar-collapse");
     document.documentElement.classList.remove("nav-open");

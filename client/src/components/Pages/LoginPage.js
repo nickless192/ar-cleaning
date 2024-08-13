@@ -1,4 +1,5 @@
 import React from "react";
+import { useEffect, useState } from "react";
 import Auth from "../../utils/auth";
 import Logo from "../../assets/svg/cleanmart-blue.svg";
 
@@ -31,7 +32,7 @@ import Footer from "components/Pages/Footer.js";
 
 function LoginPage() {
 
-  const [formData, setFormData] = React.useState({
+  const [formData, setFormData] = useState({
     username: "",
     password: ""
   });
@@ -81,13 +82,13 @@ function LoginPage() {
   const handleChange = (event) => {
     event.preventDefault();
     const { name, value } = event.target;
-    console.log(name, value);
-    console.log(formData);
+    // console.log(name, value);
+    // console.log(formData);
     setFormData({ ...formData, [name]: value });
   };
 
 
-  React.useEffect(() => {
+  useEffect(() => {
     document.body.classList.add("login-page");
     document.body.classList.add("sidebar-collapse");
     document.documentElement.classList.remove("nav-open");
