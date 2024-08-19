@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/nickless192/ar-cleaning#readme",
   "dependencies": {
+    "@huggingface/inference": "^2.8.0",
     "@sendgrid/mail": "^8.1.3",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",

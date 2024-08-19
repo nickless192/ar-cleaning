@@ -1,21 +1,11 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import Auth from "../../utils/auth";
-import Logo from "../../assets/svg/cleanmart-blue.svg";
+// import Logo from "../../assets/svg/cleanmart-blue.svg";
 
 // reactstrap components
 import {
   Button,
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  // Form,
-  Input,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroup,
-  Container,
   Row,
   Col
 } from "reactstrap";

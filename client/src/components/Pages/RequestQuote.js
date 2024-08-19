@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-    // Button,
-    // Row,
-    // Col,
     Input,
-    InputGroup,
-    InputGroupAddon,
-    InputGroupText,
     FormGroup, Label,
 
 } from 'reactstrap';
@@ -17,19 +11,15 @@ import {
     Button,
     Form,
     Row,
-    Card,
     Col,
-    ButtonGroup,
-    Tabs,
-    Tab,
-    Collapse,
-    ToggleButton
+    Collapse
 } from 'react-bootstrap';
 // import { ButtonGroup, ToggleButton } from 'react-bootstrap';
 import html2pdf from 'html2pdf.js';
 import Navbar from "components/Pages/Navbar.js";
 import Footer from "components/Pages/Footer.js";
 import Auth from "../../utils/auth";
+import VisitorCounter from "components/Pages/VisitorCounter.js";
 
 const RequestQuote = () => {
     // const [selectedOptions, setSelectedOptions] = useState([]);
@@ -51,8 +41,7 @@ const RequestQuote = () => {
         products: [],
         // serviceLevel: '', // New field for service level
     });
-    const [addedServices, setAddedServices] = useState([]);
-    const [sendEmail, setSendEmail] = useState(false);
+    // const [sendEmail, setSendEmail] = useState(true); // Default to true so that the user receives an email
     const [isLogged] = useState(Auth.loggedIn());
     // const [open, setOpen] = useState(false);
     // const [openStates, setOpenStates] = useState({});
@@ -159,27 +148,27 @@ const RequestQuote = () => {
                 }));
             }
         };
-         // Calculate subtotal, tax, and grand total whenever services change
-    const subtotalCost = formData.services.reduce((total, service) => {
-        const serviceCost = Object.values(service.customOptions || {}).reduce((sum, option) => {
-            if (option.service) {
-                return sum + option.serviceCost;
-            }
-            return sum;
+        // Calculate subtotal, tax, and grand total whenever services change
+        const subtotalCost = formData.services.reduce((total, service) => {
+            const serviceCost = Object.values(service.customOptions || {}).reduce((sum, option) => {
+                if (option.service) {
+                    return sum + option.serviceCost;
+                }
+                return sum;
+            }, 0);
+            return total + serviceCost;
         }, 0);
-        return total + serviceCost;
-    }, 0);
 
-    const tax = subtotalCost * 0.13;
-    const grandTotal = subtotalCost + tax;
+        const tax = subtotalCost * 0.13;
+        const grandTotal = subtotalCost + tax;
 
-    // Update formData with calculated values
-    setFormData(prevFormData => ({
-        ...prevFormData,
-        subtotalCost,
-        tax,
-        grandTotal
-    }));
+        // Update formData with calculated values
+        setFormData(prevFormData => ({
+            ...prevFormData,
+            subtotalCost,
+            tax,
+            grandTotal
+        }));
 
         initializeServices();
         prepopulateForm();
@@ -198,25 +187,9 @@ const RequestQuote = () => {
         setFormData(prevFormData => ({ ...prevFormData, [name]: value }));
     };
 
-    // const handleToggle = (type) => {
-    //     setOpenStates((prev) => ({
-    //         ...prev,
-    //         [type]: !prev[type],
-    //     }));
-    // };
     const handleToggle = (type) => {
         setOpenService((prev) => (prev === type ? null : type));
     };
-
-    const toggleSelection = (type, item) => {
-        setFormData(prevFormData => {
-            const updatedItems = prevFormData[type].includes(item)
-                ? prevFormData[type].filter(i => i !== item)
-                : [...prevFormData[type], item];
-            return { ...prevFormData, [type]: updatedItems };
-        });
-    };
-
 
     const handleAddService = (e) => {
         const serviceType = e.target.value;
@@ -248,10 +221,7 @@ const RequestQuote = () => {
         });
     };
 
-
     const handleRemoveService = (type) => {
-        // setAddedServices(addedServices.filter(s => s.type !== type));
-        // setFormData(prevFormData => ({ ...prevFormData, services: addedServices }));
         setFormData(prevFormData => ({
             ...prevFormData,
             services: prevFormData.services.filter(s => s.type !== type)
@@ -259,22 +229,6 @@ const RequestQuote = () => {
     };
 
     const handleCustomOptionChange = (type, option, value, cost) => {
-        // setAddedServices(addedServices.map(s => 
-        //     s.type === type 
-        //     ? { 
-        //         ...s, 
-        //         ...(option === "serviceLevel" 
-        //             ? { [option]: value }  // Add serviceLevel directly to the top level
-        //             : {
-        //                 customOptions: { 
-        //                     ...s.customOptions, 
-        //                     [option]: { service: value, serviceCost: cost }  // Group service and serviceCost
-        //                 }
-        //             }
-        //         )
-        //     } 
-        //     : s
-        // ));
         setFormData(prevFormData => ({
             ...prevFormData,
             services: prevFormData.services.map(s =>
@@ -295,12 +249,6 @@ const RequestQuote = () => {
             )
         }));
 
-        // setFormData(prevFormData => ({ 
-        //     ...prevFormData, 
-        //     services: addedServices 
-        // }));
-
-        // console.log(addedServices);
         console.log(formData);
     };
 
@@ -308,7 +256,7 @@ const RequestQuote = () => {
         e.preventDefault();
         console.log('Form data:', formData);
 
-        if (!formData.name || !formData.email || !formData.phonenumber || !formData.description || !formData.companyName || (!formData.services.length && !formData.products.length) || !formData.howDidYouHearAboutUs || !formData.subtotalCost || !formData.tax || !formData.grandTotal ||!formData.address || !formData.city || !formData.province || !formData.postalcode) {
+        if (!formData.name || !formData.email || !formData.phonenumber || !formData.description || !formData.companyName || (!formData.services.length && !formData.products.length) || !formData.howDidYouHearAboutUs || !formData.subtotalCost || !formData.tax || !formData.grandTotal || !formData.address || !formData.city || !formData.province || !formData.postalcode) {
             alert('Please fill out all required fields');
             return;
         }
@@ -341,8 +289,7 @@ const RequestQuote = () => {
                     products: [],
                     // serviceLevel: '' // Reset service level
                 });
-                setAddedServices([]);
-                
+
 
                 if (window.confirm('Would you like to download the quote as a PDF?')) {
                     const element = document.getElementById('quote-form');
@@ -357,24 +304,24 @@ const RequestQuote = () => {
                 }
 
                 const quoteResponse = await response.json();
-                if (sendEmail) {
-                    const emailResponse = await fetch('/api/quotes/send-email', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            Accept: 'application/json'
-                        },
-                        body: JSON.stringify({ email: formData.email, quote: quoteResponse })
-                    });
+                // if (sendEmail) {
+                const emailResponse = await fetch('/api/email/quote', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Accept: 'application/json'
+                    },
+                    body: JSON.stringify({ email: formData.email, quote: quoteResponse })
+                });
 
-                    if (emailResponse.ok) {
-                        alert('Email sent successfully!');
-                    } else {
-                        alert('Error sending email');
-                    }
+                if (emailResponse.ok) {
+                    alert('Email sent successfully!');
+                } else {
+                    alert('Error sending email');
                 }
-
-                const emailNotification = await fetch('/api/quotes/send-email-notification', {
+                // }
+                // merged the two fetch requests into one
+                const emailNotification = await fetch('/api/email/quote-notification', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -395,8 +342,6 @@ const RequestQuote = () => {
         }
     };
 
-
-
     const subtotalCost = formData.services.reduce((total, service) => {
         // Sum up all the costs of the services' custom options
         const serviceCost = Object.values(service.customOptions || {}).reduce((sum, option) => {
@@ -411,17 +356,16 @@ const RequestQuote = () => {
     const grandTotal = subtotalCost + tax;
 
 
-
     const renderCustomOptions = (type, serviceLevel) => {
         switch (type) {
             case 'Residential':
                 return (
                     // <Tab>
                     <>
-                        <Row className='g-2'>
+                        <Row className='g-2 px-1'>
                             <Col md>
-                                <FloatingLabel controlId={`floatingServiceLevel${type}`} label="Select Service Level...">
-                                    <Form.Select aria-label="Service level" name="serviceLevel" onChange={(e) => handleCustomOptionChange(type, 'serviceLevel', e.target.value)} >
+                                <FloatingLabel controlId={`floatingServiceLevel${type}`} label="Select Service Level..." className=''>
+                                    <Form.Select aria-label="Service level" name="serviceLevel" className="transparent" onChange={(e) => handleCustomOptionChange(type, 'serviceLevel', e.target.value)} >
                                         <option value="">Select Service Level...</option>
                                         <option value="Basic Cleaning">Basic Cleaning</option>
                                         <option value="Deep Cleaning">Deep Cleaning</option>
@@ -431,8 +375,8 @@ const RequestQuote = () => {
                             </Col>
                             <Col md>
 
-                                <FloatingLabel controlId="floatingUnitSize" label="Unit Size">
-                                    <Form.Select aria-label="Unit Size" onChange={(e) => handleCustomOptionChange(type, 'unitSize', e.target.value, pricing.unitSize[e.target.value])}>
+                                <FloatingLabel controlId="floatingUnitSize" label="Unit Size" >
+                                    <Form.Select aria-label="Unit Size" className="transparent" onChange={(e) => handleCustomOptionChange(type, 'unitSize', e.target.value, pricing.unitSize[e.target.value])}>
                                         <option value="">Select Unit Size...</option>
                                         <option value="0-499 sqft">0-499 sqft</option>
                                         <option value="500-999 sqft">500-999 sqft</option>
@@ -444,14 +388,14 @@ const RequestQuote = () => {
                             </Col>
                             <Col md>
                                 <FloatingLabel controlId="floatingBedrooms" label="Number of Bedrooms">
-                                    <Form.Control type="number" min="0" onChange={(e) => handleCustomOptionChange(type, 'bedrooms', e.target.value, pricing.bedrooms[e.target.value])}
+                                    <Form.Control type="number" min="0" className='text-cleanar-color' onChange={(e) => handleCustomOptionChange(type, 'bedrooms', e.target.value, pricing.bedrooms[e.target.value])}
                                     // disabled={formData.serviceLevel === 'Deep Cleaning'}
                                     />
                                 </FloatingLabel>
                             </Col>
                             <Col md>
                                 <FloatingLabel controlId="floatingBathrooms" label="Number of Bathrooms">
-                                    <Form.Control type="number" min="0" onChange={(e) => handleCustomOptionChange(type, 'bathrooms', e.target.value, pricing.bathrooms[e.target.value])}
+                                    <Form.Control type="number" min="0" className='text-cleanar-color' onChange={(e) => handleCustomOptionChange(type, 'bathrooms', e.target.value, pricing.bathrooms[e.target.value])}
                                     // disabled={formData.serviceLevel === 'Deep Cleaning'}
                                     />
                                 </FloatingLabel>
@@ -459,7 +403,7 @@ const RequestQuote = () => {
                         </Row>
                         {serviceLevel !== "" ? (
 
-                            <Row className='g-2'>
+                            <Row className='g-2 px-1'>
                                 <Col md>
                                     <FormGroup check>
                                         {services
@@ -483,17 +427,21 @@ const RequestQuote = () => {
                                 </Col>
                             </Row>
                         ) : null}
-                        <Button onClick={() => handleRemoveService(type)} color="danger">Remove</Button>
+                        <Row className='g-2 px-1'>
+                            <Col md>
+                                <Button onClick={() => handleRemoveService(type)} className='btn-danger' >Remove</Button>
+                            </Col>
+                        </Row>
                         {/* </Tab> */}
                     </>
                 );
             case 'Commercial':
                 return (
                     <>
-                        <Row className='g-2'>
+                        <Row className='g-2 px-1'>
                             <Col md>
                                 <FloatingLabel controlId={`floatingServiceLevel${type}`} label="Select Service Level...">
-                                    <Form.Select aria-label="Service level" name="serviceLevel" onChange={(e) => handleCustomOptionChange(type, 'serviceLevel', e.target.value)} >
+                                    <Form.Select aria-label="Service level" className='transparent' name="serviceLevel" onChange={(e) => handleCustomOptionChange(type, 'serviceLevel', e.target.value)} >
                                         <option value="">Select Service Level...</option>
                                         <option value="Basic Cleaning">Basic Cleaning</option>
                                         <option value="Deep Cleaning">Deep Cleaning</option>
@@ -502,9 +450,20 @@ const RequestQuote = () => {
                                 </FloatingLabel>
                             </Col>
                             <Col md>
-                                <FormGroup>
+                                <FloatingLabel controlId="floatingSquareFootage" label="Square Footage" className=''>
+                                    <Form.Select aria-label="Square Footage" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e.target.value, pricing.squareFootage[e.target.value])}
+
+                                    >
+                                        <option value="">Select Square Footage...</option>
+                                        <option value="0-999 sqft">0-999 sqft</option>
+                                        <option value="1000-4999 sqft">1000-4999 sqft</option>
+                                        <option value="5000-9999 sqft">5000-9999 sqft</option>
+                                        <option value="10000+ sqft">10000+ sqft</option>
+                                    </Form.Select>
+                                </FloatingLabel>
+                                {/* <FormGroup>
                                     <Label>Square Footage</Label>
-                                    <Input type="select" onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e.target.value, pricing.squareFootage[e.target.value])}
+                                    <Input type="select"  onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e.target.value, pricing.squareFootage[e.target.value])}
                                     // disabled={formData.serviceLevel === 'Deep Cleaning'}
                                     >
                                         <option value="">Select Square Footage...</option>
@@ -513,18 +472,29 @@ const RequestQuote = () => {
                                         <option value="5000-9999 sqft">5000-9999 sqft</option>
                                         <option value="10000+ sqft">10000+ sqft</option>
                                     </Input>
-                                </FormGroup>
+                                </FormGroup> */}
                             </Col>
-                        </Row>
-                        <Row className='g-2'>
                             <Col md>
-                                <FormGroup>
+                                <FloatingLabel controlId="floatingRooms" label="Number of Rooms" className=''>
+                                    <Form.Select aria-label="Number of Rooms" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'rooms', e.target.value, pricing.rooms[e.target.value])}>
+                                        <option value="">Select Number of Rooms...</option>
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                    </Form.Select>
+                                </FloatingLabel>
+                                {/* <FormGroup>
                                     <Label>Number of Rooms</Label>
                                     <Input type="number" min="0" onChange={(e) => handleCustomOptionChange(type, 'rooms', e.target.value, pricing.rooms[e.target.value])}
                                     // disabled={formData.serviceLevel === 'Deep Cleaning'}
                                     />
-                                </FormGroup>
+                                </FormGroup> */}
                             </Col>
+                        </Row>
+                        <Row className='g-2 px-1'>
                             <Col md>
                                 <FormGroup check>
                                     {services
@@ -547,15 +517,19 @@ const RequestQuote = () => {
                                 </FormGroup>
                             </Col>
                         </Row>
-                        <Button onClick={() => handleRemoveService(type)} color="danger">Remove</Button>
+                        <Row className='g-2 px-1'>
+                            <Col md>
+                                <Button onClick={() => handleRemoveService(type)} className='btn-danger'>Remove</Button>
+                            </Col>
+                        </Row>
                     </>
                 );
             case 'Industrial':
                 return (
-                    <> <Row className='g-2'>
+                    <> <Row className='g-2 px-1'>
                         <Col md>
                             <FloatingLabel controlId={`floatingServiceLevel${type}`} label="Select Service Level...">
-                                <Form.Select aria-label="Service level" name="serviceLevel" onChange={(e) => handleCustomOptionChange(type, 'serviceLevel', e.target.value)} >
+                                <Form.Select aria-label="Service level" className='transparent' name="serviceLevel" onChange={(e) => handleCustomOptionChange(type, 'serviceLevel', e.target.value)} >
                                     <option value="">Select Service Level...</option>
                                     <option value="Basic Cleaning">Basic Cleaning</option>
                                     <option value="Deep Cleaning">Deep Cleaning</option>
@@ -564,7 +538,16 @@ const RequestQuote = () => {
                             </FloatingLabel>
                         </Col>
                         <Col md>
-                            <FormGroup>
+                            <FloatingLabel controlId="floatingSquareFootage" label="Square Footage" className=''>
+                                <Form.Select aria-label="Square Footage" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e.target.value, pricing.squareFootage[e.target.value])}>
+                                    <option value="">Select Square Footage...</option>
+                                    <option value="0-999 sqft">0-999 sqft</option>
+                                    <option value="1000-4999 sqft">1000-4999 sqft</option>
+                                    <option value="5000-9999 sqft">5000-9999 sqft</option>
+                                    <option value="10000+ sqft">10000+ sqft</option>
+                                </Form.Select>
+                            </FloatingLabel>
+                            {/* <FormGroup>
                                 <Label>Square Footage</Label>
                                 <Input type="select" onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e.target.value, pricing.squareFootage[e.target.value])}
                                     disabled={formData.serviceLevel === 'Deep Cleaning'}
@@ -575,18 +558,29 @@ const RequestQuote = () => {
                                     <option value="5000-9999 sqft">5000-9999 sqft</option>
                                     <option value="10000+ sqft">10000+ sqft</option>
                                 </Input>
-                            </FormGroup>
+                            </FormGroup> */}
                         </Col>
                         <Col md>
-                            <FormGroup>
+                            <FloatingLabel controlId="floatingEmployees" label="Number of Employees" className=''>
+                                <Form.Select aria-label="Number of Employees" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'employees', e.target.value, pricing.employees[e.target.value])}>
+                                    <option value="">Select Number of Employees...</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </Form.Select>
+                            </FloatingLabel>
+                            {/* <FormGroup>
                                 <Label>Number of Employees</Label>
                                 <Input type="number" min="0" onChange={(e) => handleCustomOptionChange(type, 'employees', e.target.value, pricing.employees[e.target.value])}
                                     disabled={formData.serviceLevel === 'Deep Cleaning'}
                                 />
-                            </FormGroup>
+                            </FormGroup> */}
                         </Col>
                     </Row>
-                        <Row className='g-2'>
+                        <Row className='g-2 px-1'>
                             <Col md>
                                 <FormGroup check>
                                     {services
@@ -618,7 +612,11 @@ const RequestQuote = () => {
                                 </FormGroup>
                             </Col>
                         </Row>
-                        <Button onClick={() => handleRemoveService(type)} color="danger">Remove</Button>
+                        <Row className='g-2 px-1'>
+                            <Col md>
+                                <Button onClick={() => handleRemoveService(type)} className='btn-danger'>Remove</Button>
+                            </Col>
+                        </Row>
                     </>
                 );
             default:
@@ -630,6 +628,7 @@ const RequestQuote = () => {
         <>
             <Navbar />
             <div className="section light-bg-color pb-0 mb-0">
+                <VisitorCounter page={"request-quote"} />
                 <div className="content">
                     <Container>
                         <h2 className="text-center">Request a Quote</h2>
@@ -641,11 +640,12 @@ const RequestQuote = () => {
                                             type="text"
                                             id=" floatingFullName"
                                             placeholder="Full Name"
+                                            className='text-cleanar-color text-bold'
                                             name="name"
                                             value={formData.name}
                                             onChange={handleChange}
                                         />
-                                        <label htmlFor="floatingFullName">Full Name</label>
+                                        <label htmlFor="floatingFullName" className='text-bold'>Full Name</label>
                                     </Form.Floating>
                                 </Col>
                                 <Col md>
@@ -654,11 +654,12 @@ const RequestQuote = () => {
                                             type="text"
                                             id="floatingEmail"
                                             placeholder="Email"
+                                            className='text-cleanar-color text-bold'
                                             name="email"
                                             value={formData.email}
                                             onChange={handleChange}
                                         />
-                                        <label htmlFor="floatingEmail">Email</label>
+                                        <label htmlFor="floatingEmail" className='text-bold'>Email</label>
                                     </Form.Floating>
                                 </Col>
                                 <Col md>
@@ -667,11 +668,12 @@ const RequestQuote = () => {
                                             type="text"
                                             id="floatingPhoneNumber"
                                             placeholder="Phone Number"
+                                            className='text-cleanar-color text-bold'
                                             name="phonenumber"
                                             value={formData.phonenumber}
                                             onChange={handleChange}
                                         />
-                                        <label htmlFor="floatingPhoneNumber">Phone Number</label>
+                                        <label htmlFor="floatingPhoneNumber" className='text-bold'>Phone Number</label>
                                     </Form.Floating>
                                 </Col>
                             </Row>
@@ -682,11 +684,12 @@ const RequestQuote = () => {
                                             type="text"
                                             id="floatingAddress"
                                             placeholder="Address"
+                                            className='text-cleanar-color text-bold'
                                             name="address"
                                             value={formData.address}
                                             onChange={handleChange}
                                         />
-                                        <label htmlFor="floatingAddress">Address</label>
+                                        <label htmlFor="floatingAddress" className='text-bold'>Address</label>
                                     </Form.Floating>
                                 </Col>
                                 <Col md>
@@ -695,11 +698,12 @@ const RequestQuote = () => {
                                             type="text"
                                             id="floatingCity"
                                             placeholder="City"
+                                            className='text-cleanar-color text-bold'
                                             name="city"
                                             value={formData.city}
                                             onChange={handleChange}
                                         />
-                                        <label htmlFor="floatingCity">City</label>
+                                        <label htmlFor="floatingCity" className='text-bold'>City</label>
                                     </Form.Floating>
                                 </Col>
                                 <Col md>
@@ -708,26 +712,28 @@ const RequestQuote = () => {
                                             type="text"
                                             id="floatingProvince"
                                             placeholder="Province"
+                                            className='text-cleanar-color text-bold'
                                             name="province"
                                             value={formData.province}
                                             onChange={handleChange}
                                         />
-                                        <label htmlFor="floatingState">Province</label>
+                                        <label htmlFor="floatingState" className='text-bold'>Province</label>
                                     </Form.Floating>
                                 </Col>
                             </Row>
                             <Row className='g-2'>
-                                <Col md>
-                                    <Form.Floating className="mb-3">
+                                <Col md >
+                                    <Form.Floating className="mb-3 ">
                                         <Form.Control
                                             type="text"
                                             id="floatingPostalCode"
                                             placeholder="Postal Code"
+                                            className='text-cleanar-color text-bold'
                                             name="postalcode"
                                             value={formData.postalcode}
                                             onChange={handleChange}
                                         />
-                                        <label htmlFor="floatingPostalCode">Postal Code</label>
+                                        <label htmlFor="floatingPostalCode" className='text-bold'>Postal Code</label>
                                     </Form.Floating>
                                 </Col>
                                 <Col md>
@@ -736,54 +742,46 @@ const RequestQuote = () => {
                                             type="text"
                                             id="floatingCompanyName"
                                             placeholder="Company Name"
+                                            className='text-cleanar-color text-bold'
                                             name="companyName"
                                             value={formData.companyName}
                                             onChange={handleChange}
                                         />
-                                        <label htmlFor="floatingCompanyName">Company Name</label>
+                                        <label htmlFor="floatingCompanyName" className='text-bold '>Company Name</label>
                                     </Form.Floating>
                                 </Col>
-                                <Col md>
-                                            <FloatingLabel controlId="floatingServiceLevel" label="How Did You Hear About Us...">
-                                                <Form.Select aria-label="How Did You Hear About Us" value={formData.howDidYouHearAboutUs}
-                                                    name='howDidYouHearAboutUs' onChange={handleChange}>
-                                                    <option value="">How Did You Hear About Us?...</option>
-                                                    <option value="Google">Google</option>
-                                                    <option value="Facebook">Facebook</option>
-                                                    <option value="Instagram">Instagram</option>
-                                                    <option value="Referral">Referral</option>
-                                                    <option value="Other">Other</option>
-                                                </Form.Select>
-                                            </FloatingLabel>
-                                        </Col>
-                                
+                                <Col md className=''>
+                                    <FloatingLabel controlId="floatingServiceLevel" label="How Did You Hear About Us..." className='text-bold'>
+                                        <Form.Select aria-label="How Did You Hear About Us" value={formData.howDidYouHearAboutUs}
+                                            name='howDidYouHearAboutUs' onChange={handleChange} className='transparent no-border text-cleanar-color text-bold'>
+                                            <option value="">How Did You Hear About Us?...</option>
+                                            <option value="Google">Google</option>
+                                            <option value="Facebook">Facebook</option>
+                                            <option value="Instagram">Instagram</option>
+                                            <option value="Referral">Referral</option>
+                                            <option value="Other">Other</option>
+                                        </Form.Select>
+                                    </FloatingLabel>
+                                </Col>
+
                             </Row>
                             <FormGroup>
-                                <Label>Description</Label>
+                                <Label className='text-bold'>Description</Label>
                                 <Input
                                     type="textarea"
                                     name="description"
+                                    placeholder='Please provide a brief description of the services you are looking for, including any specific requirements or details.'
                                     value={formData.description}
                                     onChange={handleChange}
+                                    className='text-cleanar-color text-bold'
                                 />
                             </FormGroup>
                             <Row>
                                 <Col md>
-                                    {/* <FormGroup> */}
-                                    <Label>Add Requested Services</Label>
-                                    <Button className='service-button-residential' variant="" onClick={() => handleAddService({ target: { value: "Residential" } })} value="Residential">Add Residential</Button>{' '}
-                                    <Button className='service-button-commercial' onClick={() => handleAddService({ target: { value: "Commercial" } })} value="Commercial">Add Commercial</Button>{' '}
-                                    <Button className='service-button-industrial' onClick={() => handleAddService({ target: { value: "Industrial" } })} value="Industrial">Add Industrial</Button>
-
-                                    {/* <ButtonGroup>
-                                        <ToggleButton type="checkbox"
-                                            variant="primary"
-                                            onClick={() => handleAddService({ target: { value: "Residential" } })} id="Residential" value="Residential" checked={formData.services.some(service => service.type === 'Residential')}>Residential</ToggleButton>
-                                        <ToggleButton type="checkbox"
-                                            variant="primary" onClick={() => handleAddService({ target: { value: "Commercial" } })} value="Commercial" checked={formData.services.some(service => service.type === 'Commercial')}>Commercial</ToggleButton>
-                                        <ToggleButton type="checkbox"
-                                            variant="primary" onClick={() => handleAddService({ target: { value: "Industrial" } })} value="Industrial" checked={formData.services.some(service => service.type === 'Industrial')}>Industrial</ToggleButton>
-                                    </ButtonGroup> */}
+                                    <Label className='text-cleanar-color text-bold'>Add Services: </Label>
+                                    <Button className='service-button-residential' variant="" onClick={() => handleAddService({ target: { value: "Residential" } })} value="Residential">Residential</Button>{' '}
+                                    <Button className='service-button-commercial' onClick={() => handleAddService({ target: { value: "Commercial" } })} value="Commercial">Commercial</Button>{' '}
+                                    <Button className='service-button-industrial' onClick={() => handleAddService({ target: { value: "Industrial" } })} value="Industrial">Industrial/Specialized</Button>
                                 </Col>
                             </Row>
                             {(formData.services.length === 0) ? (
@@ -803,13 +801,7 @@ const RequestQuote = () => {
                                                 className={`service-button-${service.type.toLowerCase()}`}
                                             >{service.type}
                                             </Button>
-                                            {/* <Tab eventKey={service.type} title={service.type}>
-                                            {renderCustomOptions(service.type)}
-                                        </Tab> */}
                                         </>
-
-                                        // <div key={service.type} className="mb-3">
-                                        // </div>
                                     ))}
                                 </>
                             )
@@ -825,13 +817,7 @@ const RequestQuote = () => {
                                                     {renderCustomOptions(service.type, service.serviceLevel)}
                                                 </div>
                                             </Collapse>
-                                            {/* <Tab eventKey={service.type} title={service.type}>
-                                            {renderCustomOptions(service.type)}
-                                        </Tab> */}
                                         </>
-
-                                        // <div key={service.type} className="mb-3">
-                                        // </div>
                                     ))}
                                 </>
                             )
@@ -839,12 +825,12 @@ const RequestQuote = () => {
                             <Row>
                                 {/* Add a message indicating that requesting products is coming soon */}
                                 <Col md>
-                                <div className="text-center">
-                                    <h4>Products coming soon!</h4>
-                                </div>                                    
+                                    <div className="text-center">
+                                        <h4>Products coming soon!</h4>
+                                    </div>
                                 </Col>
                             </Row>
-{/* disable price display in the initial release */}
+                            {/* disable price display in the initial release */}
                             {/* <Row>
                                 <Col >
                                     <FormGroup>
@@ -877,9 +863,14 @@ const RequestQuote = () => {
                                     </FormGroup>
                                 </Col>
                             </Row> */}
+                            
+                            
                             <Row>
                                 <Col>
-                                    <FormGroup check className=''>
+                                    <p className='text-cleanar-color text-bold'>
+                                        A confirmation email will be sent to you upon submission.
+                                    </p>
+                                    {/* <FormGroup check className=''>
                                         <Label check>
                                             <Input
                                                 type="checkbox"
@@ -887,14 +878,15 @@ const RequestQuote = () => {
                                                 onChange={() => setSendEmail(!sendEmail)}
                                             />
                                             <span className="form-check-sign"></span>
-                                            Email me a copy of the quote
+                                            {/* Check if you would like to receive a copy of the quote by email 
+                                            An email confirmation will be sent to you upon submission
                                         </Label>
-                                    </FormGroup>
+                                    </FormGroup> */}
 
                                 </Col>
                             </Row>
                             <Row className='pb-3'>
-                                <Col md="12" className="text-center">
+                                <Col md className="">
                                     <Button type="submit" className='secondary-bg-color'>Submit Quote</Button>
                                 </Col>
                             </Row>

@@ -16,8 +16,7 @@ import {
   Dropdown,
   DropdownToggle,
   FormGroup,
-  Label,
-  Button
+  Label
 } from 'reactstrap';
 import { FloatingLabel,
   Form

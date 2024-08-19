@@ -39,7 +39,7 @@ const UserSchema = new Schema({
     },
     telephone: {
         type: String,
-        required: true
+        // required: true
     },
     address: {
         type: String,

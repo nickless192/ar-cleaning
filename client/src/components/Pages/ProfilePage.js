@@ -15,7 +15,7 @@ import {
 } from "reactstrap";
 import Auth from "../../utils/auth";
 import Navbar from "components/Pages/Navbar.js";
-import ProfilePageHeader from "components/Headers/ProfilePageHeader.js";
+// import ProfilePageHeader from "components/Headers/ProfilePageHeader.js";
 import Footer from "components/Pages/Footer.js";
 // import './../../assets/css/quote-dropdown.css';
 // import './../../assets/css/our-palette.css';
@@ -25,7 +25,7 @@ function ProfilePage() {
   const navigate = useNavigate(); // useNavigate hook to handle navigation
   const location = useLocation(); // useLocation hook to get the current location
   const [isEditing, setIsEditing] = useState(false);
-  const [isLogged] = React.useState(Auth.loggedIn());
+  // const [isLogged] = React.useState(Auth.loggedIn());
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",

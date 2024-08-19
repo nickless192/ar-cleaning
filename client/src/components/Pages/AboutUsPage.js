@@ -1,13 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import {
-  Row, Col, Container, Card, CardBody, CardTitle, CardText, CardHeader, ListGroup, ListGroupItem
+  Row, Col, Card, CardBody, CardTitle, CardText, CardHeader, ListGroup, ListGroupItem
 } from "reactstrap";
 import { Image } from 'react-bootstrap';
 import "./../../assets/css/our-palette.css";
 import Logo from "../../assets/img/logo.png";
 import Navbar from "components/Pages/Navbar.js";
 import Footer from "components/Pages/Footer.js";
+import VisitorCounter from "components/Pages/VisitorCounter.js";
 
 function AboutUsPage() {
 
@@ -27,6 +28,8 @@ function AboutUsPage() {
     <>
       <Navbar />
       <div className="section pb-0 mb-0">
+
+        <VisitorCounter page={"index"} />
         <Row className="content-row py-0 px-5">
           <Col xs="12" md="6" className="logo-col pr-0">
             <Image
@@ -37,33 +40,41 @@ function AboutUsPage() {
           </Col>
           <Col xs="12" md="6" className="text-col">
             <p className="text-content secondary-color">
-            At CleanAR Solutions, we provide professional cleaning services in Toronto and the GTA. Our focus on excellence ensures every project meets the highest standards, creating a clean and healthy environment. Whether you need residential, commercial, or specialized services, we customize our approach to meet your needs. Get started by requesting a quote or contact us for more information.
-              {/* At CleanAR Solutions, we are dedicated to providing professional and reliable cleaning services in Toronto and the Greater Toronto Area. With a steadfast focus on excellence and customer satisfaction, we strive to exceed expectations on every project, delivering impeccable results and exceptional service. Our team of experienced and skilled professionals is committed to ensuring your space is not only clean but also a healthy and pleasant environment.
-              <br />
-              <br />
-              Whether you need residential, commercial, or specialized cleaning services, we tailor our approach to meet your unique needs and ensure your complete satisfaction. Ready to experience the CleanAR difference? Click on "Request Quote" from the top navigation bar to get started. Still have questions? Feel free to contact us via email or phone. Our friendly team is here to answer any questions and help you find the perfect cleaning solution for your needs. */}
+              At CleanAR Solutions, we provide professional cleaning services in Toronto and the GTA. Our focus on excellence ensures every project meets the highest standards, creating a clean and healthy environment. Whether you need residential, commercial, or specialized services, we customize our approach to meet your needs. Get started by requesting a quote or contact us for more information.
             </p>
           </Col>
         </Row>
-
-
-
-
-        <div className="py-3 px-5 light-bg-color">
-          <p className="text-cleanar-color">
-            Our services are designed to meet the unique needs of our clients, providing personalized solutions and exceptional results on every project. At CleanAR Solutions, we take pride in offering reliable and high-quality service that ensures the impeccable cleanliness and maintenance of any space. Get started by requesting a quote, or log in to your account to manage your existing quotes and services. Have questions? Contact us today to speak with a member of our team. We are here to help you find the perfect cleaning solution for your needs.
-          </p>
+        <div className="py-1 px-5 light-bg-color">
+          <Row className="py-0 pr-5 light-bg-color">
+            <Col className="pr-0">
+              <Card className="card-plain">
+                <CardBody>
+                  <CardText>
+                    <p>Our services are designed to meet the unique needs of our clients, providing personalized solutions and exceptional results on every project. At CleanAR Solutions, we take pride in offering reliable and high-quality service that ensures the impeccable cleanliness and maintenance of any space. Get started by requesting a quote, or log in to your account to manage your existing quotes and services. Have questions? Contact us today to speak with a member of our team. We are here to help you find the perfect cleaning solution for your needs.</p>
+                  </CardText>
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
         </div>
         <div className="py-1 px-5 secondary-bg-color">
-          <Row className="section py-0 pr-5 secondary-bg-color">
+          <Row className=" py-0 pr-5 secondary-bg-color">
             <Col className="pr-0">
               <Card className="card-plain">
                 <CardHeader>
-                  <CardTitle tag="h4">Contact Us</CardTitle>
+                  <CardTitle tag="h4" className="text-bold">Contact Us!</CardTitle>
                 </CardHeader>
                 <CardBody>
                   <CardText>
-                    <p>We'd love to hear from you! Whether you have a question, need assistance, or just want to share your feedback, our team is here to help. Reach out to us through any of the methods below, and we’ll get back to you as soon as possible.</p>
+                    <p>We'd love to hear from you! Whether you have a question, need assistance, or just want to share your feedback, our team is here to help. Reach out to us through through your preferred method, and we'll get back to you as soon as possible.</p>
+                  </CardText>
+                </CardBody>
+              </Card>
+            </Col>
+            <Col>
+              <Card className="card-plain">
+                <CardBody>
+                  <CardText>
                     <ListGroup className="contact-info">
                       <ListGroupItem>
                         <i className="now-ui-icons tech_mobile"></i> <strong>Call Us:</strong> <Link to="tel:437-440-5514">437-440-5514</Link> <br />
@@ -89,32 +100,7 @@ function AboutUsPage() {
                 </CardBody>
               </Card>
             </Col>
-            <Col className="pr-0">
-              <Card className="card-plain">
-                <CardHeader>
-                  <CardTitle tag="h4">Follow Us on Social Media</CardTitle>
-                </CardHeader>
-                <CardBody>
-                  <CardText>
-                    <p>Stay connected with us through our social media channels. Follow us for the latest updates, promotions, and more.</p>
-                    <ListGroup className="contact-info">
-                      {/* <ListGroupItem>
-                        <i className="fab fa-facebook-square"></i> <strong>Facebook:</strong> @cleanarsolutions<br />
-                        <span>Like our page and join our community to stay in the loop.</span>
-                      </ListGroupItem>
-                      <ListGroupItem>
-                        <i className="fab fa-twitter"></i> <strong>Twitter:</strong> @cleanarsolutions<br />
-                        <span>Follow us on Twitter for quick updates and customer support.</span>
-                      </ListGroupItem> */}
-                      <ListGroupItem>
-                        <i className="fab fa-instagram"></i> <strong>Instagram:</strong> @cleanarsolutions<br />
-                        <span>Check out our latest projects and behind-the-scenes on Instagram.</span>
-                      </ListGroupItem>
-                    </ListGroup>
-                  </CardText>
-                </CardBody>
-              </Card>
-            </Col>
+            {/* </Col> */}
           </Row>
         </div>
       </div>

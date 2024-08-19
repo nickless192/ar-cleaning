@@ -1,15 +1,9 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import Auth from "../../utils/auth";
 // reactstrap components
 import {
   Button,
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  CardTitle,
   Form,
   Input,
   InputGroupAddon,
@@ -58,6 +52,31 @@ function SignUp() {
             response.json()
               .then(data => {
                 console.log(data);
+                // Auth.login(data.token, data.dbUserData.adminFlag);
+                // call api to notify user of account creation
+                fetch(`/api/email/new-user`, {
+                  method: 'post',
+                  // mode: 'no-cors',
+                  body: JSON.stringify({ email: formData.email, user: data.dbUserData }),
+                  headers: {
+                    'Content-Type': 'application/json',
+                  }
+                })
+                  .then(response => {
+                    if (response.ok) {
+                      console.log(response)
+                      console.log("notification sent!");
+                      response.json()
+                        .then(data => {
+                          console.log(data);
+                        })
+                    }
+                    else {
+                      alert(response.statusText)
+                      // console.log(response)
+                    }
+                  })
+                  .catch(err => console.log(err));
                 Auth.login(data.token, data.dbUserData.adminFlag);
               });
           }
@@ -99,160 +118,187 @@ function SignUp() {
           <Container>
             <h2 className="title text-center">Sign Up</h2>
             <Form className="form" onSubmit={(e) => handleFormSubmit(e)}>
-              
-              <div>
-                <InputGroup
-                  className={
-                    "no-border" + (formData.firstName ? " input-group-focus" : "")
-                  }
-                >
-                  <InputGroupAddon addonType="prepend">
-                    <InputGroupText>
-                      <i className="now-ui-icons users_circle-08"></i>
-                    </InputGroupText>
-                  </InputGroupAddon>
-                  <Input
-                    placeholder="First Name"
-                    type="text"
-                    id="firstName"
-                    name="firstName"
-                    // onFocus={(e) => handleChange(e)}
-                    onChange={(e) => handleChange(e)}
-                  ></Input>
-                </InputGroup>
-                <InputGroup
-                  className={
-                    "no-border" + (formData.lastName ? " input-group-focus" : "")
-                  }
-                >
-                  <InputGroupAddon addonType="prepend">
-                    <InputGroupText>
-                      <i className="now-ui-icons text_caps-small"></i>
-                    </InputGroupText>
-                  </InputGroupAddon>
-                  <Input
-                    placeholder="Last Name"
-                    type="text"
-                    id="lastName"
-                    name="lastName"
-                    // onFocus={(e) => handleChange(e)}
-                    onChange={(e) => handleChange(e)}
-                  ></Input>
-                </InputGroup>
-                <InputGroup className={`no-border ${formData.howDidYouHearAboutUs ? "input-group-focus" : ""}`}>
-                  <InputGroupAddon addonType="prepend">
-                    <InputGroupText className=''>
-                      <i className="now-ui-icons objects_globe"></i>
-                    </InputGroupText>
-                  </InputGroupAddon>
-                  <Input
-                    type="select"
-                    value={formData.howDidYouHearAboutUs}
-                    name='howDidYouHearAboutUs'
-                    // className='font-weight-bold km-bg-test'
-                    onChange={handleChange}
+
+              <Row className="g-2">
+                <Col md>
+                  <InputGroup
+                    className={
+                      "no-border" + (formData.firstName ? " input-group-focus" : "")
+                    }
                   >
-                    <option value="">How Did You Hear About Us?...</option>
-                    <option value="Google">Google</option>
-                    <option value="Facebook">Facebook</option>
-                    <option value="Instagram">Instagram</option>
-                    <option value="Referral">Referral</option>
-                    <option value="Other">Other</option>
-                  </Input>
-                </InputGroup>
-                <InputGroup
-                  className={
-                    "no-border" + (formData.email ? " input-group-focus" : "")
-                  }
-                >
-                  <InputGroupAddon addonType="prepend">
-                    <InputGroupText>
-                      <i className="now-ui-icons ui-1_email-85"></i>
-                    </InputGroupText>
-                  </InputGroupAddon>
-                  <Input
-                    placeholder="Email"
-                    type="text"
-                    id="email"
-                    name="email"
-                    // onFocus={(e) => handleChange(e)}
-                    onChange={(e) => handleChange(e)}
-                  ></Input>
-                </InputGroup>
-                <InputGroup
-                  className={
-                    "no-border" + (formData.telephone ? " input-group-focus" : "")
-                  }
-                >
-                  <InputGroupAddon addonType="prepend">
-                    <InputGroupText>
-                      <i className="now-ui-icons tech_mobile"></i>
-                    </InputGroupText>
-                  </InputGroupAddon>
-                  <Input
-                    placeholder="Telephone"
-                    type="text"
-                    id="telephone"
-                    name="telephone"
-                    // onFocus={(e) => handleChange(e)}
-                    onChange={(e) => handleChange(e)}
-                  ></Input>
-                </InputGroup>
-                <InputGroup
-                  className={
-                    "no-border" + (formData.username ? " input-group-focus" : "")
-                  }
-                >
-                  <InputGroupAddon addonType="prepend">
-                    <InputGroupText>
-                      <i className="now-ui-icons users_single-02"></i>
-                    </InputGroupText>
-                  </InputGroupAddon>
-                  <Input
-                    placeholder="Username"
-                    type="text"
-                    id="username"
-                    name="username"
-                    // onFocus={(e) => handleChange(e)}
-                    onChange={(e) => handleChange(e)}
-                  ></Input>
-                </InputGroup>
-                <InputGroup
-                  className={
-                    "no-border" + (formData.password ? " input-group-focus" : "")
-                  }
-                >
-                  <InputGroupAddon addonType="prepend">
-                    <InputGroupText>
-                      <i className="now-ui-icons objects_key-25"></i>
-                    </InputGroupText>
-                  </InputGroupAddon>
-                  <Input
-                    placeholder="Password"
-                    type="password"
-                    id="password"
-                    name="password"
-                    // onFocus={(e) => handleChange(e)}
-                    onChange={(e) => handleChange(e)}
-                  ></Input>
-                </InputGroup>
-              </div>
+                    <InputGroupAddon addonType="prepend">
+                      <InputGroupText>
+                        <i className="now-ui-icons users_circle-08"></i>
+                      </InputGroupText>
+                    </InputGroupAddon>
+                    <Input
+                      placeholder="First Name"
+                      type="text"
+                      id="firstName"
+                      name="firstName"
+                      className="text-cleanar-color"
+                      // onFocus={(e) => handleChange(e)}
+                      onChange={(e) => handleChange(e)}
+                    ></Input>
+                  </InputGroup>
+                </Col>
+                <Col md>
+                  <InputGroup
+                    className={
+                      "no-border" + (formData.lastName ? " input-group-focus" : "")
+                    }
+                  >
+                    <InputGroupAddon addonType="prepend">
+                      <InputGroupText>
+                        <i className="now-ui-icons text_caps-small"></i>
+                      </InputGroupText>
+                    </InputGroupAddon>
+                    <Input
+                      placeholder="Last Name"
+                      type="text"
+                      id="lastName"
+                      name="lastName"
+                      className="text-cleanar-color"
+                      // onFocus={(e) => handleChange(e)}
+                      onChange={(e) => handleChange(e)}
+                    ></Input>
+                  </InputGroup>
+                </Col>
+              </Row>
+              <Row className="g-2">
+                <Col md>
+                  <InputGroup
+                    className={
+                      "no-border" + (formData.email ? " input-group-focus" : "")
+                    }
+                  >
+                    <InputGroupAddon addonType="prepend">
+                      <InputGroupText>
+                        <i className="now-ui-icons ui-1_email-85"></i>
+                      </InputGroupText>
+                    </InputGroupAddon>
+                    <Input
+                      placeholder="Email"
+                      type="text"
+                      id="email"
+                      name="email"
+                      className="text-cleanar-color"
+                      // onFocus={(e) => handleChange(e)}
+                      onChange={(e) => handleChange(e)}
+                    ></Input>
+                  </InputGroup>
+                </Col>
+                <Col md>
+                  <InputGroup
+                    className={
+                      "no-border" + (formData.telephone ? " input-group-focus" : "")
+                    }
+                  >
+                    <InputGroupAddon addonType="prepend">
+                      <InputGroupText>
+                        <i className="now-ui-icons tech_mobile"></i>
+                      </InputGroupText>
+                    </InputGroupAddon>
+                    <Input
+                      placeholder="Telephone"
+                      type="text"
+                      id="telephone"
+                      name="telephone"
+                      className="text-cleanar-color"
+                      // onFocus={(e) => handleChange(e)}
+                      onChange={(e) => handleChange(e)}
+                    ></Input>
+                  </InputGroup>
+                </Col>
+              </Row>
+              <Row className="g-2">
+                <Col md>
+                  <InputGroup
+                    className={
+                      "no-border" + (formData.username ? " input-group-focus" : "")
+                    }
+                  >
+                    <InputGroupAddon addonType="prepend">
+                      <InputGroupText>
+                        <i className="now-ui-icons users_single-02"></i>
+                      </InputGroupText>
+                    </InputGroupAddon>
+                    <Input
+                      placeholder="Username"
+                      type="text"
+                      id="username"
+                      name="username"
+                      className="text-cleanar-color"
+                      // onFocus={(e) => handleChange(e)}
+                      onChange={(e) => handleChange(e)}
+                    ></Input>
+                  </InputGroup>
+                </Col>
+                <Col md>
+                  <InputGroup
+                    className={
+                      "no-border" + (formData.password ? " input-group-focus" : "")
+                    }
+                  >
+                    <InputGroupAddon addonType="prepend">
+                      <InputGroupText>
+                        <i className="now-ui-icons objects_key-25"></i>
+                      </InputGroupText>
+                    </InputGroupAddon>
+                    <Input
+                      placeholder="Password"
+                      type="password"
+                      id="password"
+                      name="password"
+                      className="text-cleanar-color"
+                      // onFocus={(e) => handleChange(e)}
+                      onChange={(e) => handleChange(e)}
+                    ></Input>
+                  </InputGroup>
+                </Col>
+              </Row>
+              <Row className="g-2">
+                <Col md>
+                  <InputGroup className={`no-border ${formData.howDidYouHearAboutUs ? "input-group-focus" : ""}`}>
+                    <InputGroupAddon addonType="prepend">
+                      <InputGroupText className=''>
+                        <i className="now-ui-icons objects_globe"></i>
+                      </InputGroupText>
+                    </InputGroupAddon>
+                    <Input
+                      type="select"
+                      value={formData.howDidYouHearAboutUs}
+                      name='howDidYouHearAboutUs'
+                      className="text-cleanar-color"
+                      // className='font-weight-bold km-bg-test'
+                      onChange={handleChange}
+                    >
+                      <option value="">How Did You Hear About Us?...</option>
+                      <option value="Google">Google</option>
+                      <option value="Facebook">Facebook</option>
+                      <option value="Instagram">Instagram</option>
+                      <option value="Referral">Referral</option>
+                      <option value="Other">Other</option>
+                    </Input>
+                  </InputGroup>
+                </Col>
+              </Row>
               <div className="text-center py-3">
                 <Row>
-<Col>
+                  <Col>
 
-              <Button
-                  className="btn-neutral btn-round btn-lg light-bg-color" 
-                  // color="info"
-                  
-                  type="submit"
-                  // onClick={(e) => handleFormSubmit(e)}
-                  size="lg"
-                >
-                  Get Started
-                </Button>
-</Col>
-{/* <Col>
+                    <Button
+                      className="btn-neutral btn-round btn-lg light-bg-color"
+                      // color="info"
+
+                      type="submit"
+                      // onClick={(e) => handleFormSubmit(e)}
+                      size="lg"
+                    >
+                      Get Started
+                    </Button>
+                  </Col>
+                  {/* <Col>
 
                 <Button
                   className="btn-round btn-white"
@@ -265,10 +311,10 @@ function SignUp() {
                   View Login Page
                 </Button>
 </Col> */}
-                
-                  
+
+
                 </Row>
-                </div>
+              </div>
             </Form>
 
           </Container>
