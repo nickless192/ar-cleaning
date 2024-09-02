@@ -14,6 +14,7 @@ import {
     Col,
     Collapse
 } from 'react-bootstrap';
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 // import { ButtonGroup, ToggleButton } from 'react-bootstrap';
 import html2pdf from 'html2pdf.js';
 import Navbar from "components/Pages/Navbar.js";
@@ -61,16 +62,16 @@ const RequestQuote = () => {
     //   };
     const togglePopover = (field) => {
         setPopoverOpen((prevState) => {
-          // Reset all fields to false
-          const newState = Object.keys(prevState).reduce((acc, key) => {
-            acc[key] = false;
-            return acc;
-          }, {});
-      
-          // Toggle the selected field
-          return { ...newState, [field]: !prevState[field] };
+            // Reset all fields to false
+            const newState = Object.keys(prevState).reduce((acc, key) => {
+                acc[key] = false;
+                return acc;
+            }, {});
+
+            // Toggle the selected field
+            return { ...newState, [field]: !prevState[field] };
         });
-      };
+    };
 
     // const [sendEmail, setSendEmail] = useState(true); // Default to true so that the user receives an email
     const [isLogged] = useState(Auth.loggedIn());
@@ -665,7 +666,7 @@ const RequestQuote = () => {
                         <h2 className="text-center">Request a Quote</h2>
                         <Form onSubmit={handleSubmit} id="quote-form">
                             <Row className='g-2'>
-                                <Col md='3' xs='11'>
+                                <Col md='3' xs='10'>
                                     <Form.Floating className="mb-3">
                                         <Form.Control
                                             type="text"
@@ -680,14 +681,14 @@ const RequestQuote = () => {
                                     </Form.Floating>
                                 </Col>
                                 <Col md='1' xs='1'>
-                                    <Button id="Tooltip1" type="button" 
-                                    // color="link"                                    
-                                     onClick={() => togglePopover('name')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
+                                    <Button id="Tooltip1" type="button"
+                                        // color="link"                                    
+                                        onClick={() => togglePopover('name')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
                                     <Popover placement="right" isOpen={popoverOpen.name} target="Tooltip1" toggle={() => togglePopover('name')}>
                                         <PopoverBody>Enter your full name.</PopoverBody>
                                     </Popover>
                                 </Col>
-                                <Col md='3' xs='11'>
+                                <Col md='3' xs='10'>
                                     <Form.Floating className="mb-3">
                                         <Form.Control
                                             type="text"
@@ -702,14 +703,14 @@ const RequestQuote = () => {
                                     </Form.Floating>
                                 </Col>
                                 <Col md='1' xs='1'>
-                                    <Button id="Tooltip2" type="button" 
-                                    // color="link"
-                                     onClick={() => togglePopover('email')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
+                                    <Button id="Tooltip2" type="button"
+                                        // color="link"
+                                        onClick={() => togglePopover('email')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
                                     <Popover placement="right" isOpen={popoverOpen.email} target="Tooltip2" toggle={() => togglePopover('email')}>
                                         <PopoverBody>Enter your email address.</PopoverBody>
                                     </Popover>
                                 </Col>
-                                <Col md='3' xs='11'>
+                                <Col md='3' xs='10'>
                                     <Form.Floating className="mb-3">
                                         <Form.Control
                                             type="text"
@@ -724,14 +725,14 @@ const RequestQuote = () => {
                                     </Form.Floating>
                                 </Col>
                                 <Col md='1' xs='1'>
-                                    <Button id="Tooltip3" type="button"  onClick={() => togglePopover('phonenumber')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
+                                    <Button id="Tooltip3" type="button" onClick={() => togglePopover('phonenumber')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
                                     <Popover placement="right" isOpen={popoverOpen.phonenumber} target="Tooltip3" toggle={() => togglePopover('phonenumber')}>
                                         <PopoverBody>Enter your phone number.</PopoverBody>
                                     </Popover>
                                 </Col>
                             </Row>
                             <Row className='g-2'>
-                                <Col md='3' xs='11'>
+                                <Col md='3' xs='10'>
                                     <Form.Floating className="mb-3">
                                         <Form.Control
                                             type="text"
@@ -751,7 +752,7 @@ const RequestQuote = () => {
                                         <PopoverBody>Enter your address.</PopoverBody>
                                     </Popover>
                                 </Col>
-                                <Col md='3' xs='11'>
+                                <Col md='3' xs='10'>
                                     <Form.Floating className="mb-3">
                                         <Form.Control
                                             type="text"
@@ -771,7 +772,7 @@ const RequestQuote = () => {
                                         <PopoverBody>Enter your city.</PopoverBody>
                                     </Popover>
                                 </Col>
-                                <Col md='3' xs='11'>
+                                <Col md='3' xs='10'>
                                     <Form.Floating className="mb-3">
                                         <Form.Control
                                             type="text"
@@ -786,14 +787,14 @@ const RequestQuote = () => {
                                     </Form.Floating>
                                 </Col>
                                 <Col md='1' xs='1'>
-                                    <Button id="Tooltip6" type="button"  onClick={() => togglePopover('province')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
+                                    <Button id="Tooltip6" type="button" onClick={() => togglePopover('province')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
                                     <Popover placement="right" isOpen={popoverOpen.province} target="Tooltip6" toggle={() => togglePopover('province')}>
                                         <PopoverBody>Enter your province.</PopoverBody>
                                     </Popover>
                                 </Col>
                             </Row>
                             <Row className='g-2'>
-                                <Col md='3' xs='11' >
+                                <Col md='3' xs='10' >
                                     <Form.Floating className="mb-3 ">
                                         <Form.Control
                                             type="text"
@@ -813,7 +814,7 @@ const RequestQuote = () => {
                                         <PopoverBody>Enter your postal code.</PopoverBody>
                                     </Popover>
                                 </Col>
-                                <Col md='3' xs='11'>
+                                <Col md='3' xs='10'>
                                     <Form.Floating className="mb-3">
                                         <Form.Control
                                             type="text"
@@ -833,7 +834,7 @@ const RequestQuote = () => {
                                         <PopoverBody>Enter your company name.</PopoverBody>
                                     </Popover>
                                 </Col>
-                                <Col md='3' xs='11' className=''>
+                                <Col md='3' xs='10' className=''>
                                     <FloatingLabel controlId="floatingHowDidYouHear" label="How Did You Hear About Us..." className='text-bold'>
                                         <Form.Select aria-label="How Did You Hear About Us" value={formData.howDidYouHearAboutUs}
                                             name='howDidYouHearAboutUs' onChange={handleChange} className='transparent no-border text-cleanar-color text-bold'>
@@ -847,7 +848,7 @@ const RequestQuote = () => {
                                     </FloatingLabel>
                                 </Col>
                                 <Col md='1' xs='1'>
-                                    <Button id="Tooltip9" type="button"  onClick={() => togglePopover('howDidYouHearAboutUs')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
+                                    <Button id="Tooltip9" type="button" onClick={() => togglePopover('howDidYouHearAboutUs')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
                                     <Popover placement="right" isOpen={popoverOpen.howDidYouHearAboutUs} target="Tooltip9" toggle={() => togglePopover('howDidYouHearAboutUs')}>
                                         <PopoverBody>How did you hear about us?</PopoverBody>
                                     </Popover>
@@ -856,83 +857,69 @@ const RequestQuote = () => {
                             </Row>
                             <FormGroup>
                                 <Label className='text-bold'>Description</Label>
-                            {/* <Row>
-                                <Col md='3' xs='3'>
-                                </Col>
-                            <Col md='1' xs='1'>
-                                    <Button id="Tooltip10" type="button" color="link" onClick={() => togglePopover('description')} className='text-cleanar-color'><FaQuestionCircle /></Button> 
-                                    <Popover placement="right" isOpen={popoverOpen.description} target="Tooltip10" toggle={() => togglePopover('description')}>
-                                        <PopoverBody>Enter a brief description of the services you are looking for.</PopoverBody>
-                                    </Popover>
-                                </Col>
-                                </Row> */}
                                 <Input
                                     type="textarea"
                                     name="description"
-                                    placeholder='Please provide a brief description of the services you are looking for, including any specific requirements or details.'
+                                    placeholder='Please describe the services you are looking for, including any specific requirements or details.'
                                     value={formData.description}
                                     onChange={handleChange}
                                     className='text-cleanar-color text-bold'
                                 />
-                                
+
                             </FormGroup>
                             <Row>
                                 <Col md='12' xs='12'>
-                                    <Label className='text-cleanar-color text-bold'>Add Services: </Label>
-                                    <Button className='service-button-residential' variant="" onClick={() => handleAddService({ target: { value: "Residential" } })} value="Residential">Residential</Button>{' '}
-                                    <Button className='service-button-commercial' onClick={() => handleAddService({ target: { value: "Commercial" } })} value="Commercial">Commercial</Button>{' '}
-                                    <Button className='service-button-industrial' onClick={() => handleAddService({ target: { value: "Industrial" } })} value="Industrial">Industrial/Specialized</Button>
+                                    <Label className='text-cleanar-color text-bold'>Add Services: </Label>{' '}
                                     <Button id="Tooltip11" type="button" onClick={() => togglePopover('services')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
                                     <Popover placement="right" isOpen={popoverOpen.services} target="Tooltip11" toggle={() => togglePopover('services')}>
-                                        <PopoverBody>Select the service type you are interested in.</PopoverBody>
+                                        <PopoverBody>Please add service type and level to customize your order</PopoverBody>
                                     </Popover>
                                 </Col>
-                                {/* <Col md='1' xs='1'>
-                                </Col>                                 */}
+                                <Col md='12' xs='12'>
+                                    <Button className='service-button-residential' variant="" onClick={() => handleAddService({ target: { value: "Residential" } })} value="Residential">Residential</Button>{' '}
+                                    <Button className='service-button-commercial' onClick={() => handleAddService({ target: { value: "Commercial" } })} value="Commercial">Commercial</Button>{' '}
+                                    <Button className='service-button-industrial' onClick={() => handleAddService({ target: { value: "Industrial" } })} value="Industrial">Industrial</Button>
+                                </Col>
                             </Row>
-                            {(formData.services.length === 0) ? (
-                                <div className="text-center">
-                                    <h4>Please add service type and level to customize your order</h4>
-                                </div>
-                            ) : (
-                                <>
-                                    {formData.services.map(service => (
-                                        <>
+                            <>
+                            {/* <Row className='mx-0'> */}
+                                {formData.services.map(service => (
+                                    <>
+                                        {/* <Col xs='4' > */}
+                                        <Button 
+                                            onClick={() => handleToggle(service.type)}
+                                            aria-controls={service.type}
+                                            // aria-expanded={openStates[service.type]}
+                                            aria-expanded={openService === service.type}
+                                            className={`service-button-${service.type.toLowerCase()} px-2`}
+                                        >{service.type}
+                                            {openService === service.type ? (
+                                                <FaChevronUp className="ms-2" />
+                                            ) : (
+                                                <FaChevronDown className="ms-2" />
+                                            )}
+                                        </Button>
+                                        {/* </Col> */}
+                                    </>
+                                ))}
+                                {/* </Row> */}
+                            </>
+                            <>
+                                {formData.services.map(service => (
+                                    <>
+                                        {/* <Collapse in={openStates[service.type]}> */}
+                                        <Collapse in={openService === service.type}>
 
-                                            <Button
-                                                onClick={() => handleToggle(service.type)}
-                                                aria-controls={service.type}
-                                                // aria-expanded={openStates[service.type]}
-                                                aria-expanded={openService === service.type}
-                                                className={`service-button-${service.type.toLowerCase()}`}
-                                            >{service.type}
-                                            </Button>
-                                            {/* <Button id="Tooltip12" type="button" color="link" onClick={() => togglePopover(service.type)} className='text-cleanar-color'><FaQuestionCircle /></Button>
-                                            <Popover placement="right" isOpen={popoverOpen[service.type]} target="Tooltip12" toggle={() => togglePopover(service.type)}>
-                                                <PopoverBody>Click to expand and customize your {service.type} service.</PopoverBody>
-                                            </Popover> */}
-                                        </>
-                                    ))}
-                                </>
-                            )
-                            }
-                            {(formData.services.length === 0) ? null : (
-                                <>
-                                    {formData.services.map(service => (
-                                        <>
-                                            {/* <Collapse in={openStates[service.type]}> */}
-                                            <Collapse in={openService === service.type}>
-
-                                                <div id={service.type} className={`service-section-${service.type.toLowerCase()} rounded`}>
-                                                    {/* {renderCustomOptions(service.type, service.customOptions.serviceLevel)} */}
-                                                    {renderCustomOptions(service.type, service.serviceLevel)}
-                                                </div>
-                                            </Collapse>
-                                        </>
-                                    ))}
-                                </>
-                            )
-                            }
+                                            <div id={service.type} className={`service-section-${service.type.toLowerCase()} rounded`}>
+                                                {/* {renderCustomOptions(service.type, service.customOptions.serviceLevel)} */}
+                                                {renderCustomOptions(service.type, service.serviceLevel)}
+                                            </div>
+                                        </Collapse>
+                                    </>
+                                ))}
+                            </>
+                            {/* ) */}
+                            {/* } */}
                             {/* <Row>                                
                                 <Col md>
                                     <div className="text-center">
@@ -973,8 +960,8 @@ const RequestQuote = () => {
                                     </FormGroup>
                                 </Col>
                             </Row> */}
-                            
-                            
+
+
                             <Row>
                                 <Col>
                                     <p className='text-cleanar-color text-bold'>

@@ -129,26 +129,25 @@ function LoginPage() {
   return (
     <>
       <Navbar />
-      <div className="section accent-bg-color pb-0 mb-0">
-        <div className="content">
-          <Container className="">
+      <div className="section accent-bg-color">
+        {/* <div className="content px-2"> */}
+          <Container className="container">
               <h2 className="title">Welcome to CleanAR Solutions</h2>
               <p className="description text-dark">
                 Log in to access your account
               </p>
             <Form onSubmit={handleFormSubmit}>
-
               <Row>
-                <Col className="ml-auto mr-auto" md="11" xs='11'>
+                <Col className="py-1" md="9" xs='9'>
                   <FloatingLabel
                     controlId="floatingInput"
                     label="Username"
-                    className="mb-3"
+                    // className="mb-3"
                   >
                     <Form.Control type="text" placeholder="" onChange={(e) => handleChange(e)} name="username" id="username" />
                   </FloatingLabel>
                 </Col>
-                <Col className="ml-auto mr-auto" md="1" xs='1'>
+                <Col className="py-1" md="1" xs='1'>
                   <Button
                     id="Tooltip1"
                     type="button"
@@ -169,12 +168,12 @@ function LoginPage() {
                 </Col>
               </Row>
               <Row>
-                <Col className="ml-auto mr-auto" md="11" xs='11'>
+                <Col className="py-1" md="9" xs='9'>
                   <FloatingLabel controlId="floatingPassword" label="Password">
                     <Form.Control type="password" placeholder="" onChange={(e) => handleChange(e)} name="password" id="password" />
                   </FloatingLabel>
                 </Col>
-                <Col className="ml-auto mr-auto" md="1" xs='1'>
+                <Col className="py-1" md="1" xs='1'>
                   <Button
                     id="Tooltip2"
                     type="button"
@@ -215,7 +214,7 @@ function LoginPage() {
               </Row>
             </Form>
           </Container>
-        </div>
+        {/* </div> */}
       </div>
       <Footer />
       {/* </div> */}

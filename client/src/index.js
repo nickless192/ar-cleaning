@@ -51,7 +51,14 @@ const App = () => {
         <Route path="/" element={<Navigate to="/index" />} />
         <Route path="*" element={<Navigate to="/index" replace />} />
       </Routes>
-
+      <a
+        href="https://wa.me/14374405514"
+        className="whatsapp-btn"
+        target="_blank"
+        rel="noreferrer"
+      >
+        <img src={require("assets/img/whatsapp-icon.png")} alt="WhatsApp" />  
+      </a>
       {/* Chatbot Button and Chat Window */}
       <button className="chatbot-toggle" onClick={toggleChat}>
         <img src={require("assets/img/chat-icon.png")} alt="Chat Coming Soon" />

@@ -149,7 +149,7 @@ function SignUp() {
             <Form className="form" onSubmit={(e) => handleFormSubmit(e)}>
 
               <Row className="g-2">
-                <Col md='5' xs='11'>
+                <Col md='5' xs='10'>
                   <InputGroup
                     className={
                       "no-border" + (formData.firstName ? " input-group-focus" : "")
@@ -179,7 +179,7 @@ function SignUp() {
                     </PopoverBody>
                   </Popover>
                 </Col>
-                <Col md='5' xs='11'>
+                <Col md='5' xs='10'>
                   <InputGroup
                     className={
                       "no-border" + (formData.lastName ? " input-group-focus" : "")
@@ -211,7 +211,7 @@ function SignUp() {
                 </Col>
               </Row>
               <Row className="g-2">
-                <Col md='5' xs='11'>
+                <Col md='5' xs='10'>
                   <InputGroup
                     className={
                       "no-border" + (formData.email ? " input-group-focus" : "")
@@ -241,7 +241,7 @@ function SignUp() {
                     </PopoverBody>
                   </Popover>
                 </Col>
-                <Col md='5' xs='11'>
+                <Col md='5' xs='10'>
                   <InputGroup
                     className={
                       "no-border" + (formData.telephone ? " input-group-focus" : "")
@@ -272,8 +272,8 @@ function SignUp() {
                   </Popover>
                 </Col>
               </Row>
-              <Row className="g-2">
-                <Col md='5' xs='11'>
+              <Row className="">
+                <Col md='5' xs='10'>
                   <InputGroup
                     className={
                       "no-border" + (formData.username ? " input-group-focus" : "")
@@ -303,7 +303,7 @@ function SignUp() {
                     </PopoverBody>
                   </Popover>
                 </Col>
-                <Col md='5' xs='11'>
+                <Col md='5' xs='10'>
                   <InputGroup
                     className={
                       "no-border" + (formData.password ? " input-group-focus" : "")
@@ -333,10 +333,9 @@ function SignUp() {
                     </PopoverBody>
                   </Popover>
                 </Col>
-
               </Row>
-              <Row className="g-2">
-                <Col md='11' xs='11'>
+              <Row className="">
+                <Col md='11' xs='10'>
                   <InputGroup className={`no-border ${formData.howDidYouHearAboutUs ? "input-group-focus" : ""}`}>
                     <InputGroupAddon addonType="prepend">
                       <InputGroupText className=''>
