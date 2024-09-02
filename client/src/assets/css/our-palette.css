@@ -55,18 +55,18 @@
 }
 
 .accent-color {
-    color: var(--accent-color);
+    color: var(--accent-color)!important;
     font-weight: bold;
     /* color: white; */
 }
 .accent-bg-color {
-    background-color: var(--accent-color);
+    background-color: var(--accent-color)!important;
     /* font-weight: bold; */
     /* color: white; */
 }
 
 .light-color {
-    color: var(--light-color);
+    color: var(--light-color)!important;
     font-weight: bold;
     /* color: black; */
 }
@@ -81,34 +81,7 @@
     background-color: transparent!important;
 }
 
-.km-bg-primary {
-    background-color: var(--primary-color)!important;
-}
 
-.km-text-primary {
-    color: var(--primary-color);
-    font-weight: bold;
-}
-.km-text-accent {
-    color: var(--accent-color);
-    font-weight: bold;
-}
-.km-text-secondary {
-   color: var(--secondary-color);
-   font-weight: bold;
-}
-.km-text-light {
-    color: var(--light-color);
-    font-weight: bold;
- }
-
-.km-bg-light {
-    background-color: var(--light-color)!important;
-}
-
-.km-bg-test {
-    background-color: var(--secondary-color)!important;
-}
 
 .navbar-color {
     background-color: var(--primary-color);

@@ -5,15 +5,22 @@ import Auth from "../../utils/auth";
 
 // reactstrap components
 import {
-  Button,
+  // Button,
   Row,
-  Col
+  Col,
+  // Tooltip,
+  Popover, PopoverBody
 } from "reactstrap";
 
 import {
   FloatingLabel,
-  Form
+  Button,
+  Form,
+  Container,
+  // InputGroup
 } from 'react-bootstrap';
+
+import { FaQuestionCircle } from 'react-icons/fa';
 
 // core components
 // import ExamplesNavbar from "components/Navbars/ExamplesNavbar.js";
@@ -26,6 +33,34 @@ function LoginPage() {
     username: "",
     password: ""
   });
+
+  // const [tooltipOpen, setTooltipOpen] = useState({
+  //   username: false,
+  //   password: false
+  // });
+
+  const [popoverOpen, setPopoverOpen] = useState({
+    username: false,
+    password: false
+  });
+
+  // const toggleTooltip = (field) => {
+  //   setTooltipOpen({ ...tooltipOpen, [field]: !tooltipOpen[field] });
+  // };
+
+  const togglePopover = (field) => {
+    setPopoverOpen((prevState) => {
+      // Reset all fields to false
+      const newState = Object.keys(prevState).reduce((acc, key) => {
+        acc[key] = false;
+        return acc;
+      }, {});
+  
+      // Toggle the selected field
+      return { ...newState, [field]: !prevState[field] };
+    });
+  };
+  
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
@@ -82,68 +117,108 @@ function LoginPage() {
     document.body.classList.add("login-page");
     document.body.classList.add("sidebar-collapse");
     document.documentElement.classList.remove("nav-open");
-    window.scrollTo(0, 0);
+    // window.scrollTo(0, 0);
     document.body.scrollTop = 0;
     return function cleanup() {
       document.body.classList.remove("login-page");
       document.body.classList.remove("sidebar-collapse");
     };
   }, []);
+
+
   return (
     <>
       <Navbar />
+      <div className="section accent-bg-color pb-0 mb-0">
+        <div className="content">
+          <Container className="">
+              <h2 className="title">Welcome to CleanAR Solutions</h2>
+              <p className="description text-dark">
+                Log in to access your account
+              </p>
+            <Form onSubmit={handleFormSubmit}>
 
-      <div className="page-header clear-filter" filter-color="blue">
-        <div
-          className="page-header-image"
-          style={{
-            backgroundImage: "url(" + require("assets/img/stock-photo-cropped-photo-responsible-cleaner-safety-protocols-placing-yellow-caution-sign.jpg") + ")"
-          }}
-        ></div>
+              <Row>
+                <Col className="ml-auto mr-auto" md="11" xs='11'>
+                  <FloatingLabel
+                    controlId="floatingInput"
+                    label="Username"
+                    className="mb-3"
+                  >
+                    <Form.Control type="text" placeholder="" onChange={(e) => handleChange(e)} name="username" id="username" />
+                  </FloatingLabel>
+                </Col>
+                <Col className="ml-auto mr-auto" md="1" xs='1'>
+                  <Button
+                    id="Tooltip1"
+                    type="button"
+                    // color="link"
+                    className="primary-bg-color btn-round btn-icon"
+                    onClick={() => togglePopover('username')}
+                  >
+                    <FaQuestionCircle />
+                  </Button>
+                  <Popover
+                    placement="top"
+                    isOpen={popoverOpen.username}
+                    target="Tooltip1"
+                    toggle={() => togglePopover('username')}
+                  >
+                    <PopoverBody>Enter your registered username.</PopoverBody>
+                  </Popover>
+                </Col>
+              </Row>
+              <Row>
+                <Col className="ml-auto mr-auto" md="11" xs='11'>
+                  <FloatingLabel controlId="floatingPassword" label="Password">
+                    <Form.Control type="password" placeholder="" onChange={(e) => handleChange(e)} name="password" id="password" />
+                  </FloatingLabel>
+                </Col>
+                <Col className="ml-auto mr-auto" md="1" xs='1'>
+                  <Button
+                    id="Tooltip2"
+                    type="button"
+                    // color="link"
+                    className="primary-bg-color btn-round btn-icon"
+                    onClick={() => togglePopover('password')}
+                  >
+                    <FaQuestionCircle />
+                  </Button>
+                  <Popover
+                    placement="top"
+                    isOpen={popoverOpen.password}
+                    target="Tooltip2"
+                    toggle={() => togglePopover('password')}
+                  >
+                    <PopoverBody>Enter your account password.</PopoverBody>
+                  </Popover>
+                </Col>
+              </Row>
+<Row>
+              <Col className="ml-auto mr-auto" md="4">
+                <div className="text-center">
+                  <Button
+                    block
+                    className="btn-round primary-bg-color"
+                    type="submit"
+                    // color="info"
 
-        <div className="content ">
-          <Row className="content-row " >
-            <Col xs="12" md="6" className="content-center">
-
-          <Form onSubmit={handleFormSubmit}>
-            <h2 className="title">Welcome to CleanAR Solutions</h2>
-            <p className="description">
-              Log in to access your account
-            </p>
-
-              <FloatingLabel
-                controlId="floatingInput"
-                label="Username"
-                className="mb-3"
-              >
-                <Form.Control type="text" placeholder="" onChange={(e) => handleChange(e)} name="username" />
-              </FloatingLabel>
-              <FloatingLabel controlId="floatingPassword" label="Password">
-                <Form.Control type="password" placeholder="" onChange={(e) => handleChange(e)} name="password" />
-              </FloatingLabel>
-            <Col className="ml-auto mr-auto" md="4">              
-              <div className="text-center">
-                <Button
-                  block
-                  className="btn-round"
-                  type="submit"
-                  color="info"
-                  size="lg"
+                    size="lg"
                   // onClick={(e) => handleFormSubmit(e)}
-                >
-                  Log In
-                </Button>
-              </div>
-              {/* </Form> */}
-              {/* </Card> */}
-            </Col>
-          </Form>
-            </Col>
-
-            </Row>
+                  >
+                    Log In
+                  </Button>
+                </div>
+                {/* </Form> */}
+                {/* </Card> */}
+              </Col>
+              </Row>
+            </Form>
+          </Container>
         </div>
-        <Footer />
       </div>
+      <Footer />
+      {/* </div> */}
     </>
   );
 }

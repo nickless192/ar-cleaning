@@ -3,19 +3,26 @@ import { useEffect, useState } from "react";
 import Auth from "../../utils/auth";
 // reactstrap components
 import {
-  Button,
-  Form,
   Input,
   InputGroupAddon,
   InputGroupText,
   InputGroup,
   Container,
-  Row,
-  Col
+  Popover, PopoverBody
 } from "reactstrap";
+
+import {
+  FloatingLabel,
+  Button,
+  Form,
+  Row,
+  Col,
+  Collapse
+} from 'react-bootstrap';
 
 import Navbar from "components/Pages/Navbar.js";
 import Footer from "components/Pages/Footer.js";
+import { FaQuestionCircle } from 'react-icons/fa';
 
 // core components
 
@@ -29,6 +36,28 @@ function SignUp() {
     username: "",
     password: ""
   });
+
+  const [popoverOpen, setPopoverOpen] = useState({
+    firstName: false,
+    lastName: false,
+    email: false,
+    telephone: false,
+    username: false,
+    password: false
+  });
+
+  const togglePopover = (field) => {
+    setPopoverOpen((prevState) => {
+      // Reset all fields to false
+      const newState = Object.keys(prevState).reduce((acc, key) => {
+        acc[key] = false;
+        return acc;
+      }, {});
+
+      // Toggle the selected field
+      return { ...newState, [field]: !prevState[field] };
+    });
+  };
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
@@ -120,7 +149,7 @@ function SignUp() {
             <Form className="form" onSubmit={(e) => handleFormSubmit(e)}>
 
               <Row className="g-2">
-                <Col md>
+                <Col md='5' xs='11'>
                   <InputGroup
                     className={
                       "no-border" + (formData.firstName ? " input-group-focus" : "")
@@ -142,7 +171,15 @@ function SignUp() {
                     ></Input>
                   </InputGroup>
                 </Col>
-                <Col md>
+                <Col md='1' xs='1'>
+                  <Button id="Popover1" type="button" className="btn-round btn-icon"><FaQuestionCircle /></Button>
+                  <Popover placement="right" isOpen={popoverOpen.firstName} target="Popover1" toggle={() => togglePopover('firstName')}>
+                    <PopoverBody>
+                      Enter your first name.
+                    </PopoverBody>
+                  </Popover>
+                </Col>
+                <Col md='5' xs='11'>
                   <InputGroup
                     className={
                       "no-border" + (formData.lastName ? " input-group-focus" : "")
@@ -164,9 +201,17 @@ function SignUp() {
                     ></Input>
                   </InputGroup>
                 </Col>
+                <Col md='1' xs='1'>
+                  <Button id="Popover2" type="button" className="btn-round btn-icon"><FaQuestionCircle /></Button>
+                  <Popover placement="right" isOpen={popoverOpen.lastName} target="Popover2" toggle={() => togglePopover('lastName')}>
+                    <PopoverBody>
+                      Enter your last name.
+                    </PopoverBody>
+                  </Popover>
+                </Col>
               </Row>
               <Row className="g-2">
-                <Col md>
+                <Col md='5' xs='11'>
                   <InputGroup
                     className={
                       "no-border" + (formData.email ? " input-group-focus" : "")
@@ -188,7 +233,15 @@ function SignUp() {
                     ></Input>
                   </InputGroup>
                 </Col>
-                <Col md>
+                <Col md='1' xs='1'>
+                  <Button id="Popover3" type="button" className="btn-round btn-icon"><FaQuestionCircle /></Button>
+                  <Popover placement="right" isOpen={popoverOpen.email} target="Popover3" toggle={() => togglePopover('email')}>
+                    <PopoverBody>
+                      Enter your email address.
+                    </PopoverBody>
+                  </Popover>
+                </Col>
+                <Col md='5' xs='11'>
                   <InputGroup
                     className={
                       "no-border" + (formData.telephone ? " input-group-focus" : "")
@@ -210,9 +263,17 @@ function SignUp() {
                     ></Input>
                   </InputGroup>
                 </Col>
+                <Col md='1' xs='1'>
+                  <Button id="Popover4" type="button" className="btn-round btn-icon"><FaQuestionCircle /></Button>
+                  <Popover placement="right" isOpen={popoverOpen.telephone} target="Popover4" toggle={() => togglePopover('telephone')}>
+                    <PopoverBody>
+                      Enter your telephone number.
+                    </PopoverBody>
+                  </Popover>
+                </Col>
               </Row>
               <Row className="g-2">
-                <Col md>
+                <Col md='5' xs='11'>
                   <InputGroup
                     className={
                       "no-border" + (formData.username ? " input-group-focus" : "")
@@ -234,7 +295,15 @@ function SignUp() {
                     ></Input>
                   </InputGroup>
                 </Col>
-                <Col md>
+                <Col md='1' xs='1'>
+                  <Button id="Popover5" type="button" className="btn-round btn-icon"><FaQuestionCircle /></Button>
+                  <Popover placement="right" isOpen={popoverOpen.username} target="Popover5" toggle={() => togglePopover('username')}>
+                    <PopoverBody>
+                      Enter your username.
+                    </PopoverBody>
+                  </Popover>
+                </Col>
+                <Col md='5' xs='11'>
                   <InputGroup
                     className={
                       "no-border" + (formData.password ? " input-group-focus" : "")
@@ -256,9 +325,18 @@ function SignUp() {
                     ></Input>
                   </InputGroup>
                 </Col>
+                <Col md='1' xs='1'>
+                  <Button id="Popover6" type="button" className="btn-round btn-icon"><FaQuestionCircle /></Button>
+                  <Popover placement="right" isOpen={popoverOpen.password} target="Popover6" toggle={() => togglePopover('password')}>
+                    <PopoverBody>
+                      Enter your password.
+                    </PopoverBody>
+                  </Popover>
+                </Col>
+
               </Row>
               <Row className="g-2">
-                <Col md>
+                <Col md='11' xs='11'>
                   <InputGroup className={`no-border ${formData.howDidYouHearAboutUs ? "input-group-focus" : ""}`}>
                     <InputGroupAddon addonType="prepend">
                       <InputGroupText className=''>
@@ -282,41 +360,27 @@ function SignUp() {
                     </Input>
                   </InputGroup>
                 </Col>
+                <Col md='1' xs='1'>
+                  <Button id="Popover7" type="button" className="btn-round btn-icon"><FaQuestionCircle /></Button>
+                  <Popover placement="right" isOpen={popoverOpen.howDidYouHearAboutUs} target="Popover7" toggle={() => togglePopover('howDidYouHearAboutUs')}>
+                    <PopoverBody>
+                      How did you hear about us?
+                    </PopoverBody>
+                  </Popover>
+                </Col>
               </Row>
               <div className="text-center py-3">
-                <Row>
-                  <Col>
 
                     <Button
-                      className="btn-neutral btn-round btn-lg light-bg-color"
-                      // color="info"
-
+                      className="btn-round light-bg-color"
                       type="submit"
                       // onClick={(e) => handleFormSubmit(e)}
                       size="lg"
                     >
                       Get Started
                     </Button>
-                  </Col>
-                  {/* <Col>
-
-                <Button
-                  className="btn-round btn-white"
-                  color="default"
-                  to="/login-page"
-                  // outline
-                  size="lg"
-                  tag={Link}
-                >
-                  View Login Page
-                </Button>
-</Col> */}
-
-
-                </Row>
               </div>
             </Form>
-
           </Container>
         </div>
       </div>

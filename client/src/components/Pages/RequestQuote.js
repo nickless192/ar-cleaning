@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
     Input,
     FormGroup, Label,
-
+    Popover, PopoverBody
 } from 'reactstrap';
 import {
     FloatingLabel,
@@ -20,6 +20,7 @@ import Navbar from "components/Pages/Navbar.js";
 import Footer from "components/Pages/Footer.js";
 import Auth from "../../utils/auth";
 import VisitorCounter from "components/Pages/VisitorCounter.js";
+import { FaQuestionCircle } from 'react-icons/fa';
 
 const RequestQuote = () => {
     // const [selectedOptions, setSelectedOptions] = useState([]);
@@ -41,6 +42,36 @@ const RequestQuote = () => {
         products: [],
         // serviceLevel: '', // New field for service level
     });
+    const [popoverOpen, setPopoverOpen] = useState({
+        name: false,
+        email: false,
+        phonenumber: false,
+        description: false,
+        companyName: false,
+        howDidYouHearAboutUs: false,
+        address: false,
+        city: false,
+        province: false,
+        postalcode: false,
+        services: false,
+        products: false
+    });
+    // const togglePopover = (field) => {
+    //     setPopoverOpen({ ...popoverOpen, [field]: !popoverOpen[field] });
+    //   };
+    const togglePopover = (field) => {
+        setPopoverOpen((prevState) => {
+          // Reset all fields to false
+          const newState = Object.keys(prevState).reduce((acc, key) => {
+            acc[key] = false;
+            return acc;
+          }, {});
+      
+          // Toggle the selected field
+          return { ...newState, [field]: !prevState[field] };
+        });
+      };
+
     // const [sendEmail, setSendEmail] = useState(true); // Default to true so that the user receives an email
     const [isLogged] = useState(Auth.loggedIn());
     // const [open, setOpen] = useState(false);
@@ -363,7 +394,7 @@ const RequestQuote = () => {
                     // <Tab>
                     <>
                         <Row className='g-2 px-1'>
-                            <Col md>
+                            <Col md='4' xs='12'>
                                 <FloatingLabel controlId={`floatingServiceLevel${type}`} label="Select Service Level..." className=''>
                                     <Form.Select aria-label="Service level" name="serviceLevel" className="transparent" onChange={(e) => handleCustomOptionChange(type, 'serviceLevel', e.target.value)} >
                                         <option value="">Select Service Level...</option>
@@ -373,7 +404,7 @@ const RequestQuote = () => {
                                     </Form.Select>
                                 </FloatingLabel>
                             </Col>
-                            <Col md>
+                            <Col md='4' xs='12'>
 
                                 <FloatingLabel controlId="floatingUnitSize" label="Unit Size" >
                                     <Form.Select aria-label="Unit Size" className="transparent" onChange={(e) => handleCustomOptionChange(type, 'unitSize', e.target.value, pricing.unitSize[e.target.value])}>
@@ -386,14 +417,14 @@ const RequestQuote = () => {
                                     </Form.Select>
                                 </FloatingLabel>
                             </Col>
-                            <Col md>
+                            <Col md='4' xs='12'>
                                 <FloatingLabel controlId="floatingBedrooms" label="Number of Bedrooms">
                                     <Form.Control type="number" min="0" className='text-cleanar-color' onChange={(e) => handleCustomOptionChange(type, 'bedrooms', e.target.value, pricing.bedrooms[e.target.value])}
                                     // disabled={formData.serviceLevel === 'Deep Cleaning'}
                                     />
                                 </FloatingLabel>
                             </Col>
-                            <Col md>
+                            <Col md='4' xs='12'>
                                 <FloatingLabel controlId="floatingBathrooms" label="Number of Bathrooms">
                                     <Form.Control type="number" min="0" className='text-cleanar-color' onChange={(e) => handleCustomOptionChange(type, 'bathrooms', e.target.value, pricing.bathrooms[e.target.value])}
                                     // disabled={formData.serviceLevel === 'Deep Cleaning'}
@@ -404,7 +435,7 @@ const RequestQuote = () => {
                         {serviceLevel !== "" ? (
 
                             <Row className='g-2 px-1'>
-                                <Col md>
+                                <Col md='4' xs='12'>
                                     <FormGroup check>
                                         {services
                                             .filter(service => service.serviceLevel === serviceLevel)
@@ -439,7 +470,7 @@ const RequestQuote = () => {
                 return (
                     <>
                         <Row className='g-2 px-1'>
-                            <Col md>
+                            <Col md='4' xs='12'>
                                 <FloatingLabel controlId={`floatingServiceLevel${type}`} label="Select Service Level...">
                                     <Form.Select aria-label="Service level" className='transparent' name="serviceLevel" onChange={(e) => handleCustomOptionChange(type, 'serviceLevel', e.target.value)} >
                                         <option value="">Select Service Level...</option>
@@ -449,7 +480,7 @@ const RequestQuote = () => {
                                     </Form.Select>
                                 </FloatingLabel>
                             </Col>
-                            <Col md>
+                            <Col md='4' xs='12'>
                                 <FloatingLabel controlId="floatingSquareFootage" label="Square Footage" className=''>
                                     <Form.Select aria-label="Square Footage" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e.target.value, pricing.squareFootage[e.target.value])}
 
@@ -474,7 +505,7 @@ const RequestQuote = () => {
                                     </Input>
                                 </FormGroup> */}
                             </Col>
-                            <Col md>
+                            <Col md='4' xs='12'>
                                 <FloatingLabel controlId="floatingRooms" label="Number of Rooms" className=''>
                                     <Form.Select aria-label="Number of Rooms" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'rooms', e.target.value, pricing.rooms[e.target.value])}>
                                         <option value="">Select Number of Rooms...</option>
@@ -495,7 +526,7 @@ const RequestQuote = () => {
                             </Col>
                         </Row>
                         <Row className='g-2 px-1'>
-                            <Col md>
+                            <Col md='4' xs='12'>
                                 <FormGroup check>
                                     {services
                                         .filter(service => service.serviceLevel === serviceLevel)
@@ -527,7 +558,7 @@ const RequestQuote = () => {
             case 'Industrial':
                 return (
                     <> <Row className='g-2 px-1'>
-                        <Col md>
+                        <Col md='4' xs='12'>
                             <FloatingLabel controlId={`floatingServiceLevel${type}`} label="Select Service Level...">
                                 <Form.Select aria-label="Service level" className='transparent' name="serviceLevel" onChange={(e) => handleCustomOptionChange(type, 'serviceLevel', e.target.value)} >
                                     <option value="">Select Service Level...</option>
@@ -537,7 +568,7 @@ const RequestQuote = () => {
                                 </Form.Select>
                             </FloatingLabel>
                         </Col>
-                        <Col md>
+                        <Col md='4' xs='12'>
                             <FloatingLabel controlId="floatingSquareFootage" label="Square Footage" className=''>
                                 <Form.Select aria-label="Square Footage" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e.target.value, pricing.squareFootage[e.target.value])}>
                                     <option value="">Select Square Footage...</option>
@@ -560,7 +591,7 @@ const RequestQuote = () => {
                                 </Input>
                             </FormGroup> */}
                         </Col>
-                        <Col md>
+                        <Col md='4' xs='12'>
                             <FloatingLabel controlId="floatingEmployees" label="Number of Employees" className=''>
                                 <Form.Select aria-label="Number of Employees" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'employees', e.target.value, pricing.employees[e.target.value])}>
                                     <option value="">Select Number of Employees...</option>
@@ -581,7 +612,7 @@ const RequestQuote = () => {
                         </Col>
                     </Row>
                         <Row className='g-2 px-1'>
-                            <Col md>
+                            <Col md='4' xs='12'>
                                 <FormGroup check>
                                     {services
                                         .filter(service => service.serviceLevel === serviceLevel)
@@ -634,7 +665,7 @@ const RequestQuote = () => {
                         <h2 className="text-center">Request a Quote</h2>
                         <Form onSubmit={handleSubmit} id="quote-form">
                             <Row className='g-2'>
-                                <Col md>
+                                <Col md='3' xs='11'>
                                     <Form.Floating className="mb-3">
                                         <Form.Control
                                             type="text"
@@ -648,7 +679,15 @@ const RequestQuote = () => {
                                         <label htmlFor="floatingFullName" className='text-bold'>Full Name</label>
                                     </Form.Floating>
                                 </Col>
-                                <Col md>
+                                <Col md='1' xs='1'>
+                                    <Button id="Tooltip1" type="button" 
+                                    // color="link"                                    
+                                     onClick={() => togglePopover('name')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
+                                    <Popover placement="right" isOpen={popoverOpen.name} target="Tooltip1" toggle={() => togglePopover('name')}>
+                                        <PopoverBody>Enter your full name.</PopoverBody>
+                                    </Popover>
+                                </Col>
+                                <Col md='3' xs='11'>
                                     <Form.Floating className="mb-3">
                                         <Form.Control
                                             type="text"
@@ -662,7 +701,15 @@ const RequestQuote = () => {
                                         <label htmlFor="floatingEmail" className='text-bold'>Email</label>
                                     </Form.Floating>
                                 </Col>
-                                <Col md>
+                                <Col md='1' xs='1'>
+                                    <Button id="Tooltip2" type="button" 
+                                    // color="link"
+                                     onClick={() => togglePopover('email')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
+                                    <Popover placement="right" isOpen={popoverOpen.email} target="Tooltip2" toggle={() => togglePopover('email')}>
+                                        <PopoverBody>Enter your email address.</PopoverBody>
+                                    </Popover>
+                                </Col>
+                                <Col md='3' xs='11'>
                                     <Form.Floating className="mb-3">
                                         <Form.Control
                                             type="text"
@@ -676,9 +723,15 @@ const RequestQuote = () => {
                                         <label htmlFor="floatingPhoneNumber" className='text-bold'>Phone Number</label>
                                     </Form.Floating>
                                 </Col>
+                                <Col md='1' xs='1'>
+                                    <Button id="Tooltip3" type="button"  onClick={() => togglePopover('phonenumber')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
+                                    <Popover placement="right" isOpen={popoverOpen.phonenumber} target="Tooltip3" toggle={() => togglePopover('phonenumber')}>
+                                        <PopoverBody>Enter your phone number.</PopoverBody>
+                                    </Popover>
+                                </Col>
                             </Row>
                             <Row className='g-2'>
-                                <Col md>
+                                <Col md='3' xs='11'>
                                     <Form.Floating className="mb-3">
                                         <Form.Control
                                             type="text"
@@ -692,7 +745,13 @@ const RequestQuote = () => {
                                         <label htmlFor="floatingAddress" className='text-bold'>Address</label>
                                     </Form.Floating>
                                 </Col>
-                                <Col md>
+                                <Col md='1' xs='1'>
+                                    <Button id="Tooltip4" type="button" onClick={() => togglePopover('address')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
+                                    <Popover placement="right" isOpen={popoverOpen.address} target="Tooltip4" toggle={() => togglePopover('address')}>
+                                        <PopoverBody>Enter your address.</PopoverBody>
+                                    </Popover>
+                                </Col>
+                                <Col md='3' xs='11'>
                                     <Form.Floating className="mb-3">
                                         <Form.Control
                                             type="text"
@@ -706,7 +765,13 @@ const RequestQuote = () => {
                                         <label htmlFor="floatingCity" className='text-bold'>City</label>
                                     </Form.Floating>
                                 </Col>
-                                <Col md>
+                                <Col md='1' xs='1'>
+                                    <Button id="Tooltip5" type="button" onClick={() => togglePopover('city')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
+                                    <Popover placement="right" isOpen={popoverOpen.city} target="Tooltip5" toggle={() => togglePopover('city')}>
+                                        <PopoverBody>Enter your city.</PopoverBody>
+                                    </Popover>
+                                </Col>
+                                <Col md='3' xs='11'>
                                     <Form.Floating className="mb-3">
                                         <Form.Control
                                             type="text"
@@ -720,9 +785,15 @@ const RequestQuote = () => {
                                         <label htmlFor="floatingState" className='text-bold'>Province</label>
                                     </Form.Floating>
                                 </Col>
+                                <Col md='1' xs='1'>
+                                    <Button id="Tooltip6" type="button"  onClick={() => togglePopover('province')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
+                                    <Popover placement="right" isOpen={popoverOpen.province} target="Tooltip6" toggle={() => togglePopover('province')}>
+                                        <PopoverBody>Enter your province.</PopoverBody>
+                                    </Popover>
+                                </Col>
                             </Row>
                             <Row className='g-2'>
-                                <Col md >
+                                <Col md='3' xs='11' >
                                     <Form.Floating className="mb-3 ">
                                         <Form.Control
                                             type="text"
@@ -736,7 +807,13 @@ const RequestQuote = () => {
                                         <label htmlFor="floatingPostalCode" className='text-bold'>Postal Code</label>
                                     </Form.Floating>
                                 </Col>
-                                <Col md>
+                                <Col md='1' xs='1'>
+                                    <Button id="Tooltip7" type="button" onClick={() => togglePopover('postalcode')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
+                                    <Popover placement="right" isOpen={popoverOpen.postalcode} target="Tooltip7" toggle={() => togglePopover('postalcode')}>
+                                        <PopoverBody>Enter your postal code.</PopoverBody>
+                                    </Popover>
+                                </Col>
+                                <Col md='3' xs='11'>
                                     <Form.Floating className="mb-3">
                                         <Form.Control
                                             type="text"
@@ -750,8 +827,14 @@ const RequestQuote = () => {
                                         <label htmlFor="floatingCompanyName" className='text-bold '>Company Name</label>
                                     </Form.Floating>
                                 </Col>
-                                <Col md className=''>
-                                    <FloatingLabel controlId="floatingServiceLevel" label="How Did You Hear About Us..." className='text-bold'>
+                                <Col md='1' xs='1'>
+                                    <Button id="Tooltip8" type="button" onClick={() => togglePopover('companyName')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
+                                    <Popover placement="right" isOpen={popoverOpen.companyName} target="Tooltip8" toggle={() => togglePopover('companyName')}>
+                                        <PopoverBody>Enter your company name.</PopoverBody>
+                                    </Popover>
+                                </Col>
+                                <Col md='3' xs='11' className=''>
+                                    <FloatingLabel controlId="floatingHowDidYouHear" label="How Did You Hear About Us..." className='text-bold'>
                                         <Form.Select aria-label="How Did You Hear About Us" value={formData.howDidYouHearAboutUs}
                                             name='howDidYouHearAboutUs' onChange={handleChange} className='transparent no-border text-cleanar-color text-bold'>
                                             <option value="">How Did You Hear About Us?...</option>
@@ -763,10 +846,26 @@ const RequestQuote = () => {
                                         </Form.Select>
                                     </FloatingLabel>
                                 </Col>
+                                <Col md='1' xs='1'>
+                                    <Button id="Tooltip9" type="button"  onClick={() => togglePopover('howDidYouHearAboutUs')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
+                                    <Popover placement="right" isOpen={popoverOpen.howDidYouHearAboutUs} target="Tooltip9" toggle={() => togglePopover('howDidYouHearAboutUs')}>
+                                        <PopoverBody>How did you hear about us?</PopoverBody>
+                                    </Popover>
+                                </Col>
 
                             </Row>
                             <FormGroup>
                                 <Label className='text-bold'>Description</Label>
+                            {/* <Row>
+                                <Col md='3' xs='3'>
+                                </Col>
+                            <Col md='1' xs='1'>
+                                    <Button id="Tooltip10" type="button" color="link" onClick={() => togglePopover('description')} className='text-cleanar-color'><FaQuestionCircle /></Button> 
+                                    <Popover placement="right" isOpen={popoverOpen.description} target="Tooltip10" toggle={() => togglePopover('description')}>
+                                        <PopoverBody>Enter a brief description of the services you are looking for.</PopoverBody>
+                                    </Popover>
+                                </Col>
+                                </Row> */}
                                 <Input
                                     type="textarea"
                                     name="description"
@@ -775,14 +874,21 @@ const RequestQuote = () => {
                                     onChange={handleChange}
                                     className='text-cleanar-color text-bold'
                                 />
+                                
                             </FormGroup>
                             <Row>
-                                <Col md>
+                                <Col md='12' xs='12'>
                                     <Label className='text-cleanar-color text-bold'>Add Services: </Label>
                                     <Button className='service-button-residential' variant="" onClick={() => handleAddService({ target: { value: "Residential" } })} value="Residential">Residential</Button>{' '}
                                     <Button className='service-button-commercial' onClick={() => handleAddService({ target: { value: "Commercial" } })} value="Commercial">Commercial</Button>{' '}
                                     <Button className='service-button-industrial' onClick={() => handleAddService({ target: { value: "Industrial" } })} value="Industrial">Industrial/Specialized</Button>
+                                    <Button id="Tooltip11" type="button" onClick={() => togglePopover('services')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
+                                    <Popover placement="right" isOpen={popoverOpen.services} target="Tooltip11" toggle={() => togglePopover('services')}>
+                                        <PopoverBody>Select the service type you are interested in.</PopoverBody>
+                                    </Popover>
                                 </Col>
+                                {/* <Col md='1' xs='1'>
+                                </Col>                                 */}
                             </Row>
                             {(formData.services.length === 0) ? (
                                 <div className="text-center">
@@ -801,6 +907,10 @@ const RequestQuote = () => {
                                                 className={`service-button-${service.type.toLowerCase()}`}
                                             >{service.type}
                                             </Button>
+                                            {/* <Button id="Tooltip12" type="button" color="link" onClick={() => togglePopover(service.type)} className='text-cleanar-color'><FaQuestionCircle /></Button>
+                                            <Popover placement="right" isOpen={popoverOpen[service.type]} target="Tooltip12" toggle={() => togglePopover(service.type)}>
+                                                <PopoverBody>Click to expand and customize your {service.type} service.</PopoverBody>
+                                            </Popover> */}
                                         </>
                                     ))}
                                 </>
@@ -812,6 +922,7 @@ const RequestQuote = () => {
                                         <>
                                             {/* <Collapse in={openStates[service.type]}> */}
                                             <Collapse in={openService === service.type}>
+
                                                 <div id={service.type} className={`service-section-${service.type.toLowerCase()} rounded`}>
                                                     {/* {renderCustomOptions(service.type, service.customOptions.serviceLevel)} */}
                                                     {renderCustomOptions(service.type, service.serviceLevel)}
@@ -822,14 +933,13 @@ const RequestQuote = () => {
                                 </>
                             )
                             }
-                            <Row>
-                                {/* Add a message indicating that requesting products is coming soon */}
+                            {/* <Row>                                
                                 <Col md>
                                     <div className="text-center">
                                         <h4>Products coming soon!</h4>
                                     </div>
                                 </Col>
-                            </Row>
+                            </Row> */}
                             {/* disable price display in the initial release */}
                             {/* <Row>
                                 <Col >
