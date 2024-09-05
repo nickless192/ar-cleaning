@@ -1,7 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import {
-  Row, Col, Card, CardBody, CardTitle, CardText, CardHeader, ListGroup, ListGroupItem
+  Row, Col, Card, CardBody, CardTitle, CardText, CardHeader, ListGroup, ListGroupItem,
+  CardFooter
 } from "reactstrap";
 import { Image } from 'react-bootstrap';
 import "./../../assets/css/our-palette.css";
@@ -39,24 +40,27 @@ function AboutUsPage() {
             />
           </Col>
           <Col xs="12" md="6" className="text-col">
-            <p className="text-content secondary-color">
-              At CleanAR Solutions, we provide professional cleaning services in Toronto and the GTA. Our focus on excellence ensures every project meets the highest standards, creating a clean and healthy environment. Whether you need residential, commercial, or specialized services, we customize our approach to meet your needs. Get started by requesting a quote or contact us for more information.
-            </p>
+          <Card className="card-plain">
+          <CardHeader>
+            <CardTitle tag="h3" className="text-bold">Welcome to CleanAR Solutions</CardTitle>
+          </CardHeader>
+          <CardBody>          
+            <CardText>
+              <p className="">
+              At <b>CleanAR Solutions</b>, we provide professional cleaning services in Toronto and the GTA. Our focus on excellence ensures every project meets the highest standards, creating a clean and healthy environment. Whether you need residential, commercial, or carpet cleaning, we customize our approach to meet your needs. Get started by <a href="/request-quote" >requesting a quote</a>, or <a href="mailto:info@cleanARsolutions.ca">contact us</a> for more information.
+              </p>
+              <p className="">              
+              With 10 years of experience, our services are designed to meet the unique needs of our clients, providing personalized solutions and exceptional results on every project. At <b>CleanAR Solutions</b>, we take pride in offering reliable and high-quality service that ensures the impeccable cleanliness and maintenance of any space.  We are here to help you find the perfect cleaning solution for your needs.
+              </p>
+            </CardText>
+            <Link to="/request-quote" className="btn primary-bg-color">Request a Quote</Link>
+            <Link to="/products-and-services" className="btn secondary-bg-color">Learn More About Our Services</Link>
+          </CardBody>
+        </Card>
+            
+            
           </Col>
         </Row>
-        <div className="py-1 px-5 light-bg-color">
-          <Row className="py-0 pr-5 light-bg-color">
-            <Col className="pr-0">
-              <Card className="card-plain">
-                <CardBody>
-                  <CardText>
-                    <p>Our services are designed to meet the unique needs of our clients, providing personalized solutions and exceptional results on every project. At CleanAR Solutions, we take pride in offering reliable and high-quality service that ensures the impeccable cleanliness and maintenance of any space. Get started by requesting a quote, or log in to your account to manage your existing quotes and services. Have questions? Contact us today to speak with a member of our team. We are here to help you find the perfect cleaning solution for your needs.</p>
-                  </CardText>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
-        </div>
         <div className="py-1 px-5 secondary-bg-color">
           <Row className=" py-0 pr-5 secondary-bg-color">
             <Col className="pr-0">

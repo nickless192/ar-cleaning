@@ -651,7 +651,98 @@ const RequestQuote = () => {
                         </Row>
                     </>
                 );
-            default:
+            case 'Carpet Cleaning':
+                return (
+                    <>
+                        <Row className='g-2 px-1'>
+                            <Col md='4' xs='12'>
+                                <FloatingLabel controlId={`floatingServiceLevel${type}`} label="Select Service Level...">
+                                    <Form.Select aria-label="Service level" className='transparent' name="serviceLevel" onChange={(e) => handleCustomOptionChange(type, 'serviceLevel', e.target.value)} >
+                                        <option value="">Select Service Level...</option>
+                                        <option value="Basic Cleaning">Basic Cleaning</option>
+                                        <option value="Deep Cleaning">Deep Cleaning</option>
+                                        <option value="Special Deal">Special Deal</option>
+                                    </Form.Select>
+                                </FloatingLabel>
+                            </Col>
+                            <Col md='4' xs='12'>
+                                <FloatingLabel controlId="carpetMaterial" label="Carpet Material" className=''>
+                                    <Form.Select aria-label="Carpet Material" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'carpetMaterial', e.target.value, 50)}>
+                                        <option value="">Select Carpet Material...</option>
+                                        <option value="Nylon">Nylon</option>
+                                        <option value="Polyester">Polyester</option>
+                                        <option value="Olefin">Olefin</option>
+                                        <option value="Acrylic">Acrylic</option>
+                                        <option value="Wool">Wool</option>
+                                    </Form.Select>
+                                </FloatingLabel>
+                            </Col>
+                            <Col md='4' xs='12'>
+                                <FloatingLabel controlId="carpetSize" label="Carpet Size" className=''>
+                                    <Form.Select aria-label="Carpet Size" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'carpetSize', e.target.value, 50)}>
+                                        <option value="">Select Carpet Size...</option>
+                                        <option value="Small">Small</option>
+                                        <option value="Medium">Medium</option>
+                                        <option value="Large">Large</option>
+                                    </Form.Select>
+                                </FloatingLabel>
+                            </Col>
+                            <Col md='4' xs='12'>
+                                <FloatingLabel controlId="carpetCondition" label="Carpet Condition" className=''>
+                                    <Form.Select aria-label="Carpet Condition" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'carpetCondition', e.target.value, 50)}>
+                                        <option value="">Select Carpet Condition...</option>
+                                        <option value="Lightly Soiled">Lightly Soiled</option>
+                                        <option value="Moderately Soiled">Moderately Soiled</option>
+                                        <option value="Heavily Soiled">Heavily Soiled</option>
+                                        <option value="Stain Removal Needed">Stain Removal Needed</option>
+                                    </Form.Select>
+                                </FloatingLabel>
+                            </Col>
+                            <Col md='4' xs='12'>
+                                <FloatingLabel controlId="frequencyCleaning" label="Frequency of Cleaning" className=''>
+                                    <Form.Select aria-label="Frequency of Cleaning" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'frequencyCleaning', e.target.value, 50)}>
+                                        <option value="">Select Frequency of Cleaning...</option>
+                                        <option value="One Time">One Time</option>
+                                        <option value="Monthly">Monthly</option>
+                                        <option value="Quarterly">Quarterly</option>
+                                        <option value="Bi-Annually">Bi-Annually</option>
+                                        <option value="Annually">Annually</option>
+                                    </Form.Select>
+                                </FloatingLabel>
+                            </Col>
+                        </Row>
+                        <Row className='g-2 px-1'>
+                            <Col md='4' xs='12'>
+                                <FormGroup check>
+                                    {services
+                                        .filter(service => service.serviceLevel === serviceLevel)
+                                        .map((service, index) => {
+                                            return (<>
+                                                {service.isResidential ? (
+                                                    <Label check>
+                                                        <Input
+                                                            type="checkbox"
+                                                            onChange={(e) => handleCustomOptionChange(type, service.name, e.target.checked, service.serviceCost)}
+                                                        />
+                                                        <span className="form-check-sign"></span>
+                                                        {service.name} - ${service.serviceCost}
+                                                    </Label>
+                                                ) : null}
+                                            </>)
+                                        })}
+                                </FormGroup>
+                            </Col>
+                        </Row>
+                        <Row className='g-2 px-1'>
+                            <Col md>
+                                <Button onClick={() => handleRemoveService(type)} className='btn-danger'>Remove</Button>
+                            </Col>
+                        </Row>
+                    </>
+                );
+
+
+                default:
                 return null;
         }
     };
@@ -878,7 +969,8 @@ const RequestQuote = () => {
                                 <Col md='12' xs='12'>
                                     <Button className='service-button-residential' variant="" onClick={() => handleAddService({ target: { value: "Residential" } })} value="Residential">Residential</Button>{' '}
                                     <Button className='service-button-commercial' onClick={() => handleAddService({ target: { value: "Commercial" } })} value="Commercial">Commercial</Button>{' '}
-                                    <Button className='service-button-industrial' onClick={() => handleAddService({ target: { value: "Industrial" } })} value="Industrial">Industrial</Button>
+                                    {/* <Button className='service-button-industrial' onClick={() => handleAddService({ target: { value: "Industrial" } })} value="Industrial">Industrial</Button> */}
+                                    <Button className='service-button-industrial' onClick={() => handleAddService({ target: { value: "Carpet Cleaning" } })} value="Carpet Cleaning">Carpet Cleaning</Button>
                                 </Col>
                             </Row>
                             <>
