@@ -30,7 +30,7 @@ const ProductsAndServices = () => {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
 
       <div className="section light-blue-bg-color pb-0 mb-0">
         <div className="container">
@@ -273,7 +273,7 @@ const ProductsAndServices = () => {
 
 
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };

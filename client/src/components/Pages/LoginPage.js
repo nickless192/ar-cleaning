@@ -102,6 +102,9 @@ function LoginPage() {
 
 
     }
+    else {
+      alert("Please enter your username and password");
+    }
   }
 
   const handleChange = (event) => {
@@ -128,17 +131,17 @@ function LoginPage() {
 
   return (
     <>
-      <Navbar />
-      <div className="section accent-bg-color">
+      {/* <Navbar /> */}
+      <div className="content light-bg-color">
         {/* <div className="content px-2"> */}
           <Container className="container">
-              <h2 className="title">Welcome to CleanAR Solutions</h2>
-              <p className="description text-dark">
-                Log in to access your account
+              <h2 className="title primary-color">Welcome to CleanAR <span className="secondary-color">Solutions</span></h2>
+              <p className="primary-color text-bold">
+                Log in to access your account for faster checkout and to view order history.
               </p>
             <Form onSubmit={handleFormSubmit}>
               <Row>
-                <Col className="py-1" md="9" xs='9'>
+                <Col className="py-3" md="6" xs='6'>
                   <FloatingLabel
                     controlId="floatingInput"
                     label="Username"
@@ -147,10 +150,11 @@ function LoginPage() {
                     <Form.Control type="text" placeholder="" onChange={(e) => handleChange(e)} name="username" id="username" />
                   </FloatingLabel>
                 </Col>
-                <Col className="py-1" md="1" xs='1'>
+                <Col className="py-3" md="1" xs='1'>
                   <Button
                     id="Tooltip1"
                     type="button"
+                    tabIndex='-1'
                     // color="link"
                     className="primary-bg-color btn-round btn-icon"
                     onClick={() => togglePopover('username')}
@@ -168,15 +172,16 @@ function LoginPage() {
                 </Col>
               </Row>
               <Row>
-                <Col className="py-1" md="9" xs='9'>
+                <Col className="py-3" md="6" xs='6'>
                   <FloatingLabel controlId="floatingPassword" label="Password">
                     <Form.Control type="password" placeholder="" onChange={(e) => handleChange(e)} name="password" id="password" />
                   </FloatingLabel>
                 </Col>
-                <Col className="py-1" md="1" xs='1'>
+                <Col className="py-3" md="1" xs='1'>
                   <Button
                     id="Tooltip2"
                     type="button"
+                    tabIndex='-1'
                     // color="link"
                     className="primary-bg-color btn-round btn-icon"
                     onClick={() => togglePopover('password')}
@@ -194,7 +199,7 @@ function LoginPage() {
                 </Col>
               </Row>
 <Row>
-              <Col className="ml-auto mr-auto" md="4">
+              <Col className="ml-auto mr-auto py-3" md="4">
                 <div className="text-center">
                   <Button
                     block
@@ -216,7 +221,7 @@ function LoginPage() {
           </Container>
         {/* </div> */}
       </div>
-      <Footer />
+      {/* <Footer /> */}
       {/* </div> */}
     </>
   );

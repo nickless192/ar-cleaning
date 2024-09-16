@@ -176,7 +176,7 @@ const ManageProduct = () => {
 
     return (
         <>
-            <Navbar />
+            {/* <Navbar /> */}
             <div className="page-header clear-filter" filter-color="blue">
                 <div
                     className="page-header-image"
@@ -343,7 +343,7 @@ const ManageProduct = () => {
                     </Form>
                 </div>
             </div>
-            <Footer />
+            {/* <Footer /> */}
         </>
     );
 };

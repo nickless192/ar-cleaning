@@ -32,8 +32,8 @@
     /* color: white; */
 }
 .primary-color {
-    color: var(--primary-color);
-    font-weight: bold;
+    color: var(--primary-color)!important;
+    /* font-weight: bold!important; */
     /* color: white; */
 }
 
@@ -45,7 +45,7 @@
 
 .secondary-color {
     color: var(--secondary-color)!important;
-    font-weight: bold;
+    /* font-weight: bold; */
     /* color: white; */
 }
 .secondary-bg-color {
@@ -56,7 +56,7 @@
 
 .accent-color {
     color: var(--accent-color)!important;
-    font-weight: bold;
+    /* font-weight: bold; */
     /* color: white; */
 }
 .accent-bg-color {
@@ -67,7 +67,7 @@
 
 .light-color {
     color: var(--light-color)!important;
-    font-weight: bold;
+    /* font-weight: bold; */
     /* color: black; */
 }
 
@@ -84,12 +84,12 @@
 
 
 .navbar-color {
-    background-color: var(--primary-color);
+    background-color: var(--light-color);
 }
 
 .logo-size {
-    height: 450px;
-    width: auto;
+    height: 250px;
+    /* width: auto; */
 }
 
  /* Placeholder styles */
@@ -219,8 +219,8 @@
   /* Logo Column */
   .logo-col {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: left;
+    align-items: left;
   }
   
   .logo-image {
@@ -239,6 +239,26 @@
       max-width: 500px;
     }
   }
+
+
+  .logo-image-index {
+    max-width: 300px;
+    height: auto;
+  }
+  
+  @media (min-width: 768px) {
+    .logo-image-index {
+      max-width: 300px;
+    }
+  }
+  
+  @media (min-width: 1200px) {
+    .logo-image-index {
+      max-width: 300px;
+    }
+  }
+
+
   
   /* Text Column */
   .text-col {
@@ -312,7 +332,7 @@ textarea {
 .chatbot-toggle {
     position: fixed;
     bottom: 20px;
-    right: 20px;
+    right: 80px;
     background: #007bff;
     border-radius: 50%;
     padding: 10px;
@@ -324,7 +344,7 @@ textarea {
 .whatsapp-btn {
     position: fixed;
     bottom: 10px;
-    right: 80px;
+    right: 20px;
     /* background: #007bff; */
     border-radius: 50%;
     padding: 10px;
@@ -352,3 +372,53 @@ textarea {
     flex-direction: column;
     overflow: hidden;
 }
+
+/* fix footer to the bottom of all pages */
+.footer {
+    position: sticky;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: var(--primary-color)!important;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    z-index: 1000;
+
+}
+
+.nav-bar-top {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    margin-bottom: 0px!important;
+    /* padding-bottom: 0px!important; */
+}
+
+
+.navbar-top {
+    position: sticky; 
+    top:0;
+}
+
+.section-background {
+    background-image: url('../img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg');
+    background-size: cover; /* Ensures the image covers the whole section */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat; /* Prevents repeating the image */
+    padding: 20px; /* Optional: adds padding around the content */
+    position: relative; /* Makes sure the content is positioned relative to the background */
+    z-index: 1; /* Keeps the content above the background */
+  }
+  
+  .section-background::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Optional: Adds a transparent dark overlay */
+    z-index: -1; /* Places the overlay beneath the content */
+  }
+  

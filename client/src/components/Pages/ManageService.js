@@ -212,7 +212,7 @@ const ManageService = () => {
 
     return (
         <>
-            <Navbar />
+            {/* <Navbar /> */}
             {/* <div className="page-header clear-filter" filter-color="blue"> */}
             <div
                 className="section page-header-image"
@@ -458,7 +458,7 @@ const ManageService = () => {
                 </div>
             </div>
             {/* </div> */}
-            <Footer />
+            {/* <Footer /> */}
         </>
 
     );

@@ -20,6 +20,8 @@ import Footer from "components/Pages/Footer.js";
 // import './../../assets/css/quote-dropdown.css';
 // import './../../assets/css/our-palette.css';
 
+import backgroundImage from 'assets/img/stock-photo-cropped-shot-woman-rubber-gloves-cleaning-office-table.jpg';
+
 
 function ProfilePage() {
   const navigate = useNavigate(); // useNavigate hook to handle navigation
@@ -82,7 +84,7 @@ function ProfilePage() {
     document.body.classList.add("profile-page");
     document.body.classList.add("sidebar-collapse");
     document.documentElement.classList.remove("nav-open");
-    window.scrollTo(0, 0);
+    // window.scrollTo(0, 0);
     document.body.scrollTop = 0;
     return function cleanup() {
       document.body.classList.remove("profile-page");
@@ -174,27 +176,34 @@ function ProfilePage() {
     // navigate("/quote");
   }
 
+  const handleCancelClick = async (e) => {
+    e.preventDefault();
+    setIsEditing(false);
+    const data = await Auth.getProfile().data;
+    setFormData({
+      name: data.firstName + " " + data.lastName,
+                  email: data.email,
+                  phonenumber: data.telephone,
+                  address: data.address,
+                  city: data.city,
+                  province: data.province,
+                  postalcode: data.postalcode,
+                  howDidYouHearAboutUs: data.howDidYouHearAboutUs,
+                  companyName: data.companyName,
+                  userId: data._id
+    });
+  }
+
   return (
     <>
-      <Navbar />
-      <div className="wrapper">
-        <div
-          className="page-header clear-filter page-header-small"
-          filter-color="blue"
-        >
-          <div
-            className="page-header-image"
-            style={{
-              backgroundImage: "url(" + require("assets/img/bg5.jpg") + ")"
-            }}
-          ></div>
-          <Container >
-
+      {/* <Navbar /> */}
+      <div className="wrapper light-bg-color mb-0 section-background" style={{ backgroundImage: `url(${backgroundImage})`}}>
+        <div className="content" filter-color="blue">
             <Form onSubmit={handleSaveClick} >
               <div className="photo-container">
                 <img alt="..." src={require("assets/img/default-avatar.png")}></img>
               </div>
-              <h3 className="title">{formData.name}</h3>
+              <h3 className="title primary-color">{formData.name}</h3>
               <p className="category">
                 {isEditing ? (
                   <>
@@ -202,12 +211,14 @@ function ProfilePage() {
                       type="text"
                       name="address"
                       placeholder="Address"
+                      className="mb-3"
                       value={formData.address}
                       onChange={handleInputChange}
                     />
                     <Input
                       type="text"
                       name="city"
+                      className="mb-3"
                       placeholder="City"
                       value={formData.city}
                       onChange={handleInputChange}
@@ -215,6 +226,7 @@ function ProfilePage() {
                     <Input
                       type="text"
                       name="province"
+                      className="mb-3"
                       placeholder="Province"
                       value={formData.province}
                       onChange={handleInputChange}
@@ -222,6 +234,7 @@ function ProfilePage() {
                     <Input
                       type="text"
                       name="postalcode"
+                      className="mb-3"
                       placeholder="Postal Code"
                       value={formData.postalcode}
                       onChange={handleInputChange}
@@ -235,11 +248,12 @@ function ProfilePage() {
                 )}
               </p>
               <Row className="content no-gutters">
-                <Col lg="6" xs="12" className="mb-3">
+                <Col lg="6" xs="12" className="mb-3 secondary-color text-center">
                   <h5>Phone Number</h5>
                   {isEditing ? (
                     <Input
                       type="text"
+                      className="mb-3"
                       name="phonenumber"
                       value={formData.phonenumber}
                       onChange={handleInputChange}
@@ -248,17 +262,20 @@ function ProfilePage() {
                     <p>{formData.phonenumber ? formData.phonenumber : "Add phone number"}</p>
                   )}
                 </Col>
-                <Col lg="6" xs="12" className="mb-3">
+                <Col lg="6" xs="12" className="mb-3 secondary-color text-center">
                   <h5>Email Address</h5>
                   <p>{formData.email ? formData.email : "Add email"}</p>
                 </Col>
-                </Row>
-                <Row className="content no-gutters">
-                <Col lg="12" xs="12" className="mb-3">
+              </Row>
+              <Row className="content no-gutters text-center">
+                <Col lg="3" xs="0" className="">
+                </Col>
+                <Col lg="6" xs="12" className="mb-3 secondary-color text-center">
                   <h5>Company Name</h5>
                   {isEditing ? (
                     <Input
                       type="text"
+                      className="mb-3"
                       name="companyName"
                       value={formData.companyName}
                       onChange={handleInputChange}
@@ -271,42 +288,51 @@ function ProfilePage() {
 
               {/* <div className="content">
             </div> */}
-              <Container className="section bg-transparent">
+              <Container className="section bg-transparent mt-3">
                 <div className="button-container ">
                   {isEditing ? (
-                    <Button className="btn-round" color="success" size="lg" type="submit">
+                    <>
+                    <Button className="btn-round primary-bg-color mx-2" size="lg" type="submit">
                       Save Profile
                     </Button>
+                    <Button className="btn-round secondary-bg-color mx-2" size="lg" onClick={handleCancelClick}> 
+                    Cancel 
+                    </Button>
+                    </>
+
                   ) : (
-                    <Button className="btn-round" color="info" size="lg" onClick={handleEditClick}>
+                    <Button className="btn-round secondary-bg-color" size="lg" onClick={handleEditClick}>
                       Edit Profile
                     </Button>
                   )}
                 </div>
               </Container>
             </Form>
-          </Container>
+          {/* </Container> */}
         </div>
-        <div className="container">
+        {/* <div className="content"> */}
+        {/* <Row>
+          <Col className="">
           <h4 className="title text-left">Search your Quotes</h4>
-        <Dropdown isOpen={dropdownOpen} toggle={toggle}>
-                <DropdownToggle caret>
-                  {`Select Quote to View Details`}
-                </DropdownToggle>
-                <DropdownMenu className='scrollable-dropdown-menu'>
-                  {/* <DropdownItem onClick={() => setDisplayedQuote({ products: [], services: [] })}>Quotes</DropdownItem> */}
-                  <DropdownItem onClick={(e) => handleQuoteClick(e)} value="">Quotes</DropdownItem>
-                  {quotes.map((quote) => (
-                    <DropdownItem key={quote._id} onClick={(e) => handleQuoteClick(e)} value={quote.quoteId}>
-                      {/* <DropdownItem key={quote._id} onClick={() => setDisplayedQuote(quote)}></DropdownItem> */}
-                      {"Quote Id:"}{quote.quoteId} - {"Created at:"}{quote.createdAt}
-                    </DropdownItem>
-                  ))}
-                </DropdownMenu>
-              </Dropdown>
+          <Dropdown isOpen={dropdownOpen} toggle={toggle}>
+            <DropdownToggle caret>
+              {`Select Quote to View Details`}
+            </DropdownToggle>
+            <DropdownMenu className='scrollable-dropdown-menu'>
+              <DropdownItem onClick={(e) => handleQuoteClick(e)} value="">Quotes</DropdownItem>
+              {quotes.map((quote) => (
+                <DropdownItem key={quote._id} onClick={(e) => handleQuoteClick(e)} value={quote.quoteId}>
+                  {"Quote Id:"}{quote.quoteId} - {"Created at:"}{quote.createdAt}
+                </DropdownItem>
+              ))}
+            </DropdownMenu>
+          </Dropdown>
+
+          </Col>
+        </Row> */}
         </div>
-      </div>
-      <Footer />
+      {/* </div> */}
+      {/* <Footer /> */}
     </>
   );
 }

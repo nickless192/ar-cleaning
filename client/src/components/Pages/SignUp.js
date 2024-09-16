@@ -64,7 +64,6 @@ function SignUp() {
     if (formData.firstName && formData.lastName && formData.email && formData.username && formData.password && formData.telephone) {
       fetch(`/api/users/`, {
         method: 'post',
-        // mode: 'no-cors',
         body: JSON.stringify(formData),
         headers: {
           'Content-Type': 'application/json',
@@ -117,6 +116,9 @@ function SignUp() {
         .catch(err => console.log(err))
 
     }
+    else {
+      alert("Please fill out all fields before submitting");
+    }
   }
 
   const handleChange = (event) => {
@@ -141,8 +143,8 @@ function SignUp() {
 
   return (
     <>
-      <Navbar />
-      <div className="section section-signup secondary-bg-color pb-0 mb-0">
+      {/* <Navbar /> */}
+      <div className="section section-signup light-blue-bg-color pb-0 mb-0">
         <div className="content">
           <Container>
             <h2 className="title text-center">Sign Up</h2>
@@ -172,7 +174,7 @@ function SignUp() {
                   </InputGroup>
                 </Col>
                 <Col md='1' xs='1'>
-                  <Button id="Popover1" type="button" className="btn-round btn-icon"><FaQuestionCircle /></Button>
+                  <Button id="Popover1" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
                   <Popover placement="right" isOpen={popoverOpen.firstName} target="Popover1" toggle={() => togglePopover('firstName')}>
                     <PopoverBody>
                       Enter your first name.
@@ -202,7 +204,7 @@ function SignUp() {
                   </InputGroup>
                 </Col>
                 <Col md='1' xs='1'>
-                  <Button id="Popover2" type="button" className="btn-round btn-icon"><FaQuestionCircle /></Button>
+                  <Button id="Popover2" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
                   <Popover placement="right" isOpen={popoverOpen.lastName} target="Popover2" toggle={() => togglePopover('lastName')}>
                     <PopoverBody>
                       Enter your last name.
@@ -234,7 +236,7 @@ function SignUp() {
                   </InputGroup>
                 </Col>
                 <Col md='1' xs='1'>
-                  <Button id="Popover3" type="button" className="btn-round btn-icon"><FaQuestionCircle /></Button>
+                  <Button id="Popover3" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
                   <Popover placement="right" isOpen={popoverOpen.email} target="Popover3" toggle={() => togglePopover('email')}>
                     <PopoverBody>
                       Enter your email address.
@@ -264,7 +266,7 @@ function SignUp() {
                   </InputGroup>
                 </Col>
                 <Col md='1' xs='1'>
-                  <Button id="Popover4" type="button" className="btn-round btn-icon"><FaQuestionCircle /></Button>
+                  <Button id="Popover4" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
                   <Popover placement="right" isOpen={popoverOpen.telephone} target="Popover4" toggle={() => togglePopover('telephone')}>
                     <PopoverBody>
                       Enter your telephone number.
@@ -296,7 +298,7 @@ function SignUp() {
                   </InputGroup>
                 </Col>
                 <Col md='1' xs='1'>
-                  <Button id="Popover5" type="button" className="btn-round btn-icon"><FaQuestionCircle /></Button>
+                  <Button id="Popover5" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
                   <Popover placement="right" isOpen={popoverOpen.username} target="Popover5" toggle={() => togglePopover('username')}>
                     <PopoverBody>
                       Enter your username.
@@ -326,7 +328,7 @@ function SignUp() {
                   </InputGroup>
                 </Col>
                 <Col md='1' xs='1'>
-                  <Button id="Popover6" type="button" className="btn-round btn-icon"><FaQuestionCircle /></Button>
+                  <Button id="Popover6" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
                   <Popover placement="right" isOpen={popoverOpen.password} target="Popover6" toggle={() => togglePopover('password')}>
                     <PopoverBody>
                       Enter your password.
@@ -360,7 +362,7 @@ function SignUp() {
                   </InputGroup>
                 </Col>
                 <Col md='1' xs='1'>
-                  <Button id="Popover7" type="button" className="btn-round btn-icon"><FaQuestionCircle /></Button>
+                  <Button id="Popover7" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
                   <Popover placement="right" isOpen={popoverOpen.howDidYouHearAboutUs} target="Popover7" toggle={() => togglePopover('howDidYouHearAboutUs')}>
                     <PopoverBody>
                       How did you hear about us?
@@ -383,7 +385,7 @@ function SignUp() {
           </Container>
         </div>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }

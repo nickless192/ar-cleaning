@@ -180,10 +180,10 @@ const ViewQuote = () => {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
 
       <div
-        className="section section-signup km-bg-primary"
+        className="section section-signup light-bg-color"
         style={{
           // backgroundImage: "url(" + require("assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg") + ")",
           backgroundSize: "cover",
@@ -198,13 +198,13 @@ const ViewQuote = () => {
             {/* add a search bar for users to input a quote Id to search for */}
             <InputGroup>
               <Input
-                className="accent-bg-color"
+                className=""
                 id="search"
                 placeholder="Search for a quote..."
                 type="text"
               />
               <InputGroupAddon addonType="append">
-                <InputGroupText className="accent-bg-color" onClick={searchQuote}>
+                <InputGroupText className="" onClick={searchQuote}>
                   <i className="now-ui-icons ui-1_zoom-bold"></i>
                 </InputGroupText>
               </InputGroupAddon>
@@ -242,7 +242,7 @@ const ViewQuote = () => {
           </Container>
         </div>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };

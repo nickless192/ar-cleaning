@@ -196,7 +196,7 @@ function IndexNavbar() {
                     }}
                 />
             ) : null}
-            <Navbar className={"fixed-top navbar-color " + navbarColor} expand="lg" >
+            <Navbar className={"fixed-top nav-bar-top navbar-color " + navbarColor} expand="lg" >
                 <Container>
                     <div className="navbar-translate">
                         <NavbarBrand
@@ -204,7 +204,8 @@ function IndexNavbar() {
                             id="navbar-brand"
                             className="text-capitalize font-weight-bold"
                         >
-                            CleanAR Solutions
+                            <img src={require("../../assets/img/IC CLEAN AR-16.png")} alt="CleanAR Solutions" className="" width="30" height="24" />
+                            <span className="primary-color">CleanAR</span> <span className="secondary-color">Solutions</span>
                         </NavbarBrand>
                         <button
                             className="navbar-toggler"
@@ -240,6 +241,16 @@ function IndexNavbar() {
                                     <p>Download</p>
                                 </NavLink>
                             </NavItem> */}
+                            <NavItem>
+                                <NavLink
+                                    // className="nav-link btn-neutral"
+                                    // color="info"
+                                    href="/about-us"
+                                >
+                                    <i className="now-ui-icons business_badge mr-1"></i>
+                                    <p>About Us</p>
+                                </NavLink>
+                            </NavItem>
                             <NavItem>
                                 <NavLink
                                     // className="nav-link btn-neutral"

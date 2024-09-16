@@ -148,7 +148,7 @@ const ManageUser = () => {
 
     return (
         <>
-            <Navbar />
+            {/* <Navbar /> */}
             {/* <div className="page-header clear-filter" filter-color="blue"> */}
                 <div
                     className="section page-header-image"
@@ -366,7 +366,7 @@ const ManageUser = () => {
                     
                 </div>
             {/* </div> */}
-            <Footer />
+            {/* <Footer /> */}
         </>
     );
 };

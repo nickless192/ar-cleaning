@@ -10,38 +10,38 @@ function Footer() {
       <Container>
         <nav>
           <ul>
-            {/* <li>
-              <a href="/privacy-policy" target="_blank">
-                Privacy Policy
-              </a>
-            </li> */}
             <li>
-              <a href="/terms-conditions" target="_blank">
+              <a href="/careers">
+                Work With Us
+              </a>
+            </li>
+            <li>
+              <a href="/terms-conditions">
                 Terms & Conditions
               </a>
             </li>
             <li>
-              <a href="/disclaimer" target="_blank">
+              <a href="/disclaimer">
                 Disclaimer
               </a>
             </li>
             {/* <li>
-              <a href="/return-refund-policy" target="_blank">
+              <a href="/return-refund-policy">
                 Refund Policy
               </a>
             </li> */}
             {/* <li>
-              <a href="/sitemap" target="_blank">
+              <a href="/sitemap">
                 Sitemap
               </a>
             </li> */}
             <li>
-              <a href="/accessibility-statement" target="_blank">
+              <a href="/accessibility-statement">
                 Accessibility Statement
               </a>
             </li>
             <li>
-              <a href="/testimonials-reviews" target="_blank">
+              <a href="https://g.page/r/Cek9dkmHVuBKEAE/review" target="_blank">
                 Testimonials/Reviews
               </a>
             </li>            

@@ -12,6 +12,7 @@ import "assets/demo/nucleo-icons-page-styles.css?v=1.5.0";
 
 // pages for this kit
 import Index from "views/Index.js";
+import AboutUsPage from "../src/components/Pages/AboutUsPage";
 import LoginPage from "../src/components/Pages/LoginPage";
 import ProfilePage from "../src/components/Pages/ProfilePage";
 import SignUp from "../src/components/Pages/SignUp";
@@ -23,6 +24,9 @@ import ViewQuotes from "../src/components/Pages/ViewQuotes";
 import ProductsAndServices from "../src/components/Pages/ProductsAndServices";
 import ProtectedRoute from "../src/components/Pages/ProtectedRoute";
 import ChatTool from "../src/components/Pages/ChatTool";
+import Footer from "components/Pages/Footer";
+import Navbar from "components/Pages/Navbar.js";
+import Career from "components/Pages/Career.js";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -35,6 +39,7 @@ const App = () => {
 
   return (
     <BrowserRouter>
+      <Navbar />
       <Routes>
         <Route path="/index" element={<Index />} />
         <Route path="/profile-page" element={<ProtectedRoute element={<ProfilePage />} />} />
@@ -45,24 +50,28 @@ const App = () => {
         <Route path="/view-quotes/:quoteId" element={<ProtectedRoute element={<ViewQuotes />} />} />
         <Route path="/login-page" element={<LoginPage />} />
         <Route path="/signup-page" element={<SignUp />} />
-        <Route path='/request-quote' element={<RequestQuote/>} />
-        <Route path='/chat-tool' element={<ChatTool/>} />
+        <Route path='/request-quote' element={<RequestQuote />} />
+        <Route path='/chat-tool' element={<ChatTool />} />
+        <Route path="/careers" element={<Career />} />
+        <Route path="/about-us" element={<AboutUsPage />} />
         <Route path="/products-and-services" element={<ProductsAndServices />} />
         <Route path="/" element={<Navigate to="/index" />} />
         <Route path="*" element={<Navigate to="/index" replace />} />
       </Routes>
+      <Footer />
       <a
         href="https://wa.me/14374405514"
         className="whatsapp-btn"
         target="_blank"
         rel="noreferrer"
       >
-        <img src={require("assets/img/whatsapp-icon.png")} alt="WhatsApp" />  
+        <img src={require("assets/img/whatsapp-icon.png")} alt="WhatsApp" />
       </a>
       {/* Chatbot Button and Chat Window */}
-      <button className="chatbot-toggle" onClick={toggleChat}>
+      {/* disabled until implemented fully */}
+      {/* <button className="chatbot-toggle" onClick={toggleChat}>
         <img src={require("assets/img/chat-icon.png")} alt="Chat Coming Soon" />
-      </button>
+      </button> */}
       {/* {isChatOpen && <ChatTool />} */}
     </BrowserRouter>
   );

@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import {
   Row, Col, Card, CardBody, CardTitle, CardText, CardHeader, ListGroup, ListGroupItem,
+  Container,
   CardFooter
 } from "reactstrap";
 import { Image } from 'react-bootstrap';
@@ -27,7 +28,7 @@ function AboutUsPage() {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="section pb-0 mb-0">
 
         <VisitorCounter page={"index"} />
@@ -61,54 +62,32 @@ function AboutUsPage() {
             
           </Col>
         </Row>
-        <div className="py-1 px-5 secondary-bg-color">
-          <Row className=" py-0 pr-5 secondary-bg-color">
-            <Col className="pr-0">
-              <Card className="card-plain">
-                <CardHeader>
-                  <CardTitle tag="h4" className="text-bold">Contact Us!</CardTitle>
-                </CardHeader>
-                <CardBody>
-                  <CardText>
-                    <p>We'd love to hear from you! Whether you have a question, need assistance, or just want to share your feedback, our team is here to help. Reach out to us through through your preferred method, and we'll get back to you as soon as possible.</p>
-                  </CardText>
-                </CardBody>
-              </Card>
-            </Col>
-            <Col>
-              <Card className="card-plain">
-                <CardBody>
-                  <CardText>
-                    <ListGroup className="contact-info">
-                      <ListGroupItem>
-                        <i className="now-ui-icons tech_mobile"></i> <strong>Call Us:</strong> <Link to="tel:437-440-5514">437-440-5514</Link> <br />
-                        <span>Our customer service team is available to assist you Monday through Friday, from 9 AM to 6 PM. Don't hesitate to call for any inquiries or support!</span>
-                      </ListGroupItem>
-                      <ListGroupItem>
-                        <i className="now-ui-icons ui-1_email-85"></i> <strong>Email Us:</strong> <a href="mailto:info@cleanarsolutions.ca">info@cleanarsolutions.ca</a><br />
-                        <span>For detailed inquiries or if you prefer written communication, drop us an email. We aim to respond within 24 hours.</span>
-                      </ListGroupItem>
-                      <ListGroupItem>
-                        <i className="now-ui-icons location_pin"></i> <strong>Visit Us:</strong>  <a
-                          href="https://www.google.com/maps/search/?api=1&query=Toronto,+ON+M4Y+3C2"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="location-link"
-                        >
-                          Toronto, ON M4Y 3C2
-                        </a><br />
-                        <span>We're conveniently located in the heart of Toronto. Contact us to schedule an appointment or for more information.</span>
-                      </ListGroupItem>
-                    </ListGroup>
-                  </CardText>
-                </CardBody>
-              </Card>
-            </Col>
-            {/* </Col> */}
-          </Row>
-        </div>
+        <Container>
+            <Row>
+              <Col>                
+                <h2>Our Mission</h2>
+                <p>
+                  Our mission is to provide a platform for people to request and receive quotes for cleaning services.
+                </p>
+                <h2>Our Vision</h2>
+                <p>
+                  Our vision is to create a platform that connects people with cleaning service providers.
+                </p>
+                <h2>Our Values</h2>
+                <p>
+                  We value honesty, integrity, and transparency.
+                </p>
+                <h2>Our Services</h2>
+                <p>
+                  We offer a platform for people to request quotes for cleaning services.
+                </p>
+
+
+              </Col>
+            </Row>
+          </Container>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }
