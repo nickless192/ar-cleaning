@@ -90,10 +90,10 @@ const QuoteSchema = new Schema({
         type: String,
         // required: true
     },
-    // serviceLevel: {
-    //     type: String,
-    //     required: true // This is new
-    // },
+    promoCode: {
+        type: String
+    },
+    
     products: [ProductSchema],
     services: [ServiceSchema],
     userId: {

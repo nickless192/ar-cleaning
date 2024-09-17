@@ -1,6 +1,11 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { Link } from "react-router-dom";
 import {
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
   Card,
   CardHeader,
   CardBody,
@@ -18,8 +23,33 @@ import Logo from "assets/img/IC CLEAN AR-15-cropped.png";
 
 function Index() {
 
+  const [promoCode, setPromoCode] = useState('WELCOME10');
 
-  React.useEffect(() => {
+  const [modal, setModal] = useState(false);
+
+  const toggleModal = () => {
+    setModal(!modal);
+    // localStorage.setItem('modalShown', 'true');
+    sessionStorage.setItem('modalShown', 'true');
+  };
+
+  const handleDontShowAgain = () => {
+    localStorage.setItem('modalDontShowAgain', 'true');
+    setModal(false);
+  };
+
+
+  useEffect(() => {
+    // const modalShown = localStorage.getItem('modalShown');
+    const modalShown = sessionStorage.getItem('modalShown');
+    const modalDontShowAgain = localStorage.getItem('modalDontShowAgain');
+
+    if (modalDontShowAgain) {
+      setModal(false);
+    } else
+    if (!modalShown) {
+      setModal(true);
+    }
     document.body.classList.add("index-page");
     document.body.classList.add("sidebar-collapse");
     document.documentElement.classList.remove("nav-open");
@@ -34,7 +64,16 @@ function Index() {
 
   return (
     <>
-      {/* <AboutUsPage /> */}
+    <Modal isOpen={modal} toggle={toggleModal}>
+        <ModalHeader toggle={toggleModal}>Welcome Promo!</ModalHeader>
+        <ModalBody>
+          Welcome to CleanAR Solutions! We're excited to offer you 10% discount for your first cleaning service. <a href="mailto:info@cleanARsolutions.ca">Contact us</a> today to claim your discount or <Link to={`/request-quote?promoCode=${promoCode}`}>click here to request a quote</Link>. We look forward to hearing from you!
+        </ModalBody>
+        <ModalFooter>
+          <Button className="primary-bg-color" onClick={toggleModal}>Close</Button>
+          <Button color="danger" onClick={handleDontShowAgain}>Don't Show Again</Button>
+        </ModalFooter>
+      </Modal>
       <div className="content section-background mb-0" style={{ backgroundImage: `url(${backgroundImage})` }}>
         <p>
           <div className="py-1 px-5 ">
@@ -42,7 +81,6 @@ function Index() {
               <Col className="pr-0">
                 <Card className="card-plain">
                   <Row>
-
                     <CardHeader>
                       <Row>
                         <Col md='7' className="logo-col">

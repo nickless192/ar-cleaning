@@ -16,6 +16,11 @@ function Footer() {
               </a>
             </li>
             <li>
+              <a href="https://g.page/r/Cek9dkmHVuBKEAE/review" target="_blank">              
+                Provide A Review
+              </a>
+            </li>                        
+            <li>
               <a href="/terms-conditions">
                 Terms & Conditions
               </a>
@@ -40,11 +45,6 @@ function Footer() {
                 Accessibility Statement
               </a>
             </li>
-            <li>
-              <a href="https://g.page/r/Cek9dkmHVuBKEAE/review" target="_blank">
-                Testimonials/Reviews
-              </a>
-            </li>            
             {/* <li>
               <a href="/newsletter-signup" target="_blank">
                 Newsletter Signup
@@ -52,14 +52,10 @@ function Footer() {
             </li> */}
           </ul>
         </nav>
-        {/* <div className="payment-methods">
-          <img src="/images/payment-method1.png" alt="Payment Method 1" />
-          <img src="/images/payment-method2.png" alt="Payment Method 2" />
-        </div> */}
         <div className="copyright" id="copyright">
           © {new Date().getFullYear()}, Designed and Coded by{" "}
           <a href="_blank" target="_blank">
-            Nickless192
+            Omar Rodriguez
           </a>
         </div>
       </Container>

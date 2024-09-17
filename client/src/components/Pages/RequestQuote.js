@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
     Input,
     FormGroup, Label,
@@ -24,7 +24,9 @@ import VisitorCounter from "components/Pages/VisitorCounter.js";
 import { FaQuestionCircle } from 'react-icons/fa';
 
 const RequestQuote = () => {
-    // const [selectedOptions, setSelectedOptions] = useState([]);
+
+    const location = useLocation();
+    // const [promoCode, setPromoCode] = useState('');
     const navigate = useNavigate();
     const [services, setServices] = useState([]);
     const [products, setProducts] = useState([]);
@@ -35,7 +37,7 @@ const RequestQuote = () => {
         companyName: '',
         email: '',
         phonenumber: '',
-        howDidYouHearAboutUs: '',
+        promoCode: '',
         subtotalCost: 0,
         tax: 0,
         grandTotal: 0,
@@ -191,8 +193,20 @@ const RequestQuote = () => {
             return total + serviceCost;
         }, 0);
 
+        // Extract promoCode from the query string
+        const searchParams = new URLSearchParams(location.search);
+        const code = searchParams.get('promoCode');
+
         const tax = subtotalCost * 0.13;
         const grandTotal = subtotalCost + tax;
+
+        if (code) {
+            setFormData(prevFormData => ({
+                ...prevFormData,
+                promoCode: code
+            }));
+        }            
+            
 
         // Update formData with calculated values
         setFormData(prevFormData => ({
@@ -211,7 +225,7 @@ const RequestQuote = () => {
         return () => {
             document.body.classList.remove("request-quote", "sidebar-collapse");
         };
-    }, [isLogged, formData.services]);
+    }, [isLogged, formData.services, location.search]);
 
     const handleChange = (event) => {
 
@@ -374,19 +388,6 @@ const RequestQuote = () => {
             console.error('Error submitting quote:', error);
         }
     };
-
-    const subtotalCost = formData.services.reduce((total, service) => {
-        // Sum up all the costs of the services' custom options
-        const serviceCost = Object.values(service.customOptions || {}).reduce((sum, option) => {
-            if (option.service) {
-                return sum + option.serviceCost;
-            }
-            return sum;
-        }, 0);
-        return total + serviceCost;
-    }, 0);
-    const tax = subtotalCost * 0.13;
-    const grandTotal = subtotalCost + tax;
 
 
     const renderCustomOptions = (type, serviceLevel) => {
@@ -755,7 +756,17 @@ const RequestQuote = () => {
                 <VisitorCounter page={"request-quote"} />
                 <div className="content">
                     <Container>
-                        <h2 className="text-center">Request a Quote</h2>
+                        <h2 className="text-center pt-3 primary-color text-bold">Request a Quote</h2>
+                        <p className="text-bold pb-2">
+                        {isLogged ? (
+                            <span>Logged in as {Auth.getProfile().data.firstName} {Auth.getProfile().data.lastName}. Feel free to adjust the pre-filled data if needed!</span>
+                        ) : (
+                            <span>Please fill out the form below to request a quote. <br />
+                            If you have an account with us already, please log-in to pre-fill your information for a smoother experience</span>
+                        )}
+                        </p>
+                            
+                            {/* <p>If you have an account with us already, please log-in to pre-fill your information for a speedy request</p> */}
                         <Form onSubmit={handleSubmit} id="quote-form">
                             <Row className='g-2'>
                                 <Col md='3' xs='10'>
@@ -926,7 +937,28 @@ const RequestQuote = () => {
                                         <PopoverBody>Enter your company name.</PopoverBody>
                                     </Popover>
                                 </Col>
-                                <Col md='3' xs='10' className=''>
+                                <Col md='3' xs='10'>
+                                    <Form.Floating className="mb-3">
+                                        <Form.Control
+                                            type="text"
+                                            id="promoCode"
+                                            placeholder="Promo Code"
+                                            className='text-cleanar-color text-bold'
+                                            name="promoCode"
+                                            value={formData.promoCode}
+                                            onChange={handleChange}
+                                        />
+                                        <label htmlFor="promoCode" className='text-bold'>Promo Code</label>
+                                    </Form.Floating>
+                                </Col>
+                                <Col md='1' xs='1'>
+                                    <Button id="Tooltip10" type="button" tabIndex='-1' onClick={() => togglePopover('promoCode')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
+                                    <Popover placement="right" isOpen={popoverOpen.promoCode} target="Tooltip10" toggle={() => togglePopover('promoCode')}>
+                                        <PopoverBody>Enter your promo code. Discount will be reflected on the quote if eligible. Promos cannot be combined.</PopoverBody>
+                                    </Popover>
+                                </Col>
+
+                                {/* <Col md='3' xs='10' className=''>
                                     <FloatingLabel controlId="floatingHowDidYouHear" label="How Did You Hear About Us..." className='text-bold'>
                                         <Form.Select aria-label="How Did You Hear About Us" value={formData.howDidYouHearAboutUs}
                                             name='howDidYouHearAboutUs' onChange={handleChange} className='transparent no-border text-cleanar-color text-bold'>
@@ -944,7 +976,7 @@ const RequestQuote = () => {
                                     <Popover placement="right" isOpen={popoverOpen.howDidYouHearAboutUs} target="Tooltip9" toggle={() => togglePopover('howDidYouHearAboutUs')}>
                                         <PopoverBody>How did you hear about us?</PopoverBody>
                                     </Popover>
-                                </Col>
+                                </Col> */}
 
                             </Row>
                             <FormGroup>
@@ -976,6 +1008,14 @@ const RequestQuote = () => {
                             </Row>
                             <>
                             {/* <Row className='mx-0'> */}
+                            { (formData.services.length === 0 ) ? (
+                                <Button
+                                    disabled
+                                    className='service-button-residential px-2'
+                                    >Choose a service type to customize your quote</Button>
+                            ) 
+                            : (
+                            <>
                                 {formData.services.map(service => (
                                     <>
                                         {/* <Col xs='4' > */}
@@ -995,6 +1035,9 @@ const RequestQuote = () => {
                                         {/* </Col> */}
                                     </>
                                 ))}
+                            </>
+                            )                            
+                            }
                                 {/* </Row> */}
                             </>
                             <>
@@ -1057,8 +1100,8 @@ const RequestQuote = () => {
 
                             <Row>
                                 <Col>
-                                    <p className='text-cleanar-color text-bold'>
-                                        A confirmation email will be sent to you upon submission.
+                                    <p className='primary-color text-bold pt-2'>
+                                        A confirmation email will be sent to you upon submission. Our team will review your request and get back to you as soon as possible. Thank you for choosing CleanAR Solutions!
                                     </p>
                                     {/* <FormGroup check className=''>
                                         <Label check>
