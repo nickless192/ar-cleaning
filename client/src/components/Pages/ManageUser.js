@@ -12,8 +12,6 @@ import {
 } from 'reactstrap';
 import Auth from "../../utils/auth";
 
-import Navbar from "components/Pages/Navbar.js";
-import Footer from "components/Pages/Footer.js";
 
 const ManageUser = () => {
     const [formData, setFormData] = useState({
@@ -28,7 +26,6 @@ const ManageUser = () => {
     const [users, setUsers] = useState([]);
     const [editingUserId, setEditingUserId] = useState(null);
     const [editedUser, setEditedUser] = useState({});
-    const [isLogged] = React.useState(Auth.loggedIn());
     const [currentUserId] = useState(Auth.getProfile().data._id);
 
     useEffect(() => {

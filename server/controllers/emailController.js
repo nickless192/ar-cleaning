@@ -132,7 +132,7 @@ ClenanAR Solutions`;
             // const { email, user } = req.body;
             const emailText = `This is an automated notification email from CleanAR Solutions.
 
-            Another user has joined our community!
+            An new user has joined our community!
 
             Best regards,
 

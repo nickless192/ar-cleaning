@@ -11,8 +11,6 @@ import {
 
 } from 'reactstrap'; // Importing required components from reactstrap
 
-import Navbar from "components/Pages/Navbar.js";
-import Footer from "components/Pages/Footer.js";
 
 const ProductsAndServices = () => {
 

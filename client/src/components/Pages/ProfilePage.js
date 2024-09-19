@@ -6,19 +6,9 @@ import {
   Row,
   Col,
   Input,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-
   Form,
 } from "reactstrap";
 import Auth from "../../utils/auth";
-import Navbar from "components/Pages/Navbar.js";
-// import ProfilePageHeader from "components/Headers/ProfilePageHeader.js";
-import Footer from "components/Pages/Footer.js";
-// import './../../assets/css/quote-dropdown.css';
-// import './../../assets/css/our-palette.css';
 
 import backgroundImage from 'assets/img/stock-photo-cropped-shot-woman-rubber-gloves-cleaning-office-table.jpg';
 
@@ -28,7 +18,7 @@ function ProfilePage() {
   const location = useLocation(); // useLocation hook to get the current location
   const [isEditing, setIsEditing] = useState(false);
   // const [isLogged] = React.useState(Auth.loggedIn());
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [setDropdownOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",

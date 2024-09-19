@@ -22,10 +22,6 @@ import {
 
 import { FaQuestionCircle } from 'react-icons/fa';
 
-// core components
-// import ExamplesNavbar from "components/Navbars/ExamplesNavbar.js";
-import Navbar from "components/Pages/Navbar.js";
-import Footer from "components/Pages/Footer.js";
 
 function LoginPage() {
 
@@ -112,7 +108,7 @@ function LoginPage() {
     const { name, value } = event.target;
     // console.log(name, value);
     // console.log(formData);
-    setFormData({ ...formData, [name]: value });
+    setFormData({ ...formData, [name]: value.trim() });
   };
 
 

@@ -12,16 +12,12 @@ import {
 } from "reactstrap";
 
 import {
-  FloatingLabel,
   Button,
   Form,
   Row,
-  Col,
-  Collapse
+  Col
 } from 'react-bootstrap';
 
-import Navbar from "components/Pages/Navbar.js";
-import Footer from "components/Pages/Footer.js";
 import { FaQuestionCircle } from 'react-icons/fa';
 
 // core components
@@ -59,74 +55,143 @@ function SignUp() {
     });
   };
 
+  // const handleFormSubmit = async (event) => {
+  //   event.preventDefault();
+  //   if (formData.firstName && formData.lastName && formData.email && formData.username && formData.password && formData.telephone) {
+  //     fetch(`/api/users/`, {
+  //       method: 'post',
+  //       body: JSON.stringify(formData),
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         // 'Access-Control-Allow-Credentials': 'true',
+  //         // 'accept': 'application/json',
+  //         // 'Access-Control-Allow-Origin': 'http://localhost:3000'
+  //         // 'Access-Control-Allow-Origin': '*' 
+  //       }
+  //     })
+  //       .then(response => {
+  //         if (response.ok) {
+  //           console.log(response)
+  //           console.log("new account created!");
+  //           response.json()
+  //             .then(data => {
+  //               console.log(data);
+  //               // Auth.login(data.token, data.dbUserData.adminFlag);
+  //               // call api to notify user of account creation
+  //               fetch(`/api/email/new-user`, {
+  //                 method: 'post',
+  //                 // mode: 'no-cors',
+  //                 body: JSON.stringify({ email: formData.email, user: data.dbUserData }),
+  //                 headers: {
+  //                   'Content-Type': 'application/json',
+  //                 }
+  //               })
+  //                 .then(response => {
+  //                   if (response.ok) {
+  //                     console.log(response)
+  //                     console.log("notification sent!");
+  //                     response.json()
+  //                       .then(data => {
+  //                         console.log(data);
+  //                       })
+  //                   }
+  //                   else {
+  //                     alert(response.statusText)
+  //                     // console.log(response)
+  //                   }
+  //                 })
+  //                 .catch(err => console.log(err));
+  //               Auth.login(data.token, data.dbUserData.adminFlag);
+  //             });
+  //         }
+  //         else {
+  //           alert(response.statusText)
+  //           // console.log(response)
+  //         }
+  //       })
+  //       .catch(err => console.log(err))
+
+  //   }
+  //   else {
+  //     alert("Please fill out all fields before submitting");
+  //   }
+  // }
+
   const handleFormSubmit = async (event) => {
     event.preventDefault();
+  
     if (formData.firstName && formData.lastName && formData.email && formData.username && formData.password && formData.telephone) {
-      fetch(`/api/users/`, {
-        method: 'post',
-        body: JSON.stringify(formData),
-        headers: {
-          'Content-Type': 'application/json',
-          // 'Access-Control-Allow-Credentials': 'true',
-          // 'accept': 'application/json',
-          // 'Access-Control-Allow-Origin': 'http://localhost:3000'
-          // 'Access-Control-Allow-Origin': '*' 
-        }
-      })
-        .then(response => {
-          if (response.ok) {
-            console.log(response)
-            console.log("new account created!");
-            response.json()
-              .then(data => {
-                console.log(data);
-                // Auth.login(data.token, data.dbUserData.adminFlag);
-                // call api to notify user of account creation
-                fetch(`/api/email/new-user`, {
-                  method: 'post',
-                  // mode: 'no-cors',
-                  body: JSON.stringify({ email: formData.email, user: data.dbUserData }),
-                  headers: {
-                    'Content-Type': 'application/json',
-                  }
-                })
-                  .then(response => {
-                    if (response.ok) {
-                      console.log(response)
-                      console.log("notification sent!");
-                      response.json()
-                        .then(data => {
-                          console.log(data);
-                        })
-                    }
-                    else {
-                      alert(response.statusText)
-                      // console.log(response)
-                    }
-                  })
-                  .catch(err => console.log(err));
-                Auth.login(data.token, data.dbUserData.adminFlag);
-              });
+      try {
+        const response = await fetch(`/api/users/`, {
+          method: 'post',
+          body: JSON.stringify(formData),
+          headers: {
+            'Content-Type': 'application/json',
           }
-          else {
-            alert(response.statusText)
-            // console.log(response)
+        });
+  
+        if (response.ok) {
+          console.log("New account created!");
+          const data = await response.json();
+  
+          // Call API to notify user of account creation
+          const emailResponse = await fetch(`/api/email/new-user`, {
+            method: 'post',
+            body: JSON.stringify({ email: formData.email, user: data.dbUserData }),
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          });
+  
+          if (emailResponse.ok) {
+            console.log("Notification sent!");
+            // const emailData = await emailResponse.json();
+            // console.log(emailData);
+          } else {
+            alert(emailResponse.statusText);
           }
-        })
-        .catch(err => console.log(err))
 
-    }
-    else {
+          const EmailNotificationResponse = await fetch(`/api/email/new-user-notification`, {
+            method: 'post',
+            body: JSON.stringify({ email: formData.email, user: data.dbUserData }),
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          });
+
+          if (EmailNotificationResponse.ok) {
+            console.log("Notification sent!");
+            // const emailData = await EmailNotificationResponse.json();
+            // console.log(emailData);
+          } else {
+            alert(EmailNotificationResponse.statusText);
+          }
+  
+          // Now call Auth.login after the email has been sent
+          Auth.login(data.token, data.dbUserData.adminFlag);
+  
+        } else {
+          alert(response.statusText);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    } else {
       alert("Please fill out all fields before submitting");
     }
-  }
+  };
+  
 
   const handleChange = (event) => {
     event.preventDefault();
     const { name, value } = event.target;
+    // if the value type is a string, crop any additional white space
+    // if (typeof value === 'string') {
+    //   value.trim();
+    // }
     // console.log(name, value);
     // console.log(formData);
-    setFormData({ ...formData, [name]: value });
+    setFormData({ ...formData, [name]: value.trim() });
   };
 
   useEffect(() => {

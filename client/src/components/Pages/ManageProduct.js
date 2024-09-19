@@ -18,8 +18,6 @@ import {
     CardFooter
 } from 'reactstrap';
 
-import Navbar from "components/Pages/Navbar.js";
-import Footer from "components/Pages/Footer.js";
 
 const ManageProduct = () => {
     const [formData, setFormData] = useState({

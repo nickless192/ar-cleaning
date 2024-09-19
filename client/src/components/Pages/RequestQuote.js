@@ -17,11 +17,12 @@ import {
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 // import { ButtonGroup, ToggleButton } from 'react-bootstrap';
 import html2pdf from 'html2pdf.js';
-import Navbar from "components/Pages/Navbar.js";
-import Footer from "components/Pages/Footer.js";
 import Auth from "../../utils/auth";
 import VisitorCounter from "components/Pages/VisitorCounter.js";
-import { FaQuestionCircle } from 'react-icons/fa';
+import {
+    FaQuestionCircle
+} from 'react-icons/fa';
+
 
 const RequestQuote = () => {
 
@@ -59,6 +60,7 @@ const RequestQuote = () => {
         services: false,
         products: false
     });
+    const [validPromoCode, setValidPromoCode] = useState(false);
     // const togglePopover = (field) => {
     //     setPopoverOpen({ ...popoverOpen, [field]: !popoverOpen[field] });
     //   };
@@ -195,18 +197,18 @@ const RequestQuote = () => {
 
         // Extract promoCode from the query string
         const searchParams = new URLSearchParams(location.search);
-        const code = searchParams.get('promoCode');
+        const promoCode = searchParams.get('promoCode');
 
         const tax = subtotalCost * 0.13;
         const grandTotal = subtotalCost + tax;
 
-        if (code) {
+        if (promoCode) {
             setFormData(prevFormData => ({
                 ...prevFormData,
-                promoCode: code
+                promoCode: promoCode
             }));
-        }            
-            
+        }
+
 
         // Update formData with calculated values
         setFormData(prevFormData => ({
@@ -230,6 +232,10 @@ const RequestQuote = () => {
     const handleChange = (event) => {
 
         const { name, value } = event.target;
+        // reset validation if promo code is changed
+        if (name === 'promoCode') {
+            setValidPromoCode(false);
+        }
         setFormData(prevFormData => ({ ...prevFormData, [name]: value }));
     };
 
@@ -298,95 +304,125 @@ const RequestQuote = () => {
         console.log(formData);
     };
 
+    const handlePromoCodeValidation = async (e) => {
+        e.preventDefault();
+        //const promoCode = e.target.value;
+        const promoCode = formData.promoCode.toLowerCase();
+        if (promoCode === 'welcome10') {
+            setValidPromoCode(true);
+            alert('Valid promo code! 10% discount will be applied to your quote');
+            return true;
+        }
+        else {
+            setValidPromoCode(false);
+            alert('Invalid promo code');
+            return false;
+        }
+    };
+
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log('Form data:', formData);
 
-        if (!formData.name || !formData.email || !formData.phonenumber || !formData.description || !formData.companyName || (!formData.services.length && !formData.products.length) || !formData.subtotalCost || !formData.tax || !formData.grandTotal || !formData.address || !formData.city || !formData.province || !formData.postalcode) {
-            // if (!formData.name || !formData.email || !formData.phonenumber || !formData.description || !formData.companyName || (!formData.services.length && !formData.products.length) || !formData.howDidYouHearAboutUs || !formData.subtotalCost || !formData.tax || !formData.grandTotal || !formData.address || !formData.city || !formData.province || !formData.postalcode) {
-            alert('Please fill out all required fields');
-            return;
-        }
+        const promoCodeIsValid = await handlePromoCodeValidation(e);
+        // if (!validPromoCode) {
+        // }
 
-        try {
-            const response = await fetch('/api/quotes', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json'
-                },
-                body: JSON.stringify(formData)
-            });
-
-            if (response.ok) {
-                alert('Quote submitted successfully!');
-                // disable for testing
-                setFormData({
-                    name: '',
-                    userId: '',
-                    description: '',
-                    companyName: '',
-                    email: '',
-                    phonenumber: '',
-                    howDidYouHearAboutUs: '',
-                    subtotalCost: 0,
-                    tax: 0,
-                    grandTotal: 0,
-                    services: [],
-                    products: [],
-                    // serviceLevel: '' // Reset service level
-                });
-
-
-                if (window.confirm('Would you like to download the quote as a PDF?')) {
-                    const element = document.getElementById('quote-form');
-                    const opt = {
-                        margin: 0.5,
-                        filename: 'quote.pdf',
-                        image: { type: 'jpeg', quality: 0.98 },
-                        html2canvas: { scale: 2 },
-                        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-                    };
-                    html2pdf().set(opt).from(element).save();
-                }
-
-                const quoteResponse = await response.json();
-                // if (sendEmail) {
-                const emailResponse = await fetch('/api/email/quote', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Accept: 'application/json'
-                    },
-                    body: JSON.stringify({ email: formData.email, quote: quoteResponse })
-                });
-
-                if (emailResponse.ok) {
-                    alert('Email sent successfully!');
-                } else {
-                    alert('Error sending email');
-                }
-                // }
-                // merged the two fetch requests into one
-                const emailNotification = await fetch('/api/email/quote-notification', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Accept: 'application/json'
-                    },
-                    body: JSON.stringify({ email: formData.email, quote: quoteResponse })
-                });
-                if (emailNotification.ok) {
-                    alert('Email notification sent successfully!');
-                }
-                else {
-                    alert('Error sending email notification');
-                }
-                navigate('/index');
+        if (promoCodeIsValid) {
+            if (!formData.name || !formData.email || !formData.phonenumber || !formData.description || !formData.companyName || (!formData.services.length && !formData.products.length) || !formData.subtotalCost || !formData.tax || !formData.grandTotal || !formData.address || !formData.city || !formData.province || !formData.postalcode) {
+                // if (!formData.name || !formData.email || !formData.phonenumber || !formData.description || !formData.companyName || (!formData.services.length && !formData.products.length) || !formData.howDidYouHearAboutUs || !formData.subtotalCost || !formData.tax || !formData.grandTotal || !formData.address || !formData.city || !formData.province || !formData.postalcode) {
+                alert('Please fill out all required fields');
+                return;
             }
-        } catch (error) {
-            console.error('Error submitting quote:', error);
+
+            try {
+                const response = await fetch('/api/quotes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Accept: 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    alert('Quote submitted successfully!');
+                    // disable for testing
+                    setFormData({
+                        name: '',
+                        userId: '',
+                        description: '',
+                        companyName: '',
+                        email: '',
+                        phonenumber: '',
+                        howDidYouHearAboutUs: '',
+                        subtotalCost: 0,
+                        tax: 0,
+                        grandTotal: 0,
+                        services: [],
+                        products: [],
+                        // serviceLevel: '' // Reset service level
+                    });
+
+
+                    if (window.confirm('Would you like to download the quote as a PDF?')) {
+                        const element = document.getElementById('quote-form');
+                        const opt = {
+                            margin: 0.5,
+                            filename: 'quote.pdf',
+                            image: { type: 'jpeg', quality: 0.98 },
+                            html2canvas: { scale: 2 },
+                            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+                        };
+                        html2pdf().set(opt).from(element).save();
+                    }
+
+                    const quoteResponse = await response.json();
+                    // if (sendEmail) {
+                    const emailResponse = await fetch('/api/email/quote', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Accept: 'application/json'
+                        },
+                        body: JSON.stringify({ email: formData.email, quote: quoteResponse })
+                    });
+
+                    if (emailResponse.ok) {
+                        alert('Email confirmation sent successfully!');
+                        console.log('Email sent successfully!');
+                    } else {
+                        alert('Error sending email');
+                    }
+                    // }
+                    // merged the two fetch requests into one
+                    const emailNotification = await fetch('/api/email/quote-notification', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Accept: 'application/json'
+                        },
+                        body: JSON.stringify({ email: formData.email, quote: quoteResponse })
+                    });
+                    if (emailNotification.ok) {
+                        // alert('Email notification sent successfully!');
+                        console.log('Email notification sent successfully!');
+                    }
+                    else {
+                        alert('Error sending email notification');
+                    }
+                    navigate('/index');
+                }
+            } catch (error) {
+                console.error('Error submitting quote:', error);
+            }
         }
+        else {
+            alert('Invalid promo code');
+        }
+
+
     };
 
 
@@ -744,7 +780,7 @@ const RequestQuote = () => {
                 );
 
 
-                default:
+            default:
                 return null;
         }
     };
@@ -758,15 +794,15 @@ const RequestQuote = () => {
                     <Container>
                         <h2 className="text-center pt-3 primary-color text-bold">Request a Quote</h2>
                         <p className="text-bold pb-2">
-                        {isLogged ? (
-                            <span>Logged in as {Auth.getProfile().data.firstName} {Auth.getProfile().data.lastName}. Feel free to adjust the pre-filled data if needed!</span>
-                        ) : (
-                            <span>Please fill out the form below to request a quote. <br />
-                            If you have an account with us already, please log-in to pre-fill your information for a smoother experience</span>
-                        )}
+                            {isLogged ? (
+                                <span>Logged in as {Auth.getProfile().data.firstName} {Auth.getProfile().data.lastName}. Feel free to adjust the pre-filled data if needed!</span>
+                            ) : (
+                                <span>Please fill out the form below to request a quote. <br />
+                                    If you have an account with us already, please log-in to pre-fill your information for a smoother experience</span>
+                            )}
                         </p>
-                            
-                            {/* <p>If you have an account with us already, please log-in to pre-fill your information for a speedy request</p> */}
+
+                        {/* <p>If you have an account with us already, please log-in to pre-fill your information for a speedy request</p> */}
                         <Form onSubmit={handleSubmit} id="quote-form">
                             <Row className='g-2'>
                                 <Col md='3' xs='10'>
@@ -951,6 +987,10 @@ const RequestQuote = () => {
                                         <label htmlFor="promoCode" className='text-bold'>Promo Code</label>
                                     </Form.Floating>
                                 </Col>
+                                {/* add a button to validate the promo code */}
+                                {/* <Col md='1' xs='1'>
+                                    <Button id="validatePromoCode" type="button" onClick={handlePromoCodeValidation} className='primary-bg-color btn-round btn-icon'><FaCheck /></Button>
+                                </Col> */}
                                 <Col md='1' xs='1'>
                                     <Button id="Tooltip10" type="button" tabIndex='-1' onClick={() => togglePopover('promoCode')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
                                     <Popover placement="right" isOpen={popoverOpen.promoCode} target="Tooltip10" toggle={() => togglePopover('promoCode')}>
@@ -1007,37 +1047,37 @@ const RequestQuote = () => {
                                 </Col>
                             </Row>
                             <>
-                            {/* <Row className='mx-0'> */}
-                            { (formData.services.length === 0 ) ? (
-                                <Button
-                                    disabled
-                                    className='service-button-residential px-2'
+                                {/* <Row className='mx-0'> */}
+                                {(formData.services.length === 0) ? (
+                                    <Button
+                                        disabled
+                                        className='service-button-residential px-2'
                                     >Choose a service type to customize your quote</Button>
-                            ) 
-                            : (
-                            <>
-                                {formData.services.map(service => (
-                                    <>
-                                        {/* <Col xs='4' > */}
-                                        <Button 
-                                            onClick={() => handleToggle(service.type)}
-                                            aria-controls={service.type}
-                                            // aria-expanded={openStates[service.type]}
-                                            aria-expanded={openService === service.type}
-                                            className={`service-button-${service.type.toLowerCase()} px-2`}
-                                        >{service.type}
-                                            {openService === service.type ? (
-                                                <FaChevronUp className="ms-2" />
-                                            ) : (
-                                                <FaChevronDown className="ms-2" />
-                                            )}
-                                        </Button>
-                                        {/* </Col> */}
-                                    </>
-                                ))}
-                            </>
-                            )                            
-                            }
+                                )
+                                    : (
+                                        <>
+                                            {formData.services.map(service => (
+                                                <>
+                                                    {/* <Col xs='4' > */}
+                                                    <Button
+                                                        onClick={() => handleToggle(service.type)}
+                                                        aria-controls={service.type}
+                                                        // aria-expanded={openStates[service.type]}
+                                                        aria-expanded={openService === service.type}
+                                                        className={`service-button-${service.type.toLowerCase()} px-2`}
+                                                    >{service.type}
+                                                        {openService === service.type ? (
+                                                            <FaChevronUp className="ms-2" />
+                                                        ) : (
+                                                            <FaChevronDown className="ms-2" />
+                                                        )}
+                                                    </Button>
+                                                    {/* </Col> */}
+                                                </>
+                                            ))}
+                                        </>
+                                    )
+                                }
                                 {/* </Row> */}
                             </>
                             <>

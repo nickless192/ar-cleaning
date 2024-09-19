@@ -42,11 +42,7 @@ class AuthService {
     // console.log(id_token, adminFlag);
     localStorage.setItem('id_token', id_token);
     localStorage.setItem('adminFlag', adminFlag);
-    // sessionStorage.setItem('id_token', id_token);
-    // sessionStorage.setItem('adminFlag', adminFlag);
-
-    // console.log("login token:",id_token);
-    // console.log(sessionStorage.getItem('id_token'));
+    
     window.location.assign('/profile-page');
 
   }

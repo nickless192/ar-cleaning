@@ -1,15 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import {
-  Row, Col, Card, CardBody, CardTitle, CardText, CardHeader, ListGroup, ListGroupItem,
+  Row, Col, Card, CardBody, CardTitle, CardText, CardHeader,
   Container,
-  CardFooter
 } from "reactstrap";
 import { Image } from 'react-bootstrap';
 import "./../../assets/css/our-palette.css";
 import Logo from "../../assets/img/logo.png";
-import Navbar from "components/Pages/Navbar.js";
-import Footer from "components/Pages/Footer.js";
 import VisitorCounter from "components/Pages/VisitorCounter.js";
 
 function AboutUsPage() {
