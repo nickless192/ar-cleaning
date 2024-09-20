@@ -3,17 +3,15 @@ import { useEffect, useState } from "react";
 import Auth from "../../utils/auth";
 // reactstrap components
 import {
-  Input,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroup,
   Container,
-  Popover, PopoverBody
+  Popover,
+  PopoverBody
 } from "reactstrap";
 
 import {
   Button,
   Form,
+  FloatingLabel,
   Row,
   Col
 } from 'react-bootstrap';
@@ -28,6 +26,7 @@ function SignUp() {
     lastName: "",
     email: "",
     howDidYouHearAboutUs: "",
+    howDidYouHearAboutUsSupport: "",
     telephone: "",
     username: "",
     password: ""
@@ -38,7 +37,7 @@ function SignUp() {
     lastName: false,
     email: false,
     telephone: false,
-    username: false,
+    username: false,    
     password: false
   });
 
@@ -119,7 +118,7 @@ function SignUp() {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-  
+
     if (formData.firstName && formData.lastName && formData.email && formData.username && formData.password && formData.telephone) {
       try {
         const response = await fetch(`/api/users/`, {
@@ -129,11 +128,11 @@ function SignUp() {
             'Content-Type': 'application/json',
           }
         });
-  
+
         if (response.ok) {
           console.log("New account created!");
           const data = await response.json();
-  
+
           // Call API to notify user of account creation
           const emailResponse = await fetch(`/api/email/new-user`, {
             method: 'post',
@@ -142,7 +141,7 @@ function SignUp() {
               'Content-Type': 'application/json',
             }
           });
-  
+
           if (emailResponse.ok) {
             console.log("Notification sent!");
             // const emailData = await emailResponse.json();
@@ -166,10 +165,10 @@ function SignUp() {
           } else {
             alert(EmailNotificationResponse.statusText);
           }
-  
+
           // Now call Auth.login after the email has been sent
           Auth.login(data.token, data.dbUserData.adminFlag);
-  
+
         } else {
           alert(response.statusText);
         }
@@ -180,7 +179,7 @@ function SignUp() {
       alert("Please fill out all fields before submitting");
     }
   };
-  
+
 
   const handleChange = (event) => {
     event.preventDefault();
@@ -217,13 +216,27 @@ function SignUp() {
 
               <Row className="g-2">
                 <Col md='5' xs='10'>
-                  <InputGroup
+                  <Form.Floating className="mb-3">
+                    <Form.Control
+                      id="floatinFirstName"
+                      type="text"
+                      placeholder="First Name"
+                      className="text-cleanar-color"
+                      name="firstName"
+                      value={formData.firstName}
+                      onChange={(e) => handleChange(e)}
+                    />
+                    <label htmlFor="floatinFirstName"
+                      className="text-cleanar-color"
+                    >First Name</label>
+                  </Form.Floating>
+                  {/* <InputGroup
                     className={
                       "no-border" + (formData.firstName ? " input-group-focus" : "")
                     }
                   >
                     <InputGroupAddon addonType="prepend">
-                      <InputGroupText>
+                      <InputGroupText className="">
                         <i className="now-ui-icons users_circle-08"></i>
                       </InputGroupText>
                     </InputGroupAddon>
@@ -236,7 +249,7 @@ function SignUp() {
                       // onFocus={(e) => handleChange(e)}
                       onChange={(e) => handleChange(e)}
                     ></Input>
-                  </InputGroup>
+                  </InputGroup> */}
                 </Col>
                 <Col md='1' xs='1'>
                   <Button id="Popover1" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
@@ -247,7 +260,21 @@ function SignUp() {
                   </Popover>
                 </Col>
                 <Col md='5' xs='10'>
-                  <InputGroup
+                  <Form.Floating className="mb-3">
+                    <Form.Control
+                      id="floatingLastName"
+                      type="text"
+                      placeholder="Last Name"
+                      className="text-cleanar-color"
+                      name="lastName"
+                      value={formData.lastName}
+                      onChange={(e) => handleChange(e)}
+                    />
+                    <label htmlFor="floatingLastName"
+                      className="text-cleanar-color"
+                    >Last Name</label>
+                  </Form.Floating>
+                  {/* <InputGroup
                     className={
                       "no-border" + (formData.lastName ? " input-group-focus" : "")
                     }
@@ -266,7 +293,7 @@ function SignUp() {
                       // onFocus={(e) => handleChange(e)}
                       onChange={(e) => handleChange(e)}
                     ></Input>
-                  </InputGroup>
+                  </InputGroup> */}
                 </Col>
                 <Col md='1' xs='1'>
                   <Button id="Popover2" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
@@ -279,7 +306,21 @@ function SignUp() {
               </Row>
               <Row className="g-2">
                 <Col md='5' xs='10'>
-                  <InputGroup
+                  <Form.Floating className="mb-3">
+                    <Form.Control
+                      id="floatingEmail"
+                      type="text"
+                      placeholder="Email"
+                      className="text-cleanar-color"
+                      name="email"
+                      value={formData.email}
+                      onChange={(e) => handleChange(e)}
+                    />
+                    <label htmlFor="floatingEmail"
+                      className="text-cleanar-color"
+                    >Email</label>
+                  </Form.Floating>
+                  {/* <InputGroup
                     className={
                       "no-border" + (formData.email ? " input-group-focus" : "")
                     }
@@ -298,7 +339,7 @@ function SignUp() {
                       // onFocus={(e) => handleChange(e)}
                       onChange={(e) => handleChange(e)}
                     ></Input>
-                  </InputGroup>
+                  </InputGroup> */}
                 </Col>
                 <Col md='1' xs='1'>
                   <Button id="Popover3" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
@@ -309,7 +350,21 @@ function SignUp() {
                   </Popover>
                 </Col>
                 <Col md='5' xs='10'>
-                  <InputGroup
+                  <Form.Floating className="mb-3">
+                    <Form.Control
+                      id="floatingTelephone"
+                      type="text"
+                      placeholder="Telephone"
+                      className="text-cleanar-color"
+                      name="telephone"
+                      value={formData.telephone}
+                      onChange={(e) => handleChange(e)}
+                    />
+                    <label htmlFor="floatingTelephone"
+                      className="text-cleanar-color"
+                    >Telephone</label>
+                  </Form.Floating>
+                  {/* <InputGroup
                     className={
                       "no-border" + (formData.telephone ? " input-group-focus" : "")
                     }
@@ -328,7 +383,7 @@ function SignUp() {
                       // onFocus={(e) => handleChange(e)}
                       onChange={(e) => handleChange(e)}
                     ></Input>
-                  </InputGroup>
+                  </InputGroup> */}
                 </Col>
                 <Col md='1' xs='1'>
                   <Button id="Popover4" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
@@ -341,7 +396,21 @@ function SignUp() {
               </Row>
               <Row className="">
                 <Col md='5' xs='10'>
-                  <InputGroup
+                  <Form.Floating className="mb-3">
+                    <Form.Control
+                      id="floatingUsername"
+                      type="text"
+                      placeholder="Username"
+                      className="text-cleanar-color"
+                      name="username"
+                      value={formData.username}
+                      onChange={(e) => handleChange(e)}
+                    />
+                    <label htmlFor="floatingUsername"
+                      className="text-cleanar-color"
+                    >Username</label>
+                  </Form.Floating>
+                  {/* <InputGroup
                     className={
                       "no-border" + (formData.username ? " input-group-focus" : "")
                     }
@@ -360,7 +429,7 @@ function SignUp() {
                       // onFocus={(e) => handleChange(e)}
                       onChange={(e) => handleChange(e)}
                     ></Input>
-                  </InputGroup>
+                  </InputGroup> */}
                 </Col>
                 <Col md='1' xs='1'>
                   <Button id="Popover5" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
@@ -371,7 +440,21 @@ function SignUp() {
                   </Popover>
                 </Col>
                 <Col md='5' xs='10'>
-                  <InputGroup
+                  <Form.Floating className="mb-3">
+                    <Form.Control
+                      id="floatingPassword"
+                      type="password"
+                      placeholder="Password"
+                      className="text-cleanar-color"
+                      name="password"
+                      value={formData.password}
+                      onChange={(e) => handleChange(e)}
+                    />
+                    <label htmlFor="floatingPassword"
+                      className="text-cleanar-color"
+                    >Password</label>
+                  </Form.Floating>
+                  {/* <InputGroup
                     className={
                       "no-border" + (formData.password ? " input-group-focus" : "")
                     }
@@ -390,7 +473,7 @@ function SignUp() {
                       // onFocus={(e) => handleChange(e)}
                       onChange={(e) => handleChange(e)}
                     ></Input>
-                  </InputGroup>
+                  </InputGroup> */}
                 </Col>
                 <Col md='1' xs='1'>
                   <Button id="Popover6" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
@@ -402,20 +485,20 @@ function SignUp() {
                 </Col>
               </Row>
               <Row className="">
-                <Col md='11' xs='10'>
-                  <InputGroup className={`no-border ${formData.howDidYouHearAboutUs ? "input-group-focus" : ""}`}>
-                    <InputGroupAddon addonType="prepend">
-                      <InputGroupText className=''>
-                        <i className="now-ui-icons objects_globe"></i>
-                      </InputGroupText>
-                    </InputGroupAddon>
-                    <Input
+                <Col md='5' xs='10'>
+                  <FloatingLabel
+                    controlId="floatingHowDidYouHearAboutUs"
+                    label="How Did You Hear About Us?"
+                    className="text-cleanar-color"
+                  >
+                    <Form.Select
+                      id="floatingHowDidYouHearAboutUs"
                       type="select"
+                      placeholder="How Did You Hear About Us?"
+                      className="text-cleanar-color light-blue-bg-color"
+                      name="howDidYouHearAboutUs"
                       value={formData.howDidYouHearAboutUs}
-                      name='howDidYouHearAboutUs'
-                      className="text-cleanar-color"
-                      // className='font-weight-bold km-bg-test'
-                      onChange={handleChange}
+                      onChange={(e) => handleChange(e)}
                     >
                       <option value="">How Did You Hear About Us?...</option>
                       <option value="Google">Google</option>
@@ -423,10 +506,10 @@ function SignUp() {
                       <option value="Instagram">Instagram</option>
                       <option value="Referral">Referral</option>
                       <option value="Other">Other</option>
-                    </Input>
-                  </InputGroup>
-                </Col>
-                <Col md='1' xs='1'>
+                    </Form.Select>
+                  </FloatingLabel>
+                  </Col>
+                  <Col md='1' xs='1'>
                   <Button id="Popover7" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
                   <Popover placement="right" isOpen={popoverOpen.howDidYouHearAboutUs} target="Popover7" toggle={() => togglePopover('howDidYouHearAboutUs')}>
                     <PopoverBody>
@@ -434,17 +517,78 @@ function SignUp() {
                     </PopoverBody>
                   </Popover>
                 </Col>
+                  {/* if the user selected other, then render the box to enter the source. if they select referral, another box renders that allows to enter who referred them */}
+                  {formData.howDidYouHearAboutUs === 'Referral' ? (
+                    <>
+                <Col md='5' xs='1'>
+                      <Form.Floating className="mb-3">
+                        <Form.Control
+                          id="floatingReferral"
+                          type="text"
+                          placeholder="Referral"
+                          className="text-cleanar-color "
+                          name="howDidYouHearAboutUs"
+                          value={formData.howDidYouHearAboutUsSupport}
+                          onChange={(e) => handleChange(e)}
+                        />
+                        <label htmlFor="floatingReferral"
+                          className="text-cleanar-color"
+                        >Referral</label>
+                      </Form.Floating>
+                    </Col>
+                    <Col md='1' xs='1'>
+                      <Button id="Popover8" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
+                      <Popover placement="right" isOpen={popoverOpen.howDidYouHearAboutUsSupport} target="Popover8" toggle={() => togglePopover('howDidYouHearAboutUsSupport')}>
+                        <PopoverBody>
+                          Who referred you?
+                        </PopoverBody>
+                      </Popover>
+                    </Col>
+                    </>
+                  ) : null
+                  }
+                  {formData.howDidYouHearAboutUs === 'Other' ? (
+                    <>
+
+                      <Col md='5' xs='1'>
+                      <Form.Floating className="mb-3">
+                        <Form.Control
+                          id="floatingOther"
+                          type="text"
+                          placeholder="Other"
+                          className="text-cleanar-color"
+                          name="howDidYouHearAboutUs"
+                          value={formData.howDidYouHearAboutUsSupport}
+                          onChange={(e) => handleChange(e)}
+                        />
+                        <label htmlFor="floatingOther"
+                          className="text-cleanar-color"
+                        >Other</label>
+                      </Form.Floating>
+                      </Col>
+                      <Col md='1' xs='1'>
+                      <Button id="Popover9" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
+                      <Popover placement="right" isOpen={popoverOpen.howDidYouHearAboutUsSupport} target="Popover9" toggle={() => togglePopover('howDidYouHearAboutUsSupport')}>
+                        <PopoverBody>
+                          How did you hear about us?
+                        </PopoverBody>
+                      </Popover>
+                    </Col>
+                    </>
+                  ) : null
+                  }
+                
               </Row>
               <div className="text-center py-3">
 
-                    <Button
-                      className="btn-round light-bg-color"
-                      type="submit"
-                      // onClick={(e) => handleFormSubmit(e)}
-                      size="lg"
-                    >
-                      Get Started
-                    </Button>
+                <Button
+                  className="btn-round light-bg-color"
+                  type="submit"
+                  // onClick={(e) => handleFormSubmit(e)}
+                  size="lg"
+                >
+                  Get Started
+                </Button>
               </div>
             </Form>
           </Container>

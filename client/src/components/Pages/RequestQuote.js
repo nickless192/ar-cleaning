@@ -16,7 +16,7 @@ import {
 } from 'react-bootstrap';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 // import { ButtonGroup, ToggleButton } from 'react-bootstrap';
-import html2pdf from 'html2pdf.js';
+// import html2pdf from 'html2pdf.js';
 import Auth from "../../utils/auth";
 import VisitorCounter from "components/Pages/VisitorCounter.js";
 import {
@@ -30,7 +30,7 @@ const RequestQuote = () => {
     // const [promoCode, setPromoCode] = useState('');
     const navigate = useNavigate();
     const [services, setServices] = useState([]);
-    const [products, setProducts] = useState([]);
+    const [setProducts] = useState([]);
     const [formData, setFormData] = useState({
         name: '',
         userId: '',
@@ -325,11 +325,20 @@ const RequestQuote = () => {
         e.preventDefault();
         console.log('Form data:', formData);
 
-        const promoCodeIsValid = await handlePromoCodeValidation(e);
+        let promoCodeIsValid = false;
+
+        if (formData.promoCode) {
+            promoCodeIsValid = await handlePromoCodeValidation(e);
+            if (!validPromoCode) {
+                return;
+            }
+        }
+
+        // const promoCodeIsValid = await handlePromoCodeValidation(e);
         // if (!validPromoCode) {
         // }
 
-        if (promoCodeIsValid) {
+        if (promoCodeIsValid || formData.promoCode === '') {
             if (!formData.name || !formData.email || !formData.phonenumber || !formData.description || !formData.companyName || (!formData.services.length && !formData.products.length) || !formData.subtotalCost || !formData.tax || !formData.grandTotal || !formData.address || !formData.city || !formData.province || !formData.postalcode) {
                 // if (!formData.name || !formData.email || !formData.phonenumber || !formData.description || !formData.companyName || (!formData.services.length && !formData.products.length) || !formData.howDidYouHearAboutUs || !formData.subtotalCost || !formData.tax || !formData.grandTotal || !formData.address || !formData.city || !formData.province || !formData.postalcode) {
                 alert('Please fill out all required fields');
@@ -366,17 +375,17 @@ const RequestQuote = () => {
                     });
 
 
-                    if (window.confirm('Would you like to download the quote as a PDF?')) {
-                        const element = document.getElementById('quote-form');
-                        const opt = {
-                            margin: 0.5,
-                            filename: 'quote.pdf',
-                            image: { type: 'jpeg', quality: 0.98 },
-                            html2canvas: { scale: 2 },
-                            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-                        };
-                        html2pdf().set(opt).from(element).save();
-                    }
+                    // if (window.confirm('Would you like to download the quote as a PDF?')) {
+                    //     const element = document.getElementById('quote-form');
+                    //     const opt = {
+                    //         margin: 0.5,
+                    //         filename: 'quote.pdf',
+                    //         image: { type: 'jpeg', quality: 0.98 },
+                    //         html2canvas: { scale: 2 },
+                    //         jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+                    //     };
+                    //     html2pdf().set(opt).from(element).save();
+                    // }
 
                     const quoteResponse = await response.json();
                     // if (sendEmail) {

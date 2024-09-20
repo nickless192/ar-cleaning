@@ -76,6 +76,9 @@
     /* font-weight: bold; */
     /* color: white; */
 }
+.opacity-8 {
+    opacity: 0.8;
+}
 
 .transparent {
     background-color: transparent!important;

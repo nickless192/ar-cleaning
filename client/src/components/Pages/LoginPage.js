@@ -128,7 +128,7 @@ function LoginPage() {
   return (
     <>
       {/* <Navbar /> */}
-      <div className="content light-bg-color">
+      <div className="content light-bg-color opacity-8">
         {/* <div className="content px-2"> */}
           <Container className="container">
               <h2 className="title primary-color">Welcome to CleanAR <span className="secondary-color">Solutions</span></h2>
@@ -142,8 +142,9 @@ function LoginPage() {
                     controlId="floatingInput"
                     label="Username"
                     // className="mb-3"
+                    className="text-bold text-cleanar-color" 
                   >
-                    <Form.Control type="text" placeholder="" onChange={(e) => handleChange(e)} name="username" id="username" />
+                    <Form.Control type="text" className='text-bold text-cleanar-color' placeholder="" onChange={(e) => handleChange(e)} name="username" id="username" />
                   </FloatingLabel>
                 </Col>
                 <Col className="py-3" md="1" xs='1'>
@@ -169,8 +170,12 @@ function LoginPage() {
               </Row>
               <Row>
                 <Col className="py-3" md="6" xs='6'>
-                  <FloatingLabel controlId="floatingPassword" label="Password">
-                    <Form.Control type="password" placeholder="" onChange={(e) => handleChange(e)} name="password" id="password" />
+                  <FloatingLabel controlId="floatingPassword" label="Password"
+                  className="text-bold text-cleanar-color" 
+                  >
+                    <Form.Control type="password" placeholder="" 
+                    className="text-bold text-cleanar-color" 
+                    onChange={(e) => handleChange(e)} name="password" id="password" />
                   </FloatingLabel>
                 </Col>
                 <Col className="py-3" md="1" xs='1'>
