@@ -17,7 +17,8 @@ const dateFormat = require('../utils/dateFormat');
 // }, { _id: false });
 const CustomOptionsSchema = new Schema({
     service: { type: Schema.Types.Mixed, required: true }, // Mixed type to handle string, boolean, or other types
-    serviceCost: { type: Number, required: true }
+    serviceCost: { type: Number, required: true },
+    label: { type: String }
 });
 
 const ServiceSchema = new Schema({

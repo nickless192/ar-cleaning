@@ -280,7 +280,7 @@ const RequestQuote = () => {
         }));
     };
 
-    const handleCustomOptionChange = (type, option, value, cost) => {
+    const handleCustomOptionChange = (type, option, value, cost, label) => {
         setFormData(prevFormData => ({
             ...prevFormData,
             services: prevFormData.services.map(s =>
@@ -292,7 +292,7 @@ const RequestQuote = () => {
                             : {
                                 customOptions: {
                                     ...s.customOptions,
-                                    [option]: { service: value, serviceCost: cost }  // Group service and serviceCost
+                                    [option]: { service: value, serviceCost: cost, label:label }  // Group service and serviceCost
                                 }
                             }
                         )
@@ -455,7 +455,7 @@ const RequestQuote = () => {
                             <Col md='4' xs='12'>
 
                                 <FloatingLabel controlId="floatingUnitSize" label="Unit Size" >
-                                    <Form.Select aria-label="Unit Size" className="transparent" onChange={(e) => handleCustomOptionChange(type, 'unitSize', e.target.value, pricing.unitSize[e.target.value])}>
+                                    <Form.Select aria-label="Unit Size" className="transparent" onChange={(e) => handleCustomOptionChange(type, 'unitSize', e.target.value, pricing.unitSize[e.target.value], e.target.getAttribute('aria-label'))}>
                                         <option value="">Select Unit Size...</option>
                                         <option value="0-499 sqft">0-499 sqft</option>
                                         <option value="500-999 sqft">500-999 sqft</option>
@@ -467,14 +467,14 @@ const RequestQuote = () => {
                             </Col>
                             <Col md='4' xs='12'>
                                 <FloatingLabel controlId="floatingBedrooms" label="Number of Bedrooms">
-                                    <Form.Control type="number" min="0" className='text-cleanar-color' onChange={(e) => handleCustomOptionChange(type, 'bedrooms', e.target.value, pricing.bedrooms[e.target.value])}
+                                    <Form.Control aria-label='Number of Bedrooms' type="number" min="0" className='text-cleanar-color' onChange={(e) => handleCustomOptionChange(type, 'bedrooms', e.target.value, pricing.bedrooms[e.target.value], e.target.getAttribute('aria-label'))}
                                     // disabled={formData.serviceLevel === 'Deep Cleaning'}
                                     />
                                 </FloatingLabel>
                             </Col>
                             <Col md='4' xs='12'>
                                 <FloatingLabel controlId="floatingBathrooms" label="Number of Bathrooms">
-                                    <Form.Control type="number" min="0" className='text-cleanar-color' onChange={(e) => handleCustomOptionChange(type, 'bathrooms', e.target.value, pricing.bathrooms[e.target.value])}
+                                    <Form.Control aria-label='Number of Bathrooms' type="number" min="0" className='text-cleanar-color' onChange={(e) => handleCustomOptionChange(type, 'bathrooms', e.target.value, pricing.bathrooms[e.target.value], e.target.getAttribute('aria-label'))}
                                     // disabled={formData.serviceLevel === 'Deep Cleaning'}
                                     />
                                 </FloatingLabel>
@@ -493,7 +493,7 @@ const RequestQuote = () => {
                                                         <Label check>
                                                             <Input
                                                                 type="checkbox"
-                                                                onChange={(e) => handleCustomOptionChange(type, service.name, e.target.checked, service.serviceCost)}
+                                                                onChange={(e) => handleCustomOptionChange(type, service.name, e.target.checked, service.serviceCost, "")}
                                                             // disabled={formData.serviceLevel !== service.serviceLevel}
                                                             />
                                                             <span className="form-check-sign"></span>
@@ -530,7 +530,7 @@ const RequestQuote = () => {
                             </Col>
                             <Col md='4' xs='12'>
                                 <FloatingLabel controlId="floatingSquareFootage" label="Square Footage" className=''>
-                                    <Form.Select aria-label="Square Footage" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e.target.value, pricing.squareFootage[e.target.value])}
+                                    <Form.Select aria-label="Square Footage" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e.target.value, pricing.squareFootage[e.target.value], e.target.getAttribute('aria-label'))}
 
                                     >
                                         <option value="">Select Square Footage...</option>
@@ -540,22 +540,10 @@ const RequestQuote = () => {
                                         <option value="10000+ sqft">10000+ sqft</option>
                                     </Form.Select>
                                 </FloatingLabel>
-                                {/* <FormGroup>
-                                    <Label>Square Footage</Label>
-                                    <Input type="select"  onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e.target.value, pricing.squareFootage[e.target.value])}
-                                    // disabled={formData.serviceLevel === 'Deep Cleaning'}
-                                    >
-                                        <option value="">Select Square Footage...</option>
-                                        <option value="0-999 sqft">0-999 sqft</option>
-                                        <option value="1000-4999 sqft">1000-4999 sqft</option>
-                                        <option value="5000-9999 sqft">5000-9999 sqft</option>
-                                        <option value="10000+ sqft">10000+ sqft</option>
-                                    </Input>
-                                </FormGroup> */}
                             </Col>
                             <Col md='4' xs='12'>
                                 <FloatingLabel controlId="floatingRooms" label="Number of Rooms" className=''>
-                                    <Form.Select aria-label="Number of Rooms" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'rooms', e.target.value, pricing.rooms[e.target.value])}>
+                                    <Form.Select aria-label="Number of Rooms" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'rooms', e.target.value, pricing.rooms[e.target.value], e.target.getAttribute('aria-label'))}>
                                         <option value="">Select Number of Rooms...</option>
                                         <option value="0">0</option>
                                         <option value="1">1</option>
@@ -584,7 +572,7 @@ const RequestQuote = () => {
                                                     <Label check>
                                                         <Input
                                                             type="checkbox"
-                                                            onChange={(e) => handleCustomOptionChange(type, service.name, e.target.checked, service.serviceCost)}
+                                                            onChange={(e) => handleCustomOptionChange(type, service.name, e.target.checked, service.serviceCost, "")}
                                                         // disabled={formData.serviceLevel === 'Deep Cleaning'}
                                                         />
                                                         <span className="form-check-sign"></span>
@@ -618,7 +606,7 @@ const RequestQuote = () => {
                         </Col>
                         <Col md='4' xs='12'>
                             <FloatingLabel controlId="floatingSquareFootage" label="Square Footage" className=''>
-                                <Form.Select aria-label="Square Footage" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e.target.value, pricing.squareFootage[e.target.value])}>
+                                <Form.Select aria-label="Square Footage" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e.target.value, pricing.squareFootage[e.target.value], e.target.getAttribute('aria-label'))}>
                                     <option value="">Select Square Footage...</option>
                                     <option value="0-999 sqft">0-999 sqft</option>
                                     <option value="1000-4999 sqft">1000-4999 sqft</option>
@@ -626,22 +614,10 @@ const RequestQuote = () => {
                                     <option value="10000+ sqft">10000+ sqft</option>
                                 </Form.Select>
                             </FloatingLabel>
-                            {/* <FormGroup>
-                                <Label>Square Footage</Label>
-                                <Input type="select" onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e.target.value, pricing.squareFootage[e.target.value])}
-                                    disabled={formData.serviceLevel === 'Deep Cleaning'}
-                                >
-                                    <option value="">Select Square Footage...</option>
-                                    <option value="0-999 sqft">0-999 sqft</option>
-                                    <option value="1000-4999 sqft">1000-4999 sqft</option>
-                                    <option value="5000-9999 sqft">5000-9999 sqft</option>
-                                    <option value="10000+ sqft">10000+ sqft</option>
-                                </Input>
-                            </FormGroup> */}
                         </Col>
                         <Col md='4' xs='12'>
                             <FloatingLabel controlId="floatingEmployees" label="Number of Employees" className=''>
-                                <Form.Select aria-label="Number of Employees" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'employees', e.target.value, pricing.employees[e.target.value])}>
+                                <Form.Select aria-label="Number of Employees" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'employees', e.target.value, pricing.employees[e.target.value], e.target.getAttribute('aria-label'))}>
                                     <option value="">Select Number of Employees...</option>
                                     <option value="0">0</option>
                                     <option value="1">1</option>
@@ -651,12 +627,6 @@ const RequestQuote = () => {
                                     <option value="5">5</option>
                                 </Form.Select>
                             </FloatingLabel>
-                            {/* <FormGroup>
-                                <Label>Number of Employees</Label>
-                                <Input type="number" min="0" onChange={(e) => handleCustomOptionChange(type, 'employees', e.target.value, pricing.employees[e.target.value])}
-                                    disabled={formData.serviceLevel === 'Deep Cleaning'}
-                                />
-                            </FormGroup> */}
                         </Col>
                     </Row>
                         <Row className='g-2 px-1'>
@@ -670,7 +640,7 @@ const RequestQuote = () => {
                                                     <Label check>
                                                         <Input
                                                             type="checkbox"
-                                                            onChange={(e) => handleCustomOptionChange(type, service.name, e.target.checked, service.serviceCost)}
+                                                            onChange={(e) => handleCustomOptionChange(type, service.name, e.target.checked, service.serviceCost, "")}
                                                         // disabled={formData.serviceLevel === 'Deep Cleaning'}
                                                         />
                                                         <span className="form-check-sign"></span>
@@ -714,7 +684,7 @@ const RequestQuote = () => {
                             </Col>
                             <Col md='4' xs='12'>
                                 <FloatingLabel controlId="carpetMaterial" label="Carpet Material" className=''>
-                                    <Form.Select aria-label="Carpet Material" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'carpetMaterial', e.target.value, 50)}>
+                                    <Form.Select aria-label="Carpet Material" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'carpetMaterial', e.target.value, 50, e.target.getAttribute('aria-label'))}>
                                         <option value="">Select Carpet Material...</option>
                                         <option value="Nylon">Nylon</option>
                                         <option value="Polyester">Polyester</option>
@@ -726,7 +696,7 @@ const RequestQuote = () => {
                             </Col>
                             <Col md='4' xs='12'>
                                 <FloatingLabel controlId="carpetSize" label="Carpet Size" className=''>
-                                    <Form.Select aria-label="Carpet Size" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'carpetSize', e.target.value, 50)}>
+                                    <Form.Select aria-label="Carpet Size" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'carpetSize', e.target.value, 50, e.target.getAttribute('aria-label'))}>
                                         <option value="">Select Carpet Size...</option>
                                         <option value="Small">Small</option>
                                         <option value="Medium">Medium</option>
@@ -736,7 +706,7 @@ const RequestQuote = () => {
                             </Col>
                             <Col md='4' xs='12'>
                                 <FloatingLabel controlId="carpetCondition" label="Carpet Condition" className=''>
-                                    <Form.Select aria-label="Carpet Condition" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'carpetCondition', e.target.value, 50)}>
+                                    <Form.Select aria-label="Carpet Condition" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'carpetCondition', e.target.value, 50, e.target.getAttribute('aria-label'))}>
                                         <option value="">Select Carpet Condition...</option>
                                         <option value="Lightly Soiled">Lightly Soiled</option>
                                         <option value="Moderately Soiled">Moderately Soiled</option>
@@ -747,7 +717,7 @@ const RequestQuote = () => {
                             </Col>
                             <Col md='4' xs='12'>
                                 <FloatingLabel controlId="frequencyCleaning" label="Frequency of Cleaning" className=''>
-                                    <Form.Select aria-label="Frequency of Cleaning" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'frequencyCleaning', e.target.value, 50)}>
+                                    <Form.Select aria-label="Frequency of Cleaning" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'frequencyCleaning', e.target.value, 50, e.target.getAttribute('aria-label'))}>
                                         <option value="">Select Frequency of Cleaning...</option>
                                         <option value="One Time">One Time</option>
                                         <option value="Monthly">Monthly</option>
@@ -769,7 +739,7 @@ const RequestQuote = () => {
                                                     <Label check>
                                                         <Input
                                                             type="checkbox"
-                                                            onChange={(e) => handleCustomOptionChange(type, service.name, e.target.checked, service.serviceCost)}
+                                                            onChange={(e) => handleCustomOptionChange(type, service.name, e.target.checked, service.serviceCost,"")}
                                                         />
                                                         <span className="form-check-sign"></span>
                                                         {service.name} - ${service.serviceCost}

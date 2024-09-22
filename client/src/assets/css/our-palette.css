@@ -27,10 +27,42 @@
 }
 
 .text-cleanar-bg-color {
-    background-color: var(--text-cleanar-color);
+    background-color: var(--text-cleanar-color)!important;
     /* font-weight: bold; */
     /* color: white; */
 }
+
+.modal-header-text {
+    background-color: var(--text-cleanar-color)!important;
+    font-size: 25px;
+    color: white;
+    text-align: center!important;
+    /* align-items: center!important; */
+}
+
+.modal-body-text {
+    background-color: var(--text-cleanar-color)!important;
+    font-size: 15px;
+    font-weight: bold;
+    color: white;
+    text-align: center!important;
+    /* align-items: center!important; */
+}
+
+.modal-link {
+    color: var(--secondary-color)!important;
+    /* font-size: 15px;
+    font-weight: bold; */
+    /* color: white; */
+}
+
+.modal-link:hover {
+    color: var(--accent-color)!important;
+    /* font-size: 15px;
+    font-weight: bold; */
+    /* color: white; */
+}
+
 .primary-color {
     color: var(--primary-color)!important;
     /* font-weight: bold!important; */

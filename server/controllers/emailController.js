@@ -7,21 +7,98 @@ const emailController = {
         try {
             // console.log('Emailing quote: ', req.body);
             const { email, quote } = req.body;
-            const emailText = `Dear ${quote.name},
+            // const emailText = `Dear ${quote.name},
 
-            Thanks for your quote request! Your new quote request has been created with the following details:
+            // Thanks for your quote request! Your new quote request has been created with the following details:
 
-            Quote ID: ${quote.quoteId}
+            // Quote ID: ${quote.quoteId}
 
-            To view and manage this quote, please click on the link below and enter the quote ID above:
+            // To view and manage this quote, please click on the link below and enter the quote ID above:
 
-            https://www.cleanARsolutions.ca/view-quotes
+            // https://www.cleanARsolutions.ca/view-quotes
 
-            We will be in touch with you shortly to discuss your quote further.
+            // We will be in touch with you shortly to discuss your quote further.
 
-            Best regards,
+            // Best regards,
 
-            ClenanAR Solutions`;
+            // ClenanAR Solutions`;
+
+
+
+            const emailText = `
+Dear ${quote.name},
+
+Thank you for your quote request! We have received it with the following details:
+
+**Quote ID**: ${quote.quoteId}
+
+**Company**: ${quote.companyName}  
+**Address**: ${quote.address}, ${quote.city}, ${quote.province}, ${quote.postalcode}  
+**Phone Number**: ${quote.phonenumber}  
+**Email**: ${quote.email}
+
+**Services Requested**:
+${quote.services.map(service => {
+                let customOptionsText = '';
+
+                // if (service.customOptions && typeof service.customOptions === 'object') {
+                //     customOptionsText = Object.keys(service.customOptions).map(key => {
+                //         const option = service.customOptions[key];
+                //         if (typeof option.service === 'boolean') {
+                //             return `- ${key}`;
+                //         } else {
+                //             return `- ${key}: ${option.service}`;
+                //         }
+                //     }).join('\n');
+                if (service.customOptions && typeof service.customOptions === 'object') {
+                    customOptionsText = Object.keys(service.customOptions).map(key => {
+                        console.log('service.customOptions[key]: ', service.customOptions[key]);
+                        const option = service.customOptions[key];
+                        const label = option.label || key; // Use ariaLabel if available, otherwise fallback to key
+                        if (typeof option.service === 'boolean') {
+                            return `- ${label.toUpperCase()}`;
+                        } else {
+                            return `- ${label.toUpperCase()}: ${option.service}`;
+                        }
+                    }).join('\n');
+                } else {
+                    console.error('service.customOptions is not an object:', service.customOptions);
+                    customOptionsText = 'No custom options were selected.';
+                }
+
+                // Use customOptionsText as needed
+                console.log(customOptionsText);
+                return `
+- **${service.type}** (${service.serviceLevel})
+
+- **Custom Options**:
+${customOptionsText}
+`            }
+            ).join('\n')}           
+
+
+To view and manage this quote, please click on the link below and enter the Quote ID provided above:
+
+https://www.cleanARsolutions.ca/view-quotes
+
+Please note, this is a preliminary summary, and we will send a finalized quote in a separate email. We look forward to discussing your requirements further.
+
+Best regards,  
+CleanAR Solutions
+
+            `;
+            // - **Description**: ${service.description}
+            // ${service.customOptions.map(option => `- ${option.optionName}: ${option.optionValue}`).join('\n')}
+            // - **Cost**: $${service.customOptions.find(option => option.optionName === 'serviceCost').optionValue}
+
+            // ${quote.services.map(service => `- ${service.type} (${service.serviceLevel}) - Cost: $${service.customOptions.get('serviceCost')}`).join('\n')}
+
+            // **Products Included**:
+            // ${quote.products.map(product => `- ${product.name} - Cost: $${product.productCost}`).join('\n')}
+            // **Subtotal**: $${quote.subtotalCost}  
+            // **Tax**: $${quote.tax}  
+            // **Grand Total**: $${quote.grandTotal}
+
             const msg = {
                 to: email, // Change to your recipient
                 from: 'info@cleanARsolutions.ca', // Change to your verified sender
@@ -29,6 +106,8 @@ const emailController = {
                 text: emailText, // plain text body
 
             }
+            console.log('Emailing quote message: ', msg);
+
             sgMail
                 .send(msg)
                 .then(() => {
@@ -57,7 +136,7 @@ const emailController = {
             User Id: ${quote.userId}
             Name: ${quote.name}
             Email: ${quote.email}
-            Phone: ${quote.telephone}
+            Phone: ${quote.phonenumber}
             Address: ${quote.address}
             City: ${quote.city}
             Province: ${quote.province}

@@ -23,7 +23,7 @@ import Logo from "assets/img/IC CLEAN AR-15-cropped.png";
 
 function Index() {
 
-  const [promoCode, setPromoCode] = useState('WELCOME10');
+  const [promoCode] = useState('WELCOME10');
 
   const [modal, setModal] = useState(false);
 
@@ -64,13 +64,13 @@ function Index() {
 
   return (
     <>
-    <Modal isOpen={modal} toggle={toggleModal}>
-        <ModalHeader toggle={toggleModal}>Welcome Promo!</ModalHeader>
-        <ModalBody>
-          Welcome to CleanAR Solutions! We're excited to offer you 10% discount for your first cleaning service. <a href="mailto:info@cleanARsolutions.ca">Contact us</a> today to claim your discount or <Link to={`/request-quote?promoCode=${promoCode}`}>click here to request a quote</Link>. We look forward to hearing from you!
+    <Modal isOpen={modal} toggle={toggleModal} >
+        <ModalHeader toggle={toggleModal} className="modal-header-text">Welcome Promo!</ModalHeader>
+        <ModalBody className="modal-body-text">
+          Welcome to CleanAR Solutions! We're excited to offer you 10% discount for your first cleaning service. <a href="mailto:info@cleanARsolutions.ca" className="modal-link">Contact us</a> today to claim your discount or <Link className="modal-link" to={`/request-quote?promoCode=${promoCode}`}>click here to request a quote</Link>. We look forward to hearing from you!
         </ModalBody>
-        <ModalFooter>
-          <Button className="primary-bg-color" onClick={toggleModal}>Close</Button>
+        <ModalFooter className="modal-header-text">
+          <Button className="secondary-bg-color" onClick={toggleModal}>Close</Button>
           <Button color="danger" onClick={handleDontShowAgain}>Don't Show Again</Button>
         </ModalFooter>
       </Modal>
