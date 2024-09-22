@@ -88,7 +88,7 @@ CleanAR Solutions
                 text: emailText, // plain text body
 
             }
-            console.log('Emailing quote message: ', msg);
+            // console.log('Emailing quote message: ', msg);
 
             sgMail
                 .send(msg)
