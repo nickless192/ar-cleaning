@@ -7,23 +7,6 @@ const emailController = {
         try {
             // console.log('Emailing quote: ', req.body);
             const { email, quote } = req.body;
-            // const emailText = `Dear ${quote.name},
-
-            // Thanks for your quote request! Your new quote request has been created with the following details:
-
-            // Quote ID: ${quote.quoteId}
-
-            // To view and manage this quote, please click on the link below and enter the quote ID above:
-
-            // https://www.cleanARsolutions.ca/view-quotes
-
-            // We will be in touch with you shortly to discuss your quote further.
-
-            // Best regards,
-
-            // ClenanAR Solutions`;
-
-
 
             const emailText = `
 Dear ${quote.name},
@@ -33,7 +16,7 @@ Thank you for your quote request! We have received it with the following details
 **Quote ID**: ${quote.quoteId}
 
 **Company**: ${quote.companyName}  
-**Address**: ${quote.address}, ${quote.city}, ${quote.province}, ${quote.postalcode}  
+**Address**: ${quote.address.toUpperCase()}, ${quote.city.toUpperCase()}, ${quote.province.toUpperCase()}, ${quote.postalcode.toUpperCase()}  
 **Phone Number**: ${quote.phonenumber}  
 **Email**: ${quote.email}
 
@@ -88,7 +71,6 @@ CleanAR Solutions
 
             `;
             // - **Description**: ${service.description}
-            // ${service.customOptions.map(option => `- ${option.optionName}: ${option.optionValue}`).join('\n')}
             // - **Cost**: $${service.customOptions.find(option => option.optionName === 'serviceCost').optionValue}
 
             // ${quote.services.map(service => `- ${service.type} (${service.serviceLevel}) - Cost: $${service.customOptions.get('serviceCost')}`).join('\n')}
