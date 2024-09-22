@@ -39,9 +39,9 @@ ${quote.services.map(service => {
                         const option = service.customOptions[key];
                         const label = option.label || key; // Use ariaLabel if available, otherwise fallback to key
                         if (typeof option.service === 'boolean') {
-                            return `- ${label.toUpperCase()}`;
+                            return `- ${label}`;
                         } else {
-                            return `- ${label.toUpperCase()}: ${option.service}`;
+                            return `- ${label}: ${option.service}`;
                         }
                     }).join('\n');
                 } else {
@@ -147,9 +147,9 @@ ${quote.services.map(service => {
                         const option = service.customOptions[key];
                         const label = option.label || key; // Use ariaLabel if available, otherwise fallback to key
                         if (typeof option.service === 'boolean') {
-                            return `- ${label.toUpperCase()}`;
+                            return `- ${label}`;
                         } else {
-                            return `- ${label.toUpperCase()}: ${option.service}`;
+                            return `- ${label}: ${option.service}`;
                         }
                     }).join('\n');
                 } else {
