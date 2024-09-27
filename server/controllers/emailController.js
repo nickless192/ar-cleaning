@@ -19,20 +19,12 @@ Thank you for your quote request! We have received it with the following details
 **Address**: ${quote.address.toUpperCase()}, ${quote.city.toUpperCase()}, ${quote.province.toUpperCase()}, ${quote.postalcode.toUpperCase()}  
 **Phone Number**: ${quote.phonenumber}  
 **Email**: ${quote.email}
+**Date**: ${quote.createdAt}
+**Promo Code**: ${(quote.promoCode)? ( quote.promoCode ) : ( 'No promo code was used.' )}
 
 **Services Requested**:
 ${quote.services.map(service => {
                 let customOptionsText = '';
-
-                // if (service.customOptions && typeof service.customOptions === 'object') {
-                //     customOptionsText = Object.keys(service.customOptions).map(key => {
-                //         const option = service.customOptions[key];
-                //         if (typeof option.service === 'boolean') {
-                //             return `- ${key}`;
-                //         } else {
-                //             return `- ${key}: ${option.service}`;
-                //         }
-                //     }).join('\n');
                 if (service.customOptions && typeof service.customOptions === 'object') {
                     customOptionsText = Object.keys(service.customOptions).map(key => {
                         console.log('service.customOptions[key]: ', service.customOptions[key]);
@@ -50,7 +42,7 @@ ${quote.services.map(service => {
                 }
 
                 // Use customOptionsText as needed
-                console.log(customOptionsText);
+                // console.log(customOptionsText);
                 return `
 - **${service.type}** (${service.serviceLevel})
 
@@ -68,6 +60,8 @@ Please note, this is a preliminary summary, and we will send a finalized quote i
 
 Best regards,  
 CleanAR Solutions
+info@cleanARsolutions.ca
+(437) 440-5514
 
             `;
             // - **Description**: ${service.description}
@@ -127,6 +121,7 @@ Thank you for your quote request! We have received it with the following details
 **Address**: ${quote.address.toUpperCase()}, ${quote.city.toUpperCase()}, ${quote.province.toUpperCase()}, ${quote.postalcode.toUpperCase()}  
 **Phone Number**: ${quote.phonenumber}  
 **Email**: ${quote.email}
+**Promo Code**: ${(quote.promoCode)? ( quote.promoCode ) : ( 'No promo code was used.' )}
 
 **Services Requested**:
 ${quote.services.map(service => {
@@ -147,7 +142,10 @@ ${quote.services.map(service => {
                         const option = service.customOptions[key];
                         const label = option.label || key; // Use ariaLabel if available, otherwise fallback to key
                         if (typeof option.service === 'boolean') {
-                            return `- ${label}`;
+                            if (option.service) {
+                                return `- ${label}`;
+                            }
+                            // return `- ${label}`;
                         } else {
                             return `- ${label}: ${option.service}`;
                         }
@@ -176,6 +174,8 @@ Please note, this is a preliminary summary, and we will send a finalized quote i
 
 Best regards,  
 CleanAR Solutions
+info@cleanARsolutions.ca
+(437) 440-5514
 
 --------------------------------------------
 
@@ -183,7 +183,9 @@ Make sure to follow up with the client to discuss their requirements further.
 
 Best regards,
 
-ClenanAR Solutions`;
+ClenanAR Solutions
+info@cleanARsolutions.ca
+(437) 440-5514`;
             const msg = {
                 to: ['omar.rguez26@gmail.com', 'filiberto_2305@outlook.com', 'info@cleanARsolutions.ca'], // Change to your recipient
                 from: 'info@cleanARsolutions.ca', // Change to your verified sender
@@ -214,11 +216,15 @@ ClenanAR Solutions`;
 
             Welcome to CleanAR Solutions! We are excited to have you join our community and look forward to providing you with exceptional cleaning services. 
 
+            Remember to log in to your account to request quotes, view your quotes, and manage your account.
+
             If you have any questions or need assistance, please don't hesitate to reach out to us. 
 
             Best regards,
 
-            CleanAR Solutions`;
+            CleanAR Solutions
+            info@cleanARsolutions.ca
+            (437) 440-5514`;
             const msg = {
                 to: email, // Change to your recipient
                 from: 'info@cleanARsolutions.ca', // Change to your verified sender
