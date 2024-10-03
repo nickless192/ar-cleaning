@@ -23,7 +23,8 @@ import Logo from "assets/img/IC CLEAN AR-15-cropped.png";
 
 function Index() {
 
-  const [promoCode] = useState('WELCOME10');
+  const [promoCode] = useState('FALL15');
+  // const [promoCode] = useState('WELCOME10');
 
   const [modal, setModal] = useState(false);
 
@@ -65,12 +66,21 @@ function Index() {
   return (
     <>
     <Modal isOpen={modal} toggle={toggleModal} >
-        <ModalHeader toggle={toggleModal} className="modal-header-text">Welcome Promo!</ModalHeader>
+        {/* <ModalHeader toggle={toggleModal} className="modal-header-text">Welcome Promo!</ModalHeader>
         <ModalBody className="modal-body-text">
           Welcome to CleanAR Solutions! We're excited to offer you 10% discount for your first cleaning service. <a href="mailto:info@cleanARsolutions.ca" className="modal-link">Contact us</a> today to claim your discount or <Link className="modal-link" to={`/request-quote?promoCode=${promoCode}`}>click here to request a quote</Link>. We look forward to hearing from you!
         </ModalBody>
         <ModalFooter className="modal-header-text">
           <Button className="secondary-bg-color" onClick={toggleModal}>Close</Button>
+          <Button color="danger" onClick={handleDontShowAgain}>Don't Show Again</Button>
+        </ModalFooter> */}
+        <ModalHeader toggle={toggleModal} className="modal-header-text">Fall Savings! Book today and get 15% off your next service</ModalHeader>
+        <ModalBody className="modal-body-text">
+          This fall, enjoy 15% off your next cleaning service with CleanAR Solutions! <a href="mailto:info@cleanARsolutions.ca" className="modal-link">Contact us</a> today to claim your discount or <Link className="modal-link" to={`/request-quote?promoCode=${promoCode}`}>click here to request a quote</Link>. We look forward to hearing from you!
+          {/* Welcome to CleanAR Solutions! We're excited to offer you 10% discount for your first cleaning service. <a href="mailto:info@cleanARsolutions.ca" className="modal-link">Contact us</a> today to claim your discount or <Link className="modal-link" to={`/request-quote?promoCode=${promoCode}`}>click here to request a quote</Link>. We look forward to hearing from you! */}
+        </ModalBody>
+        <ModalFooter className="modal-footer pt-2">
+          <Button className="modal-btn" onClick={toggleModal}>Close</Button>
           <Button color="danger" onClick={handleDontShowAgain}>Don't Show Again</Button>
         </ModalFooter>
       </Modal>

@@ -132,6 +132,8 @@ const RequestQuote = () => {
         }
     };
 
+    const [isInitialLoad, setIsInitialLoad] = useState(true);
+
     useEffect(() => {
         const initializeServices = async () => {
             try {
@@ -196,18 +198,25 @@ const RequestQuote = () => {
         }, 0);
 
         // Extract promoCode from the query string
-        const searchParams = new URLSearchParams(location.search);
-        const promoCode = searchParams.get('promoCode');
 
         const tax = subtotalCost * 0.13;
         const grandTotal = subtotalCost + tax;
 
-        if (promoCode) {
-            setFormData(prevFormData => ({
-                ...prevFormData,
-                promoCode: promoCode
-            }));
+        if (isInitialLoad) {
+            const searchParams = new URLSearchParams(location.search);
+            const promoCode = searchParams.get('promoCode');
+
+            if (promoCode) {
+                setFormData(prevFormData => ({
+                    ...prevFormData,
+                    promoCode: promoCode
+                }));
+            }
+            initializeServices();
+            prepopulateForm();
+            setIsInitialLoad(false);
         }
+
 
 
         // Update formData with calculated values
@@ -218,8 +227,9 @@ const RequestQuote = () => {
             grandTotal
         }));
 
-        initializeServices();
-        prepopulateForm();
+
+
+        // handlePromoCodeValidation();
         document.body.classList.add("request-quote", "sidebar-collapse");
         document.documentElement.classList.remove("nav-open");
         // window.scrollTo(0, 0);
@@ -292,7 +302,7 @@ const RequestQuote = () => {
                             : {
                                 customOptions: {
                                     ...s.customOptions,
-                                    [option]: { service: value, serviceCost: cost, label:label }  // Group service and serviceCost
+                                    [option]: { service: value, serviceCost: cost, label: label }  // Group service and serviceCost
                                 }
                             }
                         )
@@ -308,14 +318,15 @@ const RequestQuote = () => {
         e.preventDefault();
         //const promoCode = e.target.value;
         const promoCode = formData.promoCode.toLowerCase();
-        if (promoCode === 'welcome10') {
+        // if (promoCode === 'welcome10') {
+        if (promoCode === 'fall15') {
             setValidPromoCode(true);
-            alert('Valid promo code! 10% discount will be applied to your quote');
+            // alert('Valid promo code! 15% discount will be applied to your quote');
             return true;
         }
         else {
             setValidPromoCode(false);
-            alert('Invalid promo code');
+            alert('Invalid promo code. Please review your code and try again. If you do not have a promo code, please leave the field blank.');
             return false;
         }
     };
@@ -329,7 +340,7 @@ const RequestQuote = () => {
 
         if (formData.promoCode) {
             promoCodeIsValid = await handlePromoCodeValidation(e);
-            if (!validPromoCode) {
+            if (!promoCodeIsValid) {
                 return;
             }
         }
@@ -428,7 +439,7 @@ const RequestQuote = () => {
             }
         }
         else {
-            alert('Invalid promo code');
+            alert('Invalid promo code. Please review your code and try again. If you do not have a promo code, please leave the field blank.');
         }
 
 
@@ -739,7 +750,7 @@ const RequestQuote = () => {
                                                     <Label check>
                                                         <Input
                                                             type="checkbox"
-                                                            onChange={(e) => handleCustomOptionChange(type, service.name, e.target.checked, service.serviceCost,"")}
+                                                            onChange={(e) => handleCustomOptionChange(type, service.name, e.target.checked, service.serviceCost, "")}
                                                         />
                                                         <span className="form-check-sign"></span>
                                                         {service.name} - ${service.serviceCost}
@@ -999,7 +1010,7 @@ const RequestQuote = () => {
 
                             </Row>
                             <FormGroup>
-                                <Label className='text-bold'>Description</Label>
+                                <Label className='text-bold'>Description*</Label>
                                 <Input
                                     type="textarea"
                                     name="description"
