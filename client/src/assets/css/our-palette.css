@@ -34,7 +34,7 @@
 
 .modal-header-text {
     background-color: #fb8500!important;
-    font-size: 20px;
+    font-size: 18px;
     color: white;
     text-align: center!important;
     /* align-items: center!important; */
@@ -59,7 +59,7 @@
 }
 
 .modal-link {
-    color: var(--secondary-color)!important;
+    color: var(--text-cleanar-color)!important;
     /* font-size: 15px;
     font-weight: bold; */
     /* color: white; */

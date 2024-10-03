@@ -74,12 +74,12 @@ function Index() {
           <Button className="secondary-bg-color" onClick={toggleModal}>Close</Button>
           <Button color="danger" onClick={handleDontShowAgain}>Don't Show Again</Button>
         </ModalFooter> */}
-        <ModalHeader toggle={toggleModal} className="modal-header-text">Fall Savings! Book today and get 15% off your next service</ModalHeader>
+        <ModalHeader toggle={toggleModal} className="modal-header-text">Fall Savings! Book with code FALL15 and get 15% off your next service</ModalHeader>
         <ModalBody className="modal-body-text">
-          This fall, enjoy 15% off your next cleaning service with CleanAR Solutions! <a href="mailto:info@cleanARsolutions.ca" className="modal-link">Contact us</a> today to claim your discount or <Link className="modal-link" to={`/request-quote?promoCode=${promoCode}`}>click here to request a quote</Link>. We look forward to hearing from you!
+          This fall, use code <Link className="modal-link" to={`/request-quote?promoCode=${promoCode}`}>FALL15</Link> to enjoy 15% off your next cleaning service with CleanAR Solutions when requesting a quote! <a href="mailto:info@cleanARsolutions.ca" className="modal-link">Contact us</a> today if you need help to claim your discount or <Link className="modal-link" to={`/request-quote?promoCode=${promoCode}`}>click here to request a quote.</Link>
           {/* Welcome to CleanAR Solutions! We're excited to offer you 10% discount for your first cleaning service. <a href="mailto:info@cleanARsolutions.ca" className="modal-link">Contact us</a> today to claim your discount or <Link className="modal-link" to={`/request-quote?promoCode=${promoCode}`}>click here to request a quote</Link>. We look forward to hearing from you! */}
         </ModalBody>
-        <ModalFooter className="modal-footer pt-2">
+        <ModalFooter className="modal-footer pt-3">
           <Button className="modal-btn" onClick={toggleModal}>Close</Button>
           <Button color="danger" onClick={handleDontShowAgain}>Don't Show Again</Button>
         </ModalFooter>
