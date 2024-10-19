@@ -319,7 +319,7 @@ const RequestQuote = () => {
         //const promoCode = e.target.value;
         const promoCode = formData.promoCode.toLowerCase();
         // if (promoCode === 'welcome10') {
-        if (promoCode === 'fall15') {
+        if (promoCode === 'fall15' ||  promoCode === '4HOAN7ZHLQ') {
             setValidPromoCode(true);
             // alert('Valid promo code! 15% discount will be applied to your quote');
             return true;

@@ -17,7 +17,7 @@ function Footer() {
             </li>
             <li>
               <a href="https://g.page/r/Cek9dkmHVuBKEAE/review" target="_blank">              
-                Provide A Review
+                Leave A Review
               </a>
             </li>                        
             <li>

@@ -27,6 +27,7 @@ import ChatTool from "../src/components/Pages/ChatTool";
 import Footer from "components/Pages/Footer";
 import Navbar from "components/Pages/Navbar.js";
 import Career from "components/Pages/Career.js";
+import GiftCard from "components/Pages/ManageGiftCard.js";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -46,6 +47,7 @@ const App = () => {
         <Route path="/manage-service" element={<ProtectedRoute element={<ManageService />} />} />
         <Route path="/manage-product" element={<ProtectedRoute element={<ManageProduct />} />} />
         <Route path="/manage-user" element={<ProtectedRoute element={<ManageUser />} />} />
+        <Route path="/manage-gift-card" element={<ProtectedRoute element={<GiftCard />} />} />
         <Route path="/view-quotes" element={<ProtectedRoute element={<ViewQuotes />} />} />
         <Route path="/view-quotes/:quoteId" element={<ProtectedRoute element={<ViewQuotes />} />} />
         <Route path="/login-page" element={<LoginPage />} />
