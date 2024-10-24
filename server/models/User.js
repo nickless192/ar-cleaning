@@ -86,6 +86,14 @@ UserSchema.pre('save', async function (next) {
     next();
 });
 
+// Pre-save hook to store the username in lowercase
+UserSchema.pre('save', function (next) {
+    if (this.isModified('username')) {
+      this.username = this.username.toLowerCase();
+    }
+    next();
+  });
+
 // compare the incoming password with the hashed password
 UserSchema.methods.isCorrectPassword = async function (password) {
     // console.log(password);

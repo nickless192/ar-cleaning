@@ -62,7 +62,7 @@ const userControllers = {
             .catch(err => res.status(500).json(err));
     },
     async login ({ body }, res) {
-        const dbUserData = await User.findOne({ username: body.username });
+        const dbUserData = await User.findOne({ username: body.username.toLowerCase() });
 
         // if (dbUserData) {
         if (!dbUserData) {
@@ -80,7 +80,23 @@ const userControllers = {
         // }
         // )
         // .catch(err => console.log(err))
-    }
+    },
+    async migrateUsernamesToLowercase (req, res) {
+        try {
+            const users = await User.find({});
+            for (let user of users) {
+              const lowercaseUsername = user.username.toLowerCase();
+              if (user.username !== lowercaseUsername) {
+                user.username = lowercaseUsername;
+                await user.save();
+              }
+            }
+            res.status(200).json({ message: 'Usernames successfully migrated to lowercase' });
+          } catch (error) {
+            console.error('Error during migration:', error);
+            res.status(500).json({ message: 'Server error during migration' });
+          }
+      }
 };
 
 module.exports = userControllers;
