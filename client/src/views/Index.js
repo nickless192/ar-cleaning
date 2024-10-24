@@ -86,14 +86,14 @@ function Index() {
       </Modal>
       <div className="content section-background mb-0" style={{ backgroundImage: `url(${backgroundImage})` }}>
         <p>
-          <div className="py-1 px-5 ">
-            <Row className="pr-5 ">
+          <div className="py-0 px-2 ">
+            <Row className="pr-0 ">
               <Col className="pr-0">
                 <Card className="card-plain">
                   <Row>
                     <CardHeader>
                       <Row>
-                        <Col md='7' className="logo-col">
+                        <Col md='5' className="logo-col">
                           <Col>
                             <Row className="">
                               <Col className=""  >
@@ -115,7 +115,7 @@ function Index() {
                           </Col>
                         </Col>
 
-                        <Col md='5'>
+                        <Col md='7'>
                           <Card className="card-plain">
                             <CardBody>
                               <CardText>

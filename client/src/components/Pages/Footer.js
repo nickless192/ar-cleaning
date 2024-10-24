@@ -40,11 +40,11 @@ function Footer() {
                 Sitemap
               </a>
             </li> */}
-            <li>
+            {/* <li>
               <a href="/accessibility-statement">
                 Accessibility Statement
               </a>
-            </li>
+            </li> */}
             {/* <li>
               <a href="/newsletter-signup" target="_blank">
                 Newsletter Signup
