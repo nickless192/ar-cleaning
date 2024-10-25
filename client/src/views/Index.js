@@ -93,7 +93,7 @@ function Index() {
                   <Row>
                     <CardHeader>
                       <Row>
-                        <Col md='5' className="logo-col">
+                        <Col md='3' className="logo-col">
                           <Col>
                             <Row className="">
                               <Col className=""  >
@@ -106,23 +106,22 @@ function Index() {
                               </Col>
                             </Row>
 
-                            <Row className="">
+                            {/* <Row className="">
                               <CardText className="text-start mt-3 pt-2">
-                                {/* <CardTitle tag="h3" className="text-bold primary-color">Welcome to CleanAR Solutions</CardTitle> */}
                                 <p className="light-color text-bold">Get the professional cleaning services you need with CleanAR Solutions! We offer a range of services, contact us today to learn more about our services and request a quote.</p>
                               </CardText>
-                            </Row>
+                            </Row> */}
                           </Col>
                         </Col>
 
-                        <Col md='7'>
+                        <Col md='9'>
                           <Card className="card-plain">
                             <CardBody>
                               <CardText>
                                 <ListGroup className="contact-info">
                                   <ListGroupItem>
                                     <i className="now-ui-icons tech_mobile"></i> <strong>Request a Quote:</strong> <Link to="/request-quote">Click Here</Link> <br />
-                                    <span>Interested in our services? Fill out our online form to request a quote. We'll get back to you with a customized estimate based on your needs.</span>
+                                    <span>Get the professional cleaning services you need with CleanAR Solutions! We offer a range of services, contact us today to learn more about our services and request a quote.</span>
                                   </ListGroupItem>
                                   <ListGroupItem>
                                     <i className="now-ui-icons tech_mobile"></i> <strong>Call Us:</strong> <Link to="tel:437-440-5514">437-440-5514</Link> <br />

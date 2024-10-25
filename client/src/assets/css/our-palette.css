@@ -21,116 +21,119 @@
 
 /* Test classes */
 .text-cleanar-color {
-    color: var(--text-cleanar-color)!important;
+    color: var(--text-cleanar-color) !important;
     font-weight: bold;
     /* color: white; */
 }
 
 .text-cleanar-bg-color {
-    background-color: var(--text-cleanar-color)!important;
+    background-color: var(--text-cleanar-color) !important;
     /* font-weight: bold; */
     /* color: white; */
 }
 
 .modal-header-text {
-    background-color: #fb8500!important;
+    background-color: #fb8500 !important;
     font-size: 18px;
     color: white;
-    text-align: center!important;
+    text-align: center !important;
     /* align-items: center!important; */
 }
 
 .modal-body-text {
-    background-color: #fb8500!important;
+    background-color: #fb8500 !important;
     font-size: 15px;
     font-weight: bold;
     color: white;
-    text-align: center!important;
+    text-align: center !important;
     /* align-items: center!important; */
 }
 
 .modal-footer {
-    background-color: #ffb703!important;
+    background-color: #ffb703 !important;
     font-size: 15px;
     font-weight: bold;
     color: white;
-    text-align: center!important;
+    text-align: center !important;
     /* align-items: center!important; */
 }
 
 .modal-link {
-    color: var(--text-cleanar-color)!important;
+    color: var(--text-cleanar-color) !important;
     /* font-size: 15px;
     font-weight: bold; */
     /* color: white; */
 }
 
 .modal-btn {
-    color: #8ecae6!important;
-    background-color: #023047!important;
-     /* font-size: 15px; */
-    font-weight: bold!important; 
+    color: #8ecae6 !important;
+    background-color: #023047 !important;
+    /* font-size: 15px; */
+    font-weight: bold !important;
     /* color: white; */
 }
 
 .modal-link:hover {
-    color: var(--accent-color)!important;
+    color: var(--accent-color) !important;
     /* font-size: 15px;
     font-weight: bold; */
     /* color: white; */
 }
 
 .primary-color {
-    color: var(--primary-color)!important;
+    color: var(--primary-color) !important;
     /* font-weight: bold!important; */
     /* color: white; */
 }
 
 .primary-bg-color {
-    background-color: var(--primary-color)!important;
+    background-color: var(--primary-color) !important;
     /* font-weight: bold; */
     /* color: white; */
 }
 
 .secondary-color {
-    color: var(--secondary-color)!important;
+    color: var(--secondary-color) !important;
     /* font-weight: bold; */
     /* color: white; */
 }
+
 .secondary-bg-color {
-    background-color: var(--secondary-color)!important;
+    background-color: var(--secondary-color) !important;
     /* font-weight: bold; */
     /* color: white; */
 }
 
 .accent-color {
-    color: var(--accent-color)!important;
+    color: var(--accent-color) !important;
     /* font-weight: bold; */
     /* color: white; */
 }
+
 .accent-bg-color {
-    background-color: var(--accent-color)!important;
+    background-color: var(--accent-color) !important;
     /* font-weight: bold; */
     /* color: white; */
 }
 
 .light-color {
-    color: var(--light-color)!important;
+    color: var(--light-color) !important;
     /* font-weight: bold; */
     /* color: black; */
 }
 
 .light-bg-color {
-    background-color: var(--light-color)!important;
+    background-color: var(--light-color) !important;
     /* font-weight: bold; */
     /* color: white; */
 }
+
 .opacity-8 {
     opacity: 0.8;
 }
 
 .transparent {
-    background-color: transparent!important;
+    background-color: transparent !important;
 }
 
 
@@ -144,7 +147,7 @@
     /* width: auto; */
 }
 
- /* Placeholder styles */
+/* Placeholder styles */
 /* ::-webkit-input-placeholder {
     color: white !important;
 }
@@ -169,30 +172,36 @@
 } */
 
 .service-button-residential {
-    background-color: var(--light-blue-color)!important; /* Green */
+    background-color: var(--light-blue-color) !important;
+    /* Green */
     color: white;
 }
 
 .service-button-commercial {
-    background-color: var(--primary-color)!important; /* Blue */
+    background-color: var(--primary-color) !important;
+    /* Blue */
     color: white;
 }
 
 .service-button-industrial {
-    background-color: var(--accent-color)!important; /* Red */
+    background-color: var(--accent-color) !important;
+    /* Red */
     color: white;
 }
 
 .service-section-residential {
-    background-color: var(--light-blue-color); /* Light green */
+    background-color: var(--light-blue-color);
+    /* Light green */
 }
 
 .service-section-commercial {
-    background-color: var(--primary-color); /* Light blue */
+    background-color: var(--primary-color);
+    /* Light blue */
 }
 
 .service-section-industrial {
-    background-color: var(--accent-color); /* Light red */
+    background-color: var(--accent-color);
+    /* Light red */
 }
 
 /* Contact Section */
@@ -212,6 +221,7 @@
     font-size: 0.9rem;
     font-weight: bold;
 }
+
 .section {
     padding: 20px;
     margin-bottom: 30px;
@@ -248,7 +258,7 @@
 }
 
 .light-blue-bg-color {
-    background-color: var(--light-blue-color)!important;
+    background-color: var(--light-blue-color) !important;
 }
 
 /* Image
@@ -256,8 +266,8 @@
     max-width: 150px;
     height: auto;
 } */
- .brown-bg-color {
-    background-color: var(--brown-color)!important;
+.brown-bg-color {
+    background-color: var(--brown-color) !important;
 }
 
 /* Content Row Layout */
@@ -266,95 +276,96 @@
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-  }
-  
-  /* Logo Column */
-  .logo-col {
+}
+
+/* Logo Column */
+.logo-col {
     display: flex;
     justify-content: left;
     align-items: left;
-  }
-  
-  .logo-image {
+}
+
+.logo-image {
     max-width: 300px;
     height: auto;
-  }
-  
-  @media (min-width: 768px) {
+}
+
+@media (min-width: 768px) {
     .logo-image {
-      max-width: 400px;
+        max-width: 400px;
     }
-  }
-  
-  @media (min-width: 1200px) {
+}
+
+@media (min-width: 1200px) {
     .logo-image {
-      max-width: 500px;
+        max-width: 500px;
     }
-  }
+}
 
 
-  .logo-image-index {
+.logo-image-index {
     max-width: 300px;
     height: auto;
-  }
-  
-  @media (min-width: 768px) {
+}
+
+@media (min-width: 768px) {
     .logo-image-index {
-      max-width: 300px;
+        max-width: 300px;
     }
-  }
-  
-  @media (min-width: 1200px) {
+}
+
+@media (min-width: 1200px) {
     .logo-image-index {
-      max-width: 300px;
+        max-width: 300px;
     }
-  }
+}
 
 
-  
-  /* Text Column */
-  .text-col {
+
+/* Text Column */
+.text-col {
     display: flex;
     align-items: center;
-  }
-  
-  .text-content {
+}
+
+.text-content {
     font-size: 1rem;
     line-height: 1.6;
     text-align: justify;
-  }
-  
-  @media (min-width: 768px) {
+}
+
+@media (min-width: 768px) {
     .text-content {
-      font-size: 1.1rem;
+        font-size: 1.1rem;
     }
-  }
-  
-  @media (min-width: 1200px) {
+}
+
+@media (min-width: 1200px) {
     .text-content {
-      font-size: 1.2rem;
+        font-size: 1.2rem;
     }
-  }
+}
+
 /* for chatbot */
-  #chat-area {
+#chat-area {
     margin: 0 auto;
     width: 10%;
     height: 100px;
-    overflow:scroll;
+    overflow: scroll;
     border: 1px solid gray;
     border-radius: 4px;
 }
 
-.input {            
+.input {
     width: 100%;
 }
 
-.submit-area{
+.submit-area {
     justify-content: center;
     display: flex;
     margin: 20px auto;
-    width: 10%;            
-}       
+    width: 10%;
+}
 
 textarea {
     width: 10%;
@@ -365,7 +376,7 @@ textarea {
     margin: 0 auto;
     padding: 10px 10px;
     background-color: #C4DBFE;
-    margin: 10px auto;            
+    margin: 10px auto;
 }
 
 .answer {
@@ -403,6 +414,31 @@ textarea {
     border: none;
     cursor: pointer;
     z-index: 1000;
+    animation: bounce 2s infinite;
+}
+
+.whatsapp-btn:hover {
+    animation: none; /* Stop bouncing when hovered */
+    transform: scale(1.1); /* Slightly enlarge on hover */
+  }
+
+@keyframes bounce {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateY(0);
+    }
+
+    40% {
+        transform: translateY(-15px);
+    }
+
+    60% {
+        transform: translateY(-10px);
+    }
 }
 
 .chatbot-toggle img {
@@ -431,7 +467,7 @@ textarea {
     left: 0;
     bottom: 0;
     width: 100%;
-    background-color: var(--primary-color)!important;
+    background-color: var(--primary-color) !important;
     color: white;
     text-align: center;
     padding: 10px;
@@ -443,34 +479,41 @@ textarea {
     position: sticky;
     top: 0;
     z-index: 1000;
-    margin-bottom: 0px!important;
+    margin-bottom: 0px !important;
     /* padding-bottom: 0px!important; */
 }
 
 
 .navbar-top {
-    position: sticky; 
-    top:0;
+    position: sticky;
+    top: 0;
 }
 
 .section-background {
     background-image: url('../img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg');
-    background-size: cover; /* Ensures the image covers the whole section */
-    background-position: center; /* Centers the image */
-    background-repeat: no-repeat; /* Prevents repeating the image */
-    padding: 20px; /* Optional: adds padding around the content */
-    position: relative; /* Makes sure the content is positioned relative to the background */
-    z-index: 1; /* Keeps the content above the background */
-  }
-  
-  .section-background::before {
+    background-size: cover;
+    /* Ensures the image covers the whole section */
+    background-position: center;
+    /* Centers the image */
+    background-repeat: no-repeat;
+    /* Prevents repeating the image */
+    padding: 20px;
+    /* Optional: adds padding around the content */
+    position: relative;
+    /* Makes sure the content is positioned relative to the background */
+    z-index: 1;
+    /* Keeps the content above the background */
+}
+
+.section-background::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Optional: Adds a transparent dark overlay */
-    z-index: -1; /* Places the overlay beneath the content */
-  }
-  
+    background: rgba(0, 0, 0, 0.5);
+    /* Optional: Adds a transparent dark overlay */
+    z-index: -1;
+    /* Places the overlay beneath the content */
+}
