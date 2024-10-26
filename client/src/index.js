@@ -60,7 +60,7 @@ const App = () => {
         <Route path="/" element={<Navigate to="/index" />} />
         <Route path="*" element={<Navigate to="/index" replace />} />
       </Routes>
-      <Footer />
+      {/* <Footer /> */}
       <a
         href="https://wa.me/14374405514"
         className="whatsapp-btn"

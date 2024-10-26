@@ -2,7 +2,10 @@
 import React from "react";
 
 // reactstrap components
-import { Container } from "reactstrap";
+import { Container,
+  Nav,
+
+ } from "reactstrap";
 
 function Footer() {
   return (

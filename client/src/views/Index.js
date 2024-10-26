@@ -114,7 +114,7 @@ function Index() {
                           </Col>
                         </Col>
 
-                        <Col md='9'>
+                        <Col md='4'>
                           <Card className="card-plain">
                             <CardBody>
                               <CardText>
@@ -146,6 +146,36 @@ function Index() {
                               </CardText>
                             </CardBody>
                           </Card>
+                        </Col>
+                        <Col md='4'>
+                        <Card className="card-plain">
+                            <CardBody>
+                              <CardText>
+                                <ListGroup className="leave-review">
+                                  <ListGroupItem>
+                                    <i className="now-ui-icons ui-2_like"></i> <strong>Leave a Review:</strong> <a href="https://g.page/r/Cek9dkmHVuBKEAE/review" target="_blank" rel="noreferrer">Click Here</a> <br />
+                                    <span>Share your experience with CleanAR Solutions! We value your feedback and would love to hear about your experience with our services.</span>
+                                  </ListGroupItem>
+                                  <ListGroupItem>
+                                    <i className="now-ui-icons ui-2_like"></i> <strong>Follow Us:</strong> <a href="https://www.instagram.com/cleanarsolutions/" target="_blank" rel="noreferrer">Instagram</a> <br />
+                                    <span>Stay up-to-date with our latest news, promotions, and cleaning tips! Follow us on Instagram for more information.</span>
+                                  </ListGroupItem>
+                                  <ListGroupItem>
+                                    <i className="now-ui-icons ui-2_like"></i> <strong>Like Us:</strong> <a href="https://www.facebook.com/cleanarsolutions/" target="_blank" rel="noreferrer">Facebook</a> <br />
+                                    <span>Like our Facebook page to stay connected and receive updates on our services, promotions, and more!</span>
+                                  </ListGroupItem>
+                                  {/* <ListGroupItem>
+                        <i className="now-ui-icons ui-2_like"></i> <strong>Subscribe:</strong> <a href="/newsletter-signup" target="_blank">Newsletter</a> <br />
+                        <span>Subscribe to our newsletter to receive exclusive offers, promotions, and cleaning tips directly to your inbox!</span>
+                      </ListGroupItem> */}
+                                </ListGroup>
+                                
+                              </CardText>
+                            </CardBody>
+                          </Card>
+
+
+
                         </Col>
                       </Row>
                     </CardHeader>

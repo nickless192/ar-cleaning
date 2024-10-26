@@ -208,9 +208,9 @@ function SignUp() {
   return (
     <>
       {/* <Navbar /> */}
-      <div className="section section-signup light-blue-bg-color pb-0 mb-0">
-        <div className="content">
-          <Container>
+      {/* <div className="section section-signup light-blue-bg-color pb-0 mb-0"> */}
+        <div className="content light-blue-bg-color">
+          <Container className="container">
             <h2 className="title text-center">Sign Up</h2>
             <Form className="form" onSubmit={(e) => handleFormSubmit(e)}>
 
@@ -593,7 +593,7 @@ function SignUp() {
             </Form>
           </Container>
         </div>
-      </div>
+      {/* </div> */}
       {/* <Footer /> */}
     </>
   );

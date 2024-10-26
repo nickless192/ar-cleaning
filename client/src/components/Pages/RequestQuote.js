@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import {
     Input,
     FormGroup, Label,
@@ -319,7 +319,7 @@ const RequestQuote = () => {
         //const promoCode = e.target.value;
         const promoCode = formData.promoCode.toLowerCase();
         // if (promoCode === 'welcome10') {
-        if (promoCode === 'fall15' ||  promoCode === '4HOAN7ZHLQ') {
+        if (promoCode === 'fall15' ||  promoCode === '4HOAN7ZHLQ' || promoCode === 'follow15') {
             setValidPromoCode(true);
             // alert('Valid promo code! 15% discount will be applied to your quote');
             return true;
@@ -334,7 +334,7 @@ const RequestQuote = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Form data:', formData);
+        // console.log('Form data:', formData);
 
         let promoCodeIsValid = false;
 
@@ -350,7 +350,7 @@ const RequestQuote = () => {
         // }
 
         if (promoCodeIsValid || formData.promoCode === '') {
-            if (!formData.name || !formData.email || !formData.phonenumber || !formData.description || !formData.companyName || (!formData.services.length && !formData.products.length) || !formData.subtotalCost || !formData.tax || !formData.grandTotal || !formData.address || !formData.city || !formData.province || !formData.postalcode) {
+            if (!formData.name || !formData.email || !formData.phonenumber || !formData.description || (!formData.services.length && !formData.products.length) || !formData.subtotalCost || !formData.tax || !formData.grandTotal || !formData.address || !formData.city || !formData.province || !formData.postalcode) {
                 // if (!formData.name || !formData.email || !formData.phonenumber || !formData.description || !formData.companyName || (!formData.services.length && !formData.products.length) || !formData.howDidYouHearAboutUs || !formData.subtotalCost || !formData.tax || !formData.grandTotal || !formData.address || !formData.city || !formData.province || !formData.postalcode) {
                 alert('Please fill out all required fields');
                 return;
@@ -787,8 +787,8 @@ const RequestQuote = () => {
                             {isLogged ? (
                                 <span>Logged in as {Auth.getProfile().data.firstName} {Auth.getProfile().data.lastName}. Feel free to adjust the pre-filled data if needed!</span>
                             ) : (
-                                <span>Please fill out the form below to request a quote. <br />
-                                    If you have an account with us already, please log-in to pre-fill your information for a smoother experience</span>
+                                <span>Please fill out the form below to request a quote. Fields with * are required. <br />
+                                    If you have an account with us already, <Link to="/login-page">log in</Link> to pre-fill your information for a smoother experience</span>
                             )}
                         </p>
 
@@ -806,7 +806,7 @@ const RequestQuote = () => {
                                             value={formData.name}
                                             onChange={handleChange}
                                         />
-                                        <label htmlFor="floatingFullName" className='text-bold'>Full Name</label>
+                                        <label htmlFor="floatingFullName" className='text-bold'>Full Name*</label>
                                     </Form.Floating>
                                 </Col>
                                 <Col md='1' xs='1'>
@@ -828,7 +828,7 @@ const RequestQuote = () => {
                                             value={formData.email}
                                             onChange={handleChange}
                                         />
-                                        <label htmlFor="floatingEmail" className='text-bold'>Email</label>
+                                        <label htmlFor="floatingEmail" className='text-bold'>Email*</label>
                                     </Form.Floating>
                                 </Col>
                                 <Col md='1' xs='1'>
@@ -850,7 +850,7 @@ const RequestQuote = () => {
                                             value={formData.phonenumber}
                                             onChange={handleChange}
                                         />
-                                        <label htmlFor="floatingPhoneNumber" className='text-bold'>Phone Number</label>
+                                        <label htmlFor="floatingPhoneNumber" className='text-bold'>Phone Number*</label>
                                     </Form.Floating>
                                 </Col>
                                 <Col md='1' xs='1'>
@@ -872,7 +872,7 @@ const RequestQuote = () => {
                                             value={formData.address}
                                             onChange={handleChange}
                                         />
-                                        <label htmlFor="floatingAddress" className='text-bold'>Address</label>
+                                        <label htmlFor="floatingAddress" className='text-bold'>Address*</label>
                                     </Form.Floating>
                                 </Col>
                                 <Col md='1' xs='1'>
@@ -892,7 +892,7 @@ const RequestQuote = () => {
                                             value={formData.city}
                                             onChange={handleChange}
                                         />
-                                        <label htmlFor="floatingCity" className='text-bold'>City</label>
+                                        <label htmlFor="floatingCity" className='text-bold'>City*</label>
                                     </Form.Floating>
                                 </Col>
                                 <Col md='1' xs='1'>
@@ -912,7 +912,7 @@ const RequestQuote = () => {
                                             value={formData.province}
                                             onChange={handleChange}
                                         />
-                                        <label htmlFor="floatingState" className='text-bold'>Province</label>
+                                        <label htmlFor="floatingState" className='text-bold'>Province*</label>
                                     </Form.Floating>
                                 </Col>
                                 <Col md='1' xs='1'>
@@ -934,7 +934,7 @@ const RequestQuote = () => {
                                             value={formData.postalcode}
                                             onChange={handleChange}
                                         />
-                                        <label htmlFor="floatingPostalCode" className='text-bold'>Postal Code</label>
+                                        <label htmlFor="floatingPostalCode" className='text-bold'>Postal Code*</label>
                                     </Form.Floating>
                                 </Col>
                                 <Col md='1' xs='1'>

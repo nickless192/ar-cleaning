@@ -24,7 +24,7 @@ const ManageUser = () => {
     });
 
     const [message, setMessage] = useState('');
-  const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const [users, setUsers] = useState([]);
     const [editingUserId, setEditingUserId] = useState(null);
@@ -164,16 +164,16 @@ const ManageUser = () => {
         <>
             {/* <Navbar /> */}
             {/* <div className="page-header clear-filter" filter-color="blue"> */}
-                <div
-                    className="section page-header-image"
-                    style={{
-                        backgroundImage: "url(" + require("assets/img/stock-photo-cropped-shot-woman-rubber-gloves-cleaning-office-table.jpg") + ")",
-                        backgroundSize: "cover",
-                        backgroundPosition: "top center",
-                        minHeight: "700px"
-                    }}
-                >
-                    <div className='content'>
+            <div
+                className="section page-header-image"
+                style={{
+                    backgroundImage: "url(" + require("assets/img/stock-photo-cropped-shot-woman-rubber-gloves-cleaning-office-table.jpg") + ")",
+                    backgroundSize: "cover",
+                    backgroundPosition: "top center",
+                    minHeight: "700px"
+                }}
+            >
+                <div className='content'>
                     <Container>
                         <h2>All Users</h2>
                         <Row>
@@ -263,13 +263,13 @@ const ManageUser = () => {
                                 </Col>
                             ))}
                         </Row>
-                        <div>
-      <h2>Username Migration</h2>
-      <button onClick={handleMigrate} disabled={loading}>
-        {loading ? 'Migrating...' : 'Migrate Usernames to Lowercase'}
-      </button>
-      {message && <p>{message}</p>}
-    </div>
+                        {/* <div>
+                            <h2>Username Migration</h2>
+                            <button onClick={handleMigrate} disabled={loading}>
+                                {loading ? 'Migrating...' : 'Migrate Usernames to Lowercase'}
+                            </button>
+                            {message && <p>{message}</p>}
+                        </div> */}
 
                         <Form onSubmit={handleSubmit} className='form'>
                             <Container>
@@ -383,9 +383,9 @@ const ManageUser = () => {
                             </Container>
                         </Form>
                     </Container>
-                    </div>
-                    
                 </div>
+
+            </div>
             {/* </div> */}
             {/* <Footer /> */}
         </>
