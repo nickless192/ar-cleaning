@@ -287,7 +287,7 @@ function IndexNavbar() {
                                 </NavLink>
                             </NavItem> */}
                             {showLogin()}
-                            <NavItem>
+                            {/* <NavItem>
                                 <NavLink
                                     href="https://www.instagram.com/cleanARsolutions/"
                                     target="_blank"
@@ -296,7 +296,7 @@ function IndexNavbar() {
                                     <i className="fab fa-instagram"></i>
                                     <p className="d-lg-none d-xl-none">Instagram</p>
                                 </NavLink>
-                            </NavItem>
+                            </NavItem> */}
                         </Nav>
                     </Collapse>
                 </Container>
