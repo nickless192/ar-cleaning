@@ -28,6 +28,7 @@ import Footer from "components/Pages/Footer";
 import Navbar from "components/Pages/Navbar.js";
 import Career from "components/Pages/Career.js";
 import GiftCard from "components/Pages/ManageGiftCard.js";
+import VisitorStats from "components/Pages/VisitorStats.js";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -50,6 +51,7 @@ const App = () => {
         <Route path="/manage-gift-card" element={<ProtectedRoute element={<GiftCard />} />} />
         <Route path="/view-quotes" element={<ProtectedRoute element={<ViewQuotes />} />} />
         <Route path="/view-quotes/:quoteId" element={<ProtectedRoute element={<ViewQuotes />} />} />
+        <Route path="/visitor-stats" element={<ProtectedRoute element={<VisitorStats />} />} />
         <Route path="/login-page" element={<LoginPage />} />
         <Route path="/signup-page" element={<SignUp />} />
         <Route path='/request-quote' element={<RequestQuote />} />

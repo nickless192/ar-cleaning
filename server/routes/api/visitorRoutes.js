@@ -1,8 +1,20 @@
-const express = require('express');
-const router = express.Router();
-const {incrementVisitorCount, getVisitorCount } = require('../../controllers/visitorController');
+const router = require('express').Router();
+const {incrementVisitorCount, getVisitorCount, logVisit, getDailyVisitors, migrateData } = require('../../controllers/visitorController');
 
-router.get('/', getVisitorCount);
-router.post('/increment', incrementVisitorCount);
+// router.route('/').get(getVisitorCount).post(incrementVisitorCount);
+// router.get('/', getVisitorCount);
+// router.post('/increment', incrementVisitorCount);
+router.route('/logs')
+.post(logVisit);
+// router.post('/log', logVisit); // Log each visit
+router.route('/daily')
+.get(getDailyVisitors);
+
+router.route('/migrate')
+.post(migrateData);
+
+// router.get('/daily', getDailyVisitors); // Get daily visitors
+// router.post('/migrate', migrateData); // Migrate data
+
 
 module.exports = router;

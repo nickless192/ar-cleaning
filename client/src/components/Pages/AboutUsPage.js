@@ -28,7 +28,7 @@ function AboutUsPage() {
       {/* <Navbar /> */}
       <div className="section pb-0 mb-0">
 
-        <VisitorCounter page={"index"} />
+        <VisitorCounter page={"aboutuspage"} />
         <Row className="content-row py-0 px-5">
           <Col xs="12" md="6" className="logo-col pr-0">
             <Image
