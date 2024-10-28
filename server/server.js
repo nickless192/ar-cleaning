@@ -24,9 +24,9 @@ if (process.env.NODE_ENV === 'production') {
 // enable routes
 app.use(require('./routes'));
 
-app.get('/index', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
-});
+// app.get('/index', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+// });
 // // DO NOT COMMENT OUT THIS CODE
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
