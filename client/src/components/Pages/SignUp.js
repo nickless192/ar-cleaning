@@ -54,68 +54,6 @@ function SignUp() {
     });
   };
 
-  // const handleFormSubmit = async (event) => {
-  //   event.preventDefault();
-  //   if (formData.firstName && formData.lastName && formData.email && formData.username && formData.password && formData.telephone) {
-  //     fetch(`/api/users/`, {
-  //       method: 'post',
-  //       body: JSON.stringify(formData),
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         // 'Access-Control-Allow-Credentials': 'true',
-  //         // 'accept': 'application/json',
-  //         // 'Access-Control-Allow-Origin': 'http://localhost:3000'
-  //         // 'Access-Control-Allow-Origin': '*' 
-  //       }
-  //     })
-  //       .then(response => {
-  //         if (response.ok) {
-  //           console.log(response)
-  //           console.log("new account created!");
-  //           response.json()
-  //             .then(data => {
-  //               console.log(data);
-  //               // Auth.login(data.token, data.dbUserData.adminFlag);
-  //               // call api to notify user of account creation
-  //               fetch(`/api/email/new-user`, {
-  //                 method: 'post',
-  //                 // mode: 'no-cors',
-  //                 body: JSON.stringify({ email: formData.email, user: data.dbUserData }),
-  //                 headers: {
-  //                   'Content-Type': 'application/json',
-  //                 }
-  //               })
-  //                 .then(response => {
-  //                   if (response.ok) {
-  //                     console.log(response)
-  //                     console.log("notification sent!");
-  //                     response.json()
-  //                       .then(data => {
-  //                         console.log(data);
-  //                       })
-  //                   }
-  //                   else {
-  //                     alert(response.statusText)
-  //                     // console.log(response)
-  //                   }
-  //                 })
-  //                 .catch(err => console.log(err));
-  //               Auth.login(data.token, data.dbUserData.adminFlag);
-  //             });
-  //         }
-  //         else {
-  //           alert(response.statusText)
-  //           // console.log(response)
-  //         }
-  //       })
-  //       .catch(err => console.log(err))
-
-  //   }
-  //   else {
-  //     alert("Please fill out all fields before submitting");
-  //   }
-  // }
-
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
@@ -184,12 +122,6 @@ function SignUp() {
   const handleChange = (event) => {
     event.preventDefault();
     const { name, value } = event.target;
-    // if the value type is a string, crop any additional white space
-    // if (typeof value === 'string') {
-    //   value.trim();
-    // }
-    // console.log(name, value);
-    // console.log(formData);
     setFormData({ ...formData, [name]: value.trim() });
   };
 
@@ -215,7 +147,7 @@ function SignUp() {
             <Form className="form" onSubmit={(e) => handleFormSubmit(e)}>
 
               <Row className="g-2">
-                <Col md='11' xs='11'>
+                <Col md='10' xs='10'>
                   <Form.Floating className="mb-3">
                     <Form.Control
                       id="floatinFirstName"
@@ -239,7 +171,7 @@ function SignUp() {
                     </PopoverBody>
                   </Popover>
                 </Col>
-                <Col md='11' xs='11'>
+                <Col md='10' xs='10'>
                   <Form.Floating className="mb-3">
                     <Form.Control
                       id="floatingLastName"
@@ -265,7 +197,7 @@ function SignUp() {
                 </Col>
               </Row>
               <Row className="g-2">
-                <Col md='11' xs='11'>
+                <Col md='10' xs='10'>
                   <Form.Floating className="mb-3">
                     <Form.Control
                       id="floatingEmail"
@@ -289,7 +221,7 @@ function SignUp() {
                     </PopoverBody>
                   </Popover>
                 </Col>
-                <Col md='11' xs='11'>
+                <Col md='10' xs='10'>
                   <Form.Floating className="mb-3">
                     <Form.Control
                       id="floatingTelephone"
@@ -315,7 +247,7 @@ function SignUp() {
                 </Col>
               </Row>
               <Row className="">
-                <Col md='11' xs='11'>
+                <Col md='10' xs='10'>
                   <Form.Floating className="mb-3">
                     <Form.Control
                       id="floatingUsername"
@@ -339,7 +271,7 @@ function SignUp() {
                     </PopoverBody>
                   </Popover>
                 </Col>
-                <Col md='11' xs='11'>
+                <Col md='10' xs='10'>
                   <Form.Floating className="mb-3">
                     <Form.Control
                       id="floatingPassword"
@@ -385,7 +317,7 @@ function SignUp() {
                 </Col>
               </Row>
               <Row className="">
-                <Col md='11' xs='11'>
+                <Col md='10' xs='10'>
                   <FloatingLabel
                     controlId="floatingHowDidYouHearAboutUs"
                     label="How Did You Hear About Us?"
