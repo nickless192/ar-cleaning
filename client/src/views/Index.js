@@ -38,7 +38,7 @@ function Index() {
           <p className="">
             This fall, use code <Link to={`/request-quote?promoCode=FALL15`} className="slide-link">FALL15</Link> to enjoy 15% off your next cleaning service with CleanAR Solutions!
             <br />
-            <a href="mailto:info@cleanARsolutions.ca" className="modal-link">Contact us</a> today or <Link to={`/request-quote?promoCode=FALL15`} className="slide-link">click here to request a quote</Link>.
+            <a href="mailto:info@cleanARsolutions.ca" className="slide-link">Contact us</a> today or <Link to={`/request-quote?promoCode=FALL15`} className="slide-link">click here to request a quote.</Link>
           </p>
         </div>
       )
@@ -50,7 +50,7 @@ function Index() {
           <p>
             Get the professional cleaning services you need with CleanAR Solutions! We offer a range of services, contact us today to learn more about our services and request a quote.
             <br />
-            <Link to="/request-quote" className="modal-link">Click here to request a quote</Link>
+            <Link to="/request-quote" className="slide-link">Click here to request a quote.</Link>
           </p>
         </div>
       )
@@ -61,10 +61,46 @@ function Index() {
           <h3 className="slide-title">Follow Us on Instagram!</h3>
           <p>
             Stay up-to-date with our latest news, promotions, and cleaning tips!
-            < br/>
-            Follow us on Instagram for more information.
-            <br />
-            <a href="https://www.instagram.com/cleanarsolutions/" target="_blank" rel="noreferrer" className="modal-link">Visit Our Instagram Page</a>
+            < br/>            
+            <a href="https://www.instagram.com/cleanarsolutions/" target="_blank" rel="noreferrer" className="slide-link">Join us on Instagram for more information.</a>
+          </p>
+        </div>
+      )
+    },
+    {
+      content: (
+        <div className="promo-slide work-with-us-slide">
+          <h3 className="slide-title">Work with Us!</h3>
+          <p>
+          Join us in our mission to provide exceptional cleaning services to our clients. We are always looking for talented and dedicated individuals to join our team. If you are passionate about cleanliness and customer service, we want to hear from you.
+            < br/>            
+            <a href="mailto:info@cleanARsolutions.ca" className="slide-link">Email us </a> your resume today.
+          </p>
+        </div>
+      )
+    },
+    {
+      content: (
+        <div className="promo-slide display-review-slide">
+          <h3 className="slide-title">Read Our Reviews!</h3>
+          <p>
+          Are you a <strong>new</strong> customer considering our services? Check out our reviews on Google to see what our customers are saying about us!
+            < br/>  
+            <a href="https://www.google.com/search?q=cleanar+solutions&nfpr=1&sa=X&ved=2ahUKEwi-ktao06-JAxXDJzQIHUMUGRYQvgUoAXoECAsQAg&biw=1536&bih=730&dpr=1.25#" target="_blank" rel="noreferrer" className="slide-link">Read Reviews...</a>        
+            
+          </p>
+        </div>
+      )
+    },
+    {
+      content: (
+        <div className="promo-slide review-slide">
+          <h3 className="slide-title">We'd love to hear from you!</h3>
+          <p>
+          Are you a <strong>returning</strong> customer? We'd love to hear from you! Share your experience with CleanAR Solutions by leaving a review on Google.
+            < br/>  
+            <a href="https://g.page/r/Cek9dkmHVuBKEAE/review" target="_blank" rel="noreferrer" className="slide-link">Leave a Review...</a>              
+            
           </p>
         </div>
       )
@@ -162,7 +198,6 @@ function Index() {
   return (
     <>
       <VisitorCounter page={"index"} />
-      <Modal isOpen={modal} toggle={toggleModal} >
         {/* <ModalHeader toggle={toggleModal} className="modal-header-text">Welcome Promo!</ModalHeader>
         <ModalBody className="modal-body-text">
           Welcome to CleanAR Solutions! We're excited to offer you 10% discount for your first cleaning service. <a href="mailto:info@cleanARsolutions.ca" className="modal-link">Contact us</a> today to claim your discount or <Link className="modal-link" to={`/request-quote?promoCode=${promoCode}`}>click here to request a quote</Link>. We look forward to hearing from you!
@@ -171,16 +206,17 @@ function Index() {
           <Button className="secondary-bg-color" onClick={toggleModal}>Close</Button>
           <Button color="danger" onClick={handleDontShowAgain}>Don't Show Again</Button>
         </ModalFooter> */}
+      {/* <Modal isOpen={modal} toggle={toggleModal}>
         <ModalHeader toggle={toggleModal} className="modal-header-text">Fall Savings! Book with code FALL15 and get 15% off your next service</ModalHeader>
         <ModalBody className="modal-body-text">
           This fall, use code <Link className="modal-link" to={`/request-quote?promoCode=${promoCode}`}>FALL15</Link> to enjoy 15% off your next cleaning service with CleanAR Solutions when requesting a quote! <a href="mailto:info@cleanARsolutions.ca" className="modal-link">Contact us</a> today if you need help to claim your discount or <Link className="modal-link" to={`/request-quote?promoCode=${promoCode}`}>click here to request a quote.</Link>
-          {/* Welcome to CleanAR Solutions! We're excited to offer you 10% discount for your first cleaning service. <a href="mailto:info@cleanARsolutions.ca" className="modal-link">Contact us</a> today to claim your discount or <Link className="modal-link" to={`/request-quote?promoCode=${promoCode}`}>click here to request a quote</Link>. We look forward to hearing from you! */}
+       
         </ModalBody>
         <ModalFooter className="modal-footer pt-3">
           <Button className="modal-btn" onClick={toggleModal}>Close</Button>
           <Button color="danger" onClick={handleDontShowAgain}>Don't Show Again</Button>
         </ModalFooter>
-      </Modal>
+      </Modal> */}
       <div className="content section-background mb-0" style={{ backgroundImage: `url(${backgroundImage})` }}>
         <p>
           <div className="py-0 px-2 ">

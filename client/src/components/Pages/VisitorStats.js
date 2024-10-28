@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-// import axios from 'axios';
+import { Button } from 'reactstrap';
+
 
 const VisitorStats = () => {
     const [dailyVisits, setDailyVisits] = useState({
@@ -55,15 +56,15 @@ const VisitorStats = () => {
                 <p>Request Quote: {dailyVisits['request-quote']}</p>
                 <p>Career: {dailyVisits.career}</p>
             </div>
-            <div>
-                {/* Button to trigger migration */}
-                <button onClick={handleMigrate}>
-                    Migrate Visitor Data
-                </button>
-
+                {/* Button to trigger migration  */}
                 {/* Display migration status */}
+            {/* <div className='visitor-log-migration'>
+                <Button onClick={handleMigrate}>
+                    Migrate Visitor Data
+                </Button>
+
                 {migrationStatus && <p>{migrationStatus}</p>}
-            </div>
+            </div> */}
         </>
     );
 };

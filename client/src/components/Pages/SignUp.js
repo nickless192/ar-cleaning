@@ -215,7 +215,7 @@ function SignUp() {
             <Form className="form" onSubmit={(e) => handleFormSubmit(e)}>
 
               <Row className="g-2">
-                <Col md='5' xs='10'>
+                <Col md='11' xs='11'>
                   <Form.Floating className="mb-3">
                     <Form.Control
                       id="floatinFirstName"
@@ -230,26 +230,6 @@ function SignUp() {
                       className="text-cleanar-color"
                     >First Name</label>
                   </Form.Floating>
-                  {/* <InputGroup
-                    className={
-                      "no-border" + (formData.firstName ? " input-group-focus" : "")
-                    }
-                  >
-                    <InputGroupAddon addonType="prepend">
-                      <InputGroupText className="">
-                        <i className="now-ui-icons users_circle-08"></i>
-                      </InputGroupText>
-                    </InputGroupAddon>
-                    <Input
-                      placeholder="First Name"
-                      type="text"
-                      id="firstName"
-                      name="firstName"
-                      className="text-cleanar-color"
-                      // onFocus={(e) => handleChange(e)}
-                      onChange={(e) => handleChange(e)}
-                    ></Input>
-                  </InputGroup> */}
                 </Col>
                 <Col md='1' xs='1'>
                   <Button id="Popover1" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
@@ -259,7 +239,7 @@ function SignUp() {
                     </PopoverBody>
                   </Popover>
                 </Col>
-                <Col md='5' xs='10'>
+                <Col md='11' xs='11'>
                   <Form.Floating className="mb-3">
                     <Form.Control
                       id="floatingLastName"
@@ -274,26 +254,6 @@ function SignUp() {
                       className="text-cleanar-color"
                     >Last Name</label>
                   </Form.Floating>
-                  {/* <InputGroup
-                    className={
-                      "no-border" + (formData.lastName ? " input-group-focus" : "")
-                    }
-                  >
-                    <InputGroupAddon addonType="prepend">
-                      <InputGroupText>
-                        <i className="now-ui-icons text_caps-small"></i>
-                      </InputGroupText>
-                    </InputGroupAddon>
-                    <Input
-                      placeholder="Last Name"
-                      type="text"
-                      id="lastName"
-                      name="lastName"
-                      className="text-cleanar-color"
-                      // onFocus={(e) => handleChange(e)}
-                      onChange={(e) => handleChange(e)}
-                    ></Input>
-                  </InputGroup> */}
                 </Col>
                 <Col md='1' xs='1'>
                   <Button id="Popover2" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
@@ -305,7 +265,7 @@ function SignUp() {
                 </Col>
               </Row>
               <Row className="g-2">
-                <Col md='5' xs='10'>
+                <Col md='11' xs='11'>
                   <Form.Floating className="mb-3">
                     <Form.Control
                       id="floatingEmail"
@@ -320,26 +280,6 @@ function SignUp() {
                       className="text-cleanar-color"
                     >Email</label>
                   </Form.Floating>
-                  {/* <InputGroup
-                    className={
-                      "no-border" + (formData.email ? " input-group-focus" : "")
-                    }
-                  >
-                    <InputGroupAddon addonType="prepend">
-                      <InputGroupText>
-                        <i className="now-ui-icons ui-1_email-85"></i>
-                      </InputGroupText>
-                    </InputGroupAddon>
-                    <Input
-                      placeholder="Email"
-                      type="text"
-                      id="email"
-                      name="email"
-                      className="text-cleanar-color"
-                      // onFocus={(e) => handleChange(e)}
-                      onChange={(e) => handleChange(e)}
-                    ></Input>
-                  </InputGroup> */}
                 </Col>
                 <Col md='1' xs='1'>
                   <Button id="Popover3" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
@@ -349,7 +289,7 @@ function SignUp() {
                     </PopoverBody>
                   </Popover>
                 </Col>
-                <Col md='5' xs='10'>
+                <Col md='11' xs='11'>
                   <Form.Floating className="mb-3">
                     <Form.Control
                       id="floatingTelephone"
@@ -364,26 +304,6 @@ function SignUp() {
                       className="text-cleanar-color"
                     >Telephone</label>
                   </Form.Floating>
-                  {/* <InputGroup
-                    className={
-                      "no-border" + (formData.telephone ? " input-group-focus" : "")
-                    }
-                  >
-                    <InputGroupAddon addonType="prepend">
-                      <InputGroupText>
-                        <i className="now-ui-icons tech_mobile"></i>
-                      </InputGroupText>
-                    </InputGroupAddon>
-                    <Input
-                      placeholder="Telephone"
-                      type="text"
-                      id="telephone"
-                      name="telephone"
-                      className="text-cleanar-color"
-                      // onFocus={(e) => handleChange(e)}
-                      onChange={(e) => handleChange(e)}
-                    ></Input>
-                  </InputGroup> */}
                 </Col>
                 <Col md='1' xs='1'>
                   <Button id="Popover4" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
@@ -395,7 +315,7 @@ function SignUp() {
                 </Col>
               </Row>
               <Row className="">
-                <Col md='5' xs='10'>
+                <Col md='11' xs='11'>
                   <Form.Floating className="mb-3">
                     <Form.Control
                       id="floatingUsername"
@@ -410,26 +330,6 @@ function SignUp() {
                       className="text-cleanar-color"
                     >Username</label>
                   </Form.Floating>
-                  {/* <InputGroup
-                    className={
-                      "no-border" + (formData.username ? " input-group-focus" : "")
-                    }
-                  >
-                    <InputGroupAddon addonType="prepend">
-                      <InputGroupText>
-                        <i className="now-ui-icons users_single-02"></i>
-                      </InputGroupText>
-                    </InputGroupAddon>
-                    <Input
-                      placeholder="Username"
-                      type="text"
-                      id="username"
-                      name="username"
-                      className="text-cleanar-color"
-                      // onFocus={(e) => handleChange(e)}
-                      onChange={(e) => handleChange(e)}
-                    ></Input>
-                  </InputGroup> */}
                 </Col>
                 <Col md='1' xs='1'>
                   <Button id="Popover5" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
@@ -439,7 +339,7 @@ function SignUp() {
                     </PopoverBody>
                   </Popover>
                 </Col>
-                <Col md='5' xs='10'>
+                <Col md='11' xs='11'>
                   <Form.Floating className="mb-3">
                     <Form.Control
                       id="floatingPassword"
@@ -485,7 +385,7 @@ function SignUp() {
                 </Col>
               </Row>
               <Row className="">
-                <Col md='5' xs='10'>
+                <Col md='11' xs='11'>
                   <FloatingLabel
                     controlId="floatingHowDidYouHearAboutUs"
                     label="How Did You Hear About Us?"

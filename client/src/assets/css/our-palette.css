@@ -544,7 +544,7 @@ textarea {
     /* max-width: 600px; */
     /* background-color: white; */
     padding: 20px;
-    font-size: 15px;
+    font-size: 22px;
     font-weight: bold;
     color: white;
     border-radius: 10px;
@@ -552,7 +552,7 @@ textarea {
   }
 
   .slide-title {
-    font-size: 20px;
+    font-size: 25px;
     font-weight: bold;
   }
 
@@ -560,17 +560,22 @@ textarea {
     background-color: #fb8500 !important;
   }
 
-  .request-quote-slide {
+  .request-quote-slide, 
+  .display-review-slide {
     background-color: var(--secondary-color) !important;
   }
 
-  .follow-us-slide {
+  .follow-us-slide, .review-slide {
     background-color: var(--accent-color) !important;
+  }
+
+  .work-with-us-slide {
+    background-color: var(--light-color) !important;
   }
 
   .slide-link {
     color: var(--text-cleanar-color) !important;
-    /* font-size: 15px;
-    font-weight: bold; */
+    /* font-size: 15px; */
+    font-weight: bold;
     /* color: white; */
 }
