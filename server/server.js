@@ -24,13 +24,10 @@ if (process.env.NODE_ENV === 'production') {
 // enable routes
 app.use(require('./routes'));
 
-// app.get('/index', (req, res) => {
+// // DO NOT COMMENT OUT THIS CODE - this makes the index page get the /GET error
+// app.get('*', (req, res) => {
 //   res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
 // });
-// // DO NOT COMMENT OUT THIS CODE
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
-});
 // connect to mongo
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/ar-cleaning',{
     useNewUrlParser: true,
