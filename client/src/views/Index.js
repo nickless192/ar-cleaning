@@ -34,7 +34,7 @@ function Index() {
     {
       content: (
         <div className="promo-slide fall-saving-slide">
-          <h3 className="slide-title">Fall Savings! Book with code FALL15 and get 15% off your next service</h3>
+          <h3 className="slide-title">Fall Savings! Book with code FALL15 and get 15% off your next service!</h3>
           <p className="">
             This fall, use code <Link to={`/request-quote?promoCode=FALL15`} className="slide-link">FALL15</Link> to enjoy 15% off your next cleaning service with CleanAR Solutions!
             <br />
@@ -61,7 +61,7 @@ function Index() {
           <h3 className="slide-title">Follow Us on Instagram!</h3>
           <p>
             Stay up-to-date with our latest news, promotions, and cleaning tips!
-            < br/>            
+            < br />
             <a href="https://www.instagram.com/cleanarsolutions/" target="_blank" rel="noreferrer" className="slide-link">Join us on Instagram for more information.</a>
           </p>
         </div>
@@ -72,8 +72,8 @@ function Index() {
         <div className="promo-slide work-with-us-slide">
           <h3 className="slide-title">Work with Us!</h3>
           <p>
-          Join us in our mission to provide exceptional cleaning services to our clients. We are always looking for talented and dedicated individuals to join our team. If you are passionate about cleanliness and customer service, we want to hear from you.
-            < br/>            
+            Join us in our mission to provide exceptional cleaning services to our clients. We are always looking for talented and dedicated individuals to join our team. If you are passionate about cleanliness and customer service, we want to hear from you.
+            < br />
             <a href="mailto:info@cleanARsolutions.ca" className="slide-link">Email us </a> your resume today.
           </p>
         </div>
@@ -84,10 +84,10 @@ function Index() {
         <div className="promo-slide display-review-slide">
           <h3 className="slide-title">Read Our Reviews!</h3>
           <p>
-          Are you a <strong>new</strong> customer considering our services? Check out our reviews on Google to see what our customers are saying about us!
-            < br/>  
-            <a href="https://www.google.com/search?q=cleanar+solutions&nfpr=1&sa=X&ved=2ahUKEwi-ktao06-JAxXDJzQIHUMUGRYQvgUoAXoECAsQAg&biw=1536&bih=730&dpr=1.25#" target="_blank" rel="noreferrer" className="slide-link">Read Reviews...</a>        
-            
+            Are you a <strong>new</strong> customer considering our services? Check out our reviews on Google to see what our customers are saying about us!
+            < br />
+            <a href="https://www.google.com/search?q=cleanar+solutions&nfpr=1&sa=X&ved=2ahUKEwi-ktao06-JAxXDJzQIHUMUGRYQvgUoAXoECAsQAg&biw=1536&bih=730&dpr=1.25#" target="_blank" rel="noreferrer" className="slide-link">Read Reviews...</a>
+
           </p>
         </div>
       )
@@ -97,10 +97,10 @@ function Index() {
         <div className="promo-slide review-slide">
           <h3 className="slide-title">We'd love to hear from you!</h3>
           <p>
-          Are you a <strong>returning</strong> customer? We'd love to hear from you! Share your experience with CleanAR Solutions by leaving a review on Google.
-            < br/>  
-            <a href="https://g.page/r/Cek9dkmHVuBKEAE/review" target="_blank" rel="noreferrer" className="slide-link">Leave a Review...</a>              
-            
+            Are you a <strong>returning</strong> customer? We'd love to hear from you! Share your experience with CleanAR Solutions by leaving a review on Google.
+            < br />
+            <a href="https://g.page/r/Cek9dkmHVuBKEAE/review" target="_blank" rel="noreferrer" className="slide-link">Leave a Review...</a>
+
           </p>
         </div>
       )
@@ -198,7 +198,7 @@ function Index() {
   return (
     <>
       <VisitorCounter page={"index"} />
-        {/* <ModalHeader toggle={toggleModal} className="modal-header-text">Welcome Promo!</ModalHeader>
+      {/* <ModalHeader toggle={toggleModal} className="modal-header-text">Welcome Promo!</ModalHeader>
         <ModalBody className="modal-body-text">
           Welcome to CleanAR Solutions! We're excited to offer you 10% discount for your first cleaning service. <a href="mailto:info@cleanARsolutions.ca" className="modal-link">Contact us</a> today to claim your discount or <Link className="modal-link" to={`/request-quote?promoCode=${promoCode}`}>click here to request a quote</Link>. We look forward to hearing from you!
         </ModalBody>
@@ -220,63 +220,36 @@ function Index() {
       <div className="content section-background mb-0" style={{ backgroundImage: `url(${backgroundImage})` }}>
         <p>
           <div className="py-0 px-2 ">
-            <Row className="pr-0 ">
-              <Col className="pr-0">
+            <Row className="">
+              <Col className="">
                 <Card className="card-plain">
-                  <Row>
-                    <CardHeader>
-                      <Row>
-                        <Col md='3' className="logo-col">
-                          <Col>
-                            <Row className="">
-                              <Col className=""  >
-                                <CardImg top className="logo-image-index" src={Logo} alt="Card image cap" />
-                              </Col>
-                            </Row>
-                            <Row className="">
-                              <Col className="" >
-                                <CardTitle tag="h2" className="primary-color ">CleanAR<br /><span className="secondary-color">Solutions</span></CardTitle>
-                              </Col>
-                            </Row>
-
-                            <Row className="">
-                              {/* <CardText className="text-start mt-3 pt-2">
-                                <p className="light-color text-bold">Get the professional cleaning services you need with CleanAR Solutions! We offer a range of services, contact us today to learn more about our services and request a quote.</p>
-                              </CardText> */}
-                            </Row>
+                  <CardHeader>
+                    <Row>
+                      <Col md='3' className="logo-col">
+                        <Col>
+                          <CardImg top className="logo-image-index" src={Logo} alt="CleanAR Solutions logo" />
+                          <Col className="" >
+                            <CardTitle tag="h2" className="primary-color ">CleanAR<br /><span className="secondary-color">Solutions</span></CardTitle>
                           </Col>
                         </Col>
-
-                        <Col md='8'>
-                          <Carousel 
-                          activeIndex={activeIndex} 
-                          next={next} 
+                      </Col>
+                      <Col md='8' className="px-0">
+                        <Carousel
+                          activeIndex={activeIndex}
+                          next={next}
                           previous={previous}
                           className="carousel"
-                          // interval={3000}
-                          >
-                            <CarouselIndicators items={items} activeIndex={activeIndex} onClickHandler={goToIndex} />
-                            {slides}
-                            <CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />
-                            <CarouselControl direction="next" directionText="Next" onClickHandler={next} />
-                          </Carousel>
-
-                        </Col>
-                      </Row>
-                    </CardHeader>
-                  </Row>
+                        // interval={3000}
+                        >
+                          <CarouselIndicators items={items} activeIndex={activeIndex} onClickHandler={goToIndex} />
+                          {slides}
+                          <CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />
+                          <CarouselControl direction="next" directionText="Next" onClickHandler={next} />
+                        </Carousel>
+                      </Col>
+                    </Row>
+                  </CardHeader>
                   <Row>
-                    {/* <Col md='9' className="text-left">
-                      <h2 className="text-bold primary-color text-start position-absolute bottom-50 start-0">Welcome to CleanAR Solutions</h2>
-                    </Col> */}
-                    {/* <Col>
-                      <CardBody>
-                        <CardText>
-                          <CardTitle tag="h4" className="text-bold light-color">Contact Us!</CardTitle>
-                          <p className="light-color text-bold">We'd love to hear from you! Whether you have a question, need assistance, or just want to share your feedback, our team is here to help. Reach out to us through through your preferred method, and we'll get back to you as soon as possible.</p>
-                        </CardText>
-                      </CardBody>
-                    </Col> */}
                     <Card className="card-plain">
                       <CardBody>
                         <CardText>

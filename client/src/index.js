@@ -29,6 +29,7 @@ import Navbar from "components/Pages/Navbar.js";
 import Career from "components/Pages/Career.js";
 import GiftCard from "components/Pages/ManageGiftCard.js";
 import VisitorStats from "components/Pages/VisitorStats.js";
+import ResetPassword from "components/Pages/ResetPassword";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -59,6 +60,7 @@ const App = () => {
         <Route path="/careers" element={<Career />} />
         <Route path="/about-us" element={<AboutUsPage />} />
         <Route path="/products-and-services" element={<ProductsAndServices />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/" element={<Navigate to="/index" />} />
         <Route path="*" element={<Navigate to="/index" replace />} />
       </Routes>

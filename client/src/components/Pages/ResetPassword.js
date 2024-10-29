@@ -1,6 +1,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import Auth from "../../utils/auth";
+import { useLocation, useNavigate } from 'react-router-dom';
 // import Logo from "../../assets/svg/cleanmart-blue.svg";
 
 // reactstrap components
@@ -23,26 +24,21 @@ import {
 import { FaQuestionCircle } from 'react-icons/fa';
 
 
-function LoginPage() {
+function ResetPassword() {
 
   const [formData, setFormData] = useState({
-    username: "",
-    password: ""
+    password: "",
+    confirmPassword: ""
   });
+  const [message, setMessage] = useState('');
+  const token = new URLSearchParams(useLocation().search).get('token');
+  const navigate = useNavigate();
 
-  // const [tooltipOpen, setTooltipOpen] = useState({
-  //   username: false,
-  //   password: false
-  // });
 
   const [popoverOpen, setPopoverOpen] = useState({
-    username: false,
-    password: false
+    password: false,
+    confirmPassword: false
   });
-
-  // const toggleTooltip = (field) => {
-  //   setTooltipOpen({ ...tooltipOpen, [field]: !tooltipOpen[field] });
-  // };
 
   const togglePopover = (field) => {
     setPopoverOpen((prevState) => {
@@ -58,106 +54,48 @@ function LoginPage() {
   };
 
 
-  const handleFormSubmit = async (event) => {
-    event.preventDefault();
-
-    if (formData.username && formData.password) {
-      // console.log(body);
-      await fetch('/api/users/login/', {
-        method: 'post',
-        // mode: 'no-cors',
-        body: JSON.stringify(formData),
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      })
-        .then(response => {
-          if (response.ok) {
-            console.log("you're logged!");
-            response.json()
-              .then(data => {
-                console.log(data);
-                console.log(data.dbUserData.adminFlag);
-                Auth.login(data.token, data.dbUserData.adminFlag);
-
-
-              });
-          }
-          else {
-            // alert(response.statusText)
-            if (response.status === 404) {
-              alert("User not found")
-            }
-            else if (response.status === 401) {
-              alert("Wrong password!")
-            }
-            console.log(response)
-          }
-        })
-        .catch(err => console.log(err))
-
-
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (formData.password !== formData.confirmPassword) {
+      setMessage('Passwords do not match');
+      return;
     }
-    else {
-      alert("Please enter your username and password");
-    }
-  }
 
-  const handleResetPassword = async (event) => {
-    event.preventDefault();
-    if (formData.username) {
-      await fetch('/api/email/request-password-reset', {
-        method: 'post',
-        // mode: 'no-cors',
-        body: JSON.stringify({ username: formData.username }),
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      })
-        .then(response => {
-          if (response.ok) {
-            // console.log("Password reset request sent!");
-            response.json()
-              .then(data => {
-                // console.log(data);
-                alert(data.message);
-              });
-          }
-          else {
-            // alert(response.statusText)
-            if (response.status === 404) {
-              alert("User not found")
-            }
-            else if (response.status === 401) {
-              alert("Wrong password!")
-            }
-            // console.log(response)
-          }
-        })
-        .catch(err => console.log(err))
+    try {
+      const response = await fetch('/api/users/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, password: formData.password }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        // setMessage('Password successfully reset');
+        alert('Password successfully reset! Navigating to login page...');
+        navigate('/login-page');
+      } else {
+        setMessage(data.message || 'Error resetting password');
+      }
+    } catch (error) {
+      setMessage('Error resetting password');
     }
-    else {
-      alert("Please enter your username to reset your password");
-    }
-  }
+  };
 
   const handleChange = (event) => {
     event.preventDefault();
     const { name, value } = event.target;
-    // console.log(name, value);
-    // console.log(formData);
     setFormData({ ...formData, [name]: value.trim() });
   };
 
 
   useEffect(() => {
-    document.body.classList.add("login-page");
+    document.body.classList.add("reset-password-page");
     document.body.classList.add("sidebar-collapse");
     document.documentElement.classList.remove("nav-open");
     // window.scrollTo(0, 0);
     document.body.scrollTop = 0;
     return function cleanup() {
-      document.body.classList.remove("login-page");
+      document.body.classList.remove("reset-password-page");
       document.body.classList.remove("sidebar-collapse");
     };
   }, []);
@@ -171,54 +109,23 @@ function LoginPage() {
         <Container className="container">
           <h2 className="title primary-color">Welcome to CleanAR <span className="secondary-color">Solutions</span></h2>
           <p className="primary-color text-bold">
-            Log in to access your account for faster checkout and to view order history.
+            Reset Password.
           </p>
-          <Form onSubmit={handleFormSubmit}>
+          <Form onSubmit={handleSubmit}>
             <Row>
               <Col className="py-3" md="10" xs='10'>
                 <FloatingLabel
                   controlId="floatingInput"
-                  label="Username*"
+                  label="Password*"
                   // className="mb-3"
                   className="text-bold text-cleanar-color"
                 >
-                  <Form.Control type="text" className='text-bold text-cleanar-color' placeholder="" onChange={(e) => handleChange(e)} name="username" id="username" />
+                  <Form.Control type="password" className='text-bold text-cleanar-color' placeholder="" onChange={(e) => handleChange(e)} name="password" id="password" />
                 </FloatingLabel>
               </Col>
               <Col className="py-3" md="1" xs='1'>
                 <Button
                   id="Tooltip1"
-                  type="button"
-                  tabIndex='-1'
-                  // color="link"
-                  className="primary-bg-color btn-round btn-icon"
-                  onClick={() => togglePopover('username')}
-                >
-                  <FaQuestionCircle />
-                </Button>
-                <Popover
-                  placement="top"
-                  isOpen={popoverOpen.username}
-                  target="Tooltip1"
-                  toggle={() => togglePopover('username')}
-                >
-                  <PopoverBody>Enter your registered username.</PopoverBody>
-                </Popover>
-              </Col>
-            </Row>
-            <Row>
-              <Col className="py-3" md="10" xs='10'>
-                <FloatingLabel controlId="floatingPassword" label="Password*"
-                  className="text-bold text-cleanar-color"
-                >
-                  <Form.Control type="password" placeholder=""
-                    className="text-bold text-cleanar-color"
-                    onChange={(e) => handleChange(e)} name="password" id="password" />
-                </FloatingLabel>
-              </Col>
-              <Col className="py-3" md="1" xs='1'>
-                <Button
-                  id="Tooltip2"
                   type="button"
                   tabIndex='-1'
                   // color="link"
@@ -230,10 +137,41 @@ function LoginPage() {
                 <Popover
                   placement="top"
                   isOpen={popoverOpen.password}
-                  target="Tooltip2"
+                  target="Tooltip1"
                   toggle={() => togglePopover('password')}
                 >
-                  <PopoverBody>Enter your account password.</PopoverBody>
+                  <PopoverBody>Enter your new password.</PopoverBody>
+                </Popover>
+              </Col>
+            </Row>
+            <Row>
+              <Col className="py-3" md="10" xs='10'>
+                <FloatingLabel controlId="floatingPassword" label="Confirm Password*"
+                  className="text-bold text-cleanar-color"
+                >
+                  <Form.Control type="password" placeholder=""
+                    className="text-bold text-cleanar-color"
+                    onChange={(e) => handleChange(e)} name="confirmPassword" id="confirmPassword" />
+                </FloatingLabel>
+              </Col>
+              <Col className="py-3" md="1" xs='1'>
+                <Button
+                  id="Tooltip2"
+                  type="button"
+                  tabIndex='-1'
+                  // color="link"
+                  className="primary-bg-color btn-round btn-icon"
+                  onClick={() => togglePopover('confirmPassword')}
+                >
+                  <FaQuestionCircle />
+                </Button>
+                <Popover
+                  placement="top"
+                  isOpen={popoverOpen.confirmPassword}
+                  target="Tooltip2"
+                  toggle={() => togglePopover('confirmPassword')}
+                >
+                  <PopoverBody>Confirm your new password.</PopoverBody>
                 </Popover>
               </Col>
             </Row>
@@ -249,18 +187,10 @@ function LoginPage() {
                     size="lg"
                   // onClick={(e) => handleFormSubmit(e)}
                   >
-                    Log In
-                  </Button>
-                  <Button
-                    block
-                    className="btn-round brown-bg-color"
-                    type="button"
-                    onClick={handleResetPassword}
-                    size="lg"
-                  >
-                    Reset Your Password
+                    Change Password
                   </Button>
                 </div>
+                {message && <p>{message}</p>}
                 {/* </Form> */}
                 {/* </Card> */}
               </Col>
@@ -275,4 +205,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default ResetPassword;

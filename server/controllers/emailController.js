@@ -1,5 +1,9 @@
-const sgMail = require('@sendgrid/mail')
-sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+// const jwt = require('jsonwebtoken');
+const { signTokenForPasswordReset } = require('../utils/auth');
+const bcrypt = require('bcrypt');
+const User = require('../models/User');
 
 // Define your email controller
 const emailController = {
@@ -20,7 +24,7 @@ Thank you for your quote request! We have received it with the following details
 **Phone Number**: ${quote.phonenumber}  
 **Email**: ${quote.email}
 **Date**: ${quote.createdAt}
-**Promo Code**: ${(quote.promoCode)? ( quote.promoCode ) : ( 'No promo code was used.' )}
+**Promo Code**: ${(quote.promoCode) ? (quote.promoCode) : ('No promo code was used.')}
 
 **Services Requested**:
 ${quote.services.map(service => {
@@ -121,7 +125,7 @@ Thank you for your quote request! We have received it with the following details
 **Address**: ${quote.address.toUpperCase()}, ${quote.city.toUpperCase()}, ${quote.province.toUpperCase()}, ${quote.postalcode.toUpperCase()}  
 **Phone Number**: ${quote.phonenumber}  
 **Email**: ${quote.email}
-**Promo Code**: ${(quote.promoCode)? ( quote.promoCode ) : ( 'No promo code was used.' )}
+**Promo Code**: ${(quote.promoCode) ? (quote.promoCode) : ('No promo code was used.')}
 
 **Services Requested**:
 ${quote.services.map(service => {
@@ -276,6 +280,43 @@ info@cleanARsolutions.ca
         } catch (error) {
             console.error('Error emailing new user notification: ', error);
             res.status(500).json({ message: 'Error emailing new user notification' });
+        }
+    },
+    emailPasswordResetRequest: async (req, res) => {
+        const { username } = req.body;
+        const user = await User.findOne({ username });
+
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+        console.log('user: ', user);
+        const resetToken = signTokenForPasswordReset({ userId: user._id }, process.env.SECRET_KEY, { expiresIn: '1h' });
+        user.resetToken = bcrypt.hashSync(resetToken, 10); // Store hashed token in the DB
+        user.resetTokenExpires = Date.now() + 3600000; // 1 hour expiration
+        await user.save();
+
+        // Send the reset email with SendGrid
+        const msg = {
+            to: user.email,
+            from: 'info@cleanARsolutions.ca', // Your verified sender
+            subject: 'Password Reset Request',
+            text: `
+        You are receiving this email because you (or someone else) has requested a password reset for your account.
+        Please click on the following link, or paste this into your browser to complete the process:
+        https://www.cleanARsolutions.ca/reset-password?token=${resetToken}
+        If you did not request this, please ignore this email and your password will remain unchanged.
+        `,
+        
+        // http://localhost:3000/reset-password?token=${resetToken}
+    };
+
+        try {
+            await sgMail.send(msg);
+            res.status(200).json({ message: 'Password reset email sent! Please check your email for next steps.' });            
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Error sending email' });
+            
         }
     }
 };

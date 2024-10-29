@@ -43,5 +43,16 @@ module.exports = {
       secret,
       { expiresIn: expiration }
     );
+  },
+  verifyToken: function (token) {
+    return jwt.verify(token, secret, { maxAge: expiration });
+  },
+  signTokenForPasswordReset: function ({ userId }) {
+    const payload = { userId };
+    return jwt.sign(
+      { data: payload },
+      secret,
+      { expiresIn: '1h' }
+    );
   }
 };

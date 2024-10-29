@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { getUsers, createUser, getUserById, deleteUser, updateUser, login, migrateUsernamesToLowercase } = require('../../controllers/userControllers');
+const { getUsers, createUser, getUserById, deleteUser, updateUser, login, migrateUsernamesToLowercase, resetPassword } = require('../../controllers/userControllers');
 const {authMiddleware} = require('../../utils/auth');
 
 router.route('/')
@@ -13,6 +13,8 @@ router.route('/:userId')
     .get(getUserById)
     .put(updateUser)
     .delete(deleteUser);
+
+router.route('/reset-password').post(resetPassword);
 
 router.route('/me').get(authMiddleware, getUserById);
 

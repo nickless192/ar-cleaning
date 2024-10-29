@@ -160,7 +160,7 @@ function SignUp() {
                     />
                     <label htmlFor="floatinFirstName"
                       className="text-cleanar-color"
-                    >First Name</label>
+                    >First Name*</label>
                   </Form.Floating>
                 </Col>
                 <Col md='1' xs='1'>
@@ -184,7 +184,7 @@ function SignUp() {
                     />
                     <label htmlFor="floatingLastName"
                       className="text-cleanar-color"
-                    >Last Name</label>
+                    >Last Name*</label>
                   </Form.Floating>
                 </Col>
                 <Col md='1' xs='1'>
@@ -210,7 +210,7 @@ function SignUp() {
                     />
                     <label htmlFor="floatingEmail"
                       className="text-cleanar-color"
-                    >Email</label>
+                    >Email*</label>
                   </Form.Floating>
                 </Col>
                 <Col md='1' xs='1'>
@@ -234,7 +234,7 @@ function SignUp() {
                     />
                     <label htmlFor="floatingTelephone"
                       className="text-cleanar-color"
-                    >Telephone</label>
+                    >Telephone*</label>
                   </Form.Floating>
                 </Col>
                 <Col md='1' xs='1'>
@@ -260,7 +260,7 @@ function SignUp() {
                     />
                     <label htmlFor="floatingUsername"
                       className="text-cleanar-color"
-                    >Username</label>
+                    >Username*</label>
                   </Form.Floating>
                 </Col>
                 <Col md='1' xs='1'>
@@ -284,7 +284,7 @@ function SignUp() {
                     />
                     <label htmlFor="floatingPassword"
                       className="text-cleanar-color"
-                    >Password</label>
+                    >Password*</label>
                   </Form.Floating>
                   {/* <InputGroup
                     className={

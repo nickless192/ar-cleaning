@@ -544,7 +544,7 @@ textarea {
     /* max-width: 600px; */
     /* background-color: white; */
     padding: 20px;
-    font-size: 22px;
+    font-size: 18px;
     font-weight: bold;
     color: white;
     border-radius: 10px;
@@ -552,7 +552,7 @@ textarea {
   }
 
   .slide-title {
-    font-size: 25px;
+    font-size: 22px;
     font-weight: bold;
   }
 

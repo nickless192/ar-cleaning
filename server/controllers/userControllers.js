@@ -1,5 +1,8 @@
 const { User } = require('../models');
 const { signToken } = require('../utils/auth');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+
 
 const userControllers = {
     // get all users
@@ -61,7 +64,7 @@ const userControllers = {
             })
             .catch(err => res.status(500).json(err));
     },
-    async login ({ body }, res) {
+    async login({ body }, res) {
         const dbUserData = await User.findOne({ username: body.username.toLowerCase() });
 
         // if (dbUserData) {
@@ -81,22 +84,59 @@ const userControllers = {
         // )
         // .catch(err => console.log(err))
     },
-    async migrateUsernamesToLowercase (req, res) {
+    async migrateUsernamesToLowercase(req, res) {
         try {
             const users = await User.find({});
             for (let user of users) {
-              const lowercaseUsername = user.username.toLowerCase();
-              if (user.username !== lowercaseUsername) {
-                user.username = lowercaseUsername;
-                await user.save();
-              }
+                const lowercaseUsername = user.username.toLowerCase();
+                if (user.username !== lowercaseUsername) {
+                    user.username = lowercaseUsername;
+                    await user.save();
+                }
             }
             res.status(200).json({ message: 'Usernames successfully migrated to lowercase' });
-          } catch (error) {
+        } catch (error) {
             console.error('Error during migration:', error);
             res.status(500).json({ message: 'Server error during migration' });
-          }
-      }
+        }
+    },
+    async resetPassword({ body }, res) {
+        const { token, password } = body;
+        console.log(token);
+        let decoded;
+        try {
+            decoded = jwt.verify(token, process.env.SECRET_KEY);
+            console.log(decoded);
+        } catch (error) {
+            return res.status(400).json({ message: 'Invalid or expired token' });            
+        }
+
+        const user = await User.findById(decoded.data.userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });            
+        }
+
+        // Check if token is expired
+        if (user.resetTokenExpires < Date.now()) {
+            return res.status(400).json({ message: 'Token expired' });            
+        }
+
+        // Verify token matches the stored hashed token
+        const tokenIsValid = bcrypt.compareSync(token, user.resetToken);
+        if (!tokenIsValid) {
+            return res.status(400).json({ message: 'Invalid token' });
+            
+        }
+
+        // Update password
+        // user.password = bcrypt.hashSync(password, 10);
+        user.password = password;
+        user.resetToken = null; // Clear reset token after successful reset
+        user.resetTokenExpires = null;
+        await user.save();
+
+        res.status(200).json({ message: 'Password successfully reset' });
+    }
 };
 
 module.exports = userControllers;
