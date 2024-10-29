@@ -109,7 +109,7 @@ function LoginPage() {
       await fetch('/api/email/request-password-reset', {
         method: 'post',
         // mode: 'no-cors',
-        body: JSON.stringify({ username: formData.username }),
+        body: JSON.stringify({ username: formData.username.toLowerCase() }),
         headers: {
           'Content-Type': 'application/json',
         }
