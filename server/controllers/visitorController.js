@@ -66,6 +66,22 @@ getDailyVisitors: async (req, res) => {
         res.status(500).send({ error: 'Failed to retrieve daily visitor stats' });
     }
 },
+getVisitorPerDay: async (req, res) => {
+    try {
+        const page = req.params.page;
+        const date = req.params.date;
+        date.setHours(0, 0, 0, 0); // Start of the day
+        const tomorrow = new Date(date);
+        tomorrow.setDate(date.getDate() + 1); // End of the day
+        visits = await VisitorLog.countDocuments({
+            page: page,
+            visitDate: { $gte: date, $lt: tomorrow }
+        });
+        res.json({ count: visits });
+    } catch (err) {
+        res.status(500).send({ error: 'Failed to retrieve daily visitor stats' });
+    }
+},
 migrateData: async (req, res) => {
     try {
         // Define the pages you want to migrate data for
