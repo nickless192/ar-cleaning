@@ -26,9 +26,6 @@ import Logo from "assets/img/IC CLEAN AR-15-cropped.png";
 function Index() {
 
   const [promoCode] = useState('FALL15');
-  // const [promoCode] = useState('WELCOME10');
-
-  const [modal, setModal] = useState(false);
 
   const items = [
     {
@@ -160,29 +157,9 @@ function Index() {
   });
 
 
-  const toggleModal = () => {
-    setModal(!modal);
-    // localStorage.setItem('modalShown', 'true');
-    sessionStorage.setItem('modalShown', 'true');
-  };
-
-  const handleDontShowAgain = () => {
-    localStorage.setItem('modalDontShowAgain', 'true');
-    setModal(false);
-  };
-
-
   useEffect(() => {
     // const modalShown = localStorage.getItem('modalShown');
-    const modalShown = sessionStorage.getItem('modalShown');
-    const modalDontShowAgain = localStorage.getItem('modalDontShowAgain');
-
-    if (modalDontShowAgain) {
-      setModal(false);
-    } else
-      if (!modalShown) {
-        setModal(true);
-      }
+   
     document.body.classList.add("index-page");
     document.body.classList.add("sidebar-collapse");
     document.documentElement.classList.remove("nav-open");
@@ -198,25 +175,6 @@ function Index() {
   return (
     <>
       <VisitorCounter page={"index"} />
-      {/* <ModalHeader toggle={toggleModal} className="modal-header-text">Welcome Promo!</ModalHeader>
-        <ModalBody className="modal-body-text">
-          Welcome to CleanAR Solutions! We're excited to offer you 10% discount for your first cleaning service. <a href="mailto:info@cleanARsolutions.ca" className="modal-link">Contact us</a> today to claim your discount or <Link className="modal-link" to={`/request-quote?promoCode=${promoCode}`}>click here to request a quote</Link>. We look forward to hearing from you!
-        </ModalBody>
-        <ModalFooter className="modal-header-text">
-          <Button className="secondary-bg-color" onClick={toggleModal}>Close</Button>
-          <Button color="danger" onClick={handleDontShowAgain}>Don't Show Again</Button>
-        </ModalFooter> */}
-      {/* <Modal isOpen={modal} toggle={toggleModal}>
-        <ModalHeader toggle={toggleModal} className="modal-header-text">Fall Savings! Book with code FALL15 and get 15% off your next service</ModalHeader>
-        <ModalBody className="modal-body-text">
-          This fall, use code <Link className="modal-link" to={`/request-quote?promoCode=${promoCode}`}>FALL15</Link> to enjoy 15% off your next cleaning service with CleanAR Solutions when requesting a quote! <a href="mailto:info@cleanARsolutions.ca" className="modal-link">Contact us</a> today if you need help to claim your discount or <Link className="modal-link" to={`/request-quote?promoCode=${promoCode}`}>click here to request a quote.</Link>
-       
-        </ModalBody>
-        <ModalFooter className="modal-footer pt-3">
-          <Button className="modal-btn" onClick={toggleModal}>Close</Button>
-          <Button color="danger" onClick={handleDontShowAgain}>Don't Show Again</Button>
-        </ModalFooter>
-      </Modal> */}
       <div className="content section-background mb-0" style={{ backgroundImage: `url(${backgroundImage})` }}>
         <p>
           <div className="py-0 px-2 ">
@@ -274,14 +232,6 @@ function Index() {
                               <i className="now-ui-icons ui-2_like"></i> <strong>Follow Us:</strong> <a href="https://www.instagram.com/cleanarsolutions/" target="_blank" rel="noreferrer">Instagram</a> <br />
                               <span>Stay up-to-date with our latest news, promotions, and cleaning tips! Follow us on Instagram for more information.</span>
                             </ListGroupItem>
-                            {/* <ListGroupItem>
-                                    <i className="now-ui-icons ui-2_like"></i> <strong>Like Us:</strong> <a href="https://www.facebook.com/cleanarsolutions/" target="_blank" rel="noreferrer">Facebook</a> <br />
-                                    <span>Like our Facebook page to stay connected and receive updates on our services, promotions, and more!</span>
-                                  </ListGroupItem> */}
-                            {/* <ListGroupItem>
-                        <i className="now-ui-icons ui-2_like"></i> <strong>Subscribe:</strong> <a href="/newsletter-signup" target="_blank">Newsletter</a> <br />
-                        <span>Subscribe to our newsletter to receive exclusive offers, promotions, and cleaning tips directly to your inbox!</span>
-                      </ListGroupItem> */}
                           </ListGroup>
                         </CardText>
                       </CardBody>
