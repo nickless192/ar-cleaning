@@ -38,7 +38,7 @@ function Index() {
           <p className="">
             This fall, use code <Link to={`/request-quote?promoCode=FALL15`} className="slide-link">FALL15</Link> to enjoy 15% off your next cleaning service with CleanAR Solutions!
             <br />
-            <a href="mailto:info@cleanARsolutions.ca" className="slide-link">Contact us</a> today or <Link to={`/request-quote?promoCode=FALL15`} className="slide-link">click here to request a quote.</Link>
+            <a href="mailto:info@cleanARsolutions.ca" className="slide-link">Contact us</a> today or <Link to={`/request-quote?promoCode=FALL15`} className="slide-link" alt>click here to request a quote.</Link>
           </p>
         </div>
       )
@@ -74,7 +74,7 @@ function Index() {
           <p>
             Join us in our mission to provide exceptional cleaning services to our clients. We are always looking for talented and dedicated individuals to join our team. If you are passionate about cleanliness and customer service, we want to hear from you.
             < br />
-            <a href="mailto:info@cleanARsolutions.ca" className="slide-link">Email us </a> your resume today.
+            <a href="mailto:info@cleanARsolutions.ca" className="slide-link">Email us your resume today.</a>
           </p>
         </div>
       )
