@@ -7,6 +7,7 @@
     --light-blue-color: #64acc4;
     --brown-color: #5c5d60;
     --text-cleanar-color: #374357;
+    --accordion-bg-color: #bcd4ec;
 }
 
 /* Use the color variables in your styles */
@@ -210,13 +211,13 @@
     margin-right: 10px;
 }
 
-.list-group-item {
-    background-color: var(--light-color);
+.accordion-header {
+    background-color: var(--accordion-bg-color) !important;
     border: none;
-    margin-bottom: 10px;
+    /* margin-bottom: 10px; */
 }
 
-.list-group-item span {
+.accordion-header span {
     color: var(--brown-color);
     font-size: 0.9rem;
     font-weight: bold;

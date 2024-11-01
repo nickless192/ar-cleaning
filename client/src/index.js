@@ -7,8 +7,6 @@ import "assets/css/bootstrap.min.css";
 import "assets/css/bootstrap.min.css.map";
 import "assets/css/our-palette.css";
 import "assets/scss/now-ui-kit.scss?v=1.5.0";
-import "assets/demo/demo.css?v=1.5.0";
-import "assets/demo/nucleo-icons-page-styles.css?v=1.5.0";
 
 // pages for this kit
 import Index from "views/Index.js";
@@ -24,7 +22,6 @@ import ViewQuotes from "../src/components/Pages/ViewQuotes";
 import ProductsAndServices from "../src/components/Pages/ProductsAndServices";
 import ProtectedRoute from "../src/components/Pages/ProtectedRoute";
 import ChatTool from "../src/components/Pages/ChatTool";
-import Footer from "components/Pages/Footer";
 import Navbar from "components/Pages/Navbar.js";
 import Career from "components/Pages/Career.js";
 import GiftCard from "components/Pages/ManageGiftCard.js";

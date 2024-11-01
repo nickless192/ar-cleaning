@@ -19,6 +19,13 @@ import {
   Col,
   CardImg
 } from "reactstrap";
+import {
+  Container,
+  Accordion,
+  AccordionItem,
+  AccordionHeader,
+  AccordionBody,
+} from "react-bootstrap";
 
 import backgroundImage from 'assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg';
 import Logo from "assets/img/IC CLEAN AR-15-cropped.png";
@@ -159,12 +166,12 @@ function Index() {
 
   useEffect(() => {
     // const modalShown = localStorage.getItem('modalShown');
-   
+
     document.body.classList.add("index-page");
     document.body.classList.add("sidebar-collapse");
     document.documentElement.classList.remove("nav-open");
-    window.scrollTo(0, 0);
-    document.body.scrollTop = 0;
+    // window.scrollTo(0, 0);
+    // document.body.scrollTop = 0;
     // initializeServices();
     return function cleanup() {
       document.body.classList.remove("index-page");
@@ -211,28 +218,54 @@ function Index() {
                     <Card className="card-plain">
                       <CardBody>
                         <CardText>
-                          <ListGroup className="leave-review">
-                            <ListGroupItem>
-                              <i className="now-ui-icons tech_mobile"></i> <strong>Request a Quote:</strong> <Link to="/request-quote">Click Here</Link> <br />
-                              <span>Get the professional cleaning services you need with CleanAR Solutions! We offer a range of services, contact us today to learn more about our services and request a quote.</span>
-                            </ListGroupItem>
-                            <ListGroupItem>
-                              <i className="now-ui-icons tech_mobile"></i> <strong>Call Us:</strong> <Link to="tel:437-440-5514">437-440-5514</Link> <br />
-                              <span>Our customer service team is available to assist you Monday through Friday, from 9 AM to 6 PM. Don't hesitate to call for any inquiries or support!</span>
-                            </ListGroupItem>
-                            <ListGroupItem>
-                              <i className="now-ui-icons ui-1_email-85"></i> <strong>Email Us:</strong> <a href="mailto:info@cleanARsolutions.ca">info@cleanARsolutions.ca</a><br />
-                              <span>For detailed inquiries or if you prefer written communication, drop us an email. We aim to respond within 24 hours.</span>
-                            </ListGroupItem>
-                            <ListGroupItem>
-                              <i className="now-ui-icons ui-2_like"></i> <strong>Leave a Review:</strong> <a href="https://g.page/r/Cek9dkmHVuBKEAE/review" target="_blank" rel="noreferrer">Google Review</a> <br />
-                              <span>Share your experience with CleanAR Solutions! We value your feedback and would love to hear about your experience with our services.</span>
-                            </ListGroupItem>
-                            <ListGroupItem>
-                              <i className="now-ui-icons ui-2_like"></i> <strong>Follow Us:</strong> <a href="https://www.instagram.com/cleanarsolutions/" target="_blank" rel="noreferrer">Instagram</a> <br />
-                              <span>Stay up-to-date with our latest news, promotions, and cleaning tips! Follow us on Instagram for more information.</span>
-                            </ListGroupItem>
-                          </ListGroup>
+                          <Accordion defaultActiveKey={null} >
+                            <Accordion.Item eventKey="0" className="accordion-header">
+                              <Accordion.Header>
+                                <i className="now-ui-icons tech_mobile"></i> <strong>To Request a Quote: </strong>
+                              </Accordion.Header>
+                              <Accordion.Body>                                
+                              <Link to="/request-quote">Click Here</Link> <br />
+                                <span>Get the professional cleaning services you need with CleanAR Solutions! We offer a range of services. Contact us today to learn more and request a quote.</span>
+                              </Accordion.Body>
+                            </Accordion.Item>
+
+                            <Accordion.Item eventKey="1" className="accordion-header">
+                              <Accordion.Header >
+                                <i className="now-ui-icons tech_mobile"></i> <strong>Call Us:</strong>
+                              </Accordion.Header>
+                              <Accordion.Body>
+                                <Link to="tel:437-440-5514">437-440-5514</Link> <br />
+                                <span>Our customer service team is available Monday through Friday, from 9 AM to 6 PM. Don’t hesitate to call for any inquiries or support!</span>
+                              </Accordion.Body>
+                            </Accordion.Item>
+                            <Accordion.Item eventKey="2" className="accordion-header">
+                              <Accordion.Header>
+                                <i className="now-ui-icons ui-1_email-85"></i> <strong>Email Us:</strong>
+                              </Accordion.Header>
+                              <Accordion.Body>
+                                <a href="mailto:info@cleanARsolutions.ca">info@cleanARsolutions.ca</a><br />
+                                <span>For detailed inquiries or if you prefer written communication, drop us an email. We aim to respond within 24 hours.</span>
+                              </Accordion.Body>
+                            </Accordion.Item>
+                            <Accordion.Item eventKey="3" className="accordion-header">
+                              <Accordion.Header>
+                                <i className="now-ui-icons ui-2_like"></i> <strong>Leave a Review:</strong>
+                              </Accordion.Header>
+                              <Accordion.Body>
+                                <a href="https://g.page/r/Cek9dkmHVuBKEAE/review" target="_blank" rel="noreferrer">Google Review</a> <br />
+                                <span>Share your experience with CleanAR Solutions! We value your feedback and would love to hear about your experience with our services.</span>
+                              </Accordion.Body>
+                            </Accordion.Item>
+                            <Accordion.Item eventKey="4" className="accordion-header">
+                              <Accordion.Header>
+                                <i className="fab fa-instagram"></i> <strong>Follow Us:</strong>
+                              </Accordion.Header>
+                              <Accordion.Body>
+                                <a href="https://www.instagram.com/cleanarsolutions/" target="_blank" rel="noreferrer">Instagram</a> <br />
+                                <span>Stay up-to-date with our latest news, promotions, and cleaning tips! Follow us on Instagram for more information.</span>
+                              </Accordion.Body>
+                            </Accordion.Item>
+                          </Accordion>
                         </CardText>
                       </CardBody>
                     </Card>
