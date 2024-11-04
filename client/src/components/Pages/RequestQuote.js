@@ -436,6 +436,7 @@ const RequestQuote = () => {
                 }
             } catch (error) {
                 console.error('Error submitting quote:', error);
+                alert('Error submitting quote, please ensure all fields are filled out correctly. If the problem persists, please contact us directly with a description of the issue.');
             }
         }
         else {
