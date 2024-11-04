@@ -52,63 +52,61 @@ function Index() {
         <div className="promo-slide request-quote-slide">
           <h3 className="slide-title">Get a Quote Today!</h3>
           <p>
-            Get the professional cleaning services you need with CleanAR Solutions! We offer a range of services, contact us today to learn more about our services and request a quote.
-            <br />
-            <Link to="/request-quote" className="slide-link">Click here to request a quote.</Link>
+        Get the professional cleaning services you need with CleanAR Solutions! Contact us to learn more and request a quote.
+        <br />
+        <Link to="/request-quote" className="slide-link">Request a quote</Link>
           </p>
         </div>
       )
-    },
-    {
+        },
+        {
       content: (
         <div className="promo-slide follow-us-slide">
           <h3 className="slide-title">Follow Us on Instagram!</h3>
           <p>
-            Stay up-to-date with our latest news, promotions, and cleaning tips!
-            < br />
-            <a href="https://www.instagram.com/cleanarsolutions/" target="_blank" rel="noreferrer" className="slide-link">Join us on Instagram for more information.</a>
+        Stay up-to-date with our latest news, promotions, and cleaning tips!
+        <br />
+        <a href="https://www.instagram.com/cleanarsolutions/" target="_blank" rel="noreferrer" className="slide-link">Join us on Instagram</a>
           </p>
         </div>
       )
-    },
-    {
+        },
+        {
       content: (
         <div className="promo-slide work-with-us-slide">
           <h3 className="slide-title">Work with Us!</h3>
           <p>
-            Join us in our mission to provide exceptional cleaning services to our clients. We are always looking for talented and dedicated individuals to join our team. If you are passionate about cleanliness and customer service, we want to hear from you.
-            < br />
-            <a href="mailto:info@cleanARsolutions.ca" className="slide-link">Email us your resume today.</a>
+        Join our mission to provide exceptional cleaning services. If you are passionate about cleanliness and customer service, email us your resume.
+        <br />
+        <a href="mailto:info@cleanARsolutions.ca" className="slide-link">Email us</a>
           </p>
         </div>
       )
-    },
-    {
+        },
+        {
       content: (
         <div className="promo-slide display-review-slide">
           <h3 className="slide-title">Read Our Reviews!</h3>
           <p>
-            Are you a <strong>new</strong> customer considering our services? Check out our reviews on Google to see what our customers are saying about us!
-            < br />
-            <a href="https://www.google.com/search?q=cleanar+solutions&nfpr=1&sa=X&ved=2ahUKEwi-ktao06-JAxXDJzQIHUMUGRYQvgUoAXoECAsQAg&biw=1536&bih=730&dpr=1.25#" target="_blank" rel="noreferrer" className="slide-link">Read Reviews...</a>
-
+        New customer? Check out our reviews on Google!
+        <br />
+        <a href="https://www.google.com/search?q=cleanar+solutions" target="_blank" rel="noreferrer" className="slide-link">Read Reviews</a>
           </p>
         </div>
       )
-    },
-    {
+        },
+        {
       content: (
         <div className="promo-slide review-slide">
           <h3 className="slide-title">We'd love to hear from you!</h3>
           <p>
-            Are you a <strong>returning</strong> customer? We'd love to hear from you! Share your experience with CleanAR Solutions by leaving a review on Google.
-            < br />
-            <a href="https://g.page/r/Cek9dkmHVuBKEAE/review" target="_blank" rel="noreferrer" className="slide-link">Leave a Review...</a>
-
+        Returning customer? Share your experience by leaving a review on Google.
+        <br />
+        <a href="https://g.page/r/Cek9dkmHVuBKEAE/review" target="_blank" rel="noreferrer" className="slide-link">Leave a Review</a>
           </p>
         </div>
       )
-    },
+        },
     // {
     //   src: 'https://via.placeholder.com/800x400?text=Slide+3',
     //   altText: 'Slide 3',
@@ -182,7 +180,7 @@ function Index() {
   return (
     <>
       <VisitorCounter page={"index"} />
-      <div className="content section-background mb-0" style={{ backgroundImage: `url(${backgroundImage})` }}>
+      <div className="content section-background mb-0">
         <p>
           <div className="py-0 px-2 ">
             <Row className="">

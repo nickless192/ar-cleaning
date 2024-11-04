@@ -63,7 +63,7 @@ const App = () => {
       </Routes>
       {/* <Footer /> */}
       <a
-        href="https://wa.me/14374405514"
+        href="https://wa.me/14374405514/?text=Hello%2C%20I%20am%20intested%20in%20your%20services.%20Please%20contact%20me."
         className="whatsapp-btn"
         target="_blank"
         rel="noreferrer"
