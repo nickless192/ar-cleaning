@@ -71,18 +71,18 @@ function Index() {
         </div>
       )
         },
-        {
-      content: (
-        <div className="promo-slide work-with-us-slide">
-          <h3 className="slide-title">Work with Us!</h3>
-          <p>
-        Join our mission to provide exceptional cleaning services. If you are passionate about cleanliness and customer service, email us your resume.
-        <br />
-        <a href="mailto:info@cleanARsolutions.ca" className="slide-link">Email us</a>
-          </p>
-        </div>
-      )
-        },
+      //   {
+      // content: (
+      //   <div className="promo-slide work-with-us-slide">
+      //     <h3 className="slide-title">Work with Us!</h3>
+      //     <p>
+      //   Join our mission to provide exceptional cleaning services. If you are passionate about cleanliness and customer service, email us your resume.
+      //   <br />
+      //   <a href="mailto:info@cleanARsolutions.ca" className="slide-link">Email us</a>
+      //     </p>
+      //   </div>
+      // )
+      //   },
         {
       content: (
         <div className="promo-slide display-review-slide">
