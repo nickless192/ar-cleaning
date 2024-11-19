@@ -60,6 +60,8 @@ const RequestQuote = () => {
         services: false,
         products: false
     });
+
+    const allServices = ["Residential", "Commercial", "Carpet Cleaning"];
     const [validPromoCode, setValidPromoCode] = useState(false);
     // const togglePopover = (field) => {
     //     setPopoverOpen({ ...popoverOpen, [field]: !popoverOpen[field] });
@@ -85,7 +87,7 @@ const RequestQuote = () => {
 
     // mock pricing structure
     const pricing = {
-        unitSize: {
+        squareFootage: {
             '0-499 sqft': 50,
             '500-999 sqft': 100,
             '1000-1499 sqft': 150,
@@ -116,7 +118,7 @@ const RequestQuote = () => {
             4: 200,
             5: 250,
         },
-        squareFootage: {
+        squareFootageCommercial: {
             '0-999 sqft': 100,
             '1000-4999 sqft': 200,
             '5000-9999 sqft': 300,
@@ -205,12 +207,16 @@ const RequestQuote = () => {
         if (isInitialLoad) {
             const searchParams = new URLSearchParams(location.search);
             const promoCode = searchParams.get('promoCode');
+            const serviceType = searchParams.get("service");
 
             if (promoCode) {
                 setFormData(prevFormData => ({
                     ...prevFormData,
                     promoCode: promoCode
                 }));
+            }
+            if (serviceType) {
+                handleAddService({ target: { value: serviceType } });
             }
             initializeServices();
             prepopulateForm();
@@ -281,6 +287,8 @@ const RequestQuote = () => {
                 };
             }
         });
+
+
     };
 
     const handleRemoveService = (type) => {
@@ -290,7 +298,17 @@ const RequestQuote = () => {
         }));
     };
 
-    const handleCustomOptionChange = (type, option, value, cost, label) => {
+    const handleCustomOptionChange = (type, option, e, cost, label) => {
+        let value;
+        if (e.target.type === 'checkbox') {
+            value = e.target.checked;
+        } else {
+            value = e.target.value;
+        }
+        // const value = e.target.checked || e.target.value;
+        // console.log(e.target.value);
+        // console.log(e.target.checked);
+        // console.log("value: ", value);
         setFormData(prevFormData => ({
             ...prevFormData,
             services: prevFormData.services.map(s =>
@@ -310,8 +328,6 @@ const RequestQuote = () => {
                     : s
             )
         }));
-
-        console.log(formData);
     };
 
     const handlePromoCodeValidation = async (e) => {
@@ -334,11 +350,11 @@ const RequestQuote = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // console.log('Form data:', formData);
+        console.log('Form data:', formData);
 
         let promoCodeIsValid = false;
 
-        if (formData.promoCode) {
+        if (formData.promoCode !== "") {
             promoCodeIsValid = await handlePromoCodeValidation(e);
             if (!promoCodeIsValid) {
                 return;
@@ -350,11 +366,67 @@ const RequestQuote = () => {
         // }
 
         if (promoCodeIsValid || formData.promoCode === '') {
-            if (!formData.name || !formData.email || !formData.phonenumber || !formData.description || (!formData.services.length && !formData.products.length) || !formData.subtotalCost || !formData.tax || !formData.grandTotal || !formData.address || !formData.city || !formData.province || !formData.postalcode) {
+            if (!formData.name || !formData.email || !formData.phonenumber || !formData.description || (!formData.services.length && !formData.products.length) || !formData.address || !formData.city || !formData.province || !formData.postalcode) {
                 // if (!formData.name || !formData.email || !formData.phonenumber || !formData.description || !formData.companyName || (!formData.services.length && !formData.products.length) || !formData.howDidYouHearAboutUs || !formData.subtotalCost || !formData.tax || !formData.grandTotal || !formData.address || !formData.city || !formData.province || !formData.postalcode) {
-                alert('Please fill out all required fields');
+                const missingFields = [];
+                if (!formData.name) missingFields.push('Full Name');
+                if (!formData.email) missingFields.push('Email');
+                if (!formData.phonenumber) missingFields.push('Phone Number');
+                if (!formData.description) missingFields.push('Description');
+                if (!formData.address) missingFields.push('Address');
+                if (!formData.city) missingFields.push('City');
+                if (!formData.province) missingFields.push('Province');
+                if (!formData.postalcode) missingFields.push('Postal Code');
+                if (!formData.services.length && !formData.products.length) missingFields.push('Services or Products');
+                // if (!formData.subtotalCost) missingFields.push('Subtotal Cost');
+                // if (!formData.tax) missingFields.push('Tax');
+                // if (!formData.grandTotal) missingFields.push('Grand Total');
+
+                if (missingFields.length > 0) {
+                    alert(`Please fill out all required fields: ${missingFields.join(', ')}`);
+                    return;
+                }
                 return;
             }
+            const isServiceLevelFilled = formData.services.every(service => service.serviceLevel);
+            const isCustomOptionsFilled = formData.services.every(service =>
+                service.customOptions &&
+                (service.customOptions.squareFootage) &&
+                service.customOptions.squareFootage.service
+            );
+
+            // Purge customOptions that don't have a service
+            const sanitizedServices = formData.services.map(service => {
+                if (service.customOptions) {
+                    const sanitizedOptions = Object.keys(service.customOptions)
+                        .filter(option => service.customOptions[option].service)
+                        .reduce((acc, option) => {
+                            acc[option] = service.customOptions[option];
+                            return acc;
+                        }, {});
+                    return { ...service, customOptions: sanitizedOptions };
+                }
+                return service;
+            });
+
+            const updatedFormData = {
+                ...formData,
+                services: sanitizedServices
+            };
+            // console.log('sanitizedServices:', sanitizedServices);
+            // console.log('isServiceLevelFilled:', isServiceLevelFilled);
+            // console.log('isCustomOptionsFilled:', isCustomOptionsFilled);
+            if (!isServiceLevelFilled) {
+                alert('Please select a service level for all services');
+                return;
+            }
+
+            // this is not needed for now
+            // if (!isCustomOptionsFilled) {
+            //     alert('Please select unit size/square footage for all services');
+            //     return;
+            // }
+
 
             try {
                 const response = await fetch('/api/quotes', {
@@ -363,7 +435,7 @@ const RequestQuote = () => {
                         'Content-Type': 'application/json',
                         Accept: 'application/json'
                     },
-                    body: JSON.stringify(formData)
+                    body: JSON.stringify(updatedFormData)
                 });
 
                 if (response.ok) {
@@ -378,6 +450,7 @@ const RequestQuote = () => {
                         phonenumber: '',
                         howDidYouHearAboutUs: '',
                         subtotalCost: 0,
+                        promoCode: '',
                         tax: 0,
                         grandTotal: 0,
                         services: [],
@@ -432,7 +505,7 @@ const RequestQuote = () => {
                     else {
                         alert('Error sending email notification');
                     }
-                    navigate('/index');
+                    // navigate('/index');
                 }
             } catch (error) {
                 console.error('Error submitting quote:', error);
@@ -454,21 +527,20 @@ const RequestQuote = () => {
                     // <Tab>
                     <>
                         <Row className='g-2 px-1'>
-                            <Col md='4' xs='12'>
-                                <FloatingLabel controlId={`floatingServiceLevel${type}`} label="Select Service Level..." className=''>
-                                    <Form.Select aria-label="Service level" name="serviceLevel" className="transparent" onChange={(e) => handleCustomOptionChange(type, 'serviceLevel', e.target.value)} >
-                                        <option value="">Select Service Level...</option>
+                            <Col md='3' xs='6'>
+                                <FloatingLabel controlId={`floatingServiceLevel${type}`} label="Select Service Level...*" className=''>
+                                    <Form.Select aria-label="Service level" name="serviceLevel" className="transparent" onChange={(e) => handleCustomOptionChange(type, 'serviceLevel', e)} >
+                                        <option value="">Service Level...*</option>
                                         <option value="Basic Cleaning">Basic Cleaning</option>
                                         <option value="Deep Cleaning">Deep Cleaning</option>
                                         <option value="Special Deal">Special Deal</option>
                                     </Form.Select>
                                 </FloatingLabel>
                             </Col>
-                            <Col md='4' xs='12'>
-
+                            <Col md='3' xs='6'>
                                 <FloatingLabel controlId="floatingUnitSize" label="Unit Size" >
-                                    <Form.Select aria-label="Unit Size" className="transparent" onChange={(e) => handleCustomOptionChange(type, 'unitSize', e.target.value, pricing.unitSize[e.target.value], e.target.getAttribute('aria-label'))}>
-                                        <option value="">Select Unit Size...</option>
+                                    <Form.Select aria-label="Unit Size" className="transparent" onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e, pricing.squareFootage[e.target.value], e.target.getAttribute('aria-label'))}>
+                                        <option value="">Unit Size...</option>
                                         <option value="0-499 sqft">0-499 sqft</option>
                                         <option value="500-999 sqft">500-999 sqft</option>
                                         <option value="1000-1499 sqft">1000-1499 sqft</option>
@@ -477,25 +549,40 @@ const RequestQuote = () => {
                                     </Form.Select>
                                 </FloatingLabel>
                             </Col>
-                            <Col md='4' xs='12'>
+                            <Col md='3' xs='6'>
                                 <FloatingLabel controlId="floatingBedrooms" label="Number of Bedrooms">
-                                    <Form.Control aria-label='Number of Bedrooms' type="number" min="0" className='text-cleanar-color' onChange={(e) => handleCustomOptionChange(type, 'bedrooms', e.target.value, pricing.bedrooms[e.target.value], e.target.getAttribute('aria-label'))}
-                                    // disabled={formData.serviceLevel === 'Deep Cleaning'}
-                                    />
+                                    <Form.Select aria-label="Number of Bedrooms" className="transparent" onChange={(e) => handleCustomOptionChange(type, 'bedrooms', e, pricing.bedrooms[e.target.value], e.target.getAttribute('aria-label'))}>
+                                        <option value="">Number of Bedrooms...</option>
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5+</option>
+                                    </Form.Select>
                                 </FloatingLabel>
                             </Col>
-                            <Col md='4' xs='12'>
+                            <Col md='3' xs='6'>
                                 <FloatingLabel controlId="floatingBathrooms" label="Number of Bathrooms">
-                                    <Form.Control aria-label='Number of Bathrooms' type="number" min="0" className='text-cleanar-color' onChange={(e) => handleCustomOptionChange(type, 'bathrooms', e.target.value, pricing.bathrooms[e.target.value], e.target.getAttribute('aria-label'))}
+                                    <Form.Select aria-label="Number of Bathrooms" className="transparent" onChange={(e) => handleCustomOptionChange(type, 'bathrooms', e, pricing.bathrooms[e.target.value], e.target.getAttribute('aria-label'))}>
+                                        <option value="">Number of Bathrooms...</option>
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5+</option>
+                                    </Form.Select>
+                                    {/* <Form.Control aria-label='Number of Bathrooms' type="number" min="0" className='text-cleanar-color' onChange={(e) => handleCustomOptionChange(type, 'bathrooms', e.target.value, pricing.bathrooms[e.target.value], e.target.getAttribute('aria-label'))}
                                     // disabled={formData.serviceLevel === 'Deep Cleaning'}
-                                    />
+                                    /> */}
                                 </FloatingLabel>
                             </Col>
                         </Row>
                         {serviceLevel !== "" ? (
-
-                            <Row className='g-2 px-1'>
-                                <Col md='4' xs='12'>
+                            <Row className='g-2 px-2'>
+                                <Col className='py-1' md='3' xs='12'>
+                                    <p className='text-bold'>Customize your service</p>
                                     <FormGroup check>
                                         {services
                                             .filter(service => service.serviceLevel === serviceLevel)
@@ -505,11 +592,11 @@ const RequestQuote = () => {
                                                         <Label check>
                                                             <Input
                                                                 type="checkbox"
-                                                                onChange={(e) => handleCustomOptionChange(type, service.name, e.target.checked, service.serviceCost, "")}
+                                                                onChange={(e) => handleCustomOptionChange(type, service.name, e, service.serviceCost, "")}
                                                             // disabled={formData.serviceLevel !== service.serviceLevel}
                                                             />
                                                             <span className="form-check-sign"></span>
-                                                            {service.name} - ${service.serviceCost}
+                                                            {service.name} - {service.description}
                                                         </Label>
                                                     ) : null}
                                                 </>)
@@ -530,22 +617,21 @@ const RequestQuote = () => {
                 return (
                     <>
                         <Row className='g-2 px-1'>
-                            <Col md='4' xs='12'>
-                                <FloatingLabel controlId={`floatingServiceLevel${type}`} label="Select Service Level...">
-                                    <Form.Select aria-label="Service level" className='transparent' name="serviceLevel" onChange={(e) => handleCustomOptionChange(type, 'serviceLevel', e.target.value)} >
-                                        <option value="">Select Service Level...</option>
+                            <Col md='3' xs='6'>
+                                <FloatingLabel controlId={`floatingServiceLevel${type}`} label="Select Service Level...*">
+                                    <Form.Select aria-label="Service level" className='transparent' name="serviceLevel" onChange={(e) => handleCustomOptionChange(type, 'serviceLevel', e)} >
+                                        <option value="">Service Level...*</option>
                                         <option value="Basic Cleaning">Basic Cleaning</option>
                                         <option value="Deep Cleaning">Deep Cleaning</option>
                                         <option value="Special Deal">Special Deal</option>
                                     </Form.Select>
                                 </FloatingLabel>
                             </Col>
-                            <Col md='4' xs='12'>
+                            <Col md='3' xs='6'>
                                 <FloatingLabel controlId="floatingSquareFootage" label="Square Footage" className=''>
-                                    <Form.Select aria-label="Square Footage" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e.target.value, pricing.squareFootage[e.target.value], e.target.getAttribute('aria-label'))}
-
+                                    <Form.Select aria-label="Square Footage" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e, pricing.squareFootageCommercial[e.target.value], e.target.getAttribute('aria-label'))}
                                     >
-                                        <option value="">Select Square Footage...</option>
+                                        <option value="">Square Footage...</option>
                                         <option value="0-999 sqft">0-999 sqft</option>
                                         <option value="1000-4999 sqft">1000-4999 sqft</option>
                                         <option value="5000-9999 sqft">5000-9999 sqft</option>
@@ -553,16 +639,16 @@ const RequestQuote = () => {
                                     </Form.Select>
                                 </FloatingLabel>
                             </Col>
-                            <Col md='4' xs='12'>
+                            <Col md='3' xs='6'>
                                 <FloatingLabel controlId="floatingRooms" label="Number of Rooms" className=''>
-                                    <Form.Select aria-label="Number of Rooms" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'rooms', e.target.value, pricing.rooms[e.target.value], e.target.getAttribute('aria-label'))}>
-                                        <option value="">Select Number of Rooms...</option>
+                                    <Form.Select aria-label="Number of Rooms" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'rooms', e, pricing.rooms[e.target.value], e.target.getAttribute('aria-label'))}>
+                                        <option value="">Number of Rooms...</option>
                                         <option value="0">0</option>
                                         <option value="1">1</option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>
                                         <option value="4">4</option>
-                                        <option value="5">5</option>
+                                        <option value="5">5+</option>
                                     </Form.Select>
                                 </FloatingLabel>
                                 {/* <FormGroup>
@@ -573,8 +659,9 @@ const RequestQuote = () => {
                                 </FormGroup> */}
                             </Col>
                         </Row>
-                        <Row className='g-2 px-1'>
-                            <Col md='4' xs='12'>
+                        <Row className='g-2 px-2'>
+                            <Col className='py-1' md='3' xs='12'>
+                                <p className='text-bold'>Customize your service</p>
                                 <FormGroup check>
                                     {services
                                         .filter(service => service.serviceLevel === serviceLevel)
@@ -584,11 +671,11 @@ const RequestQuote = () => {
                                                     <Label check>
                                                         <Input
                                                             type="checkbox"
-                                                            onChange={(e) => handleCustomOptionChange(type, service.name, e.target.checked, service.serviceCost, "")}
+                                                            onChange={(e) => handleCustomOptionChange(type, service.name, e, service.serviceCost, "")}
                                                         // disabled={formData.serviceLevel === 'Deep Cleaning'}
                                                         />
                                                         <span className="form-check-sign"></span>
-                                                        {service.name} - ${service.serviceCost}
+                                                        {service.name} - {service.description}
                                                     </Label>
                                                 ) : null}
                                             </>)
@@ -606,19 +693,19 @@ const RequestQuote = () => {
             case 'Industrial':
                 return (
                     <> <Row className='g-2 px-1'>
-                        <Col md='4' xs='12'>
-                            <FloatingLabel controlId={`floatingServiceLevel${type}`} label="Select Service Level...">
-                                <Form.Select aria-label="Service level" className='transparent' name="serviceLevel" onChange={(e) => handleCustomOptionChange(type, 'serviceLevel', e.target.value)} >
-                                    <option value="">Select Service Level...</option>
+                        <Col md='3' xs='6'>
+                            <FloatingLabel controlId={`floatingServiceLevel${type}`} label="Select Service Level...*">
+                                <Form.Select aria-label="Service level" className='transparent' name="serviceLevel" onChange={(e) => handleCustomOptionChange(type, 'serviceLevel', e)} >
+                                    <option value="">Select Service Level...*</option>
                                     <option value="Basic Cleaning">Basic Cleaning</option>
                                     <option value="Deep Cleaning">Deep Cleaning</option>
                                     <option value="Special Deal">Special Deal</option>
                                 </Form.Select>
                             </FloatingLabel>
                         </Col>
-                        <Col md='4' xs='12'>
+                        <Col md='3' xs='6'>
                             <FloatingLabel controlId="floatingSquareFootage" label="Square Footage" className=''>
-                                <Form.Select aria-label="Square Footage" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e.target.value, pricing.squareFootage[e.target.value], e.target.getAttribute('aria-label'))}>
+                                <Form.Select aria-label="Square Footage" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e, pricing.squareFootage[e.target.value], e.target.getAttribute('aria-label'))}>
                                     <option value="">Select Square Footage...</option>
                                     <option value="0-999 sqft">0-999 sqft</option>
                                     <option value="1000-4999 sqft">1000-4999 sqft</option>
@@ -627,9 +714,9 @@ const RequestQuote = () => {
                                 </Form.Select>
                             </FloatingLabel>
                         </Col>
-                        <Col md='4' xs='12'>
+                        <Col md='3' xs='6'>
                             <FloatingLabel controlId="floatingEmployees" label="Number of Employees" className=''>
-                                <Form.Select aria-label="Number of Employees" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'employees', e.target.value, pricing.employees[e.target.value], e.target.getAttribute('aria-label'))}>
+                                <Form.Select aria-label="Number of Employees" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'employees', e, pricing.employees[e.target.value], e.target.getAttribute('aria-label'))}>
                                     <option value="">Select Number of Employees...</option>
                                     <option value="0">0</option>
                                     <option value="1">1</option>
@@ -641,8 +728,9 @@ const RequestQuote = () => {
                             </FloatingLabel>
                         </Col>
                     </Row>
-                        <Row className='g-2 px-1'>
-                            <Col md='4' xs='12'>
+                        <Row className='g-2 px-2'>
+                            <Col className='py-1' md='3' xs='12'>
+                                <p className='text-bold'>Customize your service</p>
                                 <FormGroup check>
                                     {services
                                         .filter(service => service.serviceLevel === serviceLevel)
@@ -652,11 +740,11 @@ const RequestQuote = () => {
                                                     <Label check>
                                                         <Input
                                                             type="checkbox"
-                                                            onChange={(e) => handleCustomOptionChange(type, service.name, e.target.checked, service.serviceCost, "")}
+                                                            onChange={(e) => handleCustomOptionChange(type, service.name, e, service.serviceCost, "")}
                                                         // disabled={formData.serviceLevel === 'Deep Cleaning'}
                                                         />
                                                         <span className="form-check-sign"></span>
-                                                        {service.name} - ${service.serviceCost}
+                                                        {service.name} - {service.description}
                                                     </Label>
                                                 ) : null}
                                             </>)
@@ -684,20 +772,20 @@ const RequestQuote = () => {
                 return (
                     <>
                         <Row className='g-2 px-1'>
-                            <Col md='4' xs='12'>
-                                <FloatingLabel controlId={`floatingServiceLevel${type}`} label="Select Service Level...">
-                                    <Form.Select aria-label="Service level" className='transparent' name="serviceLevel" onChange={(e) => handleCustomOptionChange(type, 'serviceLevel', e.target.value)} >
-                                        <option value="">Select Service Level...</option>
+                            <Col md='3' xs='6'>
+                                <FloatingLabel controlId={`floatingServiceLevel${type}`} label="Select Service Level...*">
+                                    <Form.Select aria-label="Service level" className='transparent' name="serviceLevel" onChange={(e) => handleCustomOptionChange(type, 'serviceLevel', e)} >
+                                        <option value="">Service Level...*</option>
                                         <option value="Basic Cleaning">Basic Cleaning</option>
                                         <option value="Deep Cleaning">Deep Cleaning</option>
                                         <option value="Special Deal">Special Deal</option>
                                     </Form.Select>
                                 </FloatingLabel>
                             </Col>
-                            <Col md='4' xs='12'>
+                            <Col md='3' xs='6'>
                                 <FloatingLabel controlId="carpetMaterial" label="Carpet Material" className=''>
-                                    <Form.Select aria-label="Carpet Material" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'carpetMaterial', e.target.value, 50, e.target.getAttribute('aria-label'))}>
-                                        <option value="">Select Carpet Material...</option>
+                                    <Form.Select aria-label="Carpet Material" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'carpetMaterial', e, 50, e.target.getAttribute('aria-label'))}>
+                                        <option value="">Carpet Material...*</option>
                                         <option value="Nylon">Nylon</option>
                                         <option value="Polyester">Polyester</option>
                                         <option value="Olefin">Olefin</option>
@@ -706,20 +794,20 @@ const RequestQuote = () => {
                                     </Form.Select>
                                 </FloatingLabel>
                             </Col>
-                            <Col md='4' xs='12'>
+                            <Col md='3' xs='6'>
                                 <FloatingLabel controlId="carpetSize" label="Carpet Size" className=''>
-                                    <Form.Select aria-label="Carpet Size" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'carpetSize', e.target.value, 50, e.target.getAttribute('aria-label'))}>
-                                        <option value="">Select Carpet Size...</option>
+                                    <Form.Select aria-label="Carpet Size" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'carpetSize', e, 50, e.target.getAttribute('aria-label'))}>
+                                        <option value="">Carpet Size...</option>
                                         <option value="Small">Small</option>
                                         <option value="Medium">Medium</option>
                                         <option value="Large">Large</option>
                                     </Form.Select>
                                 </FloatingLabel>
                             </Col>
-                            <Col md='4' xs='12'>
+                            <Col md='3' xs='6'>
                                 <FloatingLabel controlId="carpetCondition" label="Carpet Condition" className=''>
-                                    <Form.Select aria-label="Carpet Condition" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'carpetCondition', e.target.value, 50, e.target.getAttribute('aria-label'))}>
-                                        <option value="">Select Carpet Condition...</option>
+                                    <Form.Select aria-label="Carpet Condition" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'carpetCondition', e, 50, e.target.getAttribute('aria-label'))}>
+                                        <option value="">Carpet Condition...</option>
                                         <option value="Lightly Soiled">Lightly Soiled</option>
                                         <option value="Moderately Soiled">Moderately Soiled</option>
                                         <option value="Heavily Soiled">Heavily Soiled</option>
@@ -727,9 +815,9 @@ const RequestQuote = () => {
                                     </Form.Select>
                                 </FloatingLabel>
                             </Col>
-                            <Col md='4' xs='12'>
+                            <Col md='3' xs='6'>
                                 <FloatingLabel controlId="frequencyCleaning" label="Frequency of Cleaning" className=''>
-                                    <Form.Select aria-label="Frequency of Cleaning" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'frequencyCleaning', e.target.value, 50, e.target.getAttribute('aria-label'))}>
+                                    <Form.Select aria-label="Frequency of Cleaning" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'frequencyCleaning', e, 50, e.target.getAttribute('aria-label'))}>
                                         <option value="">Select Frequency of Cleaning...</option>
                                         <option value="One Time">One Time</option>
                                         <option value="Monthly">Monthly</option>
@@ -741,7 +829,8 @@ const RequestQuote = () => {
                             </Col>
                         </Row>
                         <Row className='g-2 px-1'>
-                            <Col md='4' xs='12'>
+                            <Col md='3' xs='12'>
+                                <p className='text-bold'>Customize your service</p>
                                 <FormGroup check>
                                     {services
                                         .filter(service => service.serviceLevel === serviceLevel)
@@ -751,7 +840,7 @@ const RequestQuote = () => {
                                                     <Label check>
                                                         <Input
                                                             type="checkbox"
-                                                            onChange={(e) => handleCustomOptionChange(type, service.name, e.target.checked, service.serviceCost, "")}
+                                                            onChange={(e) => handleCustomOptionChange(type, service.name, e, service.serviceCost, "")}
                                                         />
                                                         <span className="form-check-sign"></span>
                                                         {service.name} - ${service.serviceCost}
@@ -776,6 +865,7 @@ const RequestQuote = () => {
         }
     };
 
+
     return (
         <>
             {/* <Navbar /> */}
@@ -788,7 +878,7 @@ const RequestQuote = () => {
                             <span>Logged in as {Auth.getProfile().data.firstName} {Auth.getProfile().data.lastName}. Feel free to adjust the pre-filled data if needed!</span>
                         ) : (
                             <span>Please fill out the form below to request a quote. Fields with * are required. <br />
-                                If you have an account with us already, <Link to="/login-page">log in</Link> to pre-fill your information for a smoother experience</span>
+                                <Link to="/login-page">Log in</Link> or <Link to="/signup-page">sign up</Link> to pre-fill your information for a smoother experience</span>
                         )}
                     </p>
 
@@ -1030,10 +1120,22 @@ const RequestQuote = () => {
                                 </Popover>
                             </Col>
                             <Col md='12' xs='12'>
-                                <Button className='service-button-residential' variant="" onClick={() => handleAddService({ target: { value: "Residential" } })} value="Residential">Residential</Button>{' '}
-                                <Button className='service-button-commercial' onClick={() => handleAddService({ target: { value: "Commercial" } })} value="Commercial">Commercial</Button>{' '}
+                                {/* <Button key='1' className={`service-button-residential ${isServiceAdded("Residential") ? "disabled" : ""}`} variant="" onClick={() => handleAddService({ target: { value: "Residential" } })} value="Residential">Residential</Button>{' '}
+                                <Button key='2' className={`service-button-commercial ${isServiceAdded("Commercial") ? "disabled" : ""}`} onClick={() => handleAddService({ target: { value: "Commercial" } })} value="Commercial">Commercial</Button>{' '} */}
                                 {/* <Button className='service-button-industrial' onClick={() => handleAddService({ target: { value: "Industrial" } })} value="Industrial">Industrial</Button> */}
-                                <Button className='service-button-industrial' onClick={() => handleAddService({ target: { value: "Carpet Cleaning" } })} value="Carpet Cleaning">Carpet Cleaning</Button>
+                                {/* <Button key='3' className={`service-button-industrial ${isServiceAdded("Carpet Cleaning") ? "disabled" : ""}`} onClick={() => handleAddService({ target: { value: "Carpet Cleaning" } })} value="Carpet Cleaning">Carpet Cleaning</Button> */}
+                                {allServices
+                                    .filter(serviceType => !formData.services.some(service => service.type === serviceType)) // Only show buttons for services not yet added
+                                    .map(serviceType => (
+                                        <Button
+                                            key={serviceType}
+                                            className={`service-button-${serviceType.toLowerCase().replace(" ", "-")}`}
+                                            onClick={() => handleAddService({ target: { value: serviceType } })}
+                                            value={serviceType}
+                                        >
+                                            {serviceType}
+                                        </Button>
+                                    ))}
                             </Col>
                         </Row>
                         <>
@@ -1076,7 +1178,8 @@ const RequestQuote = () => {
                                     {/* <Collapse in={openStates[service.type]}> */}
                                     <Collapse in={openService === service.type}>
 
-                                        <div id={service.type} className={`service-section-${service.type.toLowerCase()} rounded`}>
+                                        <div id={service.type}
+                                            className={`service-section-${service.type.toLowerCase()} rounded`}>
                                             {/* {renderCustomOptions(service.type, service.customOptions.serviceLevel)} */}
                                             {renderCustomOptions(service.type, service.serviceLevel)}
                                         </div>

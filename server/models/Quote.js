@@ -24,11 +24,11 @@ const CustomOptionsSchema = new Schema({
 const ServiceSchema = new Schema({
     type: { 
         type: String, 
-        // required: true 
+        required: true 
     },
     serviceLevel: { 
         type: String, 
-        // required: true 
+        required: true 
     },
     customOptions: { 
         type: Map, 

@@ -213,11 +213,22 @@ function Index() {
                     </Row>
                   </CardHeader>
                   <Row>
-                    <Card className="card-plain">
+                    <Card className="card-plain ">
                       <CardBody>
                         <CardText>
                           <Accordion defaultActiveKey={null} >
-                            <Accordion.Item eventKey="0" className="accordion-header">
+                            {/* add business hours */}
+                            <Accordion.Item eventKey="0" className="accordion-header ">
+                              <Accordion.Header>
+                                <i className="now-ui-icons tech_mobile"></i> <strong>Our Business Hours:</strong>
+                              </Accordion.Header>
+                              <Accordion.Body>
+                                <span>Monday - Friday: 8 AM - 6 PM</span> <br />
+                                <span>Saturday: 8 AM - 1 PM</span> <br />
+                                <span>Sunday: Closed</span>
+                              </Accordion.Body>
+                            </Accordion.Item>
+                            <Accordion.Item eventKey="1" className="accordion-header">
                               <Accordion.Header>
                                 <i className="now-ui-icons tech_mobile"></i> <strong>To Request a Quote: </strong>
                               </Accordion.Header>
@@ -227,7 +238,7 @@ function Index() {
                               </Accordion.Body>
                             </Accordion.Item>
 
-                            <Accordion.Item eventKey="1" className="accordion-header">
+                            <Accordion.Item eventKey="2" className="accordion-header">
                               <Accordion.Header >
                                 <i className="now-ui-icons tech_mobile"></i> <strong>Call Us:</strong>
                               </Accordion.Header>
@@ -236,7 +247,7 @@ function Index() {
                                 <span>Our customer service team is available Monday through Friday, from 9 AM to 6 PM. Don’t hesitate to call for any inquiries or support!</span>
                               </Accordion.Body>
                             </Accordion.Item>
-                            <Accordion.Item eventKey="2" className="accordion-header">
+                            <Accordion.Item eventKey="3" className="accordion-header">
                               <Accordion.Header>
                                 <i className="now-ui-icons ui-1_email-85"></i> <strong>Email Us:</strong>
                               </Accordion.Header>
@@ -245,7 +256,7 @@ function Index() {
                                 <span>For detailed inquiries or if you prefer written communication, drop us an email. We aim to respond within 24 hours.</span>
                               </Accordion.Body>
                             </Accordion.Item>
-                            <Accordion.Item eventKey="3" className="accordion-header">
+                            <Accordion.Item eventKey="4" className="accordion-header">
                               <Accordion.Header>
                                 <i className="now-ui-icons ui-2_like"></i> <strong>Leave a Review:</strong>
                               </Accordion.Header>
@@ -254,7 +265,7 @@ function Index() {
                                 <span>Share your experience with CleanAR Solutions! We value your feedback and would love to hear about your experience with our services.</span>
                               </Accordion.Body>
                             </Accordion.Item>
-                            <Accordion.Item eventKey="4" className="accordion-header">
+                            <Accordion.Item eventKey="5" className="accordion-header">
                               <Accordion.Header>
                                 <i className="fab fa-instagram"></i> <strong>Follow Us:</strong>
                               </Accordion.Header>

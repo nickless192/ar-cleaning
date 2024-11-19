@@ -10,7 +10,7 @@ import "assets/scss/now-ui-kit.scss?v=1.5.0";
 
 // pages for this kit
 import Index from "views/Index.js";
-import AboutUsPage from "../src/components/Pages/AboutUsPage";
+import AboutUsPage from "./components/Pages/AboutUs";
 import LoginPage from "../src/components/Pages/LoginPage";
 import ProfilePage from "../src/components/Pages/ProfilePage";
 import SignUp from "../src/components/Pages/SignUp";

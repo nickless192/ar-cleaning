@@ -7,7 +7,9 @@ import {
   Card,
   CardHeader,
   ListGroup,
-  ListGroupItem
+  ListGroupItem,
+  CardBody,
+  Button
 
 } from 'reactstrap'; // Importing required components from reactstrap
 
@@ -32,32 +34,21 @@ const ProductsAndServices = () => {
 
       <div className="section light-blue-bg-color pb-0 mb-0">
         <div className="container">
-          {/* <Row>
-              <Col className="ml-auto mr-auto text-center" md="8">
-                <h1 className="title"> </h1>
-                </Col>
-            </Row> */}
           <h2 className="title">Products and Services</h2>
-          {/* <p className="description text-cleanar-color">Explore our offerings below:</p> */}
-          <Row>
-            <Col className="text-center ml-auto mr-auto">
-              <div className="service-selector">
-                <h2 className="title text-center text-dark my-0 pb-2">Services We Provide</h2>
-                <div className="section-services ml-auto mr-auto ">
-                  <Row className="px-2 ml-auto mr-auto my-0">
-                    <Col>
-                      <Card className="secondary-bg-color"
-                        // color="primary"
-                        inverse
-                      // style={{
-                      //   width: '18rem'
-                      // }}
-                      >
-                        <CardHeader tag="h3" className="mx-2">
-                          {/* <h3 className="text-dark"> */}
-                          Residential Cleaning
-                          {/* </h3> */}
-                        </CardHeader>
+          {/* <Row>
+            <Col className="text-center ml-auto mr-auto"> */}
+              <div className="service-selector text-center">
+                <h2 className="title text-start text-dark">Our Services</h2>
+                <Row className="px-2 ml-auto mr-auto my-0">
+                  <Col>
+                    <Card className="secondary-bg-color"
+                      inverse
+                    >
+                      <CardHeader tag="h3" className="m-1">
+                        Residential Cleaning
+                        {/* </h3> */}
+                      </CardHeader>
+                      <CardBody>
                         <ListGroup>
                           <ListGroupItem className="text-dark">
                             Complete cleaning of homes, apartments, and condominiums.
@@ -69,21 +60,19 @@ const ProductsAndServices = () => {
                             Furniture cleaning to preserve its beauty and prolong its lifespan.
                           </ListGroupItem>
                         </ListGroup>
-                      </Card>
-                    </Col>
-                    <Col>
-                      <Card className="primary-bg-color"
-                        // color="primary"
-                        inverse
-                      // style={{
-                      //   width: '18rem'
-                      // }}
-                      >
-                        <CardHeader tag="h3" className="mx-2">
-                          {/* <h3 className="text-dark"> */}
-                          Commercial Cleaning
-                          {/* </h3> */}
-                        </CardHeader>
+                      </CardBody>
+                      <Button className="btn-round" color="primary" href="/request-quote?service=Residential">Add Residential Cleaning to Quote</Button>
+                    </Card>
+                  </Col>
+                  <Col>
+                    <Card className="primary-bg-color"
+                      inverse
+                    >
+                      <CardHeader tag="h3" className="m-1">
+                        Commercial Cleaning
+                        {/* </h3> */}
+                      </CardHeader>
+                      <CardBody>
                         <ListGroup>
                           <ListGroupItem className="text-dark">
                             Regular maintenance of offices and commercial spaces.
@@ -95,22 +84,18 @@ const ProductsAndServices = () => {
                             Specialized services for the film industry and special events.
                           </ListGroupItem>
                         </ListGroup>
-                      </Card>
-                    </Col>
-                    <Col>
-                      <Card className="light-blue-bg-color"
-                        // color="primary"
-                        inverse
-                      // style={{
-                      //   width: '18rem'
-                      // }}
-                      >
-                        <CardHeader tag="h3" className="mx-2">
-                          {/* <h3 className="text-dark"> */}
-                          Specialized Cleaning
-
-                          {/* </h3> */}
-                        </CardHeader>
+                      </CardBody>
+                      <Button className="btn-round" color="primary" href="/request-quote?service=Commercial">Add Commercial Cleaning to Quote</Button>
+                    </Card>
+                  </Col>
+                  <Col>
+                    <Card className="light-blue-bg-color"
+                      inverse
+                    >
+                      <CardHeader tag="h3" className="m-1">
+                        Specialized Cleaning
+                      </CardHeader>
+                      <CardBody>
                         <ListGroup>
                           <ListGroupItem className="text-dark">
                             Cleaning contracts for real estate developers and condominiums.
@@ -122,156 +107,70 @@ const ProductsAndServices = () => {
                             High-end furniture cleaning in residences and commercial spaces.
                           </ListGroupItem>
                         </ListGroup>
-                      </Card>
-
-                    </Col>
-
-                  </Row>
-
-                </div>
-              </div>
-              <div className="product-selector">
-                <h2 className="title text-center text-dark my-0 pb-2">Industries We Serve</h2>
-                <Row className="my-0">
-                  <Col>
-                    <Card className="secondary-bg-color" inverse>
-                      <CardHeader tag="h3" className="mx-2">
-                        Residential Buildings
-                      </CardHeader>
-                      <ListGroup>
-                        <ListGroupItem className="text-dark">
-                          General Cleaning: Complete cleaning of common areas such as lobbies, hallways, stairs, and recreational areas.
-                        </ListGroupItem>
-                        <ListGroupItem className="text-dark">
-                          Exterior Area Maintenance: Cleaning of sidewalks, courtyards, and parking areas.
-                        </ListGroupItem>
-                        <ListGroupItem className="text-dark">
-                          Trash Management: Collection and proper disposal of waste and garbage.
-                        </ListGroupItem>
-                      </ListGroup>
-                    </Card>
-                  </Col>
-                  <Col>
-                    <Card className="primary-bg-color" inverse>
-                      <CardHeader tag="h3" className="mx-2">
-                        {/* <h3 className="text-dark"> */}
-                        Offices
-                        {/* </h3> */}
-                      </CardHeader>
-                      <ListGroup>
-                        <ListGroupItem className="text-dark">
-                          Daily Cleaning: Cleaning of desks, tables, chairs, and break areas.
-                        </ListGroupItem>
-                        <ListGroupItem className="text-dark">
-                          Floor Maintenance: Sweeping, mopping, and polishing of floors.
-                        </ListGroupItem>
-                        <ListGroupItem className="text-dark">
-                          Bathroom Cleaning: Disinfection and deep cleaning of bathrooms and sanitary areas.
-                        </ListGroupItem>
-                      </ListGroup>
+                      </CardBody>
+                      <Button className="btn-round" color="primary" href="/request-quote?service=Commercial">Add Specialized Cleaning to Quote</Button>
                     </Card>
 
                   </Col>
+                  {/* add for carpet cleaning */}
                   <Col>
                     <Card className="light-blue-bg-color"
-                      // color="primary"
                       inverse
-                    // style={{
-                    //   width: '18rem'
-                    // }}
                     >
-                      <CardHeader tag="h3" className="mx-2">
-                        {/* <h3 className="text-dark"> */}
-                        Shopping Centers
-                        {/* </h3> */}
+                      <CardHeader tag="h3" className="m-1">
+                        Carpet Cleaning
                       </CardHeader>
-                      <ListGroup>
-                        <ListGroupItem className="text-dark">
-                          Common Area Cleaning: Cleaning of corridors, escalators, and rest areas.
-                        </ListGroupItem>
-                        <ListGroupItem className="text-dark">
-                          Store Maintenance: Cleaning of shop windows, display areas, and customer service counters.
-                        </ListGroupItem>
-                        <ListGroupItem className="text-dark">
-                          Bathroom Cleaning: Disinfection and cleaning of public bathrooms and rest areas.
-                        </ListGroupItem>
-                      </ListGroup>
+                      <CardBody>
+                        <ListGroup>
+                          <ListGroupItem className="text-dark">
+                            Deep cleaning of carpets in homes and commercial spaces.
+                          </ListGroupItem>
+                          <ListGroupItem className="text-dark">
+                            Stain removal and odor neutralization.
+                          </ListGroupItem>
+                          <ListGroupItem className="text-dark">
+                            Regular maintenance to prolong the life of carpets.
+                          </ListGroupItem>
+                        </ListGroup>
+                      </CardBody>
+                      <Button className="btn-round" color="primary" href="/request-quote?service=Carpet Cleaning">Add Carpet Cleaning to Quote</Button>
+                    </Card>
+                  </Col>
+                </Row>
+              </div>
+              <div className="product-selector">
+                <h2 className="title text-start text-dark">Our Products</h2>
+                <Row className="px-2 ml-auto mr-auto my-0">
+                  <Col md="4">
+                    <Card className="secondary-bg-color"
+                      inverse
+                    >
+                      <CardHeader tag="h3" className="m-1">
+                        Gift Cards
+                      </CardHeader>
+                      <CardBody>
+                        <ListGroup>
+                          <ListGroupItem className="text-dark">
+                            Gift cards for cleaning services.
+                          </ListGroupItem>                          
+                          <ListGroupItem className="text-dark">
+                            Available in various denominations.
+                          </ListGroupItem>
+                          <ListGroupItem className="text-dark">
+                            Perfect for friends and family.
+                          </ListGroupItem>
+                        </ListGroup>
+                      </CardBody>
+                      <Button className="btn-round" color="primary" href="/request-quote">Add Gift Card to Quote</Button>
                     </Card>
                   </Col>
                   </Row>
-            <Row className="px-5 ml-auto mr-auto">
-                  <Col>
-                    <Card className="secondary-bg-color"
-                      // color="primary"
-                      inverse
-                    // style={{
-                    //   width: '18rem'
-                    // }}
-                    >
-                      <CardHeader tag="h3" className="mx-2">
-                        {/* <h3 className="text-dark"> */}
-                        Festivals
-                        {/* </h3> */}
-                      </CardHeader>
-                      <ListGroup>
-                        <ListGroupItem className="text-dark">
-                          Pre-Event Cleaning: Cleaning of the event area before its start, including garbage collection and grounds cleaning.
-                        </ListGroupItem>
-                        <ListGroupItem className="text-dark">
+                  </div>
 
-                          Event Maintenance: Continuous maintenance of bathrooms, rest areas, and food areas during the event.
-                        </ListGroupItem>
-                        <ListGroupItem className="text-dark">
-                          Post-Event Cleaning: Thorough cleaning of the event area after its conclusion, including garbage collection and site sanitation.
-                        </ListGroupItem>
-                      </ListGroup>
-                    </Card>
-
-                  </Col>
-                  <Col>
-                    <Card className="primary-bg-color"
-                      // color="primary"
-
-                      inverse
-                    // style={{
-                    //   width: '18rem'
-                    // }}
-                    >
-                      <CardHeader tag="h3" className="mx-2">
-                        {/* <h3 className="text-dark"> */}
-                        Film Industry
-                        {/* </h3> */}
-                      </CardHeader>
-                      <ListGroup>
-                        <ListGroupItem className="text-dark">
-                          Set Cleaning: Cleaning of filming sets before, during, and after production.
-                        </ListGroupItem>
-                        <ListGroupItem className="text-dark">
-                          Location Maintenance: Regular maintenance of filming locations, including cleaning of common and exterior areas.
-                        </ListGroupItem>
-                        <ListGroupItem className="text-dark">
-                          Waste Management: Proper disposal of waste and garbage generated during filming.
-                        </ListGroupItem>
-                      </ListGroup>
-                    </Card>
-                  </Col>
-                  {/* Add more industries as needed */}
-                </Row>
-              </div>
-              {/* <div className="send-button">
-                  </div> */}
-            </Col>
-          </Row>
-
-
+            {/* </Col>
+          </Row> */}
         </div>
-        {/* </div> */}
-
-        {/* </div> */}
-
-
       </div>
-      {/* <Footer /> */}
     </>
   );
 };
