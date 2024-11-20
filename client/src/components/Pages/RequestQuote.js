@@ -527,7 +527,7 @@ const RequestQuote = () => {
                     // <Tab>
                     <>
                         <Row className='g-2 px-1'>
-                            <Col md='3' xs='6'>
+                            <Col md='2' xs='6'>
                                 <FloatingLabel controlId={`floatingServiceLevel${type}`} label="Select Service Level...*" className=''>
                                     <Form.Select aria-label="Service level" name="serviceLevel" className="transparent" onChange={(e) => handleCustomOptionChange(type, 'serviceLevel', e)} >
                                         <option value="">Service Level...*</option>
@@ -537,7 +537,7 @@ const RequestQuote = () => {
                                     </Form.Select>
                                 </FloatingLabel>
                             </Col>
-                            <Col md='3' xs='6'>
+                            <Col md='2' xs='6'>
                                 <FloatingLabel controlId="floatingUnitSize" label="Unit Size" >
                                     <Form.Select aria-label="Unit Size" className="transparent" onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e, pricing.squareFootage[e.target.value], e.target.getAttribute('aria-label'))}>
                                         <option value="">Unit Size...</option>
@@ -549,7 +549,7 @@ const RequestQuote = () => {
                                     </Form.Select>
                                 </FloatingLabel>
                             </Col>
-                            <Col md='3' xs='6'>
+                            <Col md='2' xs='6'>
                                 <FloatingLabel controlId="floatingBedrooms" label="Number of Bedrooms">
                                     <Form.Select aria-label="Number of Bedrooms" className="transparent" onChange={(e) => handleCustomOptionChange(type, 'bedrooms', e, pricing.bedrooms[e.target.value], e.target.getAttribute('aria-label'))}>
                                         <option value="">Number of Bedrooms...</option>
@@ -562,7 +562,7 @@ const RequestQuote = () => {
                                     </Form.Select>
                                 </FloatingLabel>
                             </Col>
-                            <Col md='3' xs='6'>
+                            <Col md='2' xs='6'>
                                 <FloatingLabel controlId="floatingBathrooms" label="Number of Bathrooms">
                                     <Form.Select aria-label="Number of Bathrooms" className="transparent" onChange={(e) => handleCustomOptionChange(type, 'bathrooms', e, pricing.bathrooms[e.target.value], e.target.getAttribute('aria-label'))}>
                                         <option value="">Number of Bathrooms...</option>
@@ -579,7 +579,7 @@ const RequestQuote = () => {
                                 </FloatingLabel>
                             </Col>
                         </Row>
-                        {serviceLevel !== "" ? (
+                        
                             <Row className='g-2 px-2'>
                                 <Col className='py-1' md='3' xs='12'>
                                     <p className='text-bold'>Customize your service</p>
@@ -604,7 +604,7 @@ const RequestQuote = () => {
                                     </FormGroup>
                                 </Col>
                             </Row>
-                        ) : null}
+                      
                         <Row className='g-2 px-1'>
                             <Col md>
                                 <Button onClick={() => handleRemoveService(type)} className='btn-danger' >Remove</Button>
@@ -815,7 +815,7 @@ const RequestQuote = () => {
                                     </Form.Select>
                                 </FloatingLabel>
                             </Col>
-                            <Col md='3' xs='6'>
+                            {/* <Col md='3' xs='6'>
                                 <FloatingLabel controlId="frequencyCleaning" label="Frequency of Cleaning" className=''>
                                     <Form.Select aria-label="Frequency of Cleaning" className='transparent' onChange={(e) => handleCustomOptionChange(type, 'frequencyCleaning', e, 50, e.target.getAttribute('aria-label'))}>
                                         <option value="">Select Frequency of Cleaning...</option>
@@ -826,7 +826,7 @@ const RequestQuote = () => {
                                         <option value="Annually">Annually</option>
                                     </Form.Select>
                                 </FloatingLabel>
-                            </Col>
+                            </Col> */}
                         </Row>
                         <Row className='g-2 px-1'>
                             <Col md='3' xs='12'>
@@ -869,11 +869,11 @@ const RequestQuote = () => {
     return (
         <>
             {/* <Navbar /> */}
-            <div className="light-bg-color pb-0 mb-0">
+            <div className="pb-0 mb-0 request-quote-bg">
                 <VisitorCounter page={"request-quote"} />
                 <Container>
-                    <h2 className="text-center pt-3 primary-color text-bold">Request a Quote</h2>
-                    <p className="text-bold pb-2">
+                    <h2 className="pt-3 primary-color text-bold">Request a Quote</h2>
+                    <p className="text-bold">
                         {isLogged ? (
                             <span>Logged in as {Auth.getProfile().data.firstName} {Auth.getProfile().data.lastName}. Feel free to adjust the pre-filled data if needed!</span>
                         ) : (
@@ -1156,7 +1156,7 @@ const RequestQuote = () => {
                                                     aria-controls={service.type}
                                                     // aria-expanded={openStates[service.type]}
                                                     aria-expanded={openService === service.type}
-                                                    className={`service-button-${service.type.toLowerCase()} px-2`}
+                                                    className={`service-button-${service.type.toLowerCase().replace(" ", "-")} px-2`}
                                                 >{service.type}
                                                     {openService === service.type ? (
                                                         <FaChevronUp className="ms-2" />
@@ -1179,7 +1179,7 @@ const RequestQuote = () => {
                                     <Collapse in={openService === service.type}>
 
                                         <div id={service.type}
-                                            className={`service-section-${service.type.toLowerCase()} rounded`}>
+                                            className={`service-section-${service.type.toLowerCase().replace(" ","-")} rounded`}>
                                             {/* {renderCustomOptions(service.type, service.customOptions.serviceLevel)} */}
                                             {renderCustomOptions(service.type, service.serviceLevel)}
                                         </div>

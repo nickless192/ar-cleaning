@@ -7,7 +7,11 @@
     --light-blue-color: #64acc4;
     --brown-color: #5c5d60;
     --text-cleanar-color: #374357;
-    --accordion-bg-color: #bcd4ec;
+    --accordion-bg-color: #acb9c7;
+}
+
+.request-quote-bg {
+    background-color: var(--accordion-bg-color) !important;
 }
 
 /* Use the color variables in your styles */
@@ -184,7 +188,7 @@
     color: white;
 }
 
-.service-button-industrial {
+.service-button-carpet-cleaning {
     background-color: var(--accent-color) !important;
     /* Red */
     color: white;
@@ -201,6 +205,11 @@
 }
 
 .service-section-industrial {
+    background-color: var(--accent-color);
+    /* Light red */
+}
+
+.service-section-carpet-cleaning {
     background-color: var(--accent-color);
     /* Light red */
 }
@@ -229,15 +238,28 @@
 }
 
 /* Card Styles */
+.card-border {
+    /* add border */
+    border: 1px solid var(--accent-color)!important;
+    /* background-color: white!important;    */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);    
+}
 .card-plain {
+    /* add border */
     border: none;
-    background-color: var(--light-color);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* background-color: white!important;    */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);    
+}
+/* add hover effect to animate the card */
+.card-border:hover {
+    transform: translateY(-5px);
+    transition: 0.3s;
 }
 
 .card-header {
-    background-color: var(--accent-color);
-    color: white;
+    /* color: var(--primary-color); */
+    font-weight: bold;
+    /* height: 55px; */
 }
 
 .card-title {
@@ -254,10 +276,6 @@
 }
 
 /* Background Colors */
-.light-blue-bg-color {
-    background-color: var(--light-blue-color);
-}
-
 .light-blue-bg-color {
     background-color: var(--light-blue-color) !important;
 }

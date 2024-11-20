@@ -213,7 +213,7 @@ function Index() {
                     </Row>
                   </CardHeader>
                   <Row>
-                    <Card className="card-plain ">
+                    <Card className="card-plain">
                       <CardBody>
                         <CardText>
                           <Accordion defaultActiveKey={null} >

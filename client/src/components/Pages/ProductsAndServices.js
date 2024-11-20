@@ -4,6 +4,7 @@ import "./../../assets/css/our-palette.css";
 import {
   Row,
   Col,
+  CardGroup,
   Card,
   CardHeader,
   ListGroup,
@@ -32,17 +33,20 @@ const ProductsAndServices = () => {
     <>
       {/* <Navbar /> */}
 
-      <div className="section light-blue-bg-color pb-0 mb-0">
-        <div className="container">
+      <div className="container pb-0 mb-0">
+        {/* <div className="container"> */}
           <h2 className="title">Products and Services</h2>
           {/* <Row>
             <Col className="text-center ml-auto mr-auto"> */}
               <div className="service-selector text-center">
-                <h2 className="title text-start text-dark">Our Services</h2>
-                <Row className="px-2 ml-auto mr-auto my-0">
-                  <Col>
-                    <Card className="secondary-bg-color"
-                      inverse
+                <h3 className="title text-start">Our Services</h3>                
+                <Row className="">
+                  {/* <Col> */}
+                  <CardGroup>
+                    <Card className="card-border"
+                    // color="primary"
+                    //   inverse
+                    //   outline
                     >
                       <CardHeader tag="h3" className="m-1">
                         Residential Cleaning
@@ -50,7 +54,7 @@ const ProductsAndServices = () => {
                       </CardHeader>
                       <CardBody>
                         <ListGroup>
-                          <ListGroupItem className="text-dark">
+                          <ListGroupItem className="">
                             Complete cleaning of homes, apartments, and condominiums.
                           </ListGroupItem>
                           <ListGroupItem className="text-dark">
@@ -63,10 +67,10 @@ const ProductsAndServices = () => {
                       </CardBody>
                       <Button className="btn-round" color="primary" href="/request-quote?service=Residential">Add Residential Cleaning to Quote</Button>
                     </Card>
-                  </Col>
-                  <Col>
-                    <Card className="primary-bg-color"
-                      inverse
+                    <Card className="card-border"
+                    // color="primary"
+                    // outline
+                    //   inverse
                     >
                       <CardHeader tag="h3" className="m-1">
                         Commercial Cleaning
@@ -87,9 +91,10 @@ const ProductsAndServices = () => {
                       </CardBody>
                       <Button className="btn-round" color="primary" href="/request-quote?service=Commercial">Add Commercial Cleaning to Quote</Button>
                     </Card>
-                  </Col>
-                  <Col>
-                    <Card className="light-blue-bg-color"
+                    {/*
+                    <Card className=""
+                    color="primary"
+                    outline
                       inverse
                     >
                       <CardHeader tag="h3" className="m-1">
@@ -111,11 +116,11 @@ const ProductsAndServices = () => {
                       <Button className="btn-round" color="primary" href="/request-quote?service=Commercial">Add Specialized Cleaning to Quote</Button>
                     </Card>
 
-                  </Col>
-                  {/* add for carpet cleaning */}
-                  <Col>
-                    <Card className="light-blue-bg-color"
-                      inverse
+                   */}
+                    <Card className="card-border"
+                    // color="primary"
+                    // outline
+                      // inverse
                     >
                       <CardHeader tag="h3" className="m-1">
                         Carpet Cleaning
@@ -135,15 +140,17 @@ const ProductsAndServices = () => {
                       </CardBody>
                       <Button className="btn-round" color="primary" href="/request-quote?service=Carpet Cleaning">Add Carpet Cleaning to Quote</Button>
                     </Card>
-                  </Col>
+                    </CardGroup>
+                  {/* </Col> */}                 
                 </Row>
               </div>
-              <div className="product-selector">
-                <h2 className="title text-start text-dark">Our Products</h2>
-                <Row className="px-2 ml-auto mr-auto my-0">
-                  <Col md="4">
-                    <Card className="secondary-bg-color"
-                      inverse
+              {/* <div className="product-selector">
+                <h3 className="title text-start">Our Products</h3>
+                <Row className="">
+                  <Col className="text-center">
+                  <CardGroup>
+                    <Card className="card-border"
+                      // inverse
                     >
                       <CardHeader tag="h3" className="m-1">
                         Gift Cards
@@ -163,13 +170,14 @@ const ProductsAndServices = () => {
                       </CardBody>
                       <Button className="btn-round" color="primary" href="/request-quote">Add Gift Card to Quote</Button>
                     </Card>
+                  </CardGroup>
                   </Col>
                   </Row>
-                  </div>
+                  </div> */}
 
             {/* </Col>
           </Row> */}
-        </div>
+        {/* </div> */}
       </div>
     </>
   );

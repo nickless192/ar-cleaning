@@ -101,9 +101,7 @@ function AboutUsPage() {
             <Col>
               <Card className="primary-bg-color" inverse>
                 <CardHeader tag="h3" className="mx-2">
-                  {/* <h3 className="text-dark"> */}
                   Offices
-                  {/* </h3> */}
                 </CardHeader>
                 <ListGroup>
                   <ListGroupItem className="text-dark">
@@ -119,18 +117,13 @@ function AboutUsPage() {
               </Card>
 
             </Col>
-            <Col>
+            {/* <Col>
               <Card className="light-blue-bg-color"
                 // color="primary"
                 inverse
-              // style={{
-              //   width: '18rem'
-              // }}
               >
                 <CardHeader tag="h3" className="mx-2">
-                  {/* <h3 className="text-dark"> */}
                   Shopping Centers
-                  {/* </h3> */}
                 </CardHeader>
                 <ListGroup>
                   <ListGroupItem className="text-dark">
@@ -144,21 +137,14 @@ function AboutUsPage() {
                   </ListGroupItem>
                 </ListGroup>
               </Card>
-            </Col>
-          </Row>
-          <Row className="px-5 ml-auto mr-auto">
+            </Col> */}
             <Col>
               <Card className="secondary-bg-color"
                 // color="primary"
                 inverse
-              // style={{
-              //   width: '18rem'
-              // }}
               >
                 <CardHeader tag="h3" className="mx-2">
-                  {/* <h3 className="text-dark"> */}
                   Festivals
-                  {/* </h3> */}
                 </CardHeader>
                 <ListGroup>
                   <ListGroupItem className="text-dark">
@@ -175,19 +161,17 @@ function AboutUsPage() {
               </Card>
 
             </Col>
-            <Col>
+          </Row>
+          <Row className="px-5 ml-auto mr-auto">
+            
+            {/* <Col>
               <Card className="primary-bg-color"
                 // color="primary"
 
                 inverse
-              // style={{
-              //   width: '18rem'
-              // }}
               >
                 <CardHeader tag="h3" className="mx-2">
-                  {/* <h3 className="text-dark"> */}
                   Film Industry
-                  {/* </h3> */}
                 </CardHeader>
                 <ListGroup>
                   <ListGroupItem className="text-dark">
@@ -201,7 +185,7 @@ function AboutUsPage() {
                   </ListGroupItem>
                 </ListGroup>
               </Card>
-            </Col>
+            </Col> */}
             {/* Add more industries as needed */}
           </Row>
         </Container>
