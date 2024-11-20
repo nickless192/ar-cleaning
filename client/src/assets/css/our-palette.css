@@ -36,6 +36,9 @@
     /* font-weight: bold; */
     /* color: white; */
 }
+.form-input {
+    border-radius: 0!important;
+}
 
 .modal-header-text {
     background-color: #fb8500 !important;
@@ -222,7 +225,7 @@
 
 .accordion-header {
     background-color: var(--accordion-bg-color) !important;
-    border: none;
+    border: none;    
     /* margin-bottom: 10px; */
 }
 

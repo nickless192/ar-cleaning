@@ -505,7 +505,7 @@ const RequestQuote = () => {
                     else {
                         alert('Error sending email notification');
                     }
-                    // navigate('/index');
+                    navigate('/index');
                 }
             } catch (error) {
                 console.error('Error submitting quote:', error);
@@ -579,32 +579,32 @@ const RequestQuote = () => {
                                 </FloatingLabel>
                             </Col>
                         </Row>
-                        
-                            <Row className='g-2 px-2'>
-                                <Col className='py-1' md='3' xs='12'>
-                                    <p className='text-bold'>Customize your service</p>
-                                    <FormGroup check>
-                                        {services
-                                            .filter(service => service.serviceLevel === serviceLevel)
-                                            .map((service, index) => {
-                                                return (<>
-                                                    {service.isResidential ? (
-                                                        <Label check>
-                                                            <Input
-                                                                type="checkbox"
-                                                                onChange={(e) => handleCustomOptionChange(type, service.name, e, service.serviceCost, "")}
-                                                            // disabled={formData.serviceLevel !== service.serviceLevel}
-                                                            />
-                                                            <span className="form-check-sign"></span>
-                                                            {service.name} - {service.description}
-                                                        </Label>
-                                                    ) : null}
-                                                </>)
-                                            })}
-                                    </FormGroup>
-                                </Col>
-                            </Row>
-                      
+
+                        <Row className='g-2 px-2'>
+                            <Col className='py-1' md='3' xs='12'>
+                                <p className='text-bold'>Customize your service</p>
+                                <FormGroup check>
+                                    {services
+                                        .filter(service => service.serviceLevel === serviceLevel)
+                                        .map((service, index) => {
+                                            return (<>
+                                                {service.isResidential ? (
+                                                    <Label check>
+                                                        <Input
+                                                            type="checkbox"
+                                                            onChange={(e) => handleCustomOptionChange(type, service.name, e, service.serviceCost, "")}
+                                                        // disabled={formData.serviceLevel !== service.serviceLevel}
+                                                        />
+                                                        <span className="form-check-sign"></span>
+                                                        {service.name} - {service.description}
+                                                    </Label>
+                                                ) : null}
+                                            </>)
+                                        })}
+                                </FormGroup>
+                            </Col>
+                        </Row>
+
                         <Row className='g-2 px-1'>
                             <Col md>
                                 <Button onClick={() => handleRemoveService(type)} className='btn-danger' >Remove</Button>
@@ -886,51 +886,86 @@ const RequestQuote = () => {
                     <Form onSubmit={handleSubmit} id="quote-form">
                         <Row className=''>
                             <Col md='3' xs='10'>
-                                <Form.Floating className="mb-3">
+                                <Form.Group className="mb-3">
+                                    <Form.Label className='text-bold'>Full Name*</Form.Label> <FaQuestionCircle id="Tooltip1" tabIndex='-1'
+                                        // color="link"   
+                                        // className='primary-bg-color'                                 
+                                        onClick={() => togglePopover('name')} />
+                                    <Popover placement="right" isOpen={popoverOpen.name} target="Tooltip1" toggle={() => togglePopover('name')}>
+                                        <PopoverBody>Enter your full name.</PopoverBody>
+                                    </Popover>
                                     <Form.Control
                                         type="text"
-                                        id=" floatingFullName"
+                                        id="floatingFullName"
                                         placeholder="Full Name"
-                                        className='text-cleanar-color text-bold'
+                                        className='text-cleanar-color text-bold form-input'
                                         name="name"
                                         value={formData.name}
                                         onChange={handleChange}
                                     />
-                                    <label htmlFor="floatingFullName" className='text-bold'>Full Name*</label>
-                                </Form.Floating>
+                                </Form.Group>
                             </Col>
-                            <Col md='1' xs='1'>
+                            {/* <Col md='1' xs='1'>
                                 <Button id="Tooltip1" type="button" tabIndex='-1'
                                     // color="link"                                    
                                     onClick={() => togglePopover('name')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
-                                <Popover placement="right" isOpen={popoverOpen.name} target="Tooltip1" toggle={() => togglePopover('name')}>
-                                    <PopoverBody>Enter your full name.</PopoverBody>
-                                </Popover>
-                            </Col>
+                                
+                            </Col> */}
                             <Col md='3' xs='10'>
-                                <Form.Floating className="mb-3">
+                                <Form.Group className="mb-3">
+                                    <Form.Label className='text-bold'>Email*</Form.Label> <FaQuestionCircle id="Tooltip2" onClick={() => togglePopover('email')} />
+                                    <Popover placement="right" isOpen={popoverOpen.email} target="Tooltip2" toggle={() => togglePopover('email')}>
+                                        <PopoverBody>Enter your email address.</PopoverBody>
+                                    </Popover>
                                     <Form.Control
                                         type="text"
                                         id="floatingEmail"
                                         placeholder="Email"
-                                        className='text-cleanar-color text-bold'
+                                        className='text-cleanar-color text-bold form-input'
+                                        name="email"
+                                        value={formData.email}
+                                        onChange={handleChange}
+                                    />
+                                </Form.Group>
+                                {/* <Form.Floating className="mb-3">
+                                    <Form.Control
+                                        type="text"
+                                        id="floatingEmail"
+                                        placeholder="Email"
+                                        className='text-cleanar-color text-bold form-input'
                                         name="email"
                                         value={formData.email}
                                         onChange={handleChange}
                                     />
                                     <label htmlFor="floatingEmail" className='text-bold'>Email*</label>
-                                </Form.Floating>
+                                </Form.Floating> */}
                             </Col>
-                            <Col md='1' xs='1'>
-                                <Button id="Tooltip2" type="button" tabIndex='-1'
+                            {/* <Col md='1' xs='1'> */}
+                            {/* <Button id="Tooltip2" type="button" tabIndex='-1'
                                     // color="link"
-                                    onClick={() => togglePopover('email')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
-                                <Popover placement="right" isOpen={popoverOpen.email} target="Tooltip2" toggle={() => togglePopover('email')}>
-                                    <PopoverBody>Enter your email address.</PopoverBody>
-                                </Popover>
-                            </Col>
+                                     className='primary-bg-color btn-round btn-icon'> */}
+
+                            {/* </Button> */}
+
+                            {/* </Col> */}
                             <Col md='3' xs='10'>
-                                <Form.Floating className="mb-3">
+                                <Form.Group className="mb-3">
+                                    <Form.Label className='text-bold'>Phone Number*</Form.Label>
+                                    <FaQuestionCircle id="Tooltip3" onClick={() => togglePopover('phonenumber')} />
+                                    <Popover placement="right" isOpen={popoverOpen.phonenumber} target="Tooltip3" toggle={() => togglePopover('phonenumber')}>
+                                        <PopoverBody>Enter your phone number.</PopoverBody>
+                                    </Popover>
+                                    <Form.Control
+                                        type="text"
+                                        id="floatingPhoneNumber"
+                                        placeholder="Phone Number"
+                                        className='text-cleanar-color text-bold form-input'
+                                        name="phonenumber"
+                                        value={formData.phonenumber}
+                                        onChange={handleChange}
+                                    />
+                                </Form.Group>
+                                {/* <Form.Floating className="mb-3">
                                     <Form.Control
                                         type="text"
                                         id="floatingPhoneNumber"
@@ -941,100 +976,32 @@ const RequestQuote = () => {
                                         onChange={handleChange}
                                     />
                                     <label htmlFor="floatingPhoneNumber" className='text-bold'>Phone Number*</label>
-                                </Form.Floating>
+                                </Form.Floating> */}
                             </Col>
-                            <Col md='1' xs='1'>
+                            {/* <Col md='1' xs='1'>
                                 <Button id="Tooltip3" type="button" tabIndex='-1' onClick={() => togglePopover('phonenumber')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
                                 <Popover placement="right" isOpen={popoverOpen.phonenumber} target="Tooltip3" toggle={() => togglePopover('phonenumber')}>
                                     <PopoverBody>Enter your phone number.</PopoverBody>
                                 </Popover>
-                            </Col>
-                        </Row>
-                        <Row className=''>
+                            </Col> */}
                             <Col md='3' xs='10'>
-                                <Form.Floating className="mb-3">
+                                <Form.Group className="mb-3">
+                                    <Form.Label className='text-bold'>Company Name</Form.Label>
+                                    <FaQuestionCircle id="companyNameTooltip" onClick={() => togglePopover('companyName')} />
+                                    <Popover placement="right" isOpen={popoverOpen.companyName} target="companyNameTooltip" toggle={() => togglePopover('companyName')}>
+                                        <PopoverBody>Enter your company name.</PopoverBody>
+                                    </Popover>
                                     <Form.Control
                                         type="text"
-                                        id="floatingAddress"
-                                        placeholder="Address"
-                                        className='text-cleanar-color text-bold'
-                                        name="address"
-                                        value={formData.address}
+                                        id="floatingCompanyName"
+                                        placeholder="Company Name"
+                                        className='text-cleanar-color text-bold form-input'
+                                        name="companyName"
+                                        value={formData.companyName}
                                         onChange={handleChange}
                                     />
-                                    <label htmlFor="floatingAddress" className='text-bold'>Address*</label>
-                                </Form.Floating>
-                            </Col>
-                            <Col md='1' xs='1'>
-                                <Button id="Tooltip4" type="button" tabIndex='-1' onClick={() => togglePopover('address')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
-                                <Popover placement="right" isOpen={popoverOpen.address} target="Tooltip4" toggle={() => togglePopover('address')}>
-                                    <PopoverBody>Enter your address.</PopoverBody>
-                                </Popover>
-                            </Col>
-                            <Col md='3' xs='10'>
-                                <Form.Floating className="mb-3">
-                                    <Form.Control
-                                        type="text"
-                                        id="floatingCity"
-                                        placeholder="City"
-                                        className='text-cleanar-color text-bold'
-                                        name="city"
-                                        value={formData.city}
-                                        onChange={handleChange}
-                                    />
-                                    <label htmlFor="floatingCity" className='text-bold'>City*</label>
-                                </Form.Floating>
-                            </Col>
-                            <Col md='1' xs='1'>
-                                <Button id="Tooltip5" type="button" tabIndex='-1' onClick={() => togglePopover('city')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
-                                <Popover placement="right" isOpen={popoverOpen.city} target="Tooltip5" toggle={() => togglePopover('city')}>
-                                    <PopoverBody>Enter your city.</PopoverBody>
-                                </Popover>
-                            </Col>
-                            <Col md='3' xs='10'>
-                                <Form.Floating className="mb-3">
-                                    <Form.Control
-                                        type="text"
-                                        id="floatingProvince"
-                                        placeholder="Province"
-                                        className='text-cleanar-color text-bold'
-                                        name="province"
-                                        value={formData.province}
-                                        onChange={handleChange}
-                                    />
-                                    <label htmlFor="floatingState" className='text-bold'>Province*</label>
-                                </Form.Floating>
-                            </Col>
-                            <Col md='1' xs='1'>
-                                <Button id="Tooltip6" type="button" tabIndex='-1' onClick={() => togglePopover('province')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
-                                <Popover placement="right" isOpen={popoverOpen.province} target="Tooltip6" toggle={() => togglePopover('province')}>
-                                    <PopoverBody>Enter your province.</PopoverBody>
-                                </Popover>
-                            </Col>
-                        </Row>
-                        <Row className=''>
-                            <Col md='3' xs='10' >
-                                <Form.Floating className="mb-3 ">
-                                    <Form.Control
-                                        type="text"
-                                        id="floatingPostalCode"
-                                        placeholder="Postal Code"
-                                        className='text-cleanar-color text-bold'
-                                        name="postalcode"
-                                        value={formData.postalcode}
-                                        onChange={handleChange}
-                                    />
-                                    <label htmlFor="floatingPostalCode" className='text-bold'>Postal Code*</label>
-                                </Form.Floating>
-                            </Col>
-                            <Col md='1' xs='1'>
-                                <Button id="Tooltip7" type="button" tabIndex='-1' onClick={() => togglePopover('postalcode')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
-                                <Popover placement="right" isOpen={popoverOpen.postalcode} target="Tooltip7" toggle={() => togglePopover('postalcode')}>
-                                    <PopoverBody>Enter your postal code.</PopoverBody>
-                                </Popover>
-                            </Col>
-                            <Col md='3' xs='10'>
-                                <Form.Floating className="mb-3">
+                                </Form.Group>
+                                {/* <Form.Floating className="mb-3">
                                     <Form.Control
                                         type="text"
                                         id="floatingCompanyName"
@@ -1045,60 +1012,150 @@ const RequestQuote = () => {
                                         onChange={handleChange}
                                     />
                                     <label htmlFor="floatingCompanyName" className='text-bold '>Company Name</label>
-                                </Form.Floating>
+                                </Form.Floating> */}
                             </Col>
-                            <Col md='1' xs='1'>
-                                <Button id="Tooltip8" type="button" tabIndex='-1' onClick={() => togglePopover('companyName')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
-                                <Popover placement="right" isOpen={popoverOpen.companyName} target="Tooltip8" toggle={() => togglePopover('companyName')}>
-                                    <PopoverBody>Enter your company name.</PopoverBody>
-                                </Popover>
-                            </Col>
+                        </Row>
+                        <Row className=''>
                             <Col md='3' xs='10'>
-                                <Form.Floating className="mb-3">
+                                <Form.Group className="mb-3">
+                                    <Form.Label className='text-bold'>Address*</Form.Label>
+                                    <FaQuestionCircle id="Tooltip4" onClick={() => togglePopover('address')} />
+                                    <Popover placement="right" isOpen={popoverOpen.address} target="Tooltip4" toggle={() => togglePopover('address')}>
+                                        <PopoverBody>Enter your address.</PopoverBody>
+                                    </Popover>
                                     <Form.Control
                                         type="text"
-                                        id="promoCode"
-                                        placeholder="Promo Code"
-                                        className='text-cleanar-color text-bold'
-                                        name="promoCode"
-                                        value={formData.promoCode}
+                                        id="floatingAddress"
+                                        placeholder="Address"
+                                        className='text-cleanar-color text-bold form-input'
+                                        name="address"
+                                        value={formData.address}
                                         onChange={handleChange}
                                     />
-                                    <label htmlFor="promoCode" className='text-bold'>Promo Code</label>
-                                </Form.Floating>
+                                </Form.Group>
+                                {/* <Form.Floating className="mb-3">
+                                    <Form.Control
+                                        type="text"
+                                        id="floatingAddress"
+                                        placeholder="Address"
+                                        className='text-cleanar-color text-bold'
+                                        name="address"
+                                        value={formData.address}
+                                        onChange={handleChange}
+                                    />
+                                    <label htmlFor="floatingAddress" className='text-bold'>Address*</label>
+                                </Form.Floating> */}
                             </Col>
-                            {/* add a button to validate the promo code */}
                             {/* <Col md='1' xs='1'>
-                                    <Button id="validatePromoCode" type="button" onClick={handlePromoCodeValidation} className='primary-bg-color btn-round btn-icon'><FaCheck /></Button>
-                                </Col> */}
-                            <Col md='1' xs='1'>
-                                <Button id="Tooltip10" type="button" tabIndex='-1' onClick={() => togglePopover('promoCode')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
-                                <Popover placement="right" isOpen={popoverOpen.promoCode} target="Tooltip10" toggle={() => togglePopover('promoCode')}>
-                                    <PopoverBody>Enter your promo code. Discount will be reflected on the quote if eligible. Promos cannot be combined.</PopoverBody>
+                                <Button id="Tooltip4" type="button" tabIndex='-1' onClick={() => togglePopover('address')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
+                                <Popover placement="right" isOpen={popoverOpen.address} target="Tooltip4" toggle={() => togglePopover('address')}>
+                                    <PopoverBody>Enter your address.</PopoverBody>
                                 </Popover>
-                            </Col>
-
-                            {/* <Col md='3' xs='10' className=''>
-                                    <FloatingLabel controlId="floatingHowDidYouHear" label="How Did You Hear About Us..." className='text-bold'>
-                                        <Form.Select aria-label="How Did You Hear About Us" value={formData.howDidYouHearAboutUs}
-                                            name='howDidYouHearAboutUs' onChange={handleChange} className='transparent no-border text-cleanar-color text-bold'>
-                                            <option value="">How Did You Hear About Us?...</option>
-                                            <option value="Google">Google</option>
-                                            <option value="Facebook">Facebook</option>
-                                            <option value="Instagram">Instagram</option>
-                                            <option value="Referral">Referral</option>
-                                            <option value="Other">Other</option>
-                                        </Form.Select>
-                                    </FloatingLabel>
-                                </Col>
-                                <Col md='1' xs='1'>
-                                    <Button id="Tooltip9" type="button" tabIndex='-1' onClick={() => togglePopover('howDidYouHearAboutUs')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
-                                    <Popover placement="right" isOpen={popoverOpen.howDidYouHearAboutUs} target="Tooltip9" toggle={() => togglePopover('howDidYouHearAboutUs')}>
-                                        <PopoverBody>How did you hear about us?</PopoverBody>
+                            </Col> */}
+                            <Col md='3' xs='10'>
+                                <Form.Group className="mb-3">
+                                    <Form.Label className='text-bold'>City*</Form.Label>
+                                    <FaQuestionCircle id="Tooltip5" onClick={() => togglePopover('city')} />
+                                    <Popover placement="right" isOpen={popoverOpen.city} target="Tooltip5" toggle={() => togglePopover('city')}>
+                                        <PopoverBody>Enter your city.</PopoverBody>
                                     </Popover>
-                                </Col> */}
-
+                                    <Form.Control
+                                        type="text"
+                                        id="floatingCity"
+                                        placeholder="City"
+                                        className='text-cleanar-color text-bold form-input'
+                                        name="city"
+                                        value={formData.city}
+                                        onChange={handleChange}
+                                    />
+                                </Form.Group>
+                                {/* <Form.Floating className="mb-3">
+                                    <Form.Control
+                                        type="text"
+                                        id="floatingCity"
+                                        placeholder="City"
+                                        className='text-cleanar-color text-bold'
+                                        name="city"
+                                        value={formData.city}
+                                        onChange={handleChange}
+                                    />
+                                    <label htmlFor="floatingCity" className='text-bold'>City*</label>
+                                </Form.Floating> */}
+                            </Col>
+                            {/* <Col md='1' xs='1'>
+                                <Button id="Tooltip5" type="button" tabIndex='-1' onClick={() => togglePopover('city')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
+                                <Popover placement="right" isOpen={popoverOpen.city} target="Tooltip5" toggle={() => togglePopover('city')}>
+                                    <PopoverBody>Enter your city.</PopoverBody>
+                                </Popover>
+                            </Col> */}
+                            <Col md='3' xs='10'>
+                                <Form.Group className="mb-3">
+                                    <Form.Label className='text-bold'>Province*</Form.Label>
+                                    <FaQuestionCircle id="Tooltip6" onClick={() => togglePopover('province')} />
+                                    <Popover placement="right" isOpen={popoverOpen.province} target="Tooltip6" toggle={() => togglePopover('province')}>
+                                        <PopoverBody>Enter your province.</PopoverBody>
+                                    </Popover>
+                                    <Form.Control
+                                        type="text"
+                                        id="floatingProvince"
+                                        placeholder="Province"
+                                        className='text-cleanar-color text-bold form-input'
+                                        name="province"
+                                        value={formData.province}
+                                        onChange={handleChange}
+                                    />
+                                </Form.Group>
+                                {/* <Form.Floating className="mb-3">
+                                    <Form.Control
+                                        type="text"
+                                        id="floatingProvince"
+                                        placeholder="Province"
+                                        className='text-cleanar-color text-bold'
+                                        name="province"
+                                        value={formData.province}
+                                        onChange={handleChange}
+                                    />
+                                    <label htmlFor="floatingState" className='text-bold'>Province*</label>
+                                </Form.Floating> */}
+                            </Col>
+                            {/* <Col md='1' xs='1'>
+                                <Button id="Tooltip6" type="button" tabIndex='-1' onClick={() => togglePopover('province')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
+                                <Popover placement="right" isOpen={popoverOpen.province} target="Tooltip6" toggle={() => togglePopover('province')}>
+                                    <PopoverBody>Enter your province.</PopoverBody>
+                                </Popover>
+                            </Col> */}
+                            <Col md='3' xs='10' >
+                                <Form.Group className="mb-3">
+                                    <Form.Label className='text-bold'>Postal Code*</Form.Label>
+                                    <FaQuestionCircle id="Tooltip7" onClick={() => togglePopover('postalcode')} />
+                                    <Popover placement="right" isOpen={popoverOpen.postalcode} target="Tooltip7" toggle={() => togglePopover('postalcode')}>
+                                        <PopoverBody>Enter your postal code.</PopoverBody>
+                                    </Popover>
+                                    <Form.Control
+                                        type="text"
+                                        id="floatingPostalCode"
+                                        placeholder="Postal Code"
+                                        className='text-cleanar-color text-bold form-input'
+                                        name="postalcode"
+                                        value={formData.postalcode}
+                                        onChange={handleChange}
+                                    />
+                                </Form.Group>
+                                {/* <Form.Floating className="mb-3 ">
+                                    <Form.Control
+                                        type="text"
+                                        id="floatingPostalCode"
+                                        placeholder="Postal Code"
+                                        className='text-cleanar-color text-bold'
+                                        name="postalcode"
+                                        value={formData.postalcode}
+                                        onChange={handleChange}
+                                    />
+                                    <label htmlFor="floatingPostalCode" className='text-bold'>Postal Code*</label>
+                                </Form.Floating> */}
+                            </Col>
                         </Row>
+
                         <FormGroup>
                             <Label className='text-bold'>Description*</Label>
                             <Input
@@ -1114,7 +1171,8 @@ const RequestQuote = () => {
                         <Row>
                             <Col md='12' xs='12'>
                                 <Label className='text-cleanar-color text-bold'>Add Services: </Label>{' '}
-                                <Button id="Tooltip11" type="button" tabIndex='-1' onClick={() => togglePopover('services')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button>
+                                <FaQuestionCircle id="Tooltip11" tabIndex='-1' onClick={() => togglePopover('services')} />
+                                {/* <Button id="Tooltip11" type="button" tabIndex='-1' onClick={() => togglePopover('services')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button> */}
                                 <Popover placement="right" isOpen={popoverOpen.services} target="Tooltip11" toggle={() => togglePopover('services')}>
                                     <PopoverBody>Please add service type and level to customize your order</PopoverBody>
                                 </Popover>
@@ -1179,7 +1237,7 @@ const RequestQuote = () => {
                                     <Collapse in={openService === service.type}>
 
                                         <div id={service.type}
-                                            className={`service-section-${service.type.toLowerCase().replace(" ","-")} rounded`}>
+                                            className={`service-section-${service.type.toLowerCase().replace(" ", "-")} `}>
                                             {/* {renderCustomOptions(service.type, service.customOptions.serviceLevel)} */}
                                             {renderCustomOptions(service.type, service.serviceLevel)}
                                         </div>
@@ -1230,7 +1288,27 @@ const RequestQuote = () => {
                                 </Col>
                             </Row> */}
 
+                        <Row className=''>
+                            <Col md='3' xs='10'>
+                                <Form.Group className="mb-3">
+                                    <Form.Label className='text-bold'>Promo Code</Form.Label>
+                                    <FaQuestionCircle id="Tooltip10" onClick={() => togglePopover('promoCode')} />
+                                    <Popover placement="right" isOpen={popoverOpen.promoCode} target="Tooltip10" toggle={() => togglePopover('promoCode')}>
+                                        <PopoverBody>Enter your promo code. Discount will be reflected on the quote if eligible. Promos cannot be combined.</PopoverBody>
+                                    </Popover>
+                                    <Form.Control
+                                        type="text"
+                                        id="promoCode"
+                                        placeholder="Promo Code"
+                                        className='text-cleanar-color text-bold form-input'
+                                        name="promoCode"
+                                        value={formData.promoCode}
+                                        onChange={handleChange}
+                                    />
+                                </Form.Group>
 
+                            </Col>
+                        </Row>
                         <Row>
                             <Col>
                                 <p className='primary-color text-bold pt-2'>
