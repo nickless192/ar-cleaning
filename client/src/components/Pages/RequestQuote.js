@@ -965,9 +965,7 @@ const RequestQuote = () => {
                                     {/* add a checkbox and if enabled, the email field will be disabled. but only for logged in admins */}
                                     {(isLogged === true && Auth.getProfile().data.adminFlag === true) ?
                                     (<>
-                                    <Form.Check type="checkbox" id="emailCheckbox" label="Disable email field"
-                                        
-                                     onChange={(e) => handleEmailCheckbox(e)} />
+                                    <Form.Check type="checkbox" id="emailCheckbox" label="Disable email field" onChange={(e) => handleEmailCheckbox(e)} />
                                     </>)
                                     : null}
                                 </Form.Group>
