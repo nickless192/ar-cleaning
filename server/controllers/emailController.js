@@ -56,10 +56,6 @@ ${customOptionsText}
             ).join('\n')}           
 
 
-To view and manage this quote, please click on the link below and enter the Quote ID provided above:
-
-https://www.cleanARsolutions.ca/view-quotes
-
 Please note, this is a preliminary summary, and we will send a finalized quote in a separate email. We look forward to discussing your requirements further.
 
 Best regards,  
@@ -169,10 +165,6 @@ ${customOptionsText}
 `            }
             ).join('\n')}           
 
-
-To view and manage this quote, please click on the link below and enter the Quote ID provided above:
-
-https://www.cleanARsolutions.ca/view-quotes
 
 Please note, this is a preliminary summary, and we will send a finalized quote in a separate email. We look forward to discussing your requirements further.
 
