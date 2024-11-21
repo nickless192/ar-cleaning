@@ -366,7 +366,8 @@ const RequestQuote = () => {
         // }
 
         if (promoCodeIsValid || formData.promoCode === '') {
-            if (!formData.name || !formData.email || !formData.phonenumber || !formData.description || (!formData.services.length && !formData.products.length) || !formData.address || !formData.city || !formData.province || !formData.postalcode) {
+            const emailCheckbox = document.getElementById('emailCheckbox');
+            if (!formData.name || (!formData.email && !emailCheckbox) || !formData.phonenumber || !formData.description || (!formData.services.length && !formData.products.length) || !formData.address || !formData.city || !formData.province || !formData.postalcode) {
                 // if (!formData.name || !formData.email || !formData.phonenumber || !formData.description || !formData.companyName || (!formData.services.length && !formData.products.length) || !formData.howDidYouHearAboutUs || !formData.subtotalCost || !formData.tax || !formData.grandTotal || !formData.address || !formData.city || !formData.province || !formData.postalcode) {
                 const missingFields = [];
                 if (!formData.name) missingFields.push('Full Name');
@@ -448,6 +449,10 @@ const RequestQuote = () => {
                         companyName: '',
                         email: '',
                         phonenumber: '',
+                        address: '',
+                        city: '',
+                        province: '',
+                        postalcode: '',
                         howDidYouHearAboutUs: '',
                         subtotalCost: 0,
                         promoCode: '',
@@ -472,7 +477,7 @@ const RequestQuote = () => {
                     // }
 
                     const quoteResponse = await response.json();
-                    // if (sendEmail) {
+                    if (!emailCheckbox.checked) {
                     const emailResponse = await fetch('/api/email/quote', {
                         method: 'POST',
                         headers: {
@@ -488,7 +493,7 @@ const RequestQuote = () => {
                     } else {
                         alert('Error sending email');
                     }
-                    // }
+                    }
                     // merged the two fetch requests into one
                     const emailNotification = await fetch('/api/email/quote-notification', {
                         method: 'POST',
@@ -865,6 +870,18 @@ const RequestQuote = () => {
         }
     };
 
+    const handleEmailCheckbox = (e) => {
+        if (e.target.checked) {
+            // disable the email field
+            document.getElementById('floatingEmail').disabled = true;
+            // set the email field to blank
+            setFormData(prevFormData => ({ ...prevFormData, email: '' }));
+        }
+        else {
+            document.getElementById('floatingEmail').disabled = false;
+        }
+    }
+
 
     return (
         <>
@@ -881,6 +898,25 @@ const RequestQuote = () => {
                                 <Link to="/login-page">Log in</Link> or <Link to="/signup-page">sign up</Link> to pre-fill your information for a smoother experience</span>
                         )}
                     </p>
+                    {/* add a button to reset all fields */}
+                    <Button onClick={() => setFormData({
+                        name: '',
+                        description: '',
+                        companyName: '',
+                        email: '',
+                        address: '',
+                        city: '',
+                        province: '',
+                        postalcode: '',
+                        phonenumber: '',
+                        howDidYouHearAboutUs: '',
+                        subtotalCost: 0,
+                        promoCode: '',
+                        tax: 0,
+                        grandTotal: 0,
+                        services: [],
+                        products: []
+                    })} className='btn-danger'>Reset Form</Button>
 
                     {/* <p>If you have an account with us already, please log-in to pre-fill your information for a speedy request</p> */}
                     <Form onSubmit={handleSubmit} id="quote-form">
@@ -926,6 +962,14 @@ const RequestQuote = () => {
                                         value={formData.email}
                                         onChange={handleChange}
                                     />
+                                    {/* add a checkbox and if enabled, the email field will be disabled. but only for logged in admins */}
+                                    {(isLogged === true && Auth.getProfile().data.adminFlag === true) ?
+                                    (<>
+                                    <Form.Check type="checkbox" id="emailCheckbox" label="Disable email field"
+                                        
+                                     onChange={(e) => handleEmailCheckbox(e)} />
+                                    </>)
+                                    : null}
                                 </Form.Group>
                                 {/* <Form.Floating className="mb-3">
                                     <Form.Control

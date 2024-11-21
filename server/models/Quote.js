@@ -66,7 +66,7 @@ const QuoteSchema = new Schema({
     },
     email: {
         type: String,
-        required: true,
+        // required: true,
         validate: [isEmail, 'Wrong email format']
     },
     companyName: {
