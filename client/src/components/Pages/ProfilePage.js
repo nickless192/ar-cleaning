@@ -234,12 +234,12 @@ function ProfilePage() {
                   (formData.address === undefined || formData.city === undefined || formData.postalcode === undefined || formData.province === undefined)
                     ?
                     "Add address" :
-                    `${formData.address}, ${formData.city}, ${formData.postalcode}, ${formData.province}`
+                    `${formData.address}, ${formData.city}, ${formData.postalcode.toUpperCase()}, ${formData.province}`
                 )}
               </p>
               <Row className="content no-gutters">
                 <Col lg="6" xs="12" className="mb-3 secondary-color text-center">
-                  <h5>Phone Number</h5>
+                  <h5 className="text-bold">Phone Number</h5>
                   {isEditing ? (
                     <Input
                       type="text"
@@ -253,7 +253,7 @@ function ProfilePage() {
                   )}
                 </Col>
                 <Col lg="6" xs="12" className="mb-3 secondary-color text-center">
-                  <h5>Email Address</h5>
+                  <h5 className="text-bold">Email Address</h5>
                   <p>{formData.email ? formData.email : "Add email"}</p>
                 </Col>
               </Row>
@@ -261,7 +261,7 @@ function ProfilePage() {
                 <Col lg="3" xs="0" className="">
                 </Col>
                 <Col lg="6" xs="12" className="mb-3 secondary-color text-center">
-                  <h5>Company Name</h5>
+                  <h5 className="text-bold">Company Name</h5>
                   {isEditing ? (
                     <Input
                       type="text"

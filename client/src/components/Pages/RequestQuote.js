@@ -892,10 +892,10 @@ const RequestQuote = () => {
                     <h2 className="pt-3 primary-color text-bold">Request a Quote</h2>
                     <p className="text-bold">
                         {isLogged ? (
-                            <span>Logged in as {Auth.getProfile().data.firstName} {Auth.getProfile().data.lastName}. Feel free to adjust the pre-filled data if needed!</span>
+                            <span>Logged in as {Auth.getProfile().data.firstName} {Auth.getProfile().data.lastName}. Feel free to adjust the autofill data if needed!</span>
                         ) : (
                             <span>Please fill out the form below to request a quote. Fields with * are required. <br />
-                                <Link to="/login-page">Log in</Link> or <Link to="/signup-page">sign up</Link> to pre-fill your information for a smoother experience</span>
+                                Speed up your booking process! <Link to="/login-page">Log in</Link> or <Link to="/signup-page">Sign up</Link> to autofill your details and complete your reservation in seconds.</span>
                         )}
                     </p>
                     {/* add a button to reset all fields */}
