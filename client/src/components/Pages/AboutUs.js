@@ -63,15 +63,22 @@ function AboutUsPage() {
             <Col>
               <h2>Our Mission</h2>
               <p>
-                Our mission is to provide a platform for people to request and receive quotes for cleaning services.
+              Our mission is to transform spaces into cleaner, healthier, and more welcoming environments. We achieve this by offering customizable, high-quality cleaning services that are tailored to our clients’ needs while staying true to our commitment to sustainability and excellence.
               </p>
               <h2>Our Vision</h2>
               <p>
-                Our vision is to create a platform that connects people with cleaning service providers.
+              Our vision is to become Toronto’s most trusted and innovative cleaning service provider, setting the standard for excellence while contributing to a cleaner, greener, and happier community.
               </p>
               <h2>Our Values</h2>
               <p>
-                We value honesty, integrity, and transparency.
+                <b>At CleanAR Solutions, we are guided by the following values:</b>
+                <ol>
+                  <li>Integrity: We conduct our business with honesty, transparency, and accountability.</li>
+                  <li>Quality: We deliver top-tier cleaning services with attention to detail and excellence.</li>
+                  <li>Customer Focus: We prioritize our clients’ unique needs, building trust through personalized solutions.</li>
+                  <li>Sustainability: We promote eco-friendly cleaning practices to protect our environment.</li>
+                  <li>Teamwork: We value collaboration, respect, and unity to achieve success together.</li>
+                </ol>
               </p>
 
             </Col>

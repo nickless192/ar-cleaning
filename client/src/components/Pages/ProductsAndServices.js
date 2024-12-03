@@ -5,7 +5,7 @@ import {
   Row,
   Col,
   CardGroup,
-  Card,
+  // Card,
   CardHeader,
   ListGroup,
   ListGroupItem,
@@ -13,6 +13,15 @@ import {
   Button
 
 } from 'reactstrap'; // Importing required components from reactstrap
+
+import {
+  Card
+} from 'react-bootstrap'
+
+import carpetCleaningBg from "assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg"
+import residentialCleaningBg from "assets/img/man-servant-cleaning-house.jpg";
+import commercialCleaningBg from "assets/img/full-shot-people-cleaning-office.jpg";
+
 
 
 const ProductsAndServices = () => {
@@ -33,13 +42,13 @@ const ProductsAndServices = () => {
     <>
       {/* <Navbar /> */}
 
-      <div className="container pb-0 mb-0">
+      <div className="content pb-0 mb-0 section-background products-services-section">
         {/* <div className="container"> */}
-          <h2 className="title">Products and Services</h2>
+          <h2 className="title secondary-color">Products and Services</h2>
           {/* <Row>
             <Col className="text-center ml-auto mr-auto"> */}
               <div className="service-selector text-center">
-                <h3 className="title text-start">Our Services</h3>                
+                <h3 className="title text-start secondary-color">Our Services</h3>                
                 <Row className="">
                   {/* <Col> */}
                   <CardGroup>
@@ -48,10 +57,11 @@ const ProductsAndServices = () => {
                     //   inverse
                     //   outline
                     >
-                      <CardHeader tag="h3" className="m-1">
+                      <CardHeader tag="h3" className="m-1 card-title">
                         Residential Cleaning
                         {/* </h3> */}
                       </CardHeader>
+                      <Card.Img variant="top" src={residentialCleaningBg} />
                       <CardBody>
                         <ListGroup>
                           <ListGroupItem className="">
@@ -72,10 +82,11 @@ const ProductsAndServices = () => {
                     // outline
                     //   inverse
                     >
-                      <CardHeader tag="h3" className="m-1">
+                      <CardHeader tag="h3" className="m-1 card-title">
                         Commercial Cleaning
                         {/* </h3> */}
                       </CardHeader>
+                      <Card.Img variant="top" src={commercialCleaningBg} />
                       <CardBody>
                         <ListGroup>
                           <ListGroupItem className="text-dark">
@@ -97,7 +108,7 @@ const ProductsAndServices = () => {
                     outline
                       inverse
                     >
-                      <CardHeader tag="h3" className="m-1">
+                      <CardHeader tag="h3" className="m-1 card-title">
                         Specialized Cleaning
                       </CardHeader>
                       <CardBody>
@@ -117,14 +128,15 @@ const ProductsAndServices = () => {
                     </Card>
 
                    */}
-                    <Card className="card-border"
+                    <Card className="card-border"                    
                     // color="primary"
                     // outline
                       // inverse
                     >
-                      <CardHeader tag="h3" className="m-1">
-                        Carpet Cleaning
+                      <CardHeader tag="h3" className="m-1 card-title">
+                        Carpet and Upholstery Cleaning
                       </CardHeader>
+                      <Card.Img variant="top" src={carpetCleaningBg} />
                       <CardBody>
                         <ListGroup>
                           <ListGroupItem className="text-dark">
@@ -134,7 +146,7 @@ const ProductsAndServices = () => {
                             Stain removal and odor neutralization.
                           </ListGroupItem>
                           <ListGroupItem className="text-dark">
-                            Regular maintenance to prolong the life of carpets.
+                            Upholstery cleaning to maintain the beauty and comfort of furniture.
                           </ListGroupItem>
                         </ListGroup>
                       </CardBody>

@@ -335,7 +335,7 @@ const RequestQuote = () => {
         //const promoCode = e.target.value;
         const promoCode = formData.promoCode.toLowerCase();
         // if (promoCode === 'welcome10') {
-        if (promoCode === 'fall15' || promoCode === '4HOAN7ZHLQ' || promoCode === 'follow15') {
+        if (promoCode === 'winter10' || promoCode === 'follow15') {
             setValidPromoCode(true);
             // alert('Valid promo code! 15% discount will be applied to your quote');
             return true;

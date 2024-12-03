@@ -244,6 +244,7 @@
 .card-border {
     /* add border */
     border: 1px solid var(--accent-color)!important;
+    background: transparent!important;
     /* background-color: white!important;    */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);    
 }
@@ -266,7 +267,7 @@
 }
 
 .card-title {
-    color: var(--brown-color);
+    color: var(--accent-color);
 }
 
 /* Text Styles */
@@ -512,7 +513,7 @@ textarea {
 }
 
 .section-background {
-    background-image: url('../img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg');
+    /* background-image: url('../img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg'); */
     background-size: cover;
     /* Ensures the image covers the whole section */
     background-position: center;
@@ -525,6 +526,15 @@ textarea {
     /* Makes sure the content is positioned relative to the background */
     z-index: 1;
     /* Keeps the content above the background */
+}
+
+.index-section {
+    background-image: url('../img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg');
+}
+
+.products-services-section {
+    /* background-image: url('../img/full-shot-man-cleaning-indoors.jpg'); */
+    background-image: url('../img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg');
 }
 
 .section-background::before {
@@ -578,8 +588,26 @@ textarea {
     font-weight: bold;
   }
 
+  .winter-title {
+    color: red!important;
+  }
+
   .fall-saving-slide {
     background-color: #fb8500 !important;
+  }
+
+  .winter-saving-slide {
+    background-color: green !important;
+  }
+
+  .new-year-saving-p {
+    font-size: 18px;
+    font-weight: bold;
+    color: black;
+  }
+
+  .new-year-slide {
+    background-color: gold !important;
   }
 
   .request-quote-slide, 

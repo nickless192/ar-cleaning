@@ -32,21 +32,52 @@ import Logo from "assets/img/IC CLEAN AR-15-cropped.png";
 
 function Index() {
 
-  const [promoCode] = useState('FALL15');
+  // const [promoCode] = useState('FALL15');
+  // const [promoCode] = useState('WINTER10');
+
 
   const items = [
+    // {
+    //   content: (
+    //     <div className="promo-slide fall-saving-slide">
+    //       <h3 className="slide-title">Fall Savings! Book with code FALL15 and get 15% off your next service!</h3>
+    //       <p className="">
+    //         This fall, use code <Link to={`/request-quote?promoCode=FALL15`} className="slide-link">FALL15</Link> to enjoy 15% off your next cleaning service with CleanAR Solutions!
+    //         <br />
+    //         <a href="mailto:info@cleanARsolutions.ca" className="slide-link">Contact us</a> today or <Link to={`/request-quote?promoCode=FALL15`} className="slide-link" alt>click here to request a quote.</Link>
+    //       </p>
+    //     </div>
+    //   )
+    // },
+    // create content for winter10 code for new customers
     {
       content: (
-        <div className="promo-slide fall-saving-slide">
-          <h3 className="slide-title">Fall Savings! Book with code FALL15 and get 15% off your next service!</h3>
-          <p className="">
-            This fall, use code <Link to={`/request-quote?promoCode=FALL15`} className="slide-link">FALL15</Link> to enjoy 15% off your next cleaning service with CleanAR Solutions!
+        <div className="promo-slide winter-saving-slide">
+          <h3 className="slide-title">New Customer? Use code <span className="winter-title">WINTER10</span> for 10% off your first service!</h3>
+          <p>
+            New customers can enjoy 10% off their first cleaning service with CleanAR Solutions! <br />
+            Use code <Link to={`/request-quote?promoCode=WINTER10`} className="slide-link">WINTER10</Link> when you book.
             <br />
-            <a href="mailto:info@cleanARsolutions.ca" className="slide-link">Contact us</a> today or <Link to={`/request-quote?promoCode=FALL15`} className="slide-link" alt>click here to request a quote.</Link>
+            <a href="mailto:info@cleanarsolutions.ca" className="slide-link">Contact us</a> today or <Link to={`/request-quote?promoCode=WINTER10`} className="slide-link" alt>click here to request a quote.</Link>
           </p>
         </div>
       )
-    }, {
+    },
+    // create content for ad to get customers tor request upholsery cleaning for the new year with a new year new you theme
+    {
+      content: (
+        <div className="promo-slide new-year-slide">
+          <h3 className="slide-title">New Year, New Upholstery!</h3>
+          <p className='new-year-saving-p'>
+            Start the new year with fresh upholstery! <br />
+            Book your upholstery cleaning service with CleanAR Solutions today.
+            <br />
+            <Link to="/request-quote?service=Carpet Cleaning" className="slide-link">Request a quote</Link>
+          </p>
+        </div>
+      )
+    },
+     {
       // create content to get customer to request a quote page
       content: (
         <div className="promo-slide request-quote-slide">
@@ -180,7 +211,7 @@ function Index() {
   return (
     <>
       <VisitorCounter page={"index"} />
-      <div className="content section-background mb-0">
+      <div className="content section-background index-section mb-0">
         <p>
           <div className="py-0 px-2 ">
             <Row className="">
