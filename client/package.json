@@ -61,5 +61,13 @@
   "proxy": "http://localhost:3001",
   "devDependencies": {
     "ajv": "^8.17.1"
+  },
+  "devDependencies": {
+    "@babel/types": "^7.26.3",
+    "@types/babel__core": "^7.20.5",
+    "@types/babel__generator": "^7.6.8",
+    "@types/babel__template": "^7.4.4",
+    "@types/raf": "^3.4.3",
+    "@types/warning": "^3.0.3"
   }
 }
