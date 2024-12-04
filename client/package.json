@@ -58,5 +58,8 @@
     "fsevents": "2.3.2",
     "chokidar": "3.5.3"
   },
-  "proxy": "http://localhost:3001"
+  "proxy": "http://localhost:3001",
+  "devDependencies": {
+    "ajv": "^8.17.1"
+  }
 }
