@@ -244,12 +244,35 @@ function Index() {
                     </Row>
                   </CardHeader>
                   <Row>
-                    <Card className="card-plain">
+                    <Card className="card-plain ">
                       <CardBody>
                         <CardText>
-                          <Accordion defaultActiveKey={null} >
+                        <ListGroup className="">
+                            <ListGroupItem>
+                              <i className="now-ui-icons tech_mobile"></i> <strong>Request a Quote:</strong> <Link to="/request-quote">Click Here</Link> <br />
+                              <span>Get the professional cleaning services you need with CleanAR Solutions! We offer a range of services, contact us today to learn more about our services and request a quote.</span>
+                            </ListGroupItem>
+                            <ListGroupItem>
+                              <i className="now-ui-icons tech_mobile"></i> <strong>Call Us:</strong> <Link to="tel:437-440-5514">437-440-5514</Link> <br />
+                              <span>Our customer service team is available to assist you Monday through Friday, from 9 AM to 6 PM. Don't hesitate to call for any inquiries or support!</span>
+                            </ListGroupItem>
+                            <ListGroupItem>
+                              <i className="now-ui-icons ui-1_email-85"></i> <strong>Email Us:</strong> <a href="mailto:info@cleanARsolutions.ca">info@cleanARsolutions.ca</a><br />
+                              <span>For detailed inquiries or if you prefer written communication, drop us an email. We aim to respond within 24 hours.</span>
+                            </ListGroupItem>
+                            <ListGroupItem>
+                              <i className="now-ui-icons ui-2_like"></i> <strong>Leave a Review:</strong> <a href="https://g.page/r/Cek9dkmHVuBKEAE/review" target="_blank" rel="noreferrer">Google Review</a> <br />
+                              <span>Share your experience with CleanAR Solutions! We value your feedback and would love to hear about your experience with our services.</span>
+                            </ListGroupItem>
+                            <ListGroupItem>
+                              <i className="now-ui-icons ui-2_like"></i> <strong>Follow Us:</strong> <a href="https://www.instagram.com/cleanarsolutions/" target="_blank" rel="noreferrer">Instagram</a> <br />
+                              <span>Stay up-to-date with our latest news, promotions, and cleaning tips! Follow us on Instagram for more information.</span>
+                            </ListGroupItem>
+                          </ListGroup>
+
+                          {/* <Accordion defaultActiveKey={null} > */}
                             {/* add business hours */}
-                            <Accordion.Item eventKey="0" className="accordion-header ">
+                            {/* <Accordion.Item eventKey="0" className="accordion-header ">
                               <Accordion.Header>
                                 <i className="now-ui-icons tech_mobile"></i> <strong>Our Business Hours:</strong>
                               </Accordion.Header>
@@ -305,7 +328,7 @@ function Index() {
                                 <span>Stay up-to-date with our latest news, promotions, and cleaning tips! Follow us on Instagram for more information.</span>
                               </Accordion.Body>
                             </Accordion.Item>
-                          </Accordion>
+                          </Accordion> */}
                         </CardText>
                       </CardBody>
                     </Card>
