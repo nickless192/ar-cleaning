@@ -44,11 +44,11 @@ const ProductsAndServices = () => {
 
       <div className="content pb-0 mb-0 section-background products-services-section">
         {/* <div className="container"> */}
-          <h2 className="title secondary-color">Products and Services</h2>
+          <h1 className="title secondary-color">Products and Services</h1>
           {/* <Row>
             <Col className="text-center ml-auto mr-auto"> */}
               <div className="service-selector text-center">
-                <h3 className="title text-start secondary-color">Our Services</h3>                
+                <h2 className="title text-start secondary-color">Our Services</h2>                
                 <Row className="">
                   {/* <Col> */}
                   <CardGroup>
@@ -57,11 +57,11 @@ const ProductsAndServices = () => {
                     //   inverse
                     //   outline
                     >
-                      <CardHeader tag="h3" className="m-1 card-title">
+                      <h3 className="m-1 card-title text-bold">
                         Residential Cleaning
                         {/* </h3> */}
-                      </CardHeader>
-                      <Card.Img variant="top" src={residentialCleaningBg} />
+                      </h3>
+                      <Card.Img variant="top" src={residentialCleaningBg} alt='Cleaning technician mopping the floor - Designed by Freepik' />
                       <CardBody>
                         <ListGroup>
                           <ListGroupItem className="">
@@ -82,11 +82,11 @@ const ProductsAndServices = () => {
                     // outline
                     //   inverse
                     >
-                      <CardHeader tag="h3" className="m-1 card-title">
+                      <h3 className="m-1 card-title text-bold">
                         Commercial Cleaning
                         {/* </h3> */}
-                      </CardHeader>
-                      <Card.Img variant="top" src={commercialCleaningBg} />
+                      </h3>
+                      <Card.Img variant="top" src={commercialCleaningBg} alt='Cleaners on office cleaning desks and floor - Designed by Freepik' />
                       <CardBody>
                         <ListGroup>
                           <ListGroupItem className="text-dark">
@@ -133,10 +133,10 @@ const ProductsAndServices = () => {
                     // outline
                       // inverse
                     >
-                      <CardHeader tag="h3" className="m-1 card-title">
+                      <h3 className="m-1 card-title text-bold">
                         Carpet and Upholstery Cleaning
-                      </CardHeader>
-                      <Card.Img variant="top" src={carpetCleaningBg} />
+                      </h3>
+                      <Card.Img variant="top" src={carpetCleaningBg} alt='Carpet cleaning, vaccum cleaner on carpet - Designed by Freepik' />
                       <CardBody>
                         <ListGroup>
                           <ListGroupItem className="text-dark">
@@ -157,7 +157,7 @@ const ProductsAndServices = () => {
                 </Row>
               </div>
               {/* <div className="product-selector">
-                <h3 className="title text-start">Our Products</h3>
+                <h2 className="title text-start">Our Products</h2>
                 <Row className="">
                   <Col className="text-center">
                   <CardGroup>
