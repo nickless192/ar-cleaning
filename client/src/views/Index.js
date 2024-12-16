@@ -216,18 +216,20 @@ function Index() {
         <meta name="description" content="CleanAR Solutions offers professional cleaning services for residential and commercial properties. Book now and enjoy a clean and fresh environment." />
         <meta name="keywords" content="cleaning, professional cleaning, residential cleaning, commercial cleaning, CleanAR Solutions" />
         <meta name="author" content="Nickless192" />
+<meta itemprop="name" content="CleanAR Solutions" />
+<meta itemprop="description" content="CleanAR Solutions offers top-quality cleaning services across Toronto and the GTA. From deep cleans to specialized property cleanouts, we tailor our services to" />
+<meta itemprop="image" content="" />
         <meta property="og:title" content="CleanAR Solutions - Home" />
         <meta property="og:description" content="CleanAR Solutions offers professional cleaning services for residential and commercial properties. Book now and enjoy a clean and fresh environment." />
         <meta property="og:url" content="www.cleanarsolutions.ca/index" />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://cleanarsolutions.ca/static/media/IC%20CLEAN%20AR-15-cropped.3b3b3b3b.png" />
+        <meta property="og:image" content="https://www.cleanarsolutions.ca/static/media/IC%20CLEAN%20AR-15-cropped.32f050a6a0836902ad34.png" />
         <meta property="og:image:alt" content="CleanAR Solutions logo" />
         <meta property="og:locale" content="en_CA" />
         <meta name="instagram:title" content="CleanAR Solutions - Home" />
         <meta name="instagram:description" content="CleanAR Solutions offers professional cleaning services for residential and commercial properties. Book now and enjoy a clean and fresh environment." />
         <meta name="instagram:url" content="www.instagram.com/cleanarsolutions" />
         <meta name="instagram:type" content="website" />
-        <meta name="instagram:image" content="https://cleanarsolutions.ca/static/media/IC%20CLEAN%20AR-15-cropped.3b3b3b3b.png" />
         <meta name="instagram:image:alt" content="CleanAR Solutions logo" /> 
 
       </Helmet>
