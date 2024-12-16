@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import {
     Input,
     FormGroup, Label,
@@ -478,21 +479,21 @@ const RequestQuote = () => {
 
                     const quoteResponse = await response.json();
                     if (!emailCheckbox.checked) {
-                    const emailResponse = await fetch('/api/email/quote', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            Accept: 'application/json'
-                        },
-                        body: JSON.stringify({ email: formData.email, quote: quoteResponse })
-                    });
+                        const emailResponse = await fetch('/api/email/quote', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                Accept: 'application/json'
+                            },
+                            body: JSON.stringify({ email: formData.email, quote: quoteResponse })
+                        });
 
-                    if (emailResponse.ok) {
-                        alert('Email confirmation sent successfully!');
-                        console.log('Email sent successfully!');
-                    } else {
-                        alert('Error sending email');
-                    }
+                        if (emailResponse.ok) {
+                            alert('Email confirmation sent successfully!');
+                            console.log('Email sent successfully!');
+                        } else {
+                            alert('Error sending email');
+                        }
                     }
                     // merged the two fetch requests into one
                     const emailNotification = await fetch('/api/email/quote-notification', {
@@ -886,6 +887,16 @@ const RequestQuote = () => {
     return (
         <>
             {/* <Navbar /> */}
+            <Helmet>
+                <title>Request a Quote - CleanAR Solutions</title>
+                <meta name="description" content="Request a quote for professional cleaning services from CleanAR Solutions. Fill out the form to get a customized quote for your cleaning needs." />
+                <meta name="keywords" content="request quote, cleaning services, professional cleaning, CleanAR Solutions" />
+                <meta name="author" content="CleanAR Solutions" />
+                <meta property="og:title" content="Request a Quote - CleanAR Solutions" />
+                <meta property="og:description" content="Request a quote for professional cleaning services from CleanAR Solutions. Fill out the form to get a customized quote for your cleaning needs." />
+                <meta property="og:url" content="www.cleanarsolutions.ca/request-quote" />
+                <meta property="og:type" content="website" />
+            </Helmet>
             <div className="pb-0 mb-0 request-quote-bg">
                 <VisitorCounter page={"request-quote"} />
                 <Container>
@@ -964,10 +975,10 @@ const RequestQuote = () => {
                                     />
                                     {/* add a checkbox and if enabled, the email field will be disabled. but only for logged in admins */}
                                     {(isLogged === true && Auth.getProfile().data.adminFlag === true) ?
-                                    (<>
-                                    <Form.Check type="checkbox" id="emailCheckbox" label="Disable email field" onChange={(e) => handleEmailCheckbox(e)} />
-                                    </>)
-                                    : null}
+                                        (<>
+                                            <Form.Check type="checkbox" id="emailCheckbox" label="Disable email field" onChange={(e) => handleEmailCheckbox(e)} />
+                                        </>)
+                                        : null}
                                 </Form.Group>
                                 {/* <Form.Floating className="mb-3">
                                     <Form.Control

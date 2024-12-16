@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import VisitorCounter from "components/Pages/VisitorCounter.js";
+import { Helmet } from "react-helmet";
 import {
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
+  // Modal,
+  // ModalHeader,
+  // ModalBody,
+  // ModalFooter,
+  // Button,
   Carousel, CarouselItem, CarouselControl, CarouselIndicators, CarouselCaption,
   Card,
   CardHeader,
@@ -20,14 +21,14 @@ import {
   CardImg
 } from "reactstrap";
 import {
-  Container,
-  Accordion,
-  AccordionItem,
-  AccordionHeader,
-  AccordionBody,
+  // Container,
+  // Accordion,
+  // AccordionItem,
+  // AccordionHeader,
+  // AccordionBody,
 } from "react-bootstrap";
 
-import backgroundImage from 'assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg';
+// import backgroundImage from 'assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg';
 import Logo from "assets/img/IC CLEAN AR-15-cropped.png";
 
 function Index() {
@@ -77,67 +78,67 @@ function Index() {
         </div>
       )
     },
-     {
+    {
       // create content to get customer to request a quote page
       content: (
         <div className="promo-slide request-quote-slide">
           <h3 className="slide-title">Get a Quote Today!</h3>
           <p>
-        Get the professional cleaning services you need with CleanAR Solutions! Contact us to learn more and request a quote.
-        <br />
-        <Link to="/request-quote" className="slide-link">Request a quote</Link>
+            Get the professional cleaning services you need with CleanAR Solutions! Contact us to learn more and request a quote.
+            <br />
+            <Link to="/request-quote" className="slide-link">Request a quote</Link>
           </p>
         </div>
       )
-        },
-        {
+    },
+    {
       content: (
         <div className="promo-slide follow-us-slide">
           <h3 className="slide-title">Follow Us on Instagram!</h3>
           <p>
-        Stay up-to-date with our latest news, promotions, and cleaning tips!
-        <br />
-        <a href="https://www.instagram.com/cleanarsolutions/" target="_blank" rel="noreferrer" className="slide-link">Join us on Instagram</a>
+            Stay up-to-date with our latest news, promotions, and cleaning tips!
+            <br />
+            <a href="https://www.instagram.com/cleanarsolutions/" target="_blank" rel="noreferrer" className="slide-link">Join us on Instagram</a>
           </p>
         </div>
       )
-        },
-      //   {
-      // content: (
-      //   <div className="promo-slide work-with-us-slide">
-      //     <h3 className="slide-title">Work with Us!</h3>
-      //     <p>
-      //   Join our mission to provide exceptional cleaning services. If you are passionate about cleanliness and customer service, email us your resume.
-      //   <br />
-      //   <a href="mailto:info@cleanARsolutions.ca" className="slide-link">Email us</a>
-      //     </p>
-      //   </div>
-      // )
-      //   },
-        {
+    },
+    //   {
+    // content: (
+    //   <div className="promo-slide work-with-us-slide">
+    //     <h3 className="slide-title">Work with Us!</h3>
+    //     <p>
+    //   Join our mission to provide exceptional cleaning services. If you are passionate about cleanliness and customer service, email us your resume.
+    //   <br />
+    //   <a href="mailto:info@cleanARsolutions.ca" className="slide-link">Email us</a>
+    //     </p>
+    //   </div>
+    // )
+    //   },
+    {
       content: (
         <div className="promo-slide display-review-slide">
           <h3 className="slide-title">Read Our Reviews!</h3>
           <p>
-        New customer? Check out our reviews on Google!
-        <br />
-        <a href="https://www.google.com/search?q=cleanar+solutions" target="_blank" rel="noreferrer" className="slide-link">Read Reviews</a>
+            New customer? Check out our reviews on Google!
+            <br />
+            <a href="https://www.google.com/search?q=cleanar+solutions" target="_blank" rel="noreferrer" className="slide-link">Read Reviews</a>
           </p>
         </div>
       )
-        },
-        {
+    },
+    {
       content: (
         <div className="promo-slide review-slide">
           <h3 className="slide-title">We'd love to hear from you!</h3>
           <p>
-        Returning customer? Share your experience by leaving a review on Google.
-        <br />
-        <a href="https://g.page/r/Cek9dkmHVuBKEAE/review" target="_blank" rel="noreferrer" className="slide-link">Leave a Review</a>
+            Returning customer? Share your experience by leaving a review on Google.
+            <br />
+            <a href="https://g.page/r/Cek9dkmHVuBKEAE/review" target="_blank" rel="noreferrer" className="slide-link">Leave a Review</a>
           </p>
         </div>
       )
-        },
+    },
     // {
     //   src: 'https://via.placeholder.com/800x400?text=Slide+3',
     //   altText: 'Slide 3',
@@ -210,6 +211,26 @@ function Index() {
 
   return (
     <>
+      <Helmet>
+        <title>CleanAR Solutions - Home</title>
+        <meta name="description" content="CleanAR Solutions offers professional cleaning services for residential and commercial properties. Book now and enjoy a clean and fresh environment." />
+        <meta name="keywords" content="cleaning, professional cleaning, residential cleaning, commercial cleaning, CleanAR Solutions" />
+        <meta name="author" content="Nickless192" />
+        <meta property="og:title" content="CleanAR Solutions - Home" />
+        <meta property="og:description" content="CleanAR Solutions offers professional cleaning services for residential and commercial properties. Book now and enjoy a clean and fresh environment." />
+        <meta property="og:url" content="www.cleanarsolutions.ca/index" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://cleanarsolutions.ca/static/media/IC%20CLEAN%20AR-15-cropped.3b3b3b3b.png" />
+        <meta property="og:image:alt" content="CleanAR Solutions logo" />
+        <meta property="og:locale" content="en_CA" />
+        <meta name="instagram:title" content="CleanAR Solutions - Home" />
+        <meta name="instagram:description" content="CleanAR Solutions offers professional cleaning services for residential and commercial properties. Book now and enjoy a clean and fresh environment." />
+        <meta name="instagram:url" content="www.instagram.com/cleanarsolutions" />
+        <meta name="instagram:type" content="website" />
+        <meta name="instagram:image" content="https://cleanarsolutions.ca/static/media/IC%20CLEAN%20AR-15-cropped.3b3b3b3b.png" />
+        <meta name="instagram:image:alt" content="CleanAR Solutions logo" /> 
+
+      </Helmet>
       <VisitorCounter page={"index"} />
       <div className="content section-background index-section mb-0">
         <p>
@@ -247,7 +268,7 @@ function Index() {
                     <Card className="card-plain ">
                       <CardBody>
                         <CardText>
-                        <ListGroup className="">
+                          <ListGroup className="">
                             <ListGroupItem>
                               <i className="now-ui-icons tech_mobile"></i> <strong>Request a Quote:</strong> <Link to="/request-quote">Click Here</Link> <br />
                               <span>Get the professional cleaning services you need with CleanAR Solutions! We offer a range of services, contact us today to learn more about our services and request a quote.</span>
@@ -271,8 +292,8 @@ function Index() {
                           </ListGroup>
 
                           {/* <Accordion defaultActiveKey={null} > */}
-                            {/* add business hours */}
-                            {/* <Accordion.Item eventKey="0" className="accordion-header ">
+                          {/* add business hours */}
+                          {/* <Accordion.Item eventKey="0" className="accordion-header ">
                               <Accordion.Header>
                                 <i className="now-ui-icons tech_mobile"></i> <strong>Our Business Hours:</strong>
                               </Accordion.Header>
