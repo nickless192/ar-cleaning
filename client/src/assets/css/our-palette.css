@@ -284,6 +284,11 @@
     background-color: var(--light-blue-color) !important;
 }
 
+.gradient-bg {
+    background: linear-gradient(45deg, var(--light-blue-color), var(--light-color)); /* Example gradient colors */
+    color: white; /* Ensure text is readable */
+  }
+
 /* Image
 .logo-size {
     max-width: 150px;

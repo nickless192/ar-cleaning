@@ -216,9 +216,9 @@ function Index() {
         <meta name="description" content="CleanAR Solutions offers professional cleaning services for residential and commercial properties. Book now and enjoy a clean and fresh environment." />
         <meta name="keywords" content="cleaning, professional cleaning, residential cleaning, commercial cleaning, CleanAR Solutions" />
         <meta name="author" content="Nickless192" />
-<meta itemprop="name" content="CleanAR Solutions" />
-<meta itemprop="description" content="CleanAR Solutions offers top-quality cleaning services across Toronto and the GTA. From deep cleans to specialized property cleanouts, we tailor our services to" />
-<meta itemprop="image" content="" />
+        <meta itemprop="name" content="CleanAR Solutions" />
+        <meta itemprop="description" content="CleanAR Solutions offers top-quality cleaning services across Toronto and the GTA. From deep cleans to specialized property cleanouts, we tailor our services to" />
+        <meta itemprop="image" content="" />
         <meta property="og:title" content="CleanAR Solutions - Home" />
         <meta property="og:description" content="CleanAR Solutions offers professional cleaning services for residential and commercial properties. Book now and enjoy a clean and fresh environment." />
         <meta property="og:url" content="www.cleanarsolutions.ca/index" />
@@ -230,7 +230,7 @@ function Index() {
         <meta name="instagram:description" content="CleanAR Solutions offers professional cleaning services for residential and commercial properties. Book now and enjoy a clean and fresh environment." />
         <meta name="instagram:url" content="www.instagram.com/cleanarsolutions" />
         <meta name="instagram:type" content="website" />
-        <meta name="instagram:image:alt" content="CleanAR Solutions logo" /> 
+        <meta name="instagram:image:alt" content="CleanAR Solutions logo" />
 
       </Helmet>
       <VisitorCounter page={"index"} />
@@ -246,7 +246,9 @@ function Index() {
                         <Col>
                           <CardImg top className="logo-image-index" src={Logo} alt="CleanAR Solutions logo" />
                           <Col className="" >
-                            <CardTitle tag="h2" className="primary-color ">CleanAR<br /><span className="secondary-color">Solutions</span></CardTitle>
+                          <h1 className="primary-color">CleanAR<br /><span className="secondary-color">Solutions</span></h1>
+                          {/* <h2 className="primary-color"></h2> */}
+                            {/* <CardTitle tag="h2" className="primary-color ">CleanAR<br /><span className="secondary-color">Solutions</span></CardTitle> */}
                           </Col>
                         </Col>
                       </Col>
@@ -270,25 +272,25 @@ function Index() {
                     <Card className="card-plain ">
                       <CardBody>
                         <CardText>
-                          <ListGroup className="">
-                            <ListGroupItem>
-                              <i className="now-ui-icons tech_mobile"></i> <strong>Request a Quote:</strong> <Link to="/request-quote">Click Here</Link> <br />
+                          <ListGroup>
+                            <ListGroupItem className="gradient-bg">
+                              <i className="now-ui-icons tech_laptop"></i><Link to="/request-quote" className="text-bold"> Want To Request A Quote?</Link> <br />
                               <span>Get the professional cleaning services you need with CleanAR Solutions! We offer a range of services, contact us today to learn more about our services and request a quote.</span>
                             </ListGroupItem>
-                            <ListGroupItem>
-                              <i className="now-ui-icons tech_mobile"></i> <strong>Call Us:</strong> <Link to="tel:437-440-5514">437-440-5514</Link> <br />
+                            <ListGroupItem className="gradient-bg">
+                              <i className="now-ui-icons tech_mobile"></i><Link to="tel:437-440-5514" className="text-bold"> Call or message us at 437-440-5514</Link> <br />
                               <span>Our customer service team is available to assist you Monday through Friday, from 9 AM to 6 PM. Don't hesitate to call for any inquiries or support!</span>
                             </ListGroupItem>
-                            <ListGroupItem>
-                              <i className="now-ui-icons ui-1_email-85"></i> <strong>Email Us:</strong> <a href="mailto:info@cleanARsolutions.ca">info@cleanARsolutions.ca</a><br />
+                            <ListGroupItem className="gradient-bg">
+                              <i className="now-ui-icons ui-1_email-85"></i><a href="mailto:info@cleanARsolutions.ca" className="text-bold"> Email us your questions at info@cleanARsolutions.ca</a><br />
                               <span>For detailed inquiries or if you prefer written communication, drop us an email. We aim to respond within 24 hours.</span>
                             </ListGroupItem>
-                            <ListGroupItem>
-                              <i className="now-ui-icons ui-2_like"></i> <strong>Leave a Review:</strong> <a href="https://g.page/r/Cek9dkmHVuBKEAE/review" target="_blank" rel="noreferrer">Google Review</a> <br />
+                            <ListGroupItem className="gradient-bg">
+                              <i className="now-ui-icons business_bulb-63"></i><a href="https://g.page/r/Cek9dkmHVuBKEAE/review" target="_blank" rel="noreferrer" className="text-bold"> Please Leave a Google Review</a> <br />
                               <span>Share your experience with CleanAR Solutions! We value your feedback and would love to hear about your experience with our services.</span>
                             </ListGroupItem>
-                            <ListGroupItem>
-                              <i className="now-ui-icons ui-2_like"></i> <strong>Follow Us:</strong> <a href="https://www.instagram.com/cleanarsolutions/" target="_blank" rel="noreferrer">Instagram</a> <br />
+                            <ListGroupItem className="gradient-bg">
+                              <i className="now-ui-icons ui-2_like"></i><a href="https://www.instagram.com/cleanarsolutions/" target="_blank" rel="noreferrer" className="text-bold"> Follow Us on Instagram</a> <br />
                               <span>Stay up-to-date with our latest news, promotions, and cleaning tips! Follow us on Instagram for more information.</span>
                             </ListGroupItem>
                           </ListGroup>
