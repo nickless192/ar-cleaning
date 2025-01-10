@@ -215,7 +215,7 @@ function Index() {
         <title>CleanAR Solutions - Home</title>
         <meta name="description" content="CleanAR Solutions offers professional cleaning services for residential and commercial properties. Book now and enjoy a clean and fresh environment." />
         <meta name="keywords" content="cleaning, professional cleaning, residential cleaning, commercial cleaning, CleanAR Solutions" />
-        <meta name="author" content="Nickless192" />
+        <meta name="author" content="Omar Rodriguez" />
         <meta itemprop="name" content="CleanAR Solutions" />
         <meta itemprop="description" content="CleanAR Solutions offers top-quality cleaning services across Toronto and the GTA. From deep cleans to specialized property cleanouts, we tailor our services to" />
         <meta itemprop="image" content="" />
@@ -235,67 +235,66 @@ function Index() {
       </Helmet>
       <VisitorCounter page={"index"} />
       <div className="content section-background index-section mb-0">
-        <p>
-          <div className="py-0 px-2 ">
-            <Card className="card-plain">
-              <CardHeader>
-                <Row>
-                  <Col md='3' className="logo-col">
-                    <Col>
-                      <CardImg top className="logo-image-index" src={Logo} alt="CleanAR Solutions logo" />
-                      <Col className="" >
-                        <h1 className="primary-color">CleanAR<br /><span className="secondary-color">Solutions</span></h1>
-                        {/* <h2 className="primary-color"></h2> */}
-                        {/* <CardTitle tag="h2" className="primary-color ">CleanAR<br /><span className="secondary-color">Solutions</span></CardTitle> */}
-                      </Col>
+                      <h1 className="primary-color">CleanAR<br /><span className="secondary-color">Solutions</span></h1>
+        <div className="py-0 px-2 ">
+          <Card className="card-plain">
+            <CardHeader>
+              <Row>
+                <Col md='3' className="logo-col">
+                  <Col>
+                    <CardImg top className="logo-image-index" src={Logo} alt="CleanAR Solutions logo" />
+                    <Col className="" >
+                      {/* <h2 className="primary-color"></h2> */}
+                      {/* <CardTitle tag="h2" className="primary-color ">CleanAR<br /><span className="secondary-color">Solutions</span></CardTitle> */}
                     </Col>
                   </Col>
-                  <Col md='8' className="px-0">
-                    <Carousel
-                      activeIndex={activeIndex}
-                      next={next}
-                      previous={previous}
-                      className="carousel"
-                    // interval={3000}
-                    >
-                      <CarouselIndicators items={items} activeIndex={activeIndex} onClickHandler={goToIndex} />
-                      {slides}
-                      <CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />
-                      <CarouselControl direction="next" directionText="Next" onClickHandler={next} />
-                    </Carousel>
-                  </Col>
-                </Row>
-              </CardHeader>
-              <Row>
-                <Card className="card-plain">
-                  <CardBody>
-                    <CardText>
-                      <ListGroup>
-                        <ListGroupItem className="gradient-bg">
-                          <i className="now-ui-icons tech_laptop"></i><Link to="/request-quote" className="text-bold" title="Request a quote"> Want To Request A Quote?</Link> <br />
-                          <span>Get the professional cleaning services you need with CleanAR Solutions! We offer a range of services, contact us today to learn more about our services and request a quote.</span>
-                        </ListGroupItem>
-                        <ListGroupItem className="gradient-bg">
-                          <i className="now-ui-icons tech_mobile"></i><Link to="tel:437-440-5514" className="text-bold" title="Call us at 437-440-5514"> Call or message us at 437-440-5514</Link> <br />
-                          <span>Our customer service team is available to assist you Monday through Friday, from 9 AM to 6 PM. Don't hesitate to call for any inquiries or support!</span>
-                        </ListGroupItem>
-                        <ListGroupItem className="gradient-bg">
-                          <i className="now-ui-icons ui-1_email-85"></i><a href="mailto:info@cleanARsolutions.ca" className="text-bold" title="Email us your questions at info@cleanARsolutions.ca"> Email us your questions at info@cleanARsolutions.ca</a><br />
-                          <span>For detailed inquiries or if you prefer written communication, drop us an email. We aim to respond within 24 hours.</span>
-                        </ListGroupItem>
-                        <ListGroupItem className="gradient-bg">
-                          <i className="now-ui-icons business_bulb-63"></i><a href="https://g.page/r/Cek9dkmHVuBKEAE/review" target="_blank" rel="noreferrer" className="text-bold" title="Leave a Google review"> Please Leave a Google Review</a> <br />
-                          <span>Share your experience with CleanAR Solutions! We value your feedback and would love to hear about your experience with our services.</span>
-                        </ListGroupItem>
-                        <ListGroupItem className="gradient-bg">
-                          <i className="now-ui-icons ui-2_like"></i><a href="https://www.instagram.com/cleanarsolutions/" target="_blank" rel="noreferrer" className="text-bold" title="Follow our Instagram account"> Follow Us on Instagram</a> <br />
-                          <span>Stay up-to-date with our latest news, promotions, and cleaning tips! Follow us on Instagram for more information.</span>
-                        </ListGroupItem>
-                      </ListGroup>
+                </Col>
+                <Col md='8' className="px-0">
+                  <Carousel
+                    activeIndex={activeIndex}
+                    next={next}
+                    previous={previous}
+                    className="carousel"
+                  // interval={3000}
+                  >
+                    <CarouselIndicators items={items} activeIndex={activeIndex} onClickHandler={goToIndex} />
+                    {slides}
+                    <CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />
+                    <CarouselControl direction="next" directionText="Next" onClickHandler={next} />
+                  </Carousel>
+                </Col>
+              </Row>
+            </CardHeader>
+            {/* <Row> */}
+              {/* <Card className="card-plain"> */}
+                <CardBody>
+                  <CardText>
+                    <ListGroup>
+                      <ListGroupItem className="gradient-bg">
+                        <i className="now-ui-icons tech_laptop"></i><Link to="/request-quote" className="text-bold" title="Request a quote"> Want To Request A Quote?</Link> <br />
+                        <span>Get the professional cleaning services you need with CleanAR Solutions! We offer a range of services, contact us today to learn more about our services and request a quote.</span>
+                      </ListGroupItem>
+                      <ListGroupItem className="gradient-bg">
+                        <i className="now-ui-icons tech_mobile"></i><Link to="tel:437-440-5514" className="text-bold" title="Call us at 437-440-5514"> Call or message us at 437-440-5514</Link> <br />
+                        <span>Our customer service team is available to assist you Monday through Friday, from 9 AM to 6 PM. Don't hesitate to call for any inquiries or support!</span>
+                      </ListGroupItem>
+                      <ListGroupItem className="gradient-bg">
+                        <i className="now-ui-icons ui-1_email-85"></i><a href="mailto:info@cleanARsolutions.ca" className="text-bold" title="Email us your questions at info@cleanARsolutions.ca"> Email us your questions at info@cleanARsolutions.ca</a><br />
+                        <span>For detailed inquiries or if you prefer written communication, drop us an email. We aim to respond within 24 hours.</span>
+                      </ListGroupItem>
+                      <ListGroupItem className="gradient-bg">
+                        <i className="now-ui-icons business_bulb-63"></i><a href="https://g.page/r/Cek9dkmHVuBKEAE/review" target="_blank" rel="noreferrer" className="text-bold" title="Leave a Google review"> Please Leave a Google Review</a> <br />
+                        <span>Share your experience with CleanAR Solutions! We value your feedback and would love to hear about your experience with our services.</span>
+                      </ListGroupItem>
+                      <ListGroupItem className="gradient-bg">
+                        <i className="now-ui-icons ui-2_like"></i><a href="https://www.instagram.com/cleanarsolutions/" target="_blank" rel="noreferrer" className="text-bold" title="Follow our Instagram account"> Follow Us on Instagram</a> <br />
+                        <span>Stay up-to-date with our latest news, promotions, and cleaning tips! Follow us on Instagram for more information.</span>
+                      </ListGroupItem>
+                    </ListGroup>
 
-                      {/* <Accordion defaultActiveKey={null} > */}
-                      {/* add business hours */}
-                      {/* <Accordion.Item eventKey="0" className="accordion-header ">
+                    {/* <Accordion defaultActiveKey={null} > */}
+                    {/* add business hours */}
+                    {/* <Accordion.Item eventKey="0" className="accordion-header ">
                               <Accordion.Header>
                                 <i className="now-ui-icons tech_mobile"></i> <strong>Our Business Hours:</strong>
                               </Accordion.Header>
@@ -352,14 +351,13 @@ function Index() {
                               </Accordion.Body>
                             </Accordion.Item>
                           </Accordion> */}
-                    </CardText>
-                  </CardBody>
-                </Card>
+                  </CardText>
+                </CardBody>
+              {/* </Card> */}
 
-              </Row>
-            </Card>
-          </div>
-        </p>
+            {/* </Row> */}
+          </Card>
+        </div>
       </div>
     </>
   );
