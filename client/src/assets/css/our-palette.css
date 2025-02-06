@@ -13,6 +13,15 @@
 .request-quote-bg {
     background-color: var(--accordion-bg-color) !important;
 }
+/* create a styling for a paragraph on the main page */
+.p-styling {
+    color: rgb(32, 30, 30);
+    font-size: 1.2rem;
+    background-color: var(--light-color);
+    /* background-color: var(--light-blue-color); */
+    padding: 10px;
+    border-radius: 10px;
+}
 
 /* Use the color variables in your styles */
 /* body {
@@ -39,6 +48,136 @@
 .form-input {
     border-radius: 0!important;
 }
+
+.quick-quote-container {
+    width: 100%;
+    /* max-width: 800px; */
+    margin: 0 auto;
+    padding: 10px;
+    background: lightyellow;
+    /* background-image: url('../img/view-frame-with-blue-cleaning-products.jpg'); */
+    /* background-image: url('../img/pexels-lum3n-44775-1028600.jpg'); */
+    /* Photo by Lum3n: https://www.pexels.com/photo/macro-shot-photography-of-water-drops-1028600/ */
+
+    /* background-image: url('../img/business-card-back.jpg'); */
+    background-size: cover; 
+    /* Ensures the image covers the whole section */
+    background-position: center;
+    /* Centers the image */
+    background-repeat: no-repeat;
+    /* opacity: 0.9; */
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: left;
+  }
+
+  .quick-quote-form {
+    opacity: 0.7;
+  }
+
+ 
+  .montserrat-bold {
+    font-family: "Montserrat", serif;
+    font-optical-sizing: auto;
+    font-weight: 800;
+    font-style: normal;
+  }
+
+  .alata-regular {
+    font-family: "Alata", serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  .martel-extralight {
+    font-family: "Martel", serif;
+    font-weight: 200;
+    font-style: normal;
+  }
+  
+  .martel-light {
+    font-family: "Martel", serif;
+    font-weight: 300;
+    font-style: normal;
+  }
+  
+  .martel-regular {
+    font-family: "Martel", serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+  
+  .martel-semibold {
+    font-family: "Martel", serif;
+    font-weight: 600;
+    font-style: normal;
+  }
+  
+  .martel-bold {
+    font-family: "Martel", serif;
+    font-weight: 700;
+    font-style: normal;
+  }
+  
+  .martel-extrabold {
+    font-family: "Martel", serif;
+    font-weight: 800;
+    font-style: normal;
+  }
+  
+  .martel-black {
+    font-family: "Martel", serif;
+    font-weight: 900;
+    font-style: normal;
+  }
+  
+  
+  .quick-quote-container h2 {
+    margin-bottom: 15px;
+  }
+  
+  .service-selection,
+  .options-selection {
+    margin: 15px 0;
+    text-align: left;
+  }
+  
+  .radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 5px;
+  }
+  
+  .radio-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  input[type="radio"] {
+    accent-color: #007bff;
+    width: 18px;
+    height: 18px;
+  }
+  
+  button {
+    width: 100%;
+    padding: 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top: 15px;
+  }
+  
+  button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+  
 
 .modal-header-text {
     background-color: #fb8500 !important;
@@ -216,6 +355,15 @@
     background-color: var(--accent-color);
     /* Light red */
 }
+.description-textarea {
+    width: 100%;
+    height: 100px!important;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin: 10px 0;
+    /* max-height: fit-content; */
+}
 
 /* Contact Section */
 .contact-info i {
@@ -272,7 +420,7 @@
 
 /* Text Styles */
 .text-bold {
-    font-weight: bold;
+    font-weight: bold!important;
 }
 
 .text-cleanar-color {
@@ -285,7 +433,7 @@
 }
 
 .gradient-bg {
-    background: linear-gradient(45deg, var(--light-blue-color), var(--light-color)); /* Example gradient colors */
+    background: linear-gradient(45deg, var(--light-blue-color), var(--light-blue-color)); /* Example gradient colors */
     color: white; /* Ensure text is readable */
   }
 
@@ -559,6 +707,7 @@ textarea {
     box-shadow: none; /* Remove shadow */
     border: none;     /* Remove any border */
     padding: 0;       /* Remove any padding */
+    max-height: max-content;
   }
 .promo-slide-container {
     display: flex;

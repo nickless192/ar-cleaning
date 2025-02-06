@@ -48,9 +48,7 @@ function AboutUsPage() {
                   <p className="">
                     At <b>CleanAR Solutions</b>, we provide professional cleaning services in Toronto and the GTA. Our focus on excellence ensures every project meets the highest standards, creating a clean and healthy environment. Whether you need residential, commercial, or carpet cleaning, we customize our approach to meet your needs. Get started by <a href="/request-quote" >requesting a quote</a>, or <a href="mailto:info@cleanARsolutions.ca">contact us</a> for more information.
                   </p>
-                  <p className="">
-                    With 10 years of experience, our services are designed to meet the unique needs of our clients, providing personalized solutions and exceptional results on every project. At <b>CleanAR Solutions</b>, we take pride in offering reliable and high-quality service that ensures the impeccable cleanliness and maintenance of any space.  We are here to help you find the perfect cleaning solution for your needs.
-                  </p>
+                  
                 </CardText>
                 <Link to="/request-quote" className="btn primary-bg-color">Request a Quote</Link>
                 <Link to="/products-and-services" className="btn secondary-bg-color">Learn More About Our Services</Link>
