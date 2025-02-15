@@ -7,5 +7,6 @@ const Quote = require('./Quote');
 const VisitorLog = require('./VisitorLog');
 const GiftCard = require('./GiftCard');
 const VisitorCount = require('./VisitorCount');
+const QuickQuote = require('./QuickQuote');
 
-module.exports = {User, Supplier, Service, Product, Order, Quote, VisitorLog, GiftCard, VisitorCount};
+module.exports = {User, Supplier, Service, Product, Order, Quote, VisitorLog, GiftCard, VisitorCount, QuickQuote};

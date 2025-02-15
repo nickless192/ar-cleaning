@@ -1,6 +1,7 @@
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 // const jwt = require('jsonwebtoken');
+const sharp = require('sharp');
 const { signTokenForPasswordReset } = require('../utils/auth');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
@@ -298,19 +299,88 @@ info@cleanARsolutions.ca
         https://www.cleanARsolutions.ca/reset-password?token=${resetToken}
         If you did not request this, please ignore this email and your password will remain unchanged.
         `,
-        
-        // http://localhost:3000/reset-password?token=${resetToken}
-    };
+
+            // http://localhost:3000/reset-password?token=${resetToken}
+        };
 
         try {
             await sgMail.send(msg);
-            res.status(200).json({ message: 'Password reset email sent! Please check your email for next steps.' });            
+            res.status(200).json({ message: 'Password reset email sent! Please check your email for next steps.' });
         } catch (error) {
             console.error(error);
             res.status(500).json({ message: 'Error sending email' });
-            
+
         }
+    },
+    emailQuickQuote: async (req, res) => {
+        try {
+            // console.log('Emailing quote: ', req.body);
+            // const { email, quote } = req.body;
+            // const formHtml = quote.formHtml; 
+            // const { textSummary } = req.body;
+            // if (!req.file || !textSummary) {
+            //     return res.status(400).json({ message: "Form data and screenshot are required." });
+            // }
+            const { textSummary, imageBase64 } = req.body;
+        if (!textSummary || !imageBase64) {
+            return res.status(400).json({ message: "Form data and image are required." });
+        }
+
+            // Decode the base64 image string to a buffer
+        const imageBuffer = Buffer.from(imageBase64, 'base64');
+
+        // Use Sharp to convert PNG to JPEG
+        const jpegBuffer = await sharp(imageBuffer)
+            .jpeg({ quality: 80 })  // Convert to JPEG and set quality
+            .toBuffer();  // Return a buffer
+
+        // Convert JPEG buffer to Base64
+        const jpegBase64 = jpegBuffer.toString('base64');
+
+        // Construct email HTML with inline image
+        const emailHtml = `
+            <h3>QuickQuote Form Submission</h3>
+            <p>${textSummary}</p>
+            <p><strong>Form Screenshot:</strong></p>
+            <img src="data:image/jpeg;base64,${jpegBase64}" alt="Quote Form Screenshot" style="max-width:100%; border:1px solid #ccc; border-radius:8px;">
+        `;
+
+            // const msg = {
+            //     to: 'info@cleanARsolutions.ca', // Change to your recipient
+            //     from: 'info@cleanARsolutions.ca',
+            //     subject: 'Quick Quote Request',
+            //     html: formHtml,
+            // }
+            // Email content
+        const msg = {
+            to: 'info@cleanARsolutions.ca',
+            from: 'info@cleanARsolutions.ca',
+            subject: "New Quote Submission",
+            html: emailHtml
+        };
+            sgMail
+                .send(msg)
+                .then(() => {
+                    res.status(201).json({ message: 'Email sent' });
+                })
+                .catch((error) => {
+                    console.error(error);
+                    res.status(500).json({ message: 'Error emailing quote' });
+                }
+                )
+        } catch (error) {
+            console.error('Error emailing quote: ', error);
+            res.status(500).json({ message: 'Error emailing quote' });
+        }
+
+
+
+
+
     }
+
+
+
 };
 
 module.exports = emailController;

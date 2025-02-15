@@ -1,4 +1,4 @@
-const { Quote } = require('../models');
+const { Quote, QuickQuote } = require('../models');
 
 const quoteController = {
     getQuotes: async (req, res) => {
@@ -71,6 +71,27 @@ const quoteController = {
             res.status(500).json({ message: 'Error deleting quote' });
         }
     },
+    createQuickQuote: async (req, res) => {
+        try {
+            const newQuickQuote = new QuickQuote({
+                ...req.body,
+                userId: req.body.userId || null // Ensure userId is null if not provided
+            });
+
+            const savedQuickQuote = await newQuickQuote.save();
+
+            if (!req.body.userId) {
+                savedQuickQuote.userId = savedQuickQuote.quoteId;
+                await savedQuickQuote.save();
+            }
+
+            res.status(200).json(savedQuickQuote);
+        } catch (error) {
+            console.error('Error creating quick quote: ', error);
+            res.status(500).json({ message: 'Error creating quick quote' });
+        }
+    }
+        
     
 
 

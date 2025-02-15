@@ -1,4 +1,5 @@
 const express = require('express');
+const compression = require('compression');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const path = require('path');
@@ -7,6 +8,8 @@ require('dotenv').config();
 app = express();
 const PORT = process.env.PORT || 3001;
 
+// compress all responses
+app.use(compression());
 app.use(cors());
 // setting up middleware for url encoded, json and to serve static files
 app.use(express.urlencoded({extended: true}));

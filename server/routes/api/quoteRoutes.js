@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const {getQuotes, createQuote, getQuoteById, updateQuote, deleteQuote, getUserQuotes} = require('../../controllers/quoteControllers');
+const {getQuotes, createQuote, getQuoteById, updateQuote, deleteQuote, getUserQuotes, createQuickQuote} = require('../../controllers/quoteControllers');
 
 
 router.route('/')
@@ -14,6 +14,7 @@ router.route('/:quoteId')
     router.route('/user/:userId')
     .get(getUserQuotes);
 
-
+router.route('/quickquote')
+    .post(createQuickQuote);
 
 module.exports = router;
