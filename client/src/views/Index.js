@@ -40,10 +40,11 @@ function Index() {
       <MetaTags />
       <VisitorCounter page={"index"} />
       <div className="content section-background index-section mb-0">
+            <h1 className="primary-color text-bold montserrat-bold">CleanAR Solutions</h1>
+        
         <Row>
           <Col xs='12' md='6'>
-            <CardImg top className="logo-image-index" src={Logo} alt="CleanAR Solutions logo" />
-            <h1 className="primary-color text-bold montserrat-bold">CleanAR Solutions</h1>
+            <CardImg top className="logo-image-index mb-2" src={Logo} alt="CleanAR Solutions logo" />
             <p className=" p-styling martel-regular">
               With more 10 years of experience, our services are designed to meet the unique needs of our clients, providing personalized solutions and exceptional results on every project. At <b>CleanAR Solutions</b>, we take pride in offering reliable and high-quality service that ensures the impeccable cleanliness and maintenance of any space.  We are here to help you find the perfect cleaning solution for your needs; fill up our quick form 👆 (Request Quote) and we'll be in touch with a quote. Need more information? Below you'll find all of our contact information 👇
             </p>
@@ -78,6 +79,10 @@ function Index() {
                     <ListGroupItem className="gradient-bg">
                       <i className="now-ui-icons business_bulb-63"></i><a href="https://g.page/r/Cek9dkmHVuBKEAE/review" target="_blank" rel="noreferrer noopener" className="text-bold martel-semibold" title="Leave a Google review"> Leave A Google Review</a> <br />
                       <span className="martel-bold">Share your experience with CleanAR Solutions! We value your feedback and would love to hear about your experience with our services.</span>
+                    </ListGroupItem>
+                    <ListGroupItem className="gradient-bg">
+                      <i className="now-ui-icons business_badge"></i><Link to="/products-and-services" className="text-bold martel-semibold" title="View our services"> View Our Services</Link> <br />
+                      <span className="martel-bold">Discover the range of professional cleaning services we offer at CleanAR Solutions. From residential to commercial cleaning, we have the perfect solution for you!</span>
                     </ListGroupItem>
                     {/* <ListGroupItem className="gradient-bg">
                       <i className="now-ui-icons location_pin"></i><Link to="/service-area" className="text-bold martel-semibold" title="View our service area"> View Our Service Area</Link> <br />
