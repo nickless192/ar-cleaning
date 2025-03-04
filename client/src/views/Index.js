@@ -50,7 +50,7 @@ function Index() {
             </p>
           </Col>
           <Col xs='12' md='6'>
-            {/* <QuickQuote /> */}
+            <QuickQuote />
 
           </Col>
         </Row>
