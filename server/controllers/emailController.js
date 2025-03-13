@@ -321,13 +321,14 @@ info@cleanARsolutions.ca
             // if (!req.file || !textSummary) {
             //     return res.status(400).json({ message: "Form data and screenshot are required." });
             // }
-            const { textSummary, imageBase64 } = req.body;
-        if (!textSummary || !imageBase64) {
+            const { textSummary, imageBase64, formData } = req.body;
+        if (!textSummary || !imageBase64 || !formData) {
             return res.status(400).json({ message: "Form data and image are required." });
         }
 
             // Decode the base64 image string to a buffer
         const imageBuffer = Buffer.from(imageBase64, 'base64');
+        const { name, email, phonenumber, postalcode } = formData;
 
         // Use Sharp to convert PNG to JPEG
         const jpegBuffer = await sharp(imageBuffer)
@@ -341,6 +342,12 @@ info@cleanARsolutions.ca
         const emailHtml = `
             <h3>QuickQuote Form Submission</h3>
             <p>${textSummary}</p>
+            <ul>
+                <li><strong>Name:</strong> ${name}</li>
+                <li><strong>Email:</strong> ${email}</li>
+                <li><strong>Phone:</strong> ${phonenumber}</li>
+                <li><strong>Postal Code:</strong> ${postalcode}</li>
+            </ul>                     
             <p><strong>Form Screenshot:</strong></p>
             <img src="data:image/jpeg;base64,${jpegBase64}" alt="Quote Form Screenshot" style="max-width:100%; border:1px solid #ccc; border-radius:8px;">
         `;
