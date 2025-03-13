@@ -418,7 +418,7 @@ const QuickQuote = () => {
     const canvas = await html2canvas(serviceSelectionForm);
     const imageBase64 = canvas.toDataURL("image/png").split(",")[1]; // PNG format
 
-    const payload = { textSummary, imageBase64 };
+    const payload = { textSummary, imageBase64, formData: updatedFormData };
 
         // Send form data and image to the backend
         fetch("/api/email/quick-quote", {
