@@ -314,13 +314,6 @@ info@cleanARsolutions.ca
     },
     emailQuickQuote: async (req, res) => {
         try {
-            // console.log('Emailing quote: ', req.body);
-            // const { email, quote } = req.body;
-            // const formHtml = quote.formHtml; 
-            // const { textSummary } = req.body;
-            // if (!req.file || !textSummary) {
-            //     return res.status(400).json({ message: "Form data and screenshot are required." });
-            // }
             const { textSummary, imageBase64, formData } = req.body;
         if (!textSummary || !imageBase64 || !formData) {
             return res.status(400).json({ message: "Form data and image are required." });
@@ -340,7 +333,7 @@ info@cleanARsolutions.ca
 
         // Construct email HTML with inline image
         const emailHtml = `
-            <h3>QuickQuote Form Submission</h3>
+            <h3>Form Submission</h3>
             <p>${textSummary}</p>
             <ul>
                 <li><strong>Name:</strong> ${name}</li>
@@ -349,7 +342,7 @@ info@cleanARsolutions.ca
                 <li><strong>Postal Code:</strong> ${postalcode}</li>
             </ul>                     
             <p><strong>Form Screenshot:</strong></p>
-            <img src="data:image/jpeg;base64,${jpegBase64}" alt="Quote Form Screenshot" style="max-width:100%; border:1px solid #ccc; border-radius:8px;">
+            <img src="data:image/jpeg;base64,${jpegBase64}" alt="Quote Form" style="max-width:100%; border:1px solid #ccc; border-radius:8px;">
         `;
 
             // const msg = {
@@ -360,7 +353,7 @@ info@cleanARsolutions.ca
             // }
             // Email content
         const msg = {
-            to: 'info@cleanARsolutions.ca',
+            to: ['info@cleanARsolutions.ca'],
             from: 'info@cleanARsolutions.ca',
             subject: "New Quote Submission",
             html: emailHtml
@@ -384,9 +377,36 @@ info@cleanARsolutions.ca
 
 
 
+    },
+    emailQuickNotePDF: async (req, res) => {
+        const { from, to, subject, html, attachments } = req.body;
+
+        const msg = {
+          to: to,
+          from: from,
+          subject: subject,
+          html: html,
+          attachments: attachments.map(attachment => ({
+            content: attachment.content,
+            filename: attachment.filename,
+            type: 'application/pdf',
+            disposition: 'attachment',
+            contentId: 'quickQuotePDF'
+          }))
+        };
+      
+        try {
+          await sgMail.send(msg);
+          console.log('Email sent successfully');
+          res.status(200).json({ message: 'Email sent successfully' });
+        } catch (error) {
+          console.error('Error sending email:', error);
+          if (error.response) {
+            console.error(error.response.body);
+          }
+          res.status(500).json({ message: 'Error sending email' });
+        }
     }
-
-
 
 };
 

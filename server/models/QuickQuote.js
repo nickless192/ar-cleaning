@@ -17,6 +17,7 @@ const dateFormat = require('../utils/dateFormat');
 // }, { _id: false });
 const CustomOptionsSchema = new Schema({
     service: { type: Schema.Types.Mixed, required: true }, // Mixed type to handle string, boolean, or other types
+    label: { type: String }
 });
 
 const ServiceSchema = new Schema({
@@ -59,9 +60,9 @@ const QuickQuoteSchema = new Schema({
         type: String,
         required: true
     },
-    description: {
-        type: String
-    },
+    // description: {
+    //     type: String
+    // },
     email: {
         type: String,
         // required: true,

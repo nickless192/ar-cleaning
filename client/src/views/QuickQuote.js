@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import {
@@ -24,7 +24,7 @@ import {
     FaQuestionCircle
 } from 'react-icons/fa';
 import html2canvas from 'html2canvas';
-
+import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 
 const QuickQuote = () => {
 
@@ -54,16 +54,24 @@ const QuickQuote = () => {
         phonenumber: false,
         description: false,
         companyName: false,
-        howDidYouHearAboutUs: false,
-        address: false,
-        city: false,
-        province: false,
         postalcode: false,
         services: false,
-        products: false
     });
 
     const [validPromoCode, setValidPromoCode] = useState(false);
+    const [isLogged] = useState(Auth.loggedIn());
+    const [openService, setOpenService] = useState(null);
+    const [isInitialLoad, setIsInitialLoad] = useState(true);
+    const [selectedService, setSelectedService] = useState("");
+    const [options, setOptions] = useState([]);
+
+    // Define services and their options
+    const serviceOptions = {
+        'Residential': ["House Cleaning", "Carpet Cleaning", "Move-In/Out Cleaning", "Residential Building Cleaning"],
+        'Commercial': ["Office Cleaning", "Industrial Cleaning", "Retail Cleaning"],
+        'Special Events': ["Event Cleaning", "Post-Construction Cleaning"],
+    };
+
     const togglePopover = (field) => {
         setPopoverOpen((prevState) => {
             // Reset all fields to false
@@ -77,76 +85,61 @@ const QuickQuote = () => {
         });
     };
 
-    const [isLogged] = useState(Auth.loggedIn());
-    const [openService, setOpenService] = useState(null);
-
-    const [isInitialLoad, setIsInitialLoad] = useState(true);
 
     useEffect(() => {
-        const prepopulateForm = async () => {
-            if (isLogged) {
-                const data = Auth.getProfile().data;
-                setFormData(prevFormData => ({
-                    ...prevFormData,
-                    name: data.firstName + " " + data.lastName,
-                    email: data.email,
-                    phonenumber: data.telephone,
-                    // howDidYouHearAboutUs: data.howDidYouHearAboutUs,
-                    // address: data.address,
-                    // city: data.city,
-                    // province: data.province,
-                    postalcode: data.postalcode,
-                    companyName: data.companyName,
-                    userId: data._id
-                }));
-            }
-        };
-        // Calculate subtotal, tax, and grand total whenever services change
-        const subtotalCost = formData.services.reduce((total, service) => {
-            const serviceCost = Object.values(service.customOptions || {}).reduce((sum, option) => {
-                if (option.service) {
-                    return sum + option.serviceCost;
-                }
-                return sum;
-            }, 0);
-            return total + serviceCost;
-        }, 0);
+        if (isInitialLoad) {
+            prepopulateForm();
+            setIsInitialLoad(false);
+        }
+        calculateTotals();
+        handleBodyClass();
+        return cleanupBodyClass;
+    }, [isLogged, formData.services, location.search]);
 
-        // Extract promoCode from the query string
+    const prepopulateForm = useCallback(() => {
+        if (isLogged) {
+            const data = Auth.getProfile().data;
+            setFormData(prev => ({
+                ...prev,
+                name: `${data.firstName} ${data.lastName}`,
+                email: data.email,
+                phonenumber: data.telephone,
+                postalcode: data.postalcode,
+                companyName: data.companyName,
+                userId: data._id
+            }));
+        }
+    }, [isLogged]);
+
+    const calculateTotals = useCallback(() => {
+        const subtotalCost = formData.services.reduce((total, service) => {
+            return total + Object.values(service.customOptions || {}).reduce((sum, option) => {
+                return sum + (option.service ? option.serviceCost : 0);
+            }, 0);
+        }, 0);
 
         const tax = subtotalCost * 0.13;
         const grandTotal = subtotalCost + tax;
 
-        if (isInitialLoad) {
-            // initializeServices();
-            prepopulateForm();
-            setIsInitialLoad(false);
-        }
-
-
-
-        // Update formData with calculated values
-        setFormData(prevFormData => ({
-            ...prevFormData,
+        setFormData(prev => ({
+            ...prev,
             subtotalCost,
             tax,
             grandTotal
         }));
+    }, [formData.services]);
 
 
-
-        // handlePromoCodeValidation();
+    const handleBodyClass = () => {
         document.body.classList.add("request-quote", "sidebar-collapse");
         document.documentElement.classList.remove("nav-open");
-        // window.scrollTo(0, 0);
+    };
 
-        return () => {
-            document.body.classList.remove("request-quote", "sidebar-collapse");
-        };
-    }, [isLogged, formData.services, location.search]);
+    const cleanupBodyClass = () => {
+        document.body.classList.remove("request-quote", "sidebar-collapse");
+    };
 
     const handleChange = (event) => {
-
         const { name, value } = event.target;
         // reset validation if promo code is changed
         if (name === 'promoCode') {
@@ -162,8 +155,6 @@ const QuickQuote = () => {
     const handleAddService = (e) => {
         const serviceType = e.target.value;
         console.log('serviceType:', serviceType);
-        // setSelectedService(selectedService.serviceType = serviceType);
-
         setFormData(prevFormData => {
             const service = {
                 type: serviceType,
@@ -175,77 +166,62 @@ const QuickQuote = () => {
                 services: [service]
             };
         });
-
-        // setFormData(prevFormData => {
-        //     const service = {
-        //         type: serviceType,
-        //         serviceLevel: '',
-        //         customOptions: {}
-        //     };
-        //     return {
-        //         ...prevFormData,
-        //         services: [service]
-
-        //     };
-        // });
         console.log('services:', formData.services);
-    };
-    const [selectedService, setSelectedService] = useState("");
-    const [options, setOptions] = useState([]);
-
-    // Define services and their options
-    const serviceOptions = {
-        'Residential': ["House Cleaning", "Carpet Cleaning", "Move-In/Out Cleaning", "Residential Building Cleaning"],
-        'Commercial': ["Office Cleaning", "Industrial Cleaning", "Retail Cleaning"],
-        'Special Events': ["Event Cleaning", "Post-Construction Cleaning"],
     };
 
     // Handle service selection
-    const handleServiceChange = (service) => {
+    const handleServiceChange = useCallback((service) => {
         setSelectedService(service);
         setOptions(serviceOptions[service] || []);
-        handleRemoveService();
-    };
+        setFormData(prev => ({ ...prev, services: [] }));
+    }, []);
 
-    const handleRemoveService = () => {
-        setFormData(prevFormData => ({
-            ...prevFormData,
-            services: []
-        }));
-    };
+    // const handleCustomOptionChange = (type, option, e, cost, label) => {
+    //     let value;
+    //     if (e.target.type === 'checkbox') {
+    //         value = e.target.checked;
+    //     } else {
+    //         value = e.target.value;
+    //     }
+    //     // const value = e.target.checked || e.target.value;
+    //     // console.log(e.target.value);
+    //     // console.log(e.target.checked);
+    //     // console.log("value: ", value);
+    //     console.log('option:', option);
+    //     setFormData(prevFormData => ({
+    //         ...prevFormData,
+    //         services: prevFormData.services.map(s =>
+    //             s.type === type
+    //                 ? {
+    //                     ...s,
+    //                     customOptions: {
+    //                         ...s.customOptions,
+    //                         [option]: value   // Group service and serviceCost
+    //                     }
+    //                 }
+    //                 : s
+    //         )
+    //     }));
+    // };
 
-    const handleCustomOptionChange = (type, option, e, cost, label) => {
-        let value;
-        if (e.target.type === 'checkbox') {
-            value = e.target.checked;
-        } else {
-            value = e.target.value;
-        }
-        // const value = e.target.checked || e.target.value;
-        // console.log(e.target.value);
-        // console.log(e.target.checked);
-        // console.log("value: ", value);
-        console.log('option:', option);
-        setFormData(prevFormData => ({
-            ...prevFormData,
-            services: prevFormData.services.map(s =>
-                s.type === type
-                    ? {
-                        ...s,
-                        // ...(option === "serviceLevel"
-                        //     ? { [option]: value }  // Add serviceLevel directly to the top level
-                        //     : {
-                        customOptions: {
-                            ...s.customOptions,
-                            [option]: value   // Group service and serviceCost
-                        }
-                        // }
-                        // )
+    const handleCustomOptionChange = useCallback((type, option, e, label) => {
+        let value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+        const ariaLabel = e.target.getAttribute('aria-label');
+        // console.log('value:', value);
+        setFormData(prev => ({
+            ...prev,
+            services: prev.services.map(s =>
+                s.type === type ? {
+                    ...s,
+                    customOptions: {
+                        ...s.customOptions,
+                        [option]: { service: value, label: ariaLabel }
                     }
+                }
                     : s
             )
         }));
-    };
+    }, []);
 
     const handlePromoCodeValidation = async (e) => {
         e.preventDefault();
@@ -264,11 +240,122 @@ const QuickQuote = () => {
         }
     };
 
+    const generatePDF = useCallback(async (formData) => {
+        const pdfDoc = await PDFDocument.create();
+        const page = pdfDoc.addPage([600, 800]);
+
+        const { width, height } = page.getSize();
+        const fontSize = 12;
+        let yPosition = height - 50;
+
+        // Function to add text to the PDF
+        const addText = async (text, x, y, size = fontSize) => {
+            page.drawText(text, {
+                x: x,
+                y: y,
+                size: size,
+                font: await pdfDoc.embedFont(StandardFonts.Helvetica),
+                color: rgb(0, 0, 0),
+            });
+        };
+
+        // Add title
+        await addText('Quote Submission Confirmation', 50, yPosition, 24);
+        yPosition -= 40;
+
+        // Add basic information
+        const basicInfo = [
+            `Name: ${formData.name}`,
+            `Email: ${formData.email}`,
+            `Phone Number: ${formData.phonenumber}`,
+            `Company: ${formData.companyName}`,
+            `Postal Code: ${formData.postalcode}`,
+            `Promo Code: ${formData.promoCode}`,
+        ];
+
+        for (const info of basicInfo) {
+            await addText(info, 50, yPosition);
+            yPosition -= 20;
+        }
+
+        yPosition -= 20;
+
+        // Add services
+        await addText('Services:', 50, yPosition, 18);
+        yPosition -= 30;
+
+        for (const [index, service] of formData.services.entries()) {
+            await addText(`${index + 1}. ${service.type}`, 50, yPosition, 16);
+            yPosition -= 20;
+
+            // Render custom options
+            if (service.customOptions) {
+                for (const [key, value] of Object.entries(service.customOptions)) {
+                    if (typeof value === 'object' && value !== null && value.service !== undefined) {
+                        // If value is an object, render its properties using the label
+                        await addText(`   - ${value.label || key}: ${value.service}`, 50, yPosition, 14);
+                        yPosition -= 20;
+                    }
+                }
+            }
+
+            yPosition -= 20;
+        }
+
+        // Add totals
+        // await addText('Totals:', 50, yPosition, 18);
+        // yPosition -= 30;
+
+        // const totals = [
+        //   `Subtotal: $${formData.subtotalCost.toFixed(2)}`,
+        //   `Tax: $${formData.tax.toFixed(2)}`,
+        //   `Grand Total: $${formData.grandTotal.toFixed(2)}`,
+        // ];
+
+        // for (const total of totals) {
+        //   await addText(total, 50, yPosition, 16);
+        //   yPosition -= 20;
+        // }
+
+        // Convert the PDF to base64 and send it in an email
+        const pdfBase64 = await pdfDoc.saveAsBase64();
+        await sendEmailWithPDF(formData.email, 'Your Quote Confirmation', pdfBase64);
+    }, []);
+
+    const sendEmailWithPDF = useCallback(async (to, subject, pdfBase64) => {
+        const mailOptions = {
+            from: 'info@cleanARsolutions.ca',
+            to: to,
+            subject: subject,
+            html: '<p>Please find your quote confirmation attached.</p>',
+            attachments: [{
+                filename: 'quote_confirmation.pdf',
+                content: pdfBase64,
+                encoding: 'base64'
+            }]
+        };
+
+        try {
+            const response = await fetch('/api/email/send-quick-quote-pdf', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(mailOptions)
+            });
+
+            if (response.ok) {
+                console.log('Email with PDF sent successfully!');
+            } else {
+                console.error('Error sending email with PDF');
+            }
+        } catch (error) {
+            console.error('Error sending email with PDF:', error);
+        }
+    }, []);
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Form data:', formData);
-
+        // console.log('Form data:', formData);
         let promoCodeIsValid = false;
 
         if (formData.promoCode !== "") {
@@ -278,45 +365,16 @@ const QuickQuote = () => {
             }
         }
 
-        // const promoCodeIsValid = await handlePromoCodeValidation(e);
-        // if (!validPromoCode) {
-        // }
-
         if (promoCodeIsValid || formData.promoCode === '') {
-            // const emailCheckbox = document.getElementById('emailCheckbox');
-            if (!formData.name || (!formData.email) || !formData.phonenumber || (!formData.services.length && !formData.products.length) || !formData.postalcode) {
-                // if (!formData.name || !formData.email || !formData.phonenumber || !formData.description || !formData.companyName || (!formData.services.length && !formData.products.length) || !formData.howDidYouHearAboutUs || !formData.subtotalCost || !formData.tax || !formData.grandTotal || !formData.address || !formData.city || !formData.province || !formData.postalcode) {
-                const missingFields = [];
-                if (!formData.name) missingFields.push('Full Name');
-                if (!formData.email) missingFields.push('Email');
-                if (!formData.phonenumber) missingFields.push('Phone Number');
-                // if (!formData.description) missingFields.push('Description');
-                // if (!formData.address) missingFields.push('Address');
-                // if (!formData.city) missingFields.push('City');
-                // if (!formData.province) missingFields.push('Province');
-                if (!formData.postalcode) missingFields.push('Postal Code');
-                if (!formData.services.length && !formData.products.length) missingFields.push('Services or Products');
-                // if (!formData.subtotalCost) missingFields.push('Subtotal Cost');
-                // if (!formData.tax) missingFields.push('Tax');
-                // if (!formData.grandTotal) missingFields.push('Grand Total');
-
-                if (missingFields.length > 0) {
-                    alert(`Please fill out all required fields: ${missingFields.join(', ')}`);
-                    return;
-                }
+            if (!validateForm()) {
                 return;
             }
-            // const isServiceLevelFilled = formData.services.every(service => service.serviceLevel);
-            // const isCustomOptionsFilled = formData.services.every(service =>
-            //     service.customOptions &&
-            //     (service.customOptions.squareFootage) &&
-            //     service.customOptions.squareFootage.service
-            // );
 
             // Purge customOptions that don't have a service
             const sanitizedServices = formData.services.map(service => {
                 if (service.customOptions) {
                     const sanitizedOptions = Object.keys(service.customOptions)
+                        // .filter(option => service.customOptions.service[option])
                         .filter(option => service.customOptions[option].service)
                         .reduce((acc, option) => {
                             acc[option] = service.customOptions[option];
@@ -327,23 +385,21 @@ const QuickQuote = () => {
                 return service;
             });
 
+            // console.log('Sanitized services:', sanitizedServices);
+            // Capture screenshot of the form
             const serviceSelectionForm = document.getElementById("service-selection");
-
+            const canvas = await html2canvas(serviceSelectionForm);
+            const imageBase64 = canvas.toDataURL("image/png").split(",")[1]; // PNG format
             // Extract form values
-            const serviceSelectionFormText = new FormData(serviceSelectionForm);
-            let textSummary = "";
-            for (let [key, value] of serviceSelectionFormText.entries()) {
-                const placeholder = serviceSelectionForm.querySelector(`[name="${key}"]`)?.placeholder || key;
-                textSummary += `<strong>${placeholder}:</strong> ${value}<br>`;
-            }
-            
-            console.log(textSummary);
+            const textSummary = getTextSummary(serviceSelectionForm);
 
             const updatedFormData = {
                 ...formData,
                 // serviceSelectionForm,
                 services: sanitizedServices
             };
+
+            // console.log('Updated form data:', updatedFormData);
 
             try {
                 const response = await fetch('/api/quotes/quickquote', {
@@ -356,489 +412,447 @@ const QuickQuote = () => {
                 });
 
                 if (response.ok) {
-                    alert('Quote submitted successfully!');
+                    alert(`Quote submitted successfully! We'll be in touch shortly to discuss your needs. In the meantime, feel free to browse our services.`);
                     // disable for testing
-                    setFormData({
-                        name: '',
-                        companyName: '',
-                        email: '',
-                        phonenumber: '',
-                        postalcode: '',
-                        promoCode: '',
-                        services: [],
-                        products: [],
-                        // serviceLevel: '' // Reset service level
-                    });
-
-                    // const quoteResponse = await response.json();
-                    // // if (!emailCheckbox.checked) {
-                    // const emailResponse = await fetch('/api/email/quick-quote', {
-                    //     method: 'POST',
-                    //     headers: {
-                    //         'Content-Type': 'application/json',
-                    //         Accept: 'application/json'
-                    //     },
-                    //     body: JSON.stringify({ email: formData.email, quote: quoteResponse })
-                    // });
-
-                    // if (emailResponse.ok) {
-                    //     alert('Email confirmation sent successfully!');
-                    //     console.log('Email sent successfully!');
-                    // } else {
-                    //     alert('Error sending email');
-                    // }
-                    
+                    resetForm();
                     navigate('/index');
+                    // Generate and download the PDF
+                    await generatePDF(updatedFormData);
                 }
             } catch (error) {
                 console.error('Error submitting quote:', error);
                 alert('Error submitting quote, please ensure all fields are filled out correctly. If the problem persists, please contact us directly with a description of the issue.');
             }
 
-            // html2canvas(serviceSelectionForm).then(canvas => {
-            //     canvas.toBlob(async (blob) => {
-            //         const imageBase64 = canvas.toDataURL("image/png").split(",")[1]; // Get Base64 data (remove prefix)
 
-            //         const formData = new FormData();
-            //         formData.append("textSummary", textSummary); // Send text version too
-            //         // formData.append("screenshot", blob, "quote-form.png");
-            //         formData.append("imageBase64", imageBase64); // Send Base64 image
-        
-            //         const response = await fetch("/api/email/quick-quote", {
-            //             method: "POST",
-            //             body: formData
-            //         });
-        
-            //         const data = await response.json();
-            //         alert(data.message);
-            //     });
-            // });
+            console.log(textSummary);
 
-                // Capture screenshot of the form
-    const canvas = await html2canvas(serviceSelectionForm);
-    const imageBase64 = canvas.toDataURL("image/png").split(",")[1]; // PNG format
+            const payload = { textSummary, imageBase64, formData: updatedFormData };
 
-    const payload = { textSummary, imageBase64, formData: updatedFormData };
-
-        // Send form data and image to the backend
-        fetch("/api/email/quick-quote", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-        })
-        .then(response => response.json())
-        .then(data => console.log("Success:", data))
-        .catch(error => console.error("Error:", error));
+            // Send form data and image to the backend
+            fetch("/api/email/quick-quote", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+            })
+                .then(response => response.json())
+                .then(data => console.log("Success:", data))
+                .catch(error => console.error("Error:", error));
 
         }
-        else {
-            alert('Invalid promo code. Please review your code and try again. If you do not have a promo code, please leave the field blank.');
+    };
+
+    const validateForm = () => {
+        const requiredFields = ['name', 'email', 'phonenumber', 'postalcode'];
+        const missingFields = requiredFields.filter(field => !formData[field]);
+
+        if (formData.services.length === 0 && formData.products.length === 0) {
+            missingFields.push('Services or Products');
         }
 
+        if (missingFields.length > 0) {
+            alert(`Please fill out all required fields: ${missingFields.join(', ')}`);
+            return false;
+        }
+        return true;
+    };
 
+    const resetForm = () => {
+        setFormData({
+            name: '',
+            companyName: '',
+            email: '',
+            phonenumber: '',
+            postalcode: '',
+            promoCode: '',
+            services: [],
+            products: [],
+        });
+        setSelectedService("");
+        setOptions([]);
+        
+    };
+
+    const getTextSummary = (form) => {
+        const formData = new FormData(form);
+        console.log('formData:', formData);
+        let textSummary = "";
+        for (let [key, value] of formData.entries()) {
+            console.log(key, value);
+            const placeholder = form.querySelector(`[name="${key}"]`)?.placeholder || key;
+            textSummary += `<strong>${placeholder}:</strong> ${value}<br>`;
+        }
+        return textSummary;
     };
 
 
-    const renderCustomOptions = (type, serviceLevel) => {
+    const renderCustomOptions = (type) => {
         switch (type) {
-            case 'House Cleaning': {
+            case 'House Cleaning':
+            case 'Move-In/Out Cleaning': {
                 return (
                     <>
-                        <Row>
-                            <Col>
-                                <Label>Frequency Of Cleaning</Label>
+                        <Row className="mb-3">
+                            <Col md={6} xs={12}>
+                                <Form.Group controlId={`frequency-${type}`}>
+                                    <Form.Label className="text-bold">Frequency of Cleaning</Form.Label>
+                                    <Form.Select
+                                        aria-label="Frequency of Cleaning"
+                                        className="transparent"
+                                        onChange={(e) => handleCustomOptionChange(type, 'frequency', e)}
+                                        value={formData.services.find(s => s.type === type)?.customOptions?.frequency?.service || ''}
+                                    >
+                                        <option value="">Select Frequency...</option>
+                                        <option value="One Time">One Time</option>
+                                        <option value="Weekly">Weekly</option>
+                                        <option value="Bi-Weekly">Bi-Weekly</option>
+                                        <option value="Monthly">Monthly</option>
+                                        <option value="Other">Other</option>
+                                    </Form.Select>
+                                </Form.Group>
                             </Col>
-                            <Col>
-                                <select aria-label="Frequency of Cleaning" className="transparent" onChange={(e) => handleCustomOptionChange(type, 'frequency', e)}>
-                                    <option value="">Frequency of Cleaning...</option>
-                                    <option value="One Time">One Time</option>
-                                    <option value="Weekly">Weekly</option>
-                                    <option value="Bi-Weekly">Bi-Weekly</option>
-                                    <option value="Monthly">Monthly</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <Label>Number of Bedrooms</Label>
-                            </Col>
-                            <Col>
-                                <select aria-label="Number of Bedrooms" className="transparent" onChange={(e) => handleCustomOptionChange(type, 'bedrooms', e)}>
-                                    <option value="">Number of Bedrooms...</option>
-                                    <option value="0">0</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5+</option>
-                                </select>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <Label>Number of Bathrooms</Label>
-                            </Col>
-                            <Col>
-                                <select aria-label="Number of Bathrooms" className="transparent" onChange={(e) => handleCustomOptionChange(type, 'bathrooms', e)}>
-                                    <option value="">Number of Bathrooms...</option>
-                                    <option value="0">0</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5+</option>
-                                </select>
+                            <Col md={6} xs={12}>
+                                <Form.Group controlId={`unitSize-${type}`}>
+                                    <Form.Label className="text-bold">Unit Size</Form.Label>
+                                    <Form.Select
+                                        aria-label="Unit Size"
+                                        className="transparent"
+                                        onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e)}
+                                        value={formData.services.find(s => s.type === type)?.customOptions?.squareFootage?.service || ''}
+                                    >
+                                        <option value="">Select Unit Size...</option>
+                                        <option value="0-499 sqft">0-499 sqft</option>
+                                        <option value="500-999 sqft">500-999 sqft</option>
+                                        <option value="1000-1499 sqft">1000-1499 sqft</option>
+                                        <option value="1500-1999 sqft">1500-1999 sqft</option>
+                                        <option value="2000+ sqft">2000+ sqft</option>
+                                    </Form.Select>
+                                </Form.Group>
                             </Col>
                         </Row>
-                        <Row>
-                            <Col>
-                                <Label>Unit Size</Label>
+                        <Row className="mb-3">
+                            <Col md={6} xs={12}>
+                                <Form.Group controlId={`bedrooms-${type}`}>
+                                    <Form.Label className="text-bold">Number of Bedrooms</Form.Label>
+                                    <Form.Select
+                                        aria-label="Number of Bedrooms"
+                                        className="transparent"
+                                        onChange={(e) => handleCustomOptionChange(type, 'bedrooms', e)}
+                                        value={formData.services.find(s => s.type === type)?.customOptions?.bedrooms?.service || ''}
+                                    >
+                                        <option value="">Select Number of Bedrooms...</option>
+                                        {Array.from({ length: 6 }, (_, i) => (
+                                            <option key={i} value={i.toString()}>{i === 5 ? '5+' : i}</option>
+                                        ))}
+                                    </Form.Select>
+                                </Form.Group>
                             </Col>
-                            <Col>
-                                <select aria-label="Unit Size" className="transparent" onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e)}>
-                                    <option value="">Unit Size...</option>
-                                    <option value="0-499 sqft">0-499 sqft</option>
-                                    <option value="500-999 sqft">500-999 sqft</option>
-                                    <option value="1000-1499 sqft">1000-1499 sqft</option>
-                                    <option value="1500-1999 sqft">1500-1999 sqft</option>
-                                    <option value="2000+ sqft">2000+ sqft</option>
-                                </select>
+                            <Col md={6} xs={12}>
+                                <Form.Group controlId={`bathrooms-${type}`}>
+                                    <Form.Label className="text-bold">Number of Bathrooms</Form.Label>
+                                    <Form.Select
+                                        aria-label="Number of Bathrooms"
+                                        className="transparent"
+                                        onChange={(e) => handleCustomOptionChange(type, 'bathrooms', e)}
+                                        value={formData.services.find(s => s.type === type)?.customOptions?.bathrooms?.service || ''}
+                                    >
+                                        <option value="">Select Number of Bathrooms...</option>
+                                        {Array.from({ length: 6 }, (_, i) => (
+                                            <option key={i} value={i.toString()}>{i === 5 ? '5+' : i}</option>
+                                        ))}
+                                    </Form.Select>
+                                </Form.Group>
                             </Col>
                         </Row>
+                        {type === 'House Cleaning' && (
+                            <Row className="mb-3">
+                                <Col>
+                                    <Form.Group controlId={`additionalOptions-${type}`}>
+                                        <Form.Label className="text-bold">Additional Options</Form.Label>
+                                        <Label check>
+                                            <Input
+                                                type="checkbox"
+                                                onChange={(e) => handleCustomOptionChange(type, 'deepCleaning', e)}
+                                                checked={formData.services.find(s => s.type === type)?.customOptions?.deepCleaning?.service || false}
+                                            />
+                                            <span className="form-check-sign"></span>
+                                            Deep Cleaning
+                                        </Label>
+                                        <Label check>
+                                            <Input
+                                                type="checkbox"
+                                                onChange={(e) => handleCustomOptionChange(type, 'windowCleaning', e)}
+                                                checked={formData.services.find(s => s.type === type)?.customOptions?.windowCleaning?.service || false}
+                                            />
+                                            <span className="form-check-sign"></span>
+                                            Window Cleaning
+                                        </Label>
+                                        <Label check>
+                                            <Input
+                                                type="checkbox"
+                                                onChange={(e) => handleCustomOptionChange(type, 'laundryService', e)}
+                                                checked={formData.services.find(s => s.type === type)?.customOptions?.laundryService?.service || false}
+                                            />
+                                            <span className="form-check-sign"></span>
+                                            Laundry Service
+                                        </Label>
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                        )}
                     </>
                 );
             }
             case 'Carpet Cleaning': {
                 return (
                     <>
-
-                    </>
-                );
-            }
-            case 'Move-In/Out Cleaning': {
-                return (
-                    <>
-                        {/* <Row className='g-2 px-1'>
-                            <Col md='2' xs='6'> */}
-                        <FloatingLabel controlId="floatingUnitSize" label="Unit Size" >
-                            <Form.Select aria-label="Unit Size" className="transparent" onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e)}>
-                                <option value="">Unit Size...</option>
-                                <option value="0-499 sqft">0-499 sqft</option>
-                                <option value="500-999 sqft">500-999 sqft</option>
-                                <option value="1000-1499 sqft">1000-1499 sqft</option>
-                                <option value="1500-1999 sqft">1500-1999 sqft</option>
-                                <option value="2000+ sqft">2000+ sqft</option>
-                            </Form.Select>
-                        </FloatingLabel>
-                        {/* </Col>
-                            <Col md='2' xs='6'> */}
-                        <FloatingLabel controlId="floatingBedrooms" label="Number of Bedrooms">
-                            <Form.Select aria-label="Number of Bedrooms" className="transparent" onChange={(e) => handleCustomOptionChange(type, 'bedrooms', e)}>
-                                <option value="">Number of Bedrooms...</option>
-                                <option value="0">0</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5+</option>
-                            </Form.Select>
-                        </FloatingLabel>
-                        {/* </Col>
-                            <Col md='2' xs='6'> */}
-                        <FloatingLabel controlId="floatingBathrooms" label="Number of Bathrooms">
-                            <Form.Select aria-label="Number of Bathrooms" className="transparent" onChange={(e) => handleCustomOptionChange(type, 'bathrooms', e)}>
-                                <option value="">Number of Bathrooms...</option>
-                                <option value="0">0</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5+</option>
-                            </Form.Select>
-                        </FloatingLabel>
-                        {/* </Col>
-                        </Row> */}
-                    </>
-                );
-            }
-            case 'Residential Building Cleaning': {
-                // for this one, the message is to send us an email
-                return (
-                    <>
-                        {/* <Row className='g-2 px-1'>
-                            <Col md='2' xs='6'> */}
-                        {/* send us an email */}
-
-                        <p className=''>Provide a description of the services you require. We will be in touch shortly to schedule a consultation.</p>
-                        <FloatingLabel controlId="floatingDescription" label="Description*" className=''>
-                            <Form.Control
-                                as="textarea"
-                                placeholder="Description"
-                                className='text-cleanar-color text-bold description-textarea'
-                                name="description"
-                                value={formData.services.find(s => s.type === type)?.customOptions?.description || ''}
-                                onChange={(e) => handleCustomOptionChange(type, 'description', e)}
-                            />
-                        </FloatingLabel>
-                        {/* </Col>
-                        </Row> */}
+                        <Row className="mb-3">
+                            <Col>
+                                <Form.Group controlId={`carpetType-${type}`}>
+                                    <Form.Label className="text-bold">Type of Carpet</Form.Label>
+                                    <Form.Select
+                                        aria-label="Type of Carpet"
+                                        className="transparent"
+                                        onChange={(e) => handleCustomOptionChange(type, 'carpetType', e)}
+                                        value={formData.services.find(s => s.type === type)?.customOptions?.carpetType?.service || ''}
+                                    >
+                                        <option value="">Select Carpet Type...</option>
+                                        <option value="Wool">Wool</option>
+                                        <option value="Nylon">Nylon</option>
+                                        <option value="Polyester">Polyester</option>
+                                        <option value="Olefin">Olefin</option>
+                                        <option value="Other">Other</option>
+                                    </Form.Select>
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                        <Row className="mb-3">
+                            <Col>
+                                <Form.Group controlId={`carpetArea-${type}`}>
+                                    <Form.Label className="text-bold">Carpet Area (sqft)</Form.Label>
+                                    <Form.Control
+                                        type="number"
+                                        aria-label="Carpet Area"
+                                        placeholder="Enter carpet area in square feet"
+                                        className="text-cleanar-color text-bold"
+                                        onChange={(e) => handleCustomOptionChange(type, 'carpetArea', e)}
+                                        value={formData.services.find(s => s.type === type)?.customOptions?.carpetArea?.service || ''}
+                                    />
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                        <Row className="mb-3">
+                            <Col>
+                                <Form.Group controlId={`stains-${type}`}>
+                                    <Form.Label className="text-bold">Stains or Spots</Form.Label>
+                                    <Form.Select
+                                        aria-label="Stains or Spots"
+                                        className="transparent"
+                                        onChange={(e) => handleCustomOptionChange(type, 'stains', e)}
+                                        value={formData.services.find(s => s.type === type)?.customOptions?.stains?.service || ''}
+                                    >
+                                        <option value="">Select Stain Level...</option>
+                                        <option value="None">None</option>
+                                        <option value="Light">Light</option>
+                                        <option value="Moderate">Moderate</option>
+                                        <option value="Heavy">Heavy</option>
+                                    </Form.Select>
+                                </Form.Group>
+                            </Col>
+                        </Row>
                     </>
                 );
             }
             default:
                 return (
-                    <>
-                        {/* <Row className='g-2 px-1'>
-                        <Col md='2' xs='6'> */}
-                        {/* <p className='text-bold'>Send us an email</p> */}
-                        {/* <p className=''>Description.</p> */}
-                        <FormGroup>
-                            <Label className='text-bold'>Description*</Label>
-                            <Input
-                                type="textarea"
-                                name="description"
-                                placeholder='Provide a description of the services you require. We will be in touch shortly to schedule a consultation.'
-                                value={formData.description}
-                                onChange={(e) => handleCustomOptionChange(type, 'description', e, 0, "description")}
-                                className='text-cleanar-color text-bold'
-                            />
-
-                        </FormGroup>
-                        {/* </Col>
-                    </Row> */}
-                    </>
+                    <Form.Group controlId={`description-${type}`} className="mb-3">
+                        <Form.Label className="text-bold">Description*</Form.Label>
+                        <Form.Control
+                            as="textarea"
+                            placeholder="Provide a description of the services you require. We will be in touch shortly to schedule a consultation."
+                            value={formData.services.find(s => s.type === type)?.customOptions?.description?.service || ''}
+                            onChange={(e) => handleCustomOptionChange(type, 'description', e)}
+                            className="text-cleanar-color text-bold"
+                        />
+                    </Form.Group>
                 );
+        }
+
+    };
+
+    const getTooltipText = (name) => {
+        switch (name) {
+            case 'name':
+                return 'Enter your full name.';
+            case 'email':
+                return 'Enter your email address.';
+            case 'phonenumber':
+                return 'Enter your phone number.';
+            case 'companyName':
+                return 'Enter your company name.';
+            case 'postalcode':
+                return 'Enter your postal code.';
+            case 'promoCode':
+                return 'Enter your promo code. Discount will be reflected on the quote if eligible. Promos cannot be combined.';
+            default:
+                return '';
         }
     };
 
-    const handleEmailCheckbox = (e) => {
-        if (e.target.checked) {
-            // disable the email field
-            document.getElementById('floatingEmail').disabled = true;
-            // set the email field to blank
-            setFormData(prevFormData => ({ ...prevFormData, email: '' }));
-        }
-        else {
-            document.getElementById('floatingEmail').disabled = false;
-        }
-    }
 
+    // const handleEmailCheckbox = (e) => {
+    //     if (e.target.checked) {
+    //         // disable the email field
+    //         document.getElementById('floatingEmail').disabled = true;
+    //         // set the email field to blank
+    //         setFormData(prevFormData => ({ ...prevFormData, email: '' }));
+    //     }
+    //     else {
+    //         document.getElementById('floatingEmail').disabled = false;
+    //     }
+    // }
 
     return (
         <>
             <Container className="quick-quote-container">
-                <h2 className="pt-3 primary-color text-bold">Obtain a Service Estimate</h2>
-                <Form onSubmit={handleSubmit} id="quote-form" >
+                <Helmet>
+                    <title>Quick Quote - CleanAR Solutions</title>
+                    <meta name="description" content="Get a quick service estimate from CleanAR Solutions. Fill out our form to receive a personalized quote for your cleaning needs." />
+                </Helmet>
+                {/* <h2 className="primary-color text-bold">Obtain a Service Estimate</h2> */}
+                <h2 className="text-center mb-4 primary-color text-bold">Obtain a Service Estimate</h2>
+                <Form onSubmit={handleSubmit} id="quote-form" className="p-1">
                     <Form.Group className="mb-1">
                         <Row>
-                            <Col md='2' xs='6'>
-                                <Form.Label className='text-bold'>Name*</Form.Label> <FaQuestionCircle id="Tooltip1" tabIndex='-1'
-                                    // color="link"    
-                                    // className='primary-bg-color'                                 
-                                    onClick={() => togglePopover('name')} />
-                                <Popover placement="right" isOpen={popoverOpen.name} target="Tooltip1" toggle={() => togglePopover('name')}>
-                                    <PopoverBody>Enter your full name.</PopoverBody>
-                                </Popover>
-                            </Col>
-                            <Col md='2' xs='6'>
-                                <Form.Control
-                                    type="text"
-                                    id="floatingFullName"
-                                    placeholder="Full Name"
-                                    className='text-cleanar-color text-bold form-input'
-                                    name="name"
-                                    value={formData.name}
-                                    onChange={handleChange}
-                                />
-                            </Col>
-                            <Col md='2' xs='6'>
-                                <Form.Label className='text-bold'>Email*</Form.Label> <FaQuestionCircle id="Tooltip2" onClick={() => togglePopover('email')} />
-                                <Popover placement="right" isOpen={popoverOpen.email} target="Tooltip2" toggle={() => togglePopover('email')}>
-                                    <PopoverBody>Enter your email address.</PopoverBody>
-                                </Popover>
-                            </Col>
-                            <Col md='2' xs='6'>
-                                <Form.Control
-                                    type="text"
-                                    id="floatingEmail"
-                                    placeholder="Email"
-                                    className='text-cleanar-color text-bold form-input'
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                />
-                                {/* add a checkbox and if enabled, the email field will be disabled. but only for logged in admins */}
-                                {(isLogged === true && Auth.getProfile().data.adminFlag === true) ?
-                                    (<>
-                                        <Form.Check type="checkbox" id="emailCheckbox" label="Disable email field" onChange={(e) => handleEmailCheckbox(e)} />
-                                    </>)
-                                    : null}
-                            </Col>
-                            <Col md='2' xs='6'>
-                                <Form.Label className='text-bold'>Phone No*</Form.Label><FaQuestionCircle id="Tooltip3" onClick={() => togglePopover('phonenumber')} />
-                                <Popover placement="right" isOpen={popoverOpen.phonenumber} target="Tooltip3" toggle={() => togglePopover('phonenumber')}>
-                                    <PopoverBody>Enter your phone number.</PopoverBody>
-                                </Popover>
-                            </Col>
-                            <Col md='2' xs='6'>
-                                <Form.Control
-                                    type="text"
-                                    id="floatingPhoneNumber"
-                                    placeholder="Phone Number"
-                                    className='text-cleanar-color text-bold form-input'
-                                    name="phonenumber"
-                                    value={formData.phonenumber}
-                                    onChange={handleChange}
-                                />
-                            </Col>
-                        </Row>
-                    </Form.Group>
-                    <Form.Group className="mb-1">
-                        <Row>
-                            <Col md='2' xs='6'>
-                                <Form.Label className='text-bold'>Company</Form.Label>
-                                <FaQuestionCircle id="companyNameTooltip" onClick={() => togglePopover('companyName')} />
-                                <Popover placement="right" isOpen={popoverOpen.companyName} target="companyNameTooltip" toggle={() => togglePopover('companyName')}>
-                                    <PopoverBody>Enter your company name.</PopoverBody>
-                                </Popover>
-
-                            </Col>
-                            <Col md='2' xs='6'>
-
-                                <Form.Control
-                                    type="text"
-                                    id="floatingCompanyName"
-                                    placeholder="Company Name"
-                                    className='text-cleanar-color text-bold form-input'
-                                    name="companyName"
-                                    value={formData.companyName}
-                                    onChange={handleChange}
-                                />
-                            </Col>
-                            <Col md='2' xs='6'>
-                                <Form.Label className='text-bold'>Postal Code*</Form.Label>
-                                <FaQuestionCircle id="Tooltip7" onClick={() => togglePopover('postalcode')} />
-                                <Popover placement="right" isOpen={popoverOpen.postalcode} target="Tooltip7" toggle={() => togglePopover('postalcode')}>
-                                    <PopoverBody>Enter your postal code.</PopoverBody>
-                                </Popover>
-                            </Col>
-                            <Col md='2' xs='6'>
-
-                                <Form.Control
-                                    type="text"
-                                    id="floatingPostalCode"
-                                    placeholder="Postal Code"
-                                    className='text-cleanar-color text-bold form-input'
-                                    name="postalcode"
-                                    value={formData.postalcode}
-                                    onChange={handleChange}
-                                />
-                            </Col>
-                            <Col md='2' xs='6'>
-
-                                <Form.Label className='text-bold'>Promo Code</Form.Label>
-                                <FaQuestionCircle id="Tooltip10" onClick={() => togglePopover('promoCode')} />
-                                <Popover placement="right" isOpen={popoverOpen.promoCode} target="Tooltip10" toggle={() => togglePopover('promoCode')}>
-                                    <PopoverBody>Enter your promo code. Discount will be reflected on the quote if eligible. Promos cannot be combined.</PopoverBody>
-                                </Popover>
-                            </Col>
-                            <Col md='2' xs='6'>
-
-                                <Form.Control
-                                    type="text"
-                                    id="promoCode"
-                                    placeholder="Promo Code"
-                                    className='text-cleanar-color text-bold form-input'
-                                    name="promoCode"
-                                    value={formData.promoCode}
-                                    onChange={handleChange}
-                                />
-                            </Col>
-                        </Row>
-                    </Form.Group>
-                    <Label className='text-cleanar-color text-bold'>Add Service Required*: </Label>{' '}
-                    <FaQuestionCircle id="Tooltip11" tabIndex='-1' onClick={() => togglePopover('services')} />
-                    {/* <Button id="Tooltip11" type="button" tabIndex='-1' onClick={() => togglePopover('services')} className='primary-bg-color btn-round btn-icon'><FaQuestionCircle /></Button> */}
-                    <Popover placement="right" isOpen={popoverOpen.services} target="Tooltip11" toggle={() => togglePopover('services')}>
-                        <PopoverBody>Please add service type and level to customize your order</PopoverBody>
-                    </Popover>
-                    <Form id="service-selection">
-                    <Row>
-                        <Col md='3' xs='3'>
-                            <div className="radio-group">
-                                {Object.keys(serviceOptions).map((service) => (
-                                    <label key={service} className="radio-label">
-                                        <input
-                                            type="radio"
-                                            name="serviceType"
-                                            placeholder='Service Type'
-                                            value={service}
-                                            checked={selectedService === service}
-                                            onChange={() => handleServiceChange(service)}
+                            {[
+                                { label: 'Name', name: 'name', placeholder: 'Full Name', required: true },
+                                { label: 'Email', name: 'email', placeholder: 'Email', required: true },
+                                { label: 'Phone No', name: 'phonenumber', placeholder: 'Phone Number', required: true },
+                                { label: 'Company', name: 'companyName', placeholder: 'Company Name' },
+                                { label: 'Postal Code', name: 'postalcode', placeholder: 'Postal Code', required: true },
+                                { label: 'Promo Code', name: 'promoCode', placeholder: 'Promo Code' }
+                            ].map(({ label, name, placeholder, required }) => (
+                                <Col key={name} md={4} xs={12} className="mb-2">
+                                    <Form.Label className="text-bold mb-1">
+                                        {label}{required && '*'}
+                                        <FaQuestionCircle
+                                            id={`${name}Tooltip`}
+                                            className="ms-1"
+                                            onClick={() => togglePopover(name)}
                                         />
-                                        {service}
-                                    </label>
-                                ))}
-                            </div>
-                        </Col>
-                        <Col md='4' xs='4'>
-                            {/* Options for Selected Service */}
-                            {/* <label>Choose a Service:</label> */}
-                            {selectedService && (
-                                <div className="options-selection">
-                                    <div className="radio-group">
-                                        {options.map((option) => (
-                                            <label key={option} className="radio-label">
-                                                <input type="radio" name="serviceOption"
-                                                placeholder='Service Option'
-                                                key={option} value={option} onChange={handleAddService} />
-                                                {option}
-                                            </label>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-                        </Col>
-                        <Col md='4' xs='4'>
-                            {/* add code to render options based on the serviceOption selected  */}
-                            {formData.services.map(service => (
-                                <>
-                                    {/* <div id={service.type} */}
-                                    {/* className={`service-section-${service.type.toLowerCase().replace(" ", "-")} `}> */}
-                                    {/* {renderCustomOptions(service.type, service.customOptions.serviceLevel)} */}
-                                    {renderCustomOptions(service.type, service.serviceLevel)}
-                                    {/* </div> */}
-                                </>
+                                        <Popover
+                                            placement="top"
+                                            isOpen={popoverOpen[name]}
+                                            target={`${name}Tooltip`}
+                                            toggle={() => togglePopover(name)}
+                                        >
+                                            <PopoverBody>{getTooltipText(name)}</PopoverBody>
+                                        </Popover>
+                                    </Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        id={`floating${label.replace(' ', '')}`}
+                                        placeholder={placeholder}
+                                        className="text-cleanar-color text-bold form-input"
+                                        name={name}
+                                        value={formData[name]}
+                                        onChange={handleChange}
+                                        required={required}
+                                    />
+                                </Col>
                             ))}
-                        </Col>
-                        <Col md='6' xs='6'>
-                        </Col>
-                    </Row>                  
-                    </Form> 
+                        </Row>
+                    </Form.Group>
+                    <Form.Group className="mb-3">
+                        <Form.Label className="text-bold mb-1">
+                            Add Service Required*
+                            <FaQuestionCircle
+                                id="servicesTooltip"
+                                className="ms-1"
+                                onClick={() => togglePopover('services')}
+                            />
+                            <Popover
+                                placement="top"
+                                isOpen={popoverOpen.services}
+                                target="servicesTooltip"
+                                toggle={() => togglePopover('services')}
+                            >
+                                <PopoverBody>Please add service type and level to customize your order</PopoverBody>
+                            </Popover>
+                        </Form.Label>
+                    </Form.Group>
+                    <Form id="service-selection">
+                        <Row>
+                            <Col md={4} xs={12} className="mb-3">
+                                <div className="radio-group">
+                                    {Object.keys(serviceOptions).map((service) => (
+                                        <label key={service} className="radio-label d-block mb-2">
+                                            <input
+                                                type="radio"
+                                                name="serviceType"
+                                                value={service}
+                                                checked={selectedService === service}
+                                                onChange={() => handleServiceChange(service)}
+                                                className="me-2"
+                                            />
+                                            {service}
+                                        </label>
+                                    ))}
+                                </div>
+                            </Col>
+                            <Col md={4} xs={12} className="mb-3">
+                                {selectedService && (
+                                    <div className="options-selection">
+                                        <div className="radio-group">
+                                            {options.map((option) => (
+                                                <label key={option} className="radio-label d-block mb-2">
+                                                    <input
+                                                        type="radio"
+                                                        name="serviceOption"
+                                                        value={option}
+                                                        onChange={handleAddService}
+                                                        className="me-2"
+                                                    />
+                                                    {option}
+                                                </label>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </Col>
+                            <Col md={4} xs={12}>
+                                {formData.services.map((service, index) => (
+                                    <div key={index} className="mb-3">
+                                        {/* <Button
+                                            variant="link"
+                                            className="text-cleanar-color text-bold p-0"
+                                            onClick={() => handleToggle(service.type)}
+                                        >
+                                            {service.type}
+                                            {openService === service.type ? <FaChevronUp className="ms-2" /> : <FaChevronDown className="ms-2" />}
+                                        </Button> */}
+                                        {/* <Collapse in={openService === service.type}> */}
+                                            <div>
+                                                {renderCustomOptions(service.type)}
+                                            </div>
+                                        {/* </Collapse> */}
+                                    </div>
+                                ))}
+                            </Col>
+                        </Row>
+                    </Form>
                     <Row>
                         <Col>
                             <p className='primary-color text-bold pt-2'>
                                 A confirmation email will be sent to you upon submission. Our team will review your request and get back to you as soon as possible. Thank you for choosing CleanAR Solutions!
                             </p>
-                            {/* <FormGroup check className=''>
-                                        <Label check>
-                                            <Input
-                                                type="checkbox"
-                                                checked={sendEmail}
-                                                onChange={() => setSendEmail(!sendEmail)}
-                                            />
-                                            <span className="form-check-sign"></span>
-                                            {/* Check if you would like to receive a copy of the quote by email 
-                                            An email confirmation will be sent to you upon submission
-                                        </Label>
-                                    </FormGroup> */}
-
                         </Col>
                     </Row>
                     <Row className='pb-3'>
                         <Col md className="">
                             <Button type="submit" className='secondary-bg-color'>Submit Quote</Button>
+                        </Col>
+                        <Col md className="">
                             <Button onClick={() => setFormData({
                                 name: '',
                                 companyName: '',

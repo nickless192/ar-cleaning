@@ -1,7 +1,7 @@
 const express = require('express');
 // const multer = require('multer');
 // const upload = multer({ storage: multer.memoryStorage() });
-const { emailQuote, emailQuoteNotification, emailNewUser, emailNewUserNotification, emailPasswordResetRequest, emailQuickQuote } = require('../../controllers/emailController');
+const { emailQuote, emailQuoteNotification, emailNewUser, emailNewUserNotification, emailPasswordResetRequest, emailQuickQuote, emailQuickNotePDF } = require('../../controllers/emailController');
 
 const router = express.Router();
 
@@ -9,6 +9,7 @@ const router = express.Router();
 router.post('/quote', emailQuote);
 router.post('/quick-quote', emailQuickQuote);
 router.post('/quote-notification', emailQuoteNotification);
+router.post('/send-quick-quote-pdf', emailQuickNotePDF);
 
 
 // Route for sending an email

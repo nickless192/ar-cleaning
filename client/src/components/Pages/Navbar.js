@@ -269,7 +269,7 @@ function IndexNavbar() {
                                     <p>Products & Services</p>
                                 </NavLink>
                             </NavItem>
-                            <NavItem>
+                            {/* <NavItem>
                                 <NavLink
                                     // className="nav-link btn-neutral"
                                     // color="info"
@@ -279,7 +279,7 @@ function IndexNavbar() {
                                     <p>Request Quote</p>
                                 </NavLink>
 
-                            </NavItem>
+                            </NavItem> */}
                             {/* <NavItem>
                                 <NavLink
                                     // className="nav-link btn-neutral"
