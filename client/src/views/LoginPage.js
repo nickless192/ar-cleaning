@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import Auth from "../../utils/auth";
+import Auth from "utils/auth";
 // import Logo from "../../assets/svg/cleanmart-blue.svg";
 
 // reactstrap components
