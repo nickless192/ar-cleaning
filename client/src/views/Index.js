@@ -80,6 +80,14 @@ function Index() {
             <p className="p-styling martel-regular">
               With more 10 years of experience, our services are designed to meet the unique needs of our clients, providing personalized solutions and exceptional results on every project. At <b>CleanAR Solutions</b>, we take pride in offering reliable and high-quality service that ensures the impeccable cleanliness and maintenance of any space.  We are here to help you find the perfect cleaning solution for your needs; fill up our short form 👉 and we'll be in touch with a quote. Need more information? Below you'll find all of our contact information 👇
             </p>
+          </Col>
+          <Col xs='12' md='6'>
+            <QuickQuote />
+
+          </Col>
+        </Row>
+        <Row className="">
+          <Col className="" xs='12' md='6'>
             <Card className="card-plain">
               <CardBody>
                 <CardText>
