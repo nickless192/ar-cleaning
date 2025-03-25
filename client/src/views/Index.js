@@ -83,7 +83,6 @@ function Index() {
           </Col>
           <Col xs='12' md='6'>
             <QuickQuote />
-
           </Col>
         </Row>
         <Row className="">
@@ -111,11 +110,6 @@ function Index() {
               </CardBody>
             </Card>
           </Col>
-          <Col xs='12' md='6'>
-            <QuickQuote />
-          </Col>
-        </Row>
-        <Row className="">
         </Row>
         <Footer />
       </div>
