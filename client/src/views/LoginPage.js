@@ -166,23 +166,23 @@ function LoginPage() {
   return (
     <>
       {/* <Navbar /> */}
-      <div className="content light-bg-color opacity-8">
+          <h1 className="title primary-color text-center">Log in</h1>
+      <div className="content">
         {/* <div className="content px-2"> */}
         <Container className="container">
-          <h2 className="title primary-color">Welcome to CleanAR <span className="secondary-color">Solutions</span></h2>
-          <p className="primary-color text-bold">
+          <p className="primary-color text-bold text-center">
             Log in to access your account for faster checkout and to view order history.
           </p>
           <Form onSubmit={handleFormSubmit}>
-            <Row>
-              <Col className="py-3" md="10" xs='10'>
+            <Row className="justify-content-center">
+              <Col className="py-3" md="5" xs='5'>
                 <FloatingLabel
                   controlId="floatingInput"
                   label="Username*"
                   // className="mb-3"
                   className="text-bold text-cleanar-color"
                 >
-                  <Form.Control type="text" className='text-bold text-cleanar-color' placeholder="" onChange={(e) => handleChange(e)} name="username" id="username" />
+                  <Form.Control type="text" className='form-input text-bold text-cleanar-color' placeholder="" onChange={(e) => handleChange(e)} name="username" id="username" />
                 </FloatingLabel>
               </Col>
               <Col className="py-3" md="1" xs='1'>
@@ -206,13 +206,13 @@ function LoginPage() {
                 </Popover>
               </Col>
             </Row>
-            <Row>
-              <Col className="py-3" md="10" xs='10'>
+            <Row className="justify-content-center">
+              <Col className="py-3" md="5" xs='5'>
                 <FloatingLabel controlId="floatingPassword" label="Password*"
                   className="text-bold text-cleanar-color"
                 >
                   <Form.Control type="password" placeholder=""
-                    className="text-bold text-cleanar-color"
+                    className="form-input text-bold text-cleanar-color"
                     onChange={(e) => handleChange(e)} name="password" id="password" />
                 </FloatingLabel>
               </Col>
@@ -237,8 +237,8 @@ function LoginPage() {
                 </Popover>
               </Col>
             </Row>
-            <Row>
-              <Col className="ml-auto mr-auto py-3" md="4">
+            <Row className="justify-content-center">
+              <Col className="py-3" md="5" xs='5'>
                 <div className="text-center">
                   <Button
                     block
@@ -267,10 +267,7 @@ function LoginPage() {
             </Row>
           </Form>
         </Container>
-        {/* </div> */}
       </div>
-      {/* <Footer /> */}
-      {/* </div> */}
     </>
   );
 }

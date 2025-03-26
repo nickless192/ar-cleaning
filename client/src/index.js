@@ -18,6 +18,7 @@ import ManageService from "../src/components/Pages/ManageService";
 import ManageProduct from "../src/components/Pages/ManageProduct";
 import ManageUser from "../src/components/Pages/ManageUser";
 import RequestQuote from "../src/components/Pages/RequestQuote";
+import LoginSign from "../src/components/Pages/LoginSign";
 import ViewQuotes from "../src/components/Pages/ViewQuotes";
 import ProductsAndServices from "../src/components/Pages/ProductsAndServices";
 import ProtectedRoute from "../src/components/Pages/ProtectedRoute";
@@ -50,9 +51,10 @@ const App = () => {
         <Route path="/view-quotes" element={<ProtectedRoute element={<ViewQuotes />} />} />
         <Route path="/view-quotes/:quoteId" element={<ProtectedRoute element={<ViewQuotes />} />} />
         <Route path="/visitor-stats" element={<ProtectedRoute element={<VisitorStats />} />} />
-        <Route path="/login-page" element={<LoginPage />} />
-        <Route path="/signup-page" element={<SignUp />} />
-        <Route path='/request-quote' element={<RequestQuote />} />
+        {/* <Route path="/login-page" element={<LoginPage />} /> */}
+        {/* <Route path="/signup-page" element={<SignUp />} /> */}
+        <Route path='/login-signup' element={<LoginSign />} />
+        {/* <Route path='/request-quote' element={<RequestQuote />} /> */}
         <Route path='/chat-tool' element={<ChatTool />} />
         <Route path="/careers" element={<Career />} />
         <Route path="/about-us" element={<AboutUsPage />} />

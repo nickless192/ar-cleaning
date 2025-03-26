@@ -173,13 +173,13 @@ function IndexNavbar() {
                         <NavLink
                             // className="nav-link btn-neutral"
                             // color="info"
-                            href="/signup-page"
+                            href="/login-signup"
                         >
                             <i className="now-ui-icons objects_spaceship mr-1"></i>
-                            <p>Sign Up</p>
+                            <p>Log In - Sign Up</p>
                         </NavLink>
                     </NavItem>
-                    <NavItem>
+                    {/* <NavItem>
                         <NavLink
                             // className="nav-link btn-neutral"
                             // color="info"
@@ -188,7 +188,7 @@ function IndexNavbar() {
                             <i className="now-ui-icons sport_user-run mr-1"></i>
                             <p>Log In</p>
                         </NavLink>
-                    </NavItem>
+                    </NavItem> */}
                 </>
             )
         }
