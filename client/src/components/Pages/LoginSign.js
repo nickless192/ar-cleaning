@@ -14,11 +14,11 @@ import {
 
 const LoginSign = () => {
     return (
-        <Row>
-            <Col>
+        <Row className='justify-content-center align-items-center'>
+            <Col md='4'>
                 <SignUp />
             </Col>
-            <Col>
+            <Col md='4'>
                 <LoginPage />
             </Col>
         </Row>

@@ -166,8 +166,8 @@ function LoginPage() {
   return (
     <>
       {/* <Navbar /> */}
+      <div className="content content-border">
           <h1 className="title primary-color text-center">Log in</h1>
-      <div className="content">
         {/* <div className="content px-2"> */}
         <Container className="container">
           <p className="primary-color text-bold text-center">
@@ -175,7 +175,7 @@ function LoginPage() {
           </p>
           <Form onSubmit={handleFormSubmit}>
             <Row className="justify-content-center">
-              <Col className="py-3" md="5" xs='5'>
+              <Col className="py-3" md="10" xs='10'>
                 <FloatingLabel
                   controlId="floatingInput"
                   label="Username*"
@@ -207,7 +207,7 @@ function LoginPage() {
               </Col>
             </Row>
             <Row className="justify-content-center">
-              <Col className="py-3" md="5" xs='5'>
+              <Col className="py-3" md="10" xs='10'>
                 <FloatingLabel controlId="floatingPassword" label="Password*"
                   className="text-bold text-cleanar-color"
                 >
@@ -238,7 +238,7 @@ function LoginPage() {
               </Col>
             </Row>
             <Row className="justify-content-center">
-              <Col className="py-3" md="5" xs='5'>
+              <Col className="py-3" md="10" xs='10'>
                 <div className="text-center">
                   <Button
                     block

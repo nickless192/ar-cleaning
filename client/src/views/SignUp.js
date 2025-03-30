@@ -141,12 +141,14 @@ function SignUp() {
     <>
       {/* <Navbar /> */}
       {/* <div className="section section-signup light-blue-bg-color pb-0 mb-0"> */}
+      <div className="content content-border">
       <h1 className="title secondary-color text-center">Sign Up</h1>
-      <div className="content">
-        <Container className="container">
+        {/* <Container className="container"> */}
+        <p className="text-center text-cleanar-color">Please fill out the form below to create an account.</p>
+          
           <Form className="form" onSubmit={(e) => handleFormSubmit(e)}>
             <Row className="justify-content-center">
-              <Col md='5' xs='5' className="py-1">
+              <Col md='10' xs='10' className="py-1">
               <FloatingLabel
                 controlId="floatingFirstName"
                 label="First Name*"
@@ -173,7 +175,7 @@ function SignUp() {
               </Col>
               </Row>
             <Row className="justify-content-center">
-              <Col md='5' xs='5 ' className="py-1">
+              <Col md='10' xs='10' className="py-1">
                 <FloatingLabel
                   controlId="floatingLastName"
                   label="Last Name*"
@@ -200,7 +202,7 @@ function SignUp() {
               </Col>
             </Row>
             <Row className="justify-content-center">
-              <Col md='5' xs='5' className="py-1">
+              <Col md='10' xs='10' className="py-1">
               <FloatingLabel
                 controlId="floatingEmail"
                 label="Email Address*"
@@ -227,7 +229,7 @@ function SignUp() {
               </Col>
             </Row>
             <Row className="justify-content-center">
-              <Col md='5' xs='5' className="py-1">
+              <Col md='10' xs='10' className="py-1">
               <FloatingLabel
                 controlId="floatingTelephone"
                 label="Telephone*"
@@ -254,7 +256,7 @@ function SignUp() {
               </Col>
             </Row>
             <Row className="justify-content-center">
-              <Col md='5' xs='5' className="py-1">
+              <Col md='10' xs='10' className="py-1">
               <FloatingLabel
                 controlId="floatingUsername"
                 label="Username*"
@@ -281,7 +283,7 @@ function SignUp() {
               </Col>
             </Row>
             <Row className="justify-content-center">
-              <Col md='5' xs='5' className="py-1">
+              <Col md='10' xs='10' className="py-1">
               <FloatingLabel
                 controlId="floatingPassword"
                 label="Password*"
@@ -308,7 +310,7 @@ function SignUp() {
               </Col>
             </Row>
             <Row className="justify-content-center">
-              <Col md='5' xs='5' className="py-1">
+              <Col md='10' xs='10' className="py-1">
                 <FloatingLabel
                   controlId="floatingHowDidYouHearAboutUs"
                   label="How Did You Hear About Us?"
@@ -376,7 +378,7 @@ function SignUp() {
               {formData.howDidYouHearAboutUs === 'Other' ? (
                 <>
 
-                  <Col md='5' xs='5' className="py-1">
+                  <Col md='10' xs='10' className="py-1">
                     <FloatingLabel
                       controlId="floatingOther"
                       label="Other"
@@ -407,7 +409,7 @@ function SignUp() {
 
             </Row>
             <Row className="justify-content-center">
-              <Col md='5' xs='5'>
+              <Col md='6' xs='6'>
               <Button
                 className="btn-round light-bg-color"
                 type="submit"
@@ -419,9 +421,9 @@ function SignUp() {
               </Col>
             </Row>
           </Form>
-        </Container>
-      </div>
+        {/* </Container> */}
       {/* </div> */}
+      </div>
       {/* <Footer /> */}
     </>
   );
