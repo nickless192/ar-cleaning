@@ -13,7 +13,8 @@
     width: 100%;
     margin: 0 auto;
     padding: 20px;
-    background: var(--light-color);
+    /* background: var(--light-color); */
+    background-color: white;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -141,18 +142,20 @@ button:disabled {
     background-color: var(--accent-color);
 }
 
+.landing-page-intro {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.text-align-end {
+    text-align: end;
+}
+
 /* General Styles */
 
 .request-quote-bg {
     background-color: var(--accordion-bg-color) !important;
-}
-
-.p-styling {
-    color: rgb(32, 30, 30);
-    font-size: 1.2rem;
-    background-color: var(--light-color);
-    padding: 10px;
-    border-radius: 10px;
 }
 
 /* Text Styles */
@@ -169,7 +172,7 @@ button:disabled {
 }
 
 .secondary-color {
-    color: var(--secondary-color) !important;
+    color: var(--secondary-color) !important;    
 }
 
 .secondary-bg-color {
@@ -355,8 +358,9 @@ button:disabled {
 }
 
 .gradient-bg {
-    background: linear-gradient(45deg, var(--light-blue-color), var(--light-color));
-    color: white;
+    /* background: linear-gradient(45deg, var(--light-blue-color), var(--light-color)); */
+    background-color: white;
+    /* color: white; */
 }
 
 .brown-bg-color {
@@ -568,6 +572,24 @@ textarea {
     top: 0;
 }
 
+
+.navbarh1 {
+    color: var(--primary-color);
+    font-size: 2rem;
+    font-weight: bold;
+    margin-left: 20px;
+}
+.navbarlogo {
+    max-width: 5rem;
+    height: auto;
+}
+
+.navlogoimage, 
+.navlogotext {
+    display: inline-block;
+    vertical-align: bottom;
+}
+
 /* Section Background Styles */
 .section-background {
     background-size: cover;
@@ -585,12 +607,8 @@ textarea {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    /* background: rgba(0, 0, 0, 0.5); */
     z-index: -1;
-}
-
-.index-section {
-    background-image: url('../img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg');
 }
 
 .products-services-section {

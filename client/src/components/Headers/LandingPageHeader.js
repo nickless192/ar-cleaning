@@ -2,6 +2,8 @@ import React from "react";
 
 // reactstrap components
 import { Button, Container } from "reactstrap";
+import Logo from "assets/img/IC CLEAN AR-15-cropped.png";
+import { CardImg } from "reactstrap";
 
 // core components
 
@@ -25,15 +27,16 @@ function LandingPageHeader() {
     <>
       <div className="page-header page-header-small">
         <div
-          className="page-header-image"
-          style={{
-            backgroundImage: "url(" + require("assets/img/bg6.jpg") + ")"
-          }}
+          className="page-header-image brown-bg-color"
+          // style={{
+          //   backgroundImage: "url(" + require("assets/img/bg6.jpg") + ")"
+          // }}
           ref={pageHeader}
         ></div>
+          <CardImg top className="logo-image-index mb-3" src={Logo} alt="CleanAR Solutions logo" />
         <div className="content-center">
           <Container>
-            <h1 className="title">This is our great company.</h1>
+          <h1 className="primary-color text-bold montserrat-bold">CleanAR Solutions</h1>
             <div className="text-center">
               <Button
                 className="btn-icon btn-round"

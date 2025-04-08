@@ -167,7 +167,7 @@ function LoginPage() {
     <>
       {/* <Navbar /> */}
       <div className="content content-border">
-          <h1 className="title primary-color text-center">Log in</h1>
+          <h1 className="title primary-color text-center montserrat-bold">Log in</h1>
         {/* <div className="content px-2"> */}
         <Container className="container">
           <p className="primary-color text-bold text-center">

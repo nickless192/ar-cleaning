@@ -176,7 +176,7 @@ function IndexNavbar() {
                             href="/login-signup"
                         >
                             <i className="now-ui-icons objects_spaceship mr-1"></i>
-                            <p>Log In - Sign Up</p>
+                            <p>Log In + Sign Up</p>
                         </NavLink>
                     </NavItem>
                     {/* <NavItem>
@@ -212,8 +212,11 @@ function IndexNavbar() {
                             id="navbar-brand"
                             className="text-capitalize font-weight-bold"
                         >
-                            <img src={require("../../assets/img/IC CLEAN AR-16.png")} alt="CleanAR Solutions" className="" width="30" height="24" />
-                            <span className="primary-color">CleanAR</span> <span className="secondary-color">Solutions</span>
+                            <div className="verticalalign-bottom">
+                            <img src={require("../../assets/img/IC CLEAN AR-15-cropped.png")} alt="CleanAR Solutions" className="navbarlogo" />
+                            <div class="navlogotext navbarh1 montserrat-bold">CleanAR Solutions</div>
+                            {/* <h1 className="primary-color navbarh1">CleanAR Solutions</h1> */}
+                            </div>
                         </NavbarBrand>
                         <button
                             className="navbar-toggler"

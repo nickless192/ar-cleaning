@@ -716,11 +716,11 @@ const QuickQuote = () => {
         <>
             <Container className="quick-quote-container">
                 <Helmet>
-                    <title>Quick Quote - CleanAR Solutions</title>
+                    <title>CleanAR Solutions - Quick Quote</title>
                     <meta name="description" content="Get a quick service estimate from CleanAR Solutions. Fill out our form to receive a personalized quote for your cleaning needs." />
                 </Helmet>
                 {/* <h2 className="primary-color text-bold">Obtain a Service Estimate</h2> */}
-                <h2 className="text-center mb-4 primary-color text-bold">Obtain a Service Estimate</h2>
+                <h2 className="text-center mb-4 primary-color text-bold">Get a Free Quote</h2>
                 <Form onSubmit={handleSubmit} id="quote-form" className="p-1">
                     <Form.Group className="mb-1">
                         <Row>

@@ -142,7 +142,7 @@ function SignUp() {
       {/* <Navbar /> */}
       {/* <div className="section section-signup light-blue-bg-color pb-0 mb-0"> */}
       <div className="content content-border">
-      <h1 className="title secondary-color text-center">Sign Up</h1>
+      <h1 className="title secondary-color text-center montserrat-bold">Sign Up</h1>
         {/* <Container className="container"> */}
         <p className="text-center text-cleanar-color">Please fill out the form below to create an account.</p>
           
