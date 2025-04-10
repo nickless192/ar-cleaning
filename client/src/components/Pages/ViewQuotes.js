@@ -9,7 +9,7 @@ import {
   Col,
   Input,
   InputGroup,
-  InputGroupAddon,
+  // InputGroupAddon,
   InputGroupText,
   DropdownMenu,
   DropdownItem,
@@ -203,11 +203,11 @@ const ViewQuote = () => {
                 placeholder="Search for a quote..."
                 type="text"
               />
-              <InputGroupAddon addonType="append">
+              {/* <InputGroupAddon addonType="append"> */}
                 <InputGroupText className="" onClick={searchQuote}>
                   <i className="now-ui-icons ui-1_zoom-bold"></i>
                 </InputGroupText>
-              </InputGroupAddon>
+              {/* </InputGroupAddon> */}
             </InputGroup>
             {/* <Button className="mt-3" color="primary">Search</Button> */}
 
@@ -355,7 +355,11 @@ const ServiceList = ({ services }) => (
               value={service.serviceLevel}
               readOnly
             />
-            <InputGroupAddon addonType="append" className="text-light">Custom Options:</InputGroupAddon>
+            {/* <InputGroupAddon addonType="append" className="text-light"> */}
+            <InputGroupText className="">
+            Custom Options:
+            </InputGroupText>
+            {/* </InputGroupAddon> */}
           </InputGroup>
           
           {Array.from(service.customOptions).map(([key, option], optIndex) => (
@@ -398,11 +402,11 @@ const CostDetails = ({ displayedQuote }) => (
       <FormGroup key={field} className="text-light">
         <Label for={field} className="text-light">{capitalize(field)}</Label>
         <InputGroup className="no-border">
-          <InputGroupAddon addonType="prepend">
+          {/* <InputGroupAddon addonType="prepend"> */}
             <InputGroupText className="">
               <i className="now-ui-icons shopping_tag-content"></i>
             </InputGroupText>
-          </InputGroupAddon>
+          {/* </InputGroupAddon> */}
           <Input
             id={field}
             className="text-light "

@@ -205,8 +205,8 @@ function IndexNavbar() {
                 />
             ) : null}
             <Navbar className={"fixed-top nav-bar-top navbar-color " + navbarColor} expand="lg" >
-                <Container>
-                    <div className="navbar-translate">
+                <Container className="m-0 max-width-100">
+                    <div className="navbar-translate ">
                         <NavbarBrand
                             href="/index"
                             id="navbar-brand"
@@ -237,7 +237,7 @@ function IndexNavbar() {
                         isOpen={collapseOpen}
                         navbar
                     >
-                        <Nav navbar>
+                        <Nav navbar className="">
                             {/* <NavItem>
                                 <NavLink
                                     href="#pablo"

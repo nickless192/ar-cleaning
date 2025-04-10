@@ -12,7 +12,6 @@ import {
     Col,
     Input,
     InputGroup,
-    InputGroupAddon,
     InputGroupText,
     Form, Card, CardBody, CardTitle, CardText,
     CardFooter
@@ -261,11 +260,9 @@ const ManageProduct = () => {
                                     <InputGroup className={
                                         "no-border" + (formData.productName ? " input-group-focus" : "")
                                     }>
-                                        <InputGroupAddon addonType="prepend">
                                             <InputGroupText>
                                                 <i className="now-ui-icons shopping_tag-content"></i>
                                             </InputGroupText>
-                                        </InputGroupAddon>
                                         <Input
                                             placeholder="Product Name"
                                             type="text"
@@ -280,11 +277,11 @@ const ManageProduct = () => {
                                     <InputGroup className={
                                         "no-border" + (formData.description ? " input-group-focus" : "")
                                     }>
-                                        <InputGroupAddon addonType="prepend">
+                                        {/* <InputGroupAddon addonType="prepend"> */}
                                             <InputGroupText>
                                                 <i className="now-ui-icons shopping_box"></i>
                                             </InputGroupText>
-                                        </InputGroupAddon>
+                                        {/* </InputGroupAddon> */}
                                         <Input
                                             placeholder="Description"
                                             type="text"
@@ -299,11 +296,11 @@ const ManageProduct = () => {
                                     <InputGroup className={
                                         "no-border" + (formData.productCost ? " input-group-focus" : "")
                                     }>
-                                        <InputGroupAddon addonType="prepend">
+                                        {/* <InputGroupAddon addonType="prepend"> */}
                                             <InputGroupText>
                                                 <i className="now-ui-icons shopping_cart-simple"></i>
                                             </InputGroupText>
-                                        </InputGroupAddon>
+                                        {/* </InputGroupAddon> */}
                                         <Input
                                             placeholder="Cost per Quantity"
                                             type="text"
@@ -318,11 +315,11 @@ const ManageProduct = () => {
                                     <InputGroup className={
                                         "no-border" + (formData.quantityAtHand ? " input-group-focus" : "")
                                     }>
-                                        <InputGroupAddon addonType="prepend">
+                                        {/* <InputGroupAddon addonType="prepend"> */}
                                             <InputGroupText>
                                                 <i className="now-ui-icons shopping_delivery-fast"></i>
                                             </InputGroupText>
-                                        </InputGroupAddon>
+                                        {/* </InputGroupAddon> */}
                                         <Input
                                             placeholder="Quantity at Hand"
                                             type="text"

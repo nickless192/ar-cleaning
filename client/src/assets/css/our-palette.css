@@ -3,6 +3,7 @@
     --secondary-color: #89c97f;
     --accent-color: #4db1b3;
     --light-color: #95d3c3;
+    --light-color-opaque: #b5dad0;
     --light-blue-color: #64acc4;
     --brown-color: #5c5d60;
     --text-cleanar-color: #374357;
@@ -11,14 +12,14 @@
 
 .quick-quote-container {
     width: 100%;
-    margin: 0 auto;
-    padding: 20px;
+    /* margin: 0 auto;
+    padding: 20px; */
     /* background: var(--light-color); */
     background-color: white;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    border-radius: 10px;
+    /* border-radius: 10px; */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     text-align: left;
 }
@@ -33,6 +34,10 @@
     opacity: 0.9;
 }
 
+.text-link {
+    color: #0d6efd !important;
+}
+
 .form-input {
     border-radius: 2 !important;
     border: 1px solid var(--primary-color)!important;
@@ -45,6 +50,13 @@
 .options-selection {
     margin: 15px 0;
     text-align: left;
+}
+
+.section-border {
+    border: 1px solid var(--primary-color);
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px;
 }
 
 .radio-group {
@@ -192,11 +204,18 @@ button:disabled {
 }
 
 .light-bg-color {
-    background-color: var(--light-color) !important;
+    background-color: var(--light-color) !important;    
+}
+.light-bg-color-opaque {
+    background-color: rgba(149, 211, 195, 0.1); /* 0.1 = 10% opacity */  
 }
 
 .opacity-8 {
     opacity: 0.8;
+}
+
+.opacity-1 {
+    opacity: 0.1;
 }
 
 /* Font Styles */
@@ -326,6 +345,15 @@ button:disabled {
     padding: 20px;
     margin-bottom: 30px;
 }
+
+
+.text-facebook {
+    color: #3b5998 !important;
+  }
+
+  .text-instagram {
+    color: #E1306C !important;
+  }
 
 /* Card Styles */
 .card-border {

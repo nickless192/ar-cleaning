@@ -6,7 +6,7 @@ import {
     Col,
     Input,
     InputGroup,
-    InputGroupAddon,
+    // InputGroupAddon,
     InputGroupText,
     Form, Card, CardBody, CardTitle, CardText, CardHeader
 } from 'reactstrap';
@@ -218,11 +218,11 @@ const ManageUser = () => {
                                                     placeholder="Password"
                                                 /> */}
                                                 <InputGroup className="no-border">
-                                                    <InputGroupAddon addonType="prepend">
+                                                    {/* <InputGroupAddon addonType="prepend"> */}
                                                         <InputGroupText>
                                                             <i className="now-ui-icons ui-1_check"></i>
                                                         </InputGroupText>
-                                                    </InputGroupAddon>
+                                                    {/* </InputGroupAddon> */}
                                                     <Input
                                                         type="checkbox"
                                                         name="adminFlag"
@@ -278,11 +278,11 @@ const ManageUser = () => {
                                 <Row>
                                     <Col className="text-center ml-auto mr-auto" lg="6" md="8" id='user-form'>
                                         <InputGroup className={"no-border" + (formData.firstName ? " input-group-focus" : "")}>
-                                            <InputGroupAddon addonType="prepend">
+                                            {/* <InputGroupAddon addonType="prepend"> */}
                                                 <InputGroupText>
                                                     <i className="now-ui-icons users_circle-08"></i>
                                                 </InputGroupText>
-                                            </InputGroupAddon>
+                                            {/* </InputGroupAddon> */}
                                             <Input
                                                 placeholder="First Name"
                                                 type="text"
@@ -295,11 +295,11 @@ const ManageUser = () => {
                                     </Col>
                                     <Col className="text-center ml-auto mr-auto" lg="6" md="8" id='user-form'>
                                         <InputGroup className={"no-border" + (formData.lastName ? " input-group-focus" : "")}>
-                                            <InputGroupAddon addonType="prepend">
+                                            {/* <InputGroupAddon addonType="prepend"> */}
                                                 <InputGroupText>
                                                     <i className="now-ui-icons users_circle-08"></i>
                                                 </InputGroupText>
-                                            </InputGroupAddon>
+                                            {/* </InputGroupAddon> */}
                                             <Input
                                                 placeholder="Last Name"
                                                 type="text"
@@ -312,11 +312,11 @@ const ManageUser = () => {
                                     </Col>
                                     <Col className="text-center ml-auto mr-auto" lg="6" md="8" id='user-form'>
                                         <InputGroup className={"no-border" + (formData.email ? " input-group-focus" : "")}>
-                                            <InputGroupAddon addonType="prepend">
+                                            {/* <InputGroupAddon addonType="prepend"> */}
                                                 <InputGroupText>
                                                     <i className="now-ui-icons ui-1_email-85"></i>
                                                 </InputGroupText>
-                                            </InputGroupAddon>
+                                            {/* </InputGroupAddon> */}
                                             <Input
                                                 placeholder="Email"
                                                 type="email"
@@ -329,11 +329,11 @@ const ManageUser = () => {
                                     </Col>
                                     <Col className="text-center ml-auto mr-auto" lg="6" md="8" id='user-form'>
                                         <InputGroup className={"no-border" + (formData.username ? " input-group-focus" : "")}>
-                                            <InputGroupAddon addonType="prepend">
+                                            {/* <InputGroupAddon addonType="prepend"> */}
                                                 <InputGroupText>
                                                     <i className="now-ui-icons users_single-02"></i>
                                                 </InputGroupText>
-                                            </InputGroupAddon>
+                                            {/* </InputGroupAddon> */}
                                             <Input
                                                 placeholder="Username"
                                                 type="text"
@@ -346,11 +346,11 @@ const ManageUser = () => {
                                     </Col>
                                     <Col className="text-center ml-auto mr-auto" lg="6" md="8" id='user-form'>
                                         <InputGroup className={"no-border" + (formData.password ? " input-group-focus" : "")}>
-                                            <InputGroupAddon addonType="prepend">
+                                            {/* <InputGroupAddon addonType="prepend"> */}
                                                 <InputGroupText>
                                                     <i className="now-ui-icons ui-1_lock-circle-open"></i>
                                                 </InputGroupText>
-                                            </InputGroupAddon>
+                                            {/* </InputGroupAddon> */}
                                             <Input
                                                 placeholder="Password"
                                                 type="password"
@@ -363,11 +363,11 @@ const ManageUser = () => {
                                     </Col>
                                     <Col className="text-center ml-auto mr-auto" lg="6" md="8" id='user-form'>
                                         <InputGroup className="no-border">
-                                            <InputGroupAddon addonType="prepend">
+                                            {/* <InputGroupAddon addonType="prepend"> */}
                                                 <InputGroupText>
                                                     <i className="now-ui-icons ui-1_check"></i>
                                                 </InputGroupText>
-                                            </InputGroupAddon>
+                                            {/* </InputGroupAddon> */}
                                             <Input
                                                 type="checkbox"
                                                 name="adminFlag"

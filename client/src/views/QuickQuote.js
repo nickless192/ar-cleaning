@@ -493,7 +493,7 @@ const QuickQuote = () => {
                 return (
                     <>
                         <Row className="mb-3">
-                            <Col md={6} xs={12}>
+                            <Col md={12} xs={12}>
                                 <Form.Group controlId={`frequency-${type}`}>
                                     <Form.Label className="text-bold">Frequency of Cleaning</Form.Label>
                                     <Form.Select
@@ -511,7 +511,7 @@ const QuickQuote = () => {
                                     </Form.Select>
                                 </Form.Group>
                             </Col>
-                            <Col md={6} xs={12}>
+                            <Col md={12} xs={12}>
                                 <Form.Group controlId={`unitSize-${type}`}>
                                     <Form.Label className="text-bold">Unit Size</Form.Label>
                                     <Form.Select
@@ -531,7 +531,7 @@ const QuickQuote = () => {
                             </Col>
                         </Row>
                         <Row className="mb-3">
-                            <Col md={6} xs={12}>
+                            <Col md={12} xs={12}>
                                 <Form.Group controlId={`bedrooms-${type}`}>
                                     <Form.Label className="text-bold">Number of Bedrooms</Form.Label>
                                     <Form.Select
@@ -547,7 +547,7 @@ const QuickQuote = () => {
                                     </Form.Select>
                                 </Form.Group>
                             </Col>
-                            <Col md={6} xs={12}>
+                            <Col md={12} xs={12}>
                                 <Form.Group controlId={`bathrooms-${type}`}>
                                     <Form.Label className="text-bold">Number of Bathrooms</Form.Label>
                                     <Form.Select
@@ -569,6 +569,7 @@ const QuickQuote = () => {
                                 <Col>
                                     <Form.Group controlId={`additionalOptions-${type}`}>
                                         <Form.Label className="text-bold">Additional Options</Form.Label>
+                                        <br />
                                         <Label check>
                                             <Input
                                                 type="checkbox"
@@ -714,14 +715,14 @@ const QuickQuote = () => {
 
     return (
         <>
-            <Container className="quick-quote-container">
+            <Container className="quick-quote-container px-4">
                 <Helmet>
                     <title>CleanAR Solutions - Quick Quote</title>
                     <meta name="description" content="Get a quick service estimate from CleanAR Solutions. Fill out our form to receive a personalized quote for your cleaning needs." />
                 </Helmet>
                 {/* <h2 className="primary-color text-bold">Obtain a Service Estimate</h2> */}
-                <h2 className="text-center mb-4 primary-color text-bold">Get a Free Quote</h2>
-                <Form onSubmit={handleSubmit} id="quote-form" className="p-1">
+                <h2 className="text-center primary-color text-bold">Get a Free Quote</h2>
+                <Form onSubmit={handleSubmit} id="quote-form" className="m-0 p-0">
                     <Form.Group className="mb-1">
                         <Row>
                             {[
@@ -732,7 +733,7 @@ const QuickQuote = () => {
                                 { label: 'Postal Code', name: 'postalcode', placeholder: 'Postal Code', required: true },
                                 { label: 'Promo Code', name: 'promoCode', placeholder: 'Promo Code' }
                             ].map(({ label, name, placeholder, required }) => (
-                                <Col key={name} md={4} xs={12} className="mb-2">
+                                <Col key={name} md={4} xs={12} className="mb-2 ">
                                     <Form.Label className="text-bold mb-1">
                                         {label}{required && '*'}
                                         <FaQuestionCircle
@@ -763,6 +764,7 @@ const QuickQuote = () => {
                             ))}
                         </Row>
                     </Form.Group>
+                    <section className="section-border">
                     <Form.Group className="mb-3">
                         <Form.Label className="text-bold mb-1">
                             Add Service Required*
@@ -783,8 +785,8 @@ const QuickQuote = () => {
                     </Form.Group>
                     <Form id="service-selection">
                         <Row>
-                            <Col md={4} xs={12} className="mb-3">
-                                <div className="radio-group">
+                            <Col md={4} xs={12} className="mb-3 radio-group">
+                                {/* <div className="radio-group">    */}
                                     {Object.keys(serviceOptions).map((service) => (
                                         <label key={service} className="radio-label d-block mb-2">
                                             <input
@@ -798,12 +800,12 @@ const QuickQuote = () => {
                                             {service}
                                         </label>
                                     ))}
-                                </div>
+                                {/* </div> */}
                             </Col>
                             <Col md={4} xs={12} className="mb-3">
                                 {selectedService && (
-                                    <div className="options-selection">
-                                        <div className="radio-group">
+                                    // <div className="options-selection">
+                                        <div className="radio-group options-selection">
                                             {options.map((option) => (
                                                 <label key={option} className="radio-label d-block mb-2">
                                                     <input
@@ -817,7 +819,7 @@ const QuickQuote = () => {
                                                 </label>
                                             ))}
                                         </div>
-                                    </div>
+                                    // {/* </div> */}
                                 )}
                             </Col>
                             <Col md={4} xs={12}>
@@ -832,15 +834,16 @@ const QuickQuote = () => {
                                             {openService === service.type ? <FaChevronUp className="ms-2" /> : <FaChevronDown className="ms-2" />}
                                         </Button> */}
                                         {/* <Collapse in={openService === service.type}> */}
-                                            <div>
+                                            {/* <div> */}
                                                 {renderCustomOptions(service.type)}
-                                            </div>
+                                            {/* </div> */}
                                         {/* </Collapse> */}
                                     </div>
                                 ))}
                             </Col>
                         </Row>
                     </Form>
+                    </section>
                     <Row>
                         <Col>
                             <p className='primary-color text-bold pt-2'>

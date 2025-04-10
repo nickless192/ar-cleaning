@@ -7,7 +7,7 @@ import {
     Col,
     Input,
     InputGroup,
-    InputGroupAddon,
+    // InputGroupAddon,
     InputGroupText,
     FormGroup,
     Label,
@@ -295,11 +295,11 @@ const ManageService = () => {
                                     <InputGroup className={
                                         "no-border" + (formData.name ? " input-group-focus" : "")
                                     }>
-                                        <InputGroupAddon addonType="prepend">
+                                        {/* <InputGroupAddon addonType="prepend"> */}
                                             <InputGroupText className='km-bg-test'>
                                                 <i className="now-ui-icons users_circle-08"></i>
                                             </InputGroupText>
-                                        </InputGroupAddon>
+                                        {/* </InputGroupAddon> */}
                                         <Input
                                             placeholder='Service Name...'
                                             type="text"
@@ -313,11 +313,11 @@ const ManageService = () => {
                                     <InputGroup className={
                                         "no-border" + (formData.serviceCost ? " input-group-focus" : "")
                                     }>
-                                        <InputGroupAddon addonType="prepend">
+                                        {/* <InputGroupAddon addonType="prepend"> */}
                                             <InputGroupText className='km-bg-test'>
                                                 <i className="now-ui-icons business_money-coins"></i>
                                             </InputGroupText>
-                                        </InputGroupAddon>
+                                        {/* </InputGroupAddon> */}
                                         <Input
                                             placeholder='Cost per Quantity...'
                                             type="text"
@@ -331,12 +331,12 @@ const ManageService = () => {
                                     <InputGroup className={
                                         "no-border" + (formData.description ? " input-group-focus" : "")
                                     }>
-                                        <InputGroupAddon addonType="prepend">
+                                        {/* <InputGroupAddon addonType="prepend"> */}
                                             <InputGroupText className='km-bg-test'>
 
                                                 <i className="now-ui-icons ui-2_chat-round"></i>
                                             </InputGroupText>
-                                        </InputGroupAddon>
+                                        {/* </InputGroupAddon> */}
                                         <Input
                                             placeholder='Description...'
                                             type="textarea"
