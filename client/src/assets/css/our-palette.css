@@ -487,6 +487,14 @@ button:disabled {
     /* border-radius: none !important; */
 }
 
+body.nav-open {
+    overflow-x: hidden !important;
+  }
+
+  body, html {
+    overflow-x: hidden !important;
+  }
+
 .box {
     width: 96%;
     margin: 0 auto;
@@ -597,7 +605,7 @@ button:disabled {
 
 .navbarh1 {
     color: var(--primary-color);
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: bold;
     margin-left: 20px;
 }

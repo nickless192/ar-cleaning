@@ -33,6 +33,20 @@ function IndexNavbar() {
     // console.log(adminFlag);
     // console.log(Auth.loggedIn());
 
+    const handleToggle = () => {
+        const doc = document.documentElement;
+        const isOpen = doc.classList.contains("nav-open");
+      
+        if (isOpen) {
+          doc.classList.remove("nav-open");
+        } else {
+          doc.classList.add("nav-open");
+        }
+      
+        setCollapseOpen(!collapseOpen);
+      };
+      
+
     useEffect(() => {
         const scrollTopVal = 0;
 
@@ -199,10 +213,13 @@ function IndexNavbar() {
             {collapseOpen ? (
                 <div
                     id="bodyClick"
-                    onClick={() => {
+                    onClick={
+                    // handleToggle
+                        () => {
                         document.documentElement.classList.toggle("nav-open");
                         setCollapseOpen(false);
-                    }}
+                    }
+                }
                 />
             ) : null}
             <Navbar className={"fixed-topnav-bar-top mb-0 navbar-color " + navbarColor} expand="lg">
@@ -213,24 +230,32 @@ function IndexNavbar() {
                         id="navbar-brand"
                         className="text-capitalize font-weight-bold d-flex align-items-center"
                     >
+                        <Row>
+<Col xs="12">
                         <img
                             src={require("../../assets/img/IC CLEAN AR-15-cropped.png")}
                             alt="CleanAR Solutions"
                             className="navbarlogo"
                         />
+</Col>
+                        <Col>
                         <div className="navlogotext navbarh1 montserrat-bold m-0 t-0 ms-2">
                             CleanAR Solutions
                         </div>
+                        </Col>
+                        </Row>
                     </NavbarBrand>
 
                     {/* Right: Toggler + Nav Links */}
                     <div className="d-flex align-items-center">
                         <button
                             className="navbar-toggler"
-                            onClick={() => {
-                                document.documentElement.classList.toggle("nav-open");
-                                setCollapseOpen(!collapseOpen);
-                            }}
+                            onClick={handleToggle
+                            //     () => {
+                            //     document.documentElement.classList.toggle("nav-open");
+                            //     setCollapseOpen(!collapseOpen);
+                            // }
+                        }
                             aria-expanded={collapseOpen}
                             type="button"
                         >
