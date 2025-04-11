@@ -498,7 +498,8 @@ const QuickQuote = () => {
                                     <Form.Label className="text-bold">Frequency of Cleaning</Form.Label>
                                     <Form.Select
                                         aria-label="Frequency of Cleaning"
-                                        className="transparent"
+                                        className="transparent form-border"
+                                        size='sm'
                                         onChange={(e) => handleCustomOptionChange(type, 'frequency', e)}
                                         value={formData.services.find(s => s.type === type)?.customOptions?.frequency?.service || ''}
                                     >
@@ -516,7 +517,8 @@ const QuickQuote = () => {
                                     <Form.Label className="text-bold">Unit Size</Form.Label>
                                     <Form.Select
                                         aria-label="Unit Size"
-                                        className="transparent"
+                                        size='sm'
+                                        className="transparent form-border"
                                         onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e)}
                                         value={formData.services.find(s => s.type === type)?.customOptions?.squareFootage?.service || ''}
                                     >
@@ -536,7 +538,8 @@ const QuickQuote = () => {
                                     <Form.Label className="text-bold">Number of Bedrooms</Form.Label>
                                     <Form.Select
                                         aria-label="Number of Bedrooms"
-                                        className="transparent"
+                                        className="transparent form-border"
+                                        size='sm'
                                         onChange={(e) => handleCustomOptionChange(type, 'bedrooms', e)}
                                         value={formData.services.find(s => s.type === type)?.customOptions?.bedrooms?.service || ''}
                                     >
@@ -552,7 +555,8 @@ const QuickQuote = () => {
                                     <Form.Label className="text-bold">Number of Bathrooms</Form.Label>
                                     <Form.Select
                                         aria-label="Number of Bathrooms"
-                                        className="transparent"
+                                        className="transparent form-border"
+                                        size='sm'
                                         onChange={(e) => handleCustomOptionChange(type, 'bathrooms', e)}
                                         value={formData.services.find(s => s.type === type)?.customOptions?.bathrooms?.service || ''}
                                     >
@@ -570,7 +574,7 @@ const QuickQuote = () => {
                                     <Form.Group controlId={`additionalOptions-${type}`}>
                                         <Form.Label className="text-bold">Additional Options</Form.Label>
                                         <br />
-                                        <Label check>
+                                        <Label check className="me-3">
                                             <Input
                                                 type="checkbox"
                                                 onChange={(e) => handleCustomOptionChange(type, 'deepCleaning', e)}
@@ -579,7 +583,7 @@ const QuickQuote = () => {
                                             <span className="form-check-sign"></span>
                                             Deep Cleaning
                                         </Label>
-                                        <Label check>
+                                        <Label check className="me-3">
                                             <Input
                                                 type="checkbox"
                                                 onChange={(e) => handleCustomOptionChange(type, 'windowCleaning', e)}
@@ -588,7 +592,7 @@ const QuickQuote = () => {
                                             <span className="form-check-sign"></span>
                                             Window Cleaning
                                         </Label>
-                                        <Label check>
+                                        <Label check className="me-3">
                                             <Input
                                                 type="checkbox"
                                                 onChange={(e) => handleCustomOptionChange(type, 'laundryService', e)}
@@ -613,7 +617,8 @@ const QuickQuote = () => {
                                     <Form.Label className="text-bold">Type of Carpet</Form.Label>
                                     <Form.Select
                                         aria-label="Type of Carpet"
-                                        className="transparent"
+                                        className="transparent form-border"
+                                        size='sm'
                                         onChange={(e) => handleCustomOptionChange(type, 'carpetType', e)}
                                         value={formData.services.find(s => s.type === type)?.customOptions?.carpetType?.service || ''}
                                     >
@@ -635,7 +640,7 @@ const QuickQuote = () => {
                                         type="number"
                                         aria-label="Carpet Area"
                                         placeholder="Enter carpet area in square feet"
-                                        className="text-cleanar-color text-bold"
+                                        className="text-cleanar-color text-bold form-border"
                                         onChange={(e) => handleCustomOptionChange(type, 'carpetArea', e)}
                                         value={formData.services.find(s => s.type === type)?.customOptions?.carpetArea?.service || ''}
                                     />
@@ -648,7 +653,8 @@ const QuickQuote = () => {
                                     <Form.Label className="text-bold">Stains or Spots</Form.Label>
                                     <Form.Select
                                         aria-label="Stains or Spots"
-                                        className="transparent"
+                                        size='sm'
+                                        className="transparent form-border"
                                         onChange={(e) => handleCustomOptionChange(type, 'stains', e)}
                                         value={formData.services.find(s => s.type === type)?.customOptions?.stains?.service || ''}
                                     >
@@ -721,7 +727,7 @@ const QuickQuote = () => {
                     <meta name="description" content="Get a quick service estimate from CleanAR Solutions. Fill out our form to receive a personalized quote for your cleaning needs." />
                 </Helmet>
                 {/* <h2 className="primary-color text-bold">Obtain a Service Estimate</h2> */}
-                <h2 className="text-center primary-color text-bold">Get a Free Quote</h2>
+                <h2 className="text-center primary-color text-bold pt-2">Get a Free Quote</h2>
                 <Form onSubmit={handleSubmit} id="quote-form" className="m-0 p-0">
                     <Form.Group className="mb-1">
                         <Row>
@@ -785,7 +791,7 @@ const QuickQuote = () => {
                     </Form.Group>
                     <Form id="service-selection">
                         <Row>
-                            <Col md={4} xs={12} className="mb-3 radio-group">
+                            <Col md={3} xs={12} className="mb-3 radio-group">
                                 {/* <div className="radio-group">    */}
                                     {Object.keys(serviceOptions).map((service) => (
                                         <label key={service} className="radio-label d-block mb-2">
@@ -802,7 +808,7 @@ const QuickQuote = () => {
                                     ))}
                                 {/* </div> */}
                             </Col>
-                            <Col md={4} xs={12} className="mb-3">
+                            <Col md={3} xs={12} className="mb-3">
                                 {selectedService && (
                                     // <div className="options-selection">
                                         <div className="radio-group options-selection">
@@ -822,7 +828,7 @@ const QuickQuote = () => {
                                     // {/* </div> */}
                                 )}
                             </Col>
-                            <Col md={4} xs={12}>
+                            <Col md={6} xs={12}>
                                 {formData.services.map((service, index) => (
                                     <div key={index} className="mb-3">
                                         {/* <Button

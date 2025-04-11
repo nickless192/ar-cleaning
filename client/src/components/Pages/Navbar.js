@@ -16,7 +16,8 @@ import {
     NavLink,
     Nav,
     Container,
-
+    Row,
+    Col
 } from "reactstrap";
 import Auth from "../../utils/auth";
 // import { set } from "mongoose";
@@ -204,20 +205,26 @@ function IndexNavbar() {
                     }}
                 />
             ) : null}
-            <Navbar className={"fixed-top nav-bar-top navbar-color " + navbarColor} expand="lg" >
-                <Container className="m-0 max-width-100">
-                    <div className="navbar-translate ">
-                        <NavbarBrand
-                            href="/index"
-                            id="navbar-brand"
-                            className="text-capitalize font-weight-bold"
-                        >
-                            <div className="verticalalign-bottom">
-                            <img src={require("../../assets/img/IC CLEAN AR-15-cropped.png")} alt="CleanAR Solutions" className="navbarlogo" />
-                            <div class="navlogotext navbarh1 montserrat-bold">CleanAR Solutions</div>
-                            {/* <h1 className="primary-color navbarh1">CleanAR Solutions</h1> */}
-                            </div>
-                        </NavbarBrand>
+            <Navbar className={"fixed-topnav-bar-top mb-0 navbar-color " + navbarColor} expand="lg">
+                <Container fluid className="d-flex justify-content-between align-items-center px-3">
+                    {/* Left: Logo + Company Name */}
+                    <NavbarBrand
+                        href="/index"
+                        id="navbar-brand"
+                        className="text-capitalize font-weight-bold d-flex align-items-center"
+                    >
+                        <img
+                            src={require("../../assets/img/IC CLEAN AR-15-cropped.png")}
+                            alt="CleanAR Solutions"
+                            className="navbarlogo"
+                        />
+                        <div className="navlogotext navbarh1 montserrat-bold m-0 t-0 ms-2">
+                            CleanAR Solutions
+                        </div>
+                    </NavbarBrand>
+
+                    {/* Right: Toggler + Nav Links */}
+                    <div className="d-flex align-items-center">
                         <button
                             className="navbar-toggler"
                             onClick={() => {
@@ -231,81 +238,25 @@ function IndexNavbar() {
                             <span className="navbar-toggler-bar middle-bar"></span>
                             <span className="navbar-toggler-bar bottom-bar"></span>
                         </button>
-                    </div>
-                    <Collapse
-                        className="justify-content-end"
-                        isOpen={collapseOpen}
-                        navbar
-                    >
-                        <Nav navbar className="">
-                            {/* <NavItem>
-                                <NavLink
-                                    href="#pablo"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        document
-                                            .getElementById("download-section")
-                                            .scrollIntoView();
-                                    }}
-                                >
-                                    <i className="now-ui-icons arrows-1_cloud-download-93"></i>
-                                    <p>Download</p>
-                                </NavLink>
-                            </NavItem> */}
-                            <NavItem>
-                                <NavLink
-                                    // className="nav-link btn-neutral"
-                                    // color="info"
-                                    href="/about-us"
-                                >
-                                    <i className="now-ui-icons business_badge mr-1"></i>
-                                    <p>About Us</p>
-                                </NavLink>
-                            </NavItem>
-                            <NavItem>
-                                <NavLink
-                                    // className="nav-link btn-neutral"
-                                    // color="info"
-                                    href="/products-and-services"
-                                >
-                                    <i className="now-ui-icons business_bulb-63 mr-1"></i>
-                                    <p>Products & Services</p>
-                                </NavLink>
-                            </NavItem>
-                            {/* <NavItem>
-                                <NavLink
-                                    // className="nav-link btn-neutral"
-                                    // color="info"
-                                    href="/request-quote"
-                                >
-                                    <i className="now-ui-icons shopping_cart-simple mr-1"></i>
-                                    <p>Request Quote</p>
-                                </NavLink>
 
-                            </NavItem> */}
-                            {/* <NavItem>
-                                <NavLink
-                                    // className="nav-link btn-neutral"
-                                    // color="info"
-                                    href="/view-quotes/"
-                                >
-                                    <i className="now-ui-icons files_single-copy-04 mr-1"></i>
-                                    <p>View Quotes</p>
-                                </NavLink>
-                            </NavItem> */}
-                            {showLogin()}
-                            {/* <NavItem>
-                                <NavLink
-                                    href="https://www.instagram.com/cleanARsolutions/"
-                                    target="_blank"
-                                    id="instagram-tooltip"
-                                >
-                                    <i className="fab fa-instagram"></i>
-                                    <p className="d-lg-none d-xl-none">Instagram</p>
-                                </NavLink>
-                            </NavItem> */}
-                        </Nav>
-                    </Collapse>
+                        <Collapse className="ms-3" isOpen={collapseOpen} navbar>
+                            <Nav navbar className="d-flex align-items-center">
+                                <NavItem>
+                                    <NavLink href="/about-us">
+                                        <i className="now-ui-icons business_badge mr-1"></i>
+                                        <p>About Us</p>
+                                    </NavLink>
+                                </NavItem>
+                                <NavItem>
+                                    <NavLink href="/products-and-services">
+                                        <i className="now-ui-icons business_bulb-63 mr-1"></i>
+                                        <p>Products & Services</p>
+                                    </NavLink>
+                                </NavItem>
+                                {showLogin()}
+                            </Nav>
+                        </Collapse>
+                    </div>
                 </Container>
             </Navbar>
         </>

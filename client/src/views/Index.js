@@ -4,9 +4,9 @@ import { Link } from "react-router-dom";
 import VisitorCounter from "components/Pages/VisitorCounter.js";
 import {
   Card,
-  CardBody,
-  CardText,
-  ListGroup,
+  // CardBody,
+  // CardText,
+  // ListGroup,
   ListGroupItem,
   Row,
   Col,
@@ -14,12 +14,14 @@ import {
 } from "reactstrap";
 import MetaTags from "components/Pages/MetaTags.js";
 import QuickQuote from "./QuickQuote";
-import LandingPageHeader from "components/Headers/LandingPageHeader.js";
+// import LandingPageHeader from "components/Headers/LandingPageHeader.js";
 import BusinessHoursSidebar from "components/Pages/BusinessHourSidebar";
 
 import backgroundImage from 'assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg';
-import Logo from "assets/img/IC CLEAN AR-15-cropped.png";
+// import Logo from "assets/img/IC CLEAN AR-15-cropped.png";
 import Footer from "components/Pages/Footer";
+import { FaInstagram, FaFacebook, FaTiktok } from 'react-icons/fa';
+import { FiPhoneCall } from 'react-icons/fi';
 
 function Index() {
 
@@ -83,7 +85,7 @@ function Index() {
     {
       icon: "now-ui-icons tech_mobile",
       link: "business-hours",
-      text: "Call or Message",
+      text: " Business Hours",
       description: availabilityStatus,
       additionalInfo: responseTimeMessage,
       color: "text-primary"
@@ -103,10 +105,21 @@ function Index() {
         "https://www.tiktok.com/@cleanar.solutions",
         "tel:437-440-5514",
       ],
-      text: ["Follow Us on Instagram",
-        "Join Our Facebook Community",
-        "Follow Us on TikTok",
-        "Call or Message Us",
+      text: [
+        // "Follow Us on Instagram",
+        // "Join Our Facebook Community",
+        // "Follow Us on TikTok",
+        // "Call or Message Us",
+        'Instagram',
+    'Facebook Community',
+    'TikTok',
+    'Call or Message Us',
+      ],
+      icons: [
+        <FaInstagram />,
+        <FaFacebook />,
+        <FaTiktok />,
+        <FiPhoneCall />,
       ],
       description: "Social Connection, Real-Time Updates & Engagement",
       additionalInfo: "Get Inspired & Informed",
@@ -261,7 +274,8 @@ function Index() {
                                   className="text-bold martel-semibold underline"
                                   title={item.text?.[index] || item.description}
                                 >
-                                  {item.text?.[index] || new URL(singleLink).hostname.replace("www.", "")}
+                                  {item.icons?.[index]} {item.text?.[index] || new URL(singleLink).hostname.replace("www.", "")}
+                                  {/* {item.text?.[index] || new URL(singleLink).hostname.replace("www.", "")} */}
                                 </a>
                                 {' | '}
                               </>

@@ -47,11 +47,11 @@ const BusinessHoursSidebar = () => {
       (currentDay === 6 && currentHour >= 8 && currentHour < 13); // Saturday morning
 
     if (isBusinessHours) {
-      setAvailabilityStatus('✅ We are currently available');
-      setResponseTimeMessage('Instant response expected');
+      setAvailabilityStatus('✅ We are currently available - click to view business hours');
+      setResponseTimeMessage('Expect a Quick Reply');
     } else {
       setAvailabilityStatus('⏰ We are currently offline - click to view business hours');
-      setResponseTimeMessage('We will respond within 24 hours');
+      setResponseTimeMessage('We will respond as soon as possible');
     }
 
     window.addEventListener("resize", handleResize);
