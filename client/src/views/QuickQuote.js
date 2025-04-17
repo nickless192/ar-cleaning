@@ -679,22 +679,52 @@ const QuickQuote = () => {
                                     </Form.Select>
                                 </Form.Group>
                             </Col>
+                            <Col md={12} xs={12}>
+                                <Form.Group controlId={`startDate-${type}`}>
+                                    <Form.Label className="text-bold">Desired Service Date</Form.Label>
+                                    <Form.Control
+                                        type="date"
+                                        aria-label="Desired Service Date"
+                                        className="text-cleanar-color text-bold form-border"
+                                        onChange={(e) => handleCustomOptionChange(type, 'startDate', e)}
+                                        value={formData.services.find(s => s.type === type)?.customOptions?.startDate?.service || ''}
+                                    />
+                                </Form.Group>
+                            </Col>
                         </Row>
                     </>
                 );
             }
             default:
                 return (
-                    <Form.Group controlId={`description-${type}`} className="mb-3">
-                        <Form.Label className="text-bold">Description*</Form.Label>
-                        <Form.Control
-                            as="textarea"
-                            placeholder="Provide a description of the services you require. We will be in touch shortly to schedule a consultation."
-                            value={formData.services.find(s => s.type === type)?.customOptions?.description?.service || ''}
-                            onChange={(e) => handleCustomOptionChange(type, 'description', e)}
-                            className="text-cleanar-color text-bold"
-                        />
-                    </Form.Group>
+                    <>
+                        <Row className="mb-3">
+                            <Col>
+                                <Form.Group controlId={`description-${type}`} className="mb-3">
+                                    <Form.Label className="text-bold">Description*</Form.Label>
+                                    <Form.Control
+                                        as="textarea"
+                                        placeholder="Provide a description of the services you require. We will be in touch shortly to schedule a consultation."
+                                        value={formData.services.find(s => s.type === type)?.customOptions?.description?.service || ''}
+                                        onChange={(e) => handleCustomOptionChange(type, 'description', e)}
+                                        className="text-cleanar-color text-bold"
+                                    />
+                                </Form.Group>
+                            </Col>
+                            <Col md={12} xs={12}>
+                                <Form.Group controlId={`startDate-${type}`}>
+                                    <Form.Label className="text-bold">Desired Service Date</Form.Label>
+                                    <Form.Control
+                                        type="date"
+                                        aria-label="Desired Service Date"
+                                        className="text-cleanar-color text-bold form-border"
+                                        onChange={(e) => handleCustomOptionChange(type, 'startDate', e)}
+                                        value={formData.services.find(s => s.type === type)?.customOptions?.startDate?.service || ''}
+                                    />
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                    </>
                 );
         }
 
