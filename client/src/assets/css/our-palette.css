@@ -605,8 +605,8 @@ body.nav-open {
 
 .navbarh1 {
     color: var(--primary-color);
-    font-size: 1.5rem;
-    font-weight: bold;
+    font-size: 2rem;
+    /* font-weight: bold!important; */
     margin-left: 20px;
 }
 .navbarlogo {

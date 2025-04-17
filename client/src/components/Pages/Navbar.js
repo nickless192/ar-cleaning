@@ -239,8 +239,10 @@ function IndexNavbar() {
                         />
 </Col>
                         <Col>
-                        <div className="navlogotext navbarh1 montserrat-bold m-0 t-0 ms-2">
-                            CleanAR Solutions
+                        <div className="">
+                            <h1 className="navlogotext navbarh1 montserrat-bold m-0 t-0 ms-2">
+                                CleanAR Solutions
+                                </h1>
                         </div>
                         </Col>
                         </Row>

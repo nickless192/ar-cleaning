@@ -69,7 +69,7 @@ const QuickQuote = () => {
     const serviceOptions = {
         'Residential': ["House Cleaning", "Carpet Cleaning", "Move-In/Out Cleaning", "Residential Building Cleaning"],
         'Commercial': ["Office Cleaning", "Industrial Cleaning", "Retail Cleaning"],
-        'Special Events': ["Event Cleaning", "Post-Construction Cleaning"],
+        'Specialty Cleaning': ["Event Cleaning", "Post-Construction Cleaning"],
     };
 
     const togglePopover = (field) => {
@@ -470,7 +470,7 @@ const QuickQuote = () => {
         });
         setSelectedService("");
         setOptions([]);
-        
+
     };
 
     const getTextSummary = (form) => {
@@ -565,6 +565,19 @@ const QuickQuote = () => {
                                             <option key={i} value={i.toString()}>{i === 5 ? '5+' : i}</option>
                                         ))}
                                     </Form.Select>
+                                </Form.Group>
+                            </Col>
+                            {/* add another option for desired start date or service date with a calendar pop up selector */}
+                            <Col md={12} xs={12}>
+                                <Form.Group controlId={`startDate-${type}`}>
+                                    <Form.Label className="text-bold">Desired Start Date</Form.Label>
+                                    <Form.Control
+                                        type="date"
+                                        aria-label="Desired Start Date"
+                                        className="text-cleanar-color text-bold form-border"
+                                        onChange={(e) => handleCustomOptionChange(type, 'startDate', e)}
+                                        value={formData.services.find(s => s.type === type)?.customOptions?.startDate?.service || ''}
+                                    />
                                 </Form.Group>
                             </Col>
                         </Row>
@@ -727,7 +740,7 @@ const QuickQuote = () => {
                     <meta name="description" content="Get a quick service estimate from CleanAR Solutions. Fill out our form to receive a personalized quote for your cleaning needs." />
                 </Helmet>
                 {/* <h2 className="primary-color text-bold">Obtain a Service Estimate</h2> */}
-                <h2 className="text-center primary-color text-bold pt-2">Get a Free Quote</h2>
+                <h1 className="text-center primary-color text-bold pt-2">Get a Free Quote</h1>
                 <Form onSubmit={handleSubmit} id="quote-form" className="m-0 p-0">
                     <Form.Group className="mb-1">
                         <Row>
@@ -771,28 +784,28 @@ const QuickQuote = () => {
                         </Row>
                     </Form.Group>
                     <section className="section-border">
-                    <Form.Group className="mb-3">
-                        <Form.Label className="text-bold mb-1">
-                            Add Service Required*
-                            <FaQuestionCircle
-                                id="servicesTooltip"
-                                className="ms-1"
-                                onClick={() => togglePopover('services')}
-                            />
-                            <Popover
-                                placement="top"
-                                isOpen={popoverOpen.services}
-                                target="servicesTooltip"
-                                toggle={() => togglePopover('services')}
-                            >
-                                <PopoverBody>Please add service type and level to customize your order</PopoverBody>
-                            </Popover>
-                        </Form.Label>
-                    </Form.Group>
-                    <Form id="service-selection">
-                        <Row>
-                            <Col md={3} xs={12} className="mb-3 radio-group">
-                                {/* <div className="radio-group">    */}
+                        <Form.Group className="mb-3">
+                            <Form.Label className="text-bold mb-1">
+                                Add Service Required*
+                                <FaQuestionCircle
+                                    id="servicesTooltip"
+                                    className="ms-1"
+                                    onClick={() => togglePopover('services')}
+                                />
+                                <Popover
+                                    placement="top"
+                                    isOpen={popoverOpen.services}
+                                    target="servicesTooltip"
+                                    toggle={() => togglePopover('services')}
+                                >
+                                    <PopoverBody>Please add service type and level to customize your order</PopoverBody>
+                                </Popover>
+                            </Form.Label>
+                        </Form.Group>
+                        <Form id="service-selection">
+                            <Row>
+                                <Col md={3} xs={12} className="mb-3 radio-group">
+                                    {/* <div className="radio-group">    */}
                                     {Object.keys(serviceOptions).map((service) => (
                                         <label key={service} className="radio-label d-block mb-2">
                                             <input
@@ -806,11 +819,11 @@ const QuickQuote = () => {
                                             {service}
                                         </label>
                                     ))}
-                                {/* </div> */}
-                            </Col>
-                            <Col md={3} xs={12} className="mb-3">
-                                {selectedService && (
-                                    // <div className="options-selection">
+                                    {/* </div> */}
+                                </Col>
+                                <Col md={3} xs={12} className="mb-3">
+                                    {selectedService && (
+                                        // <div className="options-selection">
                                         <div className="radio-group options-selection">
                                             {options.map((option) => (
                                                 <label key={option} className="radio-label d-block mb-2">
@@ -825,13 +838,13 @@ const QuickQuote = () => {
                                                 </label>
                                             ))}
                                         </div>
-                                    // {/* </div> */}
-                                )}
-                            </Col>
-                            <Col md={6} xs={12}>
-                                {formData.services.map((service, index) => (
-                                    <div key={index} className="mb-3">
-                                        {/* <Button
+                                        // {/* </div> */}
+                                    )}
+                                </Col>
+                                <Col md={6} xs={12}>
+                                    {formData.services.map((service, index) => (
+                                        <div key={index} className="mb-3">
+                                            {/* <Button
                                             variant="link"
                                             className="text-cleanar-color text-bold p-0"
                                             onClick={() => handleToggle(service.type)}
@@ -839,16 +852,16 @@ const QuickQuote = () => {
                                             {service.type}
                                             {openService === service.type ? <FaChevronUp className="ms-2" /> : <FaChevronDown className="ms-2" />}
                                         </Button> */}
-                                        {/* <Collapse in={openService === service.type}> */}
+                                            {/* <Collapse in={openService === service.type}> */}
                                             {/* <div> */}
-                                                {renderCustomOptions(service.type)}
+                                            {renderCustomOptions(service.type)}
                                             {/* </div> */}
-                                        {/* </Collapse> */}
-                                    </div>
-                                ))}
-                            </Col>
-                        </Row>
-                    </Form>
+                                            {/* </Collapse> */}
+                                        </div>
+                                    ))}
+                                </Col>
+                            </Row>
+                        </Form>
                     </section>
                     <Row>
                         <Col>

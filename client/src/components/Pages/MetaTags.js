@@ -13,7 +13,7 @@ const MetaTags = () =>
     <meta name="author" content="CleanAR Solutions" />
     
     {/* Canonical URL to prevent duplicate content */}
-    <link rel="canonical" href="https://www.cleanarsolutions.ca/index" />
+    {/* <link rel="canonical" href="https://www.cleanarsolutions.ca/index" /> */}
 
     {/* Open Graph Tags */}
     <meta property="og:type" content="website" />
