@@ -26,8 +26,11 @@ import ChatTool from "../src/components/Pages/ChatTool";
 import Navbar from "components/Pages/Navbar.js";
 import Career from "components/Pages/Career.js";
 import GiftCard from "components/Pages/ManageGiftCard.js";
-import VisitorStats from "components/Pages/VisitorStats.js";
+import LogDashboard from 'views/LogDashboard';
+import BookingDashboard from 'views/BookingDashboard';
 import ResetPassword from "components/Pages/ResetPassword";
+import Terms from "components/Pages/Terms";
+import Disclaimer from "components/Pages/Disclaimer";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -50,7 +53,8 @@ const App = () => {
         <Route path="/manage-gift-card" element={<ProtectedRoute element={<GiftCard />} />} />
         <Route path="/view-quotes" element={<ProtectedRoute element={<ViewQuotes />} />} />
         <Route path="/view-quotes/:quoteId" element={<ProtectedRoute element={<ViewQuotes />} />} />
-        <Route path="/visitor-stats" element={<ProtectedRoute element={<VisitorStats />} />} />
+        <Route path="/dashboard" element={<ProtectedRoute element={<LogDashboard />} />} />
+        <Route path="/booking-dashboard" element={<ProtectedRoute element={<BookingDashboard />} />} />
         {/* <Route path="/login-page" element={<LoginPage />} /> */}
         {/* <Route path="/signup-page" element={<SignUp />} /> */}
         <Route path='/login-signup' element={<LoginSign />} />
@@ -60,6 +64,8 @@ const App = () => {
         <Route path="/about-us" element={<AboutUsPage />} />
         <Route path="/products-and-services" element={<ProductsAndServices />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/terms-conditions" element={<Terms />} />
+        <Route path="/disclaimer" element={<Disclaimer />} />
         <Route path="/" element={<Navigate to="/index" />} />
         <Route path="*" element={<Navigate to="/index" replace />} />
       </Routes>

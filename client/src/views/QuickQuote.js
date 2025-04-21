@@ -19,7 +19,7 @@ import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 // import { ButtonGroup, ToggleButton } from 'react-bootstrap';
 // import html2pdf from 'html2pdf.js';
 import Auth from "../utils/auth";
-import VisitorCounter from "components/Pages/VisitorCounter.js";
+import VisitorCounter from "../../src/components/Pages/VisitorCounter";
 import {
     FaQuestionCircle
 } from 'react-icons/fa';
@@ -567,7 +567,6 @@ const QuickQuote = () => {
                                     </Form.Select>
                                 </Form.Group>
                             </Col>
-                            {/* add another option for desired start date or service date with a calendar pop up selector */}
                             <Col md={12} xs={12}>
                                 <Form.Group controlId={`startDate-${type}`}>
                                     <Form.Label className="text-bold">Desired Start Date</Form.Label>
@@ -577,6 +576,7 @@ const QuickQuote = () => {
                                         className="text-cleanar-color text-bold form-border"
                                         onChange={(e) => handleCustomOptionChange(type, 'startDate', e)}
                                         value={formData.services.find(s => s.type === type)?.customOptions?.startDate?.service || ''}
+                                        min={new Date().toISOString().split('T')[0]} // Prevent dates before today
                                     />
                                 </Form.Group>
                             </Col>
@@ -686,6 +686,7 @@ const QuickQuote = () => {
                                         type="date"
                                         aria-label="Desired Service Date"
                                         className="text-cleanar-color text-bold form-border"
+                                        min={new Date().toISOString().split('T')[0]} // Prevent dates before today
                                         onChange={(e) => handleCustomOptionChange(type, 'startDate', e)}
                                         value={formData.services.find(s => s.type === type)?.customOptions?.startDate?.service || ''}
                                     />
@@ -718,6 +719,7 @@ const QuickQuote = () => {
                                         type="date"
                                         aria-label="Desired Service Date"
                                         className="text-cleanar-color text-bold form-border"
+                                        min={new Date().toISOString().split('T')[0]} // Prevent dates before today
                                         onChange={(e) => handleCustomOptionChange(type, 'startDate', e)}
                                         value={formData.services.find(s => s.type === type)?.customOptions?.startDate?.service || ''}
                                     />
@@ -769,8 +771,9 @@ const QuickQuote = () => {
                     <title>CleanAR Solutions - Quick Quote</title>
                     <meta name="description" content="Get a quick service estimate from CleanAR Solutions. Fill out our form to receive a personalized quote for your cleaning needs." />
                 </Helmet>
+                <VisitorCounter page={"quick-quote"} />
                 {/* <h2 className="primary-color text-bold">Obtain a Service Estimate</h2> */}
-                <h1 className="text-center primary-color text-bold pt-2">Get a Free Quote</h1>
+                <h2 className="text-center primary-color text-bold pt-2">Get a Free Quote</h2>
                 <Form onSubmit={handleSubmit} id="quote-form" className="m-0 p-0">
                     <Form.Group className="mb-1">
                         <Row>

@@ -6,6 +6,7 @@
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@babel/preset-env": "^7.24.5",
     "bootstrap": "^5.3.5",
+    "date-fns": "^4.1.0",
     "framer-motion": "^12.6.3",
     "html2canvas": "^1.4.1",
     "jwt-decode": "^4.0.0",
@@ -13,8 +14,10 @@
     "nouislider": "15.4.0",
     "pdf-lib": "^1.17.1",
     "react": ">=16.8.0",
+    "react-big-calendar": "^1.18.0",
     "react-bootstrap": "^2.10.4",
     "react-bootstrap-switch": "15.5.3",
+    "react-csv": "^2.2.2",
     "react-datetime": "3.2.0",
     "react-dom": ">=16.8.0",
     "react-helmet": "^6.1.0",
@@ -22,6 +25,7 @@
     "react-router-dom": "6.11.1",
     "react-scripts": "^5.0.1",
     "reactstrap": "^9.2.3",
+    "recharts": "^2.15.3",
     "sass": "1.62.1"
   },
   "scripts": {

@@ -2,9 +2,56 @@ const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 // const jwt = require('jsonwebtoken');
 const sharp = require('sharp');
+const { Parser } = require('json2csv');
 const { signTokenForPasswordReset } = require('../utils/auth');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
+const VisitorLog = require('../models/VisitorLog');
+
+const generateWeeklyReport = async () => {
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+    const logs = await VisitorLog.find({ visitDate: { $gte: oneWeekAgo } });
+
+    // console.log('logs: ', logs);
+
+    const totalVisits = logs.length;
+    const pageCounts = {};
+    const userAgents = {};
+    const ipAddress = {};
+
+    logs.forEach((log) => {
+        pageCounts[log.page] = (pageCounts[log.page] || 0) + 1;
+        userAgents[log.userAgent] = (userAgents[log.userAgent] || 0) + 1;
+        ipAddress[log.ip] = (ipAddress[log.ip] || 0) + 1;
+    });
+
+    const parser = new Parser();
+    const csv = parser.parse(logs.map(log => ({
+        date: log.visitDate,
+        page: log.page,
+        userAgent: log.userAgent,
+        ipAddress: log.ip,
+    })));
+
+    const htmlSummary = `
+      <h2>Weekly Visitor Report</h2>
+      <p><strong>Total Visits:</strong> ${totalVisits}</p>
+      <p><strong>Page Views:</strong></p>
+      <ul>${Object.entries(pageCounts).map(([page, count]) => `<li>${page}: ${count}</li>`).join('')}</ul>
+      <p><strong>User Agents:</strong></p>
+      <ul>${Object.entries(userAgents).map(([ua, count]) => `<li>${ua}: ${count}</li>`).join('')}</ul>
+        <p><strong>IP Addresses:</strong></p>
+        <ul>${Object.entries(ipAddress).map(([ip, count]) => `<li>${ip}: ${count}</li>`).join('')}</ul>
+    `;
+
+    // console.log('csv: ', csv);
+    // console.log('htmlSummary: ', htmlSummary);
+    // console.log('totalVisits: ', totalVisits);
+
+    return { csv, htmlSummary, totalVisits };
+};
 
 // Define your email controller
 const emailController = {
@@ -180,7 +227,7 @@ Make sure to follow up with the client to discuss their requirements further.
 
 Best regards,
 
-ClenanAR Solutions
+CleanAR Solutions
 info@cleanARsolutions.ca
 (437) 440-5514`;
             const msg = {
@@ -315,24 +362,24 @@ info@cleanARsolutions.ca
     emailQuickQuote: async (req, res) => {
         try {
             const { textSummary, imageBase64, formData } = req.body;
-        if (!textSummary || !imageBase64 || !formData) {
-            return res.status(400).json({ message: "Form data and image are required." });
-        }
+            if (!textSummary || !imageBase64 || !formData) {
+                return res.status(400).json({ message: "Form data and image are required." });
+            }
 
             // Decode the base64 image string to a buffer
-        const imageBuffer = Buffer.from(imageBase64, 'base64');
-        const { name, email, phonenumber, postalcode } = formData;
+            const imageBuffer = Buffer.from(imageBase64, 'base64');
+            const { name, email, phonenumber, postalcode } = formData;
 
-        // Use Sharp to convert PNG to JPEG
-        const jpegBuffer = await sharp(imageBuffer)
-            .jpeg({ quality: 80 })  // Convert to JPEG and set quality
-            .toBuffer();  // Return a buffer
+            // Use Sharp to convert PNG to JPEG
+            const jpegBuffer = await sharp(imageBuffer)
+                .jpeg({ quality: 80 })  // Convert to JPEG and set quality
+                .toBuffer();  // Return a buffer
 
-        // Convert JPEG buffer to Base64
-        const jpegBase64 = jpegBuffer.toString('base64');
+            // Convert JPEG buffer to Base64
+            const jpegBase64 = jpegBuffer.toString('base64');
 
-        // Construct email HTML with inline image
-        const emailHtml = `
+            // Construct email HTML with inline image
+            const emailHtml = `
             <h3>Form Submission</h3>
             <p>${textSummary}</p>
             <ul>
@@ -352,12 +399,12 @@ info@cleanARsolutions.ca
             //     html: formHtml,
             // }
             // Email content
-        const msg = {
-            to: ['info@cleanARsolutions.ca'],
-            from: 'info@cleanARsolutions.ca',
-            subject: "New Quote Submission",
-            html: emailHtml
-        };
+            const msg = {
+                to: ['info@cleanARsolutions.ca'],
+                from: 'info@cleanARsolutions.ca',
+                subject: "New Quote Submission",
+                html: emailHtml
+            };
             sgMail
                 .send(msg)
                 .then(() => {
@@ -382,29 +429,116 @@ info@cleanARsolutions.ca
         const { from, to, subject, html, attachments } = req.body;
 
         const msg = {
-          to: to,
-          from: from,
-          subject: subject,
-          html: html,
-          attachments: attachments.map(attachment => ({
-            content: attachment.content,
-            filename: attachment.filename,
-            type: 'application/pdf',
-            disposition: 'attachment',
-            contentId: 'quickQuotePDF'
-          }))
+            to: to,
+            from: from,
+            subject: subject,
+            html: html,
+            attachments: attachments.map(attachment => ({
+                content: attachment.content,
+                filename: attachment.filename,
+                type: 'application/pdf',
+                disposition: 'attachment',
+                contentId: 'quickQuotePDF'
+            }))
         };
-      
+
         try {
-          await sgMail.send(msg);
-          console.log('Email sent successfully');
-          res.status(200).json({ message: 'Email sent successfully' });
+            await sgMail.send(msg);
+            console.log('Email sent successfully');
+            res.status(200).json({ message: 'Email sent successfully' });
         } catch (error) {
-          console.error('Error sending email:', error);
-          if (error.response) {
-            console.error(error.response.body);
-          }
-          res.status(500).json({ message: 'Error sending email' });
+            console.error('Error sending email:', error);
+            if (error.response) {
+                console.error(error.response.body);
+            }
+            res.status(500).json({ message: 'Error sending email' });
+        }
+    },
+    generateWeeklyReport: async () => {
+        const oneWeekAgo = new Date();
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+        const logs = await VisitorLog.find({ visitDate: { $gte: oneWeekAgo } });
+
+        // console.log('logs: ', logs);
+
+        const totalVisits = logs.length;
+        const pageCounts = {};
+        const userAgents = {};
+        const ipAddress = {};
+
+        logs.forEach((log) => {
+            pageCounts[log.page] = (pageCounts[log.page] || 0) + 1;
+            userAgents[log.userAgent] = (userAgents[log.userAgent] || 0) + 1;
+            ipAddress[log.ip] = (ipAddress[log.ip] || 0) + 1;
+        });
+
+        const parser = new Parser();
+        const csv = parser.parse(logs.map(log => ({
+            date: log.visitDate,
+            page: log.page,
+            userAgent: log.userAgent,
+            ipAddress: log.ip,
+        })));
+
+        const htmlSummary = `
+          <h2>Weekly Visitor Report</h2>
+          <p><strong>Total Visits:</strong> ${totalVisits}</p>
+          <p><strong>Page Views:</strong></p>
+          <ul>${Object.entries(pageCounts).map(([page, count]) => `<li>${page}: ${count}</li>`).join('')}</ul>
+          <p><strong>User Agents:</strong></p>
+          <ul>${Object.entries(userAgents).map(([ua, count]) => `<li>${ua}: ${count}</li>`).join('')}</ul>
+            <p><strong>IP Addresses:</strong></p>
+            <ul>${Object.entries(ipAddress).map(([ip, count]) => `<li>${ip}: ${count}</li>`).join('')}</ul>
+        `;
+
+        // console.log('csv: ', csv);
+        // console.log('htmlSummary: ', htmlSummary);
+        // console.log('totalVisits: ', totalVisits);
+
+        return { csv, htmlSummary, totalVisits };
+    },
+    sendWeeklyReportEmail: async () => {
+        const { csv, htmlSummary } = await generateWeeklyReport();
+
+        //   console.log('htmlSummary: ', htmlSummary);
+
+        const message = {
+            to: 'info@cleanarsolutions.ca', // Update with admin email
+            from: 'info@cleanarsolutions.ca',
+            subject: 'Weekly Visitor Report',
+            html: htmlSummary,
+            attachments: [
+                {
+                    content: Buffer.from(csv).toString('base64'),
+                    filename: 'visitor-report.csv',
+                    type: 'text/csv',
+                    disposition: 'attachment',
+                },
+            ],
+        };
+
+        try {
+            await sgMail.send(message);
+            // console.log('Email sent successfully');
+            // res.status(200).json({ message: 'Email sent successfully' });
+        } catch (error) {
+            console.error('Error sending email:', error);
+            if (error.response) {
+                console.error(error.response.body);
+            }
+            // res.status(500).json({ message: 'Error sending email' });
+        }
+    },
+    generateManualReport: async (req, res) => {
+        try {
+            const { csv } = await generateWeeklyReport();
+            res.header('Content-Type', 'text/csv');
+            res.attachment('visitor-report.csv');
+            res.send(csv);
+        } catch (err) {
+            console.error('Manual report error:', err);
+            res.status(500).json({ error: 'Failed to generate report' });
         }
     }
 

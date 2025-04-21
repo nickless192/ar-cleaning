@@ -114,9 +114,13 @@ function IndexNavbar() {
                                     <i className="now-ui-icons ui-1_settings-gear-63 mr-1"></i>
                                     Manage Gift Cards
                                 </DropdownItem>
-                                <DropdownItem to="/visitor-stats" tag={Link}>
+                                <DropdownItem to="/dashboard" tag={Link}>
                                     <i className="now-ui-icons ui-1_settings-gear-63 mr-1"></i>
-                                    Visitor Stats
+                                    Dashboard
+                                </DropdownItem>
+                                <DropdownItem to="/booking-dashboard" tag={Link}>
+                                    <i className="now-ui-icons ui-1_settings-gear-63 mr-1"></i>
+                                    Bookings
                                 </DropdownItem>
                                 {/* <NavItem>
                                 <NavLink

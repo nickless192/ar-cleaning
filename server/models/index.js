@@ -8,5 +8,6 @@ const VisitorLog = require('./VisitorLog');
 const GiftCard = require('./GiftCard');
 const VisitorCount = require('./VisitorCount');
 const QuickQuote = require('./QuickQuote');
+const Booking = require('./Booking'); // Uncomment if you have a Booking model
 
-module.exports = {User, Supplier, Service, Product, Order, Quote, VisitorLog, GiftCard, VisitorCount, QuickQuote};
+module.exports = {User, Supplier, Service, Product, Order, Quote, VisitorLog, GiftCard, VisitorCount, QuickQuote, Booking};

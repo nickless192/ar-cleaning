@@ -14,6 +14,8 @@ import {
 
 } from 'reactstrap'; // Importing required components from reactstrap
 
+import VisitorCounter from "components/Pages/VisitorCounter.js";
+
 import {
   Card
 } from 'react-bootstrap'
@@ -43,6 +45,7 @@ const ProductsAndServices = () => {
       {/* <Navbar /> */}
 
       <div className="content pb-0 mb-0 section-background products-services-section">
+        <VisitorCounter page={"products-and-services"} />
         {/* <div className="container"> */}
           <h1 className="title secondary-color">Products and Services</h1>
           {/* <Row>

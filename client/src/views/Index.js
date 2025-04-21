@@ -79,8 +79,6 @@ function Index() {
     Saturday: "8:00 AM – 1:00 PM"
   };
 
-
-
   const contactItems = [
     {
       icon: "now-ui-icons tech_mobile",
@@ -191,7 +189,7 @@ function Index() {
         <Row className="m-0 align-items-center">
           <Col className="m-0 p-0" xs='12' md='6'>
           {/* <h1 className="primary-color text-bold montserrat-bold text-align-end mr-3">CleanAR Solutions</h1> */}
-            <h1 className="primary-color text-bold montserrat-bold text-align-end mr-3">Get Started</h1>
+            <h1 className="primary-color text-bold montserrat-bold text-align-end mr-3">CleanAR Solutions <br /> Getting Started</h1>
             {/* <CardImg top className="logo-image-index mb-3" src={Logo} alt="CleanAR Solutions logo" /> */}
             <p className="martel-bold landing-page-intro text-align-end mr-3">
               {/* With more 10 years of experience, our services are designed to meet the unique needs of our clients, providing personalized solutions and exceptional results on every project. At <b>CleanAR Solutions</b>, we take pride in offering reliable and high-quality service that ensures the impeccable cleanliness and maintenance of any space.  We are here to help you find the perfect cleaning solution for your needs; fill up our short form and we'll be in touch with a quote. Need more information? Below you'll find all of our contact information, including our phone number, email address, and social media links. We look forward to hearing from you! */}
@@ -206,28 +204,6 @@ function Index() {
         </Row>
         <Row>
           <Col xs='12' md='6'>
-            {/* <Card className="">
-              <CardBody>
-                <CardText>
-                  {contactItems.map((item, index) => (
-                    <ListGroupItem key={index} className="gradient-bg">
-                      <i className={item.icon}></i>
-                      {item.link.startsWith("http") || item.link.startsWith("mailto") ? (
-                        <a href={item.link} target="_blank" rel="noreferrer noopener" className="text-bold martel-semibold" title={item.text}>
-                          {' '}{item.text}
-                        </a>
-                      ) : (
-                        <Link to={item.link} className="text-bold martel-semibold" title={item.text}>
-                          {' '}{item.text}
-                        </Link>
-                      )}
-                      <br />
-                      <span className="martel-bold">{item.description}</span>
-                    </ListGroupItem>
-                  ))}
-                </CardText>
-              </CardBody>
-            </Card> */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}

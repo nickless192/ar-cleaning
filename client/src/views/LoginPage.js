@@ -1,6 +1,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import Auth from "utils/auth";
+import VisitorCounter from "../../src/components/Pages/VisitorCounter";
 // import Logo from "../../assets/svg/cleanmart-blue.svg";
 
 // reactstrap components
@@ -166,6 +167,7 @@ function LoginPage() {
   return (
     <>
       {/* <Navbar /> */}
+      <VisitorCounter page={"login-page"} />
       <div className="content content-border">
           <h1 className="title primary-color text-center montserrat-bold">Log in</h1>
         {/* <div className="content px-2"> */}

@@ -7,6 +7,7 @@ const chatRoutes = require('./chatRoutes');
 const visitorRoutes = require('./visitorRoutes');
 const emailRoutes = require('./emailRoutes');
 const reviewRoutes = require('./reviewRoutes');
+const bookingRoutes = require('./bookingRoutes');
 
 router.use('/users', userRoutes);
 router.use('/services', serviceRoutes);
@@ -16,6 +17,6 @@ router.use('/chat', chatRoutes);
 router.use('/visitors', visitorRoutes);
 router.use('/email', emailRoutes);
 router.use('/reviews', reviewRoutes);
-// router.use('/thoughts', thoughtsRoutes);
+router.use('/bookings', bookingRoutes); 
 
 module.exports = router;
