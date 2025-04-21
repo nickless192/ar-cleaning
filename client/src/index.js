@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 
@@ -11,13 +11,13 @@ import "assets/scss/now-ui-kit.scss?v=1.5.0";
 // pages for this kit
 import Index from "views/Index.js";
 import AboutUsPage from "./components/Pages/AboutUs";
-import LoginPage from "views/LoginPage";
+// import LoginPage from "views/LoginPage";
 import ProfilePage from "../src/components/Pages/ProfilePage";
-import SignUp from "views/SignUp";
+// import SignUp from "views/SignUp";
 import ManageService from "../src/components/Pages/ManageService";
 import ManageProduct from "../src/components/Pages/ManageProduct";
 import ManageUser from "../src/components/Pages/ManageUser";
-import RequestQuote from "../src/components/Pages/RequestQuote";
+// import RequestQuote from "../src/components/Pages/RequestQuote";
 import LoginSign from "../src/components/Pages/LoginSign";
 import ViewQuotes from "../src/components/Pages/ViewQuotes";
 import ProductsAndServices from "../src/components/Pages/ProductsAndServices";
@@ -31,15 +31,16 @@ import BookingDashboard from 'views/BookingDashboard';
 import ResetPassword from "components/Pages/ResetPassword";
 import Terms from "components/Pages/Terms";
 import Disclaimer from "components/Pages/Disclaimer";
+import Footer from "components/Pages/Footer.js";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 const App = () => {
-  const [isChatOpen, setIsChatOpen] = useState(false);
+  // const [isChatOpen, setIsChatOpen] = useState(false);
 
-  const toggleChat = () => {
-    setIsChatOpen(!isChatOpen);
-  };
+  // const toggleChat = () => {
+  //   setIsChatOpen(!isChatOpen);
+  // };
 
   return (
     <BrowserRouter>
@@ -69,7 +70,7 @@ const App = () => {
         <Route path="/" element={<Navigate to="/index" />} />
         <Route path="*" element={<Navigate to="/index" replace />} />
       </Routes>
-      {/* <Footer /> */}
+      <Footer />
       <a
         href="https://wa.me/14374405514/?text=Hello%2C%20I%20am%20intested%20in%20your%20services.%20Please%20contact%20me."
         className="whatsapp-btn"

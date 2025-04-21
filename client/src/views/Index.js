@@ -296,7 +296,7 @@ function Index() {
           </Col>
         </Row>
 
-        <Footer />
+        {/* <Footer /> */}
       </div>
 
     </>
