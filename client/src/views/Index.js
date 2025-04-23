@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from 'framer-motion';
 import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import VisitorCounter from "components/Pages/VisitorCounter.js";
 import {
   Card,
@@ -27,6 +28,7 @@ function Index() {
 
   const [availabilityStatus, setAvailabilityStatus] = useState('');
   const [responseTimeMessage, setResponseTimeMessage] = useState('');
+  const location = useLocation();
 
   // const contactItems = [
   //   {
@@ -174,6 +176,9 @@ function Index() {
     // window.scrollTo(0, 0);
     // document.body.scrollTop = 0;
     // initializeServices();
+    if (location.state?.scrollToQuote) {
+      document.getElementById("quote-section")?.scrollIntoView({ behavior: "smooth" });
+    }
     return function cleanup() {
       document.body.classList.remove("index-page");
       document.body.classList.remove("sidebar-collapse");

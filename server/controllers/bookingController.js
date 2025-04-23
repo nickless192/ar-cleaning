@@ -5,12 +5,13 @@ const Booking = require('../models/Booking');
 
 const bookingControllers = {
     createBooking: async (req, res) => {
-        const { customerName, customerEmail, serviceType, date } = req.body;
+        const { customerName, customerEmail, serviceType, date, confirmationSent } = req.body;
 
         if (!customerEmail || !date) return res.status(400).json({ error: 'Missing info' });
 
         try {
             // 1. Send confirmation
+            if (!confirmationSent) {
             // await sendConfirmationEmail({ customerName, customerEmail, serviceType, date });
             const msg = {
                 to: customerEmail,
@@ -33,7 +34,7 @@ const bookingControllers = {
                 console.error('[Email] Failed to send confirmation:', err);
                 throw err;
               }
-
+            }
             // 2. Save booking and schedule reminder
             const newBooking = await Booking.create({
                 customerName,
@@ -49,6 +50,7 @@ const bookingControllers = {
             console.error('Error creating booking:', err);
             res.status(500).json({ error: 'Server error' });
         }
+        
     },
     getBookings: async (req, res) => {
         try {

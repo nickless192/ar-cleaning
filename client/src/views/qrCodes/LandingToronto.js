@@ -1,5 +1,6 @@
 // src/pages/LandingToronto.jsx
 import { useNavigate } from 'react-router-dom';
+import VisitorCounter from '../../../src/components/Pages/VisitorCounter';
 
 const LandingToronto = () => {
   const navigate = useNavigate();
@@ -9,14 +10,18 @@ const LandingToronto = () => {
   };
 
   return (
-    <div className="container text-center py-5">
-      <h1>Spotted in Toronto: Cleaner Spaces 👉</h1>
-      <p>Join hundreds of Torontonians choosing CleanAR for a spotless experience.</p>
-      <div className="d-flex justify-content-center gap-3 mt-4">
-        <button className="btn btn-primary" onClick={goToQuote}>Get a Quote</button>
-        <a className="btn btn-outline-secondary" href="tel:+14374405514">Call Now</a>
+    <>
+      <VisitorCounter page={"toronto"} />
+
+      <div className="container text-center py-5">
+        <h1>Spotted in Toronto: Cleaner Spaces 👉</h1>
+        <p>Join hundreds of Torontonians choosing CleanAR for a spotless experience.</p>
+        <div className="d-flex justify-content-center gap-3 mt-4">
+          <button className="btn btn-primary" onClick={goToQuote}>Get a Quote</button>
+          <a className="btn btn-info" href="tel:+14374405514">Call Now</a>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

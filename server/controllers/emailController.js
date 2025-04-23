@@ -380,14 +380,14 @@ info@cleanARsolutions.ca
 
             // Construct email HTML with inline image
             const emailHtml = `
-            <h3>Form Submission</h3>
-            <p>${textSummary}</p>
+            <h2>Customer Form Submission</h2>
             <ul>
-                <li><strong>Name:</strong> ${name}</li>
-                <li><strong>Email:</strong> ${email}</li>
-                <li><strong>Phone:</strong> ${phonenumber}</li>
-                <li><strong>Postal Code:</strong> ${postalcode}</li>
+            <li><strong>Name:</strong> ${name}</li>
+            <li><strong>Email:</strong> ${email}</li>
+            <li><strong>Phone:</strong> ${phonenumber}</li>
+            <li><strong>Postal Code:</strong> ${postalcode}</li>
             </ul>                     
+            <p>${textSummary}</p>
             <p><strong>Form Screenshot:</strong></p>
             <img src="data:image/jpeg;base64,${jpegBase64}" alt="Quote Form" style="max-width:100%; border:1px solid #ccc; border-radius:8px;">
         `;
@@ -402,7 +402,8 @@ info@cleanARsolutions.ca
             const msg = {
                 to: ['info@cleanARsolutions.ca'],
                 from: 'info@cleanARsolutions.ca',
-                subject: "New Quote Submission",
+                // bcc: 'info@clenarsolutions.ca',
+                subject: "CleanAR Solutions: A new quote has been submitted! Please review and follow up with the client.",
                 html: emailHtml
             };
             sgMail

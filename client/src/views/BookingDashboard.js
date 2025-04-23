@@ -125,6 +125,29 @@ const BookingDashboard = () => {
                 required
               />
             </Form.Group>
+            {/* i want to add 2 options: 1 to disable sending the confirmation, and 2 to disable sending the reminder  */}
+            <Form.Group controlId="confirmationSent" className="mb-3">
+              <Form.Label>Confirmation Sent</Form.Label>
+              <Form.Check
+                type="checkbox"
+                name="confirmationSent"
+                className="text-cleanar-color text-bold form-input"
+                checked={formData.confirmationSent}
+                onChange={handleChange}
+                label="Send confirmation email"
+              />
+            </Form.Group>
+            <Form.Group controlId="reminderScheduled" className="mb-3">
+              <Form.Label>Reminder Scheduled</Form.Label>
+              <Form.Check
+                type="checkbox"
+                name="reminderScheduled"
+                className="text-cleanar-color text-bold form-input"
+                checked={formData.reminderScheduled}
+                onChange={handleChange}
+                label="Send reminder email"
+              />
+            </Form.Group> 
 
             <Button type="submit" disabled={loading}>
               {loading ? <Spinner animation="border" size="sm" /> : 'Submit Booking'}

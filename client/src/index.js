@@ -33,6 +33,12 @@ import Terms from "components/Pages/Terms";
 import Disclaimer from "components/Pages/Disclaimer";
 import Footer from "components/Pages/Footer.js";
 
+import LandingFresh from "views/qrCodes/LandingFresh";
+import LandingNow from "views/qrCodes/LandingNow";
+import LandingSecret from "views/qrCodes/LandingSecret";
+import LandingStart from "views/qrCodes/LandingStart";
+import LandingToronto from "views/qrCodes/LandingToronto";
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 const App = () => {
@@ -67,6 +73,11 @@ const App = () => {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/terms-conditions" element={<Terms />} />
         <Route path="/disclaimer" element={<Disclaimer />} />
+        <Route path="/now" element={<LandingNow />} />
+      <Route path="/start" element={<LandingStart />} />
+      <Route path="/toronto" element={<LandingToronto />} />
+      <Route path="/fresh" element={<LandingFresh />} />
+      <Route path="/secret" element={<LandingSecret />} />
         <Route path="/" element={<Navigate to="/index" />} />
         <Route path="*" element={<Navigate to="/index" replace />} />
       </Routes>

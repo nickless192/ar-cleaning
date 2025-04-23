@@ -1,21 +1,18 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import {
     Input,
-    FormGroup, Label,
+    Label,
     Popover, PopoverBody
 } from 'reactstrap';
 import {
-    FloatingLabel,
     Container,
     Button,
     Form,
     Row,
     Col,
-    Collapse
 } from 'react-bootstrap';
-import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 // import { ButtonGroup, ToggleButton } from 'react-bootstrap';
 // import html2pdf from 'html2pdf.js';
 import Auth from "../utils/auth";
@@ -29,10 +26,7 @@ import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 const QuickQuote = () => {
 
     const location = useLocation();
-    // const [promoCode, setPromoCode] = useState('');
     const navigate = useNavigate();
-    const [service, setService] = useState({});
-    const [setProducts] = useState([]);
     const [formData, setFormData] = useState({
         name: '',
         userId: '',
@@ -60,7 +54,6 @@ const QuickQuote = () => {
 
     const [validPromoCode, setValidPromoCode] = useState(false);
     const [isLogged] = useState(Auth.loggedIn());
-    const [openService, setOpenService] = useState(null);
     const [isInitialLoad, setIsInitialLoad] = useState(true);
     const [selectedService, setSelectedService] = useState("");
     const [options, setOptions] = useState([]);
@@ -148,9 +141,6 @@ const QuickQuote = () => {
         setFormData(prevFormData => ({ ...prevFormData, [name]: value }));
     };
 
-    const handleToggle = (type) => {
-        setOpenService((prev) => (prev === type ? null : type));
-    };
 
     const handleAddService = (e) => {
         const serviceType = e.target.value;
@@ -166,7 +156,7 @@ const QuickQuote = () => {
                 services: [service]
             };
         });
-        console.log('services:', formData.services);
+        // console.log('services:', formData.services);
     };
 
     // Handle service selection
@@ -260,7 +250,7 @@ const QuickQuote = () => {
         };
 
         // Add title
-        await addText('Quote Submission Confirmation', 50, yPosition, 24);
+        await addText('Service Request Confirmation', 50, yPosition, 24);
         yPosition -= 40;
 
         // Add basic information
@@ -281,11 +271,11 @@ const QuickQuote = () => {
         yPosition -= 20;
 
         // Add services
-        await addText('Services:', 50, yPosition, 18);
+        await addText('Service Requested:', 50, yPosition, 18);
         yPosition -= 30;
 
         for (const [index, service] of formData.services.entries()) {
-            await addText(`${index + 1}. ${service.type}`, 50, yPosition, 16);
+            await addText(`${service.type}`, 50, yPosition, 16);
             yPosition -= 20;
 
             // Render custom options
@@ -293,7 +283,11 @@ const QuickQuote = () => {
                 for (const [key, value] of Object.entries(service.customOptions)) {
                     if (typeof value === 'object' && value !== null && value.service !== undefined) {
                         // If value is an object, render its properties using the label
+                        if (typeof value.service === 'boolean') {
+                            await addText(`   - ${value.label || key}: ${value.service ? 'Yes' : 'No'}`, 50, yPosition, 14);
+                        } else {
                         await addText(`   - ${value.label || key}: ${value.service}`, 50, yPosition, 14);
+                        }
                         yPosition -= 20;
                     }
                 }
@@ -319,15 +313,30 @@ const QuickQuote = () => {
 
         // Convert the PDF to base64 and send it in an email
         const pdfBase64 = await pdfDoc.saveAsBase64();
-        await sendEmailWithPDF(formData.email, 'Your Quote Confirmation', pdfBase64);
+        await sendEmailWithPDF(formData, 'CleanAR Solutions: Your Quote Confirmation', pdfBase64);
     }, []);
 
-    const sendEmailWithPDF = useCallback(async (to, subject, pdfBase64) => {
+    const sendEmailWithPDF = useCallback(async (formData, subject, pdfBase64) => {
+        const hmtlMessage = `
+        <h2>Thank you for contacting us!</h2>
+        <p>Hi ${formData.name},</p>
+        <p>We have received your quote request and are currently processing it. Please find your quote confirmation attached.</p>
+        <p>We will be in touch shortly to discuss your needs. In the meantime, feel free to browse our services.</p>
+        <p>Best regards,</p>
+        <p>CleanAR Solutions</p>
+        <p>
+        <a href="https://www.cleanarsolutions.ca/index" target="_blank">www.cleanarsolutions.ca/index</a>
+        </p>
+        <p>
+        <a href="tel:+437-440-5514">+1 (437) 440-5514</a>
+        </p>`;               
+
         const mailOptions = {
             from: 'info@cleanARsolutions.ca',
-            to: to,
+            to: formData.email,
+            bcc: 'info@cleanARsolutions.ca',
             subject: subject,
-            html: '<p>Please find your quote confirmation attached.</p>',
+            html: hmtlMessage,
             attachments: [{
                 filename: 'quote_confirmation.pdf',
                 content: pdfBase64,
@@ -415,9 +424,9 @@ const QuickQuote = () => {
                     alert(`Quote submitted successfully! We'll be in touch shortly to discuss your needs. In the meantime, feel free to browse our services.`);
                     // disable for testing
                     resetForm();
-                    navigate('/index');
                     // Generate and download the PDF
                     await generatePDF(updatedFormData);
+                    navigate('/index');
                 }
             } catch (error) {
                 console.error('Error submitting quote:', error);
@@ -475,10 +484,10 @@ const QuickQuote = () => {
 
     const getTextSummary = (form) => {
         const formData = new FormData(form);
-        console.log('formData:', formData);
+        // console.log('formData:', formData);
         let textSummary = "";
         for (let [key, value] of formData.entries()) {
-            console.log(key, value);
+            // console.log(key, value);
             const placeholder = form.querySelector(`[name="${key}"]`)?.placeholder || key;
             textSummary += `<strong>${placeholder}:</strong> ${value}<br>`;
         }
@@ -591,6 +600,7 @@ const QuickQuote = () => {
                                             <Input
                                                 type="checkbox"
                                                 onChange={(e) => handleCustomOptionChange(type, 'deepCleaning', e)}
+                                                aria-label="Deep Cleaning"
                                                 checked={formData.services.find(s => s.type === type)?.customOptions?.deepCleaning?.service || false}
                                             />
                                             <span className="form-check-sign"></span>
@@ -600,6 +610,7 @@ const QuickQuote = () => {
                                             <Input
                                                 type="checkbox"
                                                 onChange={(e) => handleCustomOptionChange(type, 'windowCleaning', e)}
+                                                aria-label="Window Cleaning"
                                                 checked={formData.services.find(s => s.type === type)?.customOptions?.windowCleaning?.service || false}
                                             />
                                             <span className="form-check-sign"></span>
@@ -609,6 +620,7 @@ const QuickQuote = () => {
                                             <Input
                                                 type="checkbox"
                                                 onChange={(e) => handleCustomOptionChange(type, 'laundryService', e)}
+                                                aria-label="Laundry Service"
                                                 checked={formData.services.find(s => s.type === type)?.customOptions?.laundryService?.service || false}
                                             />
                                             <span className="form-check-sign"></span>
@@ -705,6 +717,8 @@ const QuickQuote = () => {
                                     <Form.Label className="text-bold">Description*</Form.Label>
                                     <Form.Control
                                         as="textarea"
+                                        rows={3}
+                                        aria-label="Description"
                                         placeholder="Provide a description of the services you require. We will be in touch shortly to schedule a consultation."
                                         value={formData.services.find(s => s.type === type)?.customOptions?.description?.service || ''}
                                         onChange={(e) => handleCustomOptionChange(type, 'description', e)}
@@ -766,7 +780,7 @@ const QuickQuote = () => {
 
     return (
         <>
-            <Container className="quick-quote-container px-4">
+            <Container className="quick-quote-container px-4" id="quote-section">
                 <Helmet>
                     <title>CleanAR Solutions - Quick Quote</title>
                     <meta name="description" content="Get a quick service estimate from CleanAR Solutions. Fill out our form to receive a personalized quote for your cleaning needs." />
@@ -844,6 +858,7 @@ const QuickQuote = () => {
                                             <input
                                                 type="radio"
                                                 name="serviceType"
+                                                placeholder='Service Type'
                                                 value={service}
                                                 checked={selectedService === service}
                                                 onChange={() => handleServiceChange(service)}
@@ -863,6 +878,7 @@ const QuickQuote = () => {
                                                     <input
                                                         type="radio"
                                                         name="serviceOption"
+                                                        placeholder='Service Option'
                                                         value={option}
                                                         onChange={handleAddService}
                                                         className="me-2"
@@ -877,19 +893,7 @@ const QuickQuote = () => {
                                 <Col md={6} xs={12}>
                                     {formData.services.map((service, index) => (
                                         <div key={index} className="mb-3">
-                                            {/* <Button
-                                            variant="link"
-                                            className="text-cleanar-color text-bold p-0"
-                                            onClick={() => handleToggle(service.type)}
-                                        >
-                                            {service.type}
-                                            {openService === service.type ? <FaChevronUp className="ms-2" /> : <FaChevronDown className="ms-2" />}
-                                        </Button> */}
-                                            {/* <Collapse in={openService === service.type}> */}
-                                            {/* <div> */}
                                             {renderCustomOptions(service.type)}
-                                            {/* </div> */}
-                                            {/* </Collapse> */}
                                         </div>
                                     ))}
                                 </Col>
