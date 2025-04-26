@@ -361,22 +361,24 @@ info@cleanARsolutions.ca
     },
     emailQuickQuote: async (req, res) => {
         try {
-            const { textSummary, imageBase64, formData } = req.body;
-            if (!textSummary || !imageBase64 || !formData) {
+            // const { textSummary, imageBase64, formData } = req.body;
+            // if (!textSummary || !imageBase64 || !formData) {
+                const { textSummary, formData } = req.body;
+                if (!textSummary || !formData) {
                 return res.status(400).json({ message: "Form data and image are required." });
             }
 
             // Decode the base64 image string to a buffer
-            const imageBuffer = Buffer.from(imageBase64, 'base64');
+            // const imageBuffer = Buffer.from(imageBase64, 'base64');
             const { name, email, phonenumber, postalcode } = formData;
 
             // Use Sharp to convert PNG to JPEG
-            const jpegBuffer = await sharp(imageBuffer)
-                .jpeg({ quality: 80 })  // Convert to JPEG and set quality
-                .toBuffer();  // Return a buffer
+            // const jpegBuffer = await sharp(imageBuffer)
+            //     .jpeg({ quality: 80 })  // Convert to JPEG and set quality
+            //     .toBuffer();  // Return a buffer
 
             // Convert JPEG buffer to Base64
-            const jpegBase64 = jpegBuffer.toString('base64');
+            // const jpegBase64 = jpegBuffer.toString('base64');
 
             // Construct email HTML with inline image
             const emailHtml = `
@@ -388,9 +390,9 @@ info@cleanARsolutions.ca
             <li><strong>Postal Code:</strong> ${postalcode}</li>
             </ul>                     
             <p>${textSummary}</p>
-            <p><strong>Form Screenshot:</strong></p>
-            <img src="data:image/jpeg;base64,${jpegBase64}" alt="Quote Form" style="max-width:100%; border:1px solid #ccc; border-radius:8px;">
-        `;
+            `;
+            // <p><strong>Form Screenshot:</strong></p>
+            // <img src="data:image/jpeg;base64,${jpegBase64}" alt="Quote Form" style="max-width:100%; border:1px solid #ccc; border-radius:8px;">
 
             // const msg = {
             //     to: 'info@cleanARsolutions.ca', // Change to your recipient

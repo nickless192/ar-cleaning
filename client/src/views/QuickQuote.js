@@ -13,6 +13,7 @@ import {
     Row,
     Col,
 } from 'react-bootstrap';
+// import Logo from '../../assets/img/IC CLEAN AR-15-cropped.png"';
 // import { ButtonGroup, ToggleButton } from 'react-bootstrap';
 // import html2pdf from 'html2pdf.js';
 import Auth from "../utils/auth";
@@ -22,6 +23,7 @@ import {
 } from 'react-icons/fa';
 import html2canvas from 'html2canvas';
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
+import Logo from "../../src/assets/img/IC CLEAN AR-15-cropped.png"
 
 const QuickQuote = () => {
 
@@ -144,7 +146,7 @@ const QuickQuote = () => {
 
     const handleAddService = (e) => {
         const serviceType = e.target.value;
-        console.log('serviceType:', serviceType);
+        // console.log('serviceType:', serviceType);
         setFormData(prevFormData => {
             const service = {
                 type: serviceType,
@@ -232,6 +234,8 @@ const QuickQuote = () => {
 
     const generatePDF = useCallback(async (formData) => {
         const pdfDoc = await PDFDocument.create();
+
+        
         const page = pdfDoc.addPage([600, 800]);
 
         const { width, height } = page.getSize();
@@ -249,9 +253,36 @@ const QuickQuote = () => {
             });
         };
 
+        // Add logo to the PDF
+        const logoImageBytes = await fetch(Logo).then(res => res.arrayBuffer());
+        const logoImage = await pdfDoc.embedPng(logoImageBytes);
+        const logoDims = logoImage.scale(0.1); // Scale the logo to fit
+        page.drawImage(logoImage, {
+            x: 50,
+            y: height - logoDims.height - 20,
+            width: logoDims.width,
+            height: logoDims.height,
+        });
+        yPosition -= 65;
+        await addText('CleanAR Solutions', 50, yPosition, 18);
+        yPosition -= 20;
+        await addText('Trusted Clean, Trusted Service', 50, yPosition, 12);
+        yPosition -= 20;
+
+        // Add a line
+        page.drawLine({
+            start: { x: 50, y: yPosition },
+            end: { x: width - 50, y: yPosition },
+            thickness: 2,
+            color: rgb(0, 0, 0),
+        });
+        yPosition -= 40;
+
+
+
         // Add title
         await addText('Service Request Confirmation', 50, yPosition, 24);
-        yPosition -= 40;
+        yPosition -= 40; 
 
         // Add basic information
         const basicInfo = [
@@ -259,42 +290,91 @@ const QuickQuote = () => {
             `Email: ${formData.email}`,
             `Phone Number: ${formData.phonenumber}`,
             `Company: ${formData.companyName}`,
-            `Postal Code: ${formData.postalcode}`,
+            `Postal Code: ${formData.postalcode.toUpperCase()}`,
             `Promo Code: ${formData.promoCode}`,
         ];
 
         for (const info of basicInfo) {
-            await addText(info, 50, yPosition);
+            await addText(info, 50, yPosition, 14);
             yPosition -= 20;
         }
 
         yPosition -= 20;
 
         // Add services
-        await addText('Service Requested:', 50, yPosition, 18);
-        yPosition -= 30;
+        await addText('Required Service:', 50, yPosition, 18);
+        yPosition -= 40;
 
+        // Draw a box around the services section
+        const boxMargin = 10;
+        const boxStartY = yPosition + 20; // Adjust to start above the first service
+        let boxEndY = yPosition;
+
+        // Define table column positions
+        const columnPositions = [60, 90, 200, 320]; // Adjust as needed for spacing
+        const columnHeaders = ["#", "Service", "Type", "Custom Options"];
+
+        // Add table headers
+        for (let i = 0; i < columnHeaders.length; i++) {
+            await addText(columnHeaders[i], columnPositions[i], yPosition, 14);
+        }
+        yPosition -= 20;
+
+        // Add a line under the headers
+        page.drawLine({
+            start: { x: columnPositions[0], y: yPosition },
+            end: { x: columnPositions[columnPositions.length - 1] + 200, y: yPosition },
+            thickness: 1,
+            color: rgb(0, 0, 0),
+        });
+        yPosition -= 20;
+
+        // Add table rows
         for (const [index, service] of formData.services.entries()) {
-            await addText(`${service.type}`, 50, yPosition, 16);
-            yPosition -= 20;
+            // Column 0: Index
+            await addText(`${index + 1}`, columnPositions[0], yPosition, 12);
 
-            // Render custom options
+            // Column 1: Service
+            await addText(`${service.service || 'N/A'}`, columnPositions[1], yPosition, 12);
+
+            // Column 2: Type
+            await addText(`${service.type}`, columnPositions[2], yPosition, 12);
+
+            // Column 3: Custom Options
+            let customOptionsText = "";
+            let customOptionsCount = 0; // Count the number of custom options
+
             if (service.customOptions) {
                 for (const [key, value] of Object.entries(service.customOptions)) {
                     if (typeof value === 'object' && value !== null && value.service !== undefined) {
-                        // If value is an object, render its properties using the label
-                        if (typeof value.service === 'boolean') {
-                            await addText(`   - ${value.label || key}: ${value.service ? 'Yes' : 'No'}`, 50, yPosition, 14);
-                        } else {
-                        await addText(`   - ${value.label || key}: ${value.service}`, 50, yPosition, 14);
-                        }
-                        yPosition -= 20;
+                        const optionText = `${value.label || key}: ${typeof value.service === 'boolean' ? (value.service ? 'Yes' : 'No') : value.service}`;
+                        customOptionsText += `${optionText}\n`;
+                        customOptionsCount++; // Increment the count for each custom option
                     }
                 }
             }
 
-            yPosition -= 20;
+            await addText(customOptionsText.trim(), columnPositions[3], yPosition, 12);
+
+            // Adjust yPosition based on the number of custom options
+            yPosition -= 20 * (customOptionsCount || 1); // Default to 1 if no custom options
         }
+
+        // Update the box end position
+        boxEndY = yPosition -20;
+
+        // Draw the box
+        page.drawRectangle({
+            x: 50 - boxMargin,
+            y: boxEndY - boxMargin,
+            width: 500 + boxMargin * 2,
+            height: boxStartY - boxEndY + boxMargin * 2,
+            borderColor: rgb(0, 0, 0),
+            borderWidth: 1,
+        });
+
+        
+        yPosition -= 20;
 
         // Add totals
         // await addText('Totals:', 50, yPosition, 18);
@@ -313,6 +393,13 @@ const QuickQuote = () => {
 
         // Convert the PDF to base64 and send it in an email
         const pdfBase64 = await pdfDoc.saveAsBase64();
+
+        // // Debugging: Save the PDF to a Blob and open it in a new tab
+        // const debugPdfBytes = await pdfDoc.save();
+        // const debugBlob = new Blob([debugPdfBytes], { type: 'application/pdf' });
+        // const debugUrl = URL.createObjectURL(debugBlob);
+        // window.open(debugUrl, '_blank');
+
         await sendEmailWithPDF(formData, 'CleanAR Solutions: Your Quote Confirmation', pdfBase64);
     }, []);
 
@@ -397,8 +484,8 @@ const QuickQuote = () => {
             // console.log('Sanitized services:', sanitizedServices);
             // Capture screenshot of the form
             const serviceSelectionForm = document.getElementById("service-selection");
-            const canvas = await html2canvas(serviceSelectionForm);
-            const imageBase64 = canvas.toDataURL("image/png").split(",")[1]; // PNG format
+            // const canvas = await html2canvas(serviceSelectionForm);
+            // const imageBase64 = canvas.toDataURL("image/png").split(",")[1]; // PNG format
             // Extract form values
             const textSummary = getTextSummary(serviceSelectionForm);
 
@@ -422,11 +509,12 @@ const QuickQuote = () => {
 
                 if (response.ok) {
                     alert(`Quote submitted successfully! We'll be in touch shortly to discuss your needs. In the meantime, feel free to browse our services.`);
-                    // disable for testing
-                    resetForm();
-                    // Generate and download the PDF
                     await generatePDF(updatedFormData);
-                    navigate('/index');
+                    // disable for testing
+                    // resetForm();
+                    // Generate and download the PDF
+                    // navigate('/index');
+                    // navigate('/products-and-services');
                 }
             } catch (error) {
                 console.error('Error submitting quote:', error);
@@ -436,7 +524,8 @@ const QuickQuote = () => {
 
             console.log(textSummary);
 
-            const payload = { textSummary, imageBase64, formData: updatedFormData };
+            // const payload = { textSummary, imageBase64, formData: updatedFormData };
+            const payload = { textSummary, formData: updatedFormData };
 
             // Send form data and image to the backend
             fetch("/api/email/quick-quote", {
@@ -484,12 +573,16 @@ const QuickQuote = () => {
 
     const getTextSummary = (form) => {
         const formData = new FormData(form);
-        // console.log('formData:', formData);
         let textSummary = "";
         for (let [key, value] of formData.entries()) {
-            // console.log(key, value);
-            const placeholder = form.querySelector(`[name="${key}"]`)?.placeholder || key;
+            const element = form.querySelector(`[name="${key}"]`);
+            const placeholder = element?.getAttribute('aria-label') || key;
+
+            if (element?.type === 'checkbox') {
+            textSummary += `<strong>${placeholder}:</strong> ${element.checked ? 'Yes' : 'No'}<br>`;
+            } else {
             textSummary += `<strong>${placeholder}:</strong> ${value}<br>`;
+            }
         }
         return textSummary;
     };
@@ -508,6 +601,8 @@ const QuickQuote = () => {
                                     <Form.Select
                                         aria-label="Frequency of Cleaning"
                                         className="transparent form-border"
+                                        name="frequency"
+                                        placeholder="Frequency of Cleaning"
                                         size='sm'
                                         onChange={(e) => handleCustomOptionChange(type, 'frequency', e)}
                                         value={formData.services.find(s => s.type === type)?.customOptions?.frequency?.service || ''}
@@ -527,6 +622,8 @@ const QuickQuote = () => {
                                     <Form.Select
                                         aria-label="Unit Size"
                                         size='sm'
+                                        name="unitSize"
+                                        // placeholder="Unit Size"
                                         className="transparent form-border"
                                         onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e)}
                                         value={formData.services.find(s => s.type === type)?.customOptions?.squareFootage?.service || ''}
@@ -547,6 +644,8 @@ const QuickQuote = () => {
                                     <Form.Label className="text-bold">Number of Bedrooms</Form.Label>
                                     <Form.Select
                                         aria-label="Number of Bedrooms"
+                                        name='bedrooms'
+                                        // placeholder="Number of Bedrooms"
                                         className="transparent form-border"
                                         size='sm'
                                         onChange={(e) => handleCustomOptionChange(type, 'bedrooms', e)}
@@ -564,6 +663,8 @@ const QuickQuote = () => {
                                     <Form.Label className="text-bold">Number of Bathrooms</Form.Label>
                                     <Form.Select
                                         aria-label="Number of Bathrooms"
+                                        name='bathrooms'
+                                        // placeholder="Number of Bathrooms"
                                         className="transparent form-border"
                                         size='sm'
                                         onChange={(e) => handleCustomOptionChange(type, 'bathrooms', e)}
@@ -582,6 +683,8 @@ const QuickQuote = () => {
                                     <Form.Control
                                         type="date"
                                         aria-label="Desired Start Date"
+                                        name='startDate'
+                                        placeholder="Desired Start Date"
                                         className="text-cleanar-color text-bold form-border"
                                         onChange={(e) => handleCustomOptionChange(type, 'startDate', e)}
                                         value={formData.services.find(s => s.type === type)?.customOptions?.startDate?.service || ''}
@@ -599,6 +702,8 @@ const QuickQuote = () => {
                                         <Label check className="me-3">
                                             <Input
                                                 type="checkbox"
+                                                name="deepCleaning"
+                                                placeholder="Deep Cleaning"
                                                 onChange={(e) => handleCustomOptionChange(type, 'deepCleaning', e)}
                                                 aria-label="Deep Cleaning"
                                                 checked={formData.services.find(s => s.type === type)?.customOptions?.deepCleaning?.service || false}
@@ -611,6 +716,8 @@ const QuickQuote = () => {
                                                 type="checkbox"
                                                 onChange={(e) => handleCustomOptionChange(type, 'windowCleaning', e)}
                                                 aria-label="Window Cleaning"
+                                                name="windowCleaning"
+                                                placeholder="Window Cleaning"
                                                 checked={formData.services.find(s => s.type === type)?.customOptions?.windowCleaning?.service || false}
                                             />
                                             <span className="form-check-sign"></span>
@@ -621,6 +728,8 @@ const QuickQuote = () => {
                                                 type="checkbox"
                                                 onChange={(e) => handleCustomOptionChange(type, 'laundryService', e)}
                                                 aria-label="Laundry Service"
+                                                name="laundryService"
+                                                placeholder="Laundry Service"
                                                 checked={formData.services.find(s => s.type === type)?.customOptions?.laundryService?.service || false}
                                             />
                                             <span className="form-check-sign"></span>
@@ -643,6 +752,8 @@ const QuickQuote = () => {
                                     <Form.Select
                                         aria-label="Type of Carpet"
                                         className="transparent form-border"
+                                        name="carpetType"
+                                        placeholder="Type of Carpet"
                                         size='sm'
                                         onChange={(e) => handleCustomOptionChange(type, 'carpetType', e)}
                                         value={formData.services.find(s => s.type === type)?.customOptions?.carpetType?.service || ''}
@@ -664,6 +775,7 @@ const QuickQuote = () => {
                                     <Form.Control
                                         type="number"
                                         aria-label="Carpet Area"
+                                        name="carpetArea"
                                         placeholder="Enter carpet area in square feet"
                                         className="text-cleanar-color text-bold form-border"
                                         onChange={(e) => handleCustomOptionChange(type, 'carpetArea', e)}
@@ -679,6 +791,8 @@ const QuickQuote = () => {
                                     <Form.Select
                                         aria-label="Stains or Spots"
                                         size='sm'
+                                        name="stains"
+                                        placeholder="Stains or Spots"
                                         className="transparent form-border"
                                         onChange={(e) => handleCustomOptionChange(type, 'stains', e)}
                                         value={formData.services.find(s => s.type === type)?.customOptions?.stains?.service || ''}
@@ -697,6 +811,8 @@ const QuickQuote = () => {
                                     <Form.Control
                                         type="date"
                                         aria-label="Desired Service Date"
+                                        name='startDate'
+                                        placeholder="Desired Service Date"
                                         className="text-cleanar-color text-bold form-border"
                                         min={new Date().toISOString().split('T')[0]} // Prevent dates before today
                                         onChange={(e) => handleCustomOptionChange(type, 'startDate', e)}
@@ -719,6 +835,7 @@ const QuickQuote = () => {
                                         as="textarea"
                                         rows={3}
                                         aria-label="Description"
+                                        name="description"
                                         placeholder="Provide a description of the services you require. We will be in touch shortly to schedule a consultation."
                                         value={formData.services.find(s => s.type === type)?.customOptions?.description?.service || ''}
                                         onChange={(e) => handleCustomOptionChange(type, 'description', e)}
@@ -732,6 +849,8 @@ const QuickQuote = () => {
                                     <Form.Control
                                         type="date"
                                         aria-label="Desired Service Date"
+                                        name='startDate'
+                                        placeholder="Desired Service Date"
                                         className="text-cleanar-color text-bold form-border"
                                         min={new Date().toISOString().split('T')[0]} // Prevent dates before today
                                         onChange={(e) => handleCustomOptionChange(type, 'startDate', e)}
@@ -858,6 +977,7 @@ const QuickQuote = () => {
                                             <input
                                                 type="radio"
                                                 name="serviceType"
+                                                aria-label="Service Type"
                                                 placeholder='Service Type'
                                                 value={service}
                                                 checked={selectedService === service}
@@ -878,6 +998,7 @@ const QuickQuote = () => {
                                                     <input
                                                         type="radio"
                                                         name="serviceOption"
+                                                        aria-label="Service Option"
                                                         placeholder='Service Option'
                                                         value={option}
                                                         onChange={handleAddService}
