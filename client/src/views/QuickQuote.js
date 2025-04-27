@@ -495,6 +495,21 @@ const QuickQuote = () => {
                 services: sanitizedServices
             };
 
+            console.log(textSummary);
+
+            // const payload = { textSummary, imageBase64, formData: updatedFormData };
+            const payload = { textSummary, formData: updatedFormData };
+
+            // Send form data and image to the backend
+            fetch("/api/email/quick-quote", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+            })
+                .then(response => response.json())
+                .then(data => console.log("Success:", data))
+                .catch(error => console.error("Error:", error));
+
             // console.log('Updated form data:', updatedFormData);
 
             try {
@@ -522,20 +537,7 @@ const QuickQuote = () => {
             }
 
 
-            console.log(textSummary);
 
-            // const payload = { textSummary, imageBase64, formData: updatedFormData };
-            const payload = { textSummary, formData: updatedFormData };
-
-            // Send form data and image to the backend
-            fetch("/api/email/quick-quote", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload),
-            })
-                .then(response => response.json())
-                .then(data => console.log("Success:", data))
-                .catch(error => console.error("Error:", error));
 
         }
     };
