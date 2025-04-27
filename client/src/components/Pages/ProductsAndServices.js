@@ -55,7 +55,7 @@ const ProductsAndServices = () => {
                 <Row className="">
                   {/* <Col> */}
                   <CardGroup>
-                    <Card className="card-border"
+                    <Card className="card-border white-bg-color"
                     // color="primary"
                     //   inverse
                     //   outline
@@ -78,9 +78,9 @@ const ProductsAndServices = () => {
                           </ListGroupItem>
                         </ListGroup>
                       </CardBody>
-                      <Button className="btn-round" color="primary" href="/request-quote?service=Residential">Add Residential Cleaning to Quote</Button>
+                      {/* <Button className="btn-round" color="primary" href="/request-quote?service=Residential">Add Residential Cleaning to Quote</Button> */}
                     </Card>
-                    <Card className="card-border"
+                    <Card className="card-border white-bg-color"
                     // color="primary"
                     // outline
                     //   inverse
@@ -103,7 +103,7 @@ const ProductsAndServices = () => {
                           </ListGroupItem>
                         </ListGroup>
                       </CardBody>
-                      <Button className="btn-round" color="primary" href="/request-quote?service=Commercial">Add Commercial Cleaning to Quote</Button>
+                      {/* <Button className="btn-round" color="primary" href="/request-quote?service=Commercial">Add Commercial Cleaning to Quote</Button> */}
                     </Card>
                     {/*
                     <Card className=""
@@ -131,7 +131,7 @@ const ProductsAndServices = () => {
                     </Card>
 
                    */}
-                    <Card className="card-border"                    
+                    <Card className="card-borderwhite-bg-color"                    
                     // color="primary"
                     // outline
                       // inverse
@@ -153,7 +153,7 @@ const ProductsAndServices = () => {
                           </ListGroupItem>
                         </ListGroup>
                       </CardBody>
-                      <Button className="btn-round" color="primary" href="/request-quote?service=Carpet Cleaning">Add Carpet Cleaning to Quote</Button>
+                      {/* <Button className="btn-round" color="primary" href="/request-quote?service=Carpet Cleaning">Add Carpet Cleaning to Quote</Button> */}
                     </Card>
                     </CardGroup>
                   {/* </Col> */}                 

@@ -64,7 +64,7 @@ const BusinessHoursSidebar = () => {
   return (
     <>
       <Button color="link" onClick={toggle} className="text-bold martel-semibold p-0 m-0" title="View Business Hours">
-        <p className="text-bold martel-semibold underline pl-0 m-0 text-link">{availabilityStatus}</p>
+        <p className="text-bold martel-semibold underline pl-0 m-0 text-link text-align-left">{availabilityStatus}</p>
       </Button>
       <Offcanvas direction="end" isOpen={showHours} toggle={toggle}>
         <OffcanvasHeader toggle={toggle}>Business Hours</OffcanvasHeader>

@@ -235,7 +235,7 @@ const QuickQuote = () => {
     const generatePDF = useCallback(async (formData) => {
         const pdfDoc = await PDFDocument.create();
 
-        
+
         const page = pdfDoc.addPage([600, 800]);
 
         const { width, height } = page.getSize();
@@ -282,7 +282,7 @@ const QuickQuote = () => {
 
         // Add title
         await addText('Service Request Confirmation', 50, yPosition, 24);
-        yPosition -= 40; 
+        yPosition -= 40;
 
         // Add basic information
         const basicInfo = [
@@ -361,7 +361,7 @@ const QuickQuote = () => {
         }
 
         // Update the box end position
-        boxEndY = yPosition -20;
+        boxEndY = yPosition - 20;
 
         // Draw the box
         page.drawRectangle({
@@ -373,7 +373,7 @@ const QuickQuote = () => {
             borderWidth: 1,
         });
 
-        
+
         yPosition -= 20;
 
         // Add totals
@@ -416,12 +416,12 @@ const QuickQuote = () => {
         </p>
         <p>
         <a href="tel:+437-440-5514">+1 (437) 440-5514</a>
-        </p>`;               
+        </p>`;
 
         const mailOptions = {
             from: 'info@cleanARsolutions.ca',
             to: formData.email,
-            bcc: 'info@cleanARsolutions.ca',
+            cc: ['info@cleanARsolutions.ca'],
             subject: subject,
             html: hmtlMessage,
             attachments: [{
@@ -581,9 +581,9 @@ const QuickQuote = () => {
             const placeholder = element?.getAttribute('aria-label') || key;
 
             if (element?.type === 'checkbox') {
-            textSummary += `<strong>${placeholder}:</strong> ${element.checked ? 'Yes' : 'No'}<br>`;
+                textSummary += `<strong>${placeholder}:</strong> ${element.checked ? 'Yes' : 'No'}<br>`;
             } else {
-            textSummary += `<strong>${placeholder}:</strong> ${value}<br>`;
+                textSummary += `<strong>${placeholder}:</strong> ${value}<br>`;
             }
         }
         return textSummary;
@@ -907,7 +907,6 @@ const QuickQuote = () => {
                     <meta name="description" content="Get a quick service estimate from CleanAR Solutions. Fill out our form to receive a personalized quote for your cleaning needs." />
                 </Helmet>
                 <VisitorCounter page={"quick-quote"} />
-                {/* <h2 className="primary-color text-bold">Obtain a Service Estimate</h2> */}
                 <h2 className="text-center primary-color text-bold pt-2">Get a Free Quote</h2>
                 <Form onSubmit={handleSubmit} id="quote-form" className="m-0 p-0">
                     <Form.Group className="mb-1">
@@ -952,28 +951,27 @@ const QuickQuote = () => {
                         </Row>
                     </Form.Group>
                     <section className="section-border">
-                        <Form.Group className="mb-3">
-                            <Form.Label className="text-bold mb-1">
-                                Add Service Required*
-                                <FaQuestionCircle
-                                    id="servicesTooltip"
-                                    className="ms-1"
-                                    onClick={() => togglePopover('services')}
-                                />
-                                <Popover
-                                    placement="top"
-                                    isOpen={popoverOpen.services}
-                                    target="servicesTooltip"
-                                    toggle={() => togglePopover('services')}
-                                >
-                                    <PopoverBody>Please add service type and level to customize your order</PopoverBody>
-                                </Popover>
-                            </Form.Label>
-                        </Form.Group>
                         <Form id="service-selection">
                             <Row>
                                 <Col md={3} xs={12} className="mb-3 radio-group">
-                                    {/* <div className="radio-group">    */}
+                                    <Form.Group className="mb-3">
+                                        <Form.Label className="text-bold mb-1">
+                                            Service Required*
+                                            <FaQuestionCircle
+                                                id="servicesTooltip"
+                                                className="ms-1"
+                                                onClick={() => togglePopover('services')}
+                                            />
+                                            <Popover
+                                                placement="top"
+                                                isOpen={popoverOpen.services}
+                                                target="servicesTooltip"
+                                                toggle={() => togglePopover('services')}
+                                            >
+                                                <PopoverBody>Please add service type and level to customize your order</PopoverBody>
+                                            </Popover>
+                                        </Form.Label>
+                                    </Form.Group>
                                     {Object.keys(serviceOptions).map((service) => (
                                         <label key={service} className="radio-label d-block mb-2">
                                             <input
@@ -989,11 +987,27 @@ const QuickQuote = () => {
                                             {service}
                                         </label>
                                     ))}
-                                    {/* </div> */}
                                 </Col>
                                 <Col md={3} xs={12} className="mb-3">
-                                    {selectedService && (
-                                        // <div className="options-selection">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label className="text-bold mb-1">
+                                            Service Type*
+                                            <FaQuestionCircle
+                                                id="serviceLevelTooltip"
+                                                className="ms-1"
+                                                onClick={() => togglePopover('serviceLevel')}
+                                            />
+                                            <Popover
+                                                placement="top"
+                                                isOpen={popoverOpen.serviceLevel}
+                                                target="serviceLevelTooltip"
+                                                toggle={() => togglePopover('serviceLevel')}
+                                            >
+                                                <PopoverBody>Please select a service level to customize your order</PopoverBody>
+                                            </Popover>
+                                        </Form.Label>
+                                    </Form.Group>
+                                    {selectedService ? (
                                         <div className="radio-group options-selection">
                                             {options.map((option) => (
                                                 <label key={option} className="radio-label d-block mb-2">
@@ -1010,10 +1024,29 @@ const QuickQuote = () => {
                                                 </label>
                                             ))}
                                         </div>
-                                        // {/* </div> */}
+                                    ) : (
+                                        <p className="text-danger text-bold">Please Add Service First</p>
                                     )}
                                 </Col>
                                 <Col md={6} xs={12}>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label className="text-bold mb-1">
+                                            Your Custom Options
+                                            <FaQuestionCircle
+                                                id="additionalServicesTooltip"
+                                                className="ms-1"
+                                                onClick={() => togglePopover('additionalServices')}
+                                            />
+                                            <Popover
+                                                placement="top"
+                                                isOpen={popoverOpen.additionalServices}
+                                                target="additionalServicesTooltip"
+                                                toggle={() => togglePopover('additionalServices')}
+                                            >
+                                                <PopoverBody>Please select any additional services you would like to add to your quote.</PopoverBody>
+                                            </Popover>
+                                        </Form.Label>
+                                    </Form.Group>
                                     {formData.services.map((service, index) => (
                                         <div key={index} className="mb-3">
                                             {renderCustomOptions(service.type)}

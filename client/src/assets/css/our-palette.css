@@ -52,6 +52,16 @@
     text-align: left;
 }
 
+.text-align-left {
+    text-align: left;
+}
+.text-align-center {
+    text-align: center;
+}
+.text-align-right {
+    text-align: right;
+}
+
 .section-border {
     border: 1px solid var(--primary-color);
     border-radius: 5px;
@@ -63,7 +73,6 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    margin-top: 5px;
 }
 
 .radio-label {
@@ -204,7 +213,7 @@ button:disabled {
 }
 
 .light-bg-color {
-    background-color: var(--light-color) !important;    
+    background-color: var(--light-color)!important;    
 }
 .light-bg-color-opaque {
     background-color: rgba(149, 211, 195, 0.1); /* 0.1 = 10% opacity */  
@@ -383,6 +392,11 @@ button:disabled {
 /* Background Colors */
 .light-blue-bg-color {
     background-color: var(--light-blue-color) !important;
+}
+
+
+.white-bg-color {
+    background-color: white !important;
 }
 
 .gradient-bg {

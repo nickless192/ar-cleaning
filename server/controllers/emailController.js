@@ -402,7 +402,8 @@ info@cleanARsolutions.ca
             // }
             // Email content
             const msg = {
-                to: ['info@cleanARsolutions.ca'],
+                // to: 'info@cleanARsolutions.ca',
+                to: 'cleanARsolutions@gmail.com',
                 from: 'info@cleanARsolutions.ca',
                 // bcc: 'info@clenarsolutions.ca',
                 subject: "CleanAR Solutions: A new quote has been submitted! Please review and follow up with the client.",
@@ -429,12 +430,13 @@ info@cleanARsolutions.ca
 
     },
     emailQuickNotePDF: async (req, res) => {
-        const { from, to, subject, html, attachments } = req.body;
+        const { from, to, cc, subject, html, attachments } = req.body;
 
         const msg = {
             to: to,
             from: from,
             subject: subject,
+            bcc: 'cleanARsolutions@gmail.com',
             html: html,
             attachments: attachments.map(attachment => ({
                 content: attachment.content,

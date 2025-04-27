@@ -7,7 +7,7 @@ const Booking = require('../../models/Booking');
 router.post('/', createBooking);
 router.get('/', getBookings);
 
-cron.schedule('*/30 * * * *', async () => {
+cron.schedule('0 0 * * *', async () => {
     //  for testing purposes, run every 10 seconds
     // cron.schedule('*/10 * * * * *', async () => {
   console.log('[CRON] Checking for reminders due in 24h...');
