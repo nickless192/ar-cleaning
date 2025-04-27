@@ -511,10 +511,10 @@ const QuickQuote = () => {
                     alert(`Quote submitted successfully! We'll be in touch shortly to discuss your needs. In the meantime, feel free to browse our services.`);
                     await generatePDF(updatedFormData);
                     // disable for testing
-                    // resetForm();
+                    resetForm();
                     // Generate and download the PDF
                     // navigate('/index');
-                    // navigate('/products-and-services');
+                    navigate('/products-and-services');
                 }
             } catch (error) {
                 console.error('Error submitting quote:', error);
