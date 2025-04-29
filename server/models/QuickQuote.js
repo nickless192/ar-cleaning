@@ -97,7 +97,7 @@ const QuickQuoteSchema = new Schema({
     createdAt: {
         type: Date,
         default: Date.now,
-        get: createdAtVal => dateFormat(createdAtVal)
+        // get: createdAtVal => dateFormat(createdAtVal)
     }
 }, {
     toJSON: {

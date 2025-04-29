@@ -6,7 +6,7 @@ const LandingFresh = () => {
   const navigate = useNavigate();
 
   const goToQuote = () => {
-    navigate('/index', { state: { scrollToQuote: true } });
+    navigate('/index?promoCode=fresh15', { state: { scrollToQuote: true } });
   };
 
   return (

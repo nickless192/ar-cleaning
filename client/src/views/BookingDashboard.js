@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Table, Form, Button, Alert, Spinner } from 'react-bootstrap';
 import moment from 'moment';
+import {
+  Input,
+  Label
+} from 'reactstrap';
 import BookingCalendar from './BookingCalendar';
+import QuickQuoteDashboard from './QuickQuoteDashboard';
 
 const BookingDashboard = () => {
   const [bookings, setBookings] = useState([]);
@@ -9,7 +14,9 @@ const BookingDashboard = () => {
     customerName: '',
     customerEmail: '',
     serviceType: '',
-    date: ''
+    date: '',
+    confirmationSent: false,
+    reminderScheduled: false
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
@@ -24,7 +31,7 @@ const BookingDashboard = () => {
       const res = await fetch('/api/bookings');
       if (!res.ok) {
         throw new Error('Failed to fetch bookings');
-      }      
+      }
       const data = await res.json();
       setBookings(data);
     } catch (err) {
@@ -33,9 +40,10 @@ const BookingDashboard = () => {
   };
 
   const handleChange = e => {
+    let value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
     setFormData(prev => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [e.target.name]: value
     }));
   };
 
@@ -108,9 +116,9 @@ const BookingDashboard = () => {
                 required
               >
                 <option value="">Select a service</option>
-                <option value="Carpet Cleaning">Regular Maintenance Cleaning</option>
-                <option value="Deep Cleaning">Carpet/Upholstery Cleaning</option>
-                <option value="Move-out Cleaning">Deep Cleaning</option>
+                <option value="Regular Maintenance Cleaning">Regular Maintenance Cleaning</option>
+                <option value="Carpet Cleaning">Carpet/Upholstery Cleaning</option>
+                <option value="Deep Cleaning">Deep Cleaning</option>
               </Form.Control>
             </Form.Group>
 
@@ -127,27 +135,53 @@ const BookingDashboard = () => {
             </Form.Group>
             {/* i want to add 2 options: 1 to disable sending the confirmation, and 2 to disable sending the reminder  */}
             <Form.Group controlId="confirmationSent" className="mb-3">
-              <Form.Label>Confirmation Sent</Form.Label>
+              {/* <Form.Label>Confirmation Sent</Form.Label>
               <Form.Check
-                type="checkbox"
+                type="checkbox" 
+                id="confirmationSent"
                 name="confirmationSent"
                 className="text-cleanar-color text-bold form-input"
                 checked={formData.confirmationSent}
                 onChange={handleChange}
-                label="Send confirmation email"
-              />
+                label="Disable send confirmation email"
+              /> */}
+              <Label check className="text-cleanar-color text-bold form-input">
+                <Input
+                  type="checkbox"
+                  id="confirmationSent"
+                  name="confirmationSent"
+                  className="text-cleanar-color text-bold form-input"
+                  checked={formData.confirmationSent}
+                  onChange={handleChange}
+                />
+                <span className="form-check-sign"></span>
+                Disable send confirmation email
+              </Label>
             </Form.Group>
             <Form.Group controlId="reminderScheduled" className="mb-3">
-              <Form.Label>Reminder Scheduled</Form.Label>
+              <Label check className="text-cleanar-color text-bold form-input">
+                <Input
+                  type="checkbox"
+                  id="reminderScheduled"
+                  name="reminderScheduled"
+                  className="text-cleanar-color text-bold form-input"
+                  checked={formData.reminderScheduled}
+                  onChange={handleChange}
+                />
+                <span className="form-check-sign"></span>
+                Disable send reminder email
+              </Label>
+              {/* <Form.Label>Reminder Scheduled</Form.Label>
               <Form.Check
                 type="checkbox"
+                id="reminderScheduled"
                 name="reminderScheduled"
                 className="text-cleanar-color text-bold form-input"
                 checked={formData.reminderScheduled}
                 onChange={handleChange}
-                label="Send reminder email"
-              />
-            </Form.Group> 
+                label="Disable send reminder email"
+              /> */}
+            </Form.Group>
 
             <Button type="submit" disabled={loading}>
               {loading ? <Spinner animation="border" size="sm" /> : 'Submit Booking'}
@@ -193,6 +227,13 @@ const BookingDashboard = () => {
           <h4>Booking Calendar</h4>
           <BookingCalendar bookings={bookings} />
         </Col> */}
+      </Row>
+      {/* add quickquotedashboard */}
+      <Row className="mt-4">
+        <Col>
+          <h4>Quick Quote Dashboard</h4>
+          <QuickQuoteDashboard />
+        </Col>
       </Row>
     </Container>
   );

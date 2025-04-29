@@ -5,6 +5,10 @@
   "dependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@babel/preset-env": "^7.24.5",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/material": "^7.0.2",
+    "@mui/x-data-grid": "^8.1.0",
     "bootstrap": "^5.3.5",
     "date-fns": "^4.1.0",
     "framer-motion": "^12.6.3",

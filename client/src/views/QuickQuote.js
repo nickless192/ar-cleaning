@@ -83,6 +83,15 @@ const QuickQuote = () => {
 
     useEffect(() => {
         if (isInitialLoad) {
+            const searchParams = new URLSearchParams(location.search);
+            const promoCode = searchParams.get('promoCode');
+
+            if (promoCode) {
+                setFormData(prevFormData => ({
+                    ...prevFormData,
+                    promoCode: promoCode
+                }));
+            }
             prepopulateForm();
             setIsInitialLoad(false);
         }
@@ -220,7 +229,9 @@ const QuickQuote = () => {
         //const promoCode = e.target.value;
         const promoCode = formData.promoCode.toLowerCase();
         // if (promoCode === 'welcome10') {
-        if (promoCode === 'winter10' || promoCode === 'follow15') {
+        if (promoCode === 'toronto15' || promoCode === 'follow15'
+            || promoCode === 'now15' || promoCode === 'start15' || promoCode === 'fresh15' || promoCode === 'secret15'
+        ) {
             setValidPromoCode(true);
             // alert('Valid promo code! 15% discount will be applied to your quote');
             return true;

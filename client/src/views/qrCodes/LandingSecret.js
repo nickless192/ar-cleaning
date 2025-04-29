@@ -6,7 +6,7 @@ const LandingSecret = () => {
   const navigate = useNavigate();
 
   const goToQuote = () => {
-    navigate('/index', { state: { scrollToQuote: true } });
+    navigate('/index?promoCode=secret15', { state: { scrollToQuote: true } });
   };
 
   return (

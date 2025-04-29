@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const visitorCountSchema = new mongoose.Schema({
+const VisitorCountSchema = new mongoose.Schema({
     page: {
         type: String,
         required: true,
@@ -27,7 +27,7 @@ const visitorCountSchema = new mongoose.Schema({
 //     }, // Number of visits
 // });
 
-const VisitorCount = mongoose.model('VisitorCount', visitorCountSchema);
+const VisitorCount = mongoose.model('VisitorCount', VisitorCountSchema);
 
 module.exports = VisitorCount;
 

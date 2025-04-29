@@ -90,6 +90,26 @@ const quoteController = {
             console.error('Error creating quick quote: ', error);
             res.status(500).json({ message: 'Error creating quick quote' });
         }
+    },
+    // GET /api/quotes?page=1&limit=10
+    getPaginatedQuickQuotes: async (req, res) => {
+        try {
+            const { page = 1, limit = 10 } = req.query;
+            const quotes = await QuickQuote.find({})
+            .sort({ createdAt: -1 })
+                .skip((page - 1) * limit);
+                // .limit(limit);
+            const total = await QuickQuote.countDocuments();
+            res.json({
+                quotes,
+                total,
+                page,
+                pages: Math.ceil(total / limit),
+              });
+        } catch (error) {
+            console.error('Error getting paginated quotes: ', error);
+            res.status(500).json({ message: 'Error getting paginated quotes' });
+        }
     }
         
     

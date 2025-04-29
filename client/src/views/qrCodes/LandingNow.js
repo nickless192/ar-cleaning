@@ -6,7 +6,7 @@ const LandingNow = () => {
   const navigate = useNavigate();
 
   const goToQuote = () => {
-    navigate('/index', { state: { scrollToQuote: true } });
+    navigate('/index?promoCode=now15', { state: { scrollToQuote: true } });
   };
 
   return (

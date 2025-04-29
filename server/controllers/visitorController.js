@@ -145,6 +145,90 @@ const visitorController = {
         // finally {
         //     mongoose.connection.close();
         // }
+    },
+    generateWeeklyReport: async (res, req) => {
+      try {
+        const oneWeekAgo = new Date();
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    
+        // 1. Total Sessions and Unique Visitors
+        const sessionsAndVisitors = await VisitorLog.aggregate([
+          { $match: { visitDate: { $gte: oneWeekAgo } } },
+          {
+            $group: {
+              _id: "$visitorId",
+              sessions: { $addToSet: "$sessionId" },
+            },
+          },
+          {
+            $group: {
+              _id: null,
+              uniqueVisitors: { $sum: 1 },
+              totalSessions: { $sum: { $size: "$sessions" } },
+            },
+          },
+        ]);
+    
+        // 2. Top Countries
+        const topCountries = await VisitorLog.aggregate([
+          { $match: { visitDate: { $gte: oneWeekAgo } } },
+          { $group: { _id: "$geo.country", visitors: { $sum: 1 } } },
+          { $sort: { visitors: -1 } },
+          { $limit: 5 },
+        ]);
+    
+        // 3. Top Landing Pages
+        const topLandingPages = await VisitorLog.aggregate([
+          { $match: { visitDate: { $gte: oneWeekAgo } } },
+          { $group: { _id: "$landingPage", visits: { $sum: 1 } } },
+          { $sort: { visits: -1 } },
+          { $limit: 5 },
+        ]);
+    
+        // 4. Top Exit Pages
+        const topExitPages = await VisitorLog.aggregate([
+          { $match: { visitDate: { $gte: oneWeekAgo } } },
+          { $project: { lastPage: { $arrayElemAt: ["$pathsVisited", -1] } } },
+          { $group: { _id: "$lastPage", exits: { $sum: 1 } } },
+          { $sort: { exits: -1 } },
+          { $limit: 5 },
+        ]);
+    
+        // 5. Device Breakdown
+        const deviceBreakdown = await VisitorLog.aggregate([
+          { $match: { visitDate: { $gte: oneWeekAgo } } },
+          { $group: { _id: "$deviceType", count: { $sum: 1 } } },
+        ]);
+    
+        // 6. New vs Returning Visitors
+        const visitorTypes = await VisitorLog.aggregate([
+          { $match: { visitDate: { $gte: oneWeekAgo } } },
+          { $group: { _id: "$isReturningVisitor", count: { $sum: 1 } } },
+        ]);
+    
+        res.status(200).json({
+          totalSessions: sessionsAndVisitors[0]?.totalSessions || 0,
+          uniqueVisitors: sessionsAndVisitors[0]?.uniqueVisitors || 0,
+          topCountries,
+          topLandingPages,
+          topExitPages,
+          deviceBreakdown,
+          visitorTypes,
+        });
+        // return {
+        //   totalSessions: sessionsAndVisitors[0]?.totalSessions || 0,
+        //   uniqueVisitors: sessionsAndVisitors[0]?.uniqueVisitors || 0,
+        //   topCountries,
+        //   topLandingPages,
+        //   topExitPages,
+        //   deviceBreakdown,
+        //   visitorTypes,
+        // };
+      } catch (error) {
+        console.error("Error generating weekly report:", error);
+        res.status(500).json({ error: "Failed to generate weekly report" });
+        // throw error;
+      }
     }
 };
 

@@ -6,7 +6,7 @@ const LandingToronto = () => {
   const navigate = useNavigate();
 
   const goToQuote = () => {
-    navigate('/index', { state: { scrollToQuote: true } });
+    navigate('/index?promoCode=toronto15', { state: { scrollToQuote: true } });
   };
 
   return (

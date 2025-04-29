@@ -4,6 +4,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const path = require('path');
 require('dotenv').config();
+const trackVisitor = require('./utils/trackVisitor');
 
 app = express();
 const PORT = process.env.PORT || 3001;
@@ -25,6 +26,7 @@ if (process.env.NODE_ENV === 'production') {
 
 
 // enable routes
+// app.use(trackVisitor);
 app.use(require('./routes'));
 
 // // DO NOT COMMENT OUT THIS CODE - this makes the index page get the /GET error
