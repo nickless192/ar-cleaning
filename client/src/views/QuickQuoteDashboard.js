@@ -32,12 +32,7 @@ const QuickQuoteDashboard = () => {
     { 
       field: 'createdAt', 
       headerName: 'Submitted At', 
-      flex: 1,
-      // valueGetter: (params) => {
-      //   const createdAt = params.row?.createdAt;
-      //   console.log('Created At:', createdAt);
-      //   return createdAt ? new Date(createdAt).toLocaleDateString() : 'N/A';
-      // }
+      flex: 1
     }
   ];
 

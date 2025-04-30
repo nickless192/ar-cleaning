@@ -15,8 +15,8 @@ const BookingCalendar = ({ bookings }) => {
   }));
 
   return (
-<div className="p-3">
-  <div style={{ height: '80vh', width: '100%' }}>
+<>
+  {/* <div style={{ height: '80vh',}}> */}
     <Calendar
       localizer={localizer}
       events={events}
@@ -28,8 +28,8 @@ const BookingCalendar = ({ bookings }) => {
     //   toolbar={false}
       style={{ height: '100%' }}
     />
-  </div>
-</div>
+  {/* </div> */}
+</>
   );
 };
 

@@ -27,6 +27,7 @@ import Navbar from "components/Pages/Navbar.js";
 import Career from "components/Pages/Career.js";
 import GiftCard from "components/Pages/ManageGiftCard.js";
 import LogDashboard from 'views/LogDashboard';
+import QuickQuoteDashboard from "views/QuickQuoteDashboard";
 import BookingDashboard from 'views/BookingDashboard';
 import ResetPassword from "components/Pages/ResetPassword";
 import Terms from "components/Pages/Terms";
@@ -58,8 +59,8 @@ const App = () => {
         <Route path="/manage-product" element={<ProtectedRoute element={<ManageProduct />} />} />
         <Route path="/manage-user" element={<ProtectedRoute element={<ManageUser />} />} />
         <Route path="/manage-gift-card" element={<ProtectedRoute element={<GiftCard />} />} />
-        <Route path="/view-quotes" element={<ProtectedRoute element={<ViewQuotes />} />} />
-        <Route path="/view-quotes/:quoteId" element={<ProtectedRoute element={<ViewQuotes />} />} />
+        <Route path="/view-quotes" element={<ProtectedRoute element={<QuickQuoteDashboard />} />} />
+        {/* <Route path="/view-quotes/:quoteId" element={<ProtectedRoute element={<ViewQuotes />} />} /> */}
         <Route path="/dashboard" element={<ProtectedRoute element={<LogDashboard />} />} />
         <Route path="/booking-dashboard" element={<ProtectedRoute element={<BookingDashboard />} />} />
         {/* <Route path="/login-page" element={<LoginPage />} /> */}
@@ -82,14 +83,14 @@ const App = () => {
         <Route path="*" element={<Navigate to="/index" replace />} />
       </Routes>
       <Footer />
-      <a
+      {/* <a
         href="https://wa.me/14374405514/?text=Hello%2C%20I%20am%20intested%20in%20your%20services.%20Please%20contact%20me."
         className="whatsapp-btn"
         target="_blank"
         rel="noreferrer"
       >
         <img src={require("assets/img/whatsapp-icon.png")} alt="WhatsApp" />
-      </a>
+      </a> */}
       {/* Chatbot Button and Chat Window */}
       {/* disabled until implemented fully */}
       {/* <button className="chatbot-toggle" onClick={toggleChat}>

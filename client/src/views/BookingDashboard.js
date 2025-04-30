@@ -223,17 +223,8 @@ const BookingDashboard = () => {
 
       </Row>
       <Row className="mt-4">
-        {/* <Col>
           <h4>Booking Calendar</h4>
           <BookingCalendar bookings={bookings} />
-        </Col> */}
-      </Row>
-      {/* add quickquotedashboard */}
-      <Row className="mt-4">
-        <Col>
-          <h4>Quick Quote Dashboard</h4>
-          <QuickQuoteDashboard />
-        </Col>
       </Row>
     </Container>
   );

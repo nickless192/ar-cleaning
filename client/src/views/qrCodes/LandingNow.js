@@ -69,14 +69,14 @@ const LandingNow = () => {
           "Trusted Clean, Trusted Service" – because you deserve nothing less.
         </motion.p>
         <motion.p
-                        className="text-muted small mt-3"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.5 }}
-                      >
-                        *15% off for first-time customers only. Not valid with other offers.
-                        <a href="/terms-conditions" className="ms-1">See terms.</a>
-                      </motion.p>
+          className="text-muted small mt-3"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
+          *15% off for first-time customers only. Not valid with other offers.
+          <a href="/terms-conditions" className="ms-1">See terms.</a>
+        </motion.p>
       </div>
     </>
   );
