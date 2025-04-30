@@ -5,10 +5,10 @@ import PropTypes from "prop-types";
 
 export default function ContactCard({ icon, link, text, description, additionalInfo, color }) {
   const renderLink = (url, label, idx) => {
-    const isPhone = url.startsWith("tel:");
-    const isEmail = url.startsWith("mailto:");
+    // const isPhone = url.startsWith("tel:");
+    // const isEmail = url.startsWith("mailto:");
     const isExternal = url.startsWith("http");
-    const isInternal = !isPhone && !isEmail && !isExternal;
+    // const isInternal = !isPhone && !isEmail && !isExternal;
 
     const linkProps = {
       href: url,
