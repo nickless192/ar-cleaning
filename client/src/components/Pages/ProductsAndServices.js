@@ -1,199 +1,153 @@
-import React from 'react';
-import { useEffect } from 'react';
-import "./../../assets/css/our-palette.css";
-import {
-  Row,
-  Col,
-  CardGroup,
-  // Card,
-  CardHeader,
-  ListGroup,
-  ListGroupItem,
-  CardBody,
-  Button
+import React, { useEffect } from 'react';
+import { Container, Row, Col, Card, ListGroup, Button } from 'react-bootstrap'; // Standardize on react-bootstrap
 
-} from 'reactstrap'; // Importing required components from reactstrap
+// Assuming your CSS path is correct relative to this file or configured globally
+import "./../../assets/css/our-palette.css"; // Keep your custom styles
+// It's good practice to also import Bootstrap CSS if not done globally
+// import 'bootstrap/dist/css/bootstrap.min.css';
 
 import VisitorCounter from "components/Pages/VisitorCounter.js";
 
-import {
-  Card
-} from 'react-bootstrap'
-
-import carpetCleaningBg from "assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg"
+// Import images (ensure paths are correct)
+import carpetCleaningBg from "assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg";
 import residentialCleaningBg from "assets/img/man-servant-cleaning-house.jpg";
 import commercialCleaningBg from "assets/img/full-shot-people-cleaning-office.jpg";
 
+// --- Data Structure for Services ---
+const servicesData = [
+  {
+    title: "Residential Cleaning",
+    imgSrc: residentialCleaningBg,
+    imgAlt: "Cleaning technician mopping the floor - Designed by Freepik",
+    description: [
+      "Complete cleaning of homes, apartments, and condominiums.",
+      "Carpet Cleaning to revitalize and maintain the freshness of carpets.",
+      "Furniture cleaning to preserve its beauty and prolong its lifespan.",
+    ],
+    quoteLink: "/request-quote?service=Residential",
+    quoteButtonText: "Add Residential Cleaning to Quote"
+  },
+  {
+    title: "Commercial Cleaning",
+    imgSrc: commercialCleaningBg,
+    imgAlt: "Cleaners on office cleaning desks and floor - Designed by Freepik",
+    description: [
+      "Regular maintenance of offices and commercial spaces.",
+      "Cleaning of shopping centers and supermarkets.",
+      "Specialized services for the film industry and special events.",
+    ],
+    quoteLink: "/request-quote?service=Commercial",
+    quoteButtonText: "Add Commercial Cleaning to Quote"
+  },
+  {
+    title: "Carpet and Upholstery Cleaning",
+    imgSrc: carpetCleaningBg,
+    imgAlt: "Carpet cleaning, vacuum cleaner on carpet - Designed by Freepik",
+    description: [
+      "Deep cleaning of carpets in homes and commercial spaces.",
+      "Stain removal and odor neutralization.",
+      "Upholstery cleaning to maintain the beauty and comfort of furniture.",
+    ],
+    quoteLink: "/request-quote?service=Carpet+Cleaning", // URL encode space
+    quoteButtonText: "Add Carpet Cleaning to Quote"
+  }
+  // Add "Specialized Cleaning" or other services here if needed
+];
+
+// --- Reusable Service Card Component ---
+const ServiceCard = ({ title, imgSrc, imgAlt, description, quoteLink, quoteButtonText }) => {
+  return (
+    <Card className="h-100 card-border white-bg-color shadow-sm"> {/* h-100 for equal height, add shadow for depth */}
+      <Card.Img variant="top" src={imgSrc} alt={imgAlt} />
+      <Card.Body className="d-flex flex-column"> {/* Use flexbox to push button down */}
+        <Card.Title as="h3" className="text-bold secondary-color">{title}</Card.Title>
+        <ListGroup variant="flush" className="flex-grow-1 mb-3"> {/* flush removes card borders, flex-grow takes space */}
+          {description.map((item, index) => (
+            // Ensure ListGroup.Item background is transparent or matches card if needed
+            <ListGroup.Item key={index} className="px-0 py-1 border-0 text-dark bg-transparent">
+              {item}
+            </ListGroup.Item>
+          ))}
+        </ListGroup>
+        {/* <Button
+          variant="primary" // Use Bootstrap variants
+          href={quoteLink}
+          className="btn-round mt-auto" // mt-auto pushes button to bottom
+        >
+          {quoteButtonText}
+        </Button> */}
+      </Card.Body>
+    </Card>
+  );
+};
 
 
+// --- Main Products and Services Page Component ---
 const ProductsAndServices = () => {
 
   useEffect(() => {
+    // Add classes for potential page-specific styling overrides
     document.body.classList.add("products-services-page");
+    // Assuming sidebar-collapse is desired for this page layout
     document.body.classList.add("sidebar-collapse");
     document.documentElement.classList.remove("nav-open");
-    // window.scrollTo(0, 0);
-    document.body.scrollTop = 0;
+    // Scroll to top on mount
+    window.scrollTo(0, 0); // More standard way
+
+    // Cleanup function to remove classes when component unmounts
     return function cleanup() {
       document.body.classList.remove("products-services-page");
       document.body.classList.remove("sidebar-collapse");
     };
-  }, []);
+  }, []); // Empty dependency array ensures this runs only once on mount and cleanup on unmount
 
   return (
     <>
-      {/* <Navbar /> */}
+      {/* <Navbar /> */} {/* Assuming Navbar is handled globally or in a layout component */}
 
-      <div className="content pb-0 mb-0 section-background products-services-section">
+      {/* Use semantic section tag if appropriate */}
+      <section className="content py-5 section-background products-services-section"> {/* Added padding Y */}
         <VisitorCounter page={"products-and-services"} />
-        {/* <div className="container"> */}
-          <h1 className="title secondary-color">Products and Services</h1>
-          {/* <Row>
-            <Col className="text-center ml-auto mr-auto"> */}
-              <div className="service-selector text-center">
-                <h2 className="title text-start secondary-color">Our Services</h2>                
-                <Row className="">
-                  {/* <Col> */}
-                  <CardGroup>
-                    <Card className="card-border white-bg-color"
-                    // color="primary"
-                    //   inverse
-                    //   outline
-                    >
-                      <h3 className="m-1 card-title text-bold">
-                        Residential Cleaning
-                        {/* </h3> */}
-                      </h3>
-                      <Card.Img variant="top" src={residentialCleaningBg} alt='Cleaning technician mopping the floor - Designed by Freepik' />
-                      <CardBody>
-                        <ListGroup>
-                          <ListGroupItem className="">
-                            Complete cleaning of homes, apartments, and condominiums.
-                          </ListGroupItem>
-                          <ListGroupItem className="text-dark">
-                            Carpet Cleaning to revitalize and maintain the freshness of carpets.
-                          </ListGroupItem>
-                          <ListGroupItem className="text-dark">
-                            Furniture cleaning to preserve its beauty and prolong its lifespan.
-                          </ListGroupItem>
-                        </ListGroup>
-                      </CardBody>
-                      {/* <Button className="btn-round" color="primary" href="/request-quote?service=Residential">Add Residential Cleaning to Quote</Button> */}
-                    </Card>
-                    <Card className="card-border white-bg-color"
-                    // color="primary"
-                    // outline
-                    //   inverse
-                    >
-                      <h3 className="m-1 card-title text-bold">
-                        Commercial Cleaning
-                        {/* </h3> */}
-                      </h3>
-                      <Card.Img variant="top" src={commercialCleaningBg} alt='Cleaners on office cleaning desks and floor - Designed by Freepik' />
-                      <CardBody>
-                        <ListGroup>
-                          <ListGroupItem className="text-dark">
-                            Regular maintenance of offices and commercial spaces.
-                          </ListGroupItem>
-                          <ListGroupItem className="text-dark">
-                            Cleaning of shopping centers and supermarkets.
-                          </ListGroupItem>
-                          <ListGroupItem className="text-dark">
-                            Specialized services for the film industry and special events.
-                          </ListGroupItem>
-                        </ListGroup>
-                      </CardBody>
-                      {/* <Button className="btn-round" color="primary" href="/request-quote?service=Commercial">Add Commercial Cleaning to Quote</Button> */}
-                    </Card>
-                    {/*
-                    <Card className=""
-                    color="primary"
-                    outline
-                      inverse
-                    >
-                      <CardHeader tag="h3" className="m-1 card-title">
-                        Specialized Cleaning
-                      </CardHeader>
-                      <CardBody>
-                        <ListGroup>
-                          <ListGroupItem className="text-dark">
-                            Cleaning contracts for real estate developers and condominiums.
-                          </ListGroupItem>
-                          <ListGroupItem className="text-dark">
-                            Carpet Cleaning at large events and festivals.
-                          </ListGroupItem>
-                          <ListGroupItem className="text-dark">
-                            High-end furniture cleaning in residences and commercial spaces.
-                          </ListGroupItem>
-                        </ListGroup>
-                      </CardBody>
-                      <Button className="btn-round" color="primary" href="/request-quote?service=Commercial">Add Specialized Cleaning to Quote</Button>
-                    </Card>
+        <Container> {/* Use Container for centered, max-width content */}
+          <h1 className="title secondary-color text-center mb-4">Products and Services</h1>
 
-                   */}
-                    <Card className="card-borderwhite-bg-color"                    
-                    // color="primary"
-                    // outline
-                      // inverse
-                    >
-                      <h3 className="m-1 card-title text-bold">
-                        Carpet and Upholstery Cleaning
-                      </h3>
-                      <Card.Img variant="top" src={carpetCleaningBg} alt='Carpet cleaning, vaccum cleaner on carpet - Designed by Freepik' />
-                      <CardBody>
-                        <ListGroup>
-                          <ListGroupItem className="text-dark">
-                            Deep cleaning of carpets in homes and commercial spaces.
-                          </ListGroupItem>
-                          <ListGroupItem className="text-dark">
-                            Stain removal and odor neutralization.
-                          </ListGroupItem>
-                          <ListGroupItem className="text-dark">
-                            Upholstery cleaning to maintain the beauty and comfort of furniture.
-                          </ListGroupItem>
-                        </ListGroup>
-                      </CardBody>
-                      {/* <Button className="btn-round" color="primary" href="/request-quote?service=Carpet Cleaning">Add Carpet Cleaning to Quote</Button> */}
-                    </Card>
-                    </CardGroup>
-                  {/* </Col> */}                 
-                </Row>
-              </div>
-              {/* <div className="product-selector">
-                <h2 className="title text-start">Our Products</h2>
-                <Row className="">
-                  <Col className="text-center">
-                  <CardGroup>
-                    <Card className="card-border"
-                      // inverse
-                    >
-                      <CardHeader tag="h3" className="m-1">
-                        Gift Cards
-                      </CardHeader>
-                      <CardBody>
-                        <ListGroup>
-                          <ListGroupItem className="text-dark">
-                            Gift cards for cleaning services.
-                          </ListGroupItem>                          
-                          <ListGroupItem className="text-dark">
-                            Available in various denominations.
-                          </ListGroupItem>
-                          <ListGroupItem className="text-dark">
-                            Perfect for friends and family.
-                          </ListGroupItem>
-                        </ListGroup>
-                      </CardBody>
-                      <Button className="btn-round" color="primary" href="/request-quote">Add Gift Card to Quote</Button>
-                    </Card>
-                  </CardGroup>
-                  </Col>
-                  </Row>
-                  </div> */}
+          <div className="service-selector mb-5"> {/* Added margin bottom */}
+            <h2 className="title secondary-color mb-4">Our Services</h2>
+            <Row xs={1} md={2} lg={3} className="g-4"> {/* Responsive Grid: 1 col on xs, 2 on md, 3 on lg. g-4 adds gutters */}
+              {servicesData.map((service, index) => (
+                <Col key={index} className="d-flex align-items-stretch"> {/* Ensure cols stretch to content height */}
+                  <ServiceCard {...service} />
+                </Col>
+              ))}
+            </Row>
+          </div>
 
-            {/* </Col>
-          </Row> */}
-        {/* </div> */}
-      </div>
+          {/* --- Optional Products Section (Example) --- */}
+          {/*
+          <div className="product-selector">
+            <h2 className="title secondary-color mb-4">Our Products</h2>
+            <Row xs={1} md={2} lg={3} className="g-4">
+              <Col className="d-flex align-items-stretch">
+                 // You could create a ProductCard component here too
+                 <Card className="h-100 card-border white-bg-color shadow-sm">
+                   <Card.Body className="d-flex flex-column">
+                     <Card.Title as="h3" className="text-bold secondary-color">Gift Cards</Card.Title>
+                     <ListGroup variant="flush" className="flex-grow-1 mb-3">
+                       <ListGroup.Item className="px-0 py-1 border-0 text-dark bg-transparent">Gift cards for cleaning services.</ListGroup.Item>
+                       <ListGroup.Item className="px-0 py-1 border-0 text-dark bg-transparent">Available in various denominations.</ListGroup.Item>
+                       <ListGroup.Item className="px-0 py-1 border-0 text-dark bg-transparent">Perfect for friends and family.</ListGroup.Item>
+                     </ListGroup>
+                     <Button variant="primary" href="/request-quote" className="btn-round mt-auto">Add Gift Card to Quote</Button>
+                   </Card.Body>
+                 </Card>
+              </Col>
+              // Add more product columns if needed
+            </Row>
+          </div>
+          */}
+
+        </Container>
+      </section>
     </>
   );
 };

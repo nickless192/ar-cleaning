@@ -30,57 +30,6 @@ function Index() {
   const [responseTimeMessage, setResponseTimeMessage] = useState('');
   const location = useLocation();
 
-  // const contactItems = [
-  //   {
-  //     icon: "now-ui-icons tech_mobile",
-  //     link: "tel:437-440-5514",
-  //     text: "Call or message us at 437-440-5514",
-  //     description: "Our customer service team is available Monday through Saturday, from 8:00 AM to 7:00 PM (1:00 PM on Saturday). Call for any inquiries or support!",
-  //   },
-  //   {
-  //     icon: "now-ui-icons ui-1_email-85",
-  //     link: "mailto:info@cleanARsolutions.ca",
-  //     text: "Email us your questions at info@cleanARsolutions.ca",
-  //     description: "For detailed inquiries or written communication, send us an email. We aim to respond within 24 hours.",
-  //   },
-  //   {
-  //     icon: "now-ui-icons ui-2_like",
-  //     link: "https://www.instagram.com/cleanarsolutions/",
-  //     text: "Follow Us on Instagram",
-  //     description: "Stay updated with our latest news, promotions, and cleaning tips on Instagram.",
-  //   },
-  //   {
-  //     icon: "now-ui-icons business_bulb-63",
-  //     link: "https://g.page/r/Cek9dkmHVuBKEAE/review",
-  //     text: "Leave A Google Review",
-  //     description: "Share your experience with CleanAR Solutions. We value your feedback!",
-  //   },
-  //   {
-  //     icon: "now-ui-icons business_badge",
-  //     link: "/products-and-services",
-  //     text: "View Our Services",
-  //     description: "Explore our range of professional cleaning services, from residential to commercial.",
-  //   },
-  // ];
-
-  const [showHours, setShowHours] = useState(false);
-
-  const handleClick = (item) => {
-    if (item.link === "business-hours") {
-      setShowHours(true);
-    }
-  };
-
-  const businessHours = {
-    Sunday: "Closed",
-    Monday: "8:00 AM – 7:00 PM",
-    Tuesday: "8:00 AM – 7:00 PM",
-    Wednesday: "8:00 AM – 7:00 PM",
-    Thursday: "8:00 AM – 7:00 PM",
-    Friday: "8:00 AM – 7:00 PM",
-    Saturday: "8:00 AM – 1:00 PM"
-  };
-
   const contactItems = [
     {
       icon: "now-ui-icons tech_mobile",
@@ -192,18 +141,45 @@ function Index() {
       {/* <LandingPageHeader /> */}
       <div className="m-0 p-0 light-bg-color-opaque">
         <Row className="m-0 align-items-center">
-          <Col className="m-0 p-0" xs='12' md='6'>
-          {/* <h1 className="primary-color text-bold montserrat-bold text-align-end mr-3">CleanAR Solutions</h1> */}
+          {/* <Col className="m-0 p-0" xs='12' md='6'>
             <h1 className="primary-color text-bold montserrat-bold text-align-end mr-3">CleanAR Solutions <br /> Getting Started</h1>
-            {/* <CardImg top className="logo-image-index mb-3" src={Logo} alt="CleanAR Solutions logo" /> */}
-            <p className="martel-bold landing-page-intro text-align-end mr-3">
-              {/* With more 10 years of experience, our services are designed to meet the unique needs of our clients, providing personalized solutions and exceptional results on every project. At <b>CleanAR Solutions</b>, we take pride in offering reliable and high-quality service that ensures the impeccable cleanliness and maintenance of any space.  We are here to help you find the perfect cleaning solution for your needs; fill up our short form and we'll be in touch with a quote. Need more information? Below you'll find all of our contact information, including our phone number, email address, and social media links. We look forward to hearing from you! */}
-              {/* Tired of Cleaning? Let us handle it. At CleanAR Solutions, we offer more than just cleaning – we provide sparkling clean spaces so you can focus on what matters most. With over 10 years of experience, we tailor our services to your unique needs, delivering exceptional results every time. Get a free, personalized quote today – just fill out our short form! Connect with us on social media or contact us directly for more information. */}
-              Tired of Cleaning? Reclaim your free time with CleanAR Solutions. Serving Toronto and the GTA, we provide sparkling clean spaces so you can focus on what matters. <b>Get a free quote!</b>
+            <p className="martel-bold landing-page-intro text-align-end mr-3">Tired of Cleaning? Reclaim your free time with CleanAR Solutions. Serving Toronto and the GTA, we provide sparkling clean spaces so you can focus on what matters. <b>Get a free quote!</b>
             </p>
-          </Col>
+          </Col> */}
+                  <Col xs="12" md="6" className="text-center">
+          <motion.h1
+            className="primary-color montserrat-bold p-0 m-0"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            CleanAR Solutions
+          </motion.h1>
+          <motion.h3
+            className="text-secondary p-0 m-0 text-bold pb-2"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+          >
+            Trusted Clean, Trusted Service
+          </motion.h3>
+        {/* </Col>
+                  <Col xs="12" md="6" className="text-center px-4 mb-5"> */}
+          <motion.p
+            className="martel-bold landing-page-intro"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            Say goodbye to stress and hello to sparkle ✨<br />
+            <b>CleanAR Solutions</b> brings 10+ years of trusted cleaning to homes and businesses across the GTA.<br />
+            From deep cleans to regular maintenance, we tailor services to your needs—efficient, eco-friendly, and always reliable.
+            <br /><br />
+            <b>Get your personalized quote in under 60 seconds.</b><br />
+            It’s fast, free, and commitment-free!
+          </motion.p>
+        </Col>
           <Col className="text-center p-0 m-0" xs='12' md='6'>
-            {/* <CardImg top className="logo-image-index mb-3" src={Logo} alt="CleanAR Solutions logo" /> */}
             <CardImg top className="background-image-index" src={backgroundImage} alt="CleanAR Solutions background" />
           </Col>
         </Row>
@@ -233,16 +209,6 @@ function Index() {
                         <h6 className="mb-1">
                           {Array.isArray(item.text) ? item.description : item.text}
                         </h6>
-
-                        {/* {item.link.startsWith("http") || item.link.startsWith("mailto") ? (
-                        <a href={item.link} target="_blank" rel="noreferrer noopener" className="text-bold martel-semibold" title={item.text}>
-                          {' '}{item.description}
-                        </a>
-                      ) : (
-                        <Link to={item.link} className="text-bold martel-semibold" title={item.description}>
-                          {' '}{item.description}
-                        </Link>
-                      )} */}
                         {Array.isArray(item.link) ? (
                           <>
                             {item.link.map((singleLink, index) => (
