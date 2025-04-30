@@ -19,7 +19,7 @@ import ManageProduct from "../src/components/Pages/ManageProduct";
 import ManageUser from "../src/components/Pages/ManageUser";
 // import RequestQuote from "../src/components/Pages/RequestQuote";
 import LoginSign from "../src/components/Pages/LoginSign";
-import ViewQuotes from "../src/components/Pages/ViewQuotes";
+// import ViewQuotes from "../src/components/Pages/ViewQuotes";
 import ProductsAndServices from "../src/components/Pages/ProductsAndServices";
 import ProtectedRoute from "../src/components/Pages/ProtectedRoute";
 import ChatTool from "../src/components/Pages/ChatTool";
