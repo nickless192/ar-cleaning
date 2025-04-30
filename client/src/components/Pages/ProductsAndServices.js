@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Container, Row, Col, Card, ListGroup, Button } from 'react-bootstrap'; // Standardize on react-bootstrap
+import { Container, Row, Col, Card, ListGroup } from 'react-bootstrap'; // Standardize on react-bootstrap
 
 // Assuming your CSS path is correct relative to this file or configured globally
 import "./../../assets/css/our-palette.css"; // Keep your custom styles

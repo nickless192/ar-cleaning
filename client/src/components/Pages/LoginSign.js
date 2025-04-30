@@ -3,13 +3,13 @@ import React from 'react';
 import LoginPage from 'views/LoginPage';
 import SignUp from 'views/SignUp';
 import {
-    FloatingLabel,
-    Container,
-    Button,
-    Form,
+    // FloatingLabel,
+    // Container,
+    // Button,
+    // Form,
     Row,
     Col,
-    Collapse
+    // Collapse
 } from 'react-bootstrap';
 
 const LoginSign = () => {

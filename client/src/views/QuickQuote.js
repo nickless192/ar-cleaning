@@ -21,7 +21,7 @@ import VisitorCounter from "../../src/components/Pages/VisitorCounter";
 import {
     FaQuestionCircle
 } from 'react-icons/fa';
-import html2canvas from 'html2canvas';
+// import html2canvas from 'html2canvas';
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import Logo from "../../src/assets/img/IC CLEAN AR-15-cropped.png"
 
@@ -54,7 +54,7 @@ const QuickQuote = () => {
         services: false,
     });
 
-    const [validPromoCode, setValidPromoCode] = useState(false);
+    const [, setValidPromoCode] = useState(false);
     const [isLogged] = useState(Auth.loggedIn());
     const [isInitialLoad, setIsInitialLoad] = useState(true);
     const [selectedService, setSelectedService] = useState("");
@@ -98,6 +98,7 @@ const QuickQuote = () => {
         calculateTotals();
         handleBodyClass();
         return cleanupBodyClass;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isLogged, formData.services, location.search]);
 
     const prepopulateForm = useCallback(() => {
@@ -175,6 +176,7 @@ const QuickQuote = () => {
         setSelectedService(service);
         setOptions(serviceOptions[service] || []);
         setFormData(prev => ({ ...prev, services: [] }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // const handleCustomOptionChange = (type, option, e, cost, label) => {
@@ -412,6 +414,7 @@ const QuickQuote = () => {
         // window.open(debugUrl, '_blank');
 
         await sendEmailWithPDF(formData, 'CleanAR Solutions: Your Quote Confirmation', pdfBase64);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const sendEmailWithPDF = useCallback(async (formData, subject, pdfBase64) => {

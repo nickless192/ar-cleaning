@@ -18,7 +18,7 @@ function ProfilePage() {
   const location = useLocation(); // useLocation hook to get the current location
   const [isEditing, setIsEditing] = useState(false);
   // const [isLogged] = React.useState(Auth.loggedIn());
-  const [setDropdownOpen] = useState(false);
+  // const [setDropdownOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -31,11 +31,12 @@ function ProfilePage() {
     companyName: "",
     userId: ""
   });
-  const [quotes, setQuotes] = useState([]);
 
-  const [displayedQuote, setDisplayedQuote] = useState({ products: [], services: [], name: '', phonenumber: '', companyName: '', email: '', description: '', serviceType: '', howDidYouHearAboutUs: '', subtotalCost: 0, tax: 0, grandTotal: 0 });
+  const [, setQuotes] = useState([]);
 
-  const toggle = () => setDropdownOpen(prevState => !prevState);
+  // const [displayedQuote, setDisplayedQuote] = useState({ products: [], services: [], name: '', phonenumber: '', companyName: '', email: '', description: '', serviceType: '', howDidYouHearAboutUs: '', subtotalCost: 0, tax: 0, grandTotal: 0 });
+
+  // const toggle = () => setDropdownOpen(prevState => !prevState);
 
   useEffect(() => {
 
@@ -154,17 +155,17 @@ function ProfilePage() {
     }
   };
 
-  const handleQuoteClick = (e) => {
-    e.preventDefault();
-    const quoteId = e.target.value;
-    console.log(quoteId);
-    if (quoteId !== "") {
-      navigate(`/view-quotes/${quoteId}`);
-      // return;
-    }
+  // const handleQuoteClick = (e) => {
+  //   e.preventDefault();
+  //   const quoteId = e.target.value;
+  //   console.log(quoteId);
+  //   if (quoteId !== "") {
+  //     navigate(`/view-quotes/${quoteId}`);
+  //     // return;
+  //   }
 
-    // navigate("/quote");
-  }
+  //   // navigate("/quote");
+  // }
 
   const handleCancelClick = async (e) => {
     e.preventDefault();

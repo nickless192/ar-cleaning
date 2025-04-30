@@ -9,7 +9,7 @@ import ReportDownloadButton from './ReportDownloadButton.js';
 const LogDashboard = () => {
     const [logs, setLogs] = useState([]);
     const [filteredLogs, setFilteredLogs] = useState([]);
-    const [pages, setPages] = useState([]);
+    const [, setPages] = useState([]);
     const [selectedPage, setSelectedPage] = useState('');
     const [dateRange, setDateRange] = useState({ start: '', end: '' });
     const [currentPage, setCurrentPage] = useState(1);

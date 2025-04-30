@@ -20,7 +20,7 @@ import BusinessHoursSidebar from "components/Pages/BusinessHourSidebar";
 
 import backgroundImage from 'assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg';
 // import Logo from "assets/img/IC CLEAN AR-15-cropped.png";
-import Footer from "components/Pages/Footer";
+// import Footer from "components/Pages/Footer";
 import { FaInstagram, FaFacebook, FaTiktok } from 'react-icons/fa';
 import { FiPhoneCall } from 'react-icons/fi';
 
@@ -132,6 +132,7 @@ function Index() {
       document.body.classList.remove("index-page");
       document.body.classList.remove("sidebar-collapse");
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

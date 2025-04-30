@@ -13,7 +13,7 @@ import {
 } from 'reactstrap'; // Importing required components from reactstrap
 
 const ManageGiftCard = () => {
-    const [formData, setFormData] = useState({
+    const [formData] = useState({
         code: '',
         amount: '',
         purchaserName: '',
@@ -118,54 +118,54 @@ const ManageGiftCard = () => {
         setEditedGiftCard({ ...editedGiftCard, [name]: value });
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const { code, amount, purchaserName, recipientName, recipientEmail, message } = formData;
-        if (!amount || !purchaserName || !recipientName || !recipientEmail || !message) {
-            alert('Please provide all fields');
-            return;
-        }
-        const body = JSON.stringify({
-            code,
-            amount,
-            purchaserName,
-            recipientName,
-            recipientEmail,
-            message
-        });
+    // const handleSubmit = (e) => {
+    //     e.preventDefault();
+    //     const { code, amount, purchaserName, recipientName, recipientEmail, message } = formData;
+    //     if (!amount || !purchaserName || !recipientName || !recipientEmail || !message) {
+    //         alert('Please provide all fields');
+    //         return;
+    //     }
+    //     const body = JSON.stringify({
+    //         code,
+    //         amount,
+    //         purchaserName,
+    //         recipientName,
+    //         recipientEmail,
+    //         message
+    //     });
 
-        fetch('/api/giftCards', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body
-        })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                }
-                throw new Error('Failed to create giftCard');
-            })
-            .then(data => {
-                console.log(data);
-                setGiftCards([...giftCards, data]);
-                setFormData({
-                    code: '',
-                    amount: '',
-                    purchaserName: '',
-                    recipientName: '',
-                    recipientEmail: '',
-                    message: '',
-                    isRedeemed: false,
-                    redeemedDate: '',
-                    purchaseDate: ''
-                });
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    };
+    //     fetch('/api/giftCards', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body
+    //     })
+    //         .then(response => {
+    //             if (response.ok) {
+    //                 return response.json();
+    //             }
+    //             throw new Error('Failed to create giftCard');
+    //         })
+    //         .then(data => {
+    //             console.log(data);
+    //             setGiftCards([...giftCards, data]);
+    //             setFormData({
+    //                 code: '',
+    //                 amount: '',
+    //                 purchaserName: '',
+    //                 recipientName: '',
+    //                 recipientEmail: '',
+    //                 message: '',
+    //                 isRedeemed: false,
+    //                 redeemedDate: '',
+    //                 purchaseDate: ''
+    //             });
+    //         })
+    //         .catch(error => {
+    //             console.error(error);
+    //         });
+    // };
 
 
     useEffect(() => {

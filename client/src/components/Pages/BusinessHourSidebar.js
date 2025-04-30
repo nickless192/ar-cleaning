@@ -28,7 +28,8 @@ const BusinessHoursSidebar = () => {
   });
 
   const [availabilityStatus, setAvailabilityStatus] = useState('');
-    const [responseTimeMessage, setResponseTimeMessage] = useState('');
+  
+    const [, setResponseTimeMessage] = useState('');
   
 
   useEffect(() => {

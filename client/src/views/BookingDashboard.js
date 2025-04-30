@@ -6,7 +6,7 @@ import {
   Label
 } from 'reactstrap';
 import BookingCalendar from './BookingCalendar';
-import QuickQuoteDashboard from './QuickQuoteDashboard';
+// import QuickQuoteDashboard from './QuickQuoteDashboard';
 
 const BookingDashboard = () => {
   const [bookings, setBookings] = useState([]);
