@@ -23,8 +23,11 @@ const ManageUser = () => {
         adminFlag: false
     });
 
-    const [message, setMessage] = useState('');
-    const [loading, setLoading] = useState(false);
+    // const [, setMessage] = useState('');
+
+
+
+    // const [, setLoading] = useState(false);
 
     const [users, setUsers] = useState([]);
     const [editingUserId, setEditingUserId] = useState(null);
@@ -146,19 +149,19 @@ const ManageUser = () => {
         }
     };
 
-    const handleMigrate = async () => {
-        setLoading(true);
-        const response = await fetch('/api/users/migrate-user', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        console.log(data);
-        setMessage(data.message);
-        setLoading(false);
-    }
+    // const handleMigrate = async () => {
+    //     setLoading(true);
+    //     const response = await fetch('/api/users/migrate-user', {
+    //         method: 'PUT',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         }
+    //     });
+    //     const data = await response.json();
+    //     console.log(data);
+    //     setMessage(data.message);
+    //     setLoading(false);
+    // }
 
     return (
         <>

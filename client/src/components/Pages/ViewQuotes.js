@@ -307,25 +307,25 @@ const QuoteDetails = ({ displayedQuote }) => {
   );
 };
 
-const ProductList = ({ products }) => (
-  <div className="product-selector">
-    <h5 className="text-light">Products:</h5>
-    {products.length === 0 ? (
-      <p className="text-danger">No products selected!</p>
-    ) : (
-      products.map((product, index) => (
-        <FormGroup key={index} className="text-light">
-          <Label for={`product-${index}`} className="text-light">Product</Label>
-          <InputGroup>
-            <Input id={`product-${index}`} className="text-light " placeholder="Product..." type="text" value={product.name} readOnly />
-            <Input className="text-light " placeholder="Product Cost..." type="number" value={product.productCost} readOnly />
-            <Input className="text-light " placeholder="Id..." type="text" value={product.id} readOnly />
-          </InputGroup>
-        </FormGroup>
-      ))
-    )}
-  </div>
-);
+// const ProductList = ({ products }) => (
+//   <div className="product-selector">
+//     <h5 className="text-light">Products:</h5>
+//     {products.length === 0 ? (
+//       <p className="text-danger">No products selected!</p>
+//     ) : (
+//       products.map((product, index) => (
+//         <FormGroup key={index} className="text-light">
+//           <Label for={`product-${index}`} className="text-light">Product</Label>
+//           <InputGroup>
+//             <Input id={`product-${index}`} className="text-light " placeholder="Product..." type="text" value={product.name} readOnly />
+//             <Input className="text-light " placeholder="Product Cost..." type="number" value={product.productCost} readOnly />
+//             <Input className="text-light " placeholder="Id..." type="text" value={product.id} readOnly />
+//           </InputGroup>
+//         </FormGroup>
+//       ))
+//     )}
+//   </div>
+// );
 
 const ServiceList = ({ services }) => (
   <div className="service-selector">
@@ -393,42 +393,42 @@ const ServiceList = ({ services }) => (
 );
 
 
-const CostDetails = ({ displayedQuote }) => (
-  <div>
-    <h5 className="text-light">Costs:</h5>
-    {['subtotalCost', 'tax', 'grandTotal'].map(field => (
-      <FormGroup key={field} className="text-light">
-        <Label for={field} className="text-light">{capitalize(field)}</Label>
-        <InputGroup className="no-border">
-          {/* <InputGroupAddon addonType="prepend"> */}
-            <InputGroupText className="">
-              <i className="now-ui-icons shopping_tag-content"></i>
-            </InputGroupText>
-          {/* </InputGroupAddon> */}
-          <Input
-            id={field}
-            className="text-light "
-            placeholder={`${capitalize(field)}...`}
-            type="number"
-            value={displayedQuote[field]}
-            readOnly
-          />
-        </InputGroup>
-      </FormGroup>
-    ))}
-  </div>
-);
+// const CostDetails = ({ displayedQuote }) => (
+//   <div>
+//     <h5 className="text-light">Costs:</h5>
+//     {['subtotalCost', 'tax', 'grandTotal'].map(field => (
+//       <FormGroup key={field} className="text-light">
+//         <Label for={field} className="text-light">{capitalize(field)}</Label>
+//         <InputGroup className="no-border">
+//           {/* <InputGroupAddon addonType="prepend"> */}
+//             <InputGroupText className="">
+//               <i className="now-ui-icons shopping_tag-content"></i>
+//             </InputGroupText>
+//           {/* </InputGroupAddon> */}
+//           <Input
+//             id={field}
+//             className="text-light "
+//             placeholder={`${capitalize(field)}...`}
+//             type="number"
+//             value={displayedQuote[field]}
+//             readOnly
+//           />
+//         </InputGroup>
+//       </FormGroup>
+//     ))}
+//   </div>
+// );
 
-const iconClassMap = {
-  'Name': 'users_circle-08',
-  'Phone Number': 'tech_mobile',
-  'Company Name': 'tech_mobile',
-  'Email': 'ui-1_email-85',
-  'Description': 'shopping_tag-content',
-  'Service Type': 'shopping_tag-content',
-  'How Did You Hear About Us': 'shopping_tag-content',
-};
+// const iconClassMap = {
+//   'Name': 'users_circle-08',
+//   'Phone Number': 'tech_mobile',
+//   'Company Name': 'tech_mobile',
+//   'Email': 'ui-1_email-85',
+//   'Description': 'shopping_tag-content',
+//   'Service Type': 'shopping_tag-content',
+//   'How Did You Hear About Us': 'shopping_tag-content',
+// };
 
-const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+// const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
 
 export default ViewQuote;
