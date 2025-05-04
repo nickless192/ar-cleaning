@@ -53,9 +53,12 @@ const VisitorLogSchema = new Schema({
     type: String,
     default: 'unknown'
   },
+  ip: {
+    type: String, // optionally hashed
+    default: null
+  },
 
   geo: {
-    ip: { type: String }, // optionally hashed
     country: { type: String },
     region: { type: String },
     city: { type: String },
