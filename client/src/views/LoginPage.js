@@ -150,6 +150,11 @@ function LoginPage() {
     setFormData({ ...formData, [name]: value.trim() });
   };
 
+    // Define transition props for Popover to avoid warning
+    const transitionProps = {
+      timeout: 150 // Set a timeout value for the transition (in milliseconds)
+    };
+
 
   useEffect(() => {
     document.body.classList.add("login-page");
@@ -184,7 +189,7 @@ function LoginPage() {
                   // className="mb-3"
                   className="text-bold text-cleanar-color"
                 >
-                  <Form.Control type="text" className='form-input text-bold text-cleanar-color' placeholder="" onChange={(e) => handleChange(e)} name="username" id="username" />
+                  <Form.Control type="text" className='form-input text-bold text-cleanar-color' placeholder="" onChange={(e) => handleChange(e)} name="username"/>
                 </FloatingLabel>
               </Col>
               <Col className="py-3" md="1" xs='1'>
@@ -201,8 +206,9 @@ function LoginPage() {
                 <Popover
                   placement="top"
                   isOpen={popoverOpen.username}
-                  target="Tooltip1"
+                  target="Tooltip1"                  
                   toggle={() => togglePopover('username')}
+                  transition={transitionProps}
                 >
                   <PopoverBody>Enter your registered username.</PopoverBody>
                 </Popover>
@@ -215,7 +221,7 @@ function LoginPage() {
                 >
                   <Form.Control type="password" placeholder=""
                     className="form-input text-bold text-cleanar-color"
-                    onChange={(e) => handleChange(e)} name="password" id="password" />
+                    onChange={(e) => handleChange(e)} name="password" />
                 </FloatingLabel>
               </Col>
               <Col className="py-3" md="1" xs='1'>
@@ -234,6 +240,7 @@ function LoginPage() {
                   isOpen={popoverOpen.password}
                   target="Tooltip2"
                   toggle={() => togglePopover('password')}
+                  transition={transitionProps}
                 >
                   <PopoverBody>Enter your account password.</PopoverBody>
                 </Popover>
@@ -243,18 +250,13 @@ function LoginPage() {
               <Col className="py-3" md="10" xs='10'>
                 <div className="text-center">
                   <Button
-                    block
                     className="btn-round primary-bg-color"
                     type="submit"
-                    // color="info"
-
                     size="lg"
-                  // onClick={(e) => handleFormSubmit(e)}
                   >
                     Log In
                   </Button>
                   <Button
-                    block
                     className="btn-round brown-bg-color"
                     type="button"
                     onClick={handleResetPassword}

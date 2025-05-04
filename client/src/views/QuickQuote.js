@@ -21,7 +21,6 @@ import VisitorCounter from "../../src/components/Pages/VisitorCounter";
 import {
     FaQuestionCircle
 } from 'react-icons/fa';
-import html2canvas from 'html2canvas';
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import Logo from "../../src/assets/img/IC CLEAN AR-15-cropped.png"
 

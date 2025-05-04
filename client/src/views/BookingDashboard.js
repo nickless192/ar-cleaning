@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Container, Row, Col, Table, Form, Button, Alert, Spinner } from 'react-bootstrap';
 import moment from 'moment';
 import {
@@ -6,9 +7,11 @@ import {
   Label
 } from 'reactstrap';
 import BookingCalendar from './BookingCalendar';
-import QuickQuoteDashboard from './QuickQuoteDashboard';
 
 const BookingDashboard = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [bookings, setBookings] = useState([]);
   const [formData, setFormData] = useState({
     customerName: '',
@@ -23,7 +26,21 @@ const BookingDashboard = () => {
 
   // Fetch all bookings on mount
   useEffect(() => {
+    if (isInitialLoad) {
+      setIsInitialLoad(false);
     fetchBookings();
+    const searchParams = new URLSearchParams(location.search);
+    const customerName = searchParams.get('name');
+    const customerEmail = searchParams.get('email');
+    const serviceType = searchParams.get('serviceType');
+    setFormData(prev => ({
+      ...prev,
+      customerName: customerName || prev.customerName,
+      customerEmail: customerEmail || prev.customerEmail,
+      serviceType: serviceType || prev.serviceType
+    }));
+    }
+    
   }, []);
 
   const fetchBookings = async () => {
@@ -106,20 +123,15 @@ const BookingDashboard = () => {
             </Form.Group>
 
             <Form.Group controlId="serviceType" className="mb-3">
-              <Form.Label>Service Type</Form.Label>
+              <Form.Label>Service Type</Form.Label>              
               <Form.Control
-                as="select"
+                type="text"
                 name="serviceType"
                 className="text-cleanar-color text-bold form-input"
                 value={formData.serviceType}
                 onChange={handleChange}
                 required
-              >
-                <option value="">Select a service</option>
-                <option value="Regular Maintenance Cleaning">Regular Maintenance Cleaning</option>
-                <option value="Carpet Cleaning">Carpet/Upholstery Cleaning</option>
-                <option value="Deep Cleaning">Deep Cleaning</option>
-              </Form.Control>
+              />
             </Form.Group>
 
             <Form.Group controlId="date" className="mb-3">

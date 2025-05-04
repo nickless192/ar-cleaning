@@ -31,7 +31,8 @@
     "react-scripts": "^5.0.1",
     "reactstrap": "^9.2.3",
     "recharts": "^2.15.3",
-    "sass": "1.62.1"
+    "sass": "1.62.1",
+    "uuid": "^11.1.0"
   },
   "scripts": {
     "start": "react-scripts start",

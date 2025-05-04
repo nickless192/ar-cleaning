@@ -50,7 +50,7 @@ function ProfilePage() {
         const response = await fetch(`/api/quotes/user/${Auth.getProfile().data._id}`);
         const quotesData = await response.json();
         setQuotes(quotesData);
-        console.log(quotesData);
+        // console.log(quotesData);
         // console.log(Auth.getProfile());
         setFormData({
           name: data.firstName + " " + data.lastName,

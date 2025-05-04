@@ -22,7 +22,11 @@ const VisitorLogSchema = new Schema({
 
   pathsVisited: {
     type: [String], // Array of pages visited within the session
-    default: []
+    default: [],
+    validate: {
+      validator: arr => arr.length <= 50, // optional limit
+      message: 'Too many paths visited'
+    }
   },
 
   referrer: {
@@ -62,10 +66,14 @@ const VisitorLogSchema = new Schema({
     type: Boolean,
     default: false
   },
-
-  landingPage: {
-    type: String
+  firstSeenAt: {
+    type: Date,
+    default: Date.now
   },
+  lastSeenAt: {
+    type: Date,
+    default: Date.now
+  },  
 
   utm: {
     source: String,
