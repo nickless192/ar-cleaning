@@ -53,7 +53,7 @@ const QuickQuote = () => {
         services: false,
     });
 
-    const [validPromoCode, setValidPromoCode] = useState(false);
+    const [, setValidPromoCode] = useState(false);
     const [isLogged] = useState(Auth.loggedIn());
     const [isInitialLoad, setIsInitialLoad] = useState(true);
     const [selectedService, setSelectedService] = useState("");
@@ -61,9 +61,38 @@ const QuickQuote = () => {
 
     // Define services and their options
     const serviceOptions = {
-        'Residential': ["House Cleaning", "Carpet Cleaning", "Move-In/Out Cleaning", "Residential Building Cleaning"],
-        'Commercial': ["Office Cleaning", "Industrial Cleaning", "Retail Cleaning"],
-        'Specialty Cleaning': ["Event Cleaning", "Post-Construction Cleaning"],
+        'Home Cleaning': [
+            "House Cleaning", 
+            "Move-In/Out Cleaning",
+            "Condominium Cleaning",
+            "Residential Building Cleaning"
+        ],
+        'Commercial Cleaning': [
+            "Office Cleaning", 
+            "Industrial Cleaning", 
+            "Retail Cleaning"
+        ],
+        'Carpet & Upholstery': [
+            "Carpet Cleaning", 
+            "Upholstery Cleaning"
+        ],
+        'Window Cleaning': [
+            "Interior Window Cleaning",
+            "Window Track & Sill Cleaning",
+            "Glass Door Cleaning"
+        ],
+        'Power/Pressure Washing': [
+            "Driveway Cleaning",
+            "Patio & Deck Cleaning",
+            "Sidewalk Cleaning",
+            "Exterior Siding Cleaning",
+            "Fence Cleaning",
+            "Garage Floor Cleaning"
+        ],
+        // 'Specialty Services': [
+        //     "Event Cleaning",
+        //     "Post-Construction Cleaning"
+        // ]
     };
 
     const togglePopover = (field) => {
@@ -600,6 +629,18 @@ const QuickQuote = () => {
     };
 
 
+    const upholsteryList = [
+        "Sofa Cleaning",
+        "Chair Cleaning",
+        "Couch Cleaning",
+        "Sectional Cleaning",
+        "Ottoman Cleaning",
+        "Loveseat Cleaning",
+        "Dining Chair Cleaning",
+        "Recliner Cleaning"
+    ]
+
+
     const renderCustomOptions = (type) => {
         switch (type) {
             case 'House Cleaning':
@@ -836,7 +877,149 @@ const QuickQuote = () => {
                     </>
                 );
             }
-            default:
+            case 'Power Washing': {
+                return (
+                    <>
+                        <Row className="mb-3">
+                            <Col>
+                                <Form.Group controlId={`surfaceType-${type}`}> 
+                                    <Form.Label className="text-bold">Type of Surface</Form.Label>
+                                    <Form.Select
+                                        aria-label="Type of Surface"
+                                        className="transparent form-border"
+                                        name="surfaceType"
+                                        placeholder="Type of Surface"
+                                        size='sm'
+                                        onChange={(e) => handleCustomOptionChange(type, 'surfaceType', e)}
+                                        value={formData.services.find(s => s.type === type)?.customOptions?.surfaceType?.service || ''}
+                                    >
+                                        <option value="">Select Surface Type...</option>
+                                        <option value="Concrete">Concrete</option>
+                                        <option value="Wood">Wood</option>
+                                        <option value="Vinyl">Vinyl</option>
+                                        <option value="Brick">Brick</option>
+                                        <option value="Other">Other</option>
+                                    </Form.Select>
+                                </Form.Group>
+                            </Col>
+                            <Col>
+                                <Form.Group controlId={`area-${type}`}>
+                                    <Form.Label className="text-bold">Area (sqft)</Form.Label>
+                                    <Form.Control
+                                        type="number"
+                                        aria-label="Area"
+                                        name="area"
+                                        placeholder="Enter area in square feet"
+                                        className="text-cleanar-color text-bold form-border"
+                                        onChange={(e) => handleCustomOptionChange(type, 'area', e)}
+                                        value={formData.services.find(s => s.type === type)?.customOptions?.area?.service || ''}
+                                    />
+                                </Form.Group>
+                            </Col>
+                            <Col>
+                                <Form.Group controlId={`stains-${type}`}>
+                                    <Form.Label className="text-bold">Stains or Spots</Form.Label>
+                                    <Form.Select
+                                        aria-label="Stains or Spots"
+                                        size='sm'
+                                        name="stains"
+                                        placeholder="Stains or Spots"
+                                        className="transparent form-border"
+                                        onChange={(e) => handleCustomOptionChange(type, 'stains', e)}
+                                        value={formData.services.find(s => s.type === type)?.customOptions?.stains?.service || ''}
+                                    >
+                                        <option value="">Select Stain Level...</option>
+                                        <option value="None">None</option>
+                                        <option value="Light">Light</option>
+                                        <option value="Moderate">Moderate</option>
+                                        <option value="Heavy">Heavy</option>
+                                    </Form.Select>
+                                </Form.Group>
+                            </Col>
+                            <Col md={12} xs={12}>
+                                <Form.Group controlId={`startDate-${type}`}>
+                                    <Form.Label className="text-bold">Desired Service Date</Form.Label>
+                                    <Form.Control
+                                        type="date"
+                                        aria-label="Desired Service Date"
+                                        name='startDate'
+                                        placeholder="Desired Service Date"
+                                        className="text-cleanar-color text-bold form-border"
+                                        min={new Date().toISOString().split('T')[0]} // Prevent dates before today
+                                        onChange={(e) => handleCustomOptionChange(type, 'startDate', e)}
+                                        value={formData.services.find(s => s.type === type)?.customOptions?.startDate?.service || ''}
+                                    />
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                    </>
+                );
+            }
+            case 'Upholstery Cleaning': {
+                // include different types of upholstery to select from, and next to it, the area in sqft, the number of pieces, and the type of fabric
+                return (
+                    <>
+                        <Row className="mb-3">
+                            {upholsteryList.map((item, index) => (
+                                <Col key={index} md={6} xs={12}>
+                                    <Form.Group controlId={`upholstery-${type}-${index}`}>
+                                        <Form.Label className="text-bold">{item}</Form.Label>
+                                        <Form.Control
+                                            type="number"
+                                            aria-label="Upholstery Area"
+                                            name={`upholsteryArea-${index}`}
+                                            placeholder="Enter area in square feet"
+                                            className="text-cleanar-color text-bold form-border"
+                                            onChange={(e) => handleCustomOptionChange(type, `upholsteryArea-${index}`, e)}
+                                            value={formData.services.find(s => s.type === type)?.customOptions?.[`upholsteryArea-${index}`]?.service || ''}
+                                        />  
+                                        <Form.Control
+                                            type="number"
+                                            aria-label="Upholstery Pieces"
+                                            name={`upholsteryPieces-${index}`}
+                                            placeholder="Enter number of pieces"
+                                            className="text-cleanar-color text-bold form-border mt-2"
+                                            onChange={(e) => handleCustomOptionChange(type, `upholsteryPieces-${index}`, e)}
+                                            value={formData.services.find(s => s.type === type)?.customOptions?.[`upholsteryPieces-${index}`]?.service || ''}
+                                        />
+                                        <Form.Select
+                                            aria-label="Upholstery Fabric Type"
+                                            name={`upholsteryFabric-${index}`}
+                                            placeholder="Select fabric type"
+                                            className="transparent form-border mt-2"
+                                            onChange={(e) => handleCustomOptionChange(type, `upholsteryFabric-${index}`, e)}
+                                            value={formData.services.find(s => s.type === type)?.customOptions?.[`upholsteryFabric-${index}`]?.service || ''}
+                                        >
+                                            <option value="">Select Fabric Type...</option>
+                                            <option value="Leather">Leather</option>
+                                            <option value="Cotton">Cotton</option>
+                                            <option value="Polyester">Polyester</option>
+                                            <option value="Nylon">Nylon</option>
+                                            <option value="Other">Other</option>
+                                        </Form.Select>
+                                    </Form.Group>
+                                </Col>
+                            ))}
+                            <Col md={12} xs={12}>
+                                <Form.Group controlId={`startDate-${type}`}>
+                                    <Form.Label className="text-bold">Desired Service Date</Form.Label>
+                                    <Form.Control
+                                        type="date"
+                                        aria-label="Desired Service Date"
+                                        name='startDate'
+                                        placeholder="Desired Service Date"
+                                        className="text-cleanar-color text-bold form-border"
+                                        min={new Date().toISOString().split('T')[0]} // Prevent dates before today
+                                        onChange={(e) => handleCustomOptionChange(type, 'startDate', e)}
+                                        value={formData.services.find(s => s.type === type)?.customOptions?.startDate?.service || ''}
+                                    />
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                    </>
+                );
+            }
+                        default:
                 return (
                     <>
                         <Row className="mb-3">

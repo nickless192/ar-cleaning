@@ -108,7 +108,7 @@ function IndexNavbar() {
                                 </DropdownItem>
                                 <DropdownItem to="/view-quotes" tag={Link}>
                                     <i className="now-ui-icons ui-1_settings-gear-63 mr-1"></i>
-                                    View Quotes
+                                    View Requested Quotes
                                 </DropdownItem>
                                 <DropdownItem to="/manage-gift-card" tag={Link}>
                                     <i className="now-ui-icons ui-1_settings-gear-63 mr-1"></i>

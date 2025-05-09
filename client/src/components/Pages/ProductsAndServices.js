@@ -50,8 +50,20 @@ const servicesData = [
     ],
     quoteLink: "/request-quote?service=Carpet+Cleaning", // URL encode space
     quoteButtonText: "Add Carpet Cleaning to Quote"
+  },
+  // Add Power washing
+  {
+    title: "Power Washing",
+    imgSrc: carpetCleaningBg, // Placeholder, replace with actual image
+    imgAlt: "Power washing - Designed by Freepik",
+    description: [
+      "High-pressure cleaning for driveways, sidewalks, and patios.",
+      "Removal of dirt, mold, and mildew from exterior surfaces.",
+      "Preparation of surfaces for painting or sealing.",
+    ],
+    quoteLink: "/request-quote?service=Power+Washing", // URL encode space
+    quoteButtonText: "Add Power Washing to Quote"
   }
-  // Add "Specialized Cleaning" or other services here if needed
 ];
 
 // --- Reusable Service Card Component ---

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import VisitorCounter from "components/Pages/VisitorCounter.js";
+import ContactUs from "./ContactUs"
 import {
   Card,
   // CardBody,
@@ -21,6 +22,7 @@ import BusinessHoursSidebar from "components/Pages/BusinessHourSidebar";
 import backgroundImage from 'assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg';
 // import Logo from "assets/img/IC CLEAN AR-15-cropped.png";
 import Footer from "components/Pages/Footer";
+import WelcomeModal from "views/WelcomeModal.js";
 import { FaInstagram, FaFacebook, FaTiktok } from 'react-icons/fa';
 import { FiPhoneCall } from 'react-icons/fi';
 
@@ -39,20 +41,20 @@ function Index() {
       additionalInfo: responseTimeMessage,
       color: "text-primary"
     },
-    {
-      icon: "now-ui-icons ui-1_email-85",
-      link: "mailto:info@cleanARsolutions.ca",
-      text: "Email Support",
-      description: "For detailed inquiries or written communication, send us an email",
-      additionalInfo: "Guaranteed Response Within 24 Hours",
-      color: "text-success"
-    },
+    // {
+    //   icon: "now-ui-icons ui-1_email-85",
+    //   link: "mailto:info@cleanARsolutions.ca",
+    //   text: "Email Support",
+    //   description: "For detailed inquiries or written communication, send us an email",
+    //   additionalInfo: "Guaranteed Response Within 24 Hours",
+    //   color: "text-success"
+    // },
     {
       icon: "now-ui-icons objects_spaceship",
       link: ["https://www.instagram.com/cleanarsolutions/",
         "https://www.facebook.com/share/18X3sPR1vf/?mibextid=wwXIfr",
         "https://www.tiktok.com/@cleanar.solutions",
-        "tel:437-440-5514",
+        // "tel:437-440-5514",
       ],
       text: [
         // "Follow Us on Instagram",
@@ -62,13 +64,13 @@ function Index() {
         'Instagram',
     'Facebook Community',
     'TikTok',
-    'Call or Message Us',
+    // 'Call or Message Us',
       ],
       icons: [
         <FaInstagram />,
         <FaFacebook />,
         <FaTiktok />,
-        <FiPhoneCall />,
+        // <FiPhoneCall />,
       ],
       description: "Social Connection, Real-Time Updates & Engagement",
       additionalInfo: "Get Inspired & Informed",
@@ -138,6 +140,7 @@ function Index() {
     <>
       <MetaTags />
       <VisitorCounter page={"index"} />
+      <WelcomeModal />
       {/* <LandingPageHeader /> */}
       <div className="m-0 p-0 light-bg-color-opaque">
         <Row className="m-0 align-items-center">
@@ -266,6 +269,11 @@ function Index() {
             <QuickQuote />
           </Col>
         </Row>
+        <Row className="m-0 p-0">
+          <Col xs='12' md='12' className="p-0">
+            <ContactUs />
+          </Col>
+          </Row>
 
         {/* <Footer /> */}
       </div>

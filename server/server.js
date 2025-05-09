@@ -22,6 +22,11 @@ app.use('/images', express.static(path.join(__dirname, '../client/src/assets')))
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/build')));
+
+  // // DO NOT COMMENT OUT THIS CODE - this makes the index page get the /GET error
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+  });
 }
 
 
@@ -29,15 +34,8 @@ if (process.env.NODE_ENV === 'production') {
 // app.use(trackVisitor);
 app.use(require('./routes'));
 
-// // DO NOT COMMENT OUT THIS CODE - this makes the index page get the /GET error
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
-});
 // connect to mongo
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/ar-cleaning',{
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}) ;
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/ar-cleaning') ;
 
 // logs MongoDB statements that are executed
 mongoose.set('debug',true);
