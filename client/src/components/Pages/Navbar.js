@@ -36,16 +36,16 @@ function IndexNavbar() {
     const handleToggle = () => {
         const doc = document.documentElement;
         const isOpen = doc.classList.contains("nav-open");
-      
+
         if (isOpen) {
-          doc.classList.remove("nav-open");
+            doc.classList.remove("nav-open");
         } else {
-          doc.classList.add("nav-open");
+            doc.classList.add("nav-open");
         }
-      
+
         setCollapseOpen(!collapseOpen);
-      };
-      
+    };
+
 
     useEffect(() => {
         const scrollTopVal = 0;
@@ -218,12 +218,12 @@ function IndexNavbar() {
                 <div
                     id="bodyClick"
                     onClick={
-                    // handleToggle
+                        // handleToggle
                         () => {
-                        document.documentElement.classList.toggle("nav-open");
-                        setCollapseOpen(false);
+                            document.documentElement.classList.toggle("nav-open");
+                            setCollapseOpen(false);
+                        }
                     }
-                }
                 />
             ) : null}
             <Navbar className={"fixed-topnav-bar-top mb-0 navbar-color " + navbarColor} expand="lg">
@@ -235,20 +235,20 @@ function IndexNavbar() {
                         className="text-capitalize font-weight-bold d-flex align-items-center"
                     >
                         <Row>
-<Col xs="12">
-                        <img
-                            src={require("../../assets/img/IC CLEAN AR-15-cropped.png")}
-                            alt="CleanAR Solutions"
-                            className="navbarlogo"
-                        />
-</Col>
-                        <Col>
-                        <div className="">
-                            <h1 className="navlogotext navbarh1 montserrat-bold m-0 t-0 ms-2">
-                                CleanAR Solutions
-                                </h1>
-                        </div>
-                        </Col>
+                            <Col xs="12">
+                                <img
+                                    src={require("../../assets/img/IC CLEAN AR-15-cropped.png")}
+                                    alt="CleanAR Solutions"
+                                    className="navbarlogo"
+                                />
+                            </Col>
+                            <Col>
+                                <div className="">
+                                    <h1 className="navlogotext navbarh1 montserrat-bold m-0 t-0 ms-2">
+                                        CleanAR Solutions
+                                    </h1>
+                                </div>
+                            </Col>
                         </Row>
                     </NavbarBrand>
 
@@ -257,11 +257,11 @@ function IndexNavbar() {
                         <button
                             className="navbar-toggler"
                             onClick={handleToggle
-                            //     () => {
-                            //     document.documentElement.classList.toggle("nav-open");
-                            //     setCollapseOpen(!collapseOpen);
-                            // }
-                        }
+                                //     () => {
+                                //     document.documentElement.classList.toggle("nav-open");
+                                //     setCollapseOpen(!collapseOpen);
+                                // }
+                            }
                             aria-expanded={collapseOpen}
                             type="button"
                         >

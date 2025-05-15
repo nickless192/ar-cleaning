@@ -1,5 +1,4 @@
-const express = require('express');
-const router = express.Router();
+const router = require('express').Router();
 const cron = require('node-cron');
 const { createBooking, getBookings, deleteBooking, sendReminderEmail  } = require('../../controllers/bookingController');
 const Booking = require('../../models/Booking');

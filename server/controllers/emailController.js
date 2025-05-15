@@ -382,13 +382,7 @@ info@cleanARsolutions.ca
 
             // Construct email HTML with inline image
             const emailHtml = `
-            <h2>Customer Form Submission</h2>
-            <ul>
-            <li><strong>Name:</strong> ${name}</li>
-            <li><strong>Email:</strong> ${email}</li>
-            <li><strong>Phone:</strong> ${phonenumber}</li>
-            <li><strong>Postal Code:</strong> ${postalcode}</li>
-            </ul>                     
+            <h2>Customer Form Submission</h2>                    
             <p>${textSummary}</p>
             `;
             // <p><strong>Form Screenshot:</strong></p>

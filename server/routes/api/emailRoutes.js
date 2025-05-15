@@ -1,11 +1,8 @@
-const express = require('express');
 const cron = require('node-cron');
-// const multer = require('multer');
-// const upload = multer({ storage: multer.memoryStorage() });
 const { emailQuote, emailQuoteNotification, emailNewUser, emailNewUserNotification, emailPasswordResetRequest, emailQuickQuote, emailQuickNotePDF, generateWeeklyReport, sendWeeklyReportEmail, generateManualReport } = require('../../controllers/emailController');
 
 
-const router = express.Router();
+const router = require('express').Router();
 
 // Route for sending an email
 router.post('/quote', emailQuote);

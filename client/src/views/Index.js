@@ -127,14 +127,14 @@ function Index() {
     // window.scrollTo(0, 0);
     // document.body.scrollTop = 0;
     // initializeServices();
-    if (location.state?.scrollToQuote) {
-      document.getElementById("quote-section")?.scrollIntoView({ behavior: "smooth" });
-    }
+    // if (location.state?.scrollToQuote) {
+    //   document.getElementById("quote-section")?.scrollIntoView({ behavior: "smooth" });
+    // }
     return function cleanup() {
       document.body.classList.remove("index-page");
       document.body.classList.remove("sidebar-collapse");
     };
-  }, []);
+  }, [location.search, location.state]);
 
   return (
     <>
@@ -183,7 +183,7 @@ function Index() {
           </motion.p>
         </Col>
           <Col className="text-center p-0 m-0" xs='12' md='6'>
-            <CardImg top className="background-image-index" src={backgroundImage} alt="CleanAR Solutions background" />
+            <CardImg top className="background-image-index" src={backgroundImage} alt="CleanAR Solutions background - Designed by Freepik" />
           </Col>
         </Row>
         <Row>
@@ -215,10 +215,10 @@ function Index() {
                         {Array.isArray(item.link) ? (
                           <>
                             {item.link.map((singleLink, index) => (
-                              <>
+                              <div key={index}>
                                 {' | '}
                                 <a
-                                  key={index}
+                                  
                                   href={singleLink}
                                   target="_blank"
                                   rel="noreferrer noopener"
@@ -229,7 +229,7 @@ function Index() {
                                   {/* {item.text?.[index] || new URL(singleLink).hostname.replace("www.", "")} */}
                                 </a>
                                 {' | '}
-                              </>
+                              </div>
                             ))}
                           </>
                         ) : item.link === "business-hours" ? (
@@ -269,11 +269,11 @@ function Index() {
             <QuickQuote />
           </Col>
         </Row>
-        <Row className="m-0 p-0">
+        {/* <Row className="m-0 p-0">
           <Col xs='12' md='12' className="p-0">
             <ContactUs />
           </Col>
-          </Row>
+          </Row> */}
 
         {/* <Footer /> */}
       </div>

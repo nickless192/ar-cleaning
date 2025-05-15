@@ -8,6 +8,7 @@ const visitorRoutes = require('./visitorRoutes');
 const emailRoutes = require('./emailRoutes');
 const reviewRoutes = require('./reviewRoutes');
 const bookingRoutes = require('./bookingRoutes');
+const eventRoutes = require('./eventRoutes');
 
 router.use('/users', userRoutes);
 router.use('/services', serviceRoutes);
@@ -18,5 +19,6 @@ router.use('/visitors', visitorRoutes);
 router.use('/email', emailRoutes);
 router.use('/reviews', reviewRoutes);
 router.use('/bookings', bookingRoutes); 
+router.use('/events', eventRoutes);
 
 module.exports = router;

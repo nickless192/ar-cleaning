@@ -28,15 +28,21 @@ const WelcomeModal = () => {
     setShow(false);
   };
 
-  const handleQuoteClick = () => {
+  const handleQuoteClick = (e) => {
     trackEvent('quote_clicked');
-    navigate('/index?promoCode=welcome15', { state: { scrollToQuote: true } });
+    // navigate('/index?promoCode=welcome15', { state: { scrollToQuote: true } }); 
+    // localStorage.setItem('welcomeModalDismissed', 'true');
+    navigate('/index?promoCode=welcome15&scrollToQuote=true');    
+    // refresh
+    // window.location.reload();
+    setShow(false);
   };
 
-  const handleContactClick = () => {
-    trackEvent('contact_clicked');
-    navigate('/contact');
-  };
+  const handleProductsAndServicesClick = () => {
+    trackEvent('products_and_services_clicked');
+    navigate('/products-and-services');
+    setShow(false);
+  }
 
   const trackEvent = (action) => {
     const event = {
@@ -46,6 +52,16 @@ const WelcomeModal = () => {
     };
     console.log('Modal Event Tracked:', event);
     // Optional: Send event to backend or analytics tool
+    fetch('/api/events', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(event),
+    })
+      .then((response) => response.json())
+      .then((data) => console.log('Event logged:', data))
+      .catch((error) => console.error('Error logging event:', error));
   };
 
   return (
@@ -56,36 +72,41 @@ const WelcomeModal = () => {
       centered
       className="welcome-modal"
     >
-      <Modal.Header closeButton style={{ backgroundColor: 'var(--light-blue-color)' }}>
+      <Modal.Header closeButton className='light-blue-bg-color py-0' >
         <Modal.Title>Welcome to CleanAR Solutions!</Modal.Title>
       </Modal.Header>
       <Modal.Body style={{ backgroundColor: 'var(--light-color-opaque)' }}>
         <p>We’re thrilled to have you. Let us make your space sparkle ✨</p>
-        <p>
-          <strong>
-            New here? Use promo code{' '}
-            <span style={{ color: 'var(--primary-color)' }}>WELCOME15</span> for 15% off!
-          </strong>
-        </p>
+        {variant === 'A' ? (
+          <p>
+            <strong>
+              New with us? Use promo code{' '}
+              <span className='primary-color'>WELCOME15</span> for 15% off!
+            </strong>
+          </p>
+        ) : (
+          <p className="text-center">
+            💥 First-time customer? Use <span className='primary-color'>WELCOME15</span> for a 15% discount on your first clean!
+          </p>
+        )}
         <div className="d-flex flex-column flex-md-row justify-content-between gap-2 mt-3">
           <Button
             variant="success"
             onClick={handleQuoteClick}
-            style={{ backgroundColor: 'var(--secondary-color)', border: 'none' }}
+            className="secondary-bg-color"
           >
-            Get a Quote
+            Start Now, Get a Quote ✨
           </Button>
           <Button
             variant="info"
-            onClick={handleContactClick}
-            style={{ backgroundColor: 'var(--accent-color)', border: 'none' }}
+            onClick={handleProductsAndServicesClick}
           >
-            Message Us
+            Not sure yet? Explore our services 🔎
           </Button>
         </div>
       </Modal.Body>
-      <Modal.Footer style={{ backgroundColor: 'var(--light-color-opaque)' }}>
-        <Button variant="outline-secondary" onClick={handleDontShowAgain}>
+      <Modal.Footer className='py-2 justify-content-center' style={{ backgroundColor: 'var(--light-color-opaque)!important' }}>
+        <Button variant="danger" onClick={handleDontShowAgain}>
           Don't show this again
         </Button>
       </Modal.Footer>

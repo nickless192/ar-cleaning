@@ -30,11 +30,10 @@ const QuickQuote = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         name: '',
-        userId: '',
-        description: '',
         companyName: '',
         email: '',
         phonenumber: '',
+        postalcode: '',
         promoCode: '',
         subtotalCost: 0,
         tax: 0,
@@ -56,12 +55,13 @@ const QuickQuote = () => {
     const [, setValidPromoCode] = useState(false);
     const [isLogged] = useState(Auth.loggedIn());
     const [isInitialLoad, setIsInitialLoad] = useState(true);
+    const [scrolledToQuote, setScrolledToQuote] = useState(false);
     const [selectedService, setSelectedService] = useState("");
     const [options, setOptions] = useState([]);
 
     // Define services and their options
     const serviceOptions = {
-        'Home Cleaning': [
+        'Residential Cleaning': [
             "House Cleaning", 
             "Move-In/Out Cleaning",
             "Condominium Cleaning",
@@ -72,7 +72,7 @@ const QuickQuote = () => {
             "Industrial Cleaning", 
             "Retail Cleaning"
         ],
-        'Carpet & Upholstery': [
+        'Carpet And Upholstery': [
             "Carpet Cleaning", 
             "Upholstery Cleaning"
         ],
@@ -110,23 +110,42 @@ const QuickQuote = () => {
 
 
     useEffect(() => {
+        const searchParams = new URLSearchParams(location.search);
+        const scrollToQuote = searchParams.get('scrollToQuote');
         if (isInitialLoad) {
-            const searchParams = new URLSearchParams(location.search);
             const promoCode = searchParams.get('promoCode');
-
+            // console.log('promoCode:', promoCode);
+            const serviceClicked = searchParams.get('service');
             if (promoCode) {
                 setFormData(prevFormData => ({
                     ...prevFormData,
                     promoCode: promoCode
                 }));
             }
+            if (serviceClicked) {
+                handleServiceChange(serviceClicked);
+            }
             prepopulateForm();
             setIsInitialLoad(false);
         }
+        // console.log('serviceClicked:', serviceClicked);
+
         calculateTotals();
         handleBodyClass();
+        // if (location.state?.scrollToQuote) {
+        if (scrollToQuote && !scrolledToQuote) {
+      document.getElementById("quote-section")?.scrollIntoView({ behavior: "smooth" });
+      const promoCode = searchParams.get('promoCode');      
+      if (promoCode) {
+                setFormData(prevFormData => ({
+                    ...prevFormData,
+                    promoCode: promoCode
+                }));
+            }
+      setScrolledToQuote(true);
+    }
         return cleanupBodyClass;
-    }, [isLogged, formData.services, location.search]);
+    }, [isLogged, formData.services, location.search,location.state]);
 
     const prepopulateForm = useCallback(() => {
         if (isLogged) {
@@ -259,6 +278,7 @@ const QuickQuote = () => {
         // if (promoCode === 'welcome10') {
         if (promoCode === 'toronto15' || promoCode === 'follow15'
             || promoCode === 'now15' || promoCode === 'start15' || promoCode === 'fresh15' || promoCode === 'secret15'
+            || promoCode === 'welcome15'
         ) {
             setValidPromoCode(true);
             // alert('Valid promo code! 15% discount will be applied to your quote');
@@ -522,7 +542,8 @@ const QuickQuote = () => {
 
             // console.log('Sanitized services:', sanitizedServices);
             // Capture screenshot of the form
-            const serviceSelectionForm = document.getElementById("service-selection");
+            // const serviceSelectionForm = document.getElementById("service-selection");
+            const serviceSelectionForm = document.getElementById("quote-form");
             // const canvas = await html2canvas(serviceSelectionForm);
             // const imageBase64 = canvas.toDataURL("image/png").split(",")[1]; // PNG format
             // Extract form values
@@ -534,7 +555,7 @@ const QuickQuote = () => {
                 services: sanitizedServices
             };
 
-            console.log(textSummary);
+            // console.log(textSummary);
 
             // const payload = { textSummary, imageBase64, formData: updatedFormData };
             const payload = { textSummary, formData: updatedFormData };
@@ -647,234 +668,224 @@ const QuickQuote = () => {
             case 'Move-In/Out Cleaning': {
                 return (
                     <>
-                        <Row className="mb-3">
-                            <Col md={12} xs={12}>
-                                <Form.Group controlId={`frequency-${type}`}>
-                                    <Form.Label className="text-bold">Frequency of Cleaning</Form.Label>
-                                    <Form.Select
-                                        aria-label="Frequency of Cleaning"
-                                        className="transparent form-border"
-                                        name="frequency"
-                                        placeholder="Frequency of Cleaning"
-                                        size='sm'
-                                        onChange={(e) => handleCustomOptionChange(type, 'frequency', e)}
-                                        value={formData.services.find(s => s.type === type)?.customOptions?.frequency?.service || ''}
-                                    >
-                                        <option value="">Select Frequency...</option>
-                                        <option value="One Time">One Time</option>
-                                        <option value="Weekly">Weekly</option>
-                                        <option value="Bi-Weekly">Bi-Weekly</option>
-                                        <option value="Monthly">Monthly</option>
-                                        <option value="Other">Other</option>
-                                    </Form.Select>
-                                </Form.Group>
-                            </Col>
-                            <Col md={12} xs={12}>
-                                <Form.Group controlId={`unitSize-${type}`}>
-                                    <Form.Label className="text-bold">Unit Size</Form.Label>
-                                    <Form.Select
-                                        aria-label="Unit Size"
-                                        size='sm'
-                                        name="unitSize"
-                                        // placeholder="Unit Size"
-                                        className="transparent form-border"
-                                        onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e)}
-                                        value={formData.services.find(s => s.type === type)?.customOptions?.squareFootage?.service || ''}
-                                    >
-                                        <option value="">Select Unit Size...</option>
-                                        <option value="0-499 sqft">0-499 sqft</option>
-                                        <option value="500-999 sqft">500-999 sqft</option>
-                                        <option value="1000-1499 sqft">1000-1499 sqft</option>
-                                        <option value="1500-1999 sqft">1500-1999 sqft</option>
-                                        <option value="2000+ sqft">2000+ sqft</option>
-                                    </Form.Select>
-                                </Form.Group>
-                            </Col>
-                        </Row>
-                        <Row className="mb-3">
-                            <Col md={12} xs={12}>
-                                <Form.Group controlId={`bedrooms-${type}`}>
-                                    <Form.Label className="text-bold">Number of Bedrooms</Form.Label>
-                                    <Form.Select
-                                        aria-label="Number of Bedrooms"
-                                        name='bedrooms'
-                                        // placeholder="Number of Bedrooms"
-                                        className="transparent form-border"
-                                        size='sm'
-                                        onChange={(e) => handleCustomOptionChange(type, 'bedrooms', e)}
-                                        value={formData.services.find(s => s.type === type)?.customOptions?.bedrooms?.service || ''}
-                                    >
-                                        <option value="">Select Number of Bedrooms...</option>
-                                        {Array.from({ length: 6 }, (_, i) => (
-                                            <option key={i} value={i.toString()}>{i === 5 ? '5+' : i}</option>
-                                        ))}
-                                    </Form.Select>
-                                </Form.Group>
-                            </Col>
-                            <Col md={12} xs={12}>
-                                <Form.Group controlId={`bathrooms-${type}`}>
-                                    <Form.Label className="text-bold">Number of Bathrooms</Form.Label>
-                                    <Form.Select
-                                        aria-label="Number of Bathrooms"
-                                        name='bathrooms'
-                                        // placeholder="Number of Bathrooms"
-                                        className="transparent form-border"
-                                        size='sm'
-                                        onChange={(e) => handleCustomOptionChange(type, 'bathrooms', e)}
-                                        value={formData.services.find(s => s.type === type)?.customOptions?.bathrooms?.service || ''}
-                                    >
-                                        <option value="">Select Number of Bathrooms...</option>
-                                        {Array.from({ length: 6 }, (_, i) => (
-                                            <option key={i} value={i.toString()}>{i === 5 ? '5+' : i}</option>
-                                        ))}
-                                    </Form.Select>
-                                </Form.Group>
-                            </Col>
-                            <Col md={12} xs={12}>
-                                <Form.Group controlId={`startDate-${type}`}>
-                                    <Form.Label className="text-bold">Desired Start Date</Form.Label>
-                                    <Form.Control
-                                        type="date"
-                                        aria-label="Desired Start Date"
-                                        name='startDate'
-                                        placeholder="Desired Start Date"
-                                        className="text-cleanar-color text-bold form-border"
-                                        onChange={(e) => handleCustomOptionChange(type, 'startDate', e)}
-                                        value={formData.services.find(s => s.type === type)?.customOptions?.startDate?.service || ''}
-                                        min={new Date().toISOString().split('T')[0]} // Prevent dates before today
-                                    />
-                                </Form.Group>
-                            </Col>
-                        </Row>
-                        {type === 'House Cleaning' && (
-                            <Row className="mb-3">
-                                <Col>
-                                    <Form.Group controlId={`additionalOptions-${type}`}>
-                                        <Form.Label className="text-bold">Additional Options</Form.Label>
-                                        <br />
-                                        <Label check className="me-3">
-                                            <Input
-                                                type="checkbox"
-                                                name="deepCleaning"
-                                                placeholder="Deep Cleaning"
-                                                onChange={(e) => handleCustomOptionChange(type, 'deepCleaning', e)}
-                                                aria-label="Deep Cleaning"
-                                                checked={formData.services.find(s => s.type === type)?.customOptions?.deepCleaning?.service || false}
-                                            />
-                                            <span className="form-check-sign"></span>
-                                            Deep Cleaning
-                                        </Label>
-                                        <Label check className="me-3">
-                                            <Input
-                                                type="checkbox"
-                                                onChange={(e) => handleCustomOptionChange(type, 'windowCleaning', e)}
-                                                aria-label="Window Cleaning"
-                                                name="windowCleaning"
-                                                placeholder="Window Cleaning"
-                                                checked={formData.services.find(s => s.type === type)?.customOptions?.windowCleaning?.service || false}
-                                            />
-                                            <span className="form-check-sign"></span>
-                                            Window Cleaning
-                                        </Label>
-                                        <Label check className="me-3">
-                                            <Input
-                                                type="checkbox"
-                                                onChange={(e) => handleCustomOptionChange(type, 'laundryService', e)}
-                                                aria-label="Laundry Service"
-                                                name="laundryService"
-                                                placeholder="Laundry Service"
-                                                checked={formData.services.find(s => s.type === type)?.customOptions?.laundryService?.service || false}
-                                            />
-                                            <span className="form-check-sign"></span>
-                                            Laundry Service
-                                        </Label>
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-                        )}
-                    </>
+  <Row className="g-3">
+    {/* Frequency of Cleaning */}
+    <Col xs={12}>
+      <Form.Group controlId={`frequency-${type}`}>
+        <Form.Label className="fw-semibold">🕒 Frequency</Form.Label>
+        <Form.Select
+          aria-label="Cleaning Frequency"
+          name="frequency"
+          size="sm"
+          className="form-control border-1"
+          value={formData.services.find(s => s.type === type)?.customOptions?.frequency?.service || ''}
+          onChange={(e) => handleCustomOptionChange(type, 'frequency', e)}
+        >
+          <option value="">Select...</option>
+          <option value="One Time">One Time</option>
+          <option value="Weekly">Weekly</option>
+          <option value="Bi-Weekly">Bi-Weekly</option>
+          <option value="Monthly">Monthly</option>
+          <option value="Other">Other</option>
+        </Form.Select>
+      </Form.Group>
+    </Col>
+
+    {/* Unit Size */}
+    <Col xs={12}>
+      <Form.Group controlId={`unitSize-${type}`}>
+        <Form.Label className="fw-semibold">📏 Unit Size</Form.Label>
+        <Form.Select
+          aria-label="Unit Size"
+          name="unitSize"
+          size="sm"
+          className="form-control border-1"
+          value={formData.services.find(s => s.type === type)?.customOptions?.squareFootage?.service || ''}
+          onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e)}
+        >
+          <option value="">Select...</option>
+          <option value="0-499 sqft">0–499 sqft</option>
+          <option value="500-999 sqft">500–999 sqft</option>
+          <option value="1000-1499 sqft">1000–1499 sqft</option>
+          <option value="1500-1999 sqft">1500–1999 sqft</option>
+          <option value="2000+ sqft">2000+ sqft</option>
+        </Form.Select>
+      </Form.Group>
+    </Col>
+
+    {/* Bedrooms */}
+    <Col xs={12}>
+      <Form.Group controlId={`bedrooms-${type}`}>
+        <Form.Label className="fw-semibold">🛏️ Bedrooms</Form.Label>
+        <Form.Select
+          aria-label="Number of Bedrooms"
+          name="bedrooms"
+          size="sm"
+          className="form-control border-1"
+          value={formData.services.find(s => s.type === type)?.customOptions?.bedrooms?.service || ''}
+          onChange={(e) => handleCustomOptionChange(type, 'bedrooms', e)}
+        >
+          <option value="">Select...</option>
+          {Array.from({ length: 6 }, (_, i) => (
+            <option key={i} value={i.toString()}>{i === 5 ? '5+' : i}</option>
+          ))}
+        </Form.Select>
+      </Form.Group>
+    </Col>
+
+    {/* Bathrooms */}
+    <Col xs={12}>
+      <Form.Group controlId={`bathrooms-${type}`}>
+        <Form.Label className="fw-semibold">🚿 Bathrooms</Form.Label>
+        <Form.Select
+          aria-label="Number of Bathrooms"
+          name="bathrooms"
+          size="sm"
+          className="form-control border-1"
+          value={formData.services.find(s => s.type === type)?.customOptions?.bathrooms?.service || ''}
+          onChange={(e) => handleCustomOptionChange(type, 'bathrooms', e)}
+        >
+          <option value="">Select...</option>
+          {Array.from({ length: 6 }, (_, i) => (
+            <option key={i} value={i.toString()}>{i === 5 ? '5+' : i}</option>
+          ))}
+        </Form.Select>
+      </Form.Group>
+    </Col>
+
+    {/* Start Date */}
+    <Col xs={12}>
+      <Form.Group controlId={`startDate-${type}`}>
+        <Form.Label className="fw-semibold">📅 Start Date</Form.Label>
+        <Form.Control
+          type="date"
+          name="startDate"
+          aria-label="Desired Start Date"
+          className="form-control border-1"
+          value={formData.services.find(s => s.type === type)?.customOptions?.startDate?.service || ''}
+          onChange={(e) => handleCustomOptionChange(type, 'startDate', e)}
+          min={new Date().toISOString().split('T')[0]}
+        />
+      </Form.Group>
+    </Col>
+
+    {/* Additional Options */}
+    {type === 'House Cleaning' && (
+      <Col xs={12}>
+        <Form.Group controlId={`additionalOptions-${type}`}>
+          <Form.Label className="fw-semibold">🧼 Additional Options</Form.Label>
+          <div className="d-flex flex-wrap gap-3 mt-2">
+            {[
+              { label: 'Deep Cleaning', key: 'deepCleaning' },
+              { label: 'Window Cleaning', key: 'windowCleaning' },
+              { label: 'Laundry Service', key: 'laundryService' }
+            ].map(({ label, key }) => (
+              <Form.Check
+                key={key}
+                type="checkbox"
+                id={`${key}-${type}`}
+                label={label}
+                name={key}
+                aria-label={label}
+                className="form-check form-switch"
+                checked={formData.services.find(s => s.type === type)?.customOptions?.[key]?.service || false}
+                onChange={(e) => handleCustomOptionChange(type, key, e)}
+              />
+            ))}
+          </div>
+        </Form.Group>
+      </Col>
+    )}
+  </Row>
+</>
+
                 );
             }
             case 'Carpet Cleaning': {
                 return (
                     <>
-                        <Row className="mb-3">
-                            <Col>
-                                <Form.Group controlId={`carpetType-${type}`}>
-                                    <Form.Label className="text-bold">Type of Carpet</Form.Label>
-                                    <Form.Select
-                                        aria-label="Type of Carpet"
-                                        className="transparent form-border"
-                                        name="carpetType"
-                                        placeholder="Type of Carpet"
-                                        size='sm'
-                                        onChange={(e) => handleCustomOptionChange(type, 'carpetType', e)}
-                                        value={formData.services.find(s => s.type === type)?.customOptions?.carpetType?.service || ''}
-                                    >
-                                        <option value="">Select Carpet Type...</option>
-                                        <option value="Wool">Wool</option>
-                                        <option value="Nylon">Nylon</option>
-                                        <option value="Polyester">Polyester</option>
-                                        <option value="Olefin">Olefin</option>
-                                        <option value="Other">Other</option>
-                                    </Form.Select>
-                                </Form.Group>
-                            </Col>
-                        </Row>
-                        <Row className="mb-3">
-                            <Col>
-                                <Form.Group controlId={`carpetArea-${type}`}>
-                                    <Form.Label className="text-bold">Carpet Area (sqft)</Form.Label>
-                                    <Form.Control
-                                        type="number"
-                                        aria-label="Carpet Area"
-                                        name="carpetArea"
-                                        placeholder="Enter carpet area in square feet"
-                                        className="text-cleanar-color text-bold form-border"
-                                        onChange={(e) => handleCustomOptionChange(type, 'carpetArea', e)}
-                                        value={formData.services.find(s => s.type === type)?.customOptions?.carpetArea?.service || ''}
-                                    />
-                                </Form.Group>
-                            </Col>
-                        </Row>
-                        <Row className="mb-3">
-                            <Col>
-                                <Form.Group controlId={`stains-${type}`}>
-                                    <Form.Label className="text-bold">Stains or Spots</Form.Label>
-                                    <Form.Select
-                                        aria-label="Stains or Spots"
-                                        size='sm'
-                                        name="stains"
-                                        placeholder="Stains or Spots"
-                                        className="transparent form-border"
-                                        onChange={(e) => handleCustomOptionChange(type, 'stains', e)}
-                                        value={formData.services.find(s => s.type === type)?.customOptions?.stains?.service || ''}
-                                    >
-                                        <option value="">Select Stain Level...</option>
-                                        <option value="None">None</option>
-                                        <option value="Light">Light</option>
-                                        <option value="Moderate">Moderate</option>
-                                        <option value="Heavy">Heavy</option>
-                                    </Form.Select>
-                                </Form.Group>
-                            </Col>
-                            <Col md={12} xs={12}>
-                                <Form.Group controlId={`startDate-${type}`}>
-                                    <Form.Label className="text-bold">Desired Service Date</Form.Label>
-                                    <Form.Control
-                                        type="date"
-                                        aria-label="Desired Service Date"
-                                        name='startDate'
-                                        placeholder="Desired Service Date"
-                                        className="text-cleanar-color text-bold form-border"
-                                        min={new Date().toISOString().split('T')[0]} // Prevent dates before today
-                                        onChange={(e) => handleCustomOptionChange(type, 'startDate', e)}
-                                        value={formData.services.find(s => s.type === type)?.customOptions?.startDate?.service || ''}
-                                    />
-                                </Form.Group>
-                            </Col>
-                        </Row>
-                    </>
+  <Row className="mb-3">
+    <Col xs={12}>
+      <Form.Group controlId={`carpetType-${type}`}>
+        <Form.Label className="text-bold">Carpet Material</Form.Label>
+        <Form.Select
+          aria-label="Select carpet material"
+          className="transparent form-border"
+          name="carpetType"
+          size="sm"
+          value={formData.services.find(s => s.type === type)?.customOptions?.carpetType?.service || ''}
+          onChange={(e) => handleCustomOptionChange(type, 'carpetType', e)}
+        >
+          <option value="">Choose a material...</option>
+          <option value="Wool">Wool</option>
+          <option value="Nylon">Nylon</option>
+          <option value="Polyester">Polyester</option>
+          <option value="Olefin">Olefin</option>
+          <option value="Other">Other</option>
+        </Form.Select>
+      </Form.Group>
+    </Col>
+  </Row>
+
+  <Row className="mb-3">
+    <Col xs={12}>
+      <Form.Group controlId={`carpetArea-${type}`}>
+        <Form.Label className="text-bold">Approximate Carpet Area (sqft)</Form.Label>
+        <Form.Control
+          type="number"
+          min={0}
+          inputMode="numeric"
+          pattern="[0-9]*"
+          aria-label="Enter carpet area in square feet"
+          name="carpetArea"
+          placeholder="e.g. 500"
+          className="text-cleanar-color text-bold form-border"
+          value={formData.services.find(s => s.type === type)?.customOptions?.carpetArea?.service || ''}
+          onChange={(e) => handleCustomOptionChange(type, 'carpetArea', e)}
+        />
+      </Form.Group>
+    </Col>
+  </Row>
+
+  <Row className="mb-3">
+    <Col xs={12} md={6}>
+      <Form.Group controlId={`stains-${type}`}>
+        <Form.Label className="text-bold">Stain Level</Form.Label>
+        <Form.Select
+          aria-label="Select stain severity"
+          className="transparent form-border"
+          name="stains"
+          size="sm"
+          value={formData.services.find(s => s.type === type)?.customOptions?.stains?.service || ''}
+          onChange={(e) => handleCustomOptionChange(type, 'stains', e)}
+        >
+          <option value="">How severe are the stains?</option>
+          <option value="None">None</option>
+          <option value="Light">Light</option>
+          <option value="Moderate">Moderate</option>
+          <option value="Heavy">Heavy</option>
+        </Form.Select>
+      </Form.Group>
+    </Col>
+
+    <Col xs={12} md={6}>
+      <Form.Group controlId={`startDate-${type}`}>
+        <Form.Label className="text-bold">Preferred Cleaning Date</Form.Label>
+        <Form.Control
+          type="date"
+          aria-label="Select preferred service date"
+          name="startDate"
+          placeholder="Select a date"
+          min={new Date().toISOString().split('T')[0]}
+          className="text-cleanar-color text-bold form-border"
+          value={formData.services.find(s => s.type === type)?.customOptions?.startDate?.service || ''}
+          onChange={(e) => handleCustomOptionChange(type, 'startDate', e)}
+        />
+      </Form.Group>
+    </Col>
+  </Row>
+</>
+
                 );
             }
             case 'Power Washing': {
@@ -961,7 +972,7 @@ const QuickQuote = () => {
                     <>
                         <Row className="mb-3">
                             {upholsteryList.map((item, index) => (
-                                <Col key={index} md={6} xs={12}>
+                                <Col key={index} md={6} xs={12} className="mb-3">
                                     <Form.Group controlId={`upholstery-${type}-${index}`}>
                                         <Form.Label className="text-bold">{item}</Form.Label>
                                         <Form.Control
@@ -1133,6 +1144,7 @@ const QuickQuote = () => {
                                         type="text"
                                         id={`floating${label.replace(' ', '')}`}
                                         placeholder={placeholder}
+                                        aria-label={label}
                                         className="text-cleanar-color text-bold form-input"
                                         name={name}
                                         value={formData[name]}
@@ -1144,7 +1156,7 @@ const QuickQuote = () => {
                         </Row>
                     </Form.Group>
                     <section className="section-border">
-                        <Form id="service-selection">
+                        {/* <Form id="service-selection"> */}
                             <Row>
                                 <Col md={3} xs={12} className="mb-3 radio-group">
                                     <Form.Group className="mb-3">
@@ -1247,7 +1259,7 @@ const QuickQuote = () => {
                                     ))}
                                 </Col>
                             </Row>
-                        </Form>
+                        {/* </Form> */}
                     </section>
                     <Row>
                         <Col>
