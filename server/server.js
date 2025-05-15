@@ -24,15 +24,15 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/build')));
 
 }
+// enable routes
+// app.use(trackVisitor);
+app.use(require('./routes'));
 
 // // DO NOT COMMENT OUT THIS CODE - this makes the index page get the /GET error
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
 });
 
-// enable routes
-// app.use(trackVisitor);
-app.use(require('./routes'));
 
 // connect to mongo
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/ar-cleaning') ;
