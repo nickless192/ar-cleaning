@@ -64,6 +64,7 @@ const visitorController = {
         if (!visitor.pathsVisited.includes(page)) {
           visitor.pathsVisited.push(page);
           visitor.lastSeenAt = new Date();
+          visitor.isReturningVisitor = true;
           await visitor.save();
         }
         res.json({ message: 'Visit updated successfully' });
