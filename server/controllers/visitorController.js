@@ -48,11 +48,11 @@ const visitorController = {
         req.headers['x-forwarded-for']?.split(',').shift() ||
         req.connection?.remoteAddress ||
         req.socket?.remoteAddress;
-        // const geoInfo = await getGeoInfo(ip);
+        const geoInfo = await getGeoInfo(ip);
         const hashedIp = crypto.createHash('sha256').update(ip || '').digest('hex');
         const newVisit = new VisitorLog({
           page, userAgent: req.body.userAgent, ip: hashedIp, referrer,
-          //  geo: geoInfo, 
+           geo: geoInfo, 
            visitorId, sessionId,
           firstSeenAt: new Date(),
           lastSeenAt: new Date()
