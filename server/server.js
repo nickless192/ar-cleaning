@@ -23,12 +23,12 @@ app.use('/images', express.static(path.join(__dirname, '../client/src/assets')))
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/build')));
 
-  // // DO NOT COMMENT OUT THIS CODE - this makes the index page get the /GET error
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
-  });
 }
 
+// // DO NOT COMMENT OUT THIS CODE - this makes the index page get the /GET error
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+});
 
 // enable routes
 // app.use(trackVisitor);
