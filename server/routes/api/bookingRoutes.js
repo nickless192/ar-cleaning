@@ -6,7 +6,8 @@ const Booking = require('../../models/Booking');
 router.post('/', createBooking);
 router.get('/', getBookings);
 
-cron.schedule('0 0 * * *', async () => {
+// send reminder scheduler
+cron.schedule('0 0 * * *', async () => { 
     //  for testing purposes, run every 10 seconds
     // cron.schedule('*/10 * * * * *', async () => {
   console.log('[CRON] Checking for reminders due in 24h...');
@@ -32,6 +33,33 @@ cron.schedule('0 0 * * *', async () => {
     }
   } catch (err) {
     console.error('Reminder CRON error:', err);
+  }
+});
+
+// send confirmation email
+// Confirmation Scheduler
+cron.schedule('* * * * *', async () => {
+  const now = new Date();
+
+  const confirmations = await Booking.find({
+    confirmationDate: { $lte: now },
+    confirmationSent: false
+  });
+
+  for (const booking of confirmations) {
+    try {
+      await sgMail.send({
+        to: booking.customerEmail,
+        from: 'yourcompany@example.com',
+        subject: 'Booking Confirmation',
+        text: `Hello ${booking.customerName}, this is a confirmation for your service on ${new Date(booking.date).toLocaleString()}.`
+      });
+
+      booking.confirmationSent = true;
+      await booking.save();
+    } catch (err) {
+      console.error('Error sending confirmation:', err);
+    }
   }
 });
 

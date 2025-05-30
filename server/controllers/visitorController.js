@@ -1,6 +1,7 @@
 const { VisitorLog, VisitorCount } = require('../models');
 const crypto = require('crypto');
 const fetch = require('node-fetch');
+const UAParser = require('ua-parser-js');
 
 async function getGeoInfo(ip) {
   try {
@@ -28,6 +29,8 @@ async function getGeoInfo(ip) {
 function generateVisitorId(req) {
   const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
   const ua = req.headers['user-agent'] || '';
+  console.log('IP:', ip);
+  console.log('User-Agent:', ua);
   return crypto.createHash('sha256').update(ip + ua).digest('hex');
 }
 // const {VisitorCount} = require('../models');
@@ -37,23 +40,40 @@ const visitorController = {
 
   logVisit: async (req, res) => {
     try {
-      
+
       const page = req.body.page;
       const sessionId = req.body.sessionId || crypto.randomUUID();
       let visitor = await VisitorLog.findOne({ sessionId });
+      // console.log('Visitor:', visitor);
       if (!visitor) {
+        console.log('No existing visitor found, creating a new one');
         const visitorId = generateVisitorId(req);
+        // console.log('Generated Visitor ID:', visitorId);
         const referrer = req.get('Referrer') || null;
+        // console.log('Referrer:', referrer);
         const ip =
-        req.headers['x-forwarded-for']?.split(',').shift() ||
-        req.connection?.remoteAddress ||
-        req.socket?.remoteAddress;
+          req.headers['x-forwarded-for']?.split(',').shift() ||
+          req.connection?.remoteAddress ||
+          req.socket?.remoteAddress;
+        // console.log('IP Address:', ip);
         const geoInfo = await getGeoInfo(ip);
+        // console.log('Geo Info:', geoInfo);
         const hashedIp = crypto.createHash('sha256').update(ip || '').digest('hex');
+        // console.log('Hashed IP:', hashedIp);
+        const uaString = req.body.userAgent || '';
+const parser = new UAParser(uaString);
+const uaResult = parser.getResult();  // this is now an object with device, os, browser, etc.
+        const deviceType = uaResult.device.type || 'desktop'; // fallback if undefined
+        const browser = uaResult.browser.name || 'unknown';
+        const os = uaResult.os.name || 'unknown';
+        // console.log('Device Type:', deviceType);
+        // console.log('Browser:', browser);
+        // console.log('OS:', os);
         const newVisit = new VisitorLog({
           page, userAgent: req.body.userAgent, ip: hashedIp, referrer,
-           geo: geoInfo, 
-           visitorId, sessionId,
+          geo: geoInfo,
+          deviceType, browser, os,
+          visitorId, sessionId,
           firstSeenAt: new Date(),
           lastSeenAt: new Date()
         });
@@ -61,12 +81,13 @@ const visitorController = {
         res.json({ message: 'Visit logged successfully' });
       } else {
         // Update the existing visitor's page and pathsVisited
+        console.log('Existing visitor found, updating visit');
         if (!visitor.pathsVisited.includes(page)) {
           visitor.pathsVisited.push(page);
-          visitor.lastSeenAt = new Date();
-          visitor.isReturningVisitor = true;
-          await visitor.save();
         }
+        visitor.lastSeenAt = new Date();
+        visitor.isReturningVisitor = true;
+        await visitor.save();
         res.json({ message: 'Visit updated successfully' });
       }
     } catch (err) {

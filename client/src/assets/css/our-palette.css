@@ -10,6 +10,8 @@
     --accordion-bg-color: #acb9c7;
 }
 
+
+
 .form-control {
   border-radius: 0.5rem;
 }
@@ -18,9 +20,9 @@
   font-weight: 600;
 }
 
-.form-check.form-switch {
+/* .form-check.form-switch {
   min-width: 150px;
-}
+} */
 
 /* Modern Card-Based Upholstery Cleaning UI */
 .service-card {
@@ -289,10 +291,10 @@
 }
 
 .form-input {
-    border-radius: 2 !important;
+    border-radius: 2;
     border: 1px solid var(--primary-color)!important;
     padding: 8px;
-    margin-bottom: 10px;
+    /* margin-bottom: 10px; */
     width: 100%;
 }
 
@@ -984,7 +986,7 @@ body.nav-open {
     color: var(--text-cleanar-color) !important;
     font-weight: bold;
 }
-
+/* 
 .form-check-sign {
     display: inline-block;
     width: 18px;
@@ -1012,8 +1014,4 @@ body.nav-open {
     display: block;
   }
   
-  .form-check-input {
-    display: none;
-  }
-
-  
+   */

@@ -41,12 +41,13 @@ const VisitorCounter = ({page}) => {
         // console.log('Incrementing visitor count for page:', page);    
         // console.log('Pathname:', window.location.pathname);  
         // Update the visited pages
+        const effectivePage = page || window.location.pathname;
         addPathToVisited(window.location.pathname);  
         const pathsVisited = getPathsVisited();  // Fetch paths visited from localStorage
         const sessionId = getSessionId();
         fetch('/api/visitors/logs/', {
             method: 'POST',
-            body: JSON.stringify({ page,
+            body: JSON.stringify({ page: effectivePage,
                 userAgent: navigator.userAgent,
                 sessionId,
                 pathsVisited

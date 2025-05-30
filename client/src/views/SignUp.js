@@ -170,7 +170,11 @@ function SignUp() {
               </FloatingLabel>
               </Col>
               <Col md='1' xs='1' className="py-1">
-                <Button id="Popover1" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
+                  <FaQuestionCircle 
+                  id="Popover1"
+                   />
+                {/* <Button id="Popover1" type="button" tabIndex='-1' className="btn-round btn-icon">
+                </Button> */}
                 <Popover placement="right" isOpen={popoverOpen.firstName} target="Popover1" toggle={() => togglePopover('firstName')}
                   transition={transitionProps}
                   >
@@ -198,7 +202,9 @@ function SignUp() {
                 </FloatingLabel>
               </Col>
               <Col md='1' xs='1' className="py-1">
-                <Button id="Popover2" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
+                {/* <Button id="Popover2" type="button" tabIndex='-1' className="btn-round btn-icon"> */}
+                  <FaQuestionCircle id="Popover2" />
+                  {/* </Button> */}
                 <Popover placement="right" isOpen={popoverOpen.lastName} target="Popover2" toggle={() => togglePopover('lastName')}
                   transition={transitionProps}
                   >
@@ -226,7 +232,9 @@ function SignUp() {
               </FloatingLabel>
               </Col>
               <Col md='1' xs='1' className="py-1">
-                <Button id="Popover3" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
+                {/* <Button id="Popover3" type="button" tabIndex='-1' className="btn-round btn-icon"> */}
+                  <FaQuestionCircle id="Popover3" />
+                  {/* </Button> */}
                 <Popover placement="right" isOpen={popoverOpen.email} target="Popover3" toggle={() => togglePopover('email')}
                   transition={transitionProps}
                   >
@@ -254,7 +262,9 @@ function SignUp() {
               </FloatingLabel>
               </Col>
               <Col md='1' xs='1' className="py-1">
-                <Button id="Popover4" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
+                {/* <Button id="Popover4" type="button" tabIndex='-1' className="btn-round btn-icon"> */}
+                  <FaQuestionCircle id="Popover4" />
+                  {/* </Button> */}
                 <Popover placement="right" isOpen={popoverOpen.telephone} target="Popover4" toggle={() => togglePopover('telephone')}
                   transition={transitionProps}
                   >
@@ -282,7 +292,9 @@ function SignUp() {
               </FloatingLabel>
               </Col>
               <Col md='1' xs='1' className="py-1">
-                <Button id="Popover5" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
+                {/* <Button id="Popover5" type="button" tabIndex='-1' className="btn-round btn-icon"> */}
+                  <FaQuestionCircle id="Popover5" />
+                  {/* </Button> */}
                 <Popover placement="right" isOpen={popoverOpen.username} target="Popover5" toggle={() => togglePopover('username')}
                   transition={transitionProps}
                   >
@@ -310,7 +322,9 @@ function SignUp() {
               </FloatingLabel>
               </Col>
               <Col md='1' xs='1' className="py-1">
-                <Button id="Popover6" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
+                {/* <Button id="Popover6" type="button" tabIndex='-1' className="btn-round btn-icon"> */}
+                  <FaQuestionCircle id="Popover6" />
+                  {/* </Button> */}
                 <Popover placement="right" isOpen={popoverOpen.password} target="Popover6" toggle={() => togglePopover('password')}
                   transition={transitionProps}
                   >
@@ -345,7 +359,9 @@ function SignUp() {
                 </FloatingLabel>
               </Col>
               <Col md='1' xs='1 ' className="py-1">
-                <Button id="Popover7" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
+                {/* <Button id="Popover7" type="button" tabIndex='-1' className="btn-round btn-icon"> */}
+                  <FaQuestionCircle id="Popover7" />
+                  {/* </Button> */}
                 <Popover placement="right" isOpen={popoverOpen.howDidYouHearAboutUs} target="Popover7" toggle={() => togglePopover('howDidYouHearAboutUs')}
                   transition={transitionProps}
                   >

@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import "./../../assets/css/our-palette.css";
+// import "./../../assets/css/our-palette.css";
 // reactstrap components
 import {
 
@@ -82,7 +82,7 @@ function IndexNavbar() {
             return (
                 <>
                     {Auth.getProfile().data.adminFlag === true ? (
-                        <UncontrolledDropdown nav>
+                        <UncontrolledDropdown nav >
                             <DropdownToggle
                                 caret
                                 color="default"
@@ -90,9 +90,10 @@ function IndexNavbar() {
                                 nav
                                 onClick={(e) => e.preventDefault()}
                             >
-                                <i className="now-ui-icons ui-1_settings-gear-63 mr-1"></i>
+                                {/* <i className="now-ui-icons ui-1_settings-gear-63 mr-1"></i> */}
                                 <p>Configure</p>
                             </DropdownToggle>
+                                
                             <DropdownMenu>
                                 <DropdownItem to="/manage-product" tag={Link}>
                                     <i className="now-ui-icons ui-1_settings-gear-63 mr-1"></i>
@@ -166,7 +167,7 @@ function IndexNavbar() {
                             // color="info"
                             href="/profile-page"
                         >
-                            <i className="now-ui-icons users_circle-08 mr-1"></i>
+                            {/* <i className="now-ui-icons users_circle-08 mr-1"></i> */}
                             <p>Profile</p>
                         </NavLink>
                     </NavItem>
@@ -178,7 +179,7 @@ function IndexNavbar() {
                             id="logout-btn"
                             onClick={() => Auth.logout()}
                         >
-                            <i className="now-ui-icons arrows-1_share-66 mr-1"></i>
+                            {/* <i className="now-ui-icons arrows-1_share-66 mr-1"></i> */}
                             <p>Log Out</p>
                         </NavLink>
                     </NavItem>
@@ -194,7 +195,7 @@ function IndexNavbar() {
                             // color="info"
                             href="/login-signup"
                         >
-                            <i className="now-ui-icons objects_spaceship mr-1"></i>
+                            {/* <i className="now-ui-icons objects_spaceship mr-1"></i> */}
                             <p>Log In + Sign Up</p>
                         </NavLink>
                     </NavItem>
@@ -271,16 +272,16 @@ function IndexNavbar() {
                         </button>
 
                         <Collapse className="ms-3" isOpen={collapseOpen} navbar>
-                            <Nav navbar className="d-flex align-items-center">
+                            <Nav navbar className="d-flex align-items-center text-bold">
                                 <NavItem>
                                     <NavLink href="/about-us">
-                                        <i className="now-ui-icons business_badge mr-1"></i>
+                                        {/* <i className="now-ui-icons business_badge mr-1"></i> */}
                                         <p>About Us</p>
                                     </NavLink>
                                 </NavItem>
                                 <NavItem>
                                     <NavLink href="/products-and-services">
-                                        <i className="now-ui-icons business_bulb-63 mr-1"></i>
+                                        {/* <i className="now-ui-icons business_bulb-63 mr-1"></i> */}
                                         <p>Products & Services</p>
                                     </NavLink>
                                 </NavItem>

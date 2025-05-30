@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Auth from "utils/auth";
 import VisitorCounter from "../../src/components/Pages/VisitorCounter";
 // import Logo from "../../assets/svg/cleanmart-blue.svg";
+// import 'bootstrap/dist/css/bootstrap.min.css';
 
 // reactstrap components
 import {
@@ -193,16 +194,18 @@ function LoginPage() {
                 </FloatingLabel>
               </Col>
               <Col className="py-3" md="1" xs='1'>
-                <Button
-                  id="Tooltip1"
+                {/* <Button
                   type="button"
                   tabIndex='-1'
                   // color="link"
                   className="primary-bg-color btn-round btn-icon"
+                  > */}
+                  <FaQuestionCircle
                   onClick={() => togglePopover('username')}
-                >
-                  <FaQuestionCircle />
-                </Button>
+                  id="Tooltip1"
+                  
+                  />
+                {/* </Button> */}
                 <Popover
                   placement="top"
                   isOpen={popoverOpen.username}
@@ -225,16 +228,18 @@ function LoginPage() {
                 </FloatingLabel>
               </Col>
               <Col className="py-3" md="1" xs='1'>
-                <Button
-                  id="Tooltip2"
+                {/* <Button
                   type="button"
                   tabIndex='-1'
                   // color="link"
                   className="primary-bg-color btn-round btn-icon"
+                  > */}
+                  <FaQuestionCircle
+                  id="Tooltip2"
                   onClick={() => togglePopover('password')}
-                >
-                  <FaQuestionCircle />
-                </Button>
+                  
+                  />
+                {/* </Button> */}
                 <Popover
                   placement="top"
                   isOpen={popoverOpen.password}
@@ -247,17 +252,17 @@ function LoginPage() {
               </Col>
             </Row>
             <Row className="justify-content-center">
-              <Col className="py-3" md="10" xs='10'>
+              <Col className="py-3" md="6" xs='6'>
                 <div className="text-center">
                   <Button
-                    className="btn-round primary-bg-color"
+                    className="btn btn-round primary-bg-color"
                     type="submit"
                     size="lg"
                   >
                     Log In
                   </Button>
                   <Button
-                    className="btn-round brown-bg-color"
+                    className="btn-info btn-round"
                     type="button"
                     onClick={handleResetPassword}
                     size="lg"

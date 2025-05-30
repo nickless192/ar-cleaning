@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Container, Row, Col, Table, Form, Button, Alert, Spinner } from 'react-bootstrap';
-import moment from 'moment';
 import {
-  Input,
-  Label
+  Container, Row, Col,
+  Form, FormGroup, Label, Input,
+  Button, Alert, Spinner,
+  Table
 } from 'reactstrap';
+import moment from 'moment';
 import BookingCalendar from './BookingCalendar';
 
 const BookingDashboard = () => {
@@ -18,37 +19,35 @@ const BookingDashboard = () => {
     customerEmail: '',
     serviceType: '',
     date: '',
-    confirmationSent: false,
+    scheduleConfirmation: false,
+    confirmationDate: '',
     reminderScheduled: false
   });
+
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
 
-  // Fetch all bookings on mount
   useEffect(() => {
     if (isInitialLoad) {
       setIsInitialLoad(false);
-    fetchBookings();
-    const searchParams = new URLSearchParams(location.search);
-    const customerName = searchParams.get('name');
-    const customerEmail = searchParams.get('email');
-    const serviceType = searchParams.get('serviceType');
-    setFormData(prev => ({
-      ...prev,
-      customerName: customerName || prev.customerName,
-      customerEmail: customerEmail || prev.customerEmail,
-      serviceType: serviceType || prev.serviceType
-    }));
+      fetchBookings();
+      const searchParams = new URLSearchParams(location.search);
+      const customerName = searchParams.get('name');
+      const customerEmail = searchParams.get('email');
+      const serviceType = searchParams.get('serviceType');
+      setFormData(prev => ({
+        ...prev,
+        customerName: customerName || prev.customerName,
+        customerEmail: customerEmail || prev.customerEmail,
+        serviceType: serviceType || prev.serviceType
+      }));
     }
-    
   }, []);
 
   const fetchBookings = async () => {
     try {
       const res = await fetch('/api/bookings');
-      if (!res.ok) {
-        throw new Error('Failed to fetch bookings');
-      }
+      if (!res.ok) throw new Error('Failed to fetch bookings');
       const data = await res.json();
       setBookings(data);
     } catch (err) {
@@ -57,7 +56,7 @@ const BookingDashboard = () => {
   };
 
   const handleChange = e => {
-    let value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
     setFormData(prev => ({
       ...prev,
       [e.target.name]: value
@@ -71,18 +70,21 @@ const BookingDashboard = () => {
     try {
       const res = await fetch('/api/bookings', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
-
-      if (!res.ok) {
-        throw new Error('Failed to submit booking');
-      }
+      if (!res.ok) throw new Error('Failed to submit booking');
 
       setMessage({ type: 'success', text: 'Booking submitted successfully!' });
-      setFormData({ customerName: '', customerEmail: '', serviceType: '', date: '' });
+      setFormData({
+        customerName: '',
+        customerEmail: '',
+        serviceType: '',
+        date: '',
+        scheduleConfirmation: false,
+        confirmationDate: '',
+        reminderScheduled: false
+      });
       fetchBookings();
     } catch (err) {
       setMessage({ type: 'danger', text: 'Error submitting booking.' });
@@ -96,107 +98,110 @@ const BookingDashboard = () => {
       <Row>
         <Col md={5}>
           <h4>Create Booking</h4>
-          {message && <Alert variant={message.type}>{message.text}</Alert>}
+          {message && (
+            <Alert color={message.type}>
+              {message.text}
+            </Alert>
+          )}
           <Form onSubmit={handleSubmit}>
-            <Form.Group controlId="customerName" className="mb-3">
-              <Form.Label>Customer Name</Form.Label>
-              <Form.Control
+            <FormGroup>
+              <Label for="customerName">Customer Name</Label>
+              <Input
                 type="text"
                 name="customerName"
-                className="text-cleanar-color text-bold form-input"
+                 className="text-cleanar-color text-bold form-input"
+                id="customerName"
                 value={formData.customerName}
                 onChange={handleChange}
                 required
               />
-            </Form.Group>
+            </FormGroup>
 
-            <Form.Group controlId="customerEmail" className="mb-3">
-              <Form.Label>Customer Email</Form.Label>
-              <Form.Control
+            <FormGroup>
+              <Label for="customerEmail">Customer Email</Label>
+              <Input
                 type="email"
                 name="customerEmail"
-                className="text-cleanar-color text-bold form-input"
+                 className="text-cleanar-color text-bold form-input"
+                id="customerEmail"
                 value={formData.customerEmail}
                 onChange={handleChange}
                 required
               />
-            </Form.Group>
+            </FormGroup>
 
-            <Form.Group controlId="serviceType" className="mb-3">
-              <Form.Label>Service Type</Form.Label>              
-              <Form.Control
+            <FormGroup>
+              <Label for="serviceType">Service Type</Label>
+              <Input
                 type="text"
                 name="serviceType"
-                className="text-cleanar-color text-bold form-input"
+                 className="text-cleanar-color text-bold form-input"
+                id="serviceType"
                 value={formData.serviceType}
                 onChange={handleChange}
                 required
               />
-            </Form.Group>
+            </FormGroup>
 
-            <Form.Group controlId="date" className="mb-3">
-              <Form.Label>Booking Date</Form.Label>
-              <Form.Control
+            <FormGroup>
+              <Label for="date">Service Date</Label>
+              <Input
                 type="datetime-local"
                 name="date"
-                className="text-cleanar-color text-bold form-input"
+                id="date"
+                 className="text-cleanar-color text-bold form-input"
                 value={formData.date}
                 onChange={handleChange}
                 required
               />
-            </Form.Group>
-            {/* i want to add 2 options: 1 to disable sending the confirmation, and 2 to disable sending the reminder  */}
-            <Form.Group controlId="confirmationSent" className="mb-3">
-              {/* <Form.Label>Confirmation Sent</Form.Label>
-              <Form.Check
-                type="checkbox" 
-                id="confirmationSent"
-                name="confirmationSent"
-                className="text-cleanar-color text-bold form-input"
-                checked={formData.confirmationSent}
-                onChange={handleChange}
-                label="Disable send confirmation email"
-              /> */}
-              <Label check className="text-cleanar-color text-bold form-input">
+            </FormGroup>
+
+            <p className="text-muted mb-2 d-block">
+              A confirmation email will be sent upon saving unless you override it below.
+            </p>
+
+            <FormGroup check className="mb-3">
+              <Label check>
                 <Input
                   type="checkbox"
-                  id="confirmationSent"
-                  name="confirmationSent"
-                  className="text-cleanar-color text-bold form-input"
-                  checked={formData.confirmationSent}
+                  name="scheduleConfirmation"
+                  checked={formData.scheduleConfirmation}
                   onChange={handleChange}
-                />
-                <span className="form-check-sign"></span>
-                Disable send confirmation email
+                /><span className="form-check-sign"></span>
+                {' '}
+                Schedule Confirmation Email
               </Label>
-            </Form.Group>
-            <Form.Group controlId="reminderScheduled" className="mb-3">
-              <Label check className="text-cleanar-color text-bold form-input">
+            </FormGroup>
+
+            <FormGroup>
+              <Label for="confirmationDate">Confirmation Email Date (optional)</Label>
+              <Input
+                type="datetime-local"
+                name="confirmationDate"
+                 className="text-cleanar-color text-bold form-input"
+                id="confirmationDate"
+                value={formData.confirmationDate}
+                onChange={handleChange}
+                disabled={!formData.scheduleConfirmation}
+              />
+            </FormGroup>
+
+            <FormGroup check className="mb-3">
+              <Label check>
                 <Input
                   type="checkbox"
-                  id="reminderScheduled"
                   name="reminderScheduled"
-                  className="text-cleanar-color text-bold form-input"
                   checked={formData.reminderScheduled}
                   onChange={handleChange}
                 />
+                {' '}
                 <span className="form-check-sign"></span>
-                Disable send reminder email
+                Send 24-hour reminder email
               </Label>
-              {/* <Form.Label>Reminder Scheduled</Form.Label>
-              <Form.Check
-                type="checkbox"
-                id="reminderScheduled"
-                name="reminderScheduled"
-                className="text-cleanar-color text-bold form-input"
-                checked={formData.reminderScheduled}
-                onChange={handleChange}
-                label="Disable send reminder email"
-              /> */}
-            </Form.Group>
+            </FormGroup>
 
-            <Button type="submit" disabled={loading}>
-              {loading ? <Spinner animation="border" size="sm" /> : 'Submit Booking'}
+            <Button type="submit" color="primary" disabled={loading}>
+              {loading ? <Spinner size="sm" /> : 'Submit Booking'}
             </Button>
           </Form>
         </Col>
@@ -212,7 +217,9 @@ const BookingDashboard = () => {
                   <th>Email</th>
                   <th>Service</th>
                   <th>Date</th>
-                  <th>Reminder Sent</th>
+                  <th>Confirmation</th>
+                  <th>Reminder</th>
+                  <th>Created</th>
                 </tr>
               </thead>
               <tbody>
@@ -223,7 +230,12 @@ const BookingDashboard = () => {
                     <td>{b.customerEmail}</td>
                     <td>{b.serviceType}</td>
                     <td>{moment(b.date).format('YYYY-MM-DD HH:mm')}</td>
-                    <td>{b.reminderSent ? '✅' : '❌'}</td>
+                    <td>
+                      {b.scheduleConfirmation ? '✅' : '❌'}
+                      {b.confirmationDate && ` @ ${moment(b.confirmationDate).format('MM-DD HH:mm')}`}
+                    </td>
+                    <td>{b.reminderScheduled ? '✅' : '❌'}</td>
+                    <td>{moment(b.createdAt).format('YYYY-MM-DD')}</td>
                   </tr>
                 ))}
               </tbody>
@@ -232,11 +244,6 @@ const BookingDashboard = () => {
             <p>No bookings yet.</p>
           )}
         </Col>
-
-      </Row>
-      <Row className="mt-4">
-          <h4>Booking Calendar</h4>
-          <BookingCalendar bookings={bookings} />
       </Row>
     </Container>
   );

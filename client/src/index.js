@@ -6,7 +6,7 @@ import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import "assets/css/bootstrap.min.css";
 import "assets/css/bootstrap.min.css.map";
 import "assets/css/our-palette.css";
-import "assets/scss/now-ui-kit.scss?v=1.5.0";
+// import "assets/scss/now-ui-kit.scss?v=1.5.0";
 
 // pages for this kit
 import Index from "views/Index.js";

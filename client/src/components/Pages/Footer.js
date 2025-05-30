@@ -1,66 +1,57 @@
-/*eslint-disable*/
 import React from "react";
-
-// reactstrap components
-import { Container,
-  Nav,
-
- } from "reactstrap";
+import { Container, Row, Col, Nav } from "react-bootstrap";
 
 function Footer() {
+  const currentYear = new Date().getFullYear();
+
   return (
-    <footer className="footer light-blue-bg-color" >
+    <footer className="bg-light text-dark py-4 mt-auto light-blue-bg-color text-bold">
       <Container>
-        <nav>
-          <ul>
-            <li>
-              <a href="/careers">
-                Work With Us
+        <Row className="align-items-center">
+          <Col md={6} className="mb-3 mb-md-0">
+            <Nav className="flex-column flex-md-row" as="ul" aria-label="Footer navigation">
+              <Nav.Item as="li" className="me-md-3 mb-2 mb-md-0">
+                <Nav.Link href="/careers" className="p-0 text-dark text-decoration-none">
+                  Work With Us
+                </Nav.Link>
+              </Nav.Item>
+              <Nav.Item as="li" className="me-md-3 mb-2 mb-md-0">
+                <Nav.Link
+                  href="https://g.page/r/Cek9dkmHVuBKEAE/review"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-0 text-dark text-decoration-none"
+                >
+                  Leave A Review
+                </Nav.Link>
+              </Nav.Item>
+              <Nav.Item as="li" className="me-md-3 mb-2 mb-md-0">
+                <Nav.Link href="/terms-conditions" className="p-0 text-dark text-decoration-none">
+                  Terms & Conditions
+                </Nav.Link>
+              </Nav.Item>
+              <Nav.Item as="li">
+                <Nav.Link href="/disclaimer" className="p-0 text-dark text-decoration-none">
+                  Disclaimer
+                </Nav.Link>
+              </Nav.Item>
+            </Nav>
+          </Col>
+
+          <Col md={6} className="text-center text-md-end">
+            <small>
+              © {currentYear} | Designed & Built by{" "}
+              <a
+                href="_blank"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-dark text-decoration-none text-bold"
+              >
+                Omar Rodriguez
               </a>
-            </li>
-            <li>
-              <a href="https://g.page/r/Cek9dkmHVuBKEAE/review" target="_blank">              
-                Leave A Review
-              </a>
-            </li>                        
-            <li>
-              <a href="/terms-conditions">
-                Terms & Conditions
-              </a>
-            </li>
-            <li>
-              <a href="/disclaimer">
-                Disclaimer
-              </a>
-            </li>
-            {/* <li>
-              <a href="/return-refund-policy">
-                Refund Policy
-              </a>
-            </li> */}
-            {/* <li>
-              <a href="/sitemap">
-                Sitemap
-              </a>
-            </li> */}
-            {/* <li>
-              <a href="/accessibility-statement">
-                Accessibility Statement
-              </a>
-            </li> */}
-            {/* <li>
-              <a href="/newsletter-signup" target="_blank">
-                Newsletter Signup
-              </a>
-            </li> */}
-          </ul>
-        </nav>
-        <div className="copyright" id="copyright">
-          © {new Date().getFullYear()}, Designed and Coded by{" "}
-          <a href="_blank" target="_blank">
-            Omar Rodriguez
-          </a>
-        </div>
+            </small>
+          </Col>
+        </Row>
       </Container>
     </footer>
   );

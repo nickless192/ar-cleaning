@@ -3,7 +3,7 @@ import {
   Row, Col, Card, CardBody, CardTitle, CardText, CardHeader,
 } from "reactstrap";
 import { Image } from 'react-bootstrap';
-import "./../../assets/css/our-palette.css";
+// import "./../../assets/css/our-palette.css";
 import Logo from "../../assets/img/logo.png";
 import VisitorCounter from "components/Pages/VisitorCounter.js";
 

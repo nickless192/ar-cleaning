@@ -5,19 +5,27 @@ const Booking = require('../models/Booking');
 
 const bookingControllers = {
     createBooking: async (req, res) => {
-        const { customerName, customerEmail, serviceType, date, confirmationSent } = req.body;
+        const {
+            customerName,
+            customerEmail,
+            serviceType,
+            date,
+            scheduleConfirmation,
+            confirmationDate,
+            reminderScheduled
+        } = req.body;
 
         if (!customerEmail || !date) return res.status(400).json({ error: 'Missing info' });
 
         try {
             // 1. Send confirmation
-            if (!confirmationSent) {
-            // await sendConfirmationEmail({ customerName, customerEmail, serviceType, date });
-            const msg = {
-                to: customerEmail,
-                from: 'info@cleanarsolutions.ca', // Update with your verified sender
-                subject: '✅ Booking Confirmation - CleanAR Solutions',
-                html: `
+            if (!scheduleConfirmation) {
+                // await sendConfirmationEmail({ customerName, customerEmail, serviceType, date });
+                const msg = {
+                    to: customerEmail,
+                    from: 'info@cleanarsolutions.ca', // Update with your verified sender
+                    subject: '✅ Booking Confirmation - CleanAR Solutions',
+                    html: `
                   <h2>Thanks for booking with CleanAR Solutions!</h2>
                   <p>Hi ${customerName},</p>
                   <p>Your service is confirmed for <strong>${date}</strong>.</p>
@@ -25,32 +33,41 @@ const bookingControllers = {
                   <pre>${serviceType}</pre>
                   <p>We look forward to seeing you then! 🚐🧼</p>
                 `
-              };
-            
-              try {
-                await sgMail.send(msg);
-                console.log(`[Email] Confirmation sent to ${customerEmail}`);
-              } catch (err) {
-                console.error('[Email] Failed to send confirmation:', err);
-                throw err;
-              }
+                };
+
+                try {
+                    await sgMail.send(msg);
+                    console.log(`[Email] Confirmation sent to ${customerEmail}`);
+                } catch (err) {
+                    console.error('[Email] Failed to send confirmation:', err);
+                    throw err;
+                }
             }
             // 2. Save booking and schedule reminder
-            const newBooking = await Booking.create({
+            const newBooking = new Booking({
                 customerName,
                 customerEmail,
                 serviceType,
                 date,
-                confirmationSent: true,
-                reminderScheduled: true,
+                reminderScheduled,
+                scheduleConfirmation: scheduleConfirmation && !confirmationDate,
+                confirmationDate: confirmationDate || (scheduleConfirmation ? new Date() : null)
             });
+            // const newBooking = await Booking.create({
+            //     customerName,
+            //     customerEmail,
+            //     serviceType,
+            //     date,
+            //     scheduleConfirmation: true,
+            //     reminderScheduled: true,
+            // });
 
             res.status(201).json(newBooking);
         } catch (err) {
             console.error('Error creating booking:', err);
-            res.status(500).json({ error: 'Server error' });
+            res.status(500).json({ error: 'Failed to create booking' });
         }
-        
+
     },
     getBookings: async (req, res) => {
         try {
@@ -58,7 +75,7 @@ const bookingControllers = {
             res.json(bookings);
         } catch (err) {
             console.error('Error fetching bookings:', err);
-            res.status(500).json({ error: 'Server error' });
+            res.status(500).json({ error: 'Failed to fetch bookings' });
         }
     },
     deleteBooking: async (req, res) => {
@@ -71,10 +88,10 @@ const bookingControllers = {
             res.json(deletedBooking);
         } catch (err) {
             console.error('Error deleting booking:', err);
-            res.status(500).json({ error: 'Server error' });
+            res.status(500).json({ error: 'Failed to delete booking' });
         }
     },
-    sendReminderEmail: async ({customerEmail, customerName, date, serviceType}) => {
+    sendReminderEmail: async ({ customerEmail, customerName, date, serviceType }) => {
         const msg = {
             to: customerEmail,
             from: 'info@cleanarsolutions.ca', // Same here
