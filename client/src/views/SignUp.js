@@ -162,7 +162,7 @@ function SignUp() {
                   <Form.Control
                     type="text"
                     placeholder="First Name"
-                    className="form-input text-cleanar-color"
+                    className="form-input text-cleanar-color rounded-pill"
                     name="firstName"
                     value={formData.firstName}
                     onChange={(e) => handleChange(e)}
@@ -194,7 +194,7 @@ function SignUp() {
                   <Form.Control
                     type="text"
                     placeholder="Last Name"
-                    className="text-cleanar-color form-input"
+                    className="text-cleanar-color form-input rounded-pill"
                     name="lastName"
                     value={formData.lastName}
                     onChange={(e) => handleChange(e)}
@@ -224,7 +224,7 @@ function SignUp() {
                    <Form.Control
                     type="text"
                     placeholder="Email"
-                    className="text-cleanar-color form-input"
+                    className="text-cleanar-color form-input rounded-pill"
                     name="email"
                     value={formData.email}
                     onChange={(e) => handleChange(e)}
@@ -254,7 +254,7 @@ function SignUp() {
                   <Form.Control
                     type="text"
                     placeholder="Telephone"
-                    className="text-cleanar-color form-input"
+                    className="text-cleanar-color form-input rounded-pill"
                     name="telephone"
                     value={formData.telephone}
                     onChange={(e) => handleChange(e)}
@@ -284,7 +284,7 @@ function SignUp() {
                   <Form.Control
                     type="text"
                     placeholder="Username"
-                    className="text-cleanar-color form-input"
+                    className="text-cleanar-color form-input rounded-pill"
                     name="username"
                     value={formData.username}
                     onChange={(e) => handleChange(e)}
@@ -314,7 +314,7 @@ function SignUp() {
                   <Form.Control
                     type="password"
                     placeholder="Password"
-                    className="text-cleanar-color form-input"
+                    className="text-cleanar-color form-input rounded-pill"
                     name="password"
                     value={formData.password}
                     onChange={(e) => handleChange(e)}
@@ -344,7 +344,7 @@ function SignUp() {
                   <Form.Select
                     type="select"
                     placeholder="How Did You Hear About Us?"
-                    className="text-cleanar-color form-input"
+                    className="text-cleanar-color form-input  rounded-pill"
                     name="howDidYouHearAboutUs"
                     value={formData.howDidYouHearAboutUs}
                     onChange={(e) => handleChange(e)}
@@ -375,7 +375,7 @@ function SignUp() {
               {/* if the user selected other, then render the box to enter the source. if they select referral, another box renders that allows to enter who referred them */}
               {formData.howDidYouHearAboutUs === 'Referral' ? (
                 <>
-                  <Col md='5' xs='1' className="py-1">
+                  <Col md='10' xs='10' className="py-1">
                     <FloatingLabel
                       controlId="floatingReferral"
                       label="Referral"
@@ -384,7 +384,7 @@ function SignUp() {
                        <Form.Control
                         type="text"
                         placeholder="Referral"
-                        className="text-cleanar-color form-input"
+                        className="text-cleanar-color form-input  rounded-pill"
                         name="howDidYouHearAboutUs"
                         value={formData.howDidYouHearAboutUsSupport}
                         onChange={(e) => handleChange(e)}
@@ -392,7 +392,11 @@ function SignUp() {
                     </FloatingLabel>
                   </Col>
                   <Col md='1' xs='1' className="py-1">
-                    <Button id="Popover8" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
+                    {/* <Button id="Popover8" type="button" tabIndex='-1' className="btn-round btn-icon"> */}
+                      <FaQuestionCircle
+                      id="Popover8"
+                      />
+                      {/* </Button> */}
                     <Popover placement="right" isOpen={popoverOpen.howDidYouHearAboutUsSupport} target="Popover8" toggle={() => togglePopover('howDidYouHearAboutUsSupport')}
                       transition={transitionProps}
                       >
@@ -416,7 +420,7 @@ function SignUp() {
                        <Form.Control
                         type="text"
                         placeholder="Other"
-                        className="text-cleanar-color form-input"
+                        className="text-cleanar-color form-input  rounded-pill"
                         name="howDidYouHearAboutUs"
                         value={formData.howDidYouHearAboutUsSupport}
                         onChange={(e) => handleChange(e)}
@@ -441,7 +445,7 @@ function SignUp() {
             <Row className="justify-content-center">
               <Col md='6' xs='6'>
               <Button
-                className="btn-round light-bg-color"
+                className="btn-round light-bg-color rounded-pill"
                 type="submit"
                 // onClick={(e) => handleFormSubmit(e)}
                 size="lg"

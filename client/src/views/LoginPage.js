@@ -188,9 +188,9 @@ function LoginPage() {
                   controlId="floatingInput"
                   label="Username*"
                   // className="mb-3"
-                  className="text-bold text-cleanar-color"
+                  className="text-cleanar-color"
                 >
-                  <Form.Control type="text" className='form-input text-bold text-cleanar-color' placeholder="" onChange={(e) => handleChange(e)} name="username"/>
+                  <Form.Control type="text" className='form-input rounded-pill text-cleanar-color' placeholder="" onChange={(e) => handleChange(e)} name="username"/>
                 </FloatingLabel>
               </Col>
               <Col className="py-3" md="1" xs='1'>
@@ -220,10 +220,10 @@ function LoginPage() {
             <Row className="justify-content-center">
               <Col className="py-3" md="10" xs='10'>
                 <FloatingLabel controlId="floatingPassword" label="Password*"
-                  className="text-bold text-cleanar-color"
+                  className="text-cleanar-color"
                 >
                   <Form.Control type="password" placeholder=""
-                    className="form-input text-bold text-cleanar-color"
+                    className="form-input rounded-pill text-cleanar-color"
                     onChange={(e) => handleChange(e)} name="password" />
                 </FloatingLabel>
               </Col>
@@ -253,23 +253,25 @@ function LoginPage() {
             </Row>
             <Row className="justify-content-center">
               <Col className="py-3" md="6" xs='6'>
-                <div className="text-center">
+                {/* <div className="text-center"> */}
                   <Button
-                    className="btn btn-round primary-bg-color"
+                    className="btn rounded-pill primary-bg-color"
                     type="submit"
                     size="lg"
                   >
                     Log In
                   </Button>
+                  </Col>
+                  <Col className="py-3" md='6' xs='6'>
                   <Button
-                    className="btn-info btn-round"
+                    className="btn-info rounded-pill"
                     type="button"
                     onClick={handleResetPassword}
                     size="lg"
                   >
                     Reset Your Password
                   </Button>
-                </div>
+                {/* </div> */}
                 {/* </Form> */}
                 {/* </Card> */}
               </Col>

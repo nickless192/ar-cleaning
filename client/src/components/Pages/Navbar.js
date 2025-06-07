@@ -1,11 +1,29 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-// import "./../../assets/css/our-palette.css";
-// reactstrap components
 import {
-
+    FaBoxOpen,
+    FaConciergeBell,
+    FaUsersCog,
+    FaRegFileAlt,
+    FaGift,
+    FaTachometerAlt,
+    FaCalendarCheck,
+    FaUserCircle,
+    FaSignOutAlt,
+    FaRocket,
+    FaIdBadge,
+    FaLightbulb,
+    FaBars,
+    FaInstagram,
+    FaFacebook,
+    FaTiktok,
+    FaRegEnvelope,
+    FiPhoneCall
+} from "react-icons/fa";
+import {
     Collapse,
+    Row,
+    Col,
     DropdownToggle,
     DropdownMenu,
     DropdownItem,
@@ -15,37 +33,20 @@ import {
     NavItem,
     NavLink,
     Nav,
-    Container,
-    Row,
-    Col
+    Container
 } from "reactstrap";
 import Auth from "../../utils/auth";
-// import { set } from "mongoose";
+// import "./NavBar.css"; // We'll create this CSS file
 
 function IndexNavbar() {
     const [navbarColor, setNavbarColor] = useState("navbar-color");
     const [collapseOpen, setCollapseOpen] = useState(false);
-
     const [isLogged] = useState(Auth.loggedIn());
-    // const [adminFlag, setAdminFlag] = React.useState(localStorage.getItem('adminFlag'));
-
-    // setAdminFlag(localStorage.getItem('adminFlag'));
-    // console.log(adminFlag);
-    // console.log(Auth.loggedIn());
 
     const handleToggle = () => {
-        const doc = document.documentElement;
-        const isOpen = doc.classList.contains("nav-open");
-
-        if (isOpen) {
-            doc.classList.remove("nav-open");
-        } else {
-            doc.classList.add("nav-open");
-        }
-
+        document.documentElement.classList.toggle("nav-open");
         setCollapseOpen(!collapseOpen);
     };
-
 
     useEffect(() => {
         const scrollTopVal = 0;
@@ -64,231 +65,251 @@ function IndexNavbar() {
             }
         };
 
-        // const initializeAdminFlag = () => {
-        //     setAdminFlag(localStorage.getItem('adminFlag'));
-        // }
-
-
         window.addEventListener("scroll", updateNavbarColor);
         return function cleanup() {
-            // initializeAdminFlag();
             window.removeEventListener("scroll", updateNavbarColor);
         };
-    });
+    }, []);
+
+    // Add this right after your existing useEffect
+    useEffect(() => {
+        // Get the actual navbar height
+        const navbar = document.querySelector('.navbar');
+        if (navbar) {
+            const navbarHeight = navbar.offsetHeight;
+
+            // Apply padding to body
+            document.body.style.paddingTop = `${navbarHeight}px`;
+
+            // Set a CSS variable for potential use elsewhere
+            document.documentElement.style.setProperty('--navbar-height', `${navbarHeight}px`);
+        }
+
+        // Clean up function
+        return () => {
+            document.body.style.paddingTop = '0';
+        };
+    }, []);
 
     function showLogin() {
-        // console.log(Auth.getProfile().data.adminFlag);
         if (isLogged) {
             return (
                 <>
-                    {Auth.getProfile().data.adminFlag === true ? (
-                        <UncontrolledDropdown nav >
+                    {Auth.getProfile().data.adminFlag === true && (
+                        <UncontrolledDropdown nav className="nav-item-dropdown">
                             <DropdownToggle
-                                caret
-                                color="default"
-                                href="#pablo"
                                 nav
-                                onClick={(e) => e.preventDefault()}
+                                className="nav-link-dropdown"
                             >
-                                {/* <i className="now-ui-icons ui-1_settings-gear-63 mr-1"></i> */}
-                                <p>Configure</p>
+                                <div className="nav-link-content">
+                                    <FaUsersCog className="nav-icon" />
+                                    <span>Configure</span>
+                                </div>
                             </DropdownToggle>
-                                
-                            <DropdownMenu>
-                                <DropdownItem to="/manage-product" tag={Link}>
-                                    <i className="now-ui-icons ui-1_settings-gear-63 mr-1"></i>
-                                    Manage Products
+
+                            <DropdownMenu className="dropdown-menu">
+                                <DropdownItem to="/manage-product" tag={Link} className="dropdown-item">
+                                    <FaBoxOpen className="dropdown-icon" />
+                                    <span>Manage Products</span>
                                 </DropdownItem>
-                                <DropdownItem to="/manage-service" tag={Link}>
-                                    <i className="now-ui-icons ui-1_settings-gear-63 mr-1"></i>
-                                    Manage Services
+
+                                <DropdownItem to="/manage-service" tag={Link} className="dropdown-item">
+                                    <FaConciergeBell className="dropdown-icon" />
+                                    <span>Manage Services</span>
                                 </DropdownItem>
-                                <DropdownItem to="/manage-user" tag={Link}>
-                                    <i className="now-ui-icons ui-1_settings-gear-63 mr-1"></i>
-                                    Manage Users
+
+                                <DropdownItem to="/manage-user" tag={Link} className="dropdown-item">
+                                    <FaUsersCog className="dropdown-icon" />
+                                    <span>Manage Users</span>
                                 </DropdownItem>
-                                <DropdownItem to="/view-quotes" tag={Link}>
-                                    <i className="now-ui-icons ui-1_settings-gear-63 mr-1"></i>
-                                    View Requested Quotes
+
+                                <DropdownItem to="/view-quotes" tag={Link} className="dropdown-item">
+                                    <FaRegFileAlt className="dropdown-icon" />
+                                    <span>View Requested Quotes</span>
                                 </DropdownItem>
-                                <DropdownItem to="/manage-gift-card" tag={Link}>
-                                    <i className="now-ui-icons ui-1_settings-gear-63 mr-1"></i>
-                                    Manage Gift Cards
+
+                                <DropdownItem to="/manage-gift-card" tag={Link} className="dropdown-item">
+                                    <FaGift className="dropdown-icon" />
+                                    <span>Manage Gift Cards</span>
                                 </DropdownItem>
-                                <DropdownItem to="/dashboard" tag={Link}>
-                                    <i className="now-ui-icons ui-1_settings-gear-63 mr-1"></i>
-                                    Dashboard
+
+                                <DropdownItem to="/dashboard" tag={Link} className="dropdown-item">
+                                    <FaTachometerAlt className="dropdown-icon" />
+                                    <span>Dashboard</span>
                                 </DropdownItem>
-                                <DropdownItem to="/booking-dashboard" tag={Link}>
-                                    <i className="now-ui-icons ui-1_settings-gear-63 mr-1"></i>
-                                    Bookings
+
+                                <DropdownItem to="/booking-dashboard" tag={Link} className="dropdown-item">
+                                    <FaCalendarCheck className="dropdown-icon" />
+                                    <span>Bookings</span>
                                 </DropdownItem>
-                                {/* <NavItem>
-                                <NavLink
-                                    // className="nav-link btn-neutral"
-                                    // color="info"
-                                    href="/view-quotes/"
-                                >
-                                    <i className="now-ui-icons files_single-copy-04 mr-1"></i>
-                                    <p>View Quotes</p>
-                                </NavLink>
-                            </NavItem> */}
                             </DropdownMenu>
                         </UncontrolledDropdown>
+                    )}
 
-                    ) : console.log("Not an admin")}
-                    {/* {Auth.getProfile().data.adminFlag === true ? (
-                        <NavItem>
-                            <NavLink
-                                // className="nav-link btn-neutral"
-                                // color="info"
-                                href="/manage-service"
-                            >
-                                <i className="now-ui-icons ui-1_settings-gear-63 mr-1"></i>
-                                <p>Manage Services</p>
-                            </NavLink>
-                        </NavItem>
-                    ) : null}
-                    {Auth.getProfile().data.adminFlag === true ? (
-                        <NavItem>
-                            <NavLink
-                                // className="nav-link btn-neutral"
-                                // color="info"
-                                href="/manage-product"
-                            >
-                                <i className="now-ui-icons ui-1_settings-gear-63 mr-1"></i>
-                                <p>Manage Products</p>
-                            </NavLink>
-                        </NavItem>
-                    ) : null} */}
-                    <NavItem>
-                        <NavLink
-                            // className="nav-link btn-neutral"
-                            // color="info"
-                            href="/profile-page"
-                        >
-                            {/* <i className="now-ui-icons users_circle-08 mr-1"></i> */}
-                            <p>Profile</p>
+                    <NavItem className="nav-item">
+                        <NavLink href="/profile-page" className="nav-link">
+                            <div className="nav-link-content">
+                                <FaUserCircle className="nav-icon" />
+                                <span>Profile</span>
+                            </div>
                         </NavLink>
                     </NavItem>
-                    <NavItem>
+
+                    <NavItem className="nav-item">
                         <NavLink
-                            // className="nav-link btn-neutral"
-                            // color="info"
                             href="/index"
                             id="logout-btn"
                             onClick={() => Auth.logout()}
+                            className="nav-link"
                         >
-                            {/* <i className="now-ui-icons arrows-1_share-66 mr-1"></i> */}
-                            <p>Log Out</p>
+                            <div className="nav-link-content">
+                                <FaSignOutAlt className="nav-icon" />
+                                <span>Log Out</span>
+                            </div>
                         </NavLink>
                     </NavItem>
                 </>
-            )
-        }
-        else {
+            );
+        } else {
             return (
-                <>
-                    <NavItem>
-                        <NavLink
-                            // className="nav-link btn-neutral"
-                            // color="info"
-                            href="/login-signup"
-                        >
-                            {/* <i className="now-ui-icons objects_spaceship mr-1"></i> */}
-                            <p>Log In + Sign Up</p>
-                        </NavLink>
-                    </NavItem>
-                    {/* <NavItem>
-                        <NavLink
-                            // className="nav-link btn-neutral"
-                            // color="info"
-                            href="/login-page"
-                        >
-                            <i className="now-ui-icons sport_user-run mr-1"></i>
-                            <p>Log In</p>
-                        </NavLink>
-                    </NavItem> */}
-                </>
-            )
+                <NavItem className="nav-item">
+                    <NavLink href="/login-signup" className="nav-link nav-link-signup">
+                        <div className="nav-link-content">
+                            <FaRocket className="nav-icon" />
+                            <span>Log In / Sign Up</span>
+                        </div>
+                    </NavLink>
+                </NavItem>
+            );
         }
     }
+
     return (
         <>
-            {collapseOpen ? (
+            {collapseOpen && (
                 <div
                     id="bodyClick"
-                    onClick={
-                        // handleToggle
-                        () => {
-                            document.documentElement.classList.toggle("nav-open");
-                            setCollapseOpen(false);
-                        }
-                    }
+                    onClick={() => {
+                        document.documentElement.classList.toggle("nav-open");
+                        setCollapseOpen(false);
+                    }}
                 />
-            ) : null}
-            <Navbar className={"fixed-topnav-bar-top mb-0 navbar-color " + navbarColor} expand="lg">
-                <Container fluid className="d-flex justify-content-between align-items-center px-3">
-                    {/* Left: Logo + Company Name */}
-                    <NavbarBrand
-                        href="/index"
-                        id="navbar-brand"
-                        className="text-capitalize font-weight-bold d-flex align-items-center"
-                    >
-                        <Row>
-                            <Col xs="12">
+            )}
+
+            <Navbar fixed="top" className={" mb-0 navbar-color " + navbarColor} expand="lg">
+                <Container fluid className=" ">
+                    {/* <div className="navbar-wrapper"> */}
+                    {/* Brand/Logo */}
+                    <Row className="navbar-wrapper">
+                        <Col md="3" xs="6">
+                            <NavbarBrand
+                                href="/index"
+                                id="navbar-brand"
+                                className="text-capitalize font-weight-bold"
+                            >
+                                {/* <Row>
+                            <Col xs="12"> */}
                                 <img
                                     src={require("../../assets/img/IC CLEAN AR-15-cropped.png")}
                                     alt="CleanAR Solutions"
                                     className="navbarlogo"
                                 />
-                            </Col>
-                            <Col>
+                                {/* </Col>
+                            <Col> */}
                                 <div className="">
                                     <h1 className="navlogotext navbarh1 montserrat-bold m-0 t-0 ms-2">
                                         CleanAR Solutions
                                     </h1>
                                 </div>
-                            </Col>
-                        </Row>
-                    </NavbarBrand>
+                                {/* </Col>
+                        </Row> */}
+                            </NavbarBrand>
+                        </Col>
+                        <Col md="9" xs="6" className="">
+                            <div>
+                                <div className="navbar-nav social-icons-container">
+                                    <NavItem className="nav-item ml-auto">
+                                        <NavLink href="https://www.instagram.com/cleanarsolutions/" className="nav-link" target="_blank" rel="noopener noreferrer">
+                                            <div className="nav-link-content">
+                                                {/* <FaIdBadge className="nav-icon" /> */}
+                                                <FaInstagram />
+                                                {/* <span>Instagram</span> */}
+                                            </div>
+                                        </NavLink>
+                                    </NavItem>
+                                    <NavItem className="nav-item ml-1">
+                                        <NavLink href="https://www.facebook.com/share/18X3sPR1vf/?mibextid=wwXIfr" className="nav-link" target="_blank" rel="noopener noreferrer">
+                                            <div className="nav-link-content">
+                                                <FaFacebook className="nav-icon" />
+                                                {/* <span>About Us</span> */}
+                                            </div>
+                                        </NavLink>
+                                    </NavItem>
+                                    <NavItem className="nav-item ml-1">
+                                        <NavLink href="https://www.tiktok.com/@cleanar.solutions" className="nav-link" target="_blank" rel="noopener noreferrer">
+                                            <div className="nav-link-content">
+                                                <FaTiktok className="nav-icon" />
+                                                {/* <span>About Us</span> */}
+                                            </div>
+                                        </NavLink>
+                                    </NavItem>
+                                    <NavItem className="nav-item ml-1">
+                                        <a
+                                            href="mailto:info@cleanARsolutions.ca"
+                                            className="nav-link"
+                                            // target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            <div className="nav-link-content">
+                                                <FaRegEnvelope className="nav-icon" />
+                                                {/* <span>About Us</span> */}
+                                            </div>
+                                        </a>
+                                    </NavItem>
 
-                    {/* Right: Toggler + Nav Links */}
-                    <div className="d-flex align-items-center">
-                        <button
-                            className="navbar-toggler"
-                            onClick={handleToggle
-                                //     () => {
-                                //     document.documentElement.classList.toggle("nav-open");
-                                //     setCollapseOpen(!collapseOpen);
-                                // }
-                            }
-                            aria-expanded={collapseOpen}
-                            type="button"
-                        >
-                            <span className="navbar-toggler-bar top-bar"></span>
-                            <span className="navbar-toggler-bar middle-bar"></span>
-                            <span className="navbar-toggler-bar bottom-bar"></span>
-                        </button>
+                                </div>
+                                <div>
 
-                        <Collapse className="ms-3" isOpen={collapseOpen} navbar>
-                            <Nav navbar className="d-flex align-items-center text-bold">
-                                <NavItem>
-                                    <NavLink href="/about-us">
-                                        {/* <i className="now-ui-icons business_badge mr-1"></i> */}
-                                        <p>About Us</p>
-                                    </NavLink>
-                                </NavItem>
-                                <NavItem>
-                                    <NavLink href="/products-and-services">
-                                        {/* <i className="now-ui-icons business_bulb-63 mr-1"></i> */}
-                                        <p>Products & Services</p>
-                                    </NavLink>
-                                </NavItem>
-                                {showLogin()}
-                            </Nav>
-                        </Collapse>
-                    </div>
+                                    <button
+                                        className="navbar-toggler"
+                                        type="button"
+                                        onClick={handleToggle}
+                                        aria-expanded={collapseOpen}
+                                    >
+                                        <FaBars className="navbar-toggler-icon" />
+                                    </button>
+                                    {/* Navigation links */}
+                                    <Collapse isOpen={collapseOpen} navbar className="navbar-collapse">
+                                        <Nav navbar className="navbar-nav ">
+                                            <NavItem className="nav-item">
+                                                <NavLink href="/about-us" className="nav-link">
+                                                    <div className="nav-link-content">
+                                                        <FaIdBadge className="nav-icon" />
+                                                        <span>About Us</span>
+                                                    </div>
+                                                </NavLink>
+                                            </NavItem>
+
+                                            <NavItem className="nav-item">
+                                                <NavLink href="/products-and-services" className="nav-link">
+                                                    <div className="nav-link-content">
+                                                        <FaLightbulb className="nav-icon" />
+                                                        <span>Products & Services</span>
+                                                    </div>
+                                                </NavLink>
+                                            </NavItem>
+
+                                            {showLogin()}
+                                        </Nav>
+                                    </Collapse>
+                                </div>
+                            </div>
+
+
+                        </Col>
+                    </Row>
+                    {/* </div> */}
+
                 </Container>
             </Navbar>
         </>

@@ -1,0 +1,259 @@
+:root {
+    --primary-color: #00a5ce;
+    --secondary-color: #89c97f;
+    --accent-color: #4db1b3;
+    --light-color: #95d3c3;
+    --light-color-opaque: #b5dad0;
+    --light-blue-color: #64acc4;
+    --brown-color: #5c5d60;
+    --text-cleanar-color: #374357;
+    --accordion-bg-color: #acb9c7;
+}
+
+/* Fixed navbar styling */
+.navbar-custom {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1030;
+  background-color: var(--light-color) !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+/* The only CSS you need */
+body {
+  padding-top: 80px; /* Just use a value slightly larger than your navbar height */
+}
+
+.social-icons-container {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: left;
+  align-items: left;
+  gap: 0rem;
+  flex-wrap: nowrap;
+}
+
+.social-icons-container .nav-item {
+  flex: none !important;
+}
+
+@media (max-width: 768px) {
+  .social-icons-container {
+    justify-content: left;
+    /* margin-bottom: 1rem; */
+  }
+}
+
+/* For mobile screens, possibly increase the padding if your mobile navbar is taller */
+@media (max-width: 768px) {
+  body {
+    padding-top: 120px;
+  }
+}
+
+/* Ensure all main content containers respect the navbar */
+.main-content, 
+#root > div:first-child, 
+main,
+.page-container {
+  margin-top: 0 !important;
+}
+
+/* To ensure content flows correctly on all pages */
+.container-fluid {
+  padding-top: 0 !important;
+}
+
+.navbar-color {
+  background-color: #ffffff;
+}
+
+.navbar-transparent {
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+.navbar-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* width: 100%; */
+}
+
+/* Logo styling */
+.navbar-brand {
+  margin-right: 2rem;
+  padding: 0;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-logo {
+  height: 40px;
+  margin-right: 10px;
+}
+
+.navbar-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0;
+  color: #333;
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* Toggle button styling */
+.navbar-toggler {
+  border: none;
+  background: transparent;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.navbar-toggler:focus {
+  outline: none;
+}
+
+.navbar-toggler-icon {
+  color: #333;
+  font-size: 1.5rem;
+}
+
+/* Navigation items */
+.navbar-nav {
+  display: flex;
+  align-items: left;
+  margin-left: auto;
+}
+
+.nav-item {
+  margin: 0 0.25rem;
+  /* color:#ffffff!important */
+}
+
+.nav-link {
+  color: #fff   ;
+  font-weight: 500;
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+}
+
+.nav-link:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: #007bff;
+}
+
+.nav-link-content {
+  display: flex;
+  align-items: center;
+}
+
+.nav-icon {
+  margin-right: 0.5rem;
+  font-size: 1rem;
+}
+
+/* Dropdown styling */
+.nav-item-dropdown .nav-link-dropdown {
+  display: flex;
+  align-items: center;
+  color: #fff;
+  font-weight: 500;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+}
+
+.nav-item-dropdown .nav-link-dropdown:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: #007bff;
+}
+
+.dropdown-menu {
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem 0;
+  min-width: 220px;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1.25rem;
+  color: #333;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: #007bff;
+}
+
+.dropdown-icon {
+  margin-right: 0.75rem;
+  font-size: 1rem;
+  width: 20px;
+  text-align: center;
+}
+
+/* Signup/Login button styling */
+.nav-link-signup {
+  /* background-color: #007bff; */
+  color: white !important;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.nav-link-signup:hover {
+  background-color: #0069d9;
+  color: white !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991.98px) {
+  .navbar-collapse {
+    background-color: var(--light-color);
+    position: absolute;
+    top: 70px;
+    left: 0;
+    right: 0;
+    padding: 1rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 0 0 8px 8px;
+    z-index: 1000;
+  }
+
+  .navbar-nav {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .nav-item {
+    margin: 0.25rem 0;
+    /* width: 25%; */
+  }
+
+  .nav-link {
+    padding: 0.75rem;
+    width: 100%;
+    display: block;
+  }
+
+  .dropdown-menu {
+    position: static !important;
+    box-shadow: none;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    width: 100%;
+  }
+}

@@ -127,10 +127,10 @@ function AboutUsPage({ isAdmin = false }) {
       )}
 
       <Row className="content-row py-0 px-5" role="banner">
-        <Col xs="12" md="6" className="logo-col pr-0">
+        <Col xs="12" md="6" className="logo-col d-flex align-items-center justify-content-center">
           <Image alt="CleanAR Solutions Logo" src={Logo} className="logo-image pr-0" />
         </Col>
-        <Col xs="12" md="6" className="text-col">
+        <Col xs="12" md="6" className="text-col ">
           <Card className="card-plain">
             <CardHeader>
               <CardTitle tag="h3" className="text-bold">Welcome to CleanAR Solutions</CardTitle>
@@ -148,7 +148,7 @@ function AboutUsPage({ isAdmin = false }) {
                   <span>{content.welcomeText}</span> 
                 )}
               </CardText>
-              <Link to="/request-quote" className="btn primary-bg-color">Request a Quote</Link>
+              {/* <Link to="/request-quote" className="btn primary-bg-color">Request a Quote</Link> */}
               <Link to="/products-and-services" className="btn secondary-bg-color">Learn More About Our Services</Link>
             </CardBody>
           </Card>

@@ -1154,7 +1154,7 @@ const QuickQuote = () => {
                                         id={`floating${label.replace(' ', '')}`}
                                         placeholder={placeholder}
                                         aria-label={label}
-                                        className="text-cleanar-color text-bold form-input"
+                                        className="text-cleanar-color form-input rounded-pill"
                                         name={name}
                                         value={formData[name]}
                                         onChange={handleChange}
@@ -1279,7 +1279,7 @@ const QuickQuote = () => {
                     </Row>
                     <Row className='pb-3'>
                         <Col md className="">
-                            <Button type="submit" className='secondary-bg-color'>Submit Quote</Button>
+                            <Button type="submit" className='secondary-bg-color rounded-pill'>Submit Quote</Button>
                         </Col>
                         <Col md className="">
                             <Button onClick={() => setFormData({
@@ -1291,7 +1291,7 @@ const QuickQuote = () => {
                                 promoCode: '',
                                 services: [],
                                 products: []
-                            })} className='btn-danger'>Reset Form</Button>
+                            })} className='btn-danger rounded-pill'>Reset Form</Button>
                         </Col>
                     </Row>
                 </Form>

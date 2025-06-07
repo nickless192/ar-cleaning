@@ -35,7 +35,7 @@ app.get('*', (req, res) => {
 
 
 // connect to mongo
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/ar-cleaning') ;
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/ar-cleaning-local') ;
 
 // logs MongoDB statements that are executed
 mongoose.set('debug',true);
