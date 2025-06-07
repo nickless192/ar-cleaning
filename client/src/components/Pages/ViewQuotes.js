@@ -1,5 +1,5 @@
 import './../../assets/css/quote-dropdown.css';
-import './../../assets/css/our-palette.css';
+// import './../../assets/css/our-palette.css';
 import Auth from "../../utils/auth";
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';

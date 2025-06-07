@@ -4,6 +4,7 @@ const {incrementVisitorCount, getVisitorCount, logVisit, getDailyVisitors, migra
 // router.route('/').get(getVisitorCount).post(incrementVisitorCount);
 // router.get('/', getVisitorCount);
 // router.post('/increment', incrementVisitorCount);
+
 router.route('/logs')
 .get(getVisits) // Get all logs
 .post(logVisit);

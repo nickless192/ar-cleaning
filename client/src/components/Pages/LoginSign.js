@@ -9,16 +9,15 @@ import {
     // Form,
     Row,
     Col,
-    // Collapse
 } from 'react-bootstrap';
 
 const LoginSign = () => {
     return (
         <Row className='justify-content-center align-items-center'>
-            <Col md='4'>
+            <Col md='5' className='mx-1'>
                 <SignUp />
             </Col>
-            <Col md='4'>
+            <Col md='5' className='mx-1'>
                 <LoginPage />
             </Col>
         </Row>

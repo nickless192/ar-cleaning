@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import VisitorCounter from "components/Pages/VisitorCounter.js";
+import ContactUs from "./ContactUs"
 import {
   Card,
   // CardBody,
@@ -20,9 +21,8 @@ import BusinessHoursSidebar from "components/Pages/BusinessHourSidebar";
 
 import backgroundImage from 'assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg';
 // import Logo from "assets/img/IC CLEAN AR-15-cropped.png";
-// import Footer from "components/Pages/Footer";
+// import WelcomeModal from "views/WelcomeModal.js";
 import { FaInstagram, FaFacebook, FaTiktok } from 'react-icons/fa';
-import { FiPhoneCall } from 'react-icons/fi';
 
 function Index() {
 
@@ -47,33 +47,33 @@ function Index() {
       additionalInfo: "Guaranteed Response Within 24 Hours",
       color: "text-success"
     },
-    {
-      icon: "now-ui-icons objects_spaceship",
-      link: ["https://www.instagram.com/cleanarsolutions/",
-        "https://www.facebook.com/share/18X3sPR1vf/?mibextid=wwXIfr",
-        "https://www.tiktok.com/@cleanar.solutions",
-        "tel:437-440-5514",
-      ],
-      text: [
-        // "Follow Us on Instagram",
-        // "Join Our Facebook Community",
-        // "Follow Us on TikTok",
-        // "Call or Message Us",
-        'Instagram',
-    'Facebook Community',
-    'TikTok',
-    'Call or Message Us',
-      ],
-      icons: [
-        <FaInstagram />,
-        <FaFacebook />,
-        <FaTiktok />,
-        <FiPhoneCall />,
-      ],
-      description: "Social Connection, Real-Time Updates & Engagement",
-      additionalInfo: "Get Inspired & Informed",
-      color: "text-facebook"
-    },
+    // {
+    //   icon: "now-ui-icons objects_spaceship",
+    //   link: ["https://www.instagram.com/cleanarsolutions/",
+    //     "https://www.facebook.com/share/18X3sPR1vf/?mibextid=wwXIfr",
+    //     "https://www.tiktok.com/@cleanar.solutions",
+    //     // "tel:437-440-5514",
+    //   ],
+    //   text: [
+    //     // "Follow Us on Instagram",
+    //     // "Join Our Facebook Community",
+    //     // "Follow Us on TikTok",
+    //     // "Call or Message Us",
+    //     'Instagram',
+    // 'Facebook Community',
+    // 'TikTok',
+    // // 'Call or Message Us',
+    //   ],
+    //   icons: [
+    //     <FaInstagram />,
+    //     <FaFacebook />,
+    //     <FaTiktok />,
+    //     // <FiPhoneCall />,
+    //   ],
+    //   description: "Social Connection, Real-Time Updates & Engagement",
+    //   additionalInfo: "Get Inspired & Informed",
+    //   color: "text-facebook"
+    // },
     // {
     //   icon: "now-ui-icons objects_spaceship",
     //   link: "https://www.facebook.com/share/18X3sPR1vf/?mibextid=wwXIfr",
@@ -125,20 +125,20 @@ function Index() {
     // window.scrollTo(0, 0);
     // document.body.scrollTop = 0;
     // initializeServices();
-    if (location.state?.scrollToQuote) {
-      document.getElementById("quote-section")?.scrollIntoView({ behavior: "smooth" });
-    }
+    // if (location.state?.scrollToQuote) {
+    //   document.getElementById("quote-section")?.scrollIntoView({ behavior: "smooth" });
+    // }
     return function cleanup() {
       document.body.classList.remove("index-page");
       document.body.classList.remove("sidebar-collapse");
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <>
       <MetaTags />
-      <VisitorCounter page={"index"} />
+      <VisitorCounter />
+      <WelcomeModal />
       {/* <LandingPageHeader /> */}
       <div className="m-0 p-0 light-bg-color-opaque">
         <Row className="m-0 align-items-center">
@@ -181,7 +181,7 @@ function Index() {
           </motion.p>
         </Col>
           <Col className="text-center p-0 m-0" xs='12' md='6'>
-            <CardImg top className="background-image-index" src={backgroundImage} alt="CleanAR Solutions background" />
+            <CardImg top className="background-image-index" src={backgroundImage} alt="CleanAR Solutions background - Designed by Freepik" />
           </Col>
         </Row>
         <Row>
@@ -213,10 +213,10 @@ function Index() {
                         {Array.isArray(item.link) ? (
                           <>
                             {item.link.map((singleLink, index) => (
-                              <>
+                              <div key={index}>
                                 {' | '}
                                 <a
-                                  key={index}
+                                  
                                   href={singleLink}
                                   target="_blank"
                                   rel="noreferrer noopener"
@@ -227,7 +227,7 @@ function Index() {
                                   {/* {item.text?.[index] || new URL(singleLink).hostname.replace("www.", "")} */}
                                 </a>
                                 {' | '}
-                              </>
+                              </div>
                             ))}
                           </>
                         ) : item.link === "business-hours" ? (
@@ -267,6 +267,11 @@ function Index() {
             <QuickQuote />
           </Col>
         </Row>
+        {/* <Row className="m-0 p-0">
+          <Col xs='12' md='12' className="p-0">
+            <ContactUs />
+          </Col>
+          </Row> */}
 
         {/* <Footer /> */}
       </div>

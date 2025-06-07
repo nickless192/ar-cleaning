@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import "assets/css/our-palette.css";
+// import "assets/css/our-palette.css";
 import {
     Button,
     Container,

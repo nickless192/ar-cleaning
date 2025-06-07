@@ -31,11 +31,10 @@ const QuickQuote = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         name: '',
-        userId: '',
-        description: '',
         companyName: '',
         email: '',
         phonenumber: '',
+        postalcode: '',
         promoCode: '',
         subtotalCost: 0,
         tax: 0,
@@ -57,14 +56,44 @@ const QuickQuote = () => {
     const [, setValidPromoCode] = useState(false);
     const [isLogged] = useState(Auth.loggedIn());
     const [isInitialLoad, setIsInitialLoad] = useState(true);
+    const [scrolledToQuote, setScrolledToQuote] = useState(false);
     const [selectedService, setSelectedService] = useState("");
     const [options, setOptions] = useState([]);
 
     // Define services and their options
     const serviceOptions = {
-        'Residential': ["House Cleaning", "Carpet Cleaning", "Move-In/Out Cleaning", "Residential Building Cleaning"],
-        'Commercial': ["Office Cleaning", "Industrial Cleaning", "Retail Cleaning"],
-        'Specialty Cleaning': ["Event Cleaning", "Post-Construction Cleaning"],
+        'Residential Cleaning': [
+            "House Cleaning",
+            "Move-In/Out Cleaning",
+            "Condominium Cleaning",
+            "Residential Building Cleaning"
+        ],
+        'Commercial Cleaning': [
+            "Office Cleaning",
+            "Industrial Cleaning",
+            "Retail Cleaning"
+        ],
+        'Carpet And Upholstery': [
+            "Carpet Cleaning",
+            "Upholstery Cleaning"
+        ],
+        'Window Cleaning': [
+            "Interior Window Cleaning",
+            "Window Track & Sill Cleaning",
+            "Glass Door Cleaning"
+        ],
+        'Power/Pressure Washing': [
+            "Driveway Cleaning",
+            "Patio & Deck Cleaning",
+            "Sidewalk Cleaning",
+            "Exterior Siding Cleaning",
+            "Fence Cleaning",
+            "Garage Floor Cleaning"
+        ],
+        // 'Specialty Services': [
+        //     "Event Cleaning",
+        //     "Post-Construction Cleaning"
+        // ]
     };
 
     const togglePopover = (field) => {
@@ -82,23 +111,41 @@ const QuickQuote = () => {
 
 
     useEffect(() => {
+        const searchParams = new URLSearchParams(location.search);
+        const scrollToQuote = searchParams.get('scrollToQuote');
         if (isInitialLoad) {
-            const searchParams = new URLSearchParams(location.search);
             const promoCode = searchParams.get('promoCode');
-
+            // console.log('promoCode:', promoCode);
+            const serviceClicked = searchParams.get('service');
             if (promoCode) {
                 setFormData(prevFormData => ({
                     ...prevFormData,
                     promoCode: promoCode
                 }));
             }
+            if (serviceClicked) {
+                handleServiceChange(serviceClicked);
+            }
             prepopulateForm();
             setIsInitialLoad(false);
         }
+        // console.log('serviceClicked:', serviceClicked);
+
         calculateTotals();
         handleBodyClass();
+        // if (location.state?.scrollToQuote) {
+        if (scrollToQuote && !scrolledToQuote) {
+            document.getElementById("quote-section")?.scrollIntoView({ behavior: "smooth" });
+            const promoCode = searchParams.get('promoCode');
+            if (promoCode) {
+                setFormData(prevFormData => ({
+                    ...prevFormData,
+                    promoCode: promoCode
+                }));
+            }
+            setScrolledToQuote(true);
+        }
         return cleanupBodyClass;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isLogged, formData.services, location.search]);
 
     const prepopulateForm = useCallback(() => {
@@ -233,6 +280,7 @@ const QuickQuote = () => {
         // if (promoCode === 'welcome10') {
         if (promoCode === 'toronto15' || promoCode === 'follow15'
             || promoCode === 'now15' || promoCode === 'start15' || promoCode === 'fresh15' || promoCode === 'secret15'
+            || promoCode === 'welcome15'
         ) {
             setValidPromoCode(true);
             // alert('Valid promo code! 15% discount will be applied to your quote');
@@ -497,7 +545,8 @@ const QuickQuote = () => {
 
             // console.log('Sanitized services:', sanitizedServices);
             // Capture screenshot of the form
-            const serviceSelectionForm = document.getElementById("service-selection");
+            // const serviceSelectionForm = document.getElementById("service-selection");
+            const serviceSelectionForm = document.getElementById("quote-form");
             // const canvas = await html2canvas(serviceSelectionForm);
             // const imageBase64 = canvas.toDataURL("image/png").split(",")[1]; // PNG format
             // Extract form values
@@ -509,7 +558,7 @@ const QuickQuote = () => {
                 services: sanitizedServices
             };
 
-            console.log(textSummary);
+            // console.log(textSummary);
 
             // const payload = { textSummary, imageBase64, formData: updatedFormData };
             const payload = { textSummary, formData: updatedFormData };
@@ -604,26 +653,38 @@ const QuickQuote = () => {
     };
 
 
+    const upholsteryList = [
+        "Sofa Cleaning",
+        "Chair Cleaning",
+        "Couch Cleaning",
+        "Sectional Cleaning",
+        "Ottoman Cleaning",
+        "Loveseat Cleaning",
+        "Dining Chair Cleaning",
+        "Recliner Cleaning"
+    ]
+
+
     const renderCustomOptions = (type) => {
         switch (type) {
             case 'House Cleaning':
             case 'Move-In/Out Cleaning': {
                 return (
                     <>
-                        <Row className="mb-3">
-                            <Col md={12} xs={12}>
+                        <Row className="g-1">
+                            {/* Frequency */}
+                            <Col xs={12} md={6}>
                                 <Form.Group controlId={`frequency-${type}`}>
-                                    <Form.Label className="text-bold">Frequency of Cleaning</Form.Label>
+                                    <Form.Label className="fw-semibold">🕒 Frequency</Form.Label>
                                     <Form.Select
-                                        aria-label="Frequency of Cleaning"
-                                        className="transparent form-border"
+                                        aria-label="Cleaning Frequency"
                                         name="frequency"
-                                        placeholder="Frequency of Cleaning"
-                                        size='sm'
-                                        onChange={(e) => handleCustomOptionChange(type, 'frequency', e)}
+                                        size="sm"
+                                        className="text-cleanar-color text-bold form-input"
                                         value={formData.services.find(s => s.type === type)?.customOptions?.frequency?.service || ''}
+                                        onChange={(e) => handleCustomOptionChange(type, 'frequency', e)}
                                     >
-                                        <option value="">Select Frequency...</option>
+                                        <option value="">Select...</option>
                                         <option value="One Time">One Time</option>
                                         <option value="Weekly">Weekly</option>
                                         <option value="Bi-Weekly">Bi-Weekly</option>
@@ -632,149 +693,139 @@ const QuickQuote = () => {
                                     </Form.Select>
                                 </Form.Group>
                             </Col>
-                            <Col md={12} xs={12}>
+
+                            {/* Unit Size */}
+                            <Col xs={12} md={6}>
                                 <Form.Group controlId={`unitSize-${type}`}>
-                                    <Form.Label className="text-bold">Unit Size</Form.Label>
+                                    <Form.Label className="fw-semibold">📏 Unit Size</Form.Label>
                                     <Form.Select
                                         aria-label="Unit Size"
-                                        size='sm'
                                         name="unitSize"
-                                        // placeholder="Unit Size"
-                                        className="transparent form-border"
-                                        onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e)}
+                                        size="sm"
+                                        className="text-cleanar-color text-bold form-input"
                                         value={formData.services.find(s => s.type === type)?.customOptions?.squareFootage?.service || ''}
+                                        onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e)}
                                     >
-                                        <option value="">Select Unit Size...</option>
-                                        <option value="0-499 sqft">0-499 sqft</option>
-                                        <option value="500-999 sqft">500-999 sqft</option>
-                                        <option value="1000-1499 sqft">1000-1499 sqft</option>
-                                        <option value="1500-1999 sqft">1500-1999 sqft</option>
+                                        <option value="">Select...</option>
+                                        <option value="0-499 sqft">0–499 sqft</option>
+                                        <option value="500-999 sqft">500–999 sqft</option>
+                                        <option value="1000-1499 sqft">1000–1499 sqft</option>
+                                        <option value="1500-1999 sqft">1500–1999 sqft</option>
                                         <option value="2000+ sqft">2000+ sqft</option>
                                     </Form.Select>
                                 </Form.Group>
                             </Col>
-                        </Row>
-                        <Row className="mb-3">
-                            <Col md={12} xs={12}>
+
+                            {/* Bedrooms */}
+                            <Col xs={12} md={6}>
                                 <Form.Group controlId={`bedrooms-${type}`}>
-                                    <Form.Label className="text-bold">Number of Bedrooms</Form.Label>
+                                    <Form.Label className="fw-semibold">🛏️ Bedrooms</Form.Label>
                                     <Form.Select
                                         aria-label="Number of Bedrooms"
-                                        name='bedrooms'
-                                        // placeholder="Number of Bedrooms"
-                                        className="transparent form-border"
-                                        size='sm'
-                                        onChange={(e) => handleCustomOptionChange(type, 'bedrooms', e)}
+                                        name="bedrooms"
+                                        size="sm"
+                                        className="text-cleanar-color text-bold form-input"
                                         value={formData.services.find(s => s.type === type)?.customOptions?.bedrooms?.service || ''}
+                                        onChange={(e) => handleCustomOptionChange(type, 'bedrooms', e)}
                                     >
-                                        <option value="">Select Number of Bedrooms...</option>
+                                        <option value="">Select...</option>
                                         {Array.from({ length: 6 }, (_, i) => (
                                             <option key={i} value={i.toString()}>{i === 5 ? '5+' : i}</option>
                                         ))}
                                     </Form.Select>
                                 </Form.Group>
                             </Col>
-                            <Col md={12} xs={12}>
+
+                            {/* Bathrooms */}
+                            <Col xs={12} md={6}>
                                 <Form.Group controlId={`bathrooms-${type}`}>
-                                    <Form.Label className="text-bold">Number of Bathrooms</Form.Label>
+                                    <Form.Label className="fw-semibold">🚿 Bathrooms</Form.Label>
                                     <Form.Select
                                         aria-label="Number of Bathrooms"
-                                        name='bathrooms'
-                                        // placeholder="Number of Bathrooms"
-                                        className="transparent form-border"
-                                        size='sm'
-                                        onChange={(e) => handleCustomOptionChange(type, 'bathrooms', e)}
+                                        name="bathrooms"
+                                        size="sm"
+                                        className="text-cleanar-color text-bold form-input"
                                         value={formData.services.find(s => s.type === type)?.customOptions?.bathrooms?.service || ''}
+                                        onChange={(e) => handleCustomOptionChange(type, 'bathrooms', e)}
                                     >
-                                        <option value="">Select Number of Bathrooms...</option>
+                                        <option value="">Select...</option>
                                         {Array.from({ length: 6 }, (_, i) => (
                                             <option key={i} value={i.toString()}>{i === 5 ? '5+' : i}</option>
                                         ))}
                                     </Form.Select>
                                 </Form.Group>
                             </Col>
-                            <Col md={12} xs={12}>
+
+                            {/* Start Date */}
+                            <Col xs={12} md={6}>
                                 <Form.Group controlId={`startDate-${type}`}>
-                                    <Form.Label className="text-bold">Desired Start Date</Form.Label>
+                                    <Form.Label className="fw-semibold">📅 Start Date</Form.Label>
                                     <Form.Control
                                         type="date"
+                                        name="startDate"
                                         aria-label="Desired Start Date"
-                                        name='startDate'
-                                        placeholder="Desired Start Date"
-                                        className="text-cleanar-color text-bold form-border"
-                                        onChange={(e) => handleCustomOptionChange(type, 'startDate', e)}
+                                        size="sm"
+                                        className="text-cleanar-color text-bold form-input"
                                         value={formData.services.find(s => s.type === type)?.customOptions?.startDate?.service || ''}
-                                        min={new Date().toISOString().split('T')[0]} // Prevent dates before today
+                                        onChange={(e) => handleCustomOptionChange(type, 'startDate', e)}
+                                        min={new Date().toISOString().split('T')[0]}
                                     />
                                 </Form.Group>
                             </Col>
-                        </Row>
-                        {type === 'House Cleaning' && (
-                            <Row className="mb-3">
-                                <Col>
+
+                            {/* Additional Options */}
+                            {type === 'House Cleaning' && (
+                                <Col xs={12} md={12}>
                                     <Form.Group controlId={`additionalOptions-${type}`}>
-                                        <Form.Label className="text-bold">Additional Options</Form.Label>
-                                        <br />
-                                        <Label check className="me-3">
-                                            <Input
-                                                type="checkbox"
-                                                name="deepCleaning"
-                                                placeholder="Deep Cleaning"
-                                                onChange={(e) => handleCustomOptionChange(type, 'deepCleaning', e)}
-                                                aria-label="Deep Cleaning"
-                                                checked={formData.services.find(s => s.type === type)?.customOptions?.deepCleaning?.service || false}
-                                            />
-                                            <span className="form-check-sign"></span>
-                                            Deep Cleaning
-                                        </Label>
-                                        <Label check className="me-3">
-                                            <Input
-                                                type="checkbox"
-                                                onChange={(e) => handleCustomOptionChange(type, 'windowCleaning', e)}
-                                                aria-label="Window Cleaning"
-                                                name="windowCleaning"
-                                                placeholder="Window Cleaning"
-                                                checked={formData.services.find(s => s.type === type)?.customOptions?.windowCleaning?.service || false}
-                                            />
-                                            <span className="form-check-sign"></span>
-                                            Window Cleaning
-                                        </Label>
-                                        <Label check className="me-3">
-                                            <Input
-                                                type="checkbox"
-                                                onChange={(e) => handleCustomOptionChange(type, 'laundryService', e)}
-                                                aria-label="Laundry Service"
-                                                name="laundryService"
-                                                placeholder="Laundry Service"
-                                                checked={formData.services.find(s => s.type === type)?.customOptions?.laundryService?.service || false}
-                                            />
-                                            <span className="form-check-sign"></span>
-                                            Laundry Service
-                                        </Label>
+                                        <Form.Label className="fw-semibold">🧼 Additional Options</Form.Label>
+                                        <Row className="">
+                                            {[
+                                                { label: 'Deep Cleaning', key: 'deepCleaning' },
+                                                { label: 'Window Cleaning', key: 'windowCleaning' },
+                                                { label: 'Laundry Service', key: 'laundryService' }
+                                            ].map(({ label, key }) => (
+                                                <Col xs={12} sm={6} lg={4} key={key}>
+                                                    <Form.Check
+                                                        type="checkbox"
+                                                        id={`${key}-${type}`}
+                                                        label={label}
+                                                        name={key}
+                                                        aria-label={label}
+                                                        className=""
+                                                        checked={
+                                                            formData.services.find(s => s.type === type)?.customOptions?.[key]?.service || false
+                                                        }
+                                                        onChange={(e) => handleCustomOptionChange(type, key, e)}
+                                                    />
+                                                </Col>
+                                            ))}
+                                        </Row>
                                     </Form.Group>
                                 </Col>
-                            </Row>
-                        )}
+
+                            )}
+                        </Row>
+
                     </>
+
                 );
             }
             case 'Carpet Cleaning': {
                 return (
                     <>
                         <Row className="mb-3">
-                            <Col>
+                            <Col xs={12}>
                                 <Form.Group controlId={`carpetType-${type}`}>
-                                    <Form.Label className="text-bold">Type of Carpet</Form.Label>
+                                    <Form.Label className="text-bold">Carpet Material</Form.Label>
                                     <Form.Select
-                                        aria-label="Type of Carpet"
+                                        aria-label="Select carpet material"
                                         className="transparent form-border"
                                         name="carpetType"
-                                        placeholder="Type of Carpet"
-                                        size='sm'
-                                        onChange={(e) => handleCustomOptionChange(type, 'carpetType', e)}
+                                        size="sm"
                                         value={formData.services.find(s => s.type === type)?.customOptions?.carpetType?.service || ''}
+                                        onChange={(e) => handleCustomOptionChange(type, 'carpetType', e)}
                                     >
-                                        <option value="">Select Carpet Type...</option>
+                                        <option value="">Choose a material...</option>
                                         <option value="Wool">Wool</option>
                                         <option value="Nylon">Nylon</option>
                                         <option value="Polyester">Polyester</option>
@@ -784,23 +835,109 @@ const QuickQuote = () => {
                                 </Form.Group>
                             </Col>
                         </Row>
+
                         <Row className="mb-3">
-                            <Col>
+                            <Col xs={12}>
                                 <Form.Group controlId={`carpetArea-${type}`}>
-                                    <Form.Label className="text-bold">Carpet Area (sqft)</Form.Label>
+                                    <Form.Label className="text-bold">Approximate Carpet Area (sqft)</Form.Label>
                                     <Form.Control
                                         type="number"
-                                        aria-label="Carpet Area"
+                                        min={0}
+                                        inputMode="numeric"
+                                        pattern="[0-9]*"
+                                        size="sm"
+                                        aria-label="Enter carpet area in square feet"
                                         name="carpetArea"
-                                        placeholder="Enter carpet area in square feet"
+                                        placeholder="e.g. 500"
                                         className="text-cleanar-color text-bold form-border"
-                                        onChange={(e) => handleCustomOptionChange(type, 'carpetArea', e)}
                                         value={formData.services.find(s => s.type === type)?.customOptions?.carpetArea?.service || ''}
+                                        onChange={(e) => handleCustomOptionChange(type, 'carpetArea', e)}
                                     />
                                 </Form.Group>
                             </Col>
                         </Row>
+
                         <Row className="mb-3">
+                            <Col xs={12} md={6}>
+                                <Form.Group controlId={`stains-${type}`}>
+                                    <Form.Label className="text-bold">Stain Level</Form.Label>
+                                    <Form.Select
+                                        aria-label="Select stain severity"
+                                        className="transparent form-border"
+                                        name="stains"
+                                        size="sm"
+                                        value={formData.services.find(s => s.type === type)?.customOptions?.stains?.service || ''}
+                                        onChange={(e) => handleCustomOptionChange(type, 'stains', e)}
+                                    >
+                                        <option value="">How severe are the stains?</option>
+                                        <option value="None">None</option>
+                                        <option value="Light">Light</option>
+                                        <option value="Moderate">Moderate</option>
+                                        <option value="Heavy">Heavy</option>
+                                    </Form.Select>
+                                </Form.Group>
+                            </Col>
+
+                            <Col xs={12} md={6}>
+                                <Form.Group controlId={`startDate-${type}`}>
+                                    <Form.Label className="text-bold">Preferred Cleaning Date</Form.Label>
+                                    <Form.Control
+                                        type="date"
+                                        aria-label="Select preferred service date"
+                                        name="startDate"
+                                        size="sm"
+                                        placeholder="Select a date"
+                                        min={new Date().toISOString().split('T')[0]}
+                                        className="text-cleanar-color text-bold form-border"
+                                        value={formData.services.find(s => s.type === type)?.customOptions?.startDate?.service || ''}
+                                        onChange={(e) => handleCustomOptionChange(type, 'startDate', e)}
+                                    />
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                    </>
+
+                );
+            }
+            case 'Power Washing': {
+                return (
+                    <>
+                        <Row className="mb-3">
+                            <Col>
+                                <Form.Group controlId={`surfaceType-${type}`}>
+                                    <Form.Label className="text-bold">Type of Surface</Form.Label>
+                                    <Form.Select
+                                        aria-label="Type of Surface"
+                                        className="transparent form-border"
+                                        name="surfaceType"
+                                        placeholder="Type of Surface"
+                                        size='sm'
+                                        onChange={(e) => handleCustomOptionChange(type, 'surfaceType', e)}
+                                        value={formData.services.find(s => s.type === type)?.customOptions?.surfaceType?.service || ''}
+                                    >
+                                        <option value="">Select Surface Type...</option>
+                                        <option value="Concrete">Concrete</option>
+                                        <option value="Wood">Wood</option>
+                                        <option value="Vinyl">Vinyl</option>
+                                        <option value="Brick">Brick</option>
+                                        <option value="Other">Other</option>
+                                    </Form.Select>
+                                </Form.Group>
+                            </Col>
+                            <Col>
+                                <Form.Group controlId={`area-${type}`}>
+                                    <Form.Label className="text-bold">Area (sqft)</Form.Label>
+                                    <Form.Control
+                                        type="number"
+                                        aria-label="Area"
+                                        name="area"
+                                        placeholder="Enter area in square feet"
+                                        className="text-cleanar-color text-bold form-border"
+                                        onChange={(e) => handleCustomOptionChange(type, 'area', e)}
+                                        value={formData.services.find(s => s.type === type)?.customOptions?.area?.service || ''}
+                                    />
+                                </Form.Group>
+                            </Col>
                             <Col>
                                 <Form.Group controlId={`stains-${type}`}>
                                     <Form.Label className="text-bold">Stains or Spots</Form.Label>
@@ -840,6 +977,70 @@ const QuickQuote = () => {
                     </>
                 );
             }
+            case 'Upholstery Cleaning': {
+                // include different types of upholstery to select from, and next to it, the area in sqft, the number of pieces, and the type of fabric
+                return (
+                    <>
+                        <Row className="mb-3">
+                            {upholsteryList.map((item, index) => (
+                                <Col key={index} md={6} xs={12} className="mb-3">
+                                    <Form.Group controlId={`upholstery-${type}-${index}`}>
+                                        <Form.Label className="text-bold">{item}</Form.Label>
+                                        <Form.Control
+                                            type="number"
+                                            aria-label="Upholstery Area"
+                                            name={`upholsteryArea-${index}`}
+                                            placeholder="Enter area in square feet"
+                                            className="text-cleanar-color text-bold form-border"
+                                            onChange={(e) => handleCustomOptionChange(type, `upholsteryArea-${index}`, e)}
+                                            value={formData.services.find(s => s.type === type)?.customOptions?.[`upholsteryArea-${index}`]?.service || ''}
+                                        />
+                                        <Form.Control
+                                            type="number"
+                                            aria-label="Upholstery Pieces"
+                                            name={`upholsteryPieces-${index}`}
+                                            placeholder="Enter number of pieces"
+                                            className="text-cleanar-color text-bold form-border mt-2"
+                                            onChange={(e) => handleCustomOptionChange(type, `upholsteryPieces-${index}`, e)}
+                                            value={formData.services.find(s => s.type === type)?.customOptions?.[`upholsteryPieces-${index}`]?.service || ''}
+                                        />
+                                        <Form.Select
+                                            aria-label="Upholstery Fabric Type"
+                                            name={`upholsteryFabric-${index}`}
+                                            placeholder="Select fabric type"
+                                            className="transparent form-border mt-2"
+                                            onChange={(e) => handleCustomOptionChange(type, `upholsteryFabric-${index}`, e)}
+                                            value={formData.services.find(s => s.type === type)?.customOptions?.[`upholsteryFabric-${index}`]?.service || ''}
+                                        >
+                                            <option value="">Select Fabric Type...</option>
+                                            <option value="Leather">Leather</option>
+                                            <option value="Cotton">Cotton</option>
+                                            <option value="Polyester">Polyester</option>
+                                            <option value="Nylon">Nylon</option>
+                                            <option value="Other">Other</option>
+                                        </Form.Select>
+                                    </Form.Group>
+                                </Col>
+                            ))}
+                            <Col md={12} xs={12}>
+                                <Form.Group controlId={`startDate-${type}`}>
+                                    <Form.Label className="text-bold">Desired Service Date</Form.Label>
+                                    <Form.Control
+                                        type="date"
+                                        aria-label="Desired Service Date"
+                                        name='startDate'
+                                        placeholder="Desired Service Date"
+                                        className="text-cleanar-color text-bold form-border"
+                                        min={new Date().toISOString().split('T')[0]} // Prevent dates before today
+                                        onChange={(e) => handleCustomOptionChange(type, 'startDate', e)}
+                                        value={formData.services.find(s => s.type === type)?.customOptions?.startDate?.service || ''}
+                                    />
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                    </>
+                );
+            }
             default:
                 return (
                     <>
@@ -855,7 +1056,7 @@ const QuickQuote = () => {
                                         placeholder="Provide a description of the services you require. We will be in touch shortly to schedule a consultation."
                                         value={formData.services.find(s => s.type === type)?.customOptions?.description?.service || ''}
                                         onChange={(e) => handleCustomOptionChange(type, 'description', e)}
-                                        className="text-cleanar-color text-bold"
+                                        className="text-cleanar-color text-bold form-input"
                                     />
                                 </Form.Group>
                             </Col>
@@ -866,6 +1067,7 @@ const QuickQuote = () => {
                                         type="date"
                                         aria-label="Desired Service Date"
                                         name='startDate'
+                                        size='sm'
                                         placeholder="Desired Service Date"
                                         className="text-cleanar-color text-bold form-border"
                                         min={new Date().toISOString().split('T')[0]} // Prevent dates before today
@@ -920,7 +1122,7 @@ const QuickQuote = () => {
                     <title>CleanAR Solutions - Quick Quote</title>
                     <meta name="description" content="Get a quick service estimate from CleanAR Solutions. Fill out our form to receive a personalized quote for your cleaning needs." />
                 </Helmet>
-                <VisitorCounter page={"quick-quote"} />
+                <VisitorCounter />
                 <h2 className="text-center primary-color text-bold pt-2">Get a Free Quote</h2>
                 <Form onSubmit={handleSubmit} id="quote-form" className="m-0 p-0">
                     <Form.Group className="mb-1">
@@ -933,7 +1135,7 @@ const QuickQuote = () => {
                                 { label: 'Postal Code', name: 'postalcode', placeholder: 'Postal Code', required: true },
                                 { label: 'Promo Code', name: 'promoCode', placeholder: 'Promo Code' }
                             ].map(({ label, name, placeholder, required }) => (
-                                <Col key={name} md={4} xs={12} className="mb-2 ">
+                                <Col key={name} md={3} xs={6} className="mb-2 ">
                                     <Form.Label className="text-bold mb-1">
                                         {label}{required && '*'}
                                         <FaQuestionCircle
@@ -954,7 +1156,8 @@ const QuickQuote = () => {
                                         type="text"
                                         id={`floating${label.replace(' ', '')}`}
                                         placeholder={placeholder}
-                                        className="text-cleanar-color text-bold form-input"
+                                        aria-label={label}
+                                        className="text-cleanar-color form-input rounded-pill"
                                         name={name}
                                         value={formData[name]}
                                         onChange={handleChange}
@@ -965,110 +1168,110 @@ const QuickQuote = () => {
                         </Row>
                     </Form.Group>
                     <section className="section-border">
-                        <Form id="service-selection">
-                            <Row>
-                                <Col md={3} xs={12} className="mb-3 radio-group">
-                                    <Form.Group className="mb-3">
-                                        <Form.Label className="text-bold mb-1">
-                                            Service Required*
-                                            <FaQuestionCircle
-                                                id="servicesTooltip"
-                                                className="ms-1"
-                                                onClick={() => togglePopover('services')}
-                                            />
-                                            <Popover
-                                                placement="top"
-                                                isOpen={popoverOpen.services}
-                                                target="servicesTooltip"
-                                                toggle={() => togglePopover('services')}
-                                            >
-                                                <PopoverBody>Please add service type and level to customize your order</PopoverBody>
-                                            </Popover>
-                                        </Form.Label>
-                                    </Form.Group>
-                                    {Object.keys(serviceOptions).map((service) => (
-                                        <label key={service} className="radio-label d-block mb-2">
-                                            <input
-                                                type="radio"
-                                                name="serviceType"
-                                                aria-label="Service Type"
-                                                placeholder='Service Type'
-                                                value={service}
-                                                checked={selectedService === service}
-                                                onChange={() => handleServiceChange(service)}
-                                                className="me-2"
-                                            />
-                                            {service}
-                                        </label>
-                                    ))}
-                                </Col>
-                                <Col md={3} xs={12} className="mb-3">
-                                    <Form.Group className="mb-3">
-                                        <Form.Label className="text-bold mb-1">
-                                            Service Type*
-                                            <FaQuestionCircle
-                                                id="serviceLevelTooltip"
-                                                className="ms-1"
-                                                onClick={() => togglePopover('serviceLevel')}
-                                            />
-                                            <Popover
-                                                placement="top"
-                                                isOpen={popoverOpen.serviceLevel}
-                                                target="serviceLevelTooltip"
-                                                toggle={() => togglePopover('serviceLevel')}
-                                            >
-                                                <PopoverBody>Please select a service level to customize your order</PopoverBody>
-                                            </Popover>
-                                        </Form.Label>
-                                    </Form.Group>
-                                    {selectedService ? (
-                                        <div className="radio-group options-selection">
-                                            {options.map((option) => (
-                                                <label key={option} className="radio-label d-block mb-2">
-                                                    <input
-                                                        type="radio"
-                                                        name="serviceOption"
-                                                        aria-label="Service Option"
-                                                        placeholder='Service Option'
-                                                        value={option}
-                                                        onChange={handleAddService}
-                                                        className="me-2"
-                                                    />
-                                                    {option}
-                                                </label>
-                                            ))}
-                                        </div>
-                                    ) : (
-                                        <p className="text-danger text-bold">Please Add Service First</p>
-                                    )}
-                                </Col>
-                                <Col md={6} xs={12}>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label className="text-bold mb-1">
-                                            Your Custom Options
-                                            <FaQuestionCircle
-                                                id="additionalServicesTooltip"
-                                                className="ms-1"
-                                                onClick={() => togglePopover('additionalServices')}
-                                            />
-                                            <Popover
-                                                placement="top"
-                                                isOpen={popoverOpen.additionalServices}
-                                                target="additionalServicesTooltip"
-                                                toggle={() => togglePopover('additionalServices')}
-                                            >
-                                                <PopoverBody>Please select any additional services you would like to add to your quote.</PopoverBody>
-                                            </Popover>
-                                        </Form.Label>
-                                    </Form.Group>
-                                    {formData.services.map((service, index) => (
-                                        <div key={index} className="mb-3">
-                                            {renderCustomOptions(service.type)}
-                                        </div>
-                                    ))}
-                                </Col>
-                            </Row>
-                        </Form>
+                        {/* <Form id="service-selection"> */}
+                        <Row>
+                            <Col md={3} xs={12} className="mb-3 radio-group">
+                                <Form.Group className="mb-3">
+                                    <Form.Label className="text-bold mb-1">
+                                        Service Required*
+                                        <FaQuestionCircle
+                                            id="servicesTooltip"
+                                            className="ms-1"
+                                            onClick={() => togglePopover('services')}
+                                        />
+                                        <Popover
+                                            placement="top"
+                                            isOpen={popoverOpen.services}
+                                            target="servicesTooltip"
+                                            toggle={() => togglePopover('services')}
+                                        >
+                                            <PopoverBody>Please add service type and level to customize your order</PopoverBody>
+                                        </Popover>
+                                    </Form.Label>
+                                </Form.Group>
+                                {Object.keys(serviceOptions).map((service) => (
+                                    <label key={service} className="radio-label d-block mb-2">
+                                        <input
+                                            type="radio"
+                                            name="serviceType"
+                                            aria-label="Service Type"
+                                            placeholder='Service Type'
+                                            value={service}
+                                            checked={selectedService === service}
+                                            onChange={() => handleServiceChange(service)}
+                                            className="me-2"
+                                        />
+                                        {service}
+                                    </label>
+                                ))}
+                            </Col>
+                            <Col md={3} xs={12} className="mb-3">
+                                <Form.Group className="mb-3">
+                                    <Form.Label className="text-bold mb-1">
+                                        Service Type*
+                                        <FaQuestionCircle
+                                            id="serviceLevelTooltip"
+                                            className="ms-1"
+                                            onClick={() => togglePopover('serviceLevel')}
+                                        />
+                                        <Popover
+                                            placement="top"
+                                            isOpen={popoverOpen.serviceLevel}
+                                            target="serviceLevelTooltip"
+                                            toggle={() => togglePopover('serviceLevel')}
+                                        >
+                                            <PopoverBody>Please select a service level to customize your order</PopoverBody>
+                                        </Popover>
+                                    </Form.Label>
+                                </Form.Group>
+                                {selectedService ? (
+                                    <div className="radio-group options-selection">
+                                        {options.map((option) => (
+                                            <label key={option} className="radio-label d-block mb-2">
+                                                <input
+                                                    type="radio"
+                                                    name="serviceOption"
+                                                    aria-label="Service Option"
+                                                    placeholder='Service Option'
+                                                    value={option}
+                                                    onChange={handleAddService}
+                                                    className="me-2"
+                                                />
+                                                {option}
+                                            </label>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <p className="text-danger text-bold">Please Add Service First</p>
+                                )}
+                            </Col>
+                            <Col md={6} xs={12}>
+                                <Form.Group className="mb-3">
+                                    <Form.Label className="text-bold mb-1">
+                                        Your Custom Options
+                                        <FaQuestionCircle
+                                            id="additionalServicesTooltip"
+                                            className="ms-1"
+                                            onClick={() => togglePopover('additionalServices')}
+                                        />
+                                        <Popover
+                                            placement="top"
+                                            isOpen={popoverOpen.additionalServices}
+                                            target="additionalServicesTooltip"
+                                            toggle={() => togglePopover('additionalServices')}
+                                        >
+                                            <PopoverBody>Please select any additional services you would like to add to your quote.</PopoverBody>
+                                        </Popover>
+                                    </Form.Label>
+                                </Form.Group>
+                                {formData.services.map((service, index) => (
+                                    <div key={index} className="mb-3">
+                                        {renderCustomOptions(service.type)}
+                                    </div>
+                                ))}
+                            </Col>
+                        </Row>
+                        {/* </Form> */}
                     </section>
                     <Row>
                         <Col>
@@ -1079,7 +1282,7 @@ const QuickQuote = () => {
                     </Row>
                     <Row className='pb-3'>
                         <Col md className="">
-                            <Button type="submit" className='secondary-bg-color'>Submit Quote</Button>
+                            <Button type="submit" className='secondary-bg-color rounded-pill'>Submit Quote</Button>
                         </Col>
                         <Col md className="">
                             <Button onClick={() => setFormData({
@@ -1091,7 +1294,7 @@ const QuickQuote = () => {
                                 promoCode: '',
                                 services: [],
                                 products: []
-                            })} className='btn-danger'>Reset Form</Button>
+                            })} className='btn-danger rounded-pill'>Reset Form</Button>
                         </Col>
                     </Row>
                 </Form>

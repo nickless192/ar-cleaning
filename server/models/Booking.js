@@ -5,9 +5,18 @@ const BookingSchema = new Schema({
     customerName: String,
     serviceType: String,
     date: Date, // actual service date
-    confirmationSent: { type: Boolean, default: false },
-    reminderScheduled: { type: Boolean, default: false },
-    reminderSent: { type: Boolean, default: false },
+    scheduleConfirmation: {
+        type: Boolean, 
+        default: false
+    },
+    reminderScheduled: { 
+        type: Boolean, 
+        default: false 
+    },
+    confirmationDate: { 
+        type: Date, 
+        default: null 
+    }, // date when confirmation was sent    
     createdAt: { type: Date, default: Date.now },
 });
 

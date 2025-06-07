@@ -118,6 +118,11 @@ function SignUp() {
     }
   };
 
+    // Define transition props for Popover to avoid warning
+    const transitionProps = {
+      timeout: 150 // Set a timeout value for the transition (in milliseconds)
+    };
+
 
   const handleChange = (event) => {
     event.preventDefault();
@@ -143,7 +148,7 @@ function SignUp() {
       {/* <div className="section section-signup light-blue-bg-color pb-0 mb-0"> */}
       <div className="content content-border">
       <h1 className="title secondary-color text-center montserrat-bold">Sign Up</h1>
-        {/* <Container className="container"> */}
+        <Container className="container">
         <p className="text-center text-cleanar-color">Please fill out the form below to create an account.</p>
           
           <Form className="form" onSubmit={(e) => handleFormSubmit(e)}>
@@ -155,10 +160,9 @@ function SignUp() {
                 className="text-cleanar-color"
               >
                   <Form.Control
-                    id="floatingFirstName"
                     type="text"
                     placeholder="First Name"
-                    className="form-input text-cleanar-color"
+                    className="form-input text-cleanar-color rounded-pill"
                     name="firstName"
                     value={formData.firstName}
                     onChange={(e) => handleChange(e)}
@@ -166,8 +170,14 @@ function SignUp() {
               </FloatingLabel>
               </Col>
               <Col md='1' xs='1' className="py-1">
-                <Button id="Popover1" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
-                <Popover placement="right" isOpen={popoverOpen.firstName} target="Popover1" toggle={() => togglePopover('firstName')}>
+                  <FaQuestionCircle 
+                  id="Popover1"
+                   />
+                {/* <Button id="Popover1" type="button" tabIndex='-1' className="btn-round btn-icon">
+                </Button> */}
+                <Popover placement="right" isOpen={popoverOpen.firstName} target="Popover1" toggle={() => togglePopover('firstName')}
+                  transition={transitionProps}
+                  >
                   <PopoverBody>
                     Enter your first name.
                   </PopoverBody>
@@ -182,10 +192,9 @@ function SignUp() {
                   className="text-cleanar-color"
                 >
                   <Form.Control
-                    id="floatingLastName"
                     type="text"
                     placeholder="Last Name"
-                    className="text-cleanar-color form-input"
+                    className="text-cleanar-color form-input rounded-pill"
                     name="lastName"
                     value={formData.lastName}
                     onChange={(e) => handleChange(e)}
@@ -193,8 +202,12 @@ function SignUp() {
                 </FloatingLabel>
               </Col>
               <Col md='1' xs='1' className="py-1">
-                <Button id="Popover2" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
-                <Popover placement="right" isOpen={popoverOpen.lastName} target="Popover2" toggle={() => togglePopover('lastName')}>
+                {/* <Button id="Popover2" type="button" tabIndex='-1' className="btn-round btn-icon"> */}
+                  <FaQuestionCircle id="Popover2" />
+                  {/* </Button> */}
+                <Popover placement="right" isOpen={popoverOpen.lastName} target="Popover2" toggle={() => togglePopover('lastName')}
+                  transition={transitionProps}
+                  >
                   <PopoverBody>
                     Enter your last name.
                   </PopoverBody>
@@ -209,10 +222,9 @@ function SignUp() {
                 className="text-cleanar-color"
               >
                    <Form.Control
-                    id="floatingEmail"
                     type="text"
                     placeholder="Email"
-                    className="text-cleanar-color form-input"
+                    className="text-cleanar-color form-input rounded-pill"
                     name="email"
                     value={formData.email}
                     onChange={(e) => handleChange(e)}
@@ -220,8 +232,12 @@ function SignUp() {
               </FloatingLabel>
               </Col>
               <Col md='1' xs='1' className="py-1">
-                <Button id="Popover3" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
-                <Popover placement="right" isOpen={popoverOpen.email} target="Popover3" toggle={() => togglePopover('email')}>
+                {/* <Button id="Popover3" type="button" tabIndex='-1' className="btn-round btn-icon"> */}
+                  <FaQuestionCircle id="Popover3" />
+                  {/* </Button> */}
+                <Popover placement="right" isOpen={popoverOpen.email} target="Popover3" toggle={() => togglePopover('email')}
+                  transition={transitionProps}
+                  >
                   <PopoverBody>
                     Enter your email address.
                   </PopoverBody>
@@ -236,10 +252,9 @@ function SignUp() {
                 className="text-cleanar-color"
               >
                   <Form.Control
-                    id="floatingTelephone"
                     type="text"
                     placeholder="Telephone"
-                    className="text-cleanar-color form-input"
+                    className="text-cleanar-color form-input rounded-pill"
                     name="telephone"
                     value={formData.telephone}
                     onChange={(e) => handleChange(e)}
@@ -247,8 +262,12 @@ function SignUp() {
               </FloatingLabel>
               </Col>
               <Col md='1' xs='1' className="py-1">
-                <Button id="Popover4" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
-                <Popover placement="right" isOpen={popoverOpen.telephone} target="Popover4" toggle={() => togglePopover('telephone')}>
+                {/* <Button id="Popover4" type="button" tabIndex='-1' className="btn-round btn-icon"> */}
+                  <FaQuestionCircle id="Popover4" />
+                  {/* </Button> */}
+                <Popover placement="right" isOpen={popoverOpen.telephone} target="Popover4" toggle={() => togglePopover('telephone')}
+                  transition={transitionProps}
+                  >
                   <PopoverBody>
                     Enter your telephone number.
                   </PopoverBody>
@@ -263,10 +282,9 @@ function SignUp() {
                 className="text-cleanar-color"
               >
                   <Form.Control
-                    id="floatingUsername"
                     type="text"
                     placeholder="Username"
-                    className="text-cleanar-color form-input"
+                    className="text-cleanar-color form-input rounded-pill"
                     name="username"
                     value={formData.username}
                     onChange={(e) => handleChange(e)}
@@ -274,8 +292,12 @@ function SignUp() {
               </FloatingLabel>
               </Col>
               <Col md='1' xs='1' className="py-1">
-                <Button id="Popover5" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
-                <Popover placement="right" isOpen={popoverOpen.username} target="Popover5" toggle={() => togglePopover('username')}>
+                {/* <Button id="Popover5" type="button" tabIndex='-1' className="btn-round btn-icon"> */}
+                  <FaQuestionCircle id="Popover5" />
+                  {/* </Button> */}
+                <Popover placement="right" isOpen={popoverOpen.username} target="Popover5" toggle={() => togglePopover('username')}
+                  transition={transitionProps}
+                  >
                   <PopoverBody>
                     Enter your username.
                   </PopoverBody>
@@ -290,10 +312,9 @@ function SignUp() {
                 className="text-cleanar-color"
               >
                   <Form.Control
-                    id="floatingPassword"
                     type="password"
                     placeholder="Password"
-                    className="text-cleanar-color form-input"
+                    className="text-cleanar-color form-input rounded-pill"
                     name="password"
                     value={formData.password}
                     onChange={(e) => handleChange(e)}
@@ -301,8 +322,12 @@ function SignUp() {
               </FloatingLabel>
               </Col>
               <Col md='1' xs='1' className="py-1">
-                <Button id="Popover6" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
-                <Popover placement="right" isOpen={popoverOpen.password} target="Popover6" toggle={() => togglePopover('password')}>
+                {/* <Button id="Popover6" type="button" tabIndex='-1' className="btn-round btn-icon"> */}
+                  <FaQuestionCircle id="Popover6" />
+                  {/* </Button> */}
+                <Popover placement="right" isOpen={popoverOpen.password} target="Popover6" toggle={() => togglePopover('password')}
+                  transition={transitionProps}
+                  >
                   <PopoverBody>
                     Enter your password.
                   </PopoverBody>
@@ -317,10 +342,9 @@ function SignUp() {
                   className="text-cleanar-color"
                 >
                   <Form.Select
-                    id="floatingHowDidYouHearAboutUs"
                     type="select"
                     placeholder="How Did You Hear About Us?"
-                    className="text-cleanar-color form-input"
+                    className="text-cleanar-color form-input  rounded-pill"
                     name="howDidYouHearAboutUs"
                     value={formData.howDidYouHearAboutUs}
                     onChange={(e) => handleChange(e)}
@@ -335,8 +359,12 @@ function SignUp() {
                 </FloatingLabel>
               </Col>
               <Col md='1' xs='1 ' className="py-1">
-                <Button id="Popover7" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
-                <Popover placement="right" isOpen={popoverOpen.howDidYouHearAboutUs} target="Popover7" toggle={() => togglePopover('howDidYouHearAboutUs')}>
+                {/* <Button id="Popover7" type="button" tabIndex='-1' className="btn-round btn-icon"> */}
+                  <FaQuestionCircle id="Popover7" />
+                  {/* </Button> */}
+                <Popover placement="right" isOpen={popoverOpen.howDidYouHearAboutUs} target="Popover7" toggle={() => togglePopover('howDidYouHearAboutUs')}
+                  transition={transitionProps}
+                  >
                   <PopoverBody>
                     How did you hear about us?
                   </PopoverBody>
@@ -347,17 +375,16 @@ function SignUp() {
               {/* if the user selected other, then render the box to enter the source. if they select referral, another box renders that allows to enter who referred them */}
               {formData.howDidYouHearAboutUs === 'Referral' ? (
                 <>
-                  <Col md='5' xs='1' className="py-1">
+                  <Col md='10' xs='10' className="py-1">
                     <FloatingLabel
                       controlId="floatingReferral"
                       label="Referral"
                       className="text-cleanar-color"
                     >
                        <Form.Control
-                        id="floatingReferral"
                         type="text"
                         placeholder="Referral"
-                        className="text-cleanar-color form-input"
+                        className="text-cleanar-color form-input  rounded-pill"
                         name="howDidYouHearAboutUs"
                         value={formData.howDidYouHearAboutUsSupport}
                         onChange={(e) => handleChange(e)}
@@ -365,8 +392,14 @@ function SignUp() {
                     </FloatingLabel>
                   </Col>
                   <Col md='1' xs='1' className="py-1">
-                    <Button id="Popover8" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
-                    <Popover placement="right" isOpen={popoverOpen.howDidYouHearAboutUsSupport} target="Popover8" toggle={() => togglePopover('howDidYouHearAboutUsSupport')}>
+                    {/* <Button id="Popover8" type="button" tabIndex='-1' className="btn-round btn-icon"> */}
+                      <FaQuestionCircle
+                      id="Popover8"
+                      />
+                      {/* </Button> */}
+                    <Popover placement="right" isOpen={popoverOpen.howDidYouHearAboutUsSupport} target="Popover8" toggle={() => togglePopover('howDidYouHearAboutUsSupport')}
+                      transition={transitionProps}
+                      >
                       <PopoverBody>
                         Who referred you?
                       </PopoverBody>
@@ -385,10 +418,9 @@ function SignUp() {
                       className="text-cleanar-color"
                     >
                        <Form.Control
-                        id="floatingOther"
                         type="text"
                         placeholder="Other"
-                        className="text-cleanar-color form-input"
+                        className="text-cleanar-color form-input  rounded-pill"
                         name="howDidYouHearAboutUs"
                         value={formData.howDidYouHearAboutUsSupport}
                         onChange={(e) => handleChange(e)}
@@ -397,7 +429,9 @@ function SignUp() {
                   </Col>
                   <Col md='1' xs='1'>
                     <Button id="Popover9" type="button" tabIndex='-1' className="btn-round btn-icon"><FaQuestionCircle /></Button>
-                    <Popover placement="right" isOpen={popoverOpen.howDidYouHearAboutUsSupport} target="Popover9" toggle={() => togglePopover('howDidYouHearAboutUsSupport')}>
+                    <Popover placement="right" isOpen={popoverOpen.howDidYouHearAboutUsSupport} target="Popover9" toggle={() => togglePopover('howDidYouHearAboutUsSupport')}
+                      transition={transitionProps}
+                      >
                       <PopoverBody>
                         How did you hear about us?
                       </PopoverBody>
@@ -411,7 +445,7 @@ function SignUp() {
             <Row className="justify-content-center">
               <Col md='6' xs='6'>
               <Button
-                className="btn-round light-bg-color"
+                className="btn-round light-bg-color rounded-pill"
                 type="submit"
                 // onClick={(e) => handleFormSubmit(e)}
                 size="lg"
@@ -421,7 +455,7 @@ function SignUp() {
               </Col>
             </Row>
           </Form>
-        {/* </Container> */}
+        </Container>
       {/* </div> */}
       </div>
       {/* <Footer /> */}
