@@ -19,6 +19,15 @@ const bookingControllers = {
 
         try {
             // 1. Send confirmation
+            const newBooking = new Booking({
+                customerName,
+                customerEmail,
+                serviceType,
+                date,
+                reminderScheduled,
+                scheduleConfirmation: scheduleConfirmation && !confirmationDate,
+                confirmationDate: confirmationDate || (scheduleConfirmation ? new Date() : null)
+            });
             if (!scheduleConfirmation) {
                 // await sendConfirmationEmail({ customerName, customerEmail, serviceType, date });
                 const msg = {
@@ -44,15 +53,7 @@ const bookingControllers = {
                 }
             }
             // 2. Save booking and schedule reminder
-            const newBooking = new Booking({
-                customerName,
-                customerEmail,
-                serviceType,
-                date,
-                reminderScheduled,
-                scheduleConfirmation: scheduleConfirmation && !confirmationDate,
-                confirmationDate: confirmationDate || (scheduleConfirmation ? new Date() : null)
-            });
+            
             // const newBooking = await Booking.create({
             //     customerName,
             //     customerEmail,
