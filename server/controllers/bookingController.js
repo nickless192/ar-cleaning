@@ -19,7 +19,7 @@ const bookingControllers = {
 
         try {
             // 1. Send confirmation
-            const newBooking =  new Booking({
+            const newBooking = new Booking({
                 customerName,
                 customerEmail,
                 serviceType,
@@ -29,7 +29,7 @@ const bookingControllers = {
                 confirmationDate: confirmationDate || (scheduleConfirmation ? new Date() : null)
             });
 
-            const savedBooking = await newBooking.save();
+
             if (!scheduleConfirmation) {
                 // await sendConfirmationEmail({ customerName, customerEmail, serviceType, date });
                 const msg = {
@@ -55,7 +55,7 @@ const bookingControllers = {
                 }
             }
             // 2. Save booking and schedule reminder
-            
+
             // const newBooking = await Booking.create({
             //     customerName,
             //     customerEmail,
@@ -64,7 +64,7 @@ const bookingControllers = {
             //     scheduleConfirmation: true,
             //     reminderScheduled: true,
             // });
-
+            const savedBooking = await newBooking.save();
             res.status(201).json(savedBooking);
         } catch (err) {
             console.error('Error creating booking:', err);
