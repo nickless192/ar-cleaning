@@ -16,7 +16,11 @@ const BookingSchema = new Schema({
     confirmationDate: { 
         type: Date, 
         default: null 
-    }, // date when confirmation was sent    
+    }, // date when confirmation was sent   
+    reminderDate: { 
+        type: Date, 
+        default: null 
+    }, // date when reminder was sent 
     createdAt: { type: Date, default: Date.now },
 });
 

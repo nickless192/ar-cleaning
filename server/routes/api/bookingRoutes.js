@@ -26,6 +26,7 @@ cron.schedule('0 0 * * *', async () => {
 
     for (let booking of dueBookings) {
       await sendReminderEmail(booking);
+      booking.reminderDate = now; // Update reminder date
       booking.reminderScheduled = false;
       await booking.save();
       console.log(`Reminder sent to ${booking.customerEmail}`);
