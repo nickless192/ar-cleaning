@@ -25,8 +25,11 @@ const bookingControllers = {
                 serviceType,
                 date,
                 reminderScheduled,
-                scheduleConfirmation: scheduleConfirmation && !confirmationDate,
-                confirmationDate: confirmationDate || (scheduleConfirmation ? new Date() : null)
+                scheduleConfirmation: scheduleConfirmation || !confirmationDate,
+                confirmationDate: confirmationDate || (scheduleConfirmation ? new Date() : null),
+                reminderDate: null,
+                confirmationSent: false,
+                reminderSent: false
             });
 
 
@@ -48,6 +51,8 @@ const bookingControllers = {
 
                 try {
                     await sgMail.send(msg);
+                    newBooking.confirmationSent = true; // Mark as confirmation sent
+                    newBooking.confirmationDate = new Date(); // Set confirmation date
                     console.log(`[Email] Confirmation sent to ${customerEmail}`);
                 } catch (err) {
                     console.error('[Email] Failed to send confirmation:', err);

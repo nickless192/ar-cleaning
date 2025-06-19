@@ -21,6 +21,14 @@ const BookingSchema = new Schema({
         type: Date, 
         default: null 
     }, // date when reminder was sent 
+    confirmationSent: { 
+        type: Boolean, 
+        default: false 
+    }, // whether confirmation email was sent
+    reminderSent: { 
+        type: Boolean, 
+        default: false 
+    }, // whether reminder email was sent
     createdAt: { type: Date, default: Date.now },
 });
 

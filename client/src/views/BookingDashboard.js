@@ -216,9 +216,9 @@ const BookingDashboard = () => {
                   <th>Name</th>
                   <th>Email</th>
                   <th>Service</th>
-                  <th>Date</th>
+                  <th>Service Date</th>
                   <th>Confirmation</th>
-                  <th>Reminder</th>
+                  <th>Reminder Scheduled</th>
                   <th>Created</th>
                 </tr>
               </thead>
@@ -231,10 +231,24 @@ const BookingDashboard = () => {
                     <td>{b.serviceType}</td>
                     <td>{moment(b.date).format('YYYY-MM-DD HH:mm')}</td>
                     <td>
-                      {b.scheduleConfirmation ? '✅' : '❌'}
+                      {/* {b.scheduleConfirmation ? 'Scheduled' : 'Sent'} */}
+                      {/* <br /> */}
                       {b.confirmationDate && ` @ ${moment(b.confirmationDate).format('MM-DD HH:mm')}`}
+                      <br />
+                      {b.confirmationSent ? '✅Sent' : b.scheduleConfirmation ? 'Scheduled' : 'Sent'}
                     </td>
-                    <td>{b.reminderScheduled ? '✅' : '❌'}</td>
+                    <td>
+                      {b.reminderScheduled ? (
+                        <>
+                          {'✅Reminder Scheduled'}
+                          {b.reminderDate && ` @ ${moment(b.reminderDate).format('MM-DD HH:mm')}`}
+                          <br />
+                          {b.reminderSent ? 'Sent' : 'Send Pending'}
+                        </>
+                      ) : (
+                        '❌Reminder Not Scheduled'
+                      )}
+                    </td>
                     <td>{moment(b.createdAt).format('YYYY-MM-DD')}</td>
                   </tr>
                 ))}

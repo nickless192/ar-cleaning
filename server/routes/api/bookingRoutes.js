@@ -2,6 +2,8 @@ const router = require('express').Router();
 const cron = require('node-cron');
 const { createBooking, getBookings, deleteBooking, sendReminderEmail  } = require('../../controllers/bookingController');
 const Booking = require('../../models/Booking');
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 router.post('/', createBooking);
 router.get('/', getBookings);
@@ -18,8 +20,9 @@ cron.schedule('0 0 * * *', async () => {
 
   try {
     const dueBookings = await Booking.find({
-      date: { $gte: windowStart, $lte: windowEnd },
+      date: { $gte: windowStart, $lte: windowEnd },      
       reminderScheduled: true,
+      reminderSent: false,
     });
 
     console.log(`Found ${dueBookings.length} bookings due for reminders.`);
@@ -27,7 +30,8 @@ cron.schedule('0 0 * * *', async () => {
     for (let booking of dueBookings) {
       await sendReminderEmail(booking);
       booking.reminderDate = now; // Update reminder date
-      booking.reminderScheduled = false;
+      // booking.reminderScheduled = false;
+      booking.reminderSent = true; // Mark as reminder sent
       await booking.save();
       console.log(`Reminder sent to ${booking.customerEmail}`);
     }
@@ -43,7 +47,8 @@ cron.schedule('* * * * *', async () => {
 
   const confirmations = await Booking.find({
     confirmationDate: { $lte: now },
-    scheduleConfirmation: true
+    scheduleConfirmation: true,
+    confirmationSent: false
   });
 
   for (const booking of confirmations) {
@@ -58,7 +63,8 @@ cron.schedule('* * * * *', async () => {
   
         // booking.confirmationSent = true;
         booking.confirmationDate = now; // Update confirmation date
-        booking.scheduleConfirmation = false; // Mark as no longer scheduled
+        // booking.scheduleConfirmation = false; // Mark as no longer scheduled
+        booking.confirmationSent = true; // Mark as confirmation sent
         await booking.save();
       } catch (err) {
         console.error('Error sending confirmation:', err);
