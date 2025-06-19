@@ -20,14 +20,13 @@ cron.schedule('0 0 * * *', async () => {
     const dueBookings = await Booking.find({
       date: { $gte: windowStart, $lte: windowEnd },
       reminderScheduled: true,
-      reminderSent: false,
     });
 
     console.log(`Found ${dueBookings.length} bookings due for reminders.`);
 
     for (let booking of dueBookings) {
       await sendReminderEmail(booking);
-      booking.reminderSent = true;
+      booking.reminderScheduled = false;
       await booking.save();
       console.log(`Reminder sent to ${booking.customerEmail}`);
     }
@@ -43,22 +42,26 @@ cron.schedule('* * * * *', async () => {
 
   const confirmations = await Booking.find({
     confirmationDate: { $lte: now },
-    confirmationSent: false
+    scheduleConfirmation: true
   });
 
   for (const booking of confirmations) {
-    try {
-      await sgMail.send({
-        to: booking.customerEmail,
-        from: 'yourcompany@example.com',
-        subject: 'Booking Confirmation',
-        text: `Hello ${booking.customerName}, this is a confirmation for your service on ${new Date(booking.date).toLocaleString()}.`
-      });
-
-      booking.confirmationSent = true;
-      await booking.save();
-    } catch (err) {
-      console.error('Error sending confirmation:', err);
+    if (booking.confirmationDate !== null) {
+      try {
+        await sgMail.send({
+          to: booking.customerEmail,
+          from: 'info@cleanarsolutions.ca',
+          subject: 'Booking Confirmation',
+          text: `Hello ${booking.customerName}, this is a confirmation for your service on ${new Date(booking.date).toLocaleString()}.`
+        });
+  
+        // booking.confirmationSent = true;
+        booking.confirmationDate = now; // Update confirmation date
+        booking.scheduleConfirmation = false; // Mark as no longer scheduled
+        await booking.save();
+      } catch (err) {
+        console.error('Error sending confirmation:', err);
+      }
     }
   }
 });
