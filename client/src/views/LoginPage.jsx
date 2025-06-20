@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import Auth from "utils/auth";
-import VisitorCounter from "../../src/components/Pages/VisitorCounter";
+import Auth from "/src/utils/auth";
+import VisitorCounter from "../components/Pages/VisitorCounter";
 // import Logo from "../../assets/svg/cleanmart-blue.svg";
 // import 'bootstrap/dist/css/bootstrap.min.css';
 

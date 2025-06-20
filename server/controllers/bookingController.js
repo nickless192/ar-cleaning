@@ -19,6 +19,20 @@ const bookingControllers = {
 
         try {
             // 1. Send confirmation
+            const newBooking = new Booking({
+                customerName,
+                customerEmail,
+                serviceType,
+                date,
+                reminderScheduled,
+                scheduleConfirmation: scheduleConfirmation || !confirmationDate,
+                confirmationDate: confirmationDate || (scheduleConfirmation ? new Date() : null),
+                reminderDate: null,
+                confirmationSent: false,
+                reminderSent: false
+            });
+
+
             if (!scheduleConfirmation) {
                 // await sendConfirmationEmail({ customerName, customerEmail, serviceType, date });
                 const msg = {
@@ -37,6 +51,8 @@ const bookingControllers = {
 
                 try {
                     await sgMail.send(msg);
+                    newBooking.confirmationSent = true; // Mark as confirmation sent
+                    newBooking.confirmationDate = new Date(); // Set confirmation date
                     console.log(`[Email] Confirmation sent to ${customerEmail}`);
                 } catch (err) {
                     console.error('[Email] Failed to send confirmation:', err);
@@ -44,15 +60,7 @@ const bookingControllers = {
                 }
             }
             // 2. Save booking and schedule reminder
-            const newBooking = new Booking({
-                customerName,
-                customerEmail,
-                serviceType,
-                date,
-                reminderScheduled,
-                scheduleConfirmation: scheduleConfirmation && !confirmationDate,
-                confirmationDate: confirmationDate || (scheduleConfirmation ? new Date() : null)
-            });
+
             // const newBooking = await Booking.create({
             //     customerName,
             //     customerEmail,
@@ -61,8 +69,8 @@ const bookingControllers = {
             //     scheduleConfirmation: true,
             //     reminderScheduled: true,
             // });
-
-            res.status(201).json(newBooking);
+            const savedBooking = await newBooking.save();
+            res.status(201).json(savedBooking);
         } catch (err) {
             console.error('Error creating booking:', err);
             res.status(500).json({ error: 'Failed to create booking' });

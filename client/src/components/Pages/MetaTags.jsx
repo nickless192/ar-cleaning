@@ -1,11 +1,11 @@
 // components/MetaTags.jsx
 import React from 'react';
-import { Helmet } from "react-helmet";
+import { Helmet, HelmetProvider } from "react-helmet-async";
 
 const MetaTags = () => 
 
     <>
-  <Helmet>
+  <HelmetProvider>
     {/* Basic Meta Tags */}
     <title>CleanAR Solutions - Professional Cleaning Services in Toronto & GTA</title>
     <meta name="description" content="Professional cleaning services in Toronto & GTA. Residential, commercial, carpet & upholstery cleaning. 10+ years of experience. Get your free quote today!" />
@@ -55,7 +55,7 @@ const MetaTags = () =>
     <meta name="robots" content="index, follow" />
     <meta name="googlebot" content="index, follow" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  </Helmet>
+  </HelmetProvider>
     </>
 
 ;

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import ExportCSV from './ExportCSV.js';
-import FilterBar from './FilterBar.js';
-import LogChart from './LogChart.js';
-import LogTable from './LogTable.js';
-import CustomPagination from './CustomPagination.js';
-import ReportDownloadButton from './ReportDownloadButton.js';
+import ExportCSV from './ExportCSV.jsx';
+import FilterBar from './FilterBar.jsx';
+import LogChart from './LogChart.jsx';
+import LogTable from './LogTable.jsx';
+import CustomPagination from './CustomPagination.jsx';
+import ReportDownloadButton from './ReportDownloadButton.jsx';
 import { Row, Col, Card, Spinner } from 'react-bootstrap';
 import { FaUsers, FaGlobe, FaMobile, FaDesktop, FaTablet, FaUserClock } from 'react-icons/fa';
 

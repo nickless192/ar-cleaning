@@ -7,7 +7,7 @@ import {
 import { Image } from 'react-bootstrap';
 // import "./../../assets/css/our-palette.css";
 import Logo from "../../assets/img/logo.png";
-import VisitorCounter from "components/Pages/VisitorCounter.js";
+import VisitorCounter from "/src/components/Pages/VisitorCounter.jsx";
 
 // Reusable Content Section Component
 const ContentSection = React.memo(({ title, content, onEdit, isEditing, field }) => (

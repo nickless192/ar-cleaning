@@ -21,7 +21,7 @@ app.use(express.static('public'));
 app.use('/images', express.static(path.join(__dirname, '../client/src/assets')));
 
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../client/build')));
+  app.use(express.static(path.join(__dirname, '../client/dist')));
 
 }
 // enable routes
@@ -30,7 +30,7 @@ app.use(require('./routes'));
 
 // // DO NOT COMMENT OUT THIS CODE - this makes the index page get the /GET error
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+  res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
 });
 
 

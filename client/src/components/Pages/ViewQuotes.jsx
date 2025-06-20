@@ -22,7 +22,6 @@ import { FloatingLabel,
   Form
  } from 'react-bootstrap';
 
-
 const ViewQuote = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [quotes, setQuotes] = useState([]);
