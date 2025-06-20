@@ -11,7 +11,7 @@ import { FaUsers, FaGlobe, FaMobile, FaDesktop, FaTablet, FaUserClock } from 're
 const LogDashboard = () => {
     const [logs, setLogs] = useState([]);
     const [filteredLogs, setFilteredLogs] = useState([]);
-    const [, setPages] = useState([]);
+    const [pages, setPages] = useState([]);
     const [selectedPage, setSelectedPage] = useState('');
     const [dateRange, setDateRange] = useState({ start: '', end: '' });
     const [currentPage, setCurrentPage] = useState(1);
