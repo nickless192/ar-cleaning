@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 import {
     Input,
     Label,
@@ -17,7 +17,7 @@ import {
 // import { ButtonGroup, ToggleButton } from 'react-bootstrap';
 // import html2pdf from 'html2pdf.js';
 import Auth from "../utils/auth";
-import VisitorCounter from "../../src/components/Pages/VisitorCounter";
+import VisitorCounter from "../components/Pages/VisitorCounter";
 import {
     FaQuestionCircle
 } from 'react-icons/fa';
@@ -1115,10 +1115,10 @@ const QuickQuote = () => {
     return (
         <>
             <Container className="quick-quote-container px-4" id="quote-section">
-                <Helmet>
+                <HelmetProvider>
                     <title>CleanAR Solutions - Quick Quote</title>
                     <meta name="description" content="Get a quick service estimate from CleanAR Solutions. Fill out our form to receive a personalized quote for your cleaning needs." />
-                </Helmet>
+                </HelmetProvider>
                 <VisitorCounter />
                 <h2 className="text-center primary-color text-bold pt-2">Get a Free Quote</h2>
                 <Form onSubmit={handleSubmit} id="quote-form" className="m-0 p-0">

@@ -18,8 +18,10 @@ import {
     FaFacebook,
     FaTiktok,
     FaRegEnvelope,
-    FiPhoneCall
 } from "react-icons/fa";
+import {
+    FiPhoneCall
+} from "react-icons/fi";
 import {
     Collapse,
     Row,
@@ -35,7 +37,9 @@ import {
     Nav,
     Container
 } from "reactstrap";
-import Auth from "../../utils/auth";
+import Auth from "/src/utils/auth";
+import logo from "/src/assets/img/IC CLEAN AR-15-cropped.png";
+
 // import "./NavBar.css"; // We'll create this CSS file
 
 function IndexNavbar() {
@@ -209,11 +213,13 @@ function IndexNavbar() {
                             >
                                 {/* <Row>
                             <Col xs="12"> */}
-                                <img
-                                    src={require("../../assets/img/IC CLEAN AR-15-cropped.png")}
+                                {/* <img
+                                    src={require("/src/assets/img/IC CLEAN AR-15-cropped.png")}
                                     alt="CleanAR Solutions"
                                     className="navbarlogo"
-                                />
+                                /> */}
+                                <img src={logo} alt="CleanAR Solutions" className="navbarlogo" />
+
                                 {/* </Col>
                             <Col> */}
                                 <div className="">

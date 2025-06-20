@@ -4,43 +4,43 @@ import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 
 // styles for this kit
 // import 'bootstrap/dist/css/bootstrap.min.css';
-import "assets/css/our-palette.css";
-import "assets/css/NavBar.css";
-import "assets/css/bootstrap.min.css";
-import "assets/css/bootstrap.min.css.map";
+import "/src/assets/css/our-palette.css";
+import "/src/assets/css/NavBar.css";
+import "/src/assets/css/bootstrap.min.css";
+// import "/src/assets/css/bootstrap.min.css.map";
 // import "assets/scss/now-ui-kit.scss?v=1.5.0";
 
 // pages for this kit
-import Index from "views/Index.js";
-import AboutUsPage from "./components/Pages/AboutUs";
+import Index from "/src/views/Index.jsx";
+import AboutUsPage from "/src/components/Pages/AboutUs";
 // import LoginPage from "views/LoginPage";
-import ProfilePage from "../src/components/Pages/ProfilePage";
+import ProfilePage from "/src/components/Pages/ProfilePage";
 // import SignUp from "views/SignUp";
-import ManageService from "../src/components/Pages/ManageService";
-import ManageProduct from "../src/components/Pages/ManageProduct";
-import ManageUser from "../src/components/Pages/ManageUser";
+import ManageService from "/src/components/Pages/ManageService";
+import ManageProduct from "/src/components/Pages/ManageProduct";
+import ManageUser from "/src/components/Pages/ManageUser";
 // import RequestQuote from "../src/components/Pages/RequestQuote";
-import LoginSign from "../src/components/Pages/LoginSign";
-import ViewQuotes from "../src/components/Pages/ViewQuotes";
-import ProductsAndServices from "../src/components/Pages/ProductsAndServices";
-import ProtectedRoute from "../src/components/Pages/ProtectedRoute";
-import ChatTool from "../src/components/Pages/ChatTool";
-import Navbar from "components/Pages/Navbar.js";
-import Career from "components/Pages/Career.js";
-import GiftCard from "components/Pages/ManageGiftCard.js";
-import LogDashboard from 'views/LogDashboard';
-import QuickQuoteDashboard from "views/QuickQuoteDashboard";
-import BookingDashboard from 'views/BookingDashboard';
-import ResetPassword from "components/Pages/ResetPassword";
-import Terms from "components/Pages/Terms";
-import Disclaimer from "components/Pages/Disclaimer";
-import Footer from "components/Pages/Footer.js";
+import LoginSign from "/src/components/Pages/LoginSign";
+import ViewQuotes from "./components/Pages/ViewQuotes";
+import ProductsAndServices from "/src/components/Pages/ProductsAndServices";
+import ProtectedRoute from "/src/components/Pages/ProtectedRoute";
+import ChatTool from "/src/components/Pages/ChatTool";
+import Navbar from "/src/components/Pages/Navbar.jsx";
+import Career from "/src/components/Pages/Career.jsx";
+import GiftCard from "/src/components/Pages/ManageGiftCard.jsx";
+import LogDashboard from '/src/views/LogDashboard';
+import QuickQuoteDashboard from "/src/views/QuickQuoteDashboard";
+import BookingDashboard from '/src/views/BookingDashboard';
+import ResetPassword from "/src/components/Pages/ResetPassword";
+import Terms from "/src/components/Pages/Terms";
+import Disclaimer from "/src/components/Pages/Disclaimer";
+import Footer from "/src/components/Pages/Footer.jsx";
 
-import LandingFresh from "views/qrCodes/LandingFresh";
-import LandingNow from "views/qrCodes/LandingNow";
-import LandingSecret from "views/qrCodes/LandingSecret";
-import LandingStart from "views/qrCodes/LandingStart";
-import LandingToronto from "views/qrCodes/LandingToronto";
+import LandingFresh from "/src/views/qrCodes/LandingFresh";
+import LandingNow from "/src/views/qrCodes/LandingNow";
+import LandingSecret from "/src/views/qrCodes/LandingSecret";
+import LandingStart from "/src/views/qrCodes/LandingStart";
+import LandingToronto from "/src/views/qrCodes/LandingToronto";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -52,6 +52,7 @@ const App = () => {
   // };
 
   return (
+    <React.StrictMode>
     <BrowserRouter>
       <Navbar />
       <Routes>
@@ -100,6 +101,7 @@ const App = () => {
       </button> */}
       {/* {isChatOpen && <ChatTool />} */}
     </BrowserRouter>
+    </React.StrictMode>
   );
 };
 

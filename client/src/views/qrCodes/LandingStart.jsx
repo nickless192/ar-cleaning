@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import VisitorCounter from '../../../src/components/Pages/VisitorCounter';
+import VisitorCounter from '../../components/Pages/VisitorCounter';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { motion } from 'framer-motion';
 

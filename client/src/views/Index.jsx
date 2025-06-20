@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { motion } from 'framer-motion';
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import VisitorCounter from "components/Pages/VisitorCounter.js";
+import VisitorCounter from "/src/components/Pages/VisitorCounter.jsx";
 import ContactUs from "./ContactUs"
 import {
   Card,
@@ -14,14 +14,14 @@ import {
   Col,
   CardImg
 } from "reactstrap";
-import MetaTags from "components/Pages/MetaTags.js";
+import MetaTags from "/src/components/Pages/MetaTags.jsx";
 import QuickQuote from "./QuickQuote";
-// import LandingPageHeader from "components/Headers/LandingPageHeader.js";
-import BusinessHoursSidebar from "components/Pages/BusinessHourSidebar";
+// import LandingPageHeader from "/src/components/Headers/LandingPageHeader.jsx";
+import BusinessHoursSidebar from "/src/components/Pages/BusinessHourSidebar";
 
-import backgroundImage from 'assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg';
+import backgroundImage from '/src/assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg';
 // import Logo from "assets/img/IC CLEAN AR-15-cropped.png";
-import WelcomeModal from "views/WelcomeModal.js";
+import WelcomeModal from "/src/views/WelcomeModal.jsx";
 import { FaInstagram, FaFacebook, FaTiktok } from 'react-icons/fa';
 
 function Index() {

@@ -10,7 +10,7 @@ import {
 } from "reactstrap";
 import Auth from "../../utils/auth";
 
-import backgroundImage from 'assets/img/stock-photo-cropped-shot-woman-rubber-gloves-cleaning-office-table.jpg';
+import backgroundImage from '/src/assets/img/stock-photo-cropped-shot-woman-rubber-gloves-cleaning-office-table.jpg';
 
 
 function ProfilePage() {
@@ -190,9 +190,9 @@ function ProfilePage() {
       <div className="wrapper light-bg-color mb-0 section-background" style={{ backgroundImage: `url(${backgroundImage})`}}>
         <div className="content" filter-color="blue">
             <Form onSubmit={handleSaveClick} >
-              <div className="photo-container">
+              {/* <div className="photo-container">
                 <img alt="..." src={require("assets/img/default-avatar.png")}></img>
-              </div>
+              </div> */}
               <h3 className="title primary-color">{formData.name}</h3>
               <p className="category">
                 {isEditing ? (

@@ -22,9 +22,6 @@ import { FloatingLabel,
   Form
  } from 'react-bootstrap';
 
-import Navbar from "components/Pages/Navbar.js";
-import Footer from "components/Pages/Footer.js";
-
 const ViewQuote = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [quotes, setQuotes] = useState([]);

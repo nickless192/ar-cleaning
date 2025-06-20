@@ -1,7 +1,7 @@
 import React from 'react';
 // import './LoginSign.css';
-import LoginPage from 'views/LoginPage';
-import SignUp from 'views/SignUp';
+import LoginPage from '/src/views/LoginPage';
+import SignUp from '/src/views/SignUp';
 import {
     Row,
     Col,

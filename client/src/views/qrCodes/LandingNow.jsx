@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import VisitorCounter from '../../../src/components/Pages/VisitorCounter';
+import VisitorCounter from '../../components/Pages/VisitorCounter';
 import { motion } from 'framer-motion';
 
 const LandingNow = () => {

@@ -6,14 +6,14 @@ import { Container, Row, Col, Card, ListGroup, Button } from 'react-bootstrap'; 
 // It's good practice to also import Bootstrap CSS if not done globally
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
-import VisitorCounter from "components/Pages/VisitorCounter.js";
+import VisitorCounter from "/src/components/Pages/VisitorCounter.jsx";
 
 // Import images (ensure paths are correct)
-import carpetCleaningBg from "assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg";
-import residentialCleaningBg from "assets/img/man-servant-cleaning-house.jpg";
-import commercialCleaningBg from "assets/img/full-shot-people-cleaning-office.jpg";
-import pressureCleaningBg from "assets/img/person-wearing-yellow-rubber-boots-with-high-pressure-water-nozzle-cleaning-dirt-tiles.jpg";
-import windowCleaningBg from "assets/img/man-cleaning-window.jpg";
+import carpetCleaningBg from "/src/assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg";
+import residentialCleaningBg from "/src/assets/img/man-servant-cleaning-house.jpg";
+import commercialCleaningBg from "/src/assets/img/full-shot-people-cleaning-office.jpg";
+import pressureCleaningBg from "/src/assets/img/person-wearing-yellow-rubber-boots-with-high-pressure-water-nozzle-cleaning-dirt-tiles.jpg";
+import windowCleaningBg from "/src/assets/img/man-cleaning-window.jpg";
 
 // --- Data Structure for Services ---
 const servicesData = [

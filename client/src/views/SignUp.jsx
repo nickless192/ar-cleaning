@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import Auth from "utils/auth";
+import Auth from "/src/utils/auth";
 // reactstrap components
 import {
   Container,
