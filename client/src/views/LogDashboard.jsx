@@ -16,6 +16,8 @@ const LogDashboard = () => {
     const [dateRange, setDateRange] = useState({ start: '', end: '' });
     const [currentPage, setCurrentPage] = useState(1);
     const [isLoading, setIsLoading] = useState(true);
+    const [weeklyReport, setWeeklyReport] = useState(null);
+
     
     // New filter states
     const [deviceFilter, setDeviceFilter] = useState('');
@@ -71,7 +73,19 @@ const LogDashboard = () => {
             }
         };
 
+            const fetchWeeklyReport = async () => {
+        try {
+            const res = await fetch('/api/visitors/weekly-report');
+            if (!res.ok) throw new Error('Failed to fetch weekly report');
+            const report = await res.json();
+            setWeeklyReport(report);
+        } catch (err) {
+            console.error('Error fetching weekly report:', err);
+        }
+    };
+
         fetchLogs();
+        fetchWeeklyReport();
     }, []);
 
     // Apply filters
@@ -207,6 +221,47 @@ const LogDashboard = () => {
                     <ExportCSV logs={filteredLogs} className="me-2" />
                     <ReportDownloadButton />
                 </div>
+                {weeklyReport && (
+    <Row className="mb-4">
+        <Col md={6} lg={4} className="mb-3">
+            <Card>
+                <Card.Body className="text-center">
+                    <FaUsers className="mb-2 text-primary" size={24} />
+                    <Card.Title>Weekly Sessions</Card.Title>
+                    <h3>{weeklyReport.totalSessions}</h3>
+                </Card.Body>
+            </Card>
+        </Col>
+        <Col md={6} lg={4} className="mb-3">
+            <Card>
+                <Card.Body className="text-center">
+                    <FaUserClock className="mb-2 text-success" size={24} />
+                    <Card.Title>Unique Visitors</Card.Title>
+                    <h3>{weeklyReport.uniqueVisitors}</h3>
+                </Card.Body>
+            </Card>
+        </Col>
+        <Col md={6} lg={4} className="mb-3">
+            <Card>
+                <Card.Body className="text-center">
+                    <FaGlobe className="mb-2 text-danger" size={24} />
+                    <Card.Title>Top Country</Card.Title>
+                    {weeklyReport.topCountries?.[0] ? (
+                        <>
+                            <h4>{weeklyReport.topCountries[0]._id}</h4>
+                            <div className="small text-muted">
+                                {weeklyReport.topCountries[0].visitors} visits
+                            </div>
+                        </>
+                    ) : (
+                        <div className="text-muted">No data</div>
+                    )}
+                </Card.Body>
+            </Card>
+        </Col>
+    </Row>
+)}
+
             </div>
             
             <FilterBar

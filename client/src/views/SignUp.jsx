@@ -447,6 +447,7 @@ function SignUp() {
               <Button
                 className="btn-round light-bg-color rounded-pill"
                 type="submit"
+                data-track="signup"
                 // onClick={(e) => handleFormSubmit(e)}
                 size="lg"
               >

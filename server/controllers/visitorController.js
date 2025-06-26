@@ -49,7 +49,7 @@ const visitorController = {
         console.log('No existing visitor found, creating a new one');
         const visitorId = generateVisitorId(req);
         // console.log('Generated Visitor ID:', visitorId);
-        const referrer = req.get('Referrer') || null;
+        // const referrer = req.get('Referrer') || null;
         // console.log('Referrer:', referrer);
         const ip =
           req.headers['x-forwarded-for']?.split(',').shift() ||
@@ -61,21 +61,36 @@ const visitorController = {
         const hashedIp = crypto.createHash('sha256').update(ip || '').digest('hex');
         // console.log('Hashed IP:', hashedIp);
         const uaString = req.body.userAgent || '';
-const parser = new UAParser(uaString);
-const uaResult = parser.getResult();  // this is now an object with device, os, browser, etc.
+        const parser = new UAParser(uaString);
+        const uaResult = parser.getResult();  // this is now an object with device, os, browser, etc.
+        const isBot = /bot|crawl|slurp|spider|mediapartners/i.test(uaResult);
         const deviceType = uaResult.device.type || 'desktop'; // fallback if undefined
         const browser = uaResult.browser.name || 'unknown';
         const os = uaResult.os.name || 'unknown';
+        const screenResolution = req.body.screenResolution || '';
+        const language = req.body.language || '';
+        const timezone = req.body.timezone || '';
+        const referrer = req.body.referrer || req.get('Referrer') || null;
+        const utm = req.body.utm || {};
+        const trafficSource = req.body.trafficSource || 'unknown';
         // console.log('Device Type:', deviceType);
         // console.log('Browser:', browser);
         // console.log('OS:', os);
         const newVisit = new VisitorLog({
-          page, userAgent: req.body.userAgent, ip: hashedIp, referrer,
+          page, userAgent: req.body.userAgent,
+          ip: hashedIp,
+          referrer,
           geo: geoInfo,
           deviceType, browser, os,
           visitorId, sessionId,
           firstSeenAt: new Date(),
-          lastSeenAt: new Date()
+          lastSeenAt: new Date(),
+          screenResolution,
+          language,
+          timezone,
+          utm,
+          trafficSource,
+          isBot
         });
         await newVisit.save();
         res.json({ message: 'Visit logged successfully' });
@@ -194,12 +209,96 @@ const uaResult = parser.getResult();  // this is now an object with device, os, 
     //     mongoose.connection.close();
     // }
   },
-  generateWeeklyReport: async (res, req) => {
+  // generateWeeklyReport: async (res, req) => {
+  //   try {
+  //     const oneWeekAgo = new Date();
+  //     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+  //     // 1. Total Sessions and Unique Visitors
+  //     const sessionsAndVisitors = await VisitorLog.aggregate([
+  //       { $match: { visitDate: { $gte: oneWeekAgo } } },
+  //       {
+  //         $group: {
+  //           _id: "$visitorId",
+  //           sessions: { $addToSet: "$sessionId" },
+  //         },
+  //       },
+  //       {
+  //         $group: {
+  //           _id: null,
+  //           uniqueVisitors: { $sum: 1 },
+  //           totalSessions: { $sum: { $size: "$sessions" } },
+  //         },
+  //       },
+  //     ]);
+
+  //     // 2. Top Countries
+  //     const topCountries = await VisitorLog.aggregate([
+  //       { $match: { visitDate: { $gte: oneWeekAgo } } },
+  //       { $group: { _id: "$geo.country", visitors: { $sum: 1 } } },
+  //       { $sort: { visitors: -1 } },
+  //       { $limit: 5 },
+  //     ]);
+
+  //     // 3. Top Landing Pages
+  //     const topLandingPages = await VisitorLog.aggregate([
+  //       { $match: { visitDate: { $gte: oneWeekAgo } } },
+  //       { $group: { _id: "$landingPage", visits: { $sum: 1 } } },
+  //       { $sort: { visits: -1 } },
+  //       { $limit: 5 },
+  //     ]);
+
+  //     // 4. Top Exit Pages
+  //     const topExitPages = await VisitorLog.aggregate([
+  //       { $match: { visitDate: { $gte: oneWeekAgo } } },
+  //       { $project: { lastPage: { $arrayElemAt: ["$pathsVisited", -1] } } },
+  //       { $group: { _id: "$lastPage", exits: { $sum: 1 } } },
+  //       { $sort: { exits: -1 } },
+  //       { $limit: 5 },
+  //     ]);
+
+  //     // 5. Device Breakdown
+  //     const deviceBreakdown = await VisitorLog.aggregate([
+  //       { $match: { visitDate: { $gte: oneWeekAgo } } },
+  //       { $group: { _id: "$deviceType", count: { $sum: 1 } } },
+  //     ]);
+
+  //     // 6. New vs Returning Visitors
+  //     const visitorTypes = await VisitorLog.aggregate([
+  //       { $match: { visitDate: { $gte: oneWeekAgo } } },
+  //       { $group: { _id: "$isReturningVisitor", count: { $sum: 1 } } },
+  //     ]);
+
+  //     res.status(200).json({
+  //       totalSessions: sessionsAndVisitors[0]?.totalSessions || 0,
+  //       uniqueVisitors: sessionsAndVisitors[0]?.uniqueVisitors || 0,
+  //       topCountries,
+  //       topLandingPages,
+  //       topExitPages,
+  //       deviceBreakdown,
+  //       visitorTypes,
+  //     });
+  //     // return {
+  //     //   totalSessions: sessionsAndVisitors[0]?.totalSessions || 0,
+  //     //   uniqueVisitors: sessionsAndVisitors[0]?.uniqueVisitors || 0,
+  //     //   topCountries,
+  //     //   topLandingPages,
+  //     //   topExitPages,
+  //     //   deviceBreakdown,
+  //     //   visitorTypes,
+  //     // };
+  //   } catch (error) {
+  //     console.error("Error generating weekly report:", error);
+  //     res.status(500).json({ error: "Failed to generate weekly report" });
+  //     // throw error;
+  //   }
+  // }
+  generateWeeklyReport: async (req, res) => {
     try {
       const oneWeekAgo = new Date();
       oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
-      // 1. Total Sessions and Unique Visitors
+      // Total Sessions and Unique Visitors
       const sessionsAndVisitors = await VisitorLog.aggregate([
         { $match: { visitDate: { $gte: oneWeekAgo } } },
         {
@@ -217,67 +316,161 @@ const uaResult = parser.getResult();  // this is now an object with device, os, 
         },
       ]);
 
-      // 2. Top Countries
+      // Top Countries
       const topCountries = await VisitorLog.aggregate([
-        { $match: { visitDate: { $gte: oneWeekAgo } } },
+        { $match: { visitDate: { $gte: oneWeekAgo }, "geo.country": { $ne: null } } },
         { $group: { _id: "$geo.country", visitors: { $sum: 1 } } },
         { $sort: { visitors: -1 } },
         { $limit: 5 },
       ]);
 
-      // 3. Top Landing Pages
-      const topLandingPages = await VisitorLog.aggregate([
+      // Daily Visit Trend
+      const dailyTrend = await VisitorLog.aggregate([
         { $match: { visitDate: { $gte: oneWeekAgo } } },
-        { $group: { _id: "$landingPage", visits: { $sum: 1 } } },
+        {
+          $group: {
+            _id: {
+              $dateToString: { format: "%Y-%m-%d", date: "$visitDate" }
+            },
+            count: { $sum: 1 }
+          }
+        },
+        { $sort: { _id: 1 } }
+      ]);
+
+      // Top Visited Pages
+      const topPages = await VisitorLog.aggregate([
+        { $match: { visitDate: { $gte: oneWeekAgo } } },
+        { $group: { _id: "$page", visits: { $sum: 1 } } },
         { $sort: { visits: -1 } },
-        { $limit: 5 },
+        { $limit: 5 }
       ]);
 
-      // 4. Top Exit Pages
-      const topExitPages = await VisitorLog.aggregate([
-        { $match: { visitDate: { $gte: oneWeekAgo } } },
-        { $project: { lastPage: { $arrayElemAt: ["$pathsVisited", -1] } } },
-        { $group: { _id: "$lastPage", exits: { $sum: 1 } } },
-        { $sort: { exits: -1 } },
-        { $limit: 5 },
-      ]);
-
-      // 5. Device Breakdown
-      const deviceBreakdown = await VisitorLog.aggregate([
+      // Device Type Breakdown
+      const deviceBreakdownRaw = await VisitorLog.aggregate([
         { $match: { visitDate: { $gte: oneWeekAgo } } },
         { $group: { _id: "$deviceType", count: { $sum: 1 } } },
       ]);
+      const totalDevices = deviceBreakdownRaw.reduce((sum, d) => sum + d.count, 0);
+      const deviceBreakdown = deviceBreakdownRaw.map(d => ({
+        type: d._id || 'unknown',
+        count: d.count,
+        percent: ((d.count / totalDevices) * 100).toFixed(1) + '%'
+      }));
 
-      // 6. New vs Returning Visitors
-      const visitorTypes = await VisitorLog.aggregate([
+      // New vs Returning Visitors
+      const visitorTypesRaw = await VisitorLog.aggregate([
         { $match: { visitDate: { $gte: oneWeekAgo } } },
-        { $group: { _id: "$isReturningVisitor", count: { $sum: 1 } } },
+        { $group: { _id: "$isReturningVisitor", count: { $sum: 1 } } }
       ]);
+      const totalTypeCount = visitorTypesRaw.reduce((sum, v) => sum + v.count, 0);
+      const visitorTypes = visitorTypesRaw.map(v => ({
+        type: v._id ? 'returning' : 'new',
+        count: v.count,
+        percent: ((v.count / totalTypeCount) * 100).toFixed(1) + '%'
+      }));
 
       res.status(200).json({
+        summaryRange: {
+          from: oneWeekAgo.toISOString().split('T')[0],
+          to: new Date().toISOString().split('T')[0]
+        },
         totalSessions: sessionsAndVisitors[0]?.totalSessions || 0,
         uniqueVisitors: sessionsAndVisitors[0]?.uniqueVisitors || 0,
         topCountries,
-        topLandingPages,
-        topExitPages,
+        dailyTrend,
+        topPages,
         deviceBreakdown,
         visitorTypes,
       });
-      // return {
-      //   totalSessions: sessionsAndVisitors[0]?.totalSessions || 0,
-      //   uniqueVisitors: sessionsAndVisitors[0]?.uniqueVisitors || 0,
-      //   topCountries,
-      //   topLandingPages,
-      //   topExitPages,
-      //   deviceBreakdown,
-      //   visitorTypes,
-      // };
     } catch (error) {
       console.error("Error generating weekly report:", error);
       res.status(500).json({ error: "Failed to generate weekly report" });
-      // throw error;
     }
+  },
+  logInteraction: async (req, res) => {
+  try {
+    const { sessionId, action } = req.body;
+
+    if (!sessionId || !action) {
+      return res.status(400).json({ error: 'Missing sessionId or action' });
+    }
+
+    console.log('Logging interaction for session:', sessionId, 'action:', action);
+
+    const result = await VisitorLog.findOneAndUpdate(
+      { sessionId },
+      { $push: { interactions: action }, $set: { lastSeenAt: new Date() } },
+      { new: true }
+    );
+
+    if (!result) {
+      return res.status(404).json({ error: 'Session not found' });
+    }
+    await result.save(); // Ensure the interaction is saved
+
+    res.status(200).json({ message: 'Interaction logged' });
+  } catch (error) {
+    console.error('Failed to log interaction:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
+},
+updateSessionDuration: async (req, res) => {
+  try {
+    const { sessionId, duration } = req.body;
+
+    if (!sessionId || typeof duration !== 'number') {
+      return res.status(400).json({ error: 'Missing or invalid sessionId or duration' });
+    }
+
+    const result = await VisitorLog.findOneAndUpdate(
+      { sessionId },
+      { $set: { sessionDuration: duration, lastSeenAt: new Date() } },
+      { new: true }
+    );
+
+    if (!result) {
+      return res.status(404).json({ error: 'Session not found' });
+    }
+    // Ensure the session duration is updated
+    await result.save();
+
+    res.status(200).json({ message: 'Session duration updated' });
+  } catch (error) {
+    console.error('Error updating session duration:', error);
+    res.status(500).json({ error: 'Failed to update session duration' });
+  }
+},
+updateScrollDepth: async (req, res) => {
+  try {
+    const { sessionId, scrollDepth } = req.body;
+
+    if (!sessionId || typeof scrollDepth !== 'number') {
+      return res.status(400).json({ error: 'Missing or invalid sessionId or scrollDepth' });
+    }2
+    console.log('Updating scroll depth for session:', sessionId, 'to', scrollDepth);
+
+    const result = await VisitorLog.findOneAndUpdate(
+      { sessionId },
+      { $max: { scrollDepth }, $set: { lastSeenAt: new Date() } }, // $max only updates if greater
+      { new: true }
+    );
+
+    if (!result) {
+      return res.status(404).json({ error: 'Session not found' });
+    }
+
+    // Ensure the scroll depth is updated
+    await result.save();
+    res.status(200).json({ message: 'Scroll depth updated' });
+  } catch (error) {
+    console.error('Error updating scroll depth:', error);
+    res.status(500).json({ error: 'Failed to update scroll depth' });
+  }
+},
+
+
+
 };
 
 module.exports = visitorController;

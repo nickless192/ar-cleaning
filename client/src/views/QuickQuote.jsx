@@ -1279,10 +1279,10 @@ const QuickQuote = () => {
                     </Row>
                     <Row className='pb-3'>
                         <Col md className="">
-                            <Button type="submit" className='secondary-bg-color rounded-pill'>Submit Quote</Button>
+                            <Button type="submit" className='secondary-bg-color rounded-pill' data-track="clicked_submit_quote">Submit Quote</Button>
                         </Col>
                         <Col md className="">
-                            <Button onClick={() => setFormData({
+                            <Button data-track="clicked_reset_quote" onClick={() => setFormData({
                                 name: '',
                                 companyName: '',
                                 email: '',

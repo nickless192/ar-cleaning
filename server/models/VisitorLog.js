@@ -7,30 +7,30 @@ const VisitorLogSchema = new Schema({
   },
 
   visitorId: {
-    type: String, // hashed IP + UA, or session ID
+    type: String,
     required: true
   },
 
   sessionId: {
-    type: String, // Unique session tracking (UUID, cookie, etc.)
+    type: String
   },
 
   page: {
-    type: String, // The first page visited in this session
+    type: String,
     required: true
   },
 
   pathsVisited: {
-    type: [String], // Array of pages visited within the session
+    type: [String],
     default: [],
     validate: {
-      validator: arr => arr.length <= 50, // optional limit
+      validator: arr => arr.length <= 50,
       message: 'Too many paths visited'
     }
   },
 
   referrer: {
-    type: String, // "https://google.com", "https://instagram.com"
+    type: String,
     default: null
   },
 
@@ -40,7 +40,7 @@ const VisitorLogSchema = new Schema({
   },
 
   deviceType: {
-    type: String, // "desktop", "mobile", "tablet"
+    type: String,
     default: 'unknown'
   },
 
@@ -53,8 +53,9 @@ const VisitorLogSchema = new Schema({
     type: String,
     default: 'unknown'
   },
+
   ip: {
-    type: String, // optionally hashed
+    type: String,
     default: null
   },
 
@@ -69,22 +70,77 @@ const VisitorLogSchema = new Schema({
     type: Boolean,
     default: false
   },
+
   firstSeenAt: {
     type: Date,
     default: Date.now
   },
+
   lastSeenAt: {
     type: Date,
     default: Date.now
-  },  
+  },
 
+  // NEW 📐 System Info
+  screenResolution: {
+    type: String // e.g., "1920x1080"
+  },
+  language: {
+    type: String // e.g., "en-US"
+  },
+
+  // NEW 🔁 Engagement Tracking
+  scrollDepth: {
+    type: Number, // 0–100%
+    default: 0
+  },
+  interactions: {
+    type: [String],
+    default: []
+  },
+  sessionDuration: {
+    type: Number, // seconds
+    default: 0
+  },
+  engagementScore: {
+    type: Number,
+    default: 0
+  },
+  isBounce: {
+    type: Boolean,
+    default: false
+  },
+
+  // NEW 🎯 Marketing Attribution
   utm: {
     source: String,
     medium: String,
     campaign: String
-  }
+  },
+
+  trafficSource: {
+    type: String, // "organic", "ads", "social", "direct", "referral"
+    default: "unknown"
+  },
+
+  // NEW 🧠 Classification / Segments
+  segment: {
+    type: String // optional manual/automated tagging
+  },
+  interactions: {
+    type: [String],
+    default: [],
+    validate: {
+      validator: arr => arr.length <= 100, // optional limit
+      message: 'Too many interaction events recorded'
+    }
+  },
+  sessionDuration: { type: Number, default: 0 },       // ms
+  scrollDepth: { type: Number, default: 0 },           // percentage
+  isBot: { type: Boolean, default: false },
+
 }, {
-  timestamps: true // adds createdAt, updatedAt
+  timestamps: true
 });
 
 const VisitorLog = model('VisitorLog', VisitorLogSchema);

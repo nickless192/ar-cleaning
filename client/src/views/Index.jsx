@@ -147,39 +147,39 @@ function Index() {
             <p className="martel-bold landing-page-intro text-align-end mr-3">Tired of Cleaning? Reclaim your free time with CleanAR Solutions. Serving Toronto and the GTA, we provide sparkling clean spaces so you can focus on what matters. <b>Get a free quote!</b>
             </p>
           </Col> */}
-                  <Col xs="12" md="6" className="text-center">
-          <motion.h1
-            className="primary-color montserrat-bold p-0 m-0"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-          >
-            CleanAR Solutions
-          </motion.h1>
-          <motion.h3
-            className="text-secondary p-0 m-0 text-bold pb-2"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-          >
-            Trusted Clean, Trusted Service
-          </motion.h3>
-        {/* </Col>
+          <Col xs="12" md="6" className="text-center">
+            <motion.h1
+              className="primary-color montserrat-bold p-0 m-0"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+            >
+              CleanAR Solutions
+            </motion.h1>
+            <motion.h3
+              className="text-secondary p-0 m-0 text-bold pb-2"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+            >
+              Trusted Clean, Trusted Service
+            </motion.h3>
+            {/* </Col>
                   <Col xs="12" md="6" className="text-center px-4 mb-5"> */}
-          <motion.p
-            className="martel-bold landing-page-intro"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-          >
-            Say goodbye to stress and hello to sparkle ✨<br />
-            <b>CleanAR Solutions</b> brings 10+ years of trusted cleaning to homes and businesses across the GTA.<br />
-            From deep cleans to regular maintenance, we tailor services to your needs—efficient, eco-friendly, and always reliable.
-            <br /><br />
-            <b>Get your personalized quote in under 60 seconds.</b><br />
-            It’s fast, free, and commitment-free!
-          </motion.p>
-        </Col>
+            <motion.p
+              className="martel-bold landing-page-intro"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+            >
+              Say goodbye to stress and hello to sparkle ✨<br />
+              <b>CleanAR Solutions</b> brings 10+ years of trusted cleaning to homes and businesses across the GTA.<br />
+              From deep cleans to regular maintenance, we tailor services to your needs—efficient, eco-friendly, and always reliable.
+              <br /><br />
+              <b>Get your personalized quote in under 60 seconds.</b><br />
+              It’s fast, free, and commitment-free!
+            </motion.p>
+          </Col>
           <Col className="text-center p-0 m-0" xs='12' md='6'>
             <CardImg top className="background-image-index" src={backgroundImage} alt="CleanAR Solutions background - Designed by Freepik" />
           </Col>
@@ -216,9 +216,10 @@ function Index() {
                               <div key={index}>
                                 {' | '}
                                 <a
-                                  
+
                                   href={singleLink}
                                   target="_blank"
+                                  data-track="contact-link"
                                   rel="noreferrer noopener"
                                   className="text-bold martel-semibold underline"
                                   title={item.text?.[index] || item.description}
@@ -237,6 +238,7 @@ function Index() {
                             href={item.link}
                             target="_blank"
                             rel="noreferrer noopener"
+                            data-track="contact-link"
                             className="text-bold martel-semibold underline"
                             title={item.text}
                           >
@@ -246,6 +248,7 @@ function Index() {
                           <Link
                             to={item.link}
                             className="text-bold martel-semibold underline"
+                            data-track="contact-link"
                             title={item.description}
                           >
                             {' '}{item.description}

@@ -99,6 +99,7 @@ const ServiceCard = ({ title, imgSrc, imgAlt, description, quoteLink, quoteButto
         <Button
           // variant="primary" // Use Bootstrap variants
           href={quoteLink}
+          data-track={`clicked_add_to_quote_${title.replace(/\s+/g, '_').toLowerCase()}`}
           className="btn-round mt-auto secondary-bg-color" // mt-auto pushes button to bottom
         >
           {quoteButtonText}

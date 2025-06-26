@@ -93,12 +93,14 @@ const WelcomeModal = () => {
           <Button
             variant="success"
             onClick={handleQuoteClick}
+            data-track="quote_clicked_modal"
             className="secondary-bg-color"
           >
             Start Now, Get a Quote ✨
           </Button>
           <Button
             variant="info"
+            data-track="explore_services_modal"
             onClick={handleProductsAndServicesClick}
           >
             Not sure yet? Explore our services 🔎
@@ -106,7 +108,7 @@ const WelcomeModal = () => {
         </div>
       </Modal.Body>
       <Modal.Footer className='py-2 justify-content-center' style={{ backgroundColor: 'var(--light-color-opaque)!important' }}>
-        <Button variant="danger" onClick={handleDontShowAgain}>
+        <Button variant="danger" onClick={handleDontShowAgain} data-track="dont_show_again_modal">
           Don't show this again
         </Button>
       </Modal.Footer>

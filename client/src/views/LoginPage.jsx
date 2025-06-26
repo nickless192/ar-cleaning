@@ -257,6 +257,7 @@ function LoginPage() {
                   <Button
                     className="btn rounded-pill primary-bg-color"
                     type="submit"
+                    data-track="login"
                     size="lg"
                   >
                     Log In
@@ -266,6 +267,7 @@ function LoginPage() {
                   <Button
                     className="btn-info rounded-pill"
                     type="button"
+                    data-track="reset-password"
                     onClick={handleResetPassword}
                     size="lg"
                   >
