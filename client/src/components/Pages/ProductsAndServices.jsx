@@ -134,16 +134,16 @@ const ProductsAndServices = () => {
       {/* <Navbar /> */} {/* Assuming Navbar is handled globally or in a layout component */}
 
       {/* Use semantic section tag if appropriate */}
-      <section className="content py-5 section-background products-services-section"> {/* Added padding Y */}
+      <section className="section-background products-services-section"> {/* Added padding Y */}
         <VisitorCounter page={"products-and-services"} />
         <Container> {/* Use Container for centered, max-width content */}
           <h1 className="title secondary-color text-center mb-4">Products and Services</h1>
 
           <div className="service-selector mb-5"> {/* Added margin bottom */}
             <h2 className="title secondary-color mb-4">Our Services</h2>
-            <Row xs={1} md={2} lg={3} className='g-4'> {/* Responsive Grid: 1 col on xs, 2 on md, 3 on lg. g-4 adds gutters */}
+            <Row > {/* Responsive Grid: 1 col on xs, 2 on md, 3 on lg. g-4 adds gutters */}
               {servicesData.map((service, index) => (
-                <Col  key={index} className="d-flex align-items-stretch"> {/* Ensure cols stretch to content height */}
+                <Col xs={6} md={4} key={index} className="d-flex align-items-stretch"> {/* Ensure cols stretch to content height */}
                   <ServiceCard {...service} />
                 </Col>
               ))}

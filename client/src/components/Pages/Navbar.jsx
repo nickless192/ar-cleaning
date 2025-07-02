@@ -139,12 +139,12 @@ function IndexNavbar() {
 
                                 <DropdownItem to="/dashboard" tag={Link} className="dropdown-item">
                                     <FaTachometerAlt className="dropdown-icon" />
-                                    <span>Dashboard</span>
+                                    <span>Visitor Log Dashboard</span>
                                 </DropdownItem>
 
                                 <DropdownItem to="/booking-dashboard" tag={Link} className="dropdown-item">
                                     <FaCalendarCheck className="dropdown-icon" />
-                                    <span>Bookings</span>
+                                    <span>Bookings Dashboard</span>
                                 </DropdownItem>
                             </DropdownMenu>
                         </UncontrolledDropdown>

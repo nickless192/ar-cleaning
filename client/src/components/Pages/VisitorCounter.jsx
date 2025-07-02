@@ -180,10 +180,10 @@ useEffect(() => {
     const scrollTop = window.scrollY;
     const docHeight = document.documentElement.scrollHeight - window.innerHeight;
     const percent = Math.round((scrollTop / docHeight) * 100);
-    console.log('Scroll percent:', percent); // Debugging line
-    console.log('Max scroll so far:', maxScroll); // Debugging line
-    console.log('Document height:', docHeight); // Debugging line
-    console.log('Scroll top:', scrollTop); // Debugging line
+    // console.log('Scroll percent:', percent); // Debugging line
+    // console.log('Max scroll so far:', maxScroll); // Debugging line
+    // console.log('Document height:', docHeight); // Debugging line
+    // console.log('Scroll top:', scrollTop); // Debugging line
     if (percent > maxScroll) maxScroll = percent;
   };
 

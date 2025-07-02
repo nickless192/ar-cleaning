@@ -5,10 +5,27 @@ const BookingSchema = new Schema({
     customerName: String,
     serviceType: String,
     date: Date, // actual service date
+    income: {
+        type: Number,
+        default: 0
+    }, // income from this booking
+    status: {
+        type: String,
+        enum: ['pending', 'confirmed', 'completed', 'cancelled'],
+        default: 'pending'
+    }, // booking status
+    hidden: {
+        type: Boolean, 
+        default: false
+    },
     scheduleConfirmation: {
         type: Boolean, 
         default: false
     },
+    disableConfirmation: { 
+        type: Boolean, 
+        default: false 
+    }, // whether to disable confirmation email
     reminderScheduled: { 
         type: Boolean, 
         default: false 

@@ -307,7 +307,7 @@ function SignUp() {
             <Row className="justify-content-center">
               <Col md='10' xs='10' className="py-1">
               <FloatingLabel
-                controlId="floatingPassword"
+                controlId="floatingPasswordSignUp"
                 label="Password*"
                 className="text-cleanar-color"
               >

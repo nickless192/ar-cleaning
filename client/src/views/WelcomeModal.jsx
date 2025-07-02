@@ -72,7 +72,7 @@ const WelcomeModal = () => {
       centered
       className="welcome-modal"
     >
-      <Modal.Header closeButton className='light-blue-bg-color py-0' >
+      <Modal.Header closeButton className='light-blue-bg-color' >
         <Modal.Title>Welcome to CleanAR Solutions!</Modal.Title>
       </Modal.Header>
       <Modal.Body style={{ backgroundColor: 'var(--light-color-opaque)' }}>
