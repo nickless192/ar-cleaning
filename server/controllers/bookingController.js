@@ -5,14 +5,16 @@ const Booking = require('../models/Booking');
 
 const sendReminderEmail = async ({ customerEmail, customerName, date, serviceType }) => {
 
-        const subjectDate = date.toLocaleDateString('en-US', {
+    const utcDate = new Date(date);
+
+        const subjectDate = utcDate.toLocaleDateString('en-US', {
             weekday: 'long',  // "Wednesday"
             month: 'long',    // "July"
             day: 'numeric',   // "2"
             year: 'numeric'   // "2025"
         });
 
-        const formattedDateTime = date.toLocaleString('en-US', {
+        const formattedDateTime = utcDate.toLocaleString('en-US', {
             weekday: 'long',
             month: 'long',
             day: 'numeric',
@@ -103,13 +105,14 @@ const bookingControllers = {
 
             if (!scheduleConfirmation && !disableConfirmation) {
                 // await sendConfirmationEmail({ customerName, customerEmail, serviceType, date });
-                const subjectDate = parsedDate.toLocaleDateString('en-US', {
+                const utcDate = new Date(parsedDate);
+                const subjectDate = utcDate.toLocaleDateString('en-US', {
             weekday: 'long',  // "Wednesday"
             month: 'long',    // "July"
             day: 'numeric',   // "2"
             year: 'numeric'   // "2025"
         });
-                const formattedDateTime = parsedDate.toLocaleString('en-US', {
+                const formattedDateTime = utcDate.toLocaleString('en-US', {
                     weekday: 'long',
                     month: 'long',
                     day: 'numeric',
@@ -304,13 +307,14 @@ const bookingControllers = {
         for (const booking of confirmations) {
             if (booking.confirmationDate !== null) {
                 try {
-                    const subjectDate = booking.date.toLocaleDateString('en-US', {
+                    const utcDate = new Date(booking.date);
+                    const subjectDate = utcDate.toLocaleDateString('en-US', {
             weekday: 'long',  // "Wednesday"
             month: 'long',    // "July"
             day: 'numeric',   // "2"
             year: 'numeric'   // "2025"
         });
-                    const formattedDateTime = booking.date.toLocaleString('en-US', {
+                    const formattedDateTime = utcDate.toLocaleString('en-US', {
                         weekday: 'long',
                         month: 'long',
                         day: 'numeric',
