@@ -1,29 +1,29 @@
 const sgMail = require('@sendgrid/mail');
+const { DateTime } = require('luxon');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const Booking = require('../models/Booking');
 // const { sendConfirmationEmail } = require('../utils/emailService');
 
 const sendReminderEmail = async ({ customerEmail, customerName, date, serviceType }) => {
 
-    const utcDate = new Date(date);
+    const torontoDate = DateTime.fromJSDate(date, { zone: 'utc' }).setZone('America/Toronto');
 
-        const subjectDate = utcDate.toLocaleDateString('en-US', {
-            weekday: 'long',  // "Wednesday"
-            month: 'long',    // "July"
-            day: 'numeric',   // "2"
-            year: 'numeric'   // "2025"
-        });
+    const subjectDate = torontoDate.toLocaleString({
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric'
+    });
 
-        const formattedDateTime = utcDate.toLocaleString('en-US', {
-            weekday: 'long',
-            month: 'long',
-            day: 'numeric',
-            year: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit',
-            hour12: true,
-            timeZone: 'America/Toronto' // optional, but helpful for timezone accuracy
-        });
+    const formattedDateTime = torontoDate.toLocaleString({
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+    });
 
         const msg = {
             to: customerEmail,
@@ -105,23 +105,23 @@ const bookingControllers = {
 
             if (!scheduleConfirmation && !disableConfirmation) {
                 // await sendConfirmationEmail({ customerName, customerEmail, serviceType, date });
-                const utcDate = new Date(parsedDate);
-                const subjectDate = utcDate.toLocaleDateString('en-US', {
-            weekday: 'long',  // "Wednesday"
-            month: 'long',    // "July"
-            day: 'numeric',   // "2"
-            year: 'numeric'   // "2025"
-        });
-                const formattedDateTime = utcDate.toLocaleString('en-US', {
-                    weekday: 'long',
-                    month: 'long',
-                    day: 'numeric',
-                    year: 'numeric',
-                    hour: 'numeric',
-                    minute: '2-digit',
-                    hour12: true,
-                    timeZone: 'America/Toronto' // optional, but helpful for timezone accuracy
-                });
+                const torontoDate = DateTime.fromJSDate(date, { zone: 'utc' }).setZone('America/Toronto');
+                    const subjectDate = torontoDate.toLocaleString({
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric'
+    });
+
+    const formattedDateTime = torontoDate.toLocaleString({
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+    });
                 const msg = {
                     to: customerEmail,
                     from: 'info@cleanarsolutions.ca', // Update with your verified sender
@@ -307,23 +307,24 @@ const bookingControllers = {
         for (const booking of confirmations) {
             if (booking.confirmationDate !== null) {
                 try {
-                    const utcDate = new Date(booking.date);
-                    const subjectDate = utcDate.toLocaleDateString('en-US', {
-            weekday: 'long',  // "Wednesday"
-            month: 'long',    // "July"
-            day: 'numeric',   // "2"
-            year: 'numeric'   // "2025"
-        });
-                    const formattedDateTime = utcDate.toLocaleString('en-US', {
-                        weekday: 'long',
-                        month: 'long',
-                        day: 'numeric',
-                        year: 'numeric',
-                        hour: 'numeric',
-                        minute: '2-digit',
-                        hour12: true,
-                        timeZone: 'America/Toronto' // optional, but helpful for timezone accuracy
-                    });
+                    const torontoDate = DateTime.fromJSDate(booking.date, { zone: 'utc' }).setZone('America/Toronto');
+
+    const subjectDate = torontoDate.toLocaleString({
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric'
+    });
+
+    const formattedDateTime = torontoDate.toLocaleString({
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+    });
                     await sgMail.send({
                         to: booking.customerEmail,
                         from: 'info@cleanarsolutions.ca',

@@ -251,6 +251,18 @@ const BookingDashboard = () => {
                 Schedule Confirmation Email
               </Label>
             </FormGroup>
+            <FormGroup>
+              <Label for="confirmationDate">Confirmation Email Date (optional)</Label>
+              <Input
+                type="datetime-local"
+                name="confirmationDate"
+                className="text-cleanar-color text-bold form-input"
+                id="confirmationDate"
+                value={formData.confirmationDate}
+                onChange={handleChange}
+                disabled={!formData.scheduleConfirmation}
+              />
+            </FormGroup>
 
             <FormGroup check className="mb-3">
               <Label check>
@@ -265,18 +277,6 @@ const BookingDashboard = () => {
               </Label>
             </FormGroup>
 
-            <FormGroup>
-              <Label for="confirmationDate">Confirmation Email Date (optional)</Label>
-              <Input
-                type="datetime-local"
-                name="confirmationDate"
-                className="text-cleanar-color text-bold form-input"
-                id="confirmationDate"
-                value={formData.confirmationDate}
-                onChange={handleChange}
-                disabled={!formData.scheduleConfirmation}
-              />
-            </FormGroup>
 
             <FormGroup check className="mb-3">
               <Label check>
