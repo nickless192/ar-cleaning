@@ -403,7 +403,7 @@ const bookingControllers = {
                 booking.reminderDate = now; // Update reminder date
                 // booking.reminderScheduled = false;
                 booking.reminderSent = true; // Mark as reminder sent
-                booking.updatedBy = booking.createdBy; // Assuming createdBy is set to the user who created the booking
+                booking.updatedBy = booking.createdBy ||''; // Assuming createdBy is set to the user who created the booking
                 booking.updatedAt = now; // Update the updatedAt field
                 await booking.save();
                 console.log(`Reminder sent to ${booking.customerEmail}`);
