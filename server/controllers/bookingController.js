@@ -25,11 +25,11 @@ const sendReminderEmail = async ({ customerEmail, customerName, date, serviceTyp
         hour12: true
     });
 
-        const msg = {
-            to: customerEmail,
-            from: 'info@cleanarsolutions.ca', // Same here
-            subject: `📅[REMINDER] CleanAR Solutions: Cleaning Service Confirmation for ${subjectDate}`,
-            html: `
+    const msg = {
+        to: customerEmail,
+        from: 'info@cleanarsolutions.ca', // Same here
+        subject: `📅[REMINDER] CleanAR Solutions: Cleaning Service Confirmation for ${subjectDate}`,
+        html: `
             <h2>Your service is almost here!</h2>
             <p>Hi ${customerName},</p>
             <p>This is a friendly reminder that your cleaning appointment is scheduled for <strong>${formattedDateTime}</strong>.</p>
@@ -56,16 +56,16 @@ const sendReminderEmail = async ({ customerEmail, customerName, date, serviceTyp
 </table>
 
           `
-        };
-
-        try {
-            await sgMail.send(msg);
-            console.log(`[Email] Reminder sent to ${customerEmail}`);
-        } catch (err) {
-            console.error('[Email] Failed to send reminder:', err);
-            throw err;
-        }
     };
+
+    try {
+        await sgMail.send(msg);
+        console.log(`[Email] Reminder sent to ${customerEmail}`);
+    } catch (err) {
+        console.error('[Email] Failed to send reminder:', err);
+        throw err;
+    }
+};
 
 const bookingControllers = {
     createBooking: async (req, res) => {
@@ -81,7 +81,8 @@ const bookingControllers = {
             income
         } = req.body;
 
-        const parsedDate = new Date(date);
+        const torontoLocal = DateTime.fromISO(date, { zone: 'America/Toronto' });
+        const parsedDate = new Date(torontoLocal);
 
         if (!customerEmail || !date) return res.status(400).json({ error: 'Missing info' });
 
@@ -91,7 +92,7 @@ const bookingControllers = {
                 customerName,
                 customerEmail,
                 serviceType,
-                date,
+                date: parsedDate,
                 reminderScheduled,
                 scheduleConfirmation: scheduleConfirmation || !confirmationDate,
                 confirmationDate: confirmationDate || (scheduleConfirmation ? new Date() : null),
@@ -105,23 +106,23 @@ const bookingControllers = {
 
             if (!scheduleConfirmation && !disableConfirmation) {
                 // await sendConfirmationEmail({ customerName, customerEmail, serviceType, date });
-                const torontoDate = DateTime.fromJSDate(date, { zone: 'utc' }).setZone('America/Toronto');
-                    const subjectDate = torontoDate.toLocaleString({
-        weekday: 'long',
-        month: 'long',
-        day: 'numeric',
-        year: 'numeric'
-    });
+                const torontoDate = DateTime.fromJSDate(parsedDate, { zone: 'utc' }).setZone('America/Toronto');
+                const subjectDate = torontoDate.toLocaleString({
+                    weekday: 'long',
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric'
+                });
 
-    const formattedDateTime = torontoDate.toLocaleString({
-        weekday: 'long',
-        month: 'long',
-        day: 'numeric',
-        year: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true
-    });
+                const formattedDateTime = torontoDate.toLocaleString({
+                    weekday: 'long',
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric',
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true
+                });
                 const msg = {
                     to: customerEmail,
                     from: 'info@cleanarsolutions.ca', // Update with your verified sender
@@ -234,67 +235,67 @@ const bookingControllers = {
         }
     },
 
-//     sendReminderEmail: async ({ customerEmail, customerName, date, serviceType }) => {
+    //     sendReminderEmail: async ({ customerEmail, customerName, date, serviceType }) => {
 
-//         const subjectDate = date.toLocaleDateString('en-US', {
-//             weekday: 'long',  // "Wednesday"
-//             month: 'long',    // "July"
-//             day: 'numeric',   // "2"
-//             year: 'numeric'   // "2025"
-//         });
+    //         const subjectDate = date.toLocaleDateString('en-US', {
+    //             weekday: 'long',  // "Wednesday"
+    //             month: 'long',    // "July"
+    //             day: 'numeric',   // "2"
+    //             year: 'numeric'   // "2025"
+    //         });
 
-//         const formattedDateTime = date.toLocaleString('en-US', {
-//             weekday: 'long',
-//             month: 'long',
-//             day: 'numeric',
-//             year: 'numeric',
-//             hour: 'numeric',
-//             minute: '2-digit',
-//             hour12: true,
-//             timeZone: 'America/Toronto' // optional, but helpful for timezone accuracy
-//         });
+    //         const formattedDateTime = date.toLocaleString('en-US', {
+    //             weekday: 'long',
+    //             month: 'long',
+    //             day: 'numeric',
+    //             year: 'numeric',
+    //             hour: 'numeric',
+    //             minute: '2-digit',
+    //             hour12: true,
+    //             timeZone: 'America/Toronto' // optional, but helpful for timezone accuracy
+    //         });
 
-//         const msg = {
-//             to: customerEmail,
-//             from: 'info@cleanarsolutions.ca', // Same here
-//             subject: `📅[REMINDER] CleanAR Solutions: Cleaning Service Confirmation for ${subjectDate}`,
-//             html: `
-//             <h2>Your service is almost here!</h2>
-//             <p>Hi ${customerName},</p>
-//             <p>This is a friendly reminder that your cleaning appointment is scheduled for <strong>${formattedDateTime}</strong>.</p>
-//             <p>Details:</p>
-//             <p>${serviceType}</p>
-//             <p>Please don't hesitate to reach out if you have any questions or need help preparing the area.</p>
-//             <p>Thank you for your cooperation, and we look forward to providing you with excellent service!</p>
-//             <p>See you soon! 😊</p>
-//             <table style="width:100%; font-family: Arial, sans-serif; font-size:14px; border-collapse: collapse;">
-//   <tr>
-//     <td style="vertical-align: top; width: 50%; padding-right: 10px;">
-//       <strong>The CleanAR Solutions Team</strong><br>
-//       📞 (437) 440-5514<br>
-//       📧 <a href="mailto:info@cleanARsolutions.ca">info@cleanARsolutions.ca</a><br>
-//       🌐 <a href="https://www.cleanARsolutions.ca/index" target="_blank">www.cleanARsolutions.ca/index</a>
-//     </td>
+    //         const msg = {
+    //             to: customerEmail,
+    //             from: 'info@cleanarsolutions.ca', // Same here
+    //             subject: `📅[REMINDER] CleanAR Solutions: Cleaning Service Confirmation for ${subjectDate}`,
+    //             html: `
+    //             <h2>Your service is almost here!</h2>
+    //             <p>Hi ${customerName},</p>
+    //             <p>This is a friendly reminder that your cleaning appointment is scheduled for <strong>${formattedDateTime}</strong>.</p>
+    //             <p>Details:</p>
+    //             <p>${serviceType}</p>
+    //             <p>Please don't hesitate to reach out if you have any questions or need help preparing the area.</p>
+    //             <p>Thank you for your cooperation, and we look forward to providing you with excellent service!</p>
+    //             <p>See you soon! 😊</p>
+    //             <table style="width:100%; font-family: Arial, sans-serif; font-size:14px; border-collapse: collapse;">
+    //   <tr>
+    //     <td style="vertical-align: top; width: 50%; padding-right: 10px;">
+    //       <strong>The CleanAR Solutions Team</strong><br>
+    //       📞 (437) 440-5514<br>
+    //       📧 <a href="mailto:info@cleanARsolutions.ca">info@cleanARsolutions.ca</a><br>
+    //       🌐 <a href="https://www.cleanARsolutions.ca/index" target="_blank">www.cleanARsolutions.ca/index</a>
+    //     </td>
 
-//     <td style="vertical-align: top; width: 50%; padding-left: 10px;">
-//       📱 <a href="https://www.instagram.com/cleanarsolutions/" target="_blank">Follow us on Instagram</a><br>
-//       💲 Refer a friend and get 10% off their first service!<br>
-//       😄 <a href="https://g.page/r/Cek9dkmHVuBKEAE/review" target="_blank" rel="noopener noreferrer">Leave us a review!</a>
-//     </td>
-//   </tr>
-// </table>
+    //     <td style="vertical-align: top; width: 50%; padding-left: 10px;">
+    //       📱 <a href="https://www.instagram.com/cleanarsolutions/" target="_blank">Follow us on Instagram</a><br>
+    //       💲 Refer a friend and get 10% off their first service!<br>
+    //       😄 <a href="https://g.page/r/Cek9dkmHVuBKEAE/review" target="_blank" rel="noopener noreferrer">Leave us a review!</a>
+    //     </td>
+    //   </tr>
+    // </table>
 
-//           `
-//         };
+    //           `
+    //         };
 
-//         try {
-//             await sgMail.send(msg);
-//             console.log(`[Email] Reminder sent to ${customerEmail}`);
-//         } catch (err) {
-//             console.error('[Email] Failed to send reminder:', err);
-//             throw err;
-//         }
-//     },
+    //         try {
+    //             await sgMail.send(msg);
+    //             console.log(`[Email] Reminder sent to ${customerEmail}`);
+    //         } catch (err) {
+    //             console.error('[Email] Failed to send reminder:', err);
+    //             throw err;
+    //         }
+    //     },
     sendConfirmationEmailCron: async () => {
         const now = new Date();
 
@@ -309,22 +310,22 @@ const bookingControllers = {
                 try {
                     const torontoDate = DateTime.fromJSDate(booking.date, { zone: 'utc' }).setZone('America/Toronto');
 
-    const subjectDate = torontoDate.toLocaleString({
-        weekday: 'long',
-        month: 'long',
-        day: 'numeric',
-        year: 'numeric'
-    });
+                    const subjectDate = torontoDate.toLocaleString({
+                        weekday: 'long',
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric'
+                    });
 
-    const formattedDateTime = torontoDate.toLocaleString({
-        weekday: 'long',
-        month: 'long',
-        day: 'numeric',
-        year: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true
-    });
+                    const formattedDateTime = torontoDate.toLocaleString({
+                        weekday: 'long',
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric',
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        hour12: true
+                    });
                     await sgMail.send({
                         to: booking.customerEmail,
                         from: 'info@cleanarsolutions.ca',
