@@ -9,6 +9,7 @@ import {
 import moment from 'moment';
 import BookingCalendar from './BookingCalendar';
 import { FaTrash } from 'react-icons/fa';
+import Auth from "/src/utils/auth";
 
 const BookingDashboard = () => {
   const navigate = useNavigate();
@@ -96,7 +97,7 @@ const BookingDashboard = () => {
       const res = await fetch(`/api/bookings/${bookingId}/complete`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: 'completed' })
+        body: JSON.stringify({ status: 'completed', updatedBy: Auth.getProfile().data._id }) // Assuming you have user authentication
       });
       if (!res.ok) throw new Error('Failed to mark as completed');
       fetchBookings();
@@ -111,7 +112,7 @@ const BookingDashboard = () => {
       const res = await fetch(`/api/bookings/${bookingId}/hide`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ hidden: true })
+        body: JSON.stringify({ hidden: true, updatedBy: Auth.getProfile().data._id }) // Assuming you have user authentication
       });
       if (!res.ok) throw new Error('Failed to hide booking');
       fetchBookings();
@@ -136,10 +137,14 @@ const BookingDashboard = () => {
       return;
     }
     try {
+      const body = {
+        ...formData,
+        userId: Auth.getProfile().data._id // Assuming you have user authentication
+      };
       const res = await fetch('/api/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(body)
       });
       if (!res.ok) throw new Error('Failed to submit booking');
 

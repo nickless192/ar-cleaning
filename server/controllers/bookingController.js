@@ -74,6 +74,7 @@ const bookingControllers = {
             customerEmail,
             serviceType,
             date,
+            userId,
             scheduleConfirmation,
             confirmationDate,
             reminderScheduled,
@@ -92,6 +93,8 @@ const bookingControllers = {
                 customerName,
                 customerEmail,
                 serviceType,
+                createdBy: userId,
+                updatedBy: userId,
                 date: parsedDate,
                 reminderScheduled,
                 scheduleConfirmation: scheduleConfirmation || !confirmationDate,
@@ -159,6 +162,7 @@ const bookingControllers = {
                     await sgMail.send(msg);
                     newBooking.confirmationSent = true; // Mark as confirmation sent
                     newBooking.confirmationDate = new Date(); // Set confirmation date
+                    
                     console.log(`[Email] Confirmation sent to ${customerEmail}`);
                 } catch (err) {
                     console.error('[Email] Failed to send confirmation:', err);
@@ -215,6 +219,8 @@ const bookingControllers = {
                 return res.status(404).json({ error: 'Booking not found' });
             }
             //save
+            updatedBooking.updatedAt = new Date(); // Update the updatedAt field
+            updatedBooking.updatedBy = res.body.updatedBy; // Assuming userId is passed in the
             await updatedBooking.save();
             res.json(updatedBooking);
         } catch (err) {
@@ -229,6 +235,9 @@ const bookingControllers = {
             if (!updatedBooking) {
                 return res.status(404).json({ error: 'Booking not found' });
             }
+            updatedBooking.updatedAt = new Date(); // Update the updatedAt field
+            updatedBooking.updatedBy = res.body.updatedBy; // Assuming userId is passed in the request body
+            await updatedBooking.save(); // Save the updated booking
             res.json(updatedBooking);
         } catch (err) {
             console.error('Error hiding booking:', err);
@@ -362,6 +371,8 @@ const bookingControllers = {
                     booking.confirmationDate = now; // Update confirmation date
                     // booking.scheduleConfirmation = false; // Mark as no longer scheduled
                     booking.confirmationSent = true; // Mark as confirmation sent
+                    booking.updatedBy = booking.createdBy; // Assuming createdBy is set to the user who created the booking
+                    booking.updatedAt = now; // Update the updatedAt field
                     await booking.save();
                 } catch (err) {
                     console.error('Error sending confirmation:', err);
@@ -392,11 +403,31 @@ const bookingControllers = {
                 booking.reminderDate = now; // Update reminder date
                 // booking.reminderScheduled = false;
                 booking.reminderSent = true; // Mark as reminder sent
+                booking.updatedBy = booking.createdBy; // Assuming createdBy is set to the user who created the booking
+                booking.updatedAt = now; // Update the updatedAt field
                 await booking.save();
                 console.log(`Reminder sent to ${booking.customerEmail}`);
             }
         } catch (err) {
             console.error('Reminder CRON error:', err);
+        }
+    },
+    updateBookingWithNotes: async (req, res) => {
+        const bookingId = req.params.id;
+        const { notes, updatedBy } = req.body;
+
+        try {
+            const updatedBooking = await Booking.findByIdAndUpdate(bookingId, 
+                { notes, updatedBy, updatedAt: new Date() },
+                { new: true }
+            );
+            if (!updatedBooking) {
+                return res.status(404).json({ error: 'Booking not found' });
+            }
+            res.json(updatedBooking);
+        } catch (err) {
+            console.error('Error updating booking notes:', err);
+            res.status(500).json({ error: 'Failed to update booking notes' });
         }
     }
 };

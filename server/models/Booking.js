@@ -46,6 +46,19 @@ const BookingSchema = new Schema({
         type: Boolean, 
         default: false 
     }, // whether reminder email was sent
+    notes: { 
+        type: String, 
+        default: '' 
+    }, // additional notes for the booking
+    createdBy: {
+        type: Types.ObjectId, 
+        ref: 'User' // reference to the user who created the booking
+    },
+    updatedBy: {
+        type: Types.ObjectId, 
+        ref: 'User' // reference to the user who last updated the booking
+    },
+    updatedAt: { type: Date, default: Date.now },
     createdAt: { type: Date, default: Date.now },
 });
 
