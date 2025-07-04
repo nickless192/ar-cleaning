@@ -126,6 +126,7 @@ const bookingControllers = {
                 const msg = {
                     to: customerEmail,
                     from: 'info@cleanarsolutions.ca', // Update with your verified sender
+                    bcc:  'info@cleanarsolutions.ca', // Update with your verified sender
                     subject: `✅ CleanAR Solutions: Booking Confirmation for ${subjectDate}`,
                     html: `
                   <h2>Thanks for booking with CleanAR Solutions!</h2>
@@ -329,6 +330,7 @@ const bookingControllers = {
                     await sgMail.send({
                         to: booking.customerEmail,
                         from: 'info@cleanarsolutions.ca',
+                        bcc:  'info@cleanarsolutions.ca', // Update with your verified sender
                         subject: `✅ CleanAR Solutions: Booking Confirmation for ${subjectDate}`,
                         html: `
                   <h2>Thanks for booking with CleanAR Solutions!</h2>
