@@ -84,6 +84,10 @@ const bookingControllers = {
 
         const torontoLocal = DateTime.fromISO(date, { zone: 'America/Toronto' });
         const parsedDate = new Date(torontoLocal);
+        const confirmationDateLocal = confirmationDate ? DateTime.fromISO(confirmationDate, { zone: 'America/Toronto' }) : null;
+        if (confirmationDateLocal) {
+            confirmationDateLocal.setZone('America/Toronto');
+        }
 
         if (!customerEmail || !date) return res.status(400).json({ error: 'Missing info' });
 
@@ -97,8 +101,8 @@ const bookingControllers = {
                 updatedBy: userId,
                 date: parsedDate,
                 reminderScheduled,
-                scheduleConfirmation: scheduleConfirmation || !confirmationDate,
-                scheduledConfirmationDate: confirmationDate || (scheduleConfirmation ? new Date() : null),
+                scheduleConfirmation: scheduleConfirmation || !confirmationDateLocal,
+                scheduledConfirmationDate: confirmationDateLocal,
                 reminderDate: null,
                 confirmationSent: false,
                 reminderSent: false,
