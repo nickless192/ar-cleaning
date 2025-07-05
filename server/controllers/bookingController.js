@@ -29,6 +29,7 @@ const sendReminderEmail = async ({ customerEmail, customerName, date, serviceTyp
         to: customerEmail,
         from: 'info@cleanarsolutions.ca', // Same here
         subject: `📅[REMINDER] CleanAR Solutions: Cleaning Service Confirmation for ${subjectDate}`,
+        bcc: 'info@cleanarsolutions.ca',
         html: `
             <h2>Your service is almost here!</h2>
             <p>Hi ${customerName},</p>
