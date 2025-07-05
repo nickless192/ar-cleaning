@@ -98,7 +98,7 @@ const bookingControllers = {
                 date: parsedDate,
                 reminderScheduled,
                 scheduleConfirmation: scheduleConfirmation || !confirmationDate,
-                confirmationDate: confirmationDate || (scheduleConfirmation ? new Date() : null),
+                scheduledConfirmationDate: confirmationDate || (scheduleConfirmation ? new Date() : null),
                 reminderDate: null,
                 confirmationSent: false,
                 reminderSent: false,
@@ -310,13 +310,13 @@ const bookingControllers = {
         const now = new Date();
 
         const confirmations = await Booking.find({
-            confirmationDate: { $lte: now },
+            scheduledConfirmationDate: { $lte: now },
             scheduleConfirmation: true,
             confirmationSent: false
         });
 
         for (const booking of confirmations) {
-            if (booking.confirmationDate !== null) {
+            if (booking.scheduledConfirmationDate !== null) {
                 try {
                     const torontoDate = DateTime.fromJSDate(booking.date, { zone: 'utc' }).setZone('America/Toronto');
 
