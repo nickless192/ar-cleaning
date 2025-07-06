@@ -31,19 +31,80 @@ const generateWeeklyReport = async () => {
     const csv = parser.parse(logs.map(log => ({
         date: log.visitDate,
         page: log.page,
-        userAgent: log.userAgent,
+        // userAgent: log.userAgent,
         ipAddress: log.ip,
+        browser: log.browser,
+        os: log.os,
+        sessionDuration: log.sessionDuration,
+        referrer: log.referrer,
+        country: log.geo.country,
+        city: log.geo.city,
+        isBot: log.isBot,
+        scrollDepth: log.scrollDepth,
+        trafficSource: log.trafficSource,
+        deviceType: log.deviceType,
     })));
 
+    //   <p><strong>User Agents:</strong></p>
+    //   <ul>${Object.entries(userAgents).map(([ua, count]) => `<li>${ua}: ${count}</li>`).join('')}</ul>
     const htmlSummary = `
       <h2>Weekly Visitor Report</h2>
       <p><strong>Total Visits:</strong> ${totalVisits}</p>
       <p><strong>Page Views:</strong></p>
       <ul>${Object.entries(pageCounts).map(([page, count]) => `<li>${page}: ${count}</li>`).join('')}</ul>
-      <p><strong>User Agents:</strong></p>
-      <ul>${Object.entries(userAgents).map(([ua, count]) => `<li>${ua}: ${count}</li>`).join('')}</ul>
         <p><strong>IP Addresses:</strong></p>
         <ul>${Object.entries(ipAddress).map(([ip, count]) => `<li>${ip}: ${count}</li>`).join('')}</ul>
+        <p><strong>Country:</strong></p>
+        <ul>${Object.entries(logs.reduce((acc, log) => {
+            acc[log.geo.country] = (acc[log.geo.country] || 0) + 1;
+            return acc;
+        }, {})).map(([country, count]) => `<li>${country}: ${count}</li>`).join('')}</ul>
+        <p><strong>City:</strong></p>
+        <ul>${Object.entries(logs.reduce((acc, log) => {
+            acc[log.geo.city] = (acc[log.geo.city] || 0) + 1;
+            return acc;
+        }, {})).map(([city, count]) => `<li>${city}: ${count}</li>`).join('')}</ul>
+        <p><strong>Is Bot:</strong></p>
+        <ul>${Object.entries(logs.reduce((acc, log) => {
+            acc[log.isBot ? 'Yes' : 'No'] = (acc[log.isBot ? 'Yes' : 'No'] || 0) + 1;
+            return acc;
+        }, {})).map(([isBot, count]) => `<li>${isBot}: ${count}</li>`).join('')}</ul>
+        <p><strong>Browser:</strong></p>
+        <ul>${Object.entries(logs.reduce((acc, log) => {
+            acc[log.browser] = (acc[log.browser] || 0) + 1;
+            return acc;
+        }, {})).map(([browser, count]) => `<li>${browser}: ${count}</li>`).join('')}</ul>
+        <p><strong>Operating System:</strong></p>
+        <ul>${Object.entries(logs.reduce((acc, log) => {
+            acc[log.os] = (acc[log.os] || 0) + 1;
+            return acc;
+        }, {})).map(([os, count]) => `<li>${os}: ${count}</li>`).join('')}</ul>
+        <p><strong>Session Duration:</strong></p>
+        <ul>${Object.entries(logs.reduce((acc, log) => {
+            acc[log.sessionDuration] = (acc[log.sessionDuration] || 0) + 1;
+            return acc;
+        }, {})).map(([duration, count]) => `<li>${duration}: ${count}</li>`).join('')}</ul>
+        <p><strong>Referrers:</strong></p>
+        <ul>${Object.entries(logs.reduce((acc, log) => {
+            acc[log.referrer] = (acc[log.referrer] || 0) + 1;
+            return acc;
+        }, {})).map(([referrer, count]) => `<li>${referrer}: ${count}</li>`).join('')}</ul>
+    <p><strong>Scroll Depth:</strong></p>
+    <ul>${Object.entries(logs.reduce((acc, log) => {
+        acc[log.scrollDepth] = (acc[log.scrollDepth] || 0) + 1;
+        return acc;
+    }, {})).map(([depth, count]) => `<li>${depth}: ${count}</li>`).join('')}</ul>
+    <p><strong>Traffic Source</strong></p>
+    <ul>${Object.entries(logs.reduce((acc, log) => {
+        acc[log.trafficSource] = (acc[log.trafficSource] || 0) + 1;
+        return acc;
+    }, {})).map(([source, count]) => `<li>${source}: ${count}</li>`).join('')}</ul>
+    <p><strong>Device Type:</strong></p>
+    <ul>${Object.entries(logs.reduce((acc, log) => {
+        acc[log.deviceType] = (acc[log.deviceType] || 0) + 1;
+        return acc;
+    }, {})).map(([device, count]) => `<li>${device}: ${count}</li>`).join('')}</ul>    
+
     `;
 
     // console.log('csv: ', csv);
@@ -126,6 +187,7 @@ info@cleanARsolutions.ca
             const msg = {
                 to: email, // Change to your recipient
                 from: 'info@cleanARsolutions.ca', // Change to your verified sender
+                bcc: 'info@cleanarsolutions.ca',
                 subject: 'Your Quote from CleanAR Solutions',
                 text: emailText, // plain text body
 
@@ -272,6 +334,7 @@ info@cleanARsolutions.ca
             const msg = {
                 to: email, // Change to your recipient
                 from: 'info@cleanARsolutions.ca', // Change to your verified sender
+                bcc: 'info@cleanARsolutions.ca',
                 subject: 'Welcome to CleanAR Solutions',
                 text: emailText, // plain text body
 
@@ -396,8 +459,8 @@ info@cleanARsolutions.ca
             // }
             // Email content
             const msg = {
-                // to: 'info@cleanARsolutions.ca',
-                to: 'cleanARsolutions@gmail.com',
+                to: 'info@cleanARsolutions.ca',
+                // to: 'cleanARsolutions@gmail.com',
                 from: 'info@cleanARsolutions.ca',
                 // bcc: 'info@clenarsolutions.ca',
                 subject: "CleanAR Solutions: A new quote has been submitted! Please review and follow up with the client.",
@@ -430,7 +493,7 @@ info@cleanARsolutions.ca
             to: to,
             from: from,
             subject: subject,
-            bcc: 'cleanARsolutions@gmail.com',
+            bcc: ['cleanARsolutions@gmail.com', 'info@cleanarsolutions.ca'],
             html: html,
             attachments: attachments.map(attachment => ({
                 content: attachment.content,
@@ -474,22 +537,100 @@ info@cleanARsolutions.ca
 
         const parser = new Parser();
         const csv = parser.parse(logs.map(log => ({
-            date: log.visitDate,
-            page: log.page,
-            userAgent: log.userAgent,
-            ipAddress: log.ip,
-        })));
+        date: log.visitDate,
+        page: log.page,
+        // userAgent: log.userAgent,
+        ipAddress: log.ip,
+        browser: log.browser,
+        os: log.os,
+        sessionDuration: log.sessionDuration,
+        referrer: log.referrer,
+        country: log.geo.country,
+        city: log.geo.city,
+        isBot: log.isBot,
+        scrollDepth: log.scrollDepth,
+        trafficSource: log.trafficSource,
+        deviceType: log.deviceType,
+    })));
 
-        const htmlSummary = `
-          <h2>Weekly Visitor Report</h2>
-          <p><strong>Total Visits:</strong> ${totalVisits}</p>
-          <p><strong>Page Views:</strong></p>
-          <ul>${Object.entries(pageCounts).map(([page, count]) => `<li>${page}: ${count}</li>`).join('')}</ul>
-          <p><strong>User Agents:</strong></p>
-          <ul>${Object.entries(userAgents).map(([ua, count]) => `<li>${ua}: ${count}</li>`).join('')}</ul>
-            <p><strong>IP Addresses:</strong></p>
-            <ul>${Object.entries(ipAddress).map(([ip, count]) => `<li>${ip}: ${count}</li>`).join('')}</ul>
-        `;
+    //   <p><strong>User Agents:</strong></p>
+    //   <ul>${Object.entries(userAgents).map(([ua, count]) => `<li>${ua}: ${count}</li>`).join('')}</ul>
+    const htmlSummary = `
+      <h2>Weekly Visitor Report</h2>
+      <p><strong>Total Visits:</strong> ${totalVisits}</p>
+      <p><strong>Page Views:</strong></p>
+      <ul>${Object.entries(pageCounts).map(([page, count]) => `<li>${page}: ${count}</li>`).join('')}</ul>
+        <p><strong>IP Addresses:</strong></p>
+        <ul>${Object.entries(ipAddress).map(([ip, count]) => `<li>${ip}: ${count}</li>`).join('')}</ul>
+        <p><strong>Country:</strong></p>
+        <ul>${Object.entries(logs.reduce((acc, log) => {
+            acc[log.geo.country] = (acc[log.geo.country] || 0) + 1;
+            return acc;
+        }, {})).map(([country, count]) => `<li>${country}: ${count}</li>`).join('')}</ul>
+        <p><strong>City:</strong></p>
+        <ul>${Object.entries(logs.reduce((acc, log) => {
+            acc[log.geo.city] = (acc[log.geo.city] || 0) + 1;
+            return acc;
+        }, {})).map(([city, count]) => `<li>${city}: ${count}</li>`).join('')}</ul>
+        <p><strong>Is Bot:</strong></p>
+        <ul>${Object.entries(logs.reduce((acc, log) => {
+            acc[log.isBot ? 'Yes' : 'No'] = (acc[log.isBot ? 'Yes' : 'No'] || 0) + 1;
+            return acc;
+        }, {})).map(([isBot, count]) => `<li>${isBot}: ${count}</li>`).join('')}</ul>
+        <p><strong>Browser:</strong></p>
+        <ul>${Object.entries(logs.reduce((acc, log) => {
+            acc[log.browser] = (acc[log.browser] || 0) + 1;
+            return acc;
+        }, {})).map(([browser, count]) => `<li>${browser}: ${count}</li>`).join('')}</ul>
+        <p><strong>Operating System:</strong></p>
+        <ul>${Object.entries(logs.reduce((acc, log) => {
+            acc[log.os] = (acc[log.os] || 0) + 1;
+            return acc;
+        }, {})).map(([os, count]) => `<li>${os}: ${count}</li>`).join('')}</ul>
+        <p><strong>Session Duration:</strong></p>
+        <ul>${Object.entries(logs.reduce((acc, log) => {
+            acc[log.sessionDuration] = (acc[log.sessionDuration] || 0) + 1;
+            return acc;
+        }, {})).map(([duration, count]) => `<li>${duration}: ${count}</li>`).join('')}</ul>
+        <p><strong>Referrers:</strong></p>
+        <ul>${Object.entries(logs.reduce((acc, log) => {
+            acc[log.referrer] = (acc[log.referrer] || 0) + 1;
+            return acc;
+        }, {})).map(([referrer, count]) => `<li>${referrer}: ${count}</li>`).join('')}</ul>
+    <p><strong>Scroll Depth:</strong></p>
+    <ul>${Object.entries(logs.reduce((acc, log) => {
+        acc[log.scrollDepth] = (acc[log.scrollDepth] || 0) + 1;
+        return acc;
+    }, {})).map(([depth, count]) => `<li>${depth}: ${count}</li>`).join('')}</ul>
+    <p><strong>Traffic Source</strong></p>
+    <ul>${Object.entries(logs.reduce((acc, log) => {
+        acc[log.trafficSource] = (acc[log.trafficSource] || 0) + 1;
+        return acc;
+    }, {})).map(([source, count]) => `<li>${source}: ${count}</li>`).join('')}</ul>
+    <p><strong>Device Type:</strong></p>
+    <ul>${Object.entries(logs.reduce((acc, log) => {
+        acc[log.deviceType] = (acc[log.deviceType] || 0) + 1;
+        return acc;
+    }, {})).map(([device, count]) => `<li>${device}: ${count}</li>`).join('')}</ul>    
+
+    `;
+        // const csv = parser.parse(logs.map(log => ({
+        //     date: log.visitDate,
+        //     page: log.page,
+        //     userAgent: log.userAgent,
+        //     ipAddress: log.ip,
+        // })));
+
+        // const htmlSummary = `
+        //   <h2>Weekly Visitor Report</h2>
+        //   <p><strong>Total Visits:</strong> ${totalVisits}</p>
+        //   <p><strong>Page Views:</strong></p>
+        //   <ul>${Object.entries(pageCounts).map(([page, count]) => `<li>${page}: ${count}</li>`).join('')}</ul>
+        //   <p><strong>User Agents:</strong></p>
+        //   <ul>${Object.entries(userAgents).map(([ua, count]) => `<li>${ua}: ${count}</li>`).join('')}</ul>
+        //     <p><strong>IP Addresses:</strong></p>
+        //     <ul>${Object.entries(ipAddress).map(([ip, count]) => `<li>${ip}: ${count}</li>`).join('')}</ul>
+        // `;
 
         // console.log('csv: ', csv);
         // console.log('htmlSummary: ', htmlSummary);
