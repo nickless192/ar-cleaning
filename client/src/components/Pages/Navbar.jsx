@@ -129,7 +129,7 @@ function IndexNavbar() {
 
                                 <DropdownItem to="/view-quotes" tag={Link} className="dropdown-item">
                                     <FaRegFileAlt className="dropdown-icon" />
-                                    <span>View Requested Quotes</span>
+                                    <span>View Quote Requests</span>
                                 </DropdownItem>
 
                                 <DropdownItem to="/manage-gift-card" tag={Link} className="dropdown-item">

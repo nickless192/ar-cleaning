@@ -225,7 +225,7 @@ const bookingControllers = {
             }
             //save
             updatedBooking.updatedAt = new Date(); // Update the updatedAt field
-            updatedBooking.updatedBy = res.body.updatedBy; // Assuming userId is passed in the
+            updatedBooking.updatedBy = req.body.updatedBy; // Assuming userId is passed in the
             await updatedBooking.save();
             res.json(updatedBooking);
         } catch (err) {
@@ -241,7 +241,7 @@ const bookingControllers = {
                 return res.status(404).json({ error: 'Booking not found' });
             }
             updatedBooking.updatedAt = new Date(); // Update the updatedAt field
-            updatedBooking.updatedBy = res.body.updatedBy; // Assuming userId is passed in the request body
+            updatedBooking.updatedBy = req.body.updatedBy; // Assuming userId is passed in the request body
             await updatedBooking.save(); // Save the updated booking
             res.json(updatedBooking);
         } catch (err) {
@@ -376,7 +376,7 @@ const bookingControllers = {
                     booking.confirmationDate = now; // Update confirmation date
                     // booking.scheduleConfirmation = false; // Mark as no longer scheduled
                     booking.confirmationSent = true; // Mark as confirmation sent
-                    booking.updatedBy = booking.createdBy; // Assuming createdBy is set to the user who created the booking
+                    booking.updatedBy = booking.createdBy || null; // Assuming createdBy is set to the user who created the booking
                     booking.updatedAt = now; // Update the updatedAt field
                     await booking.save();
                 } catch (err) {

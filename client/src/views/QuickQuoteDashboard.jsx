@@ -19,7 +19,25 @@ const QuickQuoteDashboard = () => {
     q.postalcode?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const handleDeleteQuote = async () => {
+    if (!selectedQuote) return;
 
+    const confirmed = window.confirm('Are you sure you want to delete this quote?');
+    if (!confirmed) return;
+
+    try {
+      const response = await fetch(`/api/quotes/quickquote/${selectedQuote.id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error('Failed to delete quote');
+      }
+      setQuotes(quotes.filter(q => q.id !== selectedQuote.id));
+      setSelectedQuote(null);
+    } catch (err) {
+      console.error('Error deleting quote:', err);
+    }
+  };
 
   useEffect(() => {
     const fetchQuotes = async () => {
@@ -169,6 +187,37 @@ const QuickQuoteDashboard = () => {
                 </Box>
               </a>
             </Box>
+            {/* delete quote */}
+            <Box
+                  component="button"
+                  onClick={handleDeleteQuote}
+                  sx={{
+                    width: '100%',
+                    backgroundColor: '#d32f2f',
+                    color: 'white',
+                    py: 1,
+                    borderRadius: 1,
+                    fontWeight: 600,
+                    fontSize: '1rem',
+                    border: 'none',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.2s',
+                    '&:hover': {
+                      backgroundColor: '#1565c0',
+                    },
+                  }}
+                >
+                  Delete This Job
+                </Box>
+            {/* <Box mt={2}>
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={handleDeleteQuote}
+              >
+                Delete Quote
+              </Button>
+            </Box> */}
           </Paper>
         ) : (
           <Paper elevation={1} sx={{ p: 3, color: 'gray', textAlign: 'center' }}>

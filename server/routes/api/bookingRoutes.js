@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const cron = require('node-cron');
-const { createBooking, getBookings, deleteBooking, sendReminderEmail, completeBooking, hideBooking, sendReminderCron, sendConfirmationEmailCron } = require('../../controllers/bookingController');
+const { createBooking, getBookings, deleteBooking, completeBooking, hideBooking, sendReminderCron, sendConfirmationEmailCron } = require('../../controllers/bookingController');
 
 
 router.post('/', createBooking);

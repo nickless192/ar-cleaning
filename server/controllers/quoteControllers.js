@@ -71,7 +71,7 @@ const quoteController = {
             res.status(500).json({ message: 'Error deleting quote' });
         }
     },
-    createQuickQuote: async (req, res) => {
+    createQuoteRequest: async (req, res) => {
         try {
             const newQuickQuote = new QuickQuote({
                 ...req.body,
@@ -110,9 +110,19 @@ const quoteController = {
             console.error('Error getting paginated quotes: ', error);
             res.status(500).json({ message: 'Error getting paginated quotes' });
         }
-    }
-        
-    
+    },
+    deleteQuoteRequest: async (req, res) => {
+        try {
+            const quickQuote = await QuickQuote.findByIdAndDelete(req.params.quoteId);
+            if (!quickQuote) {
+                return res.status(404).json({ message: 'Quick quote not found' });
+            }
+            res.json(quickQuote);
+        } catch (error) {
+            console.error('Error deleting quick quote: ', error);
+            res.status(500).json({ message: 'Error deleting quick quote' });
+        }
+    },
 
 
 };
