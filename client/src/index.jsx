@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import './i18n'; // Import i18n configuration
 
 // styles for this kit
 // import 'bootstrap/dist/css/bootstrap.min.css';

@@ -1,9 +1,9 @@
 // CustomerRelations.jsx
 import React, { useEffect, useState } from 'react';
 import { Card, CardBody, CardTitle, Row, Col, Button, Input, Label } from 'reactstrap';
-import { getUsers } from '../../api/userApi';
-import { getBookings } from '../../api/bookingApi';
-import { linkUser, unlinkUser, linkBooking, unlinkBooking } from '../../api/customerApi';
+import { getUsers } from '/src/components/api/userApi';
+import { getBookings } from '/src/components/api/bookingApi';
+import { linkUser, unlinkUser, linkBooking, unlinkBooking } from '/src/components/api/customerApi';
 
 const CustomerRelations = ({ customer, onClose, onRefresh }) => {
   const [users, setUsers] = useState([]);

@@ -39,6 +39,7 @@ import {
 } from "reactstrap";
 import Auth from "/src/utils/auth";
 import logo from "/src/assets/img/IC CLEAN AR-15-cropped.png";
+import LanguageSwitcher from "/src/components/Pages/LanguageSwitcher";
 
 // import "./NavBar.css"; // We'll create this CSS file
 
@@ -276,6 +277,7 @@ function IndexNavbar() {
                                             </div>
                                         </a>
                                     </NavItem>
+                                    {/* <LanguageSwitcher /> */}
 
                                 </div>
                                 <div>

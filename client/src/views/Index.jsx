@@ -23,12 +23,14 @@ import backgroundImage from '/src/assets/img/stock-photo-high-angle-view-person-
 // import Logo from "assets/img/IC CLEAN AR-15-cropped.png";
 import WelcomeModal from "/src/views/WelcomeModal.jsx";
 import { FaInstagram, FaFacebook, FaTiktok } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next';
 
 function Index() {
 
   const [availabilityStatus, setAvailabilityStatus] = useState('');
   const [responseTimeMessage, setResponseTimeMessage] = useState('');
   const location = useLocation();
+  const { t } = useTranslation();
 
   const contactItems = [
     {
@@ -162,7 +164,8 @@ function Index() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
             >
-              Trusted Clean, Trusted Service
+              {/* Trusted Clean, Trusted Service */}
+              {t('tagline')}
             </motion.h3>
             {/* </Col>
                   <Col xs="12" md="6" className="text-center px-4 mb-5"> */}
@@ -172,12 +175,17 @@ function Index() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
             >
-              Say goodbye to stress and hello to sparkle ✨<br />
-              <b>CleanAR Solutions</b> brings 10+ years of trusted cleaning to homes and businesses across the GTA.<br />
-              From deep cleans to regular maintenance, we tailor services to your needs—efficient, eco-friendly, and always reliable.
-              <br /><br />
-              <b>Get your personalized quote in under 60 seconds.</b><br />
-              It’s fast, free, and commitment-free!
+              {/* Say goodbye to stress and hello to sparkle ✨<br /> */}
+              {t('intro')} <br />
+              {t('details')} <br />
+              {t('services')} <br />
+              {/* <b>CleanAR Solutions</b> brings 10+ years of trusted cleaning to homes and businesses across the GTA.<br /> */}
+              {/* From deep cleans to regular maintenance, we tailor services to your needs—efficient, eco-friendly, and always reliable. */}
+              {/* <br /><br /> */}
+              <b>{t('cta')}</b> <br />
+              {t('ctaNote')}
+              {/* <b>Get your personalized quote in under 60 seconds.</b><br /> */}
+              {/* It’s fast, free, and commitment-free! */}
             </motion.p>
           </Col>
           <Col className="text-center p-0 m-0" xs='12' md='6'>

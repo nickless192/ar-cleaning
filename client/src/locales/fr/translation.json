@@ -1,0 +1,24 @@
+{
+  "companyName": "Solutions CleanAR",
+  "tagline": "Nettoyage de confiance, service de confiance",
+  "intro": "Dites adieu au stress et bonjour à l’éclat ✨",
+  "details": "Solutions CleanAR offre plus de 10 ans de nettoyage de confiance aux foyers et entreprises du GTA.",
+  "services": "Du nettoyage en profondeur à l’entretien régulier, nos services sont adaptés à vos besoins — efficaces, écologiques et toujours fiables.",
+  "cta": "Obtenez votre devis personnalisé en moins de 60 secondes.",
+  "ctaNote": "C’est rapide, gratuit et sans engagement !",
+  "status_online": "✅ Nous sommes actuellement disponibles",
+  "status_offline": "⏰ Nous sommes actuellement hors ligne",
+  "response_now": "Réponse immédiate attendue",
+  "response_later": "Nous vous répondrons dans les 24 heures",
+
+  "contact_business_hours": "Heures d’ouverture",
+  "contact_email_support": "Assistance par courriel",
+  "email_description": "Pour des questions détaillées ou des communications écrites, envoyez-nous un courriel",
+  "email_additional": "Réponse garantie dans les 24 heures",
+  "contact_feedback": "Retour des clients",
+  "feedback_description": "Votre expérience compte",
+  "feedback_additional": "Aidez-nous à nous améliorer, partagez vos commentaires",
+  "contact_services": "Explorer les services",
+  "services_description": "Solutions de nettoyage personnalisées",
+  "services_additional": "Forfaits personnalisés disponibles"
+}
