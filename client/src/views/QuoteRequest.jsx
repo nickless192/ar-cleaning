@@ -24,7 +24,7 @@ import {
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import Logo from "../../src/assets/img/IC CLEAN AR-15-cropped.png"
 
-const QuickQuote = () => {
+const QuoteRequest = () => {
 
     const location = useLocation();
     const navigate = useNavigate();
@@ -1116,7 +1116,7 @@ const QuickQuote = () => {
         <>
             <Container className="quick-quote-container px-4" id="quote-section">
                 <HelmetProvider>
-                    <title>CleanAR Solutions - Quick Quote</title>
+                    <title>CleanAR Solutions</title>
                     <meta name="description" content="Get a quick service estimate from CleanAR Solutions. Fill out our form to receive a personalized quote for your cleaning needs." />
                 </HelmetProvider>
                 <VisitorCounter />
@@ -1300,4 +1300,4 @@ const QuickQuote = () => {
     );
 };
 
-export default QuickQuote;
+export default QuoteRequest;

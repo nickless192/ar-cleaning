@@ -15,7 +15,7 @@ import {
   CardImg
 } from "reactstrap";
 import MetaTags from "/src/components/Pages/MetaTags.jsx";
-import QuickQuote from "./QuickQuote";
+import QuoteRequest from "./QuoteRequest";
 // import LandingPageHeader from "/src/components/Headers/LandingPageHeader.jsx";
 import BusinessHoursSidebar from "/src/components/Pages/BusinessHourSidebar";
 
@@ -267,7 +267,7 @@ function Index() {
             </motion.div>
           </Col>
           <Col xs='12' md='6' className="p-0">
-            <QuickQuote />
+            <QuoteRequest />
           </Col>
         </Row>
         {/* <Row className="m-0 p-0">

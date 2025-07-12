@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import {
   Container, Row, Col,
   Form, FormGroup, Label, Input,
@@ -12,12 +12,15 @@ import { FaTrash } from 'react-icons/fa';
 import Auth from "/src/utils/auth";
 
 const BookingDashboard = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
+  const [customers, setCustomers] = useState([]);
   const location = useLocation();
+  const [selectedCustomerId, setSelectedCustomerId] = useState('');
   const [monthlyIncome, setMonthlyIncome] = useState(0);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [bookings, setBookings] = useState([]);
   const [formData, setFormData] = useState({
+    customerId: '',
     customerName: '',
     customerEmail: '',
     serviceType: '',
@@ -33,9 +36,21 @@ const BookingDashboard = () => {
   const [message, setMessage] = useState(null);
 
   useEffect(() => {
+
+    const fetchCustomers = async () => {
+      try {
+        const res = await fetch('/api/customers');
+        if (!res.ok) throw new Error('Failed to fetch customers');
+        const data = await res.json();
+        setCustomers(data);
+      } catch (err) {
+        console.error('Error fetching customers:', err);
+      }
+    };
     if (isInitialLoad) {
       setIsInitialLoad(false);
       fetchBookings();
+      fetchCustomers();
       const searchParams = new URLSearchParams(location.search);
       const customerName = searchParams.get('name');
       const customerEmail = searchParams.get('email');
@@ -160,7 +175,9 @@ const BookingDashboard = () => {
         disableConfirmation: false,
         income: 0
       });
+      setSelectedCustomerId('');
       fetchBookings();
+
     } catch (err) {
       setMessage({ type: 'danger', text: 'Error submitting booking.' });
     } finally {
@@ -180,6 +197,43 @@ const BookingDashboard = () => {
           )}
           <Form onSubmit={handleSubmit}>
             <FormGroup>
+              <Label for="customerSelect">Select Saved Customer</Label>
+              <Input
+                type="select"
+                id="customerSelect"
+                value={selectedCustomerId}
+                onChange={e => {
+                  const selectedId = e.target.value;
+                   setSelectedCustomerId(selectedId);
+                  const selectedCustomer = customers.find(c => c._id === selectedId);
+                  if (selectedCustomer) {
+                    setFormData(prev => ({
+                      ...prev,
+                      customerId: selectedCustomer._id,
+                      customerName: selectedCustomer.firstName + ' ' + selectedCustomer.lastName,
+                      customerEmail: selectedCustomer.email
+                    }));
+                  } else {
+                    // If cleared selection
+                    setFormData(prev => ({
+                      ...prev,
+                      customerId: '',
+                      customerName: '',
+                      customerEmail: ''
+                    }));
+                  }
+                }}
+              >
+                <option value="">-- Select a customer --</option>
+                {customers.map(c => (
+                  <option key={c._id} value={c._id}>
+                    {c.firstName} {c.lastName} ({c.email})
+                  </option>
+                ))}
+              </Input>
+            </FormGroup>
+
+            <FormGroup>
               <Label for="customerName">Customer Name</Label>
               <Input
                 type="text"
@@ -189,6 +243,7 @@ const BookingDashboard = () => {
                 value={formData.customerName}
                 onChange={handleChange}
                 required
+                readOnly={!!formData.customerId}
               />
             </FormGroup>
             <FormGroup>
@@ -201,8 +256,22 @@ const BookingDashboard = () => {
                 value={formData.customerEmail}
                 onChange={handleChange}
                 required
+                readOnly={!!formData.customerId}
               />
             </FormGroup>
+            {formData.customerId && (
+              <FormGroup>
+                <Label for="customerId">Customer ID</Label>
+                <Input
+                  type="text"
+                  id="customerId"
+                  className="text-cleanar-color text-bold form-input"
+                  value={formData.customerId}
+                  readOnly
+                />
+              </FormGroup>
+            )}
+
             <FormGroup>
               <Label for="serviceType">Service Type</Label>
               <Input

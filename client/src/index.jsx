@@ -35,6 +35,7 @@ import ResetPassword from "/src/components/Pages/ResetPassword";
 import Terms from "/src/components/Pages/Terms";
 import Disclaimer from "/src/components/Pages/Disclaimer";
 import Footer from "/src/components/Pages/Footer.jsx";
+import Customer from "/src/components/Pages/Customers.jsx";
 
 import LandingFresh from "/src/views/qrCodes/LandingFresh";
 import LandingNow from "/src/views/qrCodes/LandingNow";
@@ -62,6 +63,7 @@ const App = () => {
         <Route path="/manage-product" element={<ProtectedRoute element={<ManageProduct />} />} />
         <Route path="/manage-user" element={<ProtectedRoute element={<ManageUser />} />} />
         <Route path="/manage-gift-card" element={<ProtectedRoute element={<GiftCard />} />} />
+        <Route path="/manage-customers" element={<ProtectedRoute element={<Customer />} />} />
         <Route path="/view-quotes" element={<ProtectedRoute element={<QuickQuoteDashboard />} />} />
         {/* <Route path="/view-quotes/:quoteId" element={<ProtectedRoute element={<ViewQuotes />} />} /> */}
         <Route path="/dashboard" element={<ProtectedRoute element={<LogDashboard />} />} />

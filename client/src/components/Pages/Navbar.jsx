@@ -126,6 +126,10 @@ function IndexNavbar() {
                                     <FaUsersCog className="dropdown-icon" />
                                     <span>Manage Users</span>
                                 </DropdownItem>
+                                <DropdownItem to="/manage-customers" tag={Link} className="dropdown-item">
+                                    <FaUsersCog className="dropdown-icon" />
+                                    <span>Manage Customers</span>
+                                </DropdownItem>
 
                                 <DropdownItem to="/view-quotes" tag={Link} className="dropdown-item">
                                     <FaRegFileAlt className="dropdown-icon" />
