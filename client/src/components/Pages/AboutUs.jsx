@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import {
   Row, Col, Card, CardBody, CardTitle, CardText, CardHeader,
   ListGroup, ListGroupItem, Container, Button, Input,
 } from "reactstrap";
 import { Image } from 'react-bootstrap';
 // import "./../../assets/css/our-palette.css";
-import Logo from "../../assets/img/logo.png";
+import Logo from "/src/assets/img/IC CLEAN AR-15-cropped.png";
 import VisitorCounter from "/src/components/Pages/VisitorCounter.jsx";
 
 // Reusable Content Section Component
-const ContentSection = React.memo(({ title, content, onEdit, isEditing, field }) => (
+const ContentSection = ({ title, content, onEdit, isEditing, field }) => (
   <div className="content-section">
     {isEditing ? (
       <>
@@ -30,10 +31,10 @@ const ContentSection = React.memo(({ title, content, onEdit, isEditing, field })
       </>
     )}
   </div>
-));
+);
 
 // Reusable Industry Card Component
-const IndustryCard = React.memo(({ title, items, bgColor }) => (
+const IndustryCard = ({ title, items, bgColor }) => (
   <Col>
     <Card className={bgColor} inverse>
       <CardHeader tag="h3" className="mx-2">{title}</CardHeader>
@@ -44,14 +45,17 @@ const IndustryCard = React.memo(({ title, items, bgColor }) => (
       </ListGroup>
     </Card>
   </Col>
-));
+);
 
 function AboutUsPage({ isAdmin = false }) {
+  const { t } = useTranslation();
+
   const [content, setContent] = useState({
-    welcomeText: "At CleanAR Solutions, we provide professional cleaning services in Toronto and the GTA. Our focus on excellence ensures every project meets the highest standards, creating a clean and healthy environment. Whether you need residential, commercial, or carpet cleaning, we customize our approach to meet your needs. Get started by requesting a quote, or contact us for more information.",
-    mission: "Our mission is to transform spaces into cleaner, healthier, and more welcoming environments. We achieve this by offering customizable, high-quality cleaning services that are tailored to our clients’ needs while staying true to our commitment to sustainability and excellence.",
-    vision: "Our vision is to become Toronto’s most trusted and innovative cleaning service provider, setting the standard for excellence while contributing to a cleaner, greener, and happier community.",
-    values: "Integrity: We conduct our business with honesty, transparency, and accountability.\nQuality: We deliver top-tier cleaning services with attention to detail and excellence.\nCustomer Focus: We prioritize our clients’ unique needs, building trust through personalized solutions.\nSustainability: We promote eco-friendly cleaning practices to protect our environment.\nTeamwork: We value collaboration, respect, and unity to achieve success together.",
+    welcomeText: t('about.welcome_text'),
+    mission: t('about.mission_text'),
+    vision: t('about.vision_text'),
+    values_intro: t('about.values_intro'),
+    values: t('about.values_list', { returnObjects: true }),
   });
 
   const [isEditing, setIsEditing] = useState(false);
@@ -81,31 +85,19 @@ function AboutUsPage({ isAdmin = false }) {
 
   const industries = [
     {
-      title: "Residential Buildings",
+      title: t("about.industries.residential.title"),
       bgColor: "secondary-bg-color",
-      items: [
-        "General Cleaning: Complete cleaning of common areas such as lobbies, hallways, stairs, and recreational areas.",
-        "Exterior Area Maintenance: Cleaning of sidewalks, courtyards, and parking areas.",
-        "Trash Management: Collection and proper disposal of waste and garbage.",
-      ],
+      items: t("about.industries.residential.items", { returnObjects: true }),
     },
     {
-      title: "Offices",
+      title: t("about.industries.offices.title"),
       bgColor: "primary-bg-color",
-      items: [
-        "Daily Cleaning: Cleaning of desks, tables, chairs, and break areas.",
-        "Floor Maintenance: Sweeping, mopping, and polishing of floors.",
-        "Bathroom Cleaning: Disinfection and deep cleaning of bathrooms and sanitary areas.",
-      ],
+      items: t("about.industries.offices.items", { returnObjects: true }),
     },
     {
-      title: "Festivals",
+      title: t("about.industries.festivals.title"),
       bgColor: "secondary-bg-color",
-      items: [
-        "Pre-Event Cleaning: Cleaning of the event area before its start, including garbage collection and grounds cleaning.",
-        "Event Maintenance: Continuous maintenance of bathrooms, rest areas, and food areas during the event.",
-        "Post-Event Cleaning: Thorough cleaning of the event area after its conclusion, including garbage collection and site sanitation.",
-      ],
+      items: t("about.industries.festivals.items", { returnObjects: true }),
     },
   ];
 
@@ -133,7 +125,7 @@ function AboutUsPage({ isAdmin = false }) {
         <Col xs="12" md="6" className="text-col ">
           <Card className="card-plain">
             <CardHeader>
-              <CardTitle tag="h3" className="text-bold">Welcome to CleanAR Solutions</CardTitle>
+              <CardTitle tag="h3" className="text-bold">{t('about.welcome_heading')}</CardTitle>
             </CardHeader>
             <CardBody>
               <CardText>
@@ -145,11 +137,11 @@ function AboutUsPage({ isAdmin = false }) {
                     rows={5}
                   />
                 ) : (
-                  <span>{content.welcomeText}</span> 
+                  <span>{t('about.welcome_text')}</span>
                 )}
               </CardText>
               {/* <Link to="/request-quote" className="btn primary-bg-color">Request a Quote</Link> */}
-              <Link to="/products-and-services" className="btn secondary-bg-color">Learn More About Our Services</Link>
+              <Link to="/products-and-services" className="btn secondary-bg-color">{t('about.learn_more_services')}</Link>
             </CardBody>
           </Card>
         </Col>
@@ -159,21 +151,21 @@ function AboutUsPage({ isAdmin = false }) {
         <Row>
           <Col>
             <ContentSection
-              title="Our Mission"
-              content={content.mission}
+              title={t('about.mission_title')}
+              content={t('about.mission_text')}
               onEdit={handleEditChange}
               isEditing={isEditing && isAdmin}
               field="mission"
             />
             <ContentSection
-              title="Our Vision"
-              content={content.vision}
+              title={t('about.vision_title')}
+              content={t('about.vision_text')}
               onEdit={handleEditChange}
               isEditing={isEditing && isAdmin}
               field="vision"
             />
             <div className="content-section">
-              <h2>Our Values</h2>
+              <h2>{t('about.values_title')}</h2>
               {isEditing && isAdmin ? (
                 <Input
                   type="textarea"
@@ -184,12 +176,12 @@ function AboutUsPage({ isAdmin = false }) {
                 />
               ) : (
                 <>
-                  <div><strong>At CleanAR Solutions, we are guided by the following values:</strong></div>
-                  <ol>
-                    {content.values.split('\n').map((value, index) => (
-                      <li key={index}>{value}</li>
+                  <div><strong>{t('about.values_intro')}</strong></div>
+                  <ul>
+                    {content.values.map((value, index) => (
+                      <li key={index}>{t(`about.values_list.${index}`)}</li>
                     ))}
-                  </ol>
+                  </ul>
                 </>
               )}
             </div>
@@ -198,7 +190,7 @@ function AboutUsPage({ isAdmin = false }) {
       </Container>
 
       <Container className="product-selector" role="region" aria-label="Industries We Serve">
-        <h2 className="title text-center text-dark my-0 pb-2">Industries We Serve</h2>
+        <h2 className="title text-center text-dark my-0 pb-2">{t('about.industries_title')}</h2>
         <Row className="my-0">
           {industries.map((industry, index) => (
             <IndustryCard

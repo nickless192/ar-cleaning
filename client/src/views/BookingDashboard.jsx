@@ -11,6 +11,7 @@ import BookingCalendar from './BookingCalendar';
 import { FaTrash } from 'react-icons/fa';
 import Auth from "/src/utils/auth";
 
+
 const BookingDashboard = () => {
   // const navigate = useNavigate();
   const [customers, setCustomers] = useState([]);
@@ -106,7 +107,15 @@ const BookingDashboard = () => {
     }
   };
 
-  const handleComplete = async (bookingId) => {
+  const handleComplete = async (bookingId, status) => {
+    if (status === 'completed') {
+      alert('This booking is already marked as completed.');
+      return;
+    }
+    if (status === 'cancelled') {
+      alert('You cannot mark a cancelled booking as completed.');
+      return;
+    }
     if (!window.confirm('Are you sure you want to mark this booking as completed?')) return;
     try {
       const res = await fetch(`/api/bookings/${bookingId}/complete`, {
@@ -121,7 +130,11 @@ const BookingDashboard = () => {
     }
   };
 
-  const handleHide = async (bookingId) => {
+  const handleHide = async (bookingId, status) => {
+    if (status === 'pending' || status === 'confirmed') {
+      alert('You can only hide completed or cancelled bookings.');
+      return;
+    }
     if (!window.confirm('Are you sure you want to hide this booking?')) return;
     try {
       const res = await fetch(`/api/bookings/${bookingId}/hide`, {
@@ -182,6 +195,65 @@ const BookingDashboard = () => {
       setMessage({ type: 'danger', text: 'Error submitting booking.' });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleConfirmed = async (bookingId, status) => {
+    if (status !== 'pending') {
+      alert('You can only confirm bookings that are pending.');
+      return;
+    }
+    if (!window.confirm('Are you sure you want to confirm this booking?')) return;
+    try {
+      const res = await fetch(`/api/bookings/${bookingId}/confirm`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'confirmed', updatedBy: Auth.getProfile().data._id }) // Assuming you have user authentication
+      });
+      if (!res.ok) throw new Error('Failed to confirm booking');
+      fetchBookings();
+    } catch (err) {
+      alert('Error confirming booking.');
+    }
+  };
+
+  const handleCancel = async (bookingId, status) => {
+    if (status === 'completed' || status === 'cancelled') {
+      alert('You cannot cancel a completed or already cancelled booking.');
+      return;
+    }
+    if (!window.confirm('Are you sure you want to cancel this booking?')) return;
+    // return async () => {
+      try {
+        const res = await fetch(`/api/bookings/${bookingId}/cancel`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: 'cancelled', updatedBy: Auth.getProfile().data._id }) // Assuming you have user authentication
+        });
+        if (!res.ok) throw new Error('Failed to cancel booking');
+        fetchBookings();
+      } catch (err) {
+        alert('Error cancelling booking.');
+      }
+    // };
+  };
+
+  const handlePend = async (bookingId, status) => {
+    if (status !== 'confirmed' && status !== 'cancelled') {
+      alert('You can only pend bookings that are confirmed or cancelled.');
+      return;
+    }    
+    if (!window.confirm('Are you sure you want to pend this booking?')) return;
+    try {
+      const res = await fetch(`/api/bookings/${bookingId}/pending`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'pending', updatedBy: Auth.getProfile().data._id }) // Assuming you have user authentication
+      });
+      if (!res.ok) throw new Error('Failed to pend booking');
+      fetchBookings();
+    } catch (err) {
+      alert('Error pending booking.');
     }
   };
 
@@ -382,10 +454,11 @@ const BookingDashboard = () => {
                   <th>Name</th>
                   <th>Email</th>
                   <th>Service</th>
+                  <th>Income</th>
                   <th>Service Date</th>
                   <th>Confirmation</th>
                   <th>Reminder Scheduled</th>
-                  <th>Created</th>
+                  <th>Booking Created On/By</th>
                   <th>Status</th>
                   <th>Actions</th>
                 </tr>
@@ -397,13 +470,14 @@ const BookingDashboard = () => {
                     <td>{b.customerName}</td>
                     <td>{b.customerEmail}</td>
                     <td>{b.serviceType}</td>
+                    <td>{b.income ? `$${parseFloat(b.income).toFixed(2)}` : 'N/A'}</td>
                     <td>{moment(b.date).format('YYYY-MM-DD HH:mm')}</td>
                     <td>
                       {/* {b.scheduleConfirmation ? 'Scheduled' : 'Sent'} */}
                       {/* <br /> */}
                       {b.confirmationDate && ` @ ${moment(b.confirmationDate).format('MM-DD HH:mm')}`}
                       <br />
-                      {b.confirmationSent ? '✅Sent' : b.scheduleConfirmation ? 'Scheduled' : 'Sent'}
+                      {b.disableConfirmation ? 'Disabled' : b.confirmationSent ? '✅Sent' : b.scheduleConfirmation ? 'Scheduled' : 'Not Scheduled'}
                     </td>
                     <td>
                       {b.reminderScheduled ? (
@@ -417,22 +491,61 @@ const BookingDashboard = () => {
                         '❌Reminder Not Scheduled'
                       )}
                     </td>
-                    <td>{moment(b.createdAt).format('YYYY-MM-DD')}</td>
+                    <td>{moment(b.createdAt).format('YYYY-MM-DD')}
+                      <br />
+                      {moment(b.createdAt).format('HH:mm')}
+                      <br />
+                      {b.createdBy ? `by ${b.createdBy}` : 'N/A'}
+                      <br />
+                      {b.updatedBy ? `Updated by ${b.updatedBy} on ${moment(b.updatedAt).format('YYYY-MM-DD HH:mm')}` : 'N/A'}
+                    </td>
                     <td>{b.status}</td>
                     <td>
                       {/* button to update status based on a dropdown of statuses */}
                       <div className="d-flex justify-content-between">
+                        {(b.status === 'confirmed' || b.status === 'cancelled') && (
+                          <Button
+                            onClick={() => handlePend(b._id, b.status)}
+                            color="warning"
+                            size="sm"
+                          >
+                            Revert to Pending
+                          </Button>
+                        )}
+                        {b.status === 'pending' && (
+                          <Button
+                            onClick={() => handleConfirmed(b._id, b.status)}
+                            color="primary"
+                            size="sm"
+                          >
+                            Confirm
+                          </Button>
+                        )}
+                        {/* <Button
+                          onClick={() => handleConfirmed(b._id, b.status)}
+                          color="success"
+                          size="sm"
+                        >
+                          Confirm
+                        </Button> */}
                         <Button
                           color="info"
                           size="sm"
-                          onClick={() => handleComplete(b._id)}
+                          onClick={() => handleComplete(b._id, b.status)}
                         >
                           Mark Completed
                         </Button>
                         <Button
+                          color="secondary"
+                          size="sm"
+                          onClick={() => handleCancel(b._id, b.status)}
+                        >
+                          Cancel
+                        </Button>
+                        <Button
                           color="warning"
                           size="sm"
-                          onClick={() => handleHide(b._id)}
+                          onClick={() => handleHide(b._id, b.status)}
                         >
                           Hide
                         </Button>

@@ -20,5 +20,301 @@
   "feedback_additional": "Ayúdanos a mejorar, comparte tus comentarios",
   "contact_services": "Explorar servicios",
   "services_description": "Soluciones de limpieza personalizadas",
-  "services_additional": "Paquetes personalizados disponibles"
+  "services_additional": "Paquetes personalizados disponibles",
+  "products_services_title": "Productos y Servicios",
+  "our_services_title": "Nuestros Servicios",
+  "our_products_title": "Nuestros Productos",
+  "coming_soon": "¡Próximamente!",
+
+  "residential_cleaning_title": "Limpieza Residencial",
+  "residential_cleaning_description": [
+    "Limpieza completa de casas, apartamentos y condominios.",
+    "Limpieza de alfombras para revitalizar y mantener su frescura.",
+    "Limpieza de muebles para preservar su belleza y prolongar su vida útil."
+  ],
+  "residential_cleaning_button": "Agregar limpieza residencial al presupuesto",
+
+  "commercial_cleaning_title": "Limpieza Comercial",
+  "commercial_cleaning_description": [
+    "Mantenimiento regular de oficinas y espacios comerciales.",
+    "Limpieza de centros comerciales y supermercados.",
+    "Servicios especializados para la industria cinematográfica y eventos especiales."
+  ],
+  "commercial_cleaning_button": "Agregar limpieza comercial al presupuesto",
+
+  "window_cleaning_title": "Limpieza de Ventanas",
+  "window_cleaning_description": [
+    "Limpieza profesional de ventanas en hogares y negocios.",
+    "Brillo sin rayas para una vista clara.",
+    "Uso de productos ecológicos para seguridad y sostenibilidad."
+  ],
+  "window_cleaning_button": "Agregar limpieza de ventanas al presupuesto",
+
+  "carpet_cleaning_title": "Limpieza de Alfombras y Tapicería",
+  "carpet_cleaning_description": [
+    "Limpieza profunda de alfombras en casas y comercios.",
+    "Eliminación de manchas y neutralización de olores.",
+    "Limpieza de tapicería para conservar su belleza y comodidad."
+  ],
+  "carpet_cleaning_button": "Agregar limpieza de alfombras al presupuesto",
+
+  "power_washing_title": "Limpieza a Presión",
+  "power_washing_description": [
+    "Limpieza a alta presión de entradas, aceras y patios.",
+    "Eliminación de suciedad, moho y hongos de superficies exteriores.",
+    "Preparación de superficies para pintar o sellar."
+  ],
+  "power_washing_button": "Agregar limpieza a presión al presupuesto",
+
+"about": {
+  "welcome_heading": "Bienvenido a CleanAR Solutions",
+  "welcome_text": "En CleanAR Solutions ofrecemos servicios profesionales de limpieza en Toronto y el GTA. Nuestro enfoque en la excelencia garantiza que cada proyecto cumpla con los más altos estándares, creando un entorno limpio y saludable. Ya sea que necesite limpieza residencial, comercial o de alfombras, adaptamos nuestro enfoque para satisfacer sus necesidades. Solicite una cotización o contáctenos para más información.",
+  "learn_more_services": "Conozca más sobre nuestros servicios",
+  "mission_title": "Nuestra Misión",
+  "mission_text": "Nuestra misión es transformar espacios en entornos más limpios, saludables y acogedores. Lo logramos ofreciendo servicios de limpieza personalizables y de alta calidad, adaptados a las necesidades de nuestros clientes y comprometidos con la sostenibilidad y la excelencia.",
+  "vision_title": "Nuestra Visión",
+  "vision_text": "Nuestra visión es convertirnos en el proveedor de servicios de limpieza más confiable e innovador de Toronto, estableciendo el estándar de excelencia y contribuyendo a una comunidad más limpia, ecológica y feliz.",
+  "values_title": "Nuestros Valores",
+  "values_intro": "En CleanAR Solutions nos guiamos por los siguientes valores:",
+  "values_list": [
+    "Integridad: Actuamos con honestidad, transparencia y responsabilidad.",
+    "Calidad: Brindamos servicios de limpieza de alto nivel con atención al detalle y excelencia.",
+    "Enfoque en el cliente: Priorizamos las necesidades únicas de nuestros clientes con soluciones personalizadas.",
+    "Sostenibilidad: Promovemos prácticas de limpieza ecológicas para proteger el medio ambiente.",
+    "Trabajo en equipo: Valoramos la colaboración, el respeto y la unidad para lograr el éxito juntos."
+  ],
+    "industries_title": "Industrias que Atendemos",
+    "industries": {
+      "residential": {
+        "title": "Edificios Residenciales",
+        "items": [
+          "Limpieza general: Limpieza completa de áreas comunes como vestíbulos, pasillos, escaleras y zonas recreativas.",
+          "Mantenimiento exterior: Limpieza de aceras, patios y zonas de estacionamiento.",
+          "Gestión de residuos: Recolección y eliminación adecuada de basura."
+        ]
+      },
+      "offices": {
+        "title": "Oficinas",
+        "items": [
+          "Limpieza diaria: Limpieza de escritorios, mesas, sillas y áreas comunes.",
+          "Mantenimiento de suelos: Barrido, fregado y pulido.",
+          "Limpieza de baños: Desinfección y limpieza profunda de áreas sanitarias."
+        ]
+      },
+      "festivals": {
+        "title": "Festivales",
+        "items": [
+          "Limpieza previa al evento: Preparación del sitio y recolección de basura.",
+          "Mantenimiento durante el evento: Limpieza continua de baños, zonas de comida y descanso.",
+          "Limpieza posterior al evento: Limpieza total del lugar, recolección de residuos y desinfección."
+        ]
+      }
+    }
+  },
+    "navbar": {
+    "about_us": "Sobre Nosotros",
+    "products_services": "Productos y Servicios",
+    "log_in_signup": "Iniciar Sesión / Registrarse",
+    "log_out": "Cerrar Sesión",
+    "profile": "Perfil",
+    "admin": {
+      "configure": "Configurar",
+      "manage_products": "Administrar Productos",
+      "manage_services": "Administrar Servicios",
+      "manage_users": "Administrar Usuarios",
+      "manage_customers": "Administrar Clientes",
+      "view_quotes": "Ver Solicitudes de Cotización",
+      "manage_gift_cards": "Administrar Tarjetas de Regalo",
+      "visitor_dashboard": "Panel de Visitantes",
+      "booking_dashboard": "Panel de Reservas"
+    }
+  },
+  "daysOfTheWeek": {
+    "monday": "Lunes",
+    "tuesday": "Martes",
+    "wednesday": "Miércoles",
+    "thursday": "Jueves",
+    "friday": "Viernes",
+    "saturday": "Sábado",
+    "sunday": "Domingo"
+  },
+  "storeStatus": {
+    "open": "Abierto",
+    "closed": "Cerrado"
+  },
+  "footer": {
+  "work_with_us": "Trabaja con nosotros",
+  "leave_review": "Deja una reseña",
+  "terms": "Términos y Condiciones",
+  "disclaimer": "Aviso Legal",
+  "developer": "Diseñado y desarrollado por"
+},
+ "quick_quote": {
+    "form": {
+      "title": "Obtén tu cotización gratuita",
+      "name": "Nombre",
+      "email": "Correo electrónico",
+      "phonenumber": "Número de teléfono",
+      "companyName": "Empresa",
+      "postalcode": "Código postal",
+      "promoCode": "Código promocional",
+      "serviceRequired": "Servicio requerido",
+      "serviceDescription": "Por favor, agregue el tipo y nivel de servicio para personalizar su pedido.",
+      "serviceType": "Tipo de servicio",
+      "serviceLevel": "Por favor, seleccione un nivel de servicio para personalizar su pedido.",
+      "additionalServices": "Por favor, seleccione cualquier servicio adicional que le gustaría agregar a su cotización.",
+      "customOptions": "Tus opciones personalizadas",
+      "submit": "Enviar cotización",
+      "reset": "Restablecer formulario",
+      "confirmationMessage": "Se enviará un correo de confirmación después del envío. Nuestro equipo revisará su solicitud y se pondrá en contacto lo antes posible. ¡Gracias por elegir CleanAR Solutions!"
+    },
+    "tooltips": {
+      "name": "Ingrese su nombre completo.",
+      "email": "Ingrese su correo electrónico.",
+      "phonenumber": "Ingrese su número de teléfono.",
+      "companyName": "Ingrese el nombre de su empresa.",
+      "postalcode": "Ingrese su código postal.",
+      "promoCode": "Ingrese su código promocional. El descuento se aplicará si es válido. Las promociones no se pueden combinar."
+    },
+    "services": {
+      "Residential Cleaning": {
+        "label": "Limpieza residencial",
+        "types": [
+          "Limpieza de casas",
+          "Limpieza antes/después de mudanza",
+          "Limpieza de condominios",
+          "Limpieza de edificios residenciales"
+        ]
+      },
+      "Commercial Cleaning": {
+        "label": "Limpieza comercial",
+        "types": [
+          "Limpieza de oficinas",
+          "Limpieza industrial",
+          "Limpieza de tiendas"
+        ]
+      },
+      "Carpet And Upholstery": {
+        "label": "Alfombras y tapicería",
+        "types": [
+          "Limpieza de alfombras",
+          "Limpieza de tapicería"
+        ]
+      },
+      "Window Cleaning": {
+        "label": "Limpieza de ventanas",
+        "types": [
+          "Limpieza interior de ventanas",
+          "Limpieza de rieles y marcos",
+          "Limpieza de puertas de vidrio"
+        ]
+      },
+      "Power/Pressure Washing": {
+        "label": "Lavado a presión",
+        "types": [
+          "Limpieza de entradas",
+          "Limpieza de patios y terrazas",
+          "Limpieza de aceras",
+          "Limpieza de revestimiento exterior",
+          "Limpieza de cercas",
+          "Limpieza de pisos de garaje"
+        ]
+      }
+    },
+    "customOptions": {
+      "pleaseAddService": "Por favor, agregue un servicio primero",
+      "frequency": "🕒 Frecuencia",
+      "unitSize": "📏 Tamaño de la unidad",
+      "bedrooms": "🛏️ Dormitorios",
+      "bathrooms": "🚿 Baños",
+      "startDate": "📅 Fecha de inicio",
+      "selectText": "Seleccionar...",
+      "additionalOptions": "🎼 Opciones adicionales",
+      "deepCleaning": "Limpieza profunda",
+      "windowCleaning": "Limpieza de ventanas",
+      "laundryService": "Servicio de lavandería",
+      "carpetType": "Tipo de alfombra",
+      "carpetArea": "Área aproximada de la alfombra (pies²)",
+      "carpetMaterial": "Material de la alfombra",
+      "chooseMaterial": "Elegir un material...",
+      "olefin": "Olefin",
+      "wool": "Lana",
+      "stains": "Nivel de manchas",
+      "selectStainSeverity": "Seleccionar nivel de manchas",
+      "howSevereAreTheStains": "¿Qué tan severas son las manchas?",
+      "light": "Leve",
+      "moderate": "Moderada",
+      "heavy": "Severa",
+      "none": "Sin manchas",
+      "preferredCleaningDate": "Fecha preferida de limpieza",
+      "surfaceType": "Tipo de superficie",
+      "area": "pies²",
+      "oneTime": "Una vez",
+      "weekly": "Semanal",
+      "biWeekly": "Quincenal",
+      "monthly": "Mensual",
+      "other": "Otro",
+      "desiredDate": "Fecha de servicio deseada",
+      "description": "Descripción",
+      "descriptionDetail": "Proporcione una descripción de los servicios que necesita. Nos pondremos en contacto pronto para programar una consulta.",
+      "upholsteryItems": [
+        "Limpieza de sofá",
+        "Limpieza de silla",
+        "Limpieza de sillón",
+        "Limpieza de seccional",
+        "Limpieza de otomana",
+        "Limpieza de loveseat",
+        "Limpieza de silla de comedor",
+        "Limpieza de sillón reclinable"
+      ],
+      "upholsteryFabric": "Tipo de tela de tapicería",
+      "upholsteryArea": "Ingrese el área en pies cuadrados",
+      "upholsteryPieces": "Ingrese la cantidad de piezas",
+      "selectFabric": "Seleccionar tipo de tela",
+      "cotton": "Algodón",
+      "polyester": "Poliéster",
+      "leather": "Cuero",
+      "nylon": "Nylon",
+      "selectSurfaceType": "Seleccionar tipo de superficie",
+      "concrete": "Hormigón",
+      "wood": "Madera",
+      "vinyl": "Vinilo",
+      "brick": "Ladrillo",
+      "asphalt": "Asfalto"
+    },
+    "pdf": {
+      "title": "Confirmación de solicitud de servicio",
+      "headers": {
+        "name": "Nombre",
+        "email": "Correo electrónico",
+        "phone": "Número de teléfono",
+        "company": "Empresa",
+        "postalcode": "Código postal",
+        "promo": "Código promocional"
+      },
+      "table": {
+        "index": "#",
+        "service": "Servicio",
+        "type": "Tipo",
+        "customOptions": "Opciones personalizadas"
+      }
+    },
+    "email": {
+      "subject": "CleanAR Solutions: Confirmación de su cotización",
+      "greeting": "¡Gracias por contactarnos!",
+      "body": [
+        "Hola",
+        "Hemos recibido su solicitud de cotización y actualmente la estamos procesando. Encuentre adjunta la confirmación de su cotización.",
+        "Nos pondremos en contacto con usted pronto para hablar de sus necesidades. Mientras tanto, no dude en explorar nuestros servicios.",
+        "Saludos cordiales,",
+        "CleanAR Solutions"
+      ],
+      "contact": {
+        "website": "https://www.cleanarsolutions.ca/index",
+        "phone": "+1 (437) 440-5514"
+      }
+    }
+  }
+
+
 }

@@ -1,8 +1,8 @@
 {
-  "companyName": "Solutions CleanAR",
+  "companyName": "CleanAR Solutions",
   "tagline": "Nettoyage de confiance, service de confiance",
   "intro": "Dites adieu au stress et bonjour à l’éclat ✨",
-  "details": "Solutions CleanAR offre plus de 10 ans de nettoyage de confiance aux foyers et entreprises du GTA.",
+  "details": "CleanAR Solutions offre plus de 10 ans de nettoyage de confiance aux foyers et entreprises du GTA.",
   "services": "Du nettoyage en profondeur à l’entretien régulier, nos services sont adaptés à vos besoins — efficaces, écologiques et toujours fiables.",
   "cta": "Obtenez votre devis personnalisé en moins de 60 secondes.",
   "ctaNote": "C’est rapide, gratuit et sans engagement !",
@@ -20,5 +20,305 @@
   "feedback_additional": "Aidez-nous à nous améliorer, partagez vos commentaires",
   "contact_services": "Explorer les services",
   "services_description": "Solutions de nettoyage personnalisées",
-  "services_additional": "Forfaits personnalisés disponibles"
+  "services_additional": "Forfaits personnalisés disponibles",
+
+   "products_services_title": "Produits et Services",
+  "our_services_title": "Nos Services",
+  "our_products_title": "Nos Produits",
+  "coming_soon": "Bientôt disponible !",
+
+  "residential_cleaning_title": "Nettoyage résidentiel",
+  "residential_cleaning_description": [
+    "Nettoyage complet des maisons, appartements et condominiums.",
+    "Nettoyage de tapis pour revitaliser et préserver leur fraîcheur.",
+    "Nettoyage des meubles pour prolonger leur durée de vie."
+  ],
+  "residential_cleaning_button": "Ajouter le nettoyage résidentiel au devis",
+
+  "commercial_cleaning_title": "Nettoyage commercial",
+  "commercial_cleaning_description": [
+    "Entretien régulier des bureaux et des espaces commerciaux.",
+    "Nettoyage des centres commerciaux et supermarchés.",
+    "Services spécialisés pour l'industrie cinématographique et les événements spéciaux."
+  ],
+  "commercial_cleaning_button": "Ajouter le nettoyage commercial au devis",
+
+  "window_cleaning_title": "Nettoyage de vitres",
+  "window_cleaning_description": [
+    "Nettoyage professionnel des vitres pour les maisons et les entreprises.",
+    "Finition sans traces pour une vue claire.",
+    "Produits écologiques pour plus de sécurité et de durabilité."
+  ],
+  "window_cleaning_button": "Ajouter le nettoyage de vitres au devis",
+
+  "carpet_cleaning_title": "Nettoyage de tapis et meubles rembourrés",
+  "carpet_cleaning_description": [
+    "Nettoyage en profondeur des tapis dans les maisons et les entreprises.",
+    "Élimination des taches et neutralisation des odeurs.",
+    "Nettoyage des meubles pour conserver leur beauté et confort."
+  ],
+  "carpet_cleaning_button": "Ajouter le nettoyage de tapis au devis",
+
+  "power_washing_title": "Nettoyage haute pression",
+  "power_washing_description": [
+    "Nettoyage haute pression des allées, trottoirs et terrasses.",
+    "Élimination de la saleté, de la moisissure et des champignons.",
+    "Préparation des surfaces pour la peinture ou le scellement."
+  ],
+  "power_washing_button": "Ajouter le nettoyage haute pression au devis",
+
+   "about": {
+  "welcome_heading": "Bienvenue chez CleanAR Solutions",
+  "welcome_text": "Chez CleanAR Solutions, nous offrons des services de nettoyage professionnels à Toronto et dans la région du Grand Toronto. Notre engagement envers l’excellence garantit que chaque projet respecte les normes les plus élevées, créant ainsi un environnement propre et sain. Que vous ayez besoin de services résidentiels, commerciaux ou de nettoyage de tapis, nous adaptons notre approche à vos besoins. Commencez en demandant un devis, ou contactez-nous pour plus d'informations.",
+  "learn_more_services": "En savoir plus sur nos services",
+  "mission_title": "Notre Mission",
+  "mission_text": "Notre mission est de transformer les espaces en environnements plus propres, plus sains et plus accueillants. Nous y parvenons en offrant des services de nettoyage personnalisables et de haute qualité, adaptés aux besoins de nos clients tout en respectant notre engagement envers la durabilité et l’excellence.",
+  "vision_title": "Notre Vision",
+  "vision_text": "Notre vision est de devenir le fournisseur de services de nettoyage le plus fiable et innovant à Toronto, en établissant une norme d’excellence tout en contribuant à une communauté plus propre, plus verte et plus heureuse.",
+  "values_title": "Nos Valeurs",
+  "values_intro": "Chez CleanAR Solutions, nous sommes guidés par les valeurs suivantes :",
+  "values_list": [
+    "Intégrité : Nous menons nos activités avec honnêteté, transparence et responsabilité.",
+    "Qualité : Nous offrons des services de nettoyage de premier ordre avec souci du détail et excellence.",
+    "Orientation client : Nous mettons les besoins uniques de nos clients au premier plan, en bâtissant la confiance grâce à des solutions personnalisées.",
+    "Durabilité : Nous encourageons des pratiques de nettoyage respectueuses de l’environnement.",
+    "Travail d’équipe : Nous valorisons la collaboration, le respect et l’unité pour réussir ensemble."
+  ],
+    "industries_title": "Secteurs que nous desservons",
+    "industries": {
+      "residential": {
+        "title": "Bâtiments Résidentiels",
+        "items": [
+          "Nettoyage général : Nettoyage complet des espaces communs tels que les halls, couloirs, escaliers et zones de loisirs.",
+          "Entretien des espaces extérieurs : Nettoyage des trottoirs, cours et parkings.",
+          "Gestion des déchets : Collecte et élimination appropriée des ordures."
+        ]
+      },
+      "offices": {
+        "title": "Bureaux",
+        "items": [
+          "Nettoyage quotidien : Nettoyage des bureaux, tables, chaises et espaces de pause.",
+          "Entretien des sols : Balayage, nettoyage humide et polissage.",
+          "Nettoyage des sanitaires : Désinfection et nettoyage en profondeur."
+        ]
+      },
+      "festivals": {
+        "title": "Festivals",
+        "items": [
+          "Nettoyage avant l’événement : Nettoyage du site avant le début, collecte des déchets.",
+          "Maintenance durant l’événement : Entretien continu des toilettes, aires de repos et zones alimentaires.",
+          "Nettoyage après l’événement : Nettoyage approfondi, collecte des déchets et désinfection des lieux."
+        ]
+      }
+    }
+  },
+
+    "navbar": {
+    "about_us": "À propos de nous",
+    "products_services": "Produits et Services",
+    "log_in_signup": "Connexion / Inscription",
+    "log_out": "Déconnexion",
+    "profile": "Profil",
+    "admin": {
+      "configure": "Configurer",
+      "manage_products": "Gérer les Produits",
+      "manage_services": "Gérer les Services",
+      "manage_users": "Gérer les Utilisateurs",
+      "manage_customers": "Gérer les Clients",
+      "view_quotes": "Voir les Demandes de Devis",
+      "manage_gift_cards": "Gérer les Cartes-Cadeaux",
+      "visitor_dashboard": "Tableau de Bord des Visiteurs",
+      "booking_dashboard": "Tableau de Bord des Réservations"
+    }
+  },
+  "daysOfTheWeek": {
+    "monday": "Lundi",
+    "tuesday": "Mardi",
+    "wednesday": "Mercredi",
+    "thursday": "Jeudi",
+    "friday": "Vendredi",
+    "saturday": "Samedi",
+    "sunday": "Dimanche"
+  },
+  "storeStatus": {
+    "open": "Ouvert",
+    "closed": "Fermé"
+  },
+  "footer": {
+  "work_with_us": "Travaillez avec nous",
+  "leave_review": "Laissez un avis",
+  "terms": "Conditions générales",
+  "disclaimer": "Avertissement",
+  "developer": "Conçu et développé par"
+},
+ "quick_quote": {
+    "form": {
+      "title": "Obtenez votre devis gratuit",
+      "name": "Nom",
+      "email": "Email",
+      "phonenumber": "Numéro de téléphone",
+      "companyName": "Entreprise",
+      "postalcode": "Code postal",
+      "promoCode": "Code promo",
+      "serviceRequired": "Service requis",
+      "serviceDescription": "Veuillez ajouter le type et le niveau de service pour personnaliser votre commande.",
+      "serviceType": "Type de service",
+      "customOptions": "Vos options personnalisées",
+      "serviceLevel": "Veuillez sélectionner un niveau de service pour personnaliser votre commande.",
+      "additionalServices": "Veuillez sélectionner tous les services supplémentaires que vous souhaitez ajouter à votre devis.",
+      "submit": "Soumettre le devis",
+      "reset": "Réinitialiser le formulaire",
+      "confirmationMessage": "Un courriel de confirmation vous sera envoyé après la soumission. Notre équipe examinera votre demande et vous répondra dès que possible. Merci d'avoir choisi CleanAR Solutions !"
+    },
+    "tooltips": {
+      "name": "Entrez votre nom complet.",
+      "email": "Entrez votre adresse e-mail.",
+      "phonenumber": "Entrez votre numéro de téléphone.",
+      "companyName": "Entrez le nom de votre entreprise.",
+      "postalcode": "Entrez votre code postal.",
+      "promoCode": "Entrez votre code promo. La remise sera appliquée si elle est admissible. Les promotions ne peuvent pas être combinées."
+    },
+    "services": {
+      "Residential Cleaning": {
+        "label": "Nettoyage résidentiel",
+        "types": [
+          "Nettoyage de maison",
+          "Nettoyage avant/après déménagement",
+          "Nettoyage de condo",
+          "Nettoyage d’immeuble résidentiel"
+        ]
+      },
+      "Commercial Cleaning": {
+        "label": "Nettoyage commercial",
+        "types": [
+          "Nettoyage de bureau",
+          "Nettoyage industriel",
+          "Nettoyage de magasin"
+        ]
+      },
+      "Carpet And Upholstery": {
+        "label": "Tapis et rembourrage",
+        "types": [
+          "Nettoyage de tapis",
+          "Nettoyage de rembourrage"
+        ]
+      },
+      "Window Cleaning": {
+        "label": "Nettoyage de vitres",
+        "types": [
+          "Nettoyage intérieur des vitres",
+          "Nettoyage des cadres et rails",
+          "Nettoyage des portes vitrées"
+        ]
+      },
+      "Power/Pressure Washing": {
+        "label": "Lavage à pression",
+        "types": [
+          "Nettoyage d'allée",
+          "Nettoyage de patio et terrasse",
+          "Nettoyage de trottoir",
+          "Nettoyage du revêtement extérieur",
+          "Nettoyage de clôture",
+          "Nettoyage de plancher de garage"
+        ]
+      }
+    },
+    "customOptions": {
+      "pleaseAddService": "Veuillez d'abord ajouter un service",
+      "frequency": "🕒 Fréquence",
+      "unitSize": "📏 Taille du logement",
+      "bedrooms": "🛏️ Chambres",
+      "bathrooms": "🚿 Salles de bain",
+      "startDate": "📅 Date de début",
+      "selectText": "Sélectionner...",
+      "additionalOptions": "🎼 Options supplémentaires",
+      "deepCleaning": "Nettoyage en profondeur",
+      "windowCleaning": "Nettoyage de vitres",
+      "laundryService": "Service de lessive",
+      "carpetType": "Type de tapis",
+      "carpetArea": "Surface approximative du tapis (pi²)",
+      "carpetMaterial": "Matériau du tapis",
+      "chooseMaterial": "Choisir un matériau...",
+      "olefin": "Olefin",
+      "wool": "Laine",
+      "stains": "Niveau de taches",
+      "selectStainSeverity": "Sélectionner le niveau de taches",
+      "howSevereAreTheStains": "À quel point les taches sont-elles sévères ?",
+      "light": "Légères",
+      "moderate": "Modérées",
+      "heavy": "Sévères",
+      "none": "Aucune",
+      "preferredCleaningDate": "Date de nettoyage préférée",
+      "surfaceType": "Type de surface",
+      "area": "pi²",
+      "oneTime": "Une fois",
+      "weekly": "Hebdomadaire",
+      "biWeekly": "Bimensuel",
+      "monthly": "Mensuel",
+      "other": "Autre",
+      "desiredDate": "Date de service souhaitée",
+      "description": "Description",
+      "descriptionDetail": "Fournissez une description des services dont vous avez besoin. Nous vous contacterons sous peu pour planifier une consultation.",
+      "upholsteryItems": [
+        "Nettoyage de sofa",
+        "Nettoyage de chaise",
+        "Nettoyage de canapé",
+        "Nettoyage de sectionnel",
+        "Nettoyage de pouf",
+        "Nettoyage d'amour",
+        "Nettoyage de chaise de salle à manger",
+        "Nettoyage de fauteuil inclinable"
+      ],
+      "upholsteryFabric": "Type de tissu d'ameublement",
+      "upholsteryArea": "Entrez la surface en pieds carrés",
+      "upholsteryPieces": "Entrez le nombre de pièces",
+      "selectFabric": "Sélectionner le type de tissu",
+      "cotton": "Coton",
+      "polyester": "Polyester",
+      "leather": "Cuir",
+      "nylon": "Nylon",
+      "selectSurfaceType": "Sélectionner le type de surface",
+      "concrete": "Béton",
+      "wood": "Bois",
+      "vinyl": "Vinyle",
+      "brick": "Brique",
+      "asphalt": "Asphalte"
+    },
+    "pdf": {
+      "title": "Confirmation de demande de service",
+      "headers": {
+        "name": "Nom",
+        "email": "Email",
+        "phone": "Numéro de téléphone",
+        "company": "Entreprise",
+        "postalcode": "Code postal",
+        "promo": "Code promo"
+      },
+      "table": {
+        "index": "#",
+        "service": "Service",
+        "type": "Type",
+        "customOptions": "Options personnalisées"
+      }
+    },
+    "email": {
+      "subject": "CleanAR Solutions : Votre confirmation de devis",
+      "greeting": "Merci de nous avoir contactés !",
+      "body": [
+        "Bonjour",
+        "Nous avons bien reçu votre demande de devis et la traitons actuellement. Vous trouverez ci-joint la confirmation de votre devis.",
+        "Nous vous contacterons sous peu pour discuter de vos besoins. En attendant, n'hésitez pas à consulter nos services.",
+        "Cordialement,",
+        "CleanAR Solutions"
+      ],
+      "contact": {
+        "website": "https://www.cleanarsolutions.ca/index",
+        "phone": "+1 (437) 440-5514"
+      }
+    }
+  }
+
+
+
+
 }

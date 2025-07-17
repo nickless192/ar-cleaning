@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { motion } from 'framer-motion';
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
@@ -30,13 +32,13 @@ function Index() {
   const [availabilityStatus, setAvailabilityStatus] = useState('');
   const [responseTimeMessage, setResponseTimeMessage] = useState('');
   const location = useLocation();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const contactItems = [
     {
       icon: "now-ui-icons tech_mobile",
       link: "business-hours",
-      text: " Business Hours",
+      text: t('contact_business_hours'),
       description: availabilityStatus,
       additionalInfo: responseTimeMessage,
       color: "text-primary"
@@ -44,9 +46,9 @@ function Index() {
     {
       icon: "now-ui-icons ui-1_email-85",
       link: "mailto:info@cleanARsolutions.ca",
-      text: "Email Support",
-      description: "For detailed inquiries or written communication, send us an email",
-      additionalInfo: "Guaranteed Response Within 24 Hours",
+      text: t('contact_email_support'),
+      description: t('email_description'),
+      additionalInfo: t('email_additional'),
       color: "text-success"
     },
     // {
@@ -87,17 +89,17 @@ function Index() {
     {
       icon: "now-ui-icons business_bulb-63",
       link: "https://g.page/r/Cek9dkmHVuBKEAE/review",
-      text: "Customer Feedback",
-      description: "Your Experience Matters",
-      additionalInfo: "Help Us Improve, Share Your Thoughts",
+      text: t('contact_feedback'),
+      description: t('feedback_description'),
+      additionalInfo: t('feedback_additional'),
       color: "text-warning"
     },
     {
       icon: "now-ui-icons business_badge",
       link: "/products-and-services",
-      text: "Explore Services",
-      description: "Tailored Cleaning Solutions",
-      additionalInfo: "Custom Packages Available",
+      text: t('contact_services'),
+      description: t('services_description'),
+      additionalInfo: t('services_additional'),
       color: "text-info"
     }
   ];
@@ -114,11 +116,12 @@ function Index() {
       (currentDay === 6 && currentHour >= 8 && currentHour < 13); // Saturday morning
 
     if (isBusinessHours) {
-      setAvailabilityStatus('✅ We are currently available');
-      setResponseTimeMessage('Instant response expected');
+      setAvailabilityStatus(t('status_online'));
+      // setAvailabilityStatus('✅ We are currently available');
+      setResponseTimeMessage(t('response_now'));
     } else {
-      setAvailabilityStatus('⏰ We are currently offline');
-      setResponseTimeMessage('We will respond within 24 hours');
+      setAvailabilityStatus(t('status_offline'));
+      setResponseTimeMessage(t('response_later'));
     }
 
     document.body.classList.add("index-page");
@@ -134,7 +137,7 @@ function Index() {
       document.body.classList.remove("index-page");
       document.body.classList.remove("sidebar-collapse");
     };
-  }, [location.search, location.state]);
+  }, [location.search, location.state,i18n.language]);
 
   return (
     <>
@@ -278,6 +281,8 @@ function Index() {
             <QuoteRequest />
           </Col>
         </Row>
+        
+      <ToastContainer position="top-center" autoClose={2000} />
         {/* <Row className="m-0 p-0">
           <Col xs='12' md='12' className="p-0">
             <ContactUs />

@@ -10,7 +10,6 @@
   "status_offline": "⏰ We are currently offline",
   "response_now": "Instant response expected",
   "response_later": "We will respond within 24 hours",
-
   "contact_business_hours": "Business Hours",
   "contact_email_support": "Email Support",
   "email_description": "For detailed inquiries or written communication, send us an email",
@@ -20,5 +19,294 @@
   "feedback_additional": "Help Us Improve, Share Your Thoughts",
   "contact_services": "Explore Services",
   "services_description": "Tailored Cleaning Solutions",
-  "services_additional": "Custom Packages Available"
+  "services_additional": "Custom Packages Available",
+  "products_services_title": "Products and Services",
+  "our_services_title": "Our Services",
+  "our_products_title": "Our Products",
+  "coming_soon": "COMING SOON!",
+  "residential_cleaning_title": "Residential Cleaning",
+  "residential_cleaning_description": [
+    "Complete cleaning of homes, apartments, and condominiums.",
+    "Carpet Cleaning to revitalize and maintain the freshness of carpets.",
+    "Furniture cleaning to preserve its beauty and prolong its lifespan."
+  ],
+  "residential_cleaning_button": "Add Residential Cleaning to Quote",
+  "commercial_cleaning_title": "Commercial Cleaning",
+  "commercial_cleaning_description": [
+    "Regular maintenance of offices and commercial spaces.",
+    "Cleaning of shopping centers and supermarkets.",
+    "Specialized services for the film industry and special events."
+  ],
+  "commercial_cleaning_button": "Add Commercial Cleaning to Quote",
+  "window_cleaning_title": "Window Cleaning",
+  "window_cleaning_description": [
+    "Professional cleaning of windows in homes and businesses.",
+    "Streak-free shine for a clear view.",
+    "Use of eco-friendly products for safety and sustainability."
+  ],
+  "window_cleaning_button": "Add Window Cleaning to Quote",
+  "carpet_cleaning_title": "Carpet and Upholstery Cleaning",
+  "carpet_cleaning_description": [
+    "Deep cleaning of carpets in homes and commercial spaces.",
+    "Stain removal and odor neutralization.",
+    "Upholstery cleaning to maintain the beauty and comfort of furniture."
+  ],
+  "carpet_cleaning_button": "Add Carpet Cleaning to Quote",
+  "power_washing_title": "Power Washing",
+  "power_washing_description": [
+    "High-pressure cleaning for driveways, sidewalks, and patios.",
+    "Removal of dirt, mold, and mildew from exterior surfaces.",
+    "Preparation of surfaces for painting or sealing."
+  ],
+  "power_washing_button": "Add Power Washing to Quote",
+  "about": {
+    "welcome_heading": "Welcome to CleanAR Solutions",
+    "welcome_text": "At CleanAR Solutions, we provide professional cleaning services in Toronto and the GTA. Our focus on excellence ensures every project meets the highest standards, creating a clean and healthy environment. Whether you need residential, commercial, or carpet cleaning, we customize our approach to meet your needs. Get started by requesting a quote, or contact us for more information.",
+    "learn_more_services": "Learn More About Our Services",
+    "mission_title": "Our Mission",
+    "mission_text": "Our mission is to transform spaces into cleaner, healthier, and more welcoming environments. We achieve this by offering customizable, high-quality cleaning services that are tailored to our clients’ needs while staying true to our commitment to sustainability and excellence.",
+    "vision_title": "Our Vision",
+    "vision_text": "Our vision is to become Toronto’s most trusted and innovative cleaning service provider, setting the standard for excellence while contributing to a cleaner, greener, and happier community.",
+    "values_title": "Our Values",
+    "values_intro": "At CleanAR Solutions, we are guided by the following values:",
+    "values_list": [
+      "Integrity: We conduct our business with honesty, transparency, and accountability.",
+      "Quality: We deliver top-tier cleaning services with attention to detail and excellence.",
+      "Customer Focus: We prioritize our clients’ unique needs, building trust through personalized solutions.",
+      "Sustainability: We promote eco-friendly cleaning practices to protect our environment.",
+      "Teamwork: We value collaboration, respect, and unity to achieve success together."
+    ],
+    "industries_title": "Industries We Serve",
+    "industries": {
+      "residential": {
+        "title": "Residential Buildings",
+        "items": [
+          "General Cleaning: Complete cleaning of common areas such as lobbies, hallways, stairs, and recreational areas.",
+          "Exterior Area Maintenance: Cleaning of sidewalks, courtyards, and parking areas.",
+          "Trash Management: Collection and proper disposal of waste and garbage."
+        ]
+      },
+      "offices": {
+        "title": "Offices",
+        "items": [
+          "Daily Cleaning: Cleaning of desks, tables, chairs, and break areas.",
+          "Floor Maintenance: Sweeping, mopping, and polishing of floors.",
+          "Bathroom Cleaning: Disinfection and deep cleaning of bathrooms and sanitary areas."
+        ]
+      },
+      "festivals": {
+        "title": "Festivals",
+        "items": [
+          "Pre-Event Cleaning: Cleaning of the event area before its start, including garbage collection and grounds cleaning.",
+          "Event Maintenance: Continuous maintenance of bathrooms, rest areas, and food areas during the event.",
+          "Post-Event Cleaning: Thorough cleaning of the event area after its conclusion, including garbage collection and site sanitation."
+        ]
+      }
+    }
+  },
+  "navbar": {
+    "about_us": "About Us",
+    "products_services": "Products & Services",
+    "log_in_signup": "Log In / Sign Up",
+    "log_out": "Log Out",
+    "profile": "Profile",
+    "admin": {
+      "configure": "Configure",
+      "manage_products": "Manage Products",
+      "manage_services": "Manage Services",
+      "manage_users": "Manage Users",
+      "manage_customers": "Manage Customers",
+      "view_quotes": "View Quote Requests",
+      "manage_gift_cards": "Manage Gift Cards",
+      "visitor_dashboard": "Visitor Log Dashboard",
+      "booking_dashboard": "Bookings Dashboard"
+    }
+  },
+  "daysOfTheWeek": {
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday",
+    "sunday": "Sunday"
+  },
+  "storeStatus": {
+    "open": "Open",
+    "closed": "Closed"
+  },
+  "footer": {
+    "work_with_us": "Work With Us",
+    "leave_review": "Leave A Review",
+    "terms": "Terms & Conditions",
+    "disclaimer": "Disclaimer",
+    "developer": "Designed & Built by"
+  },
+  "quick_quote": {
+    "form": {
+      "title": "Get Your Free Quote",
+      "name": "Name",
+      "email": "Email",
+      "phonenumber": "Phone Number",
+      "companyName": "Company",
+      "postalcode": "Postal Code",
+      "promoCode": "Promo Code",
+      "serviceRequired": "Service Required",
+      "serviceDescription": "Please add service type and level to customize your order.",
+      "serviceType": "Service Type",
+      "customOptions": "Your Custom Options",
+      "serviceLevel": "Please select a service level to customize your order.",
+      "additionalServices": "Please select any additional services you would like to add to your quote.",
+      "submit": "Submit Quote",
+      "reset": "Reset Form",
+      "confirmationMessage": "A confirmation email will be sent to you upon submission. Our team will review your request and get back to you as soon as possible. Thank you for choosing CleanAR Solutions!"
+    },
+    "tooltips": {
+      "name": "Enter your full name.",
+      "email": "Enter your email address.",
+      "phonenumber": "Enter your phone number.",
+      "companyName": "Enter your company name.",
+      "postalcode": "Enter your postal code.",
+      "promoCode": "Enter your promo code. Discount will be reflected on the quote if eligible. Promos cannot be combined."
+    },
+    "services": {
+      "Residential Cleaning": {
+        "label": "Residential Cleaning",
+        "types": [
+          "House Cleaning",
+          "Move-In/Out Cleaning",
+          "Condominium Cleaning",
+          "Residential Building Cleaning"
+        ]
+      },
+      "Commercial Cleaning": {
+        "label": "Commercial Cleaning",
+        "types": [
+          "Office Cleaning",
+          "Industrial Cleaning",
+          "Retail Cleaning"
+        ]
+      },
+      "Carpet And Upholstery": {
+        "label": "Carpet and Upholstery",
+        "types": [
+          "Carpet Cleaning",
+          "Upholstery Cleaning"
+        ]
+      },
+      "Window Cleaning": {
+        "label": "Window Cleaning",
+        "types": [
+          "Interior Window Cleaning",
+          "Window Track & Sill Cleaning",
+          "Glass Door Cleaning"
+        ]
+      },
+      "Power/Pressure Washing": {
+        "label": "Power / Pressure Washing",
+        "types": [
+          "Driveway Cleaning",
+          "Patio & Deck Cleaning",
+          "Sidewalk Cleaning",
+          "Exterior Siding Cleaning",
+          "Fence Cleaning",
+          "Garage Floor Cleaning"
+        ]
+      }
+    },
+    "customOptions": {
+      "pleaseAddService": "Please Add Service First",
+      "frequency": "⏲️ Frequency",
+      "unitSize": "📏 Unit Size",
+      "bedrooms": "🛏️ Bedrooms",
+      "bathrooms": "🚽 Bathrooms",
+      "startDate": "📅 Start Date",
+      "selectText": "Select...",
+      "additionalOptions": "🎼 Additional Options",
+      "deepCleaning": "Deep Cleaning",
+      "windowCleaning": "Window Cleaning",
+      "laundryService": "Laundry Service",
+      "carpetType": "Carpet Material",
+      "carpetArea": "Approximate Carpet Area (sqft)",
+      "carpetMaterial": "Carpet Material",
+      "chooseMaterial": "Choose a material...",
+      "olefin": "Olefin",
+      "wool": "Wool",
+      "carpetStains": "Stain Level",
+      "stains": "Stain Level",
+      "selectStainSeverity": "Select stain severity",
+      "howSevereAreTheStains": "How severe are the stains?",
+      "light": "Light",
+      "moderate": "Moderate",
+      "heavy": "Heavy",
+      "none": "None",
+      "preferredCleaningDate": "Preferred Cleaning Date",
+      "surfaceType": "Type of Surface",
+      "area": "sqft",
+      "oneTime": "One Time",
+      "weekly": "Weekly",
+      "biWeekly": "Bi-Weekly",
+      "monthly": "Monthly",
+      "other": "Other",
+      "desiredDate": "Desired Service Date",
+      "description": "Description",
+      "descriptionDetail": "Provide a description of the services you require. We will be in touch shortly to schedule a consultation.",
+      "upholsteryItems": [
+        "Sofa Cleaning",
+        "Chair Cleaning",
+        "Couch Cleaning",
+        "Sectional Cleaning",
+        "Ottoman Cleaning",
+        "Loveseat Cleaning",
+        "Dining Chair Cleaning",
+        "Recliner Cleaning"
+      ],
+      "upholsteryFabric": "Upholstery Fabric Type",
+      "upholsteryArea": "Enter area in square feet",
+      "upholsteryPieces": "Enter number of pieces",
+      "selectFabric": "Select Fabric Type",
+      "cotton": "Cotton",
+      "polyester": "Polyester",
+      "leather": "Leather",
+      "nylon": "Nylon",
+      "selectSurfaceType": "Select Surface Type",
+      "concrete": "Concrete",
+      "wood": "Wood",
+      "vinyl": "Vinyl",
+      "brick": "Brick",
+      "asphalt": "Asphalt"
+    },
+    "pdf": {
+      "title": "Service Request Confirmation",
+      "headers": {
+        "name": "Name",
+        "email": "Email",
+        "phone": "Phone Number",
+        "company": "Company",
+        "postalcode": "Postal Code",
+        "promo": "Promo Code"
+      },
+      "table": {
+        "index": "#",
+        "service": "Service",
+        "type": "Type",
+        "customOptions": "Custom Options"
+      }
+    },
+    "email": {
+      "subject": "CleanAR Solutions: Your Quote Confirmation",
+      "greeting": "Thank you for contacting us!",
+      "body": [
+        "Hi",
+        "We have received your quote request and are currently processing it. Please find your quote confirmation attached.",
+        "We will be in touch shortly to discuss your needs. In the meantime, feel free to browse our services.",
+        "Best regards,",
+        "CleanAR Solutions"
+      ],
+      "contact": {
+        "website": "https://www.cleanarsolutions.ca/index",
+        "phone": "+1 (437) 440-5514"
+      }
+    }
+  }
 }
