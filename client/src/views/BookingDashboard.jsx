@@ -224,17 +224,17 @@ const BookingDashboard = () => {
     }
     if (!window.confirm('Are you sure you want to cancel this booking?')) return;
     // return async () => {
-      try {
-        const res = await fetch(`/api/bookings/${bookingId}/cancel`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ status: 'cancelled', updatedBy: Auth.getProfile().data._id }) // Assuming you have user authentication
-        });
-        if (!res.ok) throw new Error('Failed to cancel booking');
-        fetchBookings();
-      } catch (err) {
-        alert('Error cancelling booking.');
-      }
+    try {
+      const res = await fetch(`/api/bookings/${bookingId}/cancel`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'cancelled', updatedBy: Auth.getProfile().data._id }) // Assuming you have user authentication
+      });
+      if (!res.ok) throw new Error('Failed to cancel booking');
+      fetchBookings();
+    } catch (err) {
+      alert('Error cancelling booking.');
+    }
     // };
   };
 
@@ -242,7 +242,7 @@ const BookingDashboard = () => {
     if (status !== 'confirmed' && status !== 'cancelled') {
       alert('You can only pend bookings that are confirmed or cancelled.');
       return;
-    }    
+    }
     if (!window.confirm('Are you sure you want to pend this booking?')) return;
     try {
       const res = await fetch(`/api/bookings/${bookingId}/pending`, {
@@ -258,7 +258,7 @@ const BookingDashboard = () => {
   };
 
   return (
-    <Container className="py-4">
+    <section className="py-4 px-1 mx-auto">
       <Row>
         <Col md={5}>
           <h4>Create Booking</h4>
@@ -276,7 +276,7 @@ const BookingDashboard = () => {
                 value={selectedCustomerId}
                 onChange={e => {
                   const selectedId = e.target.value;
-                   setSelectedCustomerId(selectedId);
+                  setSelectedCustomerId(selectedId);
                   const selectedCustomer = customers.find(c => c._id === selectedId);
                   if (selectedCustomer) {
                     setFormData(prev => ({
@@ -451,109 +451,141 @@ const BookingDashboard = () => {
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Name</th>
-                  <th>Email</th>
+                  <th>Customer Name and Email</th>
+                  {/* <th>Email</th> */}
                   <th>Service</th>
                   <th>Income</th>
                   <th>Service Date</th>
-                  <th>Confirmation</th>
-                  <th>Reminder Scheduled</th>
-                  <th>Booking Created On/By</th>
+                  <th>Confirmation/Reminder Scheduled</th>
+                  {/* <th>Reminder Scheduled</th> */}
+                  <th>Booking By</th>
                   <th>Status</th>
-                  <th>Actions</th>
+                  {/* <th>Actions</th> */}
                 </tr>
               </thead>
               <tbody>
                 {bookings.map((b, index) => (
                   <tr key={b._id}>
-                    <td>{index + 1}</td>
-                    <td>{b.customerName}</td>
-                    <td>{b.customerEmail}</td>
+                    <td className="align-top">
+                      <div className="d-flex flex-column align-items-start">
+                        <div>{index + 1}</div>
+                        <div className="d-flex flex-wrap gap-1 mt-1">
+                          {(b.status === 'confirmed' || b.status === 'cancelled') && (
+                            <Button
+                              onClick={() => handlePend(b._id, b.status)}
+                              color="primary"
+                              size="sm"
+                              title="Revert to Pending"
+                            >
+                              ⏪
+                            </Button>
+                          )}
+                          {b.status === 'pending' && (
+                            <Button
+                              onClick={() => handleConfirmed(b._id, b.status)}
+                              color="success"
+                              size="sm"
+                              title="Confirm"
+                            >
+                              ✅
+                            </Button>
+                          )}
+                          <Button
+                            color="info"
+                            size="sm"
+                            onClick={() => handleComplete(b._id, b.status)}
+                            title="Mark Completed"
+                          >
+                            ✔️
+                          </Button>
+                          <Button
+                            color="secondary"
+                            size="sm"
+                            onClick={() => handleCancel(b._id, b.status)}
+                            title="Cancel"
+                          >
+                            ❌
+                          </Button>
+                          <Button
+                            color="warning"
+                            size="sm"
+                            onClick={() => handleHide(b._id, b.status)}
+                            title="Hide"
+                          >
+                            🙈
+                          </Button>
+                          <Button
+                            color="danger"
+                            size="sm"
+                            onClick={() => handleDelete(b._id)}
+                            title="Delete"
+                          >
+                            <FaTrash />
+                          </Button>
+                        </div>
+                      </div>
+                    </td>
+
+                    <td>
+                      <div className="fw-bold">{b.customerName}</div>
+                      <div className="text-muted small">{b.customerEmail}</div>
+                    </td>
+
                     <td>{b.serviceType}</td>
                     <td>{b.income ? `$${parseFloat(b.income).toFixed(2)}` : 'N/A'}</td>
                     <td>{moment(b.date).format('YYYY-MM-DD HH:mm')}</td>
                     <td>
-                      {/* {b.scheduleConfirmation ? 'Scheduled' : 'Sent'} */}
-                      {/* <br /> */}
-                      {b.confirmationDate && ` @ ${moment(b.confirmationDate).format('MM-DD HH:mm')}`}
-                      <br />
-                      {b.disableConfirmation ? 'Disabled' : b.confirmationSent ? '✅Sent' : b.scheduleConfirmation ? 'Scheduled' : 'Not Scheduled'}
-                    </td>
-                    <td>
-                      {b.reminderScheduled ? (
-                        <>
-                          {'✅Reminder Scheduled'}
-                          {b.reminderDate && ` @ ${moment(b.reminderDate).format('MM-DD HH:mm')}`}
-                          <br />
-                          {b.reminderSent ? 'Sent' : 'Send Pending'}
-                        </>
-                      ) : (
-                        '❌Reminder Not Scheduled'
-                      )}
-                    </td>
-                    <td>{moment(b.createdAt).format('YYYY-MM-DD')}
-                      <br />
-                      {moment(b.createdAt).format('HH:mm')}
-                      <br />
-                      {b.createdBy ? `by ${b.createdBy}` : 'N/A'}
-                      <br />
-                      {b.updatedBy ? `Updated by ${b.updatedBy} on ${moment(b.updatedAt).format('YYYY-MM-DD HH:mm')}` : 'N/A'}
-                    </td>
-                    <td>{b.status}</td>
-                    <td>
-                      {/* button to update status based on a dropdown of statuses */}
-                      <div className="d-flex justify-content-between">
-                        {(b.status === 'confirmed' || b.status === 'cancelled') && (
-                          <Button
-                            onClick={() => handlePend(b._id, b.status)}
-                            color="warning"
-                            size="sm"
-                          >
-                            Revert to Pending
-                          </Button>
+                      <div className="mb-1">
+                        <strong>Confirmation:</strong>{' '}
+                        {b.disableConfirmation
+                          ? 'Disabled'
+                          : b.confirmationSent
+                            ? '✅ Sent'
+                            : b.scheduleConfirmation
+                              ? 'Scheduled'
+                              : 'Not Scheduled'}
+                        {b.confirmationDate && (
+                          <div className="text-muted small">
+                            @ {moment(b.confirmationDate).format('MM-DD HH:mm')}
+                          </div>
                         )}
-                        {b.status === 'pending' && (
-                          <Button
-                            onClick={() => handleConfirmed(b._id, b.status)}
-                            color="primary"
-                            size="sm"
-                          >
-                            Confirm
-                          </Button>
-                        )}
-                        {/* <Button
-                          onClick={() => handleConfirmed(b._id, b.status)}
-                          color="success"
-                          size="sm"
-                        >
-                          Confirm
-                        </Button> */}
-                        <Button
-                          color="info"
-                          size="sm"
-                          onClick={() => handleComplete(b._id, b.status)}
-                        >
-                          Mark Completed
-                        </Button>
-                        <Button
-                          color="secondary"
-                          size="sm"
-                          onClick={() => handleCancel(b._id, b.status)}
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                          color="warning"
-                          size="sm"
-                          onClick={() => handleHide(b._id, b.status)}
-                        >
-                          Hide
-                        </Button>
                       </div>
-                      <Button color="danger" size="sm" onClick={() => handleDelete(b._id)}>
-                        <FaTrash />
-                      </Button>
+
+                      <div>
+                        <strong>Reminder:</strong>{' '}
+                        {b.reminderScheduled ? '✅ Scheduled' : '❌ Not Scheduled'}
+                        {b.reminderDate && (
+                          <div className="text-muted small">
+                            @ {moment(b.reminderDate).format('MM-DD HH:mm')}
+                          </div>
+                        )}
+                        <div className="text-muted small">
+                          {b.reminderScheduled && (b.reminderSent ? 'Sent' : 'Send Pending')}
+                        </div>
+                      </div>
                     </td>
+
+                    <td>
+                      <div className="fw-bold mb-1">
+                        {b.createdBy ? `${b.createdBy.firstName} ${b.createdBy.lastName}` : 'N/A'}
+                      </div>
+                      <div className="fw-bold">
+                        {moment(b.createdAt).format('YYYY-MM-DD')} @ {moment(b.createdAt).format('HH:mm')}
+                      </div>
+                      <div className="small">
+                        <div className="fw-semibold">Last Updated By:</div>
+                        {b.updatedBy?.firstName ? (
+                          <>
+                            <div>{b.updatedBy.firstName} {b.updatedBy.lastName}</div>
+                            <div className="text-muted">{b.updatedBy.email}</div>
+                          </>
+                        ) : (
+                          <div className="text-muted">Unknown</div>
+                        )}
+                      </div>
+                    </td>
+
+                    <td>{b.status}</td>
                   </tr>
                 ))}
               </tbody>
@@ -566,14 +598,14 @@ const BookingDashboard = () => {
       <Row className="">
         <Col>
           <h4>Booking Calendar</h4>
+          <h5>Projected Income for {moment().format('MMMM YYYY')}: <strong>${monthlyIncome.toFixed(2)}</strong></h5>
           <BookingCalendar bookings={bookings} />
           <div className="mt-3">
-            <h5>Projected Income for {moment().format('MMMM YYYY')}: <strong>${monthlyIncome.toFixed(2)}</strong></h5>
           </div>
 
         </Col>
       </Row>
-    </Container>
+    </section>
   );
 };
 

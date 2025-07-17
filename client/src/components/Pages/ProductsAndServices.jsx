@@ -133,11 +133,12 @@ const ProductsAndServices = () => {
       {/* Use semantic section tag if appropriate */}
       <section className="section-background products-services-section"> {/* Added padding Y */}
         <VisitorCounter page={"products-and-services"} />
-        <Container> {/* Use Container for centered, max-width content */}
+        <section> {/* Use Container for centered, max-width content */}
           <h1 className="title secondary-color text-center mb-4">{t("products_services_title")}</h1>
 
           <div className="service-selector mb-5"> {/* Added margin bottom */}
             <h2 className="title secondary-color mb-4">{t("our_services_title")}</h2>
+            <p className="text-left mb-4 primary-color">{t("our_services_description")}</p> {/* Optional description */}
             <Row > {/* Responsive Grid: 1 col on xs, 2 on md, 3 on lg. g-4 adds gutters */}
               {servicesData.map((service, index) => (
                 <Col xs={6} md={4} key={index} className="d-flex align-items-stretch"> {/* Ensure cols stretch to content height */}
@@ -165,7 +166,7 @@ const ProductsAndServices = () => {
           </div>
 
 
-        </Container>
+        </section>
       </section>
     </>
   );

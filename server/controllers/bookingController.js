@@ -194,7 +194,7 @@ const bookingControllers = {
     },
     getBookings: async (req, res) => {
         try {
-            const bookings = await Booking.find({}).sort({ date: -1 });
+            const bookings = await Booking.find({}).populate('updatedBy', 'firstName lastName email').populate('createdBy', 'firstName lastName email').sort({ date: -1 });
             res.json(bookings);
         } catch (err) {
             console.error('Error fetching bookings:', err);

@@ -9,36 +9,32 @@ import { Image } from 'react-bootstrap';
 // import "./../../assets/css/our-palette.css";
 import Logo from "/src/assets/img/IC CLEAN AR-15-cropped.png";
 import VisitorCounter from "/src/components/Pages/VisitorCounter.jsx";
+// ...imports unchanged...
 
-// Reusable Content Section Component
+// Reusable Content Section
 const ContentSection = ({ title, content, onEdit, isEditing, field }) => (
-  <div className="content-section">
+  <div className="content-section my-4 px-3">
+    <h2 className="fs-3 fw-bold">{title}</h2>
     {isEditing ? (
-      <>
-        <h2>{title}</h2>
-        <Input
-          type="textarea"
-          value={content}
-          onChange={(e) => onEdit(field, e.target.value)}
-          rows={5}
-          className="mb-3"
-        />
-      </>
+      <Input
+        type="textarea"
+        value={content}
+        onChange={(e) => onEdit(field, e.target.value)}
+        rows={4}
+        className="border border-primary-subtle bg-light"
+      />
     ) : (
-      <>
-        <h2>{title}</h2>
-        <div>{content}</div> {/* Use div instead of p to avoid potential nesting */}
-      </>
+      <p className="fs-5 text-secondary">{content}</p>
     )}
   </div>
 );
 
-// Reusable Industry Card Component
+// Reusable Industry Card
 const IndustryCard = ({ title, items, bgColor }) => (
-  <Col>
-    <Card className={bgColor} inverse>
-      <CardHeader tag="h3" className="mx-2">{title}</CardHeader>
-      <ListGroup>
+  <Col xs="12" md="4" className="mb-4">
+    <Card className={`h-100 shadow-sm ${bgColor}`}>
+      <CardHeader tag="h4" className="fw-bold text-white">{title}</CardHeader>
+      <ListGroup flush>
         {items.map((item, index) => (
           <ListGroupItem key={index} className="text-dark">{item}</ListGroupItem>
         ))}
@@ -47,9 +43,9 @@ const IndustryCard = ({ title, items, bgColor }) => (
   </Col>
 );
 
-function AboutUsPage({ isAdmin = false }) {
+function AboutUsPage() {
   const { t } = useTranslation();
-
+  const [isAdmin, setIsAdmin] = useState(true); // This should be dynamic
   const [content, setContent] = useState({
     welcomeText: t('about.welcome_text'),
     mission: t('about.mission_text'),
@@ -58,26 +54,11 @@ function AboutUsPage({ isAdmin = false }) {
     values: t('about.values_list', { returnObjects: true }),
   });
 
-  const [isEditing, setIsEditing] = useState(false);
 
-  const handleEditChange = (field, value) => {
-    setContent((prev) => ({ ...prev, [field]: value }));
-  };
 
-  const toggleEditMode = () => {
-    setIsEditing(!isEditing);
-  };
-
-  const saveChanges = () => {
-    setIsEditing(false);
-    alert("Changes saved! (Simulated)");
-  };
 
   useEffect(() => {
     document.body.classList.add("index-page", "sidebar-collapse");
-    document.documentElement.classList.remove("nav-open");
-    document.body.scrollTop = 0;
-
     return () => {
       document.body.classList.remove("index-page", "sidebar-collapse");
     };
@@ -86,119 +67,87 @@ function AboutUsPage({ isAdmin = false }) {
   const industries = [
     {
       title: t("about.industries.residential.title"),
-      bgColor: "secondary-bg-color",
+      bgColor: "bg-secondary",
       items: t("about.industries.residential.items", { returnObjects: true }),
     },
     {
       title: t("about.industries.offices.title"),
-      bgColor: "primary-bg-color",
+      bgColor: "bg-primary",
       items: t("about.industries.offices.items", { returnObjects: true }),
     },
     {
       title: t("about.industries.festivals.title"),
-      bgColor: "secondary-bg-color",
+      bgColor: "bg-success",
       items: t("about.industries.festivals.items", { returnObjects: true }),
     },
   ];
 
   return (
-    <div className="section pb-0 mb-0" role="main">
+    <div className="section pb-0 mb-0 bg-light">
       <VisitorCounter page="aboutuspage" />
-      
-      {isAdmin && (
-        <div className="admin-controls text-center mb-3">
-          <Button color="primary" onClick={toggleEditMode}>
-            {isEditing ? "Cancel" : "Edit Content"}
-          </Button>
-          {isEditing && (
-            <Button color="success" onClick={saveChanges} className="ml-2">
-              Save Changes
-            </Button>
-          )}
-        </div>
-      )}
 
-      <Row className="content-row py-0 px-5" role="banner">
-        <Col xs="12" md="6" className="logo-col d-flex align-items-center justify-content-center">
-          <Image alt="CleanAR Solutions Logo" src={Logo} className="logo-image pr-0" />
+      {/* Banner */}
+      <Container>
+
+      <Row className="px-4 py-5 align-items-center">
+        <Col xs="12" md="6" className="text-center text-md-start mb-4 mb-md-0">
+          <Image alt="CleanAR Solutions Logo" src={Logo} className="img-fluid" />
         </Col>
-        <Col xs="12" md="6" className="text-col ">
-          <Card className="card-plain">
-            <CardHeader>
-              <CardTitle tag="h3" className="text-bold">{t('about.welcome_heading')}</CardTitle>
+        <Col xs="12" md="6">
+          <Card className="border-0 bg-light">
+            <CardHeader className="bg-light">
+              <CardTitle tag="h2" className="text-primary fw-bold">{t('about.welcome_heading')}</CardTitle>
             </CardHeader>
-            <CardBody>
-              <CardText>
-                {isEditing ? (
-                  <Input
-                    type="textarea"
-                    value={content.welcomeText}
-                    onChange={(e) => handleEditChange("welcomeText", e.target.value)}
-                    rows={5}
-                  />
-                ) : (
-                  <span>{t('about.welcome_text')}</span>
-                )}
+            <CardBody className="">
+              <CardText className="fs-5 text-muted">
+                
+                  <span>{content.welcomeText}</span>
+                
               </CardText>
-              {/* <Link to="/request-quote" className="btn primary-bg-color">Request a Quote</Link> */}
-              <Link to="/products-and-services" className="btn secondary-bg-color">{t('about.learn_more_services')}</Link>
+              <Link to="/products-and-services" className="btn btn-outline-primary mt-3">
+                {t('about.learn_more_services')}
+              </Link>
             </CardBody>
           </Card>
         </Col>
       </Row>
+      </Container>
 
-      <Container role="region" aria-label="Company Information">
+      {/* Company Info */}
+      <Container className="my-5">
         <Row>
           <Col>
             <ContentSection
               title={t('about.mission_title')}
-              content={t('about.mission_text')}
-              onEdit={handleEditChange}
-              isEditing={isEditing && isAdmin}
+              content={content.mission}
               field="mission"
             />
             <ContentSection
               title={t('about.vision_title')}
-              content={t('about.vision_text')}
-              onEdit={handleEditChange}
-              isEditing={isEditing && isAdmin}
+              content={content.vision}
               field="vision"
             />
-            <div className="content-section">
-              <h2>{t('about.values_title')}</h2>
-              {isEditing && isAdmin ? (
-                <Input
-                  type="textarea"
-                  value={content.values}
-                  onChange={(e) => handleEditChange("values", e.target.value)}
-                  rows={5}
-                  className="mb-3"
-                />
-              ) : (
-                <>
-                  <div><strong>{t('about.values_intro')}</strong></div>
+            <div className="content-section my-4 px-3">
+              <h2 className="fs-3 fw-bold">{t('about.values_title')}</h2>
+              
+                  <p className="fw-semibold">{content.values_intro}</p>
                   <ul>
                     {content.values.map((value, index) => (
-                      <li key={index}>{t(`about.values_list.${index}`)}</li>
+                      <li key={index} className="text-secondary">{value}</li>
                     ))}
                   </ul>
-                </>
-              )}
+                
             </div>
           </Col>
         </Row>
       </Container>
 
-      <Container className="product-selector" role="region" aria-label="Industries We Serve">
-        <h2 className="title text-center text-dark my-0 pb-2">{t('about.industries_title')}</h2>
-        <Row className="my-0">
+      {/* Industries */}
+      <Container className="py-5">
+        <h2 className="text-center text-dark mb-4">{t('about.industries_title')}</h2>
+        <Row>
           {industries.map((industry, index) => (
-            <IndustryCard
-              key={index}
-              title={industry.title}
-              items={industry.items}
-              bgColor={industry.bgColor}
-            />
+            <IndustryCard key={index} {...industry} />
           ))}
         </Row>
       </Container>
