@@ -1,0 +1,37 @@
+name: Deploy to Heroku (Staging)
+
+on:
+  push:
+    branches:
+      - staging  # Change this to the name of your staging branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: |
+          npm install
+          cd client && npm install
+
+      - name: Build client
+        run: |
+          cd client
+          npm run build
+
+      - name: Deploy to Heroku
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: "cleanarsolutions-staging"  # 👈 Replace with your staging Heroku app name
+          heroku_email: "omar.rguez26@gmail.com"         # 👈 Replace with your Heroku login email
+          usedocker: false
