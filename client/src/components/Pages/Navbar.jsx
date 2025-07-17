@@ -20,9 +20,6 @@ import {
     FaRegEnvelope,
 } from "react-icons/fa";
 import {
-    FiPhoneCall
-} from "react-icons/fi";
-import {
     Collapse,
     Row,
     Col,
@@ -37,6 +34,7 @@ import {
     Nav,
     Container
 } from "reactstrap";
+import { useTranslation } from 'react-i18next';
 import Auth from "/src/utils/auth";
 import logo from "/src/assets/img/IC CLEAN AR-15-cropped.png";
 import LanguageSwitcher from "/src/components/Pages/LanguageSwitcher";
@@ -47,6 +45,7 @@ function IndexNavbar() {
     const [navbarColor, setNavbarColor] = useState("navbar-color");
     const [collapseOpen, setCollapseOpen] = useState(false);
     const [isLogged] = useState(Auth.loggedIn());
+    const { t } = useTranslation();
 
     const handleToggle = () => {
         document.documentElement.classList.toggle("nav-open");
@@ -108,48 +107,48 @@ function IndexNavbar() {
                             >
                                 <div className="nav-link-content">
                                     <FaUsersCog className="nav-icon" />
-                                    <span>Configure</span>
+                                    <span>{t('navbar.admin.configure')}</span>
                                 </div>
                             </DropdownToggle>
 
                             <DropdownMenu className="dropdown-menu">
                                 <DropdownItem to="/manage-product" tag={Link} className="dropdown-item">
                                     <FaBoxOpen className="dropdown-icon" />
-                                    <span>Manage Products</span>
+                                    <span>{t('navbar.admin.manage_products')}</span>
                                 </DropdownItem>
 
                                 <DropdownItem to="/manage-service" tag={Link} className="dropdown-item">
                                     <FaConciergeBell className="dropdown-icon" />
-                                    <span>Manage Services</span>
+                                    <span>{t('navbar.admin.manage_services')}</span>
                                 </DropdownItem>
 
                                 <DropdownItem to="/manage-user" tag={Link} className="dropdown-item">
                                     <FaUsersCog className="dropdown-icon" />
-                                    <span>Manage Users</span>
+                                    <span>{t('navbar.admin.manage_users')}</span>
                                 </DropdownItem>
                                 <DropdownItem to="/manage-customers" tag={Link} className="dropdown-item">
                                     <FaUsersCog className="dropdown-icon" />
-                                    <span>Manage Customers</span>
+                                    <span>{t('navbar.admin.manage_customers')}</span>
                                 </DropdownItem>
 
                                 <DropdownItem to="/view-quotes" tag={Link} className="dropdown-item">
                                     <FaRegFileAlt className="dropdown-icon" />
-                                    <span>View Quote Requests</span>
+                                    <span>{t('navbar.admin.view_quotes')}</span>
                                 </DropdownItem>
 
                                 <DropdownItem to="/manage-gift-card" tag={Link} className="dropdown-item">
                                     <FaGift className="dropdown-icon" />
-                                    <span>Manage Gift Cards</span>
+                                    <span>{t('navbar.admin.manage_gift_cards')}</span>
                                 </DropdownItem>
 
                                 <DropdownItem to="/dashboard" tag={Link} className="dropdown-item">
                                     <FaTachometerAlt className="dropdown-icon" />
-                                    <span>Visitor Log Dashboard</span>
+                                    <span>{t('navbar.admin.visitor_dashboard')}</span>
                                 </DropdownItem>
 
                                 <DropdownItem to="/booking-dashboard" tag={Link} className="dropdown-item">
                                     <FaCalendarCheck className="dropdown-icon" />
-                                    <span>Bookings Dashboard</span>
+                                    <span>{t('navbar.admin.booking_dashboard')}</span>
                                 </DropdownItem>
                             </DropdownMenu>
                         </UncontrolledDropdown>
@@ -159,7 +158,7 @@ function IndexNavbar() {
                         <NavLink href="/profile-page" className="nav-link">
                             <div className="nav-link-content">
                                 <FaUserCircle className="nav-icon" />
-                                <span>Profile</span>
+                                <span>{t('navbar.profile')}</span>
                             </div>
                         </NavLink>
                     </NavItem>
@@ -173,7 +172,7 @@ function IndexNavbar() {
                         >
                             <div className="nav-link-content">
                                 <FaSignOutAlt className="nav-icon" />
-                                <span>Log Out</span>
+                                <span>{t('navbar.log_out')}</span>
                             </div>
                         </NavLink>
                     </NavItem>
@@ -185,7 +184,7 @@ function IndexNavbar() {
                     <NavLink href="/login-signup" className="nav-link nav-link-signup">
                         <div className="nav-link-content">
                             <FaRocket className="nav-icon" />
-                            <span>Log In / Sign Up</span>
+                            <span>{t('navbar.log_in_signup')}</span>
                         </div>
                     </NavLink>
                 </NavItem>
@@ -277,7 +276,7 @@ function IndexNavbar() {
                                             </div>
                                         </a>
                                     </NavItem>
-                                    {/* <LanguageSwitcher /> */}
+                                    <LanguageSwitcher />
 
                                 </div>
                                 <div>
@@ -297,7 +296,7 @@ function IndexNavbar() {
                                                 <NavLink href="/about-us" className="nav-link">
                                                     <div className="nav-link-content">
                                                         <FaIdBadge className="nav-icon" />
-                                                        <span>About Us</span>
+                                                        <span>{t('navbar.about_us')}</span>
                                                     </div>
                                                 </NavLink>
                                             </NavItem>
@@ -306,7 +305,7 @@ function IndexNavbar() {
                                                 <NavLink href="/products-and-services" className="nav-link">
                                                     <div className="nav-link-content">
                                                         <FaLightbulb className="nav-icon" />
-                                                        <span>Products & Services</span>
+                                                        <span>{t('navbar.products_services')}</span>
                                                     </div>
                                                 </NavLink>
                                             </NavItem>

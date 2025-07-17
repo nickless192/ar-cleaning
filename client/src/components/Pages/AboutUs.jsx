@@ -1,79 +1,64 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import {
   Row, Col, Card, CardBody, CardTitle, CardText, CardHeader,
   ListGroup, ListGroupItem, Container, Button, Input,
 } from "reactstrap";
 import { Image } from 'react-bootstrap';
 // import "./../../assets/css/our-palette.css";
-import Logo from "../../assets/img/logo.png";
+import Logo from "/src/assets/img/IC CLEAN AR-15-cropped.png";
 import VisitorCounter from "/src/components/Pages/VisitorCounter.jsx";
+// ...imports unchanged...
 
-// Reusable Content Section Component
-const ContentSection = React.memo(({ title, content, onEdit, isEditing, field }) => (
-  <div className="content-section">
+// Reusable Content Section
+const ContentSection = ({ title, content, onEdit, isEditing, field }) => (
+  <div className="content-section my-4 px-3">
+    <h2 className="fs-3 fw-bold">{title}</h2>
     {isEditing ? (
-      <>
-        <h2>{title}</h2>
-        <Input
-          type="textarea"
-          value={content}
-          onChange={(e) => onEdit(field, e.target.value)}
-          rows={5}
-          className="mb-3"
-        />
-      </>
+      <Input
+        type="textarea"
+        value={content}
+        onChange={(e) => onEdit(field, e.target.value)}
+        rows={4}
+        className="border border-primary-subtle bg-light"
+      />
     ) : (
-      <>
-        <h2>{title}</h2>
-        <div>{content}</div> {/* Use div instead of p to avoid potential nesting */}
-      </>
+      <p className="fs-5 text-secondary">{content}</p>
     )}
   </div>
-));
+);
 
-// Reusable Industry Card Component
-const IndustryCard = React.memo(({ title, items, bgColor }) => (
-  <Col>
-    <Card className={bgColor} inverse>
-      <CardHeader tag="h3" className="mx-2">{title}</CardHeader>
-      <ListGroup>
+// Reusable Industry Card
+const IndustryCard = ({ title, items, bgColor }) => (
+  <Col xs="12" md="4" className="mb-4">
+    <Card className={`h-100 shadow-sm ${bgColor}`}>
+      <CardHeader tag="h4" className="fw-bold text-white">{title}</CardHeader>
+      <ListGroup flush>
         {items.map((item, index) => (
           <ListGroupItem key={index} className="text-dark">{item}</ListGroupItem>
         ))}
       </ListGroup>
     </Card>
   </Col>
-));
+);
 
-function AboutUsPage({ isAdmin = false }) {
+function AboutUsPage() {
+  const { t } = useTranslation();
+  const [isAdmin, setIsAdmin] = useState(true); // This should be dynamic
   const [content, setContent] = useState({
-    welcomeText: "At CleanAR Solutions, we provide professional cleaning services in Toronto and the GTA. Our focus on excellence ensures every project meets the highest standards, creating a clean and healthy environment. Whether you need residential, commercial, or carpet cleaning, we customize our approach to meet your needs. Get started by requesting a quote, or contact us for more information.",
-    mission: "Our mission is to transform spaces into cleaner, healthier, and more welcoming environments. We achieve this by offering customizable, high-quality cleaning services that are tailored to our clients’ needs while staying true to our commitment to sustainability and excellence.",
-    vision: "Our vision is to become Toronto’s most trusted and innovative cleaning service provider, setting the standard for excellence while contributing to a cleaner, greener, and happier community.",
-    values: "Integrity: We conduct our business with honesty, transparency, and accountability.\nQuality: We deliver top-tier cleaning services with attention to detail and excellence.\nCustomer Focus: We prioritize our clients’ unique needs, building trust through personalized solutions.\nSustainability: We promote eco-friendly cleaning practices to protect our environment.\nTeamwork: We value collaboration, respect, and unity to achieve success together.",
+    welcomeText: t('about.welcome_text'),
+    mission: t('about.mission_text'),
+    vision: t('about.vision_text'),
+    values_intro: t('about.values_intro'),
+    values: t('about.values_list', { returnObjects: true }),
   });
 
-  const [isEditing, setIsEditing] = useState(false);
 
-  const handleEditChange = (field, value) => {
-    setContent((prev) => ({ ...prev, [field]: value }));
-  };
 
-  const toggleEditMode = () => {
-    setIsEditing(!isEditing);
-  };
-
-  const saveChanges = () => {
-    setIsEditing(false);
-    alert("Changes saved! (Simulated)");
-  };
 
   useEffect(() => {
     document.body.classList.add("index-page", "sidebar-collapse");
-    document.documentElement.classList.remove("nav-open");
-    document.body.scrollTop = 0;
-
     return () => {
       document.body.classList.remove("index-page", "sidebar-collapse");
     };
@@ -81,132 +66,88 @@ function AboutUsPage({ isAdmin = false }) {
 
   const industries = [
     {
-      title: "Residential Buildings",
-      bgColor: "secondary-bg-color",
-      items: [
-        "General Cleaning: Complete cleaning of common areas such as lobbies, hallways, stairs, and recreational areas.",
-        "Exterior Area Maintenance: Cleaning of sidewalks, courtyards, and parking areas.",
-        "Trash Management: Collection and proper disposal of waste and garbage.",
-      ],
+      title: t("about.industries.residential.title"),
+      bgColor: "bg-secondary",
+      items: t("about.industries.residential.items", { returnObjects: true }),
     },
     {
-      title: "Offices",
-      bgColor: "primary-bg-color",
-      items: [
-        "Daily Cleaning: Cleaning of desks, tables, chairs, and break areas.",
-        "Floor Maintenance: Sweeping, mopping, and polishing of floors.",
-        "Bathroom Cleaning: Disinfection and deep cleaning of bathrooms and sanitary areas.",
-      ],
+      title: t("about.industries.offices.title"),
+      bgColor: "bg-primary",
+      items: t("about.industries.offices.items", { returnObjects: true }),
     },
     {
-      title: "Festivals",
-      bgColor: "secondary-bg-color",
-      items: [
-        "Pre-Event Cleaning: Cleaning of the event area before its start, including garbage collection and grounds cleaning.",
-        "Event Maintenance: Continuous maintenance of bathrooms, rest areas, and food areas during the event.",
-        "Post-Event Cleaning: Thorough cleaning of the event area after its conclusion, including garbage collection and site sanitation.",
-      ],
+      title: t("about.industries.festivals.title"),
+      bgColor: "bg-success",
+      items: t("about.industries.festivals.items", { returnObjects: true }),
     },
   ];
 
   return (
-    <div className="section pb-0 mb-0" role="main">
+    <div className="section pb-0 mb-0 bg-light">
       <VisitorCounter page="aboutuspage" />
-      
-      {isAdmin && (
-        <div className="admin-controls text-center mb-3">
-          <Button color="primary" onClick={toggleEditMode}>
-            {isEditing ? "Cancel" : "Edit Content"}
-          </Button>
-          {isEditing && (
-            <Button color="success" onClick={saveChanges} className="ml-2">
-              Save Changes
-            </Button>
-          )}
-        </div>
-      )}
 
-      <Row className="content-row py-0 px-5" role="banner">
-        <Col xs="12" md="6" className="logo-col d-flex align-items-center justify-content-center">
-          <Image alt="CleanAR Solutions Logo" src={Logo} className="logo-image pr-0" />
+      {/* Banner */}
+      <Container>
+
+      <Row className="px-4 py-5 align-items-center">
+        <Col xs="12" md="6" className="text-center text-md-start mb-4 mb-md-0">
+          <Image alt="CleanAR Solutions Logo" src={Logo} className="img-fluid" />
         </Col>
-        <Col xs="12" md="6" className="text-col ">
-          <Card className="card-plain">
-            <CardHeader>
-              <CardTitle tag="h3" className="text-bold">Welcome to CleanAR Solutions</CardTitle>
+        <Col xs="12" md="6">
+          <Card className="border-0 bg-light">
+            <CardHeader className="bg-light">
+              <CardTitle tag="h2" className="text-primary fw-bold">{t('about.welcome_heading')}</CardTitle>
             </CardHeader>
-            <CardBody>
-              <CardText>
-                {isEditing ? (
-                  <Input
-                    type="textarea"
-                    value={content.welcomeText}
-                    onChange={(e) => handleEditChange("welcomeText", e.target.value)}
-                    rows={5}
-                  />
-                ) : (
-                  <span>{content.welcomeText}</span> 
-                )}
+            <CardBody className="">
+              <CardText className="fs-5 text-muted">
+                
+                  <span>{content.welcomeText}</span>
+                
               </CardText>
-              {/* <Link to="/request-quote" className="btn primary-bg-color">Request a Quote</Link> */}
-              <Link to="/products-and-services" className="btn secondary-bg-color">Learn More About Our Services</Link>
+              <Link to="/products-and-services" className="btn btn-outline-primary mt-3">
+                {t('about.learn_more_services')}
+              </Link>
             </CardBody>
           </Card>
         </Col>
       </Row>
+      </Container>
 
-      <Container role="region" aria-label="Company Information">
+      {/* Company Info */}
+      <Container className="my-5">
         <Row>
           <Col>
             <ContentSection
-              title="Our Mission"
+              title={t('about.mission_title')}
               content={content.mission}
-              onEdit={handleEditChange}
-              isEditing={isEditing && isAdmin}
               field="mission"
             />
             <ContentSection
-              title="Our Vision"
+              title={t('about.vision_title')}
               content={content.vision}
-              onEdit={handleEditChange}
-              isEditing={isEditing && isAdmin}
               field="vision"
             />
-            <div className="content-section">
-              <h2>Our Values</h2>
-              {isEditing && isAdmin ? (
-                <Input
-                  type="textarea"
-                  value={content.values}
-                  onChange={(e) => handleEditChange("values", e.target.value)}
-                  rows={5}
-                  className="mb-3"
-                />
-              ) : (
-                <>
-                  <div><strong>At CleanAR Solutions, we are guided by the following values:</strong></div>
-                  <ol>
-                    {content.values.split('\n').map((value, index) => (
-                      <li key={index}>{value}</li>
+            <div className="content-section my-4 px-3">
+              <h2 className="fs-3 fw-bold">{t('about.values_title')}</h2>
+              
+                  <p className="fw-semibold">{content.values_intro}</p>
+                  <ul>
+                    {content.values.map((value, index) => (
+                      <li key={index} className="text-secondary">{value}</li>
                     ))}
-                  </ol>
-                </>
-              )}
+                  </ul>
+                
             </div>
           </Col>
         </Row>
       </Container>
 
-      <Container className="product-selector" role="region" aria-label="Industries We Serve">
-        <h2 className="title text-center text-dark my-0 pb-2">Industries We Serve</h2>
-        <Row className="my-0">
+      {/* Industries */}
+      <Container className="py-5">
+        <h2 className="text-center text-dark mb-4">{t('about.industries_title')}</h2>
+        <Row>
           {industries.map((industry, index) => (
-            <IndustryCard
-              key={index}
-              title={industry.title}
-              items={industry.items}
-              bgColor={industry.bgColor}
-            />
+            <IndustryCard key={index} {...industry} />
           ))}
         </Row>
       </Container>

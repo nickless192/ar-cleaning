@@ -7,20 +7,22 @@ import {
   ListGroup,
   ListGroupItem
 } from 'reactstrap';
+import { useTranslation } from 'react-i18next';
 
 const BusinessHoursSidebar = () => {
   const [showHours, setShowHours] = useState(false);
+  const { t, i18n } = useTranslation();
 
   const toggle = () => setShowHours(!showHours);
 
   const businessHours = {
-    Sunday: "Closed",
-    Monday: "8:00 AM – 7:00 PM",
-    Tuesday: "8:00 AM – 7:00 PM",
-    Wednesday: "8:00 AM – 7:00 PM",
-    Thursday: "8:00 AM – 7:00 PM",
-    Friday: "8:00 AM – 7:00 PM",
-    Saturday: "8:00 AM – 1:00 PM"
+    [t('daysOfTheWeek.sunday')]: [t('storeStatus.closed')],
+    [t('daysOfTheWeek.monday')]: "8:00 AM – 7:00 PM",
+    [t('daysOfTheWeek.tuesday')]: "8:00 AM – 7:00 PM",
+    [t('daysOfTheWeek.wednesday')]: "8:00 AM – 7:00 PM",
+    [t('daysOfTheWeek.thursday')]: "8:00 AM – 7:00 PM",
+    [t('daysOfTheWeek.friday')]: "8:00 AM – 7:00 PM",
+    [t('daysOfTheWeek.saturday')]: "8:00 AM – 1:00 PM"
   };
 
   const currentDay = new Date().toLocaleDateString("en-US", {
@@ -47,11 +49,11 @@ const BusinessHoursSidebar = () => {
       (currentDay === 6 && currentHour >= 8 && currentHour < 13); // Saturday morning
 
     if (isBusinessHours) {
-      setAvailabilityStatus('✅ We are currently available - click to view business hours');
-      setResponseTimeMessage('Expect a Quick Reply');
+      setAvailabilityStatus(t('status_online'));
+      setResponseTimeMessage(t('response_now'));
     } else {
-      setAvailabilityStatus('⏰ We are currently offline - click to view business hours');
-      setResponseTimeMessage('We will respond as soon as possible');
+      setAvailabilityStatus(t('status_offline'));
+      setResponseTimeMessage(t('response_later'));
     }
 
     window.addEventListener("resize", handleResize);
@@ -59,7 +61,7 @@ const BusinessHoursSidebar = () => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [i18n.language]);
 
   return (
     <>
@@ -67,7 +69,7 @@ const BusinessHoursSidebar = () => {
         <p className="text-bold martel-semibold underline pl-0 m-0 text-link text-align-left">{availabilityStatus}</p>
       </Button>
       <Offcanvas direction="end" isOpen={showHours} toggle={toggle}>
-        <OffcanvasHeader toggle={toggle}>Business Hours</OffcanvasHeader>
+        <OffcanvasHeader toggle={toggle}>{t('contact_business_hours')}</OffcanvasHeader>
         <OffcanvasBody>
           <ListGroup flush>
             {Object.entries(businessHours).map(([day, hours]) => (

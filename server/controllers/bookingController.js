@@ -102,7 +102,7 @@ const bookingControllers = {
                 updatedBy: userId,
                 date: parsedDate,
                 reminderScheduled,
-                scheduleConfirmation: scheduleConfirmation || !confirmationDateLocal,
+                scheduleConfirmation: scheduleConfirmation,
                 scheduledConfirmationDate: confirmationDateLocal,
                 reminderDate: null,
                 confirmationSent: false,
@@ -194,11 +194,20 @@ const bookingControllers = {
     },
     getBookings: async (req, res) => {
         try {
-            const bookings = await Booking.find({}).sort({ date: -1 });
+            const bookings = await Booking.find({}).populate('updatedBy', 'firstName lastName email').populate('createdBy', 'firstName lastName email').sort({ date: -1 });
             res.json(bookings);
         } catch (err) {
             console.error('Error fetching bookings:', err);
             res.status(500).json({ error: 'Failed to fetch bookings' });
+        }
+    },
+    pendingBookings: async (req, res) => {
+        try {
+            const bookings = await Booking.find({ status: 'pending' });
+            res.json(bookings);
+        } catch (err) {
+            console.error('Error fetching pending bookings:', err);
+            res.status(500).json({ error: 'Failed to fetch pending bookings' });
         }
     },
     deleteBooking: async (req, res) => {
@@ -247,6 +256,54 @@ const bookingControllers = {
         } catch (err) {
             console.error('Error hiding booking:', err);
             res.status(500).json({ error: 'Failed to hide booking' });
+        }
+    },
+    cancelBooking: async (req, res) => {
+        try {
+            const bookingId = req.params.id;
+            const updatedBooking = await Booking.findByIdAndUpdate(bookingId, { status: 'cancelled' }, { new: true });
+            if (!updatedBooking) {
+                return res.status(404).json({ error: 'Booking not found' });
+            }            
+            updatedBooking.updatedAt = new Date(); // Update the updatedAt field
+            updatedBooking.updatedBy = req.body.updatedBy; // Assuming userId is passed in the request body
+            await updatedBooking.save(); // Save the updated booking
+            res.json(updatedBooking);
+        } catch (err) {
+            console.error('Error cancelling booking:', err);
+            res.status(500).json({ error: 'Failed to cancel booking' });
+        }
+    },
+    confirmBooking: async (req, res) => {
+        try {
+            const bookingId = req.params.id;
+            const updatedBooking = await Booking.findByIdAndUpdate(bookingId, { status: 'confirmed' }, { new: true });
+            if (!updatedBooking) {
+                return res.status(404).json({ error: 'Booking not found' });
+            }
+            updatedBooking.updatedAt = new Date(); // Update the updatedAt field
+            updatedBooking.updatedBy = req.body.updatedBy; // Assuming userId is passed in the request body
+            await updatedBooking.save(); // Save the updated booking
+            res.json(updatedBooking);
+        } catch (err) {
+            console.error('Error confirming booking:', err);
+            res.status(500).json({ error: 'Failed to confirm booking' });
+        }
+    },
+    pendBookingById: async (req, res) => {
+        try {
+            const bookingId = req.params.id;
+            const updatedBooking = await Booking.findByIdAndUpdate(bookingId, { status: 'pending' }, { new: true });
+            if (!updatedBooking) {
+                return res.status(404).json({ error: 'Booking not found' });
+            }
+            updatedBooking.updatedAt = new Date(); // Update the updatedAt field
+            updatedBooking.updatedBy = req.body.updatedBy; // Assuming userId is passed in the request body
+            await updatedBooking.save(); // Save the updated booking
+            res.json(updatedBooking);
+        } catch (err) {
+            console.error('Error pending booking:', err);
+            res.status(500).json({ error: 'Failed to pending booking' });
         }
     },
 
@@ -317,7 +374,8 @@ const bookingControllers = {
         const confirmations = await Booking.find({
             scheduledConfirmationDate: { $lte: now },
             scheduleConfirmation: true,
-            confirmationSent: false
+            confirmationSent: false,
+            status: { $ne: 'cancelled' } // Exclude cancelled bookings
         });
 
         for (const booking of confirmations) {
@@ -399,6 +457,7 @@ const bookingControllers = {
                 date: { $gte: now, $lte: in24h },
                 reminderScheduled: true,
                 reminderSent: false,
+                status: { $ne: 'cancelled' } // Exclude cancelled bookings
             });
 
             console.log(`Found ${dueBookings.length} bookings due for reminders.`);

@@ -1,8 +1,10 @@
 import React from "react";
 import { Container, Row, Col, Nav } from "react-bootstrap";
+import {useTranslation} from "react-i18next";
 
 function Footer() {
   const currentYear = new Date().getFullYear();
+  const { t } = useTranslation();
 
   return (
     <footer className="text-dark py-4 mt-auto light-blue-bg-color text-bold">
@@ -12,7 +14,7 @@ function Footer() {
             <Nav className="flex-column flex-md-row" as="ul" aria-label="Footer navigation">
               <Nav.Item as="li" className="me-md-3 mb-2 mb-md-0">
                 <Nav.Link href="/careers" className="p-0 text-dark text-decoration-none">
-                  Work With Us
+                  {t("footer.work_with_us")}
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item as="li" className="me-md-3 mb-2 mb-md-0">
@@ -22,17 +24,17 @@ function Footer() {
                   rel="noopener noreferrer"
                   className="p-0 text-dark text-decoration-none"
                 >
-                  Leave A Review
+                  {t("footer.leave_review")}
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item as="li" className="me-md-3 mb-2 mb-md-0">
                 <Nav.Link href="/terms-conditions" className="p-0 text-dark text-decoration-none">
-                  Terms & Conditions
+                  {t("footer.terms")}
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item as="li">
                 <Nav.Link href="/disclaimer" className="p-0 text-dark text-decoration-none">
-                  Disclaimer
+                  {t("footer.disclaimer")}
                 </Nav.Link>
               </Nav.Item>
             </Nav>
@@ -40,7 +42,7 @@ function Footer() {
 
           <Col md={6} className="text-center text-md-end">
             <small>
-              © {currentYear} | Designed & Built by{" "}
+              © {currentYear} | {t("footer.developer")}{" "}
               <a
                 href="_blank"
                 target="_blank"

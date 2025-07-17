@@ -52,7 +52,18 @@ const Customer = () => {
 
     if (res.ok) {
       alert('Customer created successfully');
-      setFormData(initialForm);
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        telephone: '',
+        address: '',
+        city: '',
+        province: '',
+        postalcode: '',
+        companyName: '',
+        howDidYouHearAboutUs: ''
+      });
     } else {
       const error = await res.json();
       alert(`Error: ${error.message || 'Something went wrong'}`);
