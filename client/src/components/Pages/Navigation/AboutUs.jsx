@@ -8,7 +8,7 @@ import {
 import { Image } from 'react-bootstrap';
 // import "./../../assets/css/our-palette.css";
 import Logo from "/src/assets/img/IC CLEAN AR-15-cropped.png";
-import VisitorCounter from "/src/components/Pages/VisitorCounter.jsx";
+import VisitorCounter from "/src/components/Pages/Management/VisitorCounter.jsx";
 // ...imports unchanged...
 
 // Reusable Content Section

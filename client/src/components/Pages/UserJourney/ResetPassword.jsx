@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import Auth from "../../utils/auth";
+import Auth from "/src/utils/auth";
 import { useLocation, useNavigate } from 'react-router-dom';
 // import Logo from "../../assets/svg/cleanmart-blue.svg";
 

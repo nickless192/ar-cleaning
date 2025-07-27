@@ -78,7 +78,7 @@ export default function LanguageSwitcher() {
         fr: 'Bientôt disponible !',
         es: '¡Próximamente!',
       };
-      toast.info(t('coming_soon', { lng: val }) || messages[val] || 'Coming soon!');
+      toast.info(t('products_and_services.coming_soon', { lng: val }) || messages[val] || 'Coming soon!');
       return;
     }
 

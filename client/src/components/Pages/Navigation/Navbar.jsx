@@ -37,7 +37,8 @@ import {
 import { useTranslation } from 'react-i18next';
 import Auth from "/src/utils/auth";
 import logo from "/src/assets/img/IC CLEAN AR-15-cropped.png";
-import LanguageSwitcher from "/src/components/Pages/LanguageSwitcher";
+import LanguageSwitcher from "/src/components/Pages/Management/LanguageSwitcher";
+import '/src/assets/css/NavBar.css';
 
 // import "./NavBar.css"; // We'll create this CSS file
 
@@ -112,6 +113,10 @@ function IndexNavbar() {
                             </DropdownToggle>
 
                             <DropdownMenu className="dropdown-menu">
+                                <DropdownItem to="/manage-categories" tag={Link} className="dropdown-item">
+                                    <FaBoxOpen className="dropdown-icon" />
+                                    <span>{t('navbar.admin.manage_categories')}</span>
+                                </DropdownItem>
                                 <DropdownItem to="/manage-product" tag={Link} className="dropdown-item">
                                     <FaBoxOpen className="dropdown-icon" />
                                     <span>{t('navbar.admin.manage_products')}</span>
@@ -149,6 +154,11 @@ function IndexNavbar() {
                                 <DropdownItem to="/booking-dashboard" tag={Link} className="dropdown-item">
                                     <FaCalendarCheck className="dropdown-icon" />
                                     <span>{t('navbar.admin.booking_dashboard')}</span>
+                                </DropdownItem>
+
+                                <DropdownItem to="/manage-finance" tag={Link} className="dropdown-item">
+                                    <FaCalendarCheck className="dropdown-icon" />
+                                    <span>{t('navbar.admin.manage_finance')}</span>
                                 </DropdownItem>
                             </DropdownMenu>
                         </UncontrolledDropdown>
@@ -193,7 +203,7 @@ function IndexNavbar() {
     }
 
     return (
-        <>
+        <>        
             {collapseOpen && (
                 <div
                     id="bodyClick"
@@ -203,47 +213,30 @@ function IndexNavbar() {
                     }}
                 />
             )}
-
-            <Navbar fixed="top" className={" mb-0 navbar-color " + navbarColor} expand="lg">
+            <Navbar className={" mb-0 navbar-color " + navbarColor} expand="lg">
                 <Container fluid className=" ">
-                    {/* <div className="navbar-wrapper"> */}
-                    {/* Brand/Logo */}
                     <Row className="navbar-wrapper">
-                        <Col md="3" xs="6">
+                        <Col md="3" xs="3">
                             <NavbarBrand
                                 href="/index"
                                 id="navbar-brand"
                                 className="text-capitalize font-weight-bold"
                             >
-                                {/* <Row>
-                            <Col xs="12"> */}
-                                {/* <img
-                                    src={require("/src/assets/img/IC CLEAN AR-15-cropped.png")}
-                                    alt="CleanAR Solutions"
-                                    className="navbarlogo"
-                                /> */}
                                 <img src={logo} alt="CleanAR Solutions" className="navbarlogo" />
-
-                                {/* </Col>
-                            <Col> */}
-                                <div className="">
+                                <div>
                                     <h1 className="navlogotext navbarh1 montserrat-bold m-0 t-0 ms-2">
                                         CleanAR Solutions
                                     </h1>
                                 </div>
-                                {/* </Col>
-                        </Row> */}
                             </NavbarBrand>
                         </Col>
-                        <Col md="9" xs="6" className="">
+                        <Col md="9" xs="9">
                             <div>
                                 <div className="navbar-nav social-icons-container">
                                     <NavItem className="nav-item ml-auto">
                                         <NavLink href="https://www.instagram.com/cleanarsolutions/" className="nav-link" target="_blank" rel="noopener noreferrer">
                                             <div className="nav-link-content">
-                                                {/* <FaIdBadge className="nav-icon" /> */}
                                                 <FaInstagram />
-                                                {/* <span>Instagram</span> */}
                                             </div>
                                         </NavLink>
                                     </NavItem>
@@ -251,7 +244,6 @@ function IndexNavbar() {
                                         <NavLink href="https://www.facebook.com/share/18X3sPR1vf/?mibextid=wwXIfr" className="nav-link" target="_blank" rel="noopener noreferrer">
                                             <div className="nav-link-content">
                                                 <FaFacebook className="nav-icon" />
-                                                {/* <span>About Us</span> */}
                                             </div>
                                         </NavLink>
                                     </NavItem>
@@ -259,7 +251,6 @@ function IndexNavbar() {
                                         <NavLink href="https://www.tiktok.com/@cleanar.solutions" className="nav-link" target="_blank" rel="noopener noreferrer">
                                             <div className="nav-link-content">
                                                 <FaTiktok className="nav-icon" />
-                                                {/* <span>About Us</span> */}
                                             </div>
                                         </NavLink>
                                     </NavItem>
@@ -272,15 +263,12 @@ function IndexNavbar() {
                                         >
                                             <div className="nav-link-content">
                                                 <FaRegEnvelope className="nav-icon" />
-                                                {/* <span>About Us</span> */}
                                             </div>
                                         </a>
                                     </NavItem>
                                     <LanguageSwitcher />
-
                                 </div>
-                                <div>
-
+                                <div className="">
                                     <button
                                         className="navbar-toggler"
                                         type="button"

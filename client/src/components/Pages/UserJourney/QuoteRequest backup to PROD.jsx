@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Helmet, HelmetProvider } from 'react-helmet-async';
+import { HelmetProvider } from 'react-helmet-async';
+import { useTranslation } from 'react-i18next';
 import {
     Popover, PopoverBody
 } from 'reactstrap';
@@ -11,8 +12,8 @@ import {
     Row,
     Col,
 } from 'react-bootstrap';
-import Auth from "../utils/auth";
-import VisitorCounter from "../components/Pages/VisitorCounter";
+import Auth from "/src/utils/auth";
+import VisitorCounter from "/src/components/Pages/Management/VisitorCounter";
 import {
     FaQuestionCircle
 } from 'react-icons/fa';
@@ -22,6 +23,7 @@ const QuoteRequest = () => {
 
     const location = useLocation();
     const navigate = useNavigate();
+    const { t, i18n } = useTranslation();
     const [formData, setFormData] = useState({
         name: '',
         companyName: '',
@@ -82,11 +84,7 @@ const QuoteRequest = () => {
             "Exterior Siding Cleaning",
             "Fence Cleaning",
             "Garage Floor Cleaning"
-        ],
-        // 'Specialty Services': [
-        //     "Event Cleaning",
-        //     "Post-Construction Cleaning"
-        // ]
+        ]
     };
 
     const togglePopover = (field) => {
@@ -125,7 +123,8 @@ const QuoteRequest = () => {
         // console.log('serviceClicked:', serviceClicked);
 
         calculateTotals();
-        handleBodyClass();
+        document.body.classList.add("request-quote", "sidebar-collapse");
+        document.documentElement.classList.remove("nav-open");
         // if (location.state?.scrollToQuote) {
         if (scrollToQuote && !scrolledToQuote) {
             document.getElementById("quote-section")?.scrollIntoView({ behavior: "smooth" });
@@ -138,7 +137,7 @@ const QuoteRequest = () => {
             }
             setScrolledToQuote(true);
         }
-        return cleanupBodyClass;
+        return document.body.classList.remove("request-quote", "sidebar-collapse");
     }, [isLogged, formData.services, location.search, location.state]);
 
     const prepopulateForm = useCallback(() => {
@@ -175,15 +174,6 @@ const QuoteRequest = () => {
     }, [formData.services]);
 
 
-    const handleBodyClass = () => {
-        document.body.classList.add("request-quote", "sidebar-collapse");
-        document.documentElement.classList.remove("nav-open");
-    };
-
-    const cleanupBodyClass = () => {
-        document.body.classList.remove("request-quote", "sidebar-collapse");
-    };
-
     const handleChange = (event) => {
         const { name, value } = event.target;
         // reset validation if promo code is changed
@@ -217,34 +207,6 @@ const QuoteRequest = () => {
         setOptions(serviceOptions[service] || []);
         setFormData(prev => ({ ...prev, services: [] }));
     }, []);
-
-    // const handleCustomOptionChange = (type, option, e, cost, label) => {
-    //     let value;
-    //     if (e.target.type === 'checkbox') {
-    //         value = e.target.checked;
-    //     } else {
-    //         value = e.target.value;
-    //     }
-    //     // const value = e.target.checked || e.target.value;
-    //     // console.log(e.target.value);
-    //     // console.log(e.target.checked);
-    //     // console.log("value: ", value);
-    //     console.log('option:', option);
-    //     setFormData(prevFormData => ({
-    //         ...prevFormData,
-    //         services: prevFormData.services.map(s =>
-    //             s.type === type
-    //                 ? {
-    //                     ...s,
-    //                     customOptions: {
-    //                         ...s.customOptions,
-    //                         [option]: value   // Group service and serviceCost
-    //                     }
-    //                 }
-    //                 : s
-    //         )
-    //     }));
-    // };
 
     const handleCustomOptionChange = useCallback((type, option, e, label) => {
         let value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
@@ -876,19 +838,6 @@ const QuoteRequest = () => {
                 return '';
         }
     };
-
-
-    // const handleEmailCheckbox = (e) => {
-    //     if (e.target.checked) {
-    //         // disable the email field
-    //         document.getElementById('floatingEmail').disabled = true;
-    //         // set the email field to blank
-    //         setFormData(prevFormData => ({ ...prevFormData, email: '' }));
-    //     }
-    //     else {
-    //         document.getElementById('floatingEmail').disabled = false;
-    //     }
-    // }
 
     return (
         <>

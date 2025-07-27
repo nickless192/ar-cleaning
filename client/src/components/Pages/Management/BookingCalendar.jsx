@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '../../src/assets/css/bookingcalendar.css';
+import '/src/assets/css/bookingcalendar.css';
 
 const BookingCalendar = ({ bookings }) => {
   const [currentDate, setCurrentDate] = useState(new Date());

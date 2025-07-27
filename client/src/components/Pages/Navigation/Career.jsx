@@ -4,8 +4,8 @@ import {
 } from "reactstrap";
 import { Image } from 'react-bootstrap';
 // import "./../../assets/css/our-palette.css";
-import Logo from "../../assets/img/logo.png";
-import VisitorCounter from "/src/components/Pages/VisitorCounter.jsx";
+import Logo from "/src/assets/img/logo.png";
+import VisitorCounter from "/src/components/Pages/Management/VisitorCounter.jsx";
 
 function Career() {
 

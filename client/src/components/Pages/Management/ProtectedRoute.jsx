@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import Auth from "../../utils/auth"; // Adjust the path based on your project structure
+import Auth from "/src/utils/auth"; // Adjust the path based on your project structure
 
 const ProtectedRoute = ({ element }) => {
   const isAuthenticated = Auth.loggedIn();

@@ -76,12 +76,6 @@ const BookingDashboard = () => {
       // Calculate monthly income
       const thisMonth = moment().month();
       const thisYear = moment().year();
-      const total = data.reduce((sum, b) => {
-        const date = moment(b.date);
-        const amount = parseFloat(b.income || 0);
-        return date.month() === thisMonth && date.year() === thisYear ? sum + amount : sum;
-      }, 0);
-      setMonthlyIncome(total);
     } catch (err) {
       console.error('Failed to fetch bookings:', err);
     }
@@ -598,7 +592,6 @@ const BookingDashboard = () => {
       <Row className="">
         <Col>
           <h4>Booking Calendar</h4>
-          <h5>Projected Income for {moment().format('MMMM YYYY')}: <strong>${monthlyIncome.toFixed(2)}</strong></h5>
           <BookingCalendar bookings={bookings} />
           <div className="mt-3">
           </div>

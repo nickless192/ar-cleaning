@@ -21,19 +21,18 @@
   background-color: var(--light-color) !important;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
-/* The only CSS you need */
-body {
-  padding-top: 80px; /* Just use a value slightly larger than your navbar height */
-}
+
 
 .social-icons-container {
   display: flex !important;
   flex-direction: row !important;
   justify-content: left;
   align-items: left;
-  gap: 0rem;
+  gap: 0rem!important;
   flex-wrap: nowrap;
 }
+
+
 
 .social-icons-container .nav-item {
   flex: none !important;
@@ -151,6 +150,7 @@ main,
 .nav-link-content {
   display: flex;
   align-items: center;
+  font-size: 1.2rem;
 }
 
 .nav-icon {

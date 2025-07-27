@@ -10,7 +10,6 @@
   "status_offline": "⏰ Nous sommes actuellement hors ligne",
   "response_now": "Réponse immédiate attendue",
   "response_later": "Nous vous répondrons dans les 24 heures",
-
   "contact_business_hours": "Heures d’ouverture",
   "contact_email_support": "Assistance par courriel",
   "email_description": "Pour des questions détaillées ou des communications écrites, envoyez-nous un courriel",
@@ -21,71 +20,83 @@
   "contact_services": "Explorer les services",
   "services_description": "Solutions de nettoyage personnalisées",
   "services_additional": "Forfaits personnalisés disponibles",
+  "products_and_services": {
 
-   "products_services_title": "Produits et Services",
-  "our_services_title": "Nos Services",
-  "our_products_title": "Nos Produits",
-  "our_services_description": "Explorez notre gamme de services de nettoyage professionnels conçus pour répondre à vos besoins. Du résidentiel au commercial, nous avons tout ce qu'il vous faut. Notre équipe est dédiée à fournir des solutions de nettoyage de premier ordre qui garantissent un environnement propre et sain. Que vous ayez besoin d'un entretien régulier ou d'un nettoyage en profondeur ponctuel, nous personnalisons nos services pour s'adapter à vos exigences. Contactez-nous dès aujourd'hui pour en savoir plus sur la façon dont nous pouvons vous aider à obtenir un espace plus propre. Consultez régulièrement notre site pour des mises à jour sur les nouveaux services et les offres spéciales.",
-  "our_products_description": "Découvrez notre gamme de produits et solutions de nettoyage qui garantissent un foyer et un lieu de travail impeccables.",
-  "coming_soon": "Bientôt disponible !",
-
-  "residential_cleaning_title": "Nettoyage résidentiel",
-  "residential_cleaning_description": [
-    "Nettoyage complet des maisons, appartements et condominiums.",
-    "Nettoyage de tapis pour revitaliser et préserver leur fraîcheur.",
-    "Nettoyage des meubles pour prolonger leur durée de vie."
-  ],
-  "residential_cleaning_button": "Ajouter le nettoyage résidentiel au devis",
-
-  "commercial_cleaning_title": "Nettoyage commercial",
-  "commercial_cleaning_description": [
-    "Entretien régulier des bureaux et des espaces commerciaux.",
-    "Nettoyage des centres commerciaux et supermarchés.",
-    "Services spécialisés pour l'industrie cinématographique et les événements spéciaux."
-  ],
-  "commercial_cleaning_button": "Ajouter le nettoyage commercial au devis",
-
-  "window_cleaning_title": "Nettoyage de vitres",
-  "window_cleaning_description": [
-    "Nettoyage professionnel des vitres pour les maisons et les entreprises.",
-    "Finition sans traces pour une vue claire.",
-    "Produits écologiques pour plus de sécurité et de durabilité."
-  ],
-  "window_cleaning_button": "Ajouter le nettoyage de vitres au devis",
-
-  "carpet_cleaning_title": "Nettoyage de tapis et meubles rembourrés",
-  "carpet_cleaning_description": [
-    "Nettoyage en profondeur des tapis dans les maisons et les entreprises.",
-    "Élimination des taches et neutralisation des odeurs.",
-    "Nettoyage des meubles pour conserver leur beauté et confort."
-  ],
-  "carpet_cleaning_button": "Ajouter le nettoyage de tapis au devis",
-
-  "power_washing_title": "Nettoyage haute pression",
-  "power_washing_description": [
-    "Nettoyage haute pression des allées, trottoirs et terrasses.",
-    "Élimination de la saleté, de la moisissure et des champignons.",
-    "Préparation des surfaces pour la peinture ou le scellement."
-  ],
-  "power_washing_button": "Ajouter le nettoyage haute pression au devis",
-
-   "about": {
-  "welcome_heading": "Bienvenue chez CleanAR Solutions",
-  "welcome_text": "Chez CleanAR Solutions, nous offrons des services de nettoyage professionnels à Toronto et dans la région du Grand Toronto. Notre engagement envers l’excellence garantit que chaque projet respecte les normes les plus élevées, créant ainsi un environnement propre et sain. Que vous ayez besoin de services résidentiels, commerciaux ou de nettoyage de tapis, nous adaptons notre approche à vos besoins. Commencez en demandant un devis, ou contactez-nous pour plus d'informations.",
-  "learn_more_services": "En savoir plus sur nos services",
-  "mission_title": "Notre Mission",
-  "mission_text": "Notre mission est de transformer les espaces en environnements plus propres, plus sains et plus accueillants. Nous y parvenons en offrant des services de nettoyage personnalisables et de haute qualité, adaptés aux besoins de nos clients tout en respectant notre engagement envers la durabilité et l’excellence.",
-  "vision_title": "Notre Vision",
-  "vision_text": "Notre vision est de devenir le fournisseur de services de nettoyage le plus fiable et innovant à Toronto, en établissant une norme d’excellence tout en contribuant à une communauté plus propre, plus verte et plus heureuse.",
-  "values_title": "Nos Valeurs",
-  "values_intro": "Chez CleanAR Solutions, nous sommes guidés par les valeurs suivantes :",
-  "values_list": [
-    "Intégrité : Nous menons nos activités avec honnêteté, transparence et responsabilité.",
-    "Qualité : Nous offrons des services de nettoyage de premier ordre avec souci du détail et excellence.",
-    "Orientation client : Nous mettons les besoins uniques de nos clients au premier plan, en bâtissant la confiance grâce à des solutions personnalisées.",
-    "Durabilité : Nous encourageons des pratiques de nettoyage respectueuses de l’environnement.",
-    "Travail d’équipe : Nous valorisons la collaboration, le respect et l’unité pour réussir ensemble."
-  ],
+    "products_services_title": "Produits et Services",
+    "our_services_title": "Nos Services",
+    "our_products_title": "Nos Produits",
+    "our_services_description": "Explorez notre gamme de services de nettoyage professionnels conçus pour répondre à vos besoins. Du résidentiel au commercial, nous avons tout ce qu'il vous faut. Notre équipe est dédiée à fournir des solutions de nettoyage de premier ordre qui garantissent un environnement propre et sain. Que vous ayez besoin d'un entretien régulier ou d'un nettoyage en profondeur ponctuel, nous personnalisons nos services pour s'adapter à vos exigences. Contactez-nous dès aujourd'hui pour en savoir plus sur la façon dont nous pouvons vous aider à obtenir un espace plus propre. Consultez régulièrement notre site pour des mises à jour sur les nouveaux services et les offres spéciales.",
+    "our_products_description": "Découvrez notre gamme de produits et solutions de nettoyage qui garantissent un foyer et un lieu de travail impeccables.",
+    "coming_soon": "Bientôt disponible !",
+    "residential_cleaning_title": "Nettoyage résidentiel",
+    "residential_cleaning_house_cleaning": "Nettoyage de maison",
+    "residential_cleaning_move_in_out": "Nettoyage avant/après déménagement",
+    "residential_cleaning_condominium": "Nettoyage de condominium",
+    "residential_cleaning_building": "Nettoyage d'immeuble résidentiel",
+    "residential_cleaning_description": [
+      "Nettoyage complet des maisons, appartements et condominiums.",
+      "Nettoyage de tapis pour revitaliser et préserver leur fraîcheur.",
+      "Nettoyage des meubles pour prolonger leur durée de vie."
+    ],
+    "residential_cleaning_button": "Ajouter le nettoyage résidentiel au devis",
+    "commercial_cleaning_title": "Nettoyage commercial",
+    "commercial_cleaning_office_cleaning": "Nettoyage de bureau",
+    "commercial_cleaning_industrial_cleaning": "Nettoyage industriel",
+    "commercial_cleaning_retail_cleaning": "Nettoyage de magasin",
+    "commercial_cleaning_description": [
+      "Entretien régulier des bureaux et des espaces commerciaux.",
+      "Nettoyage des centres commerciaux et supermarchés.",
+      "Services spécialisés pour l'industrie cinématographique et les événements spéciaux."
+    ],
+    "commercial_cleaning_button": "Ajouter le nettoyage commercial au devis",
+    "window_cleaning_title": "Nettoyage de vitres",
+    "window_cleaning_interior": "Nettoyage intérieur des vitres",
+    "window_cleaning_track_sill": "Nettoyage des cadres et rails",
+    "window_cleaning_glass_door": "Nettoyage des portes vitrées",
+    "window_cleaning_description": [
+      "Nettoyage professionnel des vitres pour les maisons et les entreprises.",
+      "Finition sans traces pour une vue claire.",
+      "Produits écologiques pour plus de sécurité et de durabilité."
+    ],
+    "window_cleaning_button": "Ajouter le nettoyage de vitres au devis",
+    "carpet_cleaning_title": "Nettoyage de tapis et meubles rembourrés",
+    "carpet_cleaning_description": [
+      "Nettoyage en profondeur des tapis dans les maisons et les entreprises.",
+      "Élimination des taches et neutralisation des odeurs.",
+      "Nettoyage des meubles pour conserver leur beauté et confort."
+    ],
+    "carpet_and_upholstery_button": "Ajouter le nettoyage de tapis au devis",
+    "power_washing_title": "Nettoyage haute pression",
+    "power_washing_driveway": "Nettoyage d'allée",
+    "power_washing_patio_deck": "Nettoyage de patio et terrasse",
+    "power_washing_sidewalk": "Nettoyage de trottoir",
+    "power_washing_exterior_siding": "Nettoyage de revêtement extérieur",
+    "power_washing_fence": "Nettoyage de clôture",
+    "power_washing_garage_floor": "Nettoyage de plancher de garage",
+    "power_washing_description": [
+      "Nettoyage haute pression des allées, trottoirs et terrasses.",
+      "Élimination de la saleté, de la moisissure et des champignons.",
+      "Préparation des surfaces pour la peinture ou le scellement."
+    ],
+    "power_pressure_washing_button": "Ajouter le nettoyage haute pression au devis"
+  },
+  "about": {
+    "welcome_heading": "Bienvenue chez CleanAR Solutions",
+    "welcome_text": "Chez CleanAR Solutions, nous offrons des services de nettoyage professionnels à Toronto et dans la région du Grand Toronto. Notre engagement envers l’excellence garantit que chaque projet respecte les normes les plus élevées, créant ainsi un environnement propre et sain. Que vous ayez besoin de services résidentiels, commerciaux ou de nettoyage de tapis, nous adaptons notre approche à vos besoins. Commencez en demandant un devis, ou contactez-nous pour plus d'informations.",
+    "learn_more_services": "En savoir plus sur nos services",
+    "mission_title": "Notre Mission",
+    "mission_text": "Notre mission est de transformer les espaces en environnements plus propres, plus sains et plus accueillants. Nous y parvenons en offrant des services de nettoyage personnalisables et de haute qualité, adaptés aux besoins de nos clients tout en respectant notre engagement envers la durabilité et l’excellence.",
+    "vision_title": "Notre Vision",
+    "vision_text": "Notre vision est de devenir le fournisseur de services de nettoyage le plus fiable et innovant à Toronto, en établissant une norme d’excellence tout en contribuant à une communauté plus propre, plus verte et plus heureuse.",
+    "values_title": "Nos Valeurs",
+    "values_intro": "Chez CleanAR Solutions, nous sommes guidés par les valeurs suivantes :",
+    "values_list": [
+      "Intégrité : Nous menons nos activités avec honnêteté, transparence et responsabilité.",
+      "Qualité : Nous offrons des services de nettoyage de premier ordre avec souci du détail et excellence.",
+      "Orientation client : Nous mettons les besoins uniques de nos clients au premier plan, en bâtissant la confiance grâce à des solutions personnalisées.",
+      "Durabilité : Nous encourageons des pratiques de nettoyage respectueuses de l’environnement.",
+      "Travail d’équipe : Nous valorisons la collaboration, le respect et l’unité pour réussir ensemble."
+    ],
     "industries_title": "Secteurs que nous desservons",
     "industries": {
       "residential": {
@@ -114,8 +125,7 @@
       }
     }
   },
-
-    "navbar": {
+  "navbar": {
     "about_us": "À propos de nous",
     "products_services": "Produits et Services",
     "log_in_signup": "Connexion / Inscription",
@@ -123,6 +133,7 @@
     "profile": "Profil",
     "admin": {
       "configure": "Configurer",
+      "manage_categories": "Gérer les Catégories",
       "manage_products": "Gérer les Produits",
       "manage_services": "Gérer les Services",
       "manage_users": "Gérer les Utilisateurs",
@@ -147,22 +158,25 @@
     "closed": "Fermé"
   },
   "footer": {
-  "work_with_us": "Travaillez avec nous",
-  "leave_review": "Laissez un avis",
-  "terms": "Conditions générales",
-  "disclaimer": "Avertissement",
-  "developer": "Conçu et développé par"
-},
- "quick_quote": {
+    "work_with_us": "Travaillez avec nous",
+    "google_profile": "Visitez notre profil Google",
+    "terms": "Conditions générales",
+    "disclaimer": "Avertissement",
+    "developer": "Conçu et développé par"
+  },
+  "quick_quote": {
     "form": {
       "title": "Obtenez votre devis gratuit",
+      "description": "Remplissez le formulaire ci-dessous pour recevoir un devis personnalisé pour vos besoins de nettoyage. Notre équipe examinera votre demande et vous répondra dans les plus brefs délais.",
       "name": "Nom",
       "email": "Email",
       "phonenumber": "Numéro de téléphone",
       "companyName": "Entreprise",
       "postalcode": "Code postal",
       "promoCode": "Code promo",
+      "selectCategory": "Sélectionnez une catégorie",
       "serviceRequired": "Service requis",
+      "selectService": "Sélectionnez un service",
       "serviceDescription": "Veuillez ajouter le type et le niveau de service pour personnaliser votre commande.",
       "serviceType": "Type de service",
       "customOptions": "Vos options personnalisées",
@@ -179,51 +193,6 @@
       "companyName": "Entrez le nom de votre entreprise.",
       "postalcode": "Entrez votre code postal.",
       "promoCode": "Entrez votre code promo. La remise sera appliquée si elle est admissible. Les promotions ne peuvent pas être combinées."
-    },
-    "services": {
-      "Residential Cleaning": {
-        "label": "Nettoyage résidentiel",
-        "types": [
-          "Nettoyage de maison",
-          "Nettoyage avant/après déménagement",
-          "Nettoyage de condo",
-          "Nettoyage d’immeuble résidentiel"
-        ]
-      },
-      "Commercial Cleaning": {
-        "label": "Nettoyage commercial",
-        "types": [
-          "Nettoyage de bureau",
-          "Nettoyage industriel",
-          "Nettoyage de magasin"
-        ]
-      },
-      "Carpet And Upholstery": {
-        "label": "Tapis et rembourrage",
-        "types": [
-          "Nettoyage de tapis",
-          "Nettoyage de rembourrage"
-        ]
-      },
-      "Window Cleaning": {
-        "label": "Nettoyage de vitres",
-        "types": [
-          "Nettoyage intérieur des vitres",
-          "Nettoyage des cadres et rails",
-          "Nettoyage des portes vitrées"
-        ]
-      },
-      "Power/Pressure Washing": {
-        "label": "Lavage à pression",
-        "types": [
-          "Nettoyage d'allée",
-          "Nettoyage de patio et terrasse",
-          "Nettoyage de trottoir",
-          "Nettoyage du revêtement extérieur",
-          "Nettoyage de clôture",
-          "Nettoyage de plancher de garage"
-        ]
-      }
     },
     "customOptions": {
       "pleaseAddService": "Veuillez d'abord ajouter un service",
@@ -318,9 +287,8 @@
         "phone": "+1 (437) 440-5514"
       }
     }
+  },
+   "banner": {
+    "comingSoon": "De nouvelles fonctionnalités et un nouveau look arrivent prochainement sur notre site web !"
   }
-
-
-
-
 }

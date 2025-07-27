@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import VisitorCounter from '../../components/Pages/VisitorCounter';
+import VisitorCounter from '../Management/VisitorCounter';
 import { motion } from 'framer-motion';
 
 const LandingSecret = () => {

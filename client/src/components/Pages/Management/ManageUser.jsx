@@ -10,7 +10,7 @@ import {
     InputGroupText,
     Form, Card, CardBody, CardTitle, CardText, CardHeader
 } from 'reactstrap';
-import Auth from "../../utils/auth";
+import Auth from "/src/utils/auth";
 
 
 const ManageUser = () => {

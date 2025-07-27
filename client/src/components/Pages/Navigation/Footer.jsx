@@ -7,8 +7,8 @@ function Footer() {
   const { t } = useTranslation();
 
   return (
-    <footer className="text-dark py-4 mt-auto light-blue-bg-color text-bold">
-      <Container>
+    <footer className="text-dark pl-2 py-4 mt-auto light-blue-bg-color text-bold">
+      <section>
         <Row className="align-items-center">
           <Col md={6} className="mb-3 mb-md-0">
             <Nav className="flex-column flex-md-row" as="ul" aria-label="Footer navigation">
@@ -19,12 +19,12 @@ function Footer() {
               </Nav.Item>
               <Nav.Item as="li" className="me-md-3 mb-2 mb-md-0">
                 <Nav.Link
-                  href="https://g.page/r/Cek9dkmHVuBKEAE/review"
+                  href="https://g.co/kgs/7jGzM3E"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-0 text-dark text-decoration-none"
                 >
-                  {t("footer.leave_review")}
+                  {t("footer.google_profile")}
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item as="li" className="me-md-3 mb-2 mb-md-0">
@@ -54,7 +54,7 @@ function Footer() {
             </small>
           </Col>
         </Row>
-      </Container>
+      </section>
     </footer>
   );
 }

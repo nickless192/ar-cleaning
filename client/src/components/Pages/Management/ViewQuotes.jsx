@@ -1,6 +1,6 @@
-import './../../assets/css/quote-dropdown.css';
+import '/src/assets/css/quote-dropdown.css';
 // import './../../assets/css/our-palette.css';
-import Auth from "../../utils/auth";
+import Auth from "/src/utils/auth";
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import {

@@ -37,6 +37,10 @@ const UserSchema = new Schema({
         type: Boolean,
         default: false
     },
+    testerFlag: {
+        type: Boolean,
+        default: false
+    },
     telephone: {
         type: String,
         // required: true
@@ -61,13 +65,17 @@ const UserSchema = new Schema({
         type: String,
         // required: true
     },
-    resetToken: { 
-        type: String 
+    resetToken: {
+        type: String
     },
-    resetTokenExpires: { 
-        type: Date 
+    resetTokenExpires: {
+        type: Date
     },
-
+    roles: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Role',
+        default: []
+    }],
     createdAt: {
         type: Date,
         default: Date.now(),
@@ -95,10 +103,10 @@ UserSchema.pre('save', async function (next) {
 // Pre-save hook to store the username in lowercase
 UserSchema.pre('save', function (next) {
     if (this.isModified('username')) {
-      this.username = this.username.toLowerCase();
+        this.username = this.username.toLowerCase();
     }
     next();
-  });
+});
 
 // compare the incoming password with the hashed password
 UserSchema.methods.isCorrectPassword = async function (password) {

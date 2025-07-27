@@ -1,7 +1,7 @@
 import React from 'react';
 // import './LoginSign.css';
-import LoginPage from '/src/views/LoginPage';
-import SignUp from '/src/views/SignUp';
+import LoginPage from '/src/components/Pages/UserJourney/LoginPage';
+import SignUp from '/src/components/Pages/UserJourney/SignUp';
 import {
     Row,
     Col,

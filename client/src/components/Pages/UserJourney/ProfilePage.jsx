@@ -8,7 +8,7 @@ import {
   Input,
   Form,
 } from "reactstrap";
-import Auth from "../../utils/auth";
+import Auth from "/src/utils/auth";
 
 import backgroundImage from '/src/assets/img/stock-photo-cropped-shot-woman-rubber-gloves-cleaning-office-table.jpg';
 
