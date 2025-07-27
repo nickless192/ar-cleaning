@@ -870,7 +870,7 @@ body.nav-open {
     bottom: 0;
     width: 100%;
     background-color: var(--primary-color) !important;
-    color: white;
+    /* color: white; */
     text-align: center;
     padding: 10px;
     z-index: 1000;

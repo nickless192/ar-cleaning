@@ -21,7 +21,8 @@ const FinanceDashboard = () => {
       statuses: statuses.join(',')
     }).toString();
 
-    const res = await fetch(`/api/finance/summary?${qs}`);
+    // const res = await fetch(`/api/finance/summary?${qs}`);
+    const res = await fetch(`/api/finance/overview?${qs}`);
     const json = await res.json();
     setSummary(json);
     setLoading(false);
@@ -87,16 +88,7 @@ const FinanceDashboard = () => {
         </Row>
       </Form>
 
-      {summary && (
-        <Row className="g-3 mb-4">
-          <Col md={3}><StatCard title="Recognized Income" value={summary.income.recognized} /></Col>
-          <Col md={3}><StatCard title="Projected Income"  value={summary.income.projected} /></Col>
-          <Col md={3}><StatCard title="Expenses"          value={summary.expenses.total} /></Col>
-          <Col md={3}><StatCard title="Net Profit"        value={summary.netProfit} /></Col>
-        </Row>
-      )}
-
-      <Row>
+         <Row>
         <Col>
           <Card>
             <CardBody>
@@ -107,8 +99,124 @@ const FinanceDashboard = () => {
         </Col>
       </Row>
 
-      {/* Add Income & Expenses tables with CSV export if you want */}
-
+      <section className='container'>
+      <h2>Breakdown</h2>
+         {summary && (
+           <Row className="g-3 mb-4">
+          <Col md={3}><StatCard title="Recognized Income" value={summary.totals.totalIncome} /></Col>
+          <Col md={3}><StatCard title="Expenses" value={summary.totals.totalExpenses} /></Col>
+          <Col md={3}><StatCard title="Net Profit" value={summary.totals.netProfit} /></Col>
+          <Col md={3}><StatCard title="Avg. Income/Booking" value={summary.totals.avgIncomePerBooking} /></Col>
+        </Row>
+      )}
+          {/* Breakdown: Income by Status & Service */}
+      {summary && (
+        <Row className="mb-4">
+          <Col md={6}>
+            <Card>
+              <CardBody>
+                <h5>Income by Status</h5>
+                <Table striped size="sm">
+                  <thead>
+                    <tr>
+                      <th>Status</th>
+                      <th>Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Object.entries(summary.income.byStatus || {}).map(([status, val]) => (
+                      <tr key={status}>
+                        <td>{status}</td>
+                        <td>${Number(val).toFixed(2)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </CardBody>
+            </Card>
+          </Col>
+          <Col md={6}>
+            <Card>
+              <CardBody>
+                <h5>Income by Service</h5>
+                <Table striped size="sm">
+                  <thead>
+                    <tr>
+                      <th>Service Type</th>
+                      <th>Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Object.entries(summary.income.byService || {}).map(([service, val]) => (
+                      <tr key={service}>
+                        <td>{service}</td>
+                        <td>${Number(val).toFixed(2)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
+      )}
+      {/* Top Customers */}
+      {summary && summary.income.topCustomers && summary.income.topCustomers.length > 0 && (
+        <Row className="mb-4">
+          <Col>
+            <Card>
+              <CardBody>
+                <h5>Top Customers</h5>
+                <Table striped size="sm">
+                  <thead>
+                    <tr>
+                      <th>Customer</th>
+                      <th>Total Income</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {summary.income.topCustomers.map((c, i) => (
+                      <tr key={i}>
+                        <td>{c.name}</td>
+                        <td>${Number(c.total).toFixed(2)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
+      )}
+      {/* Expense Breakdown */}
+      {summary && summary.expenses && summary.expenses.byCategory && (
+        <Row className="mb-4">
+          <Col>
+            <Card>
+              <CardBody>
+                <h5>Expenses by Category</h5>
+                <Table striped size="sm">
+                  <thead>
+                    <tr>
+                      <th>Category</th>
+                      <th>Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Object.entries(summary.expenses.byCategory).map(([cat, val]) => (
+                      <tr key={cat}>
+                        <td>{cat}</td>
+                        <td>${Number(val).toFixed(2)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
+      )}
+      </section>   
     </section>
   );
 };

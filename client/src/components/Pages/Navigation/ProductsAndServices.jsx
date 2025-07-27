@@ -36,12 +36,12 @@ const ServiceCard = ({ title, imgSrc, imgAlt, description, quoteLink, quoteButto
           ))} */}
           {Array.isArray(description) ? (
             description.map((item, index) => (
-              <ListGroup.Item key={index} className="px-0 py-1 border-0 text-dark bg-transparent">
+              <ListGroup.Item key={index} className="px-0 py-1 border-0 text-bold bg-transparent">
                 {item}
               </ListGroup.Item>
             ))
           ) : (
-            <ListGroup.Item className="px-0 py-1 border-0 text-dark bg-transparent">
+            <ListGroup.Item className="px-0 py-1 border-0 text-bold bg-transparent">
               {description}
             </ListGroup.Item>
           )}
@@ -181,7 +181,7 @@ const servicesData = categories.map(cat => ({
             <p className="text-left mb-4 primary-color">{t("products_and_services.our_services_description")}</p> {/* Optional description */}
             <Row > {/* Responsive Grid: 1 col on xs, 2 on md, 3 on lg. g-4 adds gutters */}
               {servicesData.map((service, index) => (
-                <Col xs={6} md={4} key={index} className="d-flex align-items-stretch"> {/* Ensure cols stretch to content height */}
+                <Col xs={12} md={4} key={index} className="d-flex align-items-stretch mb-1 mt-1"> {/* Ensure cols stretch to content height */}
                   <ServiceCard {...service} />
                 </Col>
               ))}

@@ -157,7 +157,66 @@ const getMonthlySeries = async (req, res) => {
   }
 };
 
+const getFinanceOverview = async (req, res) => {
+  try {
+    const now = new Date();
+    const start = startOfMonth(now);
+    const end = endOfMonth(now);
+
+    // Fetch data
+    const bookings = await Booking.find({ date: { $gte: start, $lte: end }, hidden: { $ne: true } });
+    const expenses = await Expense.find({ date: { $gte: start, $lte: end } });
+
+    // Income breakdown
+    const incomeByStatus = bookings.reduce((acc, b) => {
+      const key = b.status || 'unknown';
+      acc[key] = (acc[key] || 0) + (b.income || 0);
+      return acc;
+    }, {});
+
+    const incomeByService = bookings.reduce((acc, b) => {
+      const key = b.serviceType || 'Other';
+      acc[key] = (acc[key] || 0) + (b.income || 0);
+      return acc;
+    }, {});
+
+    const topCustomers = bookings.reduce((acc, b) => {
+      const key = b.customerName || 'Unknown';
+      acc[key] = (acc[key] || 0) + (b.income || 0);
+      return acc;
+    }, {});
+    const topCustomersArray = Object.entries(topCustomers)
+      .map(([name, total]) => ({ name, total }))
+      .sort((a, b) => b.total - a.total)
+      .slice(0, 5);
+
+    // Expense breakdown
+    const expenseByCategory = expenses.reduce((acc, e) => {
+      const key = e.category || 'Uncategorized';
+      acc[key] = (acc[key] || 0) + (e.amount || 0);
+      return acc;
+    }, {});
+
+    const totalIncome = Object.values(incomeByStatus).reduce((sum, v) => sum + v, 0);
+    const totalExpenses = Object.values(expenseByCategory).reduce((sum, v) => sum + v, 0);
+    const netProfit = totalIncome - totalExpenses;
+    const avgIncomePerBooking = bookings.length > 0 ? totalIncome / bookings.length : 0;
+
+    res.json({
+      period: { start, end },
+      totals: { totalIncome, totalExpenses, netProfit, avgIncomePerBooking },
+      income: { byStatus: incomeByStatus, byService: incomeByService, topCustomers: topCustomersArray },
+      expenses: { byCategory: expenseByCategory }
+    });
+  } catch (err) {
+    console.error('getFinanceOverview error', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+
 module.exports = {
   getFinanceSummary,
-  getMonthlySeries
+  getMonthlySeries,
+  getFinanceOverview
 };

@@ -7,7 +7,7 @@ function Footer() {
   const { t } = useTranslation();
 
   return (
-    <footer className="text-dark pl-2 py-4 mt-auto light-blue-bg-color text-bold">
+    <footer className="footer text-dark pl-2 py-4">
       <section>
         <Row className="align-items-center">
           <Col md={6} className="mb-3 mb-md-0">

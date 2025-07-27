@@ -61,12 +61,12 @@ const App = () => {
     if (!header || !content || !banner || !navbar) return;
 
     // --- TEMPORARY DEBUG LOGS ---
-    console.log('-------------------------');
-    console.log(`Banner Height: ${banner.offsetHeight}px`);
-    console.log(`Navbar Height: ${navbar.offsetHeight}px`);
-    console.log(`SUM of Children: ${banner.offsetHeight + navbar.offsetHeight}px`);
-    console.log(`Measured Parent Height: ${header.offsetHeight}px`);
-    console.log('-------------------------');
+    // console.log('-------------------------');
+    // console.log(`Banner Height: ${banner.offsetHeight}px`);
+    // console.log(`Navbar Height: ${navbar.offsetHeight}px`);
+    // console.log(`SUM of Children: ${banner.offsetHeight + navbar.offsetHeight}px`);
+    // console.log(`Measured Parent Height: ${header.offsetHeight}px`);
+    // console.log('-------------------------');
     // --- END DEBUG ---
 
     // The rest of your ResizeObserver logic...

@@ -1,20 +1,6 @@
 const { Schema, model, Types } = require('mongoose');
 const { isEmail } = require('../utils/validators');
-const dateFormat = require('../utils/dateFormat');
 
-// const CustomOptionsSchema = new Schema({
-//     unitSize: { type: String },
-//     bedrooms: { type: Number },
-//     bathrooms: { type: Number },
-//     fridge: { type: Boolean },
-//     parking: { type: Boolean },
-//     squareFootage: { type: String },
-//     rooms: { type: Number },
-//     windows: { type: Boolean },
-//     employees: { type: Number },
-//     highDusting: { type: Boolean },
-//     machineryCleaning: { type: Boolean }
-// }, { _id: false });
 const CustomOptionsSchema = new Schema({
     service: { type: Schema.Types.Mixed, required: true }, // Mixed type to handle string, boolean, or other types
     label: { type: String }
@@ -94,6 +80,17 @@ const QuickQuoteSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
+    acknowledgedByUser: {
+        type: Boolean,
+        default: false
+    },
+    acknowledgedAt: { 
+        type: Date 
+    },
+  acknowledgedBy: { 
+    type: Schema.Types.ObjectId, 
+    ref: 'User' 
+},
     createdAt: {
         type: Date,
         default: Date.now,
