@@ -9,7 +9,8 @@ const {
     createQuoteRequest, 
     getPaginatedQuickQuotes, 
     deleteQuoteRequest,
-    acknowledgeQuickQuote
+    acknowledgeQuickQuote,
+    getUnacknowledgedQuotes
  } = require('../../controllers/quoteControllers');
 
 
@@ -35,6 +36,9 @@ router.route('/:quoteId')
     
 router.route('/quickquote/:id/acknowledge')
       .patch(acknowledgeQuickQuote);
+
+      router.get('/quickquote/unacknowledged', getUnacknowledgedQuotes);
+
 
 
 module.exports = router;

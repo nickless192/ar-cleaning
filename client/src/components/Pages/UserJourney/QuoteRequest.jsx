@@ -324,7 +324,7 @@ const QuoteRequest = () => {
 
                 if (response.ok) {
                     alert(`Quote submitted successfully! We'll be in touch shortly to discuss your needs. In the meantime, feel free to browse our services.`);
-                    await generatePDF(updatedFormData, t);
+                    await generatePDF(updatedFormData);
                     // disable for testing
                     resetForm();
                     // Generate and download the PDF

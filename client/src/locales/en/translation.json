@@ -208,6 +208,12 @@
       "deepCleaning": "Deep Cleaning",
       "windowCleaning": "Window Cleaning",
       "laundryService": "Laundry Service",
+      "buildingSize": "Building size...",
+      "lowrise": "Low Rise",
+      "midrise": "Mid Rise",
+      "highrise": "High Rise",
+      "commonAreas": "Common Areas",
+      "specialInstructions": "Special Instructions",
       "carpetType": "Carpet Material",
       "carpetArea": "Approximate Carpet Area (sqft)",
       "carpetMaterial": "Carpet Material",
@@ -257,6 +263,40 @@
       "vinyl": "Vinyl",
       "brick": "Brick",
       "asphalt": "Asphalt"
+    },
+    "buildingAreas": {
+      "common": {
+        "category": "Common Areas",
+        "lobby": "Lobby",
+        "elevator": "Elevator",
+        "hallways": "Hallways",
+        "staircase": "Staircase",
+        "reception": "Reception"
+      },
+      "amenities": {
+        "category": "Amenities",
+        "gym": "Gym",
+        "swimmingPool": "Swimming Pool",
+        "sauna": "Sauna",
+        "gameRoom": "Game Room",
+        "lounge": "Lounge",
+        "partyRoom": "Party Room"
+      },
+      "parking": {
+        "category": "Parking",
+        "parkingGarage": "Parking Garage",
+        "visitorParking": "Visitor Parking",
+        "bicycleStorage": "Bicycle Storage",
+        "carWashBay": "Car Wash Bay"
+      },
+      "services": {
+        "category": "Services",
+        "mailRoom": "Mail Room",
+        "packageRoom": "Package Room",
+        "laundryRoom": "Laundry Room",
+        "garbageRoom": "Garbage Room",
+        "recyclingRoom": "Recycling Room"
+      }
     },
     "pdf": {
       "title": "Service Request Confirmation",

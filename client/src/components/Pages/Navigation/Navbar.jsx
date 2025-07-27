@@ -18,6 +18,8 @@ import {
     FaFacebook,
     FaTiktok,
     FaRegEnvelope,
+    FaBell,
+    FaUser
 } from "react-icons/fa";
 import {
     Collapse,
@@ -32,7 +34,8 @@ import {
     NavItem,
     NavLink,
     Nav,
-    Container
+    Container,
+    Badge
 } from "reactstrap";
 import { useTranslation } from 'react-i18next';
 import Auth from "/src/utils/auth";
@@ -40,17 +43,31 @@ import logo from "/src/assets/img/IC CLEAN AR-15-cropped.png";
 import LanguageSwitcher from "/src/components/Pages/Management/LanguageSwitcher";
 import '/src/assets/css/NavBar.css';
 
+
 // import "./NavBar.css"; // We'll create this CSS file
 
 function IndexNavbar() {
     const [navbarColor, setNavbarColor] = useState("navbar-color");
     const [collapseOpen, setCollapseOpen] = useState(false);
+    const [unackCount, setUnackCount] = useState(0);
     const [isLogged] = useState(Auth.loggedIn());
     const { t } = useTranslation();
 
     const handleToggle = () => {
         document.documentElement.classList.toggle("nav-open");
         setCollapseOpen(!collapseOpen);
+    };
+
+    const fetchUnacknowledged = async () => {
+        try {
+            const response = await fetch(`/api/quotes/quickquote/unacknowledged`);
+            const data = await response.json();
+            // console.log(data);
+            // console.log(data.length);
+            setUnackCount(data.quotes?.length || 0);
+        } catch (err) {
+            console.error("Error fetching unacknowledged quotes:", err);
+        }
     };
 
     useEffect(() => {
@@ -94,6 +111,16 @@ function IndexNavbar() {
         return () => {
             document.body.style.paddingTop = '0';
         };
+    }, []);
+
+    useEffect(() => {
+        if (isLogged) {
+            if (Auth.getProfile().data.adminFlag === true) {
+                fetchUnacknowledged();
+                const interval = setInterval(fetchUnacknowledged, 30000); // Poll every 30s
+                return () => clearInterval(interval);
+            }
+        }
     }, []);
 
     function showLogin() {
@@ -164,6 +191,8 @@ function IndexNavbar() {
                         </UncontrolledDropdown>
                     )}
 
+
+
                     <NavItem className="nav-item">
                         <NavLink href="/profile-page" className="nav-link">
                             <div className="nav-link-content">
@@ -172,6 +201,22 @@ function IndexNavbar() {
                             </div>
                         </NavLink>
                     </NavItem>
+
+                    {Auth.getProfile().data.adminFlag === true && (
+                        <>
+                         <NavItem>
+                        <NavLink href="/view-quotes" className="position-relative">
+                            <FaBell className="nav-icon" />
+                            {unackCount > 0 && (
+                                <Badge color="danger" pill className="position-absolute top-0 start-100 translate-middle">
+                                    {unackCount}
+                                </Badge>
+                            )}
+                        </NavLink>
+                    </NavItem>
+                    </>
+                    )}
+                   
 
                     <NavItem className="nav-item">
                         <NavLink
@@ -203,7 +248,7 @@ function IndexNavbar() {
     }
 
     return (
-        <>        
+        <>
             {collapseOpen && (
                 <div
                     id="bodyClick"

@@ -152,7 +152,16 @@ const quoteController = {
         } catch (err) {
             next(err);
         }
-    }
+    },
+    getUnacknowledgedQuotes: async (req, res, next) => {
+  try {
+    const unacknowledged = await QuickQuote.find({ acknowledgedByUser: false }).sort({ createdAt: -1 });
+    res.status(200).json({ quotes: unacknowledged });
+  } catch (err) {
+    next(err);
+  }
+}
+
 }
 
 module.exports = quoteController;
