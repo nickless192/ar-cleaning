@@ -65,6 +65,32 @@ const serviceControllers = {
                 res.json(dbServiceData);
             })
             .catch(err => res.status(400).json(err));
+    },
+    duplicateService({params, body}, res) {
+        Service.findById(params.serviceId)
+        .then(originalService => {
+            if (!originalService) {
+                return res.status(404).json({ message: 'No service found to duplicate' });
+            }
+
+            // Clone the service data
+            const duplicatedData = originalService.toObject();
+            delete duplicatedData._id;
+            delete duplicatedData.serviceId;
+            delete duplicatedData.createdAt;
+            delete duplicatedData.updatedAt;
+            delete duplicatedData.__v;
+
+            // Update the name or append (Copy)
+            duplicatedData.name = body?.name || `${originalService.name} (Copy)`;
+
+            return Service.create(duplicatedData);
+        })
+        .then(duplicatedService => res.status(201).json(duplicatedService))
+        .catch(err => {
+            console.error(err);
+            res.status(500).json({ message: 'Failed to duplicate service', error: err });
+        });
     }
 }
 

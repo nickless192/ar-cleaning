@@ -96,16 +96,16 @@ const quoteController = {
         try {
             const { page = 1, limit = 10 } = req.query;
             const quotes = await QuickQuote.find({})
-            .sort({ createdAt: -1 })
+                .sort({ createdAt: -1 })
                 .skip((page - 1) * limit);
-                // .limit(limit);
+            // .limit(limit);
             const total = await QuickQuote.countDocuments();
             res.json({
                 quotes,
                 total,
                 page,
                 pages: Math.ceil(total / limit),
-              });
+            });
         } catch (error) {
             console.error('Error getting paginated quotes: ', error);
             res.status(500).json({ message: 'Error getting paginated quotes' });
@@ -123,8 +123,45 @@ const quoteController = {
             res.status(500).json({ message: 'Error deleting quick quote' });
         }
     },
+    acknowledgeQuickQuote: async (req, res, next) => {
+        try {
+            const { id } = req.params;
+            const userId = req.body.userId;
+
+            const quote = await QuickQuote.findById(id);
+            if (!quote) {
+                return res.status(404).json({ message: 'Quote not found' });
+            }
+
+            if (quote.acknowledgedByUser) {
+                // You can return 200 if you prefer idempotency
+                return res.status(409).json({ message: 'Quote already acknowledged' });
+            }
+
+            quote.acknowledgedByUser = true;
+            quote.acknowledgedAt = new Date();
+            quote.acknowledgedBy = userId;
 
 
-};
+            await quote.save();
+
+            return res.status(200).json({
+                message: 'Quote acknowledged successfully',
+                quote,
+            });
+        } catch (err) {
+            next(err);
+        }
+    },
+    getUnacknowledgedQuotes: async (req, res, next) => {
+  try {
+    const unacknowledged = await QuickQuote.find({ acknowledgedByUser: false }).sort({ createdAt: -1 });
+    res.status(200).json({ quotes: unacknowledged });
+  } catch (err) {
+    next(err);
+  }
+}
+
+}
 
 module.exports = quoteController;

@@ -10,7 +10,6 @@
   "status_offline": "⏰ Actualmente estamos fuera de horario",
   "response_now": "Respuesta inmediata esperada",
   "response_later": "Responderemos dentro de las 24 horas",
-
   "contact_business_hours": "Horario de atención",
   "contact_email_support": "Soporte por correo electrónico",
   "email_description": "Para consultas detalladas o comunicación escrita, envíanos un correo electrónico",
@@ -21,70 +20,85 @@
   "contact_services": "Explorar servicios",
   "services_description": "Soluciones de limpieza personalizadas",
   "services_additional": "Paquetes personalizados disponibles",
-  "products_services_title": "Productos y Servicios",
-  "our_services_title": "Nuestros Servicios",
-  "our_products_title": "Nuestros Productos",
-  "our_services_description": "Explora nuestra gama de servicios de limpieza profesional diseñados para satisfacer tus necesidades. Desde limpieza residencial hasta comercial, tenemos todo cubierto. Nuestro equipo está dedicado a proporcionar soluciones de limpieza de primera calidad que aseguran un ambiente impecable y saludable. Ya sea que necesites mantenimiento regular o una limpieza profunda única, personalizamos nuestros servicios para adaptarnos a tus requisitos. Contáctanos hoy para saber más sobre cómo podemos ayudarte a lograr un espacio más limpio. Visita nuestro sitio regularmente para actualizaciones sobre nuevos servicios y ofertas especiales.",
-  "our_products_description": "Descubre nuestra gama de productos y soluciones de limpieza que garantizan un hogar y lugar de trabajo impecables.", 
-  "coming_soon": "¡Próximamente!",
+  "products_and_services":{
 
-  "residential_cleaning_title": "Limpieza Residencial",
-  "residential_cleaning_description": [
-    "Limpieza completa de casas, apartamentos y condominios.",
-    "Limpieza de alfombras para revitalizar y mantener su frescura.",
-    "Limpieza de muebles para preservar su belleza y prolongar su vida útil."
-  ],
-  "residential_cleaning_button": "Agregar limpieza residencial al presupuesto",
-
-  "commercial_cleaning_title": "Limpieza Comercial",
-  "commercial_cleaning_description": [
-    "Mantenimiento regular de oficinas y espacios comerciales.",
-    "Limpieza de centros comerciales y supermercados.",
-    "Servicios especializados para la industria cinematográfica y eventos especiales."
-  ],
-  "commercial_cleaning_button": "Agregar limpieza comercial al presupuesto",
-
-  "window_cleaning_title": "Limpieza de Ventanas",
-  "window_cleaning_description": [
-    "Limpieza profesional de ventanas en hogares y negocios.",
-    "Brillo sin rayas para una vista clara.",
-    "Uso de productos ecológicos para seguridad y sostenibilidad."
-  ],
-  "window_cleaning_button": "Agregar limpieza de ventanas al presupuesto",
-
-  "carpet_cleaning_title": "Limpieza de Alfombras y Tapicería",
-  "carpet_cleaning_description": [
-    "Limpieza profunda de alfombras en casas y comercios.",
-    "Eliminación de manchas y neutralización de olores.",
-    "Limpieza de tapicería para conservar su belleza y comodidad."
-  ],
-  "carpet_cleaning_button": "Agregar limpieza de alfombras al presupuesto",
-
-  "power_washing_title": "Limpieza a Presión",
-  "power_washing_description": [
-    "Limpieza a alta presión de entradas, aceras y patios.",
-    "Eliminación de suciedad, moho y hongos de superficies exteriores.",
-    "Preparación de superficies para pintar o sellar."
-  ],
-  "power_washing_button": "Agregar limpieza a presión al presupuesto",
-
-"about": {
-  "welcome_heading": "Bienvenido a CleanAR Solutions",
-  "welcome_text": "En CleanAR Solutions ofrecemos servicios profesionales de limpieza en Toronto y el GTA. Nuestro enfoque en la excelencia garantiza que cada proyecto cumpla con los más altos estándares, creando un entorno limpio y saludable. Ya sea que necesite limpieza residencial, comercial o de alfombras, adaptamos nuestro enfoque para satisfacer sus necesidades. Solicite una cotización o contáctenos para más información.",
-  "learn_more_services": "Conozca más sobre nuestros servicios",
-  "mission_title": "Nuestra Misión",
-  "mission_text": "Nuestra misión es transformar espacios en entornos más limpios, saludables y acogedores. Lo logramos ofreciendo servicios de limpieza personalizables y de alta calidad, adaptados a las necesidades de nuestros clientes y comprometidos con la sostenibilidad y la excelencia.",
-  "vision_title": "Nuestra Visión",
-  "vision_text": "Nuestra visión es convertirnos en el proveedor de servicios de limpieza más confiable e innovador de Toronto, estableciendo el estándar de excelencia y contribuyendo a una comunidad más limpia, ecológica y feliz.",
-  "values_title": "Nuestros Valores",
-  "values_intro": "En CleanAR Solutions nos guiamos por los siguientes valores:",
-  "values_list": [
-    "Integridad: Actuamos con honestidad, transparencia y responsabilidad.",
-    "Calidad: Brindamos servicios de limpieza de alto nivel con atención al detalle y excelencia.",
-    "Enfoque en el cliente: Priorizamos las necesidades únicas de nuestros clientes con soluciones personalizadas.",
-    "Sostenibilidad: Promovemos prácticas de limpieza ecológicas para proteger el medio ambiente.",
-    "Trabajo en equipo: Valoramos la colaboración, el respeto y la unidad para lograr el éxito juntos."
-  ],
+    "products_services_title": "Productos y Servicios",
+    "our_services_title": "Nuestros Servicios",
+    "our_products_title": "Nuestros Productos",
+    "our_services_description": "Explora nuestra gama de servicios de limpieza profesional diseñados para satisfacer tus necesidades. Desde limpieza residencial hasta comercial, tenemos todo cubierto. Nuestro equipo está dedicado a proporcionar soluciones de limpieza de primera calidad que aseguran un ambiente impecable y saludable. Ya sea que necesites mantenimiento regular o una limpieza profunda única, personalizamos nuestros servicios para adaptarnos a tus requisitos. Contáctanos hoy para saber más sobre cómo podemos ayudarte a lograr un espacio más limpio. Visita nuestro sitio regularmente para actualizaciones sobre nuevos servicios y ofertas especiales.",
+    "our_products_description": "Descubre nuestra gama de productos y soluciones de limpieza que garantizan un hogar y lugar de trabajo impecables.",
+    "coming_soon": "¡Próximamente!",
+    "residential_cleaning_title": "Limpieza Residencial",
+    "residential_cleaning_house_cleaning": "Limpieza de Casas",
+    "residential_cleaning_move_in_out": "Limpieza Antes/Después de Mudanza",
+    "residential_cleaning_condominium": "Limpieza de Condominios",
+    "residential_cleaning_building": "Limpieza de Edificios Residenciales",
+    "residential_cleaning_description": [
+      "Limpieza completa de casas, apartamentos y condominios.",
+      "Limpieza de alfombras para revitalizar y mantener su frescura.",
+      "Limpieza de muebles para preservar su belleza y prolongar su vida útil."
+    ],
+    "residential_cleaning_button": "Agregar limpieza residencial al presupuesto",
+    "commercial_cleaning_title": "Limpieza Comercial",
+    "commercial_cleaning_office_cleaning": "Limpieza de Oficinas",
+    "commercial_cleaning_industrial_cleaning": "Limpieza Industrial",
+    "commercial_cleaning_retail_cleaning": "Limpieza de Tiendas",
+    "commercial_cleaning_description": [
+      "Mantenimiento regular de oficinas y espacios comerciales.",
+      "Limpieza de centros comerciales y supermercados.",
+      "Servicios especializados para la industria cinematográfica y eventos especiales."
+    ],
+    "commercial_cleaning_button": "Agregar limpieza comercial al presupuesto",
+    "window_cleaning_title": "Limpieza de Ventanas",
+    "window_cleaning_interior": "Limpieza Interior de Ventanas",
+    "window_cleaning_track_sill": "Limpieza de Rieles y Marcos",
+    "window_cleaning_glass_door": "Limpieza de Puertas de Vidrio",
+    "window_cleaning_description": [
+      "Limpieza profesional de ventanas en hogares y negocios.",
+      "Brillo sin rayas para una vista clara.",
+      "Uso de productos ecológicos para seguridad y sostenibilidad."
+    ],
+    "window_cleaning_button": "Agregar limpieza de ventanas al presupuesto",
+    "carpet_cleaning_title": "Limpieza de Alfombras y Tapicería",
+    "carpet_cleaning_carpet_cleaning": "Limpieza de Alfombras",
+    "carpet_cleaning_upholstery_cleaning": "Limpieza de Tapicería",
+    "carpet_cleaning_description": [
+      "Limpieza profunda de alfombras en casas y comercios.",
+      "Eliminación de manchas y neutralización de olores.",
+      "Limpieza de tapicería para conservar su belleza y comodidad."
+    ],
+    "carpet_and_upholstery_button": "Agregar limpieza de alfombras al presupuesto",
+    "power_washing_title": "Limpieza a Presión",
+    "power_washing_driveway": "Limpieza de Entradas",
+    "power_washing_patio_deck": "Limpieza de Patios y Terrazas",
+    "power_washing_sidewalk": "Limpieza de Aceras",
+    "power_washing_exterior_siding": "Limpieza de Revestimiento Exterior",
+    "power_washing_fence": "Limpieza de Cercas",
+    "power_washing_garage_floor": "Limpieza de Pisos de Garaje",
+    "power_washing_description": [
+      "Limpieza a alta presión de entradas, aceras y patios.",
+      "Eliminación de suciedad, moho y hongos de superficies exteriores.",
+      "Preparación de superficies para pintar o sellar."
+    ],
+    "power_pressure_washing_button": "Agregar limpieza a presión al presupuesto"
+  },
+  "about": {
+    "welcome_heading": "Bienvenido a CleanAR Solutions",
+    "welcome_text": "En CleanAR Solutions ofrecemos servicios profesionales de limpieza en Toronto y el GTA. Nuestro enfoque en la excelencia garantiza que cada proyecto cumpla con los más altos estándares, creando un entorno limpio y saludable. Ya sea que necesite limpieza residencial, comercial o de alfombras, adaptamos nuestro enfoque para satisfacer sus necesidades. Solicite una cotización o contáctenos para más información.",
+    "learn_more_services": "Conozca más sobre nuestros servicios",
+    "mission_title": "Nuestra Misión",
+    "mission_text": "Nuestra misión es transformar espacios en entornos más limpios, saludables y acogedores. Lo logramos ofreciendo servicios de limpieza personalizables y de alta calidad, adaptados a las necesidades de nuestros clientes y comprometidos con la sostenibilidad y la excelencia.",
+    "vision_title": "Nuestra Visión",
+    "vision_text": "Nuestra visión es convertirnos en el proveedor de servicios de limpieza más confiable e innovador de Toronto, estableciendo el estándar de excelencia y contribuyendo a una comunidad más limpia, ecológica y feliz.",
+    "values_title": "Nuestros Valores",
+    "values_intro": "En CleanAR Solutions nos guiamos por los siguientes valores:",
+    "values_list": [
+      "Integridad: Actuamos con honestidad, transparencia y responsabilidad.",
+      "Calidad: Brindamos servicios de limpieza de alto nivel con atención al detalle y excelencia.",
+      "Enfoque en el cliente: Priorizamos las necesidades únicas de nuestros clientes con soluciones personalizadas.",
+      "Sostenibilidad: Promovemos prácticas de limpieza ecológicas para proteger el medio ambiente.",
+      "Trabajo en equipo: Valoramos la colaboración, el respeto y la unidad para lograr el éxito juntos."
+    ],
     "industries_title": "Industrias que Atendemos",
     "industries": {
       "residential": {
@@ -113,7 +127,7 @@
       }
     }
   },
-    "navbar": {
+  "navbar": {
     "about_us": "Sobre Nosotros",
     "products_services": "Productos y Servicios",
     "log_in_signup": "Iniciar Sesión / Registrarse",
@@ -121,6 +135,7 @@
     "profile": "Perfil",
     "admin": {
       "configure": "Configurar",
+      "manage_categories": "Administrar Categorías",
       "manage_products": "Administrar Productos",
       "manage_services": "Administrar Servicios",
       "manage_users": "Administrar Usuarios",
@@ -145,22 +160,25 @@
     "closed": "Cerrado"
   },
   "footer": {
-  "work_with_us": "Trabaja con nosotros",
-  "leave_review": "Deja una reseña",
-  "terms": "Términos y Condiciones",
-  "disclaimer": "Aviso Legal",
-  "developer": "Diseñado y desarrollado por"
-},
- "quick_quote": {
+    "work_with_us": "Trabaja con nosotros",
+    "google_profile": "Visita nuestro perfil de Google",
+    "terms": "Términos y Condiciones",
+    "disclaimer": "Aviso Legal",
+    "developer": "Diseñado y desarrollado por"
+  },
+  "quick_quote": {
     "form": {
       "title": "Obtén tu cotización gratuita",
+      "description": "Complete el formulario a continuación para recibir un presupuesto personalizado para sus necesidades de limpieza. Nuestro equipo revisará su solicitud y se pondrá en contacto con usted lo antes posible.",
       "name": "Nombre",
       "email": "Correo electrónico",
       "phonenumber": "Número de teléfono",
       "companyName": "Empresa",
       "postalcode": "Código postal",
       "promoCode": "Código promocional",
-      "serviceRequired": "Servicio requerido",
+      "selectCategory": "Seleccione una categoria",
+      "serviceRequired": "Servicio Requirido",
+      "selectService": "Seleccione un servicio",
       "serviceDescription": "Por favor, agregue el tipo y nivel de servicio para personalizar su pedido.",
       "serviceType": "Tipo de servicio",
       "serviceLevel": "Por favor, seleccione un nivel de servicio para personalizar su pedido.",
@@ -177,51 +195,6 @@
       "companyName": "Ingrese el nombre de su empresa.",
       "postalcode": "Ingrese su código postal.",
       "promoCode": "Ingrese su código promocional. El descuento se aplicará si es válido. Las promociones no se pueden combinar."
-    },
-    "services": {
-      "Residential Cleaning": {
-        "label": "Limpieza residencial",
-        "types": [
-          "Limpieza de casas",
-          "Limpieza antes/después de mudanza",
-          "Limpieza de condominios",
-          "Limpieza de edificios residenciales"
-        ]
-      },
-      "Commercial Cleaning": {
-        "label": "Limpieza comercial",
-        "types": [
-          "Limpieza de oficinas",
-          "Limpieza industrial",
-          "Limpieza de tiendas"
-        ]
-      },
-      "Carpet And Upholstery": {
-        "label": "Alfombras y tapicería",
-        "types": [
-          "Limpieza de alfombras",
-          "Limpieza de tapicería"
-        ]
-      },
-      "Window Cleaning": {
-        "label": "Limpieza de ventanas",
-        "types": [
-          "Limpieza interior de ventanas",
-          "Limpieza de rieles y marcos",
-          "Limpieza de puertas de vidrio"
-        ]
-      },
-      "Power/Pressure Washing": {
-        "label": "Lavado a presión",
-        "types": [
-          "Limpieza de entradas",
-          "Limpieza de patios y terrazas",
-          "Limpieza de aceras",
-          "Limpieza de revestimiento exterior",
-          "Limpieza de cercas",
-          "Limpieza de pisos de garaje"
-        ]
-      }
     },
     "customOptions": {
       "pleaseAddService": "Por favor, agregue un servicio primero",
@@ -316,7 +289,8 @@
         "phone": "+1 (437) 440-5514"
       }
     }
+  },
+  "banner": {
+    "comingSoon": "¡Próximamente Estaremos preparando nuevas funcionalidades en nuestro sitio web."
   }
-
-
 }

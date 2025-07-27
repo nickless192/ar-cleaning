@@ -10,6 +10,29 @@
     --accordion-bg-color: #acb9c7;
 }
 
+.fixed-top-container {
+  /* --- Positioning --- */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1030;
+
+  /* --- The Flexbox Solution --- */
+  /* This tells the container to manage its children's layout. */
+  display: flex;
+  
+  /* This stacks the children (banner and navbar) vertically. */
+  flex-direction: column;
+}
+
+.fixed-top-container .navbar:last-child {
+  padding-bottom: 15px !important;
+  border-bottom: none !important;
+}
+
+/* 
+
 .form-control {
   border-radius: 0.5rem;
 }
@@ -289,7 +312,7 @@
 }
 
 .form-input {
-    border-radius: 5rem;
+    /* border-radius: 5rem; */
     border: 1px solid var(--primary-color)!important;
     padding: 8px;
     /* margin-bottom: 10px; */
@@ -847,7 +870,7 @@ body.nav-open {
     bottom: 0;
     width: 100%;
     background-color: var(--primary-color) !important;
-    color: white;
+    /* color: white; */
     text-align: center;
     padding: 10px;
     z-index: 1000;

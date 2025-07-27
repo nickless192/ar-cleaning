@@ -10,6 +10,8 @@ const reviewRoutes = require('./reviewRoutes');
 const bookingRoutes = require('./bookingRoutes');
 const eventRoutes = require('./eventRoutes');
 const customerRoutes = require('./customerRoutes');
+const categoryRoutes = require('./categoryRoutes');
+const financeRoutes = require('./financeRoutes')
 
 router.use('/users', userRoutes);
 router.use('/services', serviceRoutes);
@@ -22,5 +24,7 @@ router.use('/reviews', reviewRoutes);
 router.use('/bookings', bookingRoutes); 
 router.use('/events', eventRoutes);
 router.use('/customers', customerRoutes);
+router.use('/categories', categoryRoutes);
+router.use('/finance', financeRoutes);
 
 module.exports = router;

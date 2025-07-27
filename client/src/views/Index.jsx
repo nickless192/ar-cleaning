@@ -4,8 +4,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { motion } from 'framer-motion';
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import VisitorCounter from "/src/components/Pages/VisitorCounter.jsx";
-import ContactUs from "./ContactUs"
+import VisitorCounter from "/src/components/Pages/Management/VisitorCounter.jsx";
+import ContactUs from "../components/Pages/UserJourney/ContactUs";
 import {
   Card,
   // CardBody,
@@ -16,14 +16,14 @@ import {
   Col,
   CardImg
 } from "reactstrap";
-import MetaTags from "/src/components/Pages/MetaTags.jsx";
-import QuoteRequest from "./QuoteRequest";
+import MetaTags from "/src/components/Pages/Management/MetaTags.jsx";
+import QuoteRequest from "../components/Pages/UserJourney/QuoteRequest";
 // import LandingPageHeader from "/src/components/Headers/LandingPageHeader.jsx";
-import BusinessHoursSidebar from "/src/components/Pages/BusinessHourSidebar";
+import BusinessHoursSidebar from "/src/components/Pages/UserJourney/BusinessHourSidebar";
 
 import backgroundImage from '/src/assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg';
 // import Logo from "assets/img/IC CLEAN AR-15-cropped.png";
-import WelcomeModal from "/src/views/WelcomeModal.jsx";
+import WelcomeModal from "/src/components/Pages/UserJourney/WelcomeModal.jsx";
 import { FaInstagram, FaFacebook, FaTiktok } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 
@@ -145,7 +145,7 @@ function Index() {
       <VisitorCounter />
       <WelcomeModal />
       {/* <LandingPageHeader /> */}
-      <div className="m-0 p-0 light-bg-color-opaque">
+      <div>
         <Row className="m-0 align-items-center">
           {/* <Col className="m-0 p-0" xs='12' md='6'>
             <h1 className="primary-color text-bold montserrat-bold text-align-end mr-3">CleanAR Solutions <br /> Getting Started</h1>

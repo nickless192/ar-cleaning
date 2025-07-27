@@ -1,0 +1,26 @@
+/* /src/components/SiteBanner/SiteBanner.css */
+
+.site-banner {
+    border-radius: 0;
+    margin-bottom: 0; /* Ensures it sits flush against the navbar below it */
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    text-align: center;
+    width: 100%;
+    z-index: 1031; /* Higher than the default navbar z-index (1030) to ensure it's on top */
+}
+
+.banner-icon {
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+.banner-text {
+    font-weight: 500;
+}
+
+/* Make the close button a bit more visible if needed */
+.site-banner .btn-close {
+    filter: brightness(0.5);
+}
+

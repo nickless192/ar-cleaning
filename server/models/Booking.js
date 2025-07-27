@@ -9,6 +9,9 @@ const BookingSchema = new Schema({
         type: Number,
         default: 0
     }, // income from this booking
+    tax: { type: Number, default: 0 },           // optional
+discount: { type: Number, default: 0 },      // optional
+paidAt: { type: Date },                      // when money was *actually* received
     status: {
         type: String,
         enum: ['pending', 'confirmed', 'completed', 'cancelled'],
