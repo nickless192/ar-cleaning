@@ -18,14 +18,10 @@ jobs:
         with:
           node-version: 20
 
-      - name: Configure npm peer dependency settings
-        run: |
-          npm config set strict-peer-dependencies false
-
       - name: Install dependencies
         run: |
-          npm install
-          cd client && npm install
+          npm install --legacy-peer-deps
+          cd client && npm install --legacy-peer-deps
 
       - name: Build client
         run: |
