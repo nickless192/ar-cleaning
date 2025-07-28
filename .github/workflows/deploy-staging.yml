@@ -16,7 +16,12 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 19
+          node-version: 20
+
+      - name: Configure npm peer dependency settings
+        run: |
+          npm config set auto-install-peers true
+          npm config set strict-peer-dependencies false
 
       - name: Install dependencies
         run: |
