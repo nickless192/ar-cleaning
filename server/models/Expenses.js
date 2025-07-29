@@ -1,5 +1,62 @@
 const { Schema, model } = require('mongoose');
 
+const expenseCategories = [
+        // Marketing & Promotions
+        'Advertising',
+        'Promotional',
+        'Car Wrapping',
+        'Meals & Entertainment',
+
+        // Fees & Dues
+        'Commissions & Fees',
+        'Bank Charges',
+        'Dues & Subscriptions',
+        'Disposal Fees',
+        'Miscellaneous',
+
+        // Office & Admin
+        'Office Expenses',
+        'Rent or Lease',
+        'Supplies',
+        'Stationary & Printing',
+        'Repair & Maintenance',
+        'Cellphone',
+        'Utilities',
+        'Website Hosting',
+
+        // Operations & Materials
+        'Cost of Labor',
+        'Freight & Delivery',
+        'Supplies & Materials',
+        'Locker Room Rental',
+        'Purchases',
+        'Job Materials',
+
+        // Travel & Vehicles
+        'Airfare',
+        'Hotels',
+        'Travel Meals',
+        'Transportation',
+        'Car Leasing',
+        'Entertainment',
+        'Parking',
+
+        // Professional Services
+        'Legal & Professional Fees',
+
+        // Insurance
+        'Insurance - Disability',
+        'Insurance - Liability',
+        'Insurance - Errors & Omissions',
+        'Insurance - Car',
+
+        // Financial & Other
+        'Penalties & Settlements',
+        'Bad Debts',
+        'Interest Expense',
+        'Taxes & Licenses'
+    ];
+
 const RecurringSchema = new Schema({
   frequency: { type: String, enum: ['daily', 'weekly', 'monthly', 'yearly'] },
   interval: { type: Number, default: 1 }, // every N frequency
@@ -11,8 +68,7 @@ const ExpenseSchema = new Schema({
   description: { type: String, required: true },
   category: {
     type: String,
-    enum: ['chemicals', 'supplies', 'payroll', 'ads', 'subscriptions', 'vehicle',
-      'rent', 'tools', 'refunds', 'other'],
+    enum: expenseCategories,
     required: true
     //     // category: { type: String, enum: ['Supplies', 'Rent', 'Utilities', 'Payroll', 'Software', 'Marketing', 'Other'], default: 'Other' },
 //     category: { type: String, required: true }, // Changed to required

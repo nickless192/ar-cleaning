@@ -39,6 +39,7 @@ import Disclaimer from "/src/components/Pages/Navigation/Disclaimer";
 import Footer from "/src/components/Pages/Navigation/Footer.jsx";
 import Customer from "/src/components/Pages/Management/Customers.jsx";
 import FinanceDashboard from "/src/components/Pages/Management/FinanceDashboard";
+import ExpenseDashboard from "/src/components/Pages/Management/ExpenseDashboard";
 
 import LandingFresh from "/src/components/Pages/qrCodes/LandingFresh";
 import LandingNow from "/src/components/Pages/qrCodes/LandingNow";
@@ -103,6 +104,7 @@ const App = () => {
           <Route path="/manage-customers" element={<ProtectedRoute element={<Customer />} />} />
           <Route path="/manage-finance" element={<ProtectedRoute element={<FinanceDashboard />} />} />
           <Route path="/view-quotes" element={<ProtectedRoute element={<QuickQuoteDashboard />} />} />
+          <Route path="/manage-expense" element={<ProtectedRoute element={<ExpenseDashboard />} />} />
           {/* <Route path="/view-quotes/:quoteId" element={<ProtectedRoute element={<ViewQuotes />} />} /> */}
           <Route path="/dashboard" element={<ProtectedRoute element={<LogDashboard />} />} />
           <Route path="/booking-dashboard" element={<ProtectedRoute element={<BookingDashboard />} />} />

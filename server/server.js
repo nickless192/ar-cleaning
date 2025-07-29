@@ -19,6 +19,8 @@ app.use(express.static('public'));
 
 // Serve up static assets
 app.use('/images', express.static(path.join(__dirname, '../client/src/assets')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/dist')));
