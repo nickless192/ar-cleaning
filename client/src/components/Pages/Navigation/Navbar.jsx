@@ -116,15 +116,15 @@ function IndexNavbar() {
 
     useEffect(() => {
         if (isLogged) {
+            if (Auth.getProfile().data.testerFlag === true) {
+                setTesterFlag(true);
+            }
             if (Auth.getProfile().data.adminFlag === true) {
                 fetchUnacknowledged();
                 const interval = setInterval(fetchUnacknowledged, 30000); // Poll every 30s
                 return () => clearInterval(interval);
             }
 
-            if (Auth.getProfile().data.testerFlag === true) {
-                setTesterFlag(true);
-            }
         }
     }, []);
 
