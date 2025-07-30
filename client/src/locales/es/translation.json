@@ -143,7 +143,9 @@
       "view_quotes": "Ver Solicitudes de Cotización",
       "manage_gift_cards": "Administrar Tarjetas de Regalo",
       "visitor_dashboard": "Panel de Visitantes",
-      "booking_dashboard": "Panel de Reservas"
+      "booking_dashboard": "Panel de Reservas",
+      "manage_finance": "Administrar Finanzas",
+      "manage_expenses": "Administrar Deudas"
     }
   },
   "daysOfTheWeek": {

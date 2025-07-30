@@ -134,7 +134,7 @@ const bookingControllers = {
                 const msg = {
                     to: customerEmail,
                     from: 'info@cleanarsolutions.ca', // Update with your verified sender
-                    bcc:  'info@cleanarsolutions.ca', // Update with your verified sender
+                    bcc: 'info@cleanarsolutions.ca', // Update with your verified sender
                     subject: `✅ CleanAR Solutions: Booking Confirmation for ${subjectDate}`,
                     html: `
                   <h2>Thanks for booking with CleanAR Solutions!</h2>
@@ -167,7 +167,7 @@ const bookingControllers = {
                     await sgMail.send(msg);
                     newBooking.confirmationSent = true; // Mark as confirmation sent
                     newBooking.confirmationDate = new Date(); // Set confirmation date
-                    
+
                     console.log(`[Email] Confirmation sent to ${customerEmail}`);
                 } catch (err) {
                     console.error('[Email] Failed to send confirmation:', err);
@@ -264,7 +264,7 @@ const bookingControllers = {
             const updatedBooking = await Booking.findByIdAndUpdate(bookingId, { status: 'cancelled' }, { new: true });
             if (!updatedBooking) {
                 return res.status(404).json({ error: 'Booking not found' });
-            }            
+            }
             updatedBooking.updatedAt = new Date(); // Update the updatedAt field
             updatedBooking.updatedBy = req.body.updatedBy; // Assuming userId is passed in the request body
             await updatedBooking.save(); // Save the updated booking
@@ -402,7 +402,7 @@ const bookingControllers = {
                     await sgMail.send({
                         to: booking.customerEmail,
                         from: 'info@cleanarsolutions.ca',
-                        bcc:  'info@cleanarsolutions.ca', // Update with your verified sender
+                        bcc: 'info@cleanarsolutions.ca', // Update with your verified sender
                         subject: `✅ CleanAR Solutions: Booking Confirmation for ${subjectDate}`,
                         html: `
                   <h2>Thanks for booking with CleanAR Solutions!</h2>
@@ -467,7 +467,7 @@ const bookingControllers = {
                 booking.reminderDate = now; // Update reminder date
                 // booking.reminderScheduled = false;
                 booking.reminderSent = true; // Mark as reminder sent
-                booking.updatedBy = booking.createdBy ||null; // Assuming createdBy is set to the user who created the booking
+                booking.updatedBy = booking.createdBy || null; // Assuming createdBy is set to the user who created the booking
                 booking.updatedAt = now; // Update the updatedAt field
                 await booking.save();
                 console.log(`Reminder sent to ${booking.customerEmail}`);
@@ -481,7 +481,7 @@ const bookingControllers = {
         const { notes, updatedBy } = req.body;
 
         try {
-            const updatedBooking = await Booking.findByIdAndUpdate(bookingId, 
+            const updatedBooking = await Booking.findByIdAndUpdate(bookingId,
                 { notes, updatedBy, updatedAt: new Date() },
                 { new: true }
             );

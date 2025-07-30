@@ -1,73 +1,16 @@
-// import { useTranslation } from 'react-i18next';
-
-// export default function LanguageSwitcher() {
-//   const { i18n } = useTranslation();
-
-//   return (
-//     <div className="language-switcher d-flex gap-2">
-//       <button onClick={() => i18n.changeLanguage('en')}>EN</button>
-//       <button onClick={() => i18n.changeLanguage('fr')}>FR</button>
-//       <button onClick={() => i18n.changeLanguage('es')}>ES</button>
-//     </div>
-//   );
-// }
-
-// import { useTranslation } from 'react-i18next';
-// import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
-// import ToggleButton from 'react-bootstrap/ToggleButton';
-
-// export default function LanguageSwitcher() {
-//   const { i18n } = useTranslation();
-
-//   const languages = [
-//     { code: 'en', label: 'English', short: 'EN' },
-//     { code: 'fr', label: 'Français', short: 'FR' },
-//     { code: 'es', label: 'Español', short: 'ES' },
-//   ];
-
-//   const handleChangeLanguage = (val) => {
-//     i18n.changeLanguage(val);
-//   };
-
-//   return (
-//     <ToggleButtonGroup
-//       type="radio"
-//       name="language"
-//       value={i18n.language}
-//       onChange={handleChangeLanguage}
-//       aria-label="Language selector"
-//       className="language-switcher d-flex justify-content-center gap-1"
-//       size="sm"
-//     >
-//       {languages.map(({ code, label, short }) => (
-//         <ToggleButton
-//           key={code}
-//           id={`lang-${code}`}
-//           value={code}
-//           variant={i18n.language === code ? 'primary' : 'outline-secondary'}
-//           aria-label={`Switch language to ${label}`}
-//           size="sm"
-//         >
-//           {short}
-//         </ToggleButton>
-//       ))}
-//     </ToggleButtonGroup>
-//   );
-// }
-
 import { useTranslation } from 'react-i18next';
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
 import ToggleButton from 'react-bootstrap/ToggleButton';
-import { toast } from 'react-toastify'; // Make sure you have this installed and configured
+import { toast } from 'react-toastify';
+import Auth from "/src/utils/auth";
+import { useEffect, useState } from 'react';
 
 export default function LanguageSwitcher() {
   const { i18n, t } = useTranslation();
+  const [isLogged] = useState(Auth.loggedIn());
 
-  const languages = [
-    { code: 'en', label: 'English', short: 'EN', enabled: true },
-    { code: 'fr', label: 'Français', short: 'FR', enabled: false },
-    { code: 'es', label: 'Español', short: 'ES', enabled: false },
-  ];
+  const [languages, setLanguages] = useState([]);
+
 
   const handleChangeLanguage = (val) => {
     const selected = languages.find((lang) => lang.code === val);
@@ -84,6 +27,36 @@ export default function LanguageSwitcher() {
 
     i18n.changeLanguage(val);
   };
+
+  useEffect(() => {
+    if (isLogged) {
+      // console.log("logged user");
+      const data = Auth.getProfile().data;
+      // console.log(data);
+      if (data.testerFlag === true) {
+        // console.log("its tester - set language for testing");
+        setLanguages([
+          { code: 'en', label: 'English', short: 'EN', enabled: true },
+          { code: 'fr', label: 'Français', short: 'FR', enabled: true },
+          { code: 'es', label: 'Español', short: 'ES', enabled: true },
+        ]);
+      }
+      else {
+        setLanguages([
+          { code: 'en', label: 'English', short: 'EN', enabled: true },
+          { code: 'fr', label: 'Français', short: 'FR', enabled: false },
+          { code: 'es', label: 'Español', short: 'ES', enabled: false },
+        ]);
+      }
+    } else {
+
+      setLanguages([
+        { code: 'en', label: 'English', short: 'EN', enabled: true },
+        { code: 'fr', label: 'Français', short: 'FR', enabled: false },
+        { code: 'es', label: 'Español', short: 'ES', enabled: false },
+      ]);
+    }
+  }, [])
 
   return (
     <ToggleButtonGroup

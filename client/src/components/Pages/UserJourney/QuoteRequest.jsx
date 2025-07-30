@@ -31,6 +31,7 @@ const QuoteRequest = () => {
         phonenumber: '',
         postalcode: '',
         promoCode: '',
+        userId: '',
         subtotalCost: 0,
         tax: 0,
         grandTotal: 0,
@@ -359,14 +360,18 @@ const QuoteRequest = () => {
 
     const resetForm = () => {
         setFormData({
-            name: '',
-            companyName: '',
-            email: '',
-            phonenumber: '',
-            postalcode: '',
-            promoCode: '',
-            services: [],
-            products: [],
+             name: '',
+        companyName: '',
+        email: '',
+        phonenumber: '',
+        postalcode: '',
+        promoCode: '',
+        userId: '',
+        subtotalCost: 0,
+        tax: 0,
+        grandTotal: 0,
+        services: [],
+        products: []
         });
         setSelectedService("");
         setOptions([]);
@@ -846,7 +851,7 @@ const QuoteRequest = () => {
                     <title>CleanAR Solutions</title>
                     <meta name="description" content="Get a quick service estimate from CleanAR Solutions. Fill out our form to receive a personalized quote for your cleaning needs." />
                 </HelmetProvider>
-                <VisitorCounter />
+                {/* <VisitorCounter /> */}
                 <h2 className="text-center primary-color text-bold pt-2">Get a Free Quote</h2>
                 {/* <p className="text-center text-sm italic text-gray-500 mb-1">
                     *Translation coming soon in French and Spanish
@@ -1019,13 +1024,17 @@ const QuoteRequest = () => {
                         <Col md className="">
                             <Button data-track="clicked_reset_quote" onClick={() => setFormData({
                                 name: '',
-                                companyName: '',
-                                email: '',
-                                postalcode: '',
-                                phonenumber: '',
-                                promoCode: '',
-                                services: [],
-                                products: []
+        companyName: '',
+        email: '',
+        phonenumber: '',
+        postalcode: '',
+        promoCode: '',
+        userId: '',
+        subtotalCost: 0,
+        tax: 0,
+        grandTotal: 0,
+        services: [],
+        products: [],
                             })} className='btn-danger rounded-pill'>Reset Form</Button>
                         </Col>
                     </Row>

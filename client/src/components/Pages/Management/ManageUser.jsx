@@ -20,7 +20,8 @@ const ManageUser = () => {
         email: '',
         username: '',
         password: '',
-        adminFlag: false
+        adminFlag: false,
+        testerFlag: false
     });
 
     const [message, setMessage] = useState('');
@@ -61,13 +62,13 @@ const ManageUser = () => {
     };
 
     const handleSaveClick = () => {
-        const { firstName, lastName, email, username, adminFlag } = editedUser;
+        const { firstName, lastName, email, username, adminFlag, testerFlag } = editedUser;
         if (!firstName || !lastName || !email || !username) {
             alert('Please provide all fields');
             return;
         }
         // lets put the fields into a stringify object body
-        const body = JSON.stringify({ firstName, lastName, email, username, adminFlag });
+        const body = JSON.stringify({ firstName, lastName, email, username, adminFlag, testerFlag });
         fetch(`/api/users/${editingUserId}`, {
             method: 'PUT',
             headers: {
@@ -139,7 +140,8 @@ const ManageUser = () => {
                         email: '',
                         username: '',
                         password: '',
-                        adminFlag: false
+                        adminFlag: false,
+                        testerFlag: false
                     });
                 })
                 .catch(err => console.log(err));
@@ -230,6 +232,19 @@ const ManageUser = () => {
                                                         onChange={handleEditChange}
                                                     /> Admin
                                                 </InputGroup>
+                                                <InputGroup className="no-border">
+                                                    {/* <InputGroupAddon addonType="prepend"> */}
+                                                        <InputGroupText>
+                                                            <i className="now-ui-icons ui-1_check"></i>
+                                                        </InputGroupText>
+                                                    {/* </InputGroupAddon> */}
+                                                    <Input
+                                                        type="checkbox"
+                                                        name="testerFlag"
+                                                        checked={editedUser.testerFlag}
+                                                        onChange={handleEditChange}
+                                                    /> Tester
+                                                </InputGroup>
                                                 <Button color="primary" onClick={handleSaveClick}>Save</Button>
                                                 <Button color="secondary" onClick={handleCancelClick}>Cancel</Button>
                                                 {user._id !== currentUserId && (
@@ -248,6 +263,7 @@ const ManageUser = () => {
                                                     <CardText className='font-weight-bold text-secondary'>
                                                         Username: <span className='text-success'>{user.username}</span><br />
                                                         Admin: <span className='text-success'>{user.adminFlag ? 'Yes' : 'No'}</span>
+                                                        Tester: <span className='text-success'>{user.testerFlag ? 'Yes' : 'No'}</span>
                                                     </CardText>
                                                     <Button
                                                         color="primary"

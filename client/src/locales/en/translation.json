@@ -143,7 +143,8 @@
       "manage_gift_cards": "Manage Gift Cards",
       "visitor_dashboard": "Visitor Log Dashboard",
       "booking_dashboard": "Bookings Dashboard",
-      "manage_finance": "Financial Dashboard"
+      "manage_finance": "Financial Dashboard",
+      "manage_expenses": "Manage Expenses"
     }
   },
   "daysOfTheWeek": {

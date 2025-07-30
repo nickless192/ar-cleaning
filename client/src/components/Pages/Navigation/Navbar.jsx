@@ -52,6 +52,7 @@ function IndexNavbar() {
     const [unackCount, setUnackCount] = useState(0);
     const [isLogged] = useState(Auth.loggedIn());
     const { t } = useTranslation();
+    const [testerFlag, setTesterFlag] = useState(false);
 
     const handleToggle = () => {
         document.documentElement.classList.toggle("nav-open");
@@ -120,6 +121,10 @@ function IndexNavbar() {
                 const interval = setInterval(fetchUnacknowledged, 30000); // Poll every 30s
                 return () => clearInterval(interval);
             }
+
+            if (Auth.getProfile().data.testerFlag === true) {
+                setTesterFlag(true);
+            }
         }
     }, []);
 
@@ -161,8 +166,7 @@ function IndexNavbar() {
                                 <DropdownItem to="/manage-customers" tag={Link} className="dropdown-item">
                                     <FaUsersCog className="dropdown-icon" />
                                     <span>{t('navbar.admin.manage_customers')}</span>
-                                </DropdownItem>
-
+                                </DropdownItem>                               
                                 <DropdownItem to="/view-quotes" tag={Link} className="dropdown-item">
                                     <FaRegFileAlt className="dropdown-icon" />
                                     <span>{t('navbar.admin.view_quotes')}</span>
@@ -187,6 +191,10 @@ function IndexNavbar() {
                                     <FaCalendarCheck className="dropdown-icon" />
                                     <span>{t('navbar.admin.manage_finance')}</span>
                                 </DropdownItem>
+                                <DropdownItem to="/manage-expenses" tag={Link} className="dropdown-item">
+                                    <FaCalendarCheck className="dropdown-icon" />
+                                    <span>{t('navbar.admin.manage_expenses')}</span>
+                                </DropdownItem>
                             </DropdownMenu>
                         </UncontrolledDropdown>
                     )}
@@ -204,19 +212,19 @@ function IndexNavbar() {
 
                     {Auth.getProfile().data.adminFlag === true && (
                         <>
-                         <NavItem>
-                        <NavLink href="/view-quotes" className="position-relative">
-                            <FaBell className="nav-icon" />
-                            {unackCount > 0 && (
-                                <Badge color="danger" pill className="position-absolute top-0 start-100 translate-middle">
-                                    {unackCount}
-                                </Badge>
-                            )}
-                        </NavLink>
-                    </NavItem>
-                    </>
+                            <NavItem>
+                                <NavLink href="/view-quotes" className="position-relative">
+                                    <FaBell className="nav-icon" />
+                                    {unackCount > 0 && (
+                                        <Badge color="danger" pill className="position-absolute top-0 start-100 translate-middle">
+                                            {unackCount}
+                                        </Badge>
+                                    )}
+                                </NavLink>
+                            </NavItem>
+                        </>
                     )}
-                   
+
 
                     <NavItem className="nav-item">
                         <NavLink
@@ -342,6 +350,18 @@ function IndexNavbar() {
                                                     </div>
                                                 </NavLink>
                                             </NavItem>
+
+                                             {testerFlag === true && (
+                                                 <NavItem className="nav-item">
+                                                    <NavLink href="/quick-request-v2" className="nav-link">
+                                                     <div className="nav-link-content">
+                                                        <FaLightbulb className="nav-icon" />
+                                                        <span>{t('New Quote Request - testing - en prueba')}</span>
+                                                     </div>
+                                                    </NavLink>
+                                                 </NavItem>
+                               
+                                )}
 
                                             {showLogin()}
                                         </Nav>

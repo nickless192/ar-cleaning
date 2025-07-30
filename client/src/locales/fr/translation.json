@@ -141,7 +141,9 @@
       "view_quotes": "Voir les Demandes de Devis",
       "manage_gift_cards": "Gérer les Cartes-Cadeaux",
       "visitor_dashboard": "Tableau de Bord des Visiteurs",
-      "booking_dashboard": "Tableau de Bord des Réservations"
+      "booking_dashboard": "Tableau de Bord des Réservations",
+      "manage_finance": "Gérer les finances",
+      "manage_expenses": "Gérer les dépanses"
     }
   },
   "daysOfTheWeek": {

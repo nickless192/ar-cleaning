@@ -13,7 +13,7 @@ import {
     Col,
 } from 'react-bootstrap';
 import Auth from "/src/utils/auth";
-import VisitorCounter from "/src/components/Pages/Management/VisitorCounter";
+// import VisitorCounter from "/src/components/Pages/Management/VisitorCounter";
 import {
     FaQuestionCircle
 } from 'react-icons/fa';
