@@ -8,7 +8,7 @@ import {
     InputGroup,
     // InputGroupAddon,
     InputGroupText,
-    Form, Card, CardBody, CardTitle, CardText, CardHeader
+    Form, Card, CardBody, CardTitle, CardText, CardHeader, Label
 } from 'reactstrap';
 import Auth from "/src/utils/auth";
 
@@ -306,6 +306,7 @@ const ManageUser = () => {
                                                 name="firstName"
                                                 value={formData.firstName}
                                                 onChange={handleChange}
+                                                className="text-cleanar-color form-input"
                                             />
                                         </InputGroup>
                                     </Col>
@@ -323,6 +324,7 @@ const ManageUser = () => {
                                                 name="lastName"
                                                 value={formData.lastName}
                                                 onChange={handleChange}
+                                                className="text-cleanar-color form-input"
                                             />
                                         </InputGroup>
                                     </Col>
@@ -340,6 +342,7 @@ const ManageUser = () => {
                                                 name="email"
                                                 value={formData.email}
                                                 onChange={handleChange}
+                                                className="text-cleanar-color form-input"
                                             />
                                         </InputGroup>
                                     </Col>
@@ -357,6 +360,7 @@ const ManageUser = () => {
                                                 name="username"
                                                 value={formData.username}
                                                 onChange={handleChange}
+                                                className="text-cleanar-color form-input"
                                             />
                                         </InputGroup>
                                     </Col>
@@ -374,6 +378,7 @@ const ManageUser = () => {
                                                 name="password"
                                                 value={formData.password}
                                                 onChange={handleChange}
+                                                className="text-cleanar-color form-input"
                                             />
                                         </InputGroup>
                                     </Col>
@@ -384,12 +389,16 @@ const ManageUser = () => {
                                                     <i className="now-ui-icons ui-1_check"></i>
                                                 </InputGroupText>
                                             {/* </InputGroupAddon> */}
+                                            <Label>
+
                                             <Input
                                                 type="checkbox"
                                                 name="adminFlag"
                                                 checked={formData.adminFlag}
-                                                onChange={handleChange}
-                                            /> Admin
+                                                onChange={handleChange}                                                
+                                            /> 
+                                            Admin
+                                            </Label>
                                         </InputGroup>
                                     </Col>
                                     <Col className="text-center ml-auto mr-auto" lg="6" md="8" id='user-form'>

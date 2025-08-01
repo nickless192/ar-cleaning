@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Card, Form, Button, Row, Col } from "react-bootstrap";
+import { Card, Form, Button, Row, Col, Alert } from "react-bootstrap";
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
@@ -10,16 +10,43 @@ const ContactUs = () => {
     message: "",
   });
 
+   const [status, setStatus] = useState({ loading: false, error: "", success: "" });
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // TODO: Hook this into your API or email service
-    console.log("Form submitted:", formData);
-  };
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  setStatus({ loading: true, error: "", success: "" });
+
+  try {
+    const response = await fetch("/api/contactForm", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Something went wrong.");
+    }
+
+    setStatus({ loading: false, error: "", success: "Your message has been sent!" });
+    setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
+  } catch (error) {
+    setStatus({
+      loading: false,
+      error: error.message || "Unable to send message. Try again later.",
+      success: "",
+    });
+  }
+};
+
 
   return (
     <section className="py-5 bg-light">
@@ -29,9 +56,11 @@ const ContactUs = () => {
           <Col xs={12} md={6} className="mb-4 mb-md-0">
             <h3 className="mb-3">Let’s Talk 👋</h3>
             <p className="text-muted">
-              Have questions? Send us a message and we’ll get back to you shortly.
+              Still have questions? Send us a message and we’ll get back to you shortly.
             </p>
             <Form onSubmit={handleSubmit}>
+               {status.success && <Alert variant="success">{status.success}</Alert>}
+              {status.error && <Alert variant="danger">{status.error}</Alert>}
               <Form.Group className="mb-3" controlId="name">
                 <Form.Label>Your Name</Form.Label>
                 <Form.Control
@@ -40,6 +69,7 @@ const ContactUs = () => {
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="Jane Doe"
+                  className="text-cleanar-color form-input"
                   required
                 />
               </Form.Group>
@@ -52,6 +82,7 @@ const ContactUs = () => {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="you@example.com"
+                  className="text-cleanar-color form-input"
                   required
                 />
               </Form.Group>
@@ -64,6 +95,7 @@ const ContactUs = () => {
                   value={formData.phone}
                   onChange={handleChange}
                   placeholder="(123) 456-7890"
+                  className="text-cleanar-color form-input"
                 />
               </Form.Group>
 
@@ -74,6 +106,7 @@ const ContactUs = () => {
                   name="subject"
                   value={formData.subject}
                   onChange={handleChange}
+                  className="text-cleanar-color form-input"
                   placeholder="e.g., Booking Question"
                   required
                 />
@@ -88,6 +121,7 @@ const ContactUs = () => {
                   onChange={handleChange}
                   rows={4}
                   placeholder="Let us know how we can help..."
+                  className="text-cleanar-color form-input"
                   required
                 />
               </Form.Group>

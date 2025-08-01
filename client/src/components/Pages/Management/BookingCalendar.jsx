@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Row, Col, Card, Modal, Button, Table, Badge } from "react-bootstrap";
 import '/src/assets/css/bookingcalendar.css';
 
 const BookingCalendar = ({ bookings }) => {
@@ -8,6 +9,14 @@ const BookingCalendar = ({ bookings }) => {
   // Get current year and month
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth();
+
+  // Bootstrap contextual colors
+const statusColors = {
+  pending: "warning",     // Yellow
+  confirmed: "primary",   // Blue
+  completed: "success",   // Green
+  cancelled: "danger"     // Red
+};
 
   // Navigate to previous month
   const prevMonth = () => {
@@ -65,31 +74,18 @@ const BookingCalendar = ({ bookings }) => {
 
   // Add empty cells for days before the first day of the month
   for (let i = 0; i < firstDayOfMonth; i++) {
-    calendarDays.push(<div key={`empty-${i}`} className="calendar-day empty"></div>);
+    // calendarDays.push(<div key={`empty-${i}`} className="calendar-day empty"></div>);
+    calendarDays.push({ empty: true });
   }
 
   // Add cells for each day of the month
   for (let day = 1; day <= daysInMonth; day++) {
     const dayBookings = bookingsByDay[day] || [];
-
-    calendarDays.push(
-      <div key={day} className="calendar-day">
-        <div className="day-header">{day}</div>
-        <div className="day-bookings">
-          {dayBookings.map((booking, index) => (
-            <div
-              key={index}
-              className="booking-item"
-              onClick={() => setSelectedBooking(booking)}
-            >
-              <div className="booking-time">{formatTime(booking.date)}</div>
-              <div className="booking-name">{booking.customerName}</div>
-              <div className="booking-service">{booking.serviceType}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
+    calendarDays.push({
+      day,
+      bookings: dayBookings,
+      empty: false
+    });
   }
 
   return (
@@ -99,7 +95,11 @@ const BookingCalendar = ({ bookings }) => {
         <h2>{monthNames[currentMonth]} {currentYear}</h2>
         <button onClick={nextMonth} className="nav-button">→</button>
       </div>
-
+      {/* <div className="calendar-header">
+        <button onClick={prevMonth} className="nav-button">&larr;</button>
+        <h2 className="month-title mb-0">{monthNames[currentMonth]} {currentYear}</h2>
+        <button onClick={nextMonth} className="nav-button">&rarr;</button>
+      </div>
       <div className="weekday-header">
         <div>Sun</div>
         <div>Mon</div>
@@ -147,10 +147,112 @@ const BookingCalendar = ({ bookings }) => {
             <div className="booking-detail">
               <strong>24hr Reminder:</strong> {selectedBooking.reminderScheduled ? 'Yes' : 'No'}
             </div>
-          </div>
-          {/* <div className="booking-detail" onClick={() => setSelectedBooking(null)}><span>Close</span></div> */}
+          </div>          
         </div>
-      )}
+      )} */}
+      <Row className="weekday-header text-center fw-bold bg-primary text-white mb-2 rounded">
+        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+          <Col key={day} className="py-2 border-end border-light">
+            {day}
+          </Col>
+        ))}
+      </Row>
+
+      {/* Calendar Grid */}
+      <Row className="calendar-grid g-0">
+        {calendarDays.map((day, idx) => (
+          <Col
+            key={idx}
+            xs={12 / 7} // 7 columns
+            className="border p-2 bg-white"
+            style={{ minHeight: "100px" }}
+          >
+            {!day.empty && (
+              <>
+                <div className="fw-bold">{day.day}</div>
+                {day.bookings.map((booking, i) => (
+                  <Card
+                    key={i}
+                    className="mt-1 shadow-sm border-0"
+                    bg={statusColors[booking.status] || "secondary"}
+                    text="white"
+                    onClick={() => setSelectedBooking(booking)}
+                    style={{ cursor: "pointer", fontSize: "0.8rem" }}
+                  >
+                    <Card.Body className="p-1">
+                      {booking.customerName}{" - "}{booking.serviceType}{" "}
+                      <Badge bg="light" text="dark">
+                        {booking.status}
+                      </Badge>
+                    </Card.Body>
+                  </Card>
+                ))}
+              </>
+            )}
+
+          </Col>
+        ))}
+      </Row>
+
+      {/* Booking Details Modal */}
+      <Modal
+        show={!!selectedBooking}
+        onHide={() => setSelectedBooking(null)}
+        centered
+      >
+        {selectedBooking && (
+          <>
+            <Modal.Header closeButton>
+              <Modal.Title>Booking Details</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Table bordered size="sm">
+                <tbody>
+                  <tr>
+                    <th>Customer</th>
+                    <td>{selectedBooking.customerName}</td>
+                  </tr>
+                  <tr>
+                    <th>Email</th>
+                    <td>{selectedBooking.customerEmail}</td>
+                  </tr>
+                  <tr>
+                    <th>Service</th>
+                    <td>{selectedBooking.serviceType}</td>
+                  </tr>
+                  <tr>
+                    <th>Date/Time</th>
+                    <td>{new Date(selectedBooking.date).toLocaleString()}</td>
+                  </tr>
+                  <tr>
+                    <th>Income</th>
+                    <td>${selectedBooking.income} CAD</td>
+                  </tr>
+                  <tr>
+                    <th>Confirmation Email</th>
+                    <td>
+                      {selectedBooking.scheduleConfirmation
+                        ? `Scheduled for ${new Date(
+                          selectedBooking.confirmationDate
+                        ).toLocaleString()}`
+                        : "Not scheduled"}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>24hr Reminder</th>
+                    <td>{selectedBooking.reminderScheduled ? "Yes" : "No"}</td>
+                  </tr>
+                </tbody>
+              </Table>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={() => setSelectedBooking(null)}>
+                Close
+              </Button>
+            </Modal.Footer>
+          </>
+        )}
+      </Modal>
     </div>
   );
 };

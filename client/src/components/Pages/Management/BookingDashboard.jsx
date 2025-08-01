@@ -252,9 +252,9 @@ const BookingDashboard = () => {
   };
 
   return (
-    <section className="py-4 px-1 mx-auto">
+    <section className="py-4 px-5 mx-auto">
       <Row>
-        <Col md={5}>
+        <Col md={4}>
           <h4>Create Booking</h4>
           {message && (
             <Alert color={message.type}>
@@ -438,7 +438,17 @@ const BookingDashboard = () => {
           </Form>
         </Col>
 
-        <Col md={7}>
+      
+        <Col>
+          <h4>Booking Calendar</h4>
+          <BookingCalendar bookings={bookings} />
+          <div className="mt-3">
+          </div>
+
+        </Col>
+      </Row>
+      <Row className="">
+          <Col>
           <h4 className="mb-3">All Bookings</h4>
           {bookings.length > 0 ? (
             <Table striped bordered hover responsive>
@@ -587,15 +597,6 @@ const BookingDashboard = () => {
           ) : (
             <p>No bookings yet.</p>
           )}
-        </Col>
-      </Row>
-      <Row className="">
-        <Col>
-          <h4>Booking Calendar</h4>
-          <BookingCalendar bookings={bookings} />
-          <div className="mt-3">
-          </div>
-
         </Col>
       </Row>
     </section>

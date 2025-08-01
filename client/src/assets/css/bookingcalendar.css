@@ -6,11 +6,43 @@
   padding: 20px;
 }
 
-.calendar-header {
+/* .calendar-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+} */
+
+.calendar-header {
+  display: flex;
+  justify-content: center; /* Center the whole group */
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 10px; /* Space between button, title, button */
+}
+
+.calendar-header .nav-button {
+  background-color: #0d6efd;
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.calendar-header .nav-button:hover {
+  background-color: #0b5ed7;
+}
+
+.calendar-header .month-title {
+  white-space: nowrap; /* Keep it on one line */
+  font-size: 1.5rem;
 }
 
 .nav-button {

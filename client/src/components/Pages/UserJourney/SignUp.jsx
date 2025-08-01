@@ -56,8 +56,16 @@ function SignUp() {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
+      const cleanedData = Object.fromEntries(
+    Object.entries(formData).map(([key, val]) => [key, val.trim()])
+  );
 
-    if (formData.firstName && formData.lastName && formData.email && formData.username && formData.password && formData.telephone) {
+    if (    cleanedData.firstName &&
+    cleanedData.lastName &&
+    cleanedData.email &&
+    cleanedData.username &&
+    cleanedData.password &&
+    cleanedData.telephone) {
       try {
         const response = await fetch(`/api/users/`, {
           method: 'post',
@@ -108,7 +116,8 @@ function SignUp() {
           Auth.login(data.token, data.dbUserData.adminFlag);
 
         } else {
-          alert(response.statusText);
+          // alert(response.statusText);
+          alert("Username already taken, please try again with a different username")
         }
       } catch (err) {
         console.error(err);
@@ -127,7 +136,7 @@ function SignUp() {
   const handleChange = (event) => {
     event.preventDefault();
     const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value.trim() });
+    setFormData({ ...formData, [name]: value });
   };
 
   useEffect(() => {

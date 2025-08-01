@@ -41,6 +41,7 @@ import Customer from "/src/components/Pages/Management/Customers.jsx";
 import FinanceDashboard from "/src/components/Pages/Management/FinanceDashboard";
 import ExpenseDashboard from "/src/components/Pages/Management/ExpenseDashboard";
 import QuickRequest_v2 from "/src/components/Pages/UserJourney/QuoteRequest_v2"; // version in-dev for testing
+import AdminContactDashboard from "/src/components/Pages/Management/AdminContactDashboard"; // version in-dev for testing
 
 import LandingFresh from "/src/components/Pages/qrCodes/LandingFresh";
 import LandingNow from "/src/components/Pages/qrCodes/LandingNow";
@@ -107,6 +108,7 @@ const App = () => {
           <Route path="/view-quotes" element={<ProtectedRoute element={<QuickQuoteDashboard />} />} />
           <Route path="/manage-expenses" element={<ProtectedRoute element={<ExpenseDashboard />} />} />
           <Route path="/quick-request-v2" element={<ProtectedRoute element={<QuickRequest_v2 />} />} />
+          <Route path="/admin-contact-dashboard" element={<ProtectedRoute element={<AdminContactDashboard />} />} />
           {/* <Route path="/view-quotes/:quoteId" element={<ProtectedRoute element={<ViewQuotes />} />} /> */}
           <Route path="/dashboard" element={<ProtectedRoute element={<LogDashboard />} />} />
           <Route path="/booking-dashboard" element={<ProtectedRoute element={<BookingDashboard />} />} />

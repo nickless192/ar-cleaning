@@ -334,6 +334,7 @@ const ExpenseDashboard = () => {
                                     <Input
                                         type="file"
                                         accept="image/*,.pdf"
+                                        className="text-cleanar-color form-input"
                                         onChange={e => handleReceiptChange(e.target.files[0])}
                                     />
                                     {ocrRunning && (
@@ -356,7 +357,9 @@ const ExpenseDashboard = () => {
                         <CardBody>
                             <h5>Import CSV</h5>
                             <p className="text-muted small mb-2">Upload a CSV (columns: Amount, Category, Date, Description)</p>
-                            <Input type="file" accept=".csv" onChange={handleCSVUpload} />
+                            <Input type="file" accept=".csv" 
+                            className="text-cleanar-color form-input"
+                            onChange={handleCSVUpload} />
                             {uploading && (
                                 <div className="mt-3">
                                     <Spinner size="sm" /> Uploading…

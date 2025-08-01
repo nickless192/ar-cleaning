@@ -283,13 +283,12 @@ function Index() {
         </Row>
         
       <ToastContainer position="top-center" autoClose={2000} />
-        {/* <Row className="m-0 p-0">
+        <Row className="m-0 p-0">
           <Col xs='12' md='12' className="p-0">
             <ContactUs />
           </Col>
-          </Row> */}
+          </Row>
 
-        {/* <Footer /> */}
       </div>
 
     </>

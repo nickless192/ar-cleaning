@@ -145,6 +145,10 @@ function IndexNavbar() {
                             </DropdownToggle>
 
                             <DropdownMenu className="dropdown-menu">
+                                <DropdownItem to="/admin-contact-dashboard" tag={Link} className="dropdown-item">
+                                    <FaBoxOpen className="dropdown-icon" />
+                                    <span>{t('Admin Contact Dashboard')}</span>
+                                </DropdownItem>
                                 <DropdownItem to="/manage-categories" tag={Link} className="dropdown-item">
                                     <FaBoxOpen className="dropdown-icon" />
                                     <span>{t('navbar.admin.manage_categories')}</span>
@@ -284,7 +288,7 @@ function IndexNavbar() {
                             </NavbarBrand>
                         </Col>
                         <Col md="9" xs="9">
-                            <div>
+                            <div className="">
                                 <div className="navbar-nav social-icons-container">
                                     <NavItem className="nav-item ml-auto">
                                         <NavLink href="https://www.instagram.com/cleanarsolutions/" className="nav-link" target="_blank" rel="noopener noreferrer">

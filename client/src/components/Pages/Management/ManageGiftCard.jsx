@@ -233,31 +233,46 @@ const ManageGiftCard = () => {
                             <Form>
                                 <FormGroup>
                                     <Label for="code">Code (if known)</Label>
-                                    <Input type="text" name="code" id="code" value={formData.code} onChange={handleInputChange} />
+                                    <Input type="text" name="code" id="code" 
+                                    className="text-cleanar-color form-input"
+                                    value={formData.code} onChange={handleInputChange} />
                                 </FormGroup>
                                 <FormGroup>
                                     <Label for="amount">Amount</Label>
-                                    <Input type="text" name="amount" id="amount" value={formData.amount} onChange={handleInputChange} />
+                                    <Input type="text" name="amount" id="amount" 
+                                    className="text-cleanar-color form-input"
+                                    value={formData.amount} onChange={handleInputChange} />
                                 </FormGroup>
                                 <FormGroup>
                                     <Label for="purchaserName">Purchaser Name</Label>
-                                    <Input type="text" name="purchaserName" id="purchaserName" value={formData.purchaserName} onChange={handleInputChange} />
+                                    <Input type="text" name="purchaserName" id="purchaserName" 
+                                    className="text-cleanar-color form-input"
+                                    value={formData.purchaserName} onChange={handleInputChange} />
                                 </FormGroup>
                                 <FormGroup>
                                     <Label for="recipientName">Recipient Name</Label>
-                                    <Input type="text" name="recipientName" id="recipientName" value={formData.recipientName} onChange={handleInputChange} />
+                                    <Input type="text" name="recipientName" id="recipientName" 
+                                    className="text-cleanar-color form-input"
+                                    value={formData.recipientName} onChange={handleInputChange} />
                                 </FormGroup>
                                 <FormGroup>
                                     <Label for="recipientEmail">Recipient Email</Label>
-                                    <Input type="text" name="recipientEmail" id="recipientEmail" value={formData.recipientEmail} onChange={handleInputChange} />
+                                    <Input type="text" name="recipientEmail" id="recipientEmail" 
+                                    className="text-cleanar-color form-input"
+                                    value={formData.recipientEmail} onChange={handleInputChange} />
                                 </FormGroup>
                                 <FormGroup>
                                     <Label for="message">Message</Label>
-                                    <Input type="text" name="message" id="message" value={formData.message} onChange={handleInputChange} />
+                                    <Input type="text" name="message" id="message" 
+                                    className="text-cleanar-color form-input"
+                                    value={formData.message} onChange={handleInputChange} />
                                 </FormGroup>
                                 <FormGroup>
-                                    <Label for="isRedeemed">Redeemed</Label>
-                                    <Input type="checkbox" name="isRedeemed" id="isRedeemed" checked={formData.isRedeemed} onChange={handleInputChange} />
+                                    <Label for="isRedeemed">
+                                    <Input type="checkbox" name="isRedeemed" id="isRedeemed"
+                                     checked={formData.isRedeemed} onChange={handleInputChange} />
+                                     Redeemed
+                                     </Label>
                                 </FormGroup>
                                 <Button onClick={handleSaveClick}>Save</Button>
                                 <Button onClick={handleCancelClick}>Cancel</Button>

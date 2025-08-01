@@ -21,6 +21,9 @@ const CustomerSchema = new Schema({
   telephone: {
     type: String
   },
+  notes: {
+    type: String
+  },
   email: {
     type: String,
             // run email validation
@@ -49,6 +52,11 @@ const CustomerSchema = new Schema({
     type: Types.ObjectId,
     ref: 'Booking'
   }],
+  type: {
+    type: String,
+    enum: ["one-time", "recurring", "other"],
+    default: "one-time",
+  },
   createdAt: {
     type: Date,
     default: Date.now,

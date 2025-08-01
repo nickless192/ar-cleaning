@@ -198,6 +198,7 @@ const ManageProduct = () => {
                                                 name="name"
                                                 value={editedProduct.name}
                                                 onChange={handleEditChange}
+                                                className="text-cleanar-color form-input"
                                                 placeholder="Product Name"
                                             />
                                             <Input
@@ -206,6 +207,7 @@ const ManageProduct = () => {
                                                 value={editedProduct.description}
                                                 onChange={handleEditChange}
                                                 placeholder="Description"
+                                                className="text-cleanar-color form-input"
                                             />
                                             <Input
                                                 type="text"
@@ -213,6 +215,7 @@ const ManageProduct = () => {
                                                 value={editedProduct.productCost}
                                                 onChange={handleEditChange}
                                                 placeholder="Cost per Quantity"
+                                                className="text-cleanar-color form-input"
                                             />
                                             <Input
                                                 type="text"
@@ -220,6 +223,7 @@ const ManageProduct = () => {
                                                 value={editedProduct.quantityAtHand}
                                                 onChange={handleEditChange}
                                                 placeholder="Quantity at Hand"
+                                                className="text-cleanar-color form-input"
                                             />
                                             <Button color="primary" onClick={handleSaveClick}>Save</Button>
                                             <Button color="secondary" onClick={handleCancelClick}>Cancel</Button>
@@ -269,6 +273,7 @@ const ManageProduct = () => {
                                             id="productName"
                                             name="productName"
                                             value={formData.productName}
+                                            className="text-cleanar-color form-input"
                                             onChange={handleChange}
                                         />
                                     </InputGroup>
@@ -288,6 +293,7 @@ const ManageProduct = () => {
                                             id="description"
                                             name="description"
                                             value={formData.description}
+                                            className="text-cleanar-color form-input"
                                             onChange={handleChange}
                                         />
                                     </InputGroup>
@@ -307,6 +313,7 @@ const ManageProduct = () => {
                                             id="productCost"
                                             name="productCost"
                                             value={formData.productCost}
+                                            className="text-cleanar-color form-input"
                                             onChange={handleChange}
                                         />
                                     </InputGroup>
@@ -326,6 +333,7 @@ const ManageProduct = () => {
                                             id="quantityAtHand"
                                             name="quantityAtHand"
                                             value={formData.quantityAtHand}
+                                            className="text-cleanar-color form-input"
                                             onChange={handleChange}
                                         />
                                     </InputGroup>

@@ -13,6 +13,7 @@ const customerRoutes = require('./customerRoutes');
 const categoryRoutes = require('./categoryRoutes');
 const financeRoutes = require('./financeRoutes');
 const expensesRoutes = require('./expensesRoutes');
+const contactFormRoutes = require('./contactFormRoutes');
 
 router.use('/users', userRoutes);
 router.use('/services', serviceRoutes);
@@ -28,5 +29,6 @@ router.use('/customers', customerRoutes);
 router.use('/categories', categoryRoutes);
 router.use('/finance', financeRoutes);
 router.use('/expenses', expensesRoutes);
+router.use('/contactForm', contactFormRoutes);
 
 module.exports = router;
