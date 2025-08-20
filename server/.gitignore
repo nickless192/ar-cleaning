@@ -6,4 +6,4 @@ node_modules
 *.traineddata
 tessdata/
 
-uploads/
+uploads
