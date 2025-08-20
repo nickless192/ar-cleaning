@@ -7,7 +7,8 @@ import CustomerRelations from '/src/components/Pages/Customer/CustomerRelations'
 import {
   getCustomers,
   createCustomer,
-  updateCustomer
+  updateCustomer,
+  deleteCustomer
 } from '/src/components/API/customerApi';
 
 const Customers = () => {
@@ -35,11 +36,25 @@ const Customers = () => {
     setModalOpen(true);
   };
 
-  const handleSave = async (data) => {
+  const handleSave = async (e,data) => {
+    e.preventDefault();
     if (data._id) await updateCustomer(data._id, data);
     else await createCustomer(data);
     setModalOpen(false);
     fetchCustomers();
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm('Are you sure you want to delete this customer?')) {
+      try {
+        await deleteCustomer(id);
+        // await fetch(`/api/customers/${id}`, { method: 'DELETE' });
+        fetchCustomers();
+      } catch (error) {
+        console.error('Failed to delete customer:', error);
+        alert('Failed to delete customer. Please try again.');
+      }
+    }
   };
 
   return (
@@ -53,6 +68,7 @@ const Customers = () => {
         customers={customers}
         onEdit={handleEdit}
         onManageRelations={(cust) => setManagingCustomer(cust)}
+        onDelete={handleDelete}
       />
 
       <Modal isOpen={modalOpen} toggle={() => setModalOpen(!modalOpen)} size="lg">

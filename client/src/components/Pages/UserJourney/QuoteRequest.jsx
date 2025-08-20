@@ -893,7 +893,7 @@ const QuoteRequest = () => {
                                         id={`floating${label.replace(' ', '')}`}
                                         placeholder={placeholder}
                                         aria-label={label}
-                                        className="text-cleanar-color form-input rounded-pill"
+                                        className="text-cleanar-color form-input "
                                         name={name}
                                         value={formData[name]}
                                         onChange={handleChange}

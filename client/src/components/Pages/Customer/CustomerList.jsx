@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, FormGroup } from 'reactstrap';
 
 
-const CustomerList = ({ customers, onEdit, onManageRelations }) => {
+const CustomerList = ({ customers, onEdit, onManageRelations, onDelete }) => {
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [notes, setNotes] = useState("");
@@ -70,6 +70,7 @@ const CustomerList = ({ customers, onEdit, onManageRelations }) => {
                   <Button color="primary" size="sm" className="me-2" onClick={() => onEdit(cust)}>Edit</Button>
                   <Button color="info" size="sm" onClick={() => onManageRelations(cust)}>Manage Links</Button>
                   <Button color="secondary" size="sm" onClick={() => handleOpenModal(cust)}>Add Note</Button>
+                  <Button color="danger" size="sm" onClick={() => onDelete(cust._id)}>Delete</Button>
                 </td>
               </tr>
             ))

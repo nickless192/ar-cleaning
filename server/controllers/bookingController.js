@@ -29,7 +29,7 @@ const sendReminderEmail = async ({ customerEmail, customerName, date, serviceTyp
         to: customerEmail,
         from: 'info@cleanarsolutions.ca', // Same here
         subject: `📅[REMINDER] CleanAR Solutions: Cleaning Service Confirmation for ${subjectDate}`,
-        bcc: 'info@cleanarsolutions.ca',
+        // cc: 'info@cleanarsolutions.ca',
         html: `
             <h2>Your service is almost here!</h2>
             <p>Hi ${customerName},</p>
@@ -50,7 +50,7 @@ const sendReminderEmail = async ({ customerEmail, customerName, date, serviceTyp
 
     <td style="vertical-align: top; width: 50%; padding-left: 10px;">
       📱 <a href="https://www.instagram.com/cleanarsolutions/" target="_blank">Follow us on Instagram</a><br>
-      💲 Refer a friend and get 10% off their first service!<br>
+      💲 Refer a friend and get 10% off after their first service!<br>
       😄 <a href="https://g.page/r/Cek9dkmHVuBKEAE/review" target="_blank" rel="noopener noreferrer">Leave us a review!</a>
     </td>
   </tr>
@@ -60,6 +60,7 @@ const sendReminderEmail = async ({ customerEmail, customerName, date, serviceTyp
     };
 
     try {
+        // console.log(msg);
         await sgMail.send(msg);
         console.log(`[Email] Reminder sent to ${customerEmail}`);
     } catch (err) {
@@ -76,24 +77,24 @@ const bookingControllers = {
             serviceType,
             date,
             userId,
-            scheduleConfirmation,
-            confirmationDate,
-            reminderScheduled,
-            disableConfirmation,
+            // scheduleConfirmation,
+            // confirmationDate,
+            // reminderScheduled,
+            // disableConfirmation,
             income
         } = req.body;
 
         const torontoLocal = DateTime.fromISO(date, { zone: 'America/Toronto' });
         const parsedDate = new Date(torontoLocal);
-        const confirmationDateLocal = confirmationDate ? DateTime.fromISO(confirmationDate, { zone: 'America/Toronto' }) : null;
-        if (confirmationDateLocal) {
-            confirmationDateLocal.setZone('America/Toronto');
-        }
+        // const confirmationDateLocal = confirmationDate ? DateTime.fromISO(confirmationDate, { zone: 'America/Toronto' }) : null;
+        // if (confirmationDateLocal) {
+        //     confirmationDateLocal.setZone('America/Toronto');
+        // }
 
         if (!customerEmail || !date) return res.status(400).json({ error: 'Missing info' });
 
         try {
-            // 1. Send confirmation
+            // create new booking
             const newBooking = new Booking({
                 customerName,
                 customerEmail,
@@ -101,89 +102,15 @@ const bookingControllers = {
                 createdBy: userId,
                 updatedBy: userId,
                 date: parsedDate,
-                reminderScheduled,
-                scheduleConfirmation: scheduleConfirmation,
-                scheduledConfirmationDate: confirmationDateLocal,
+                // reminderScheduled,
+                // scheduleConfirmation: scheduleConfirmation,
+                // scheduledConfirmationDate: confirmationDateLocal,
                 reminderDate: null,
                 confirmationSent: false,
                 reminderSent: false,
-                disableConfirmation: disableConfirmation || false,
+                // disableConfirmation: disableConfirmation || false,
                 income: income || 0
             });
-
-
-            if (!scheduleConfirmation && !disableConfirmation) {
-                // await sendConfirmationEmail({ customerName, customerEmail, serviceType, date });
-                const torontoDate = DateTime.fromJSDate(parsedDate, { zone: 'utc' }).setZone('America/Toronto');
-                const subjectDate = torontoDate.toLocaleString({
-                    weekday: 'long',
-                    month: 'long',
-                    day: 'numeric',
-                    year: 'numeric'
-                });
-
-                const formattedDateTime = torontoDate.toLocaleString({
-                    weekday: 'long',
-                    month: 'long',
-                    day: 'numeric',
-                    year: 'numeric',
-                    hour: 'numeric',
-                    minute: '2-digit',
-                    hour12: true
-                });
-                const msg = {
-                    to: customerEmail,
-                    from: 'info@cleanarsolutions.ca', // Update with your verified sender
-                    bcc: 'info@cleanarsolutions.ca', // Update with your verified sender
-                    subject: `✅ CleanAR Solutions: Booking Confirmation for ${subjectDate}`,
-                    html: `
-                  <h2>Thanks for booking with CleanAR Solutions!</h2>
-                  <p>Hi ${customerName},</p>
-                  <p>Your service is confirmed for <strong>${formattedDateTime}</strong>.</p>
-                  <p>Details:</p>
-                  <p>${serviceType}</p>
-                  <p>We look forward to seeing you then! 🚐🧼</p>
-                  <table style="width:100%; font-family: Arial, sans-serif; font-size:14px; border-collapse: collapse;">
-
-  <tr>
-    <td style="vertical-align: top; width: 50%; padding-right: 10px;">
-      <strong>The CleanAR Solutions Team</strong><br>
-      📞 (437) 440-5514<br>
-      📧 <a href="mailto:info@cleanARsolutions.ca">info@cleanARsolutions.ca</a><br>
-      🌐 <a href="https://www.cleanARsolutions.ca/index" target="_blank">www.cleanARsolutions.ca/index</a>
-    </td>
-
-    <td style="vertical-align: top; width: 50%; padding-left: 10px;">
-      📱 <a href="https://www.instagram.com/cleanarsolutions/" target="_blank">Follow us on Instagram</a><br>
-      💲 Refer a friend and get 10% off their first service!<br>
-      😄 <a href="https://g.page/r/Cek9dkmHVuBKEAE/review" target="_blank" rel="noopener noreferrer">Leave us a review!</a>
-    </td>
-  </tr>
-</table>
-                `
-                };
-
-                try {
-                    await sgMail.send(msg);
-                    newBooking.confirmationSent = true; // Mark as confirmation sent
-                    newBooking.confirmationDate = new Date(); // Set confirmation date
-
-                    console.log(`[Email] Confirmation sent to ${customerEmail}`);
-                } catch (err) {
-                    console.error('[Email] Failed to send confirmation:', err);
-                    throw err;
-                }
-            }
-            // 2. Save booking and schedule reminder
-
-            // const newBooking = await Booking.create({
-            //     customerName,
-            //     customerEmail,
-            //     serviceType,
-            //     date,
-            //     scheduleConfirmation: true,
-            //     reminderScheduled: true,
-            // });
             const savedBooking = await newBooking.save();
             res.status(201).json(savedBooking);
         } catch (err) {
@@ -275,16 +202,48 @@ const bookingControllers = {
         }
     },
     confirmBooking: async (req, res) => {
+        // console.log('Confirm booking request:', req.body);
         try {
             const bookingId = req.params.id;
-            const updatedBooking = await Booking.findByIdAndUpdate(bookingId, { status: 'confirmed' }, { new: true });
-            if (!updatedBooking) {
-                return res.status(404).json({ error: 'Booking not found' });
-            }
-            updatedBooking.updatedAt = new Date(); // Update the updatedAt field
-            updatedBooking.updatedBy = req.body.updatedBy; // Assuming userId is passed in the request body
-            await updatedBooking.save(); // Save the updated booking
-            res.json(updatedBooking);
+            const {
+                scheduleConfirmation,
+                confirmationDate,
+                reminderScheduled,
+                disableConfirmation,
+                status
+            } = req.body; // Use payload if available, otherwise fall back to req.body
+            // console.log('Confirm booking body:', req.body);
+            // const updatedBooking = await Booking.findByIdAndUpdate(bookingId, {
+            //     status,
+            //     scheduleConfirmation: scheduleConfirmation || false,
+            //     scheduledConfirmationDate: confirmationDate ? DateTime.fromISO(confirmationDate, { zone: 'America/Toronto' }).toJSDate() : null,
+            //     reminderScheduled: reminderScheduled || false,
+            //     disableConfirmation: disableConfirmation || false
+
+            // }, { new: true });
+            // if (!updatedBooking) {
+            //     return res.status(404).json({ error: 'Booking not found' });
+            // }
+            // updatedBooking.updatedAt = new Date(); // Update the updatedAt field
+            // updatedBooking.updatedBy = req.body.updatedBy; // Assuming userId is passed in the request body
+            // await updatedBooking.save(); // Save the updated booking
+            // res.json(updatedBooking);
+            const updatedBooking = await Booking.findByIdAndUpdate(
+                bookingId,
+                {
+                    status,
+                    scheduleConfirmation: scheduleConfirmation || false,
+                    scheduledConfirmationDate: confirmationDate
+                        ? DateTime.fromISO(confirmationDate, { zone: 'America/Toronto' }).toJSDate()
+                        : null,
+                    reminderScheduled: reminderScheduled || false,
+                    disableConfirmation: disableConfirmation || false,
+                    updatedAt: new Date(),
+                    updatedBy: req.body.updatedBy
+                },
+                { new: true }
+            );
+            res.status(200).json(updatedBooking);
         } catch (err) {
             console.error('Error confirming booking:', err);
             res.status(500).json({ error: 'Failed to confirm booking' });
@@ -293,7 +252,15 @@ const bookingControllers = {
     pendBookingById: async (req, res) => {
         try {
             const bookingId = req.params.id;
-            const updatedBooking = await Booking.findByIdAndUpdate(bookingId, { status: 'pending' }, { new: true });
+            const updatedBooking = await Booking.findByIdAndUpdate(bookingId, { status: 'pending',
+                updatedAt: new Date(),
+                updatedBy: req.body.updatedBy,
+                scheduledConfirmationDate: null,
+                reminderScheduled: false,
+                confirmationSent: false,
+                reminderSent: false,
+                disableConfirmation: false
+             }, { new: true });
             if (!updatedBooking) {
                 return res.status(404).json({ error: 'Booking not found' });
             }
@@ -306,76 +273,15 @@ const bookingControllers = {
             res.status(500).json({ error: 'Failed to pending booking' });
         }
     },
-
-    //     sendReminderEmail: async ({ customerEmail, customerName, date, serviceType }) => {
-
-    //         const subjectDate = date.toLocaleDateString('en-US', {
-    //             weekday: 'long',  // "Wednesday"
-    //             month: 'long',    // "July"
-    //             day: 'numeric',   // "2"
-    //             year: 'numeric'   // "2025"
-    //         });
-
-    //         const formattedDateTime = date.toLocaleString('en-US', {
-    //             weekday: 'long',
-    //             month: 'long',
-    //             day: 'numeric',
-    //             year: 'numeric',
-    //             hour: 'numeric',
-    //             minute: '2-digit',
-    //             hour12: true,
-    //             timeZone: 'America/Toronto' // optional, but helpful for timezone accuracy
-    //         });
-
-    //         const msg = {
-    //             to: customerEmail,
-    //             from: 'info@cleanarsolutions.ca', // Same here
-    //             subject: `📅[REMINDER] CleanAR Solutions: Cleaning Service Confirmation for ${subjectDate}`,
-    //             html: `
-    //             <h2>Your service is almost here!</h2>
-    //             <p>Hi ${customerName},</p>
-    //             <p>This is a friendly reminder that your cleaning appointment is scheduled for <strong>${formattedDateTime}</strong>.</p>
-    //             <p>Details:</p>
-    //             <p>${serviceType}</p>
-    //             <p>Please don't hesitate to reach out if you have any questions or need help preparing the area.</p>
-    //             <p>Thank you for your cooperation, and we look forward to providing you with excellent service!</p>
-    //             <p>See you soon! 😊</p>
-    //             <table style="width:100%; font-family: Arial, sans-serif; font-size:14px; border-collapse: collapse;">
-    //   <tr>
-    //     <td style="vertical-align: top; width: 50%; padding-right: 10px;">
-    //       <strong>The CleanAR Solutions Team</strong><br>
-    //       📞 (437) 440-5514<br>
-    //       📧 <a href="mailto:info@cleanARsolutions.ca">info@cleanARsolutions.ca</a><br>
-    //       🌐 <a href="https://www.cleanARsolutions.ca/index" target="_blank">www.cleanARsolutions.ca/index</a>
-    //     </td>
-
-    //     <td style="vertical-align: top; width: 50%; padding-left: 10px;">
-    //       📱 <a href="https://www.instagram.com/cleanarsolutions/" target="_blank">Follow us on Instagram</a><br>
-    //       💲 Refer a friend and get 10% off their first service!<br>
-    //       😄 <a href="https://g.page/r/Cek9dkmHVuBKEAE/review" target="_blank" rel="noopener noreferrer">Leave us a review!</a>
-    //     </td>
-    //   </tr>
-    // </table>
-
-    //           `
-    //         };
-
-    //         try {
-    //             await sgMail.send(msg);
-    //             console.log(`[Email] Reminder sent to ${customerEmail}`);
-    //         } catch (err) {
-    //             console.error('[Email] Failed to send reminder:', err);
-    //             throw err;
-    //         }
-    //     },
-    sendConfirmationEmailCron: async () => {
+    sendScheduledConfirmationEmail: async () => {
         const now = new Date();
 
         const confirmations = await Booking.find({
             scheduledConfirmationDate: { $lte: now },
-            scheduleConfirmation: true,
+            // scheduleConfirmation: true, // so it auto sends after confirmed, or after the confirmation date
             confirmationSent: false,
-            status: { $ne: 'cancelled' } // Exclude cancelled bookings
+            // status: { $ne: 'cancelled' } // Exclude cancelled bookings
+            status: { $eq: 'confirmed' } // include confirmed bookings
         });
 
         for (const booking of confirmations) {
@@ -422,7 +328,7 @@ const bookingControllers = {
 
     <td style="vertical-align: top; width: 50%; padding-left: 10px;">
       📱 <a href="https://www.instagram.com/cleanarsolutions/" target="_blank">Follow us on Instagram</a><br>
-      💲 Refer a friend and get 10% off their first service!<br>
+      💲 Refer a friend and get 10% off after their first service!<br>
       😄 <a href="https://g.page/r/Cek9dkmHVuBKEAE/review" target="_blank" rel="noopener noreferrer">Leave us a review!</a>
     </td>
   </tr>
@@ -443,26 +349,25 @@ const bookingControllers = {
             }
         }
     },
-    sendReminderCron: async () => {
+    sendScheduledReminder: async () => {
         //  for testing purposes, run every 10 seconds
         // cron.schedule('*/10 * * * * *', async () => {
         console.log('[CRON] Checking for reminders due in 24h...');
         const now = new Date();
         const in24h = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-        // const windowStart = new Date(in24h.getTime() - 24 * 60 * 60 * 1000);
-        // const windowEnd = new Date(in24h.getTime() + 24 * 60 * 60 * 1000);
-
         try {
             const dueBookings = await Booking.find({
                 date: { $gte: now, $lte: in24h },
                 reminderScheduled: true,
                 reminderSent: false,
-                status: { $ne: 'cancelled' } // Exclude cancelled bookings
+                // status: { $ne: 'cancelled' } // Exclude cancelled bookings
+                status: { $eq: 'confirmed' } // Include confirmed bookings
             });
 
             console.log(`Found ${dueBookings.length} bookings due for reminders.`);
 
             for (let booking of dueBookings) {
+                // console.log(booking);
                 await sendReminderEmail(booking);
                 booking.reminderDate = now; // Update reminder date
                 // booking.reminderScheduled = false;
@@ -470,7 +375,7 @@ const bookingControllers = {
                 booking.updatedBy = booking.createdBy || null; // Assuming createdBy is set to the user who created the booking
                 booking.updatedAt = now; // Update the updatedAt field
                 await booking.save();
-                console.log(`Reminder sent to ${booking.customerEmail}`);
+                // console.log(`Reminder sent to ${booking.customerEmail}`);
             }
         } catch (err) {
             console.error('Reminder CRON error:', err);
@@ -492,6 +397,25 @@ const bookingControllers = {
         } catch (err) {
             console.error('Error updating booking notes:', err);
             res.status(500).json({ error: 'Failed to update booking notes' });
+        }
+    },
+    updateBookingDate: async (req, res) => {
+        const bookingId = req.params.id;
+        const { date, updatedBy } = req.body;
+
+        try {
+            const updatedBooking = await Booking.findByIdAndUpdate(bookingId,
+                { date: new Date(date), updatedBy, updatedAt: new Date() },
+                { new: true }
+            );
+            if (!updatedBooking) {
+                return res.status(404).json({ error: 'Booking not found' });
+            }
+
+            res.status(200).json(updatedBooking);
+        } catch (err) {
+            console.error('Error updating booking date:', err);
+            res.status(500).json({ error: 'Failed to update booking date' });
         }
     }
 };

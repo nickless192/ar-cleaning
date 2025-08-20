@@ -1,11 +1,22 @@
 const ContactForm = require("../models/ContactForm");
+const fetch = require("node-fetch");
 
 const contactFormController = {
   createNewFrom: async (req, res) => {
-    const { name, email, phone, subject, message } = req.body;
+    const { name, email, phone, subject, message, captcha } = req.body;
 
-    if (!name || !email || !subject || !message) {
+    if (!name || !email || !subject || !message || !captcha) {
       return res.status(400).json({ message: "Please fill in all required fields." });
+    }
+
+    const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+
+    const verificationUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${captcha}`;
+
+  const response = await fetch(verificationUrl, { method: "POST" });
+  const data = await response.json();
+    if (!data.success) {
+      return res.status(400).json({ message: "CAPTCHA verification failed. Please try again." });
     }
 
     try {

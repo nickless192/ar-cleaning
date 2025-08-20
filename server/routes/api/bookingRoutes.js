@@ -1,11 +1,15 @@
 const router = require('express').Router();
+const isDev = process.env.NODE_ENV !== "production";
 const cron = require('node-cron');
-const { createBooking, getBookings, deleteBooking, completeBooking, hideBooking, sendReminderCron, sendConfirmationEmailCron, confirmBooking, cancelBooking, pendBookingById } = require('../../controllers/bookingController');
+const { createBooking, getBookings, deleteBooking, completeBooking, hideBooking, sendScheduledReminder, sendScheduledConfirmationEmail, confirmBooking, cancelBooking, pendBookingById,
+  updateBookingDate
+ } = require('../../controllers/bookingController');
 
 
 router.post('/', createBooking);
 router.get('/', getBookings);
 router.delete('/:id', deleteBooking);
+router.put('/:id/update-date', updateBookingDate);
 router.put('/:id/complete', completeBooking);
 router.put('/:id/hide', hideBooking);
 router.put('/:id/confirm', confirmBooking);
@@ -13,11 +17,16 @@ router.put('/:id/cancel', cancelBooking);
 router.put('/:id/pending', pendBookingById);
 
 
-// send reminder scheduler
-cron.schedule('* * * * *', sendReminderCron);
+// Reminder Scheduler
+cron.schedule(
+  isDev ? "*/1 * * * *" : "*/15 * * * *", // Dev: every 1 min | Prod: every 15 mins
+  sendScheduledReminder
+);
 
-// Confirmation Scheduler - this will run every minute
-// for testing purposes, run every 10 seconds -->cron.schedule('*/10 * * * * *', sendConfirmationEmailCron)
-cron.schedule('* * * * *', sendConfirmationEmailCron);
+// Confirmation Email Scheduler
+cron.schedule(
+  isDev ? "*/10 * * * * *" : "*/5 * * * *", // Dev: every 10 sec | Prod: every 5 mins
+  sendScheduledConfirmationEmail
+);
 
 module.exports = router;

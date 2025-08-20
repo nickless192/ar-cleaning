@@ -17,10 +17,15 @@ const ExpenseDashboard = () => {
         description: '',
         receipt: null
     });
+    const [editingId, setEditingId] = useState(null);
+    const [editedExpense, setEditedExpense] = useState({});
+
 
     // OCR states
     const [ocrRunning, setOcrRunning] = useState(false);
     const [ocrProgress, setOcrProgress] = useState(0);
+    const [ocrResult, setOcrResult] = useState(null);
+    const [statementFile, setStatementFile] = useState(null);
 
     const expenseCategories = [
         // Marketing & Promotions
@@ -198,8 +203,8 @@ const ExpenseDashboard = () => {
         //             }
         //         }
         //     });
-        
-        
+
+
         try {
             const formDataToSend = new FormData();
             formDataToSend.append('receipt', file); // 👈 MUST match `upload.single('receipt')` on backend
@@ -225,6 +230,33 @@ const ExpenseDashboard = () => {
             console.error('OCR error', err);
         } finally {
             setOcrRunning(false);
+        }
+    };
+
+    const handleStatementChange = async (file) => {
+        if (!file) return;
+        setStatementFile(file);
+        setOcrRunning(true);
+        setOcrProgress(0);
+        try {
+            const formDataToSend = new FormData();
+            formDataToSend.append('statement', file); // 👈 MUST match `upload.single('statement')` on backend
+
+            const res = await fetch('/api/expenses/ocr-bank-statement', {
+                method: 'POST',
+                body: formDataToSend
+            });
+
+            const data = await res.json();
+            console.log('Imported transactions:', data.insertedExpenses);
+
+            // Optional: show confirmation message
+            setOcrResult(data);
+        } catch (err) {
+            console.error('OCR error', err);
+        } finally {
+            setOcrRunning(false);
+            setOcrProgress(100);
         }
     };
 
@@ -264,6 +296,27 @@ const ExpenseDashboard = () => {
         }
         return null;
     };
+
+    const handleSave = async (id) => {
+        try {
+            const updated = { ...editedExpense };
+            const res = await fetch(`/api/expenses/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updated),
+            });
+            if (!res.ok) throw new Error('Failed to update');
+
+            const updatedExp = await res.json();
+            setExpenses(expenses.map(e => (e._id === id ? updatedExp : e)));
+            setEditingId(null);
+            setEditedExpense({});
+        } catch (err) {
+            console.error(err);
+            alert('Update failed');
+        }
+    };
+
 
     return (
         <section className="py-4 px-1 mx-auto">
@@ -347,6 +400,36 @@ const ExpenseDashboard = () => {
                                 <Button color="primary" type="submit" disabled={uploading}>
                                     {uploading ? <Spinner size="sm" /> : 'Add Expense'}
                                 </Button>
+                                {/* Bank Statement Upload */}
+                                <FormGroup className="mt-4">
+                                    <Label>Bank Statement (PDF recommended)</Label>
+                                    <Input
+                                        type="file"
+                                        accept=".pdf,image/*"
+                                        className="text-cleanar-color form-input"
+                                        onChange={(e) => handleStatementChange(e.target.files[0])}
+                                    />
+                                    {ocrRunning && (
+                                        <div className="mt-2">
+                                            <div className="small text-muted">Processing OCR… {ocrProgress}%</div>
+                                            <Progress value={ocrProgress} />
+                                        </div>
+                                    )}
+                                    <Button
+                                        className="mt-2"
+                                        color="success"
+                                        disabled={!statementFile || ocrRunning}
+                                        onClick={() => uploadFile(statementFile, "/api/ocr-bank-statement")}
+                                    >
+                                        Upload Bank Statement
+                                    </Button>
+                                </FormGroup>
+
+                                {ocrResult && (
+                                    <pre className="mt-4 p-2 bg-light border rounded">
+                                        {JSON.stringify(ocrResult, null, 2)}
+                                    </pre>
+                                )}
                             </Form>
                         </CardBody>
                     </Card>
@@ -357,9 +440,9 @@ const ExpenseDashboard = () => {
                         <CardBody>
                             <h5>Import CSV</h5>
                             <p className="text-muted small mb-2">Upload a CSV (columns: Amount, Category, Date, Description)</p>
-                            <Input type="file" accept=".csv" 
-                            className="text-cleanar-color form-input"
-                            onChange={handleCSVUpload} />
+                            <Input type="file" accept=".csv"
+                                className="text-cleanar-color form-input"
+                                onChange={handleCSVUpload} />
                             {uploading && (
                                 <div className="mt-3">
                                     <Spinner size="sm" /> Uploading…
@@ -384,7 +467,7 @@ const ExpenseDashboard = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {expenses.map(exp => (
+                        {/* {expenses.map(exp => (
                             <tr key={exp._id}>
                                 <td>{moment(exp.date).format('YYYY-MM-DD')}</td>
                                 <td>{exp.category}</td>
@@ -397,7 +480,114 @@ const ExpenseDashboard = () => {
                                     <Button size="sm" color="danger" onClick={() => handleDelete(exp._id)}>Delete</Button>
                                 </td>
                             </tr>
-                        ))}
+                        ))} */}
+                        {expenses.map(exp => {
+                            const isEditing = editingId === exp._id;
+
+                            return (
+                                <tr key={exp._id}>
+                                    <td>
+                                        {isEditing ? (
+                                            <input
+                                                type="date"
+                                                value={moment(editedExpense.date || exp.date).format('YYYY-MM-DD')}
+                                                onChange={(e) =>
+                                                    setEditedExpense({ ...editedExpense, date: e.target.value })
+                                                }
+                                            />
+                                        ) : (
+                                            moment(exp.date).format('YYYY-MM-DD')
+                                        )}
+                                    </td>
+
+                                    <td>
+                                        {isEditing ? (
+                                            <select
+                                                value={editedExpense.category || exp.category}
+                                                onChange={(e) =>
+                                                    setEditedExpense({ ...editedExpense, category: e.target.value })
+                                                }
+                                            >
+                                                <option value="Bank Import">Bank Import</option>
+                                                <option value="Supplies">Supplies</option>
+                                                <option value="Utilities">Utilities</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                        ) : (
+                                            exp.category
+                                        )}
+                                    </td>
+
+                                    <td>
+                                        {isEditing ? (
+                                            <input
+                                                type="number"
+                                                step="0.01"
+                                                value={editedExpense.amount ?? exp.amount}
+                                                onChange={(e) =>
+                                                    setEditedExpense({ ...editedExpense, amount: e.target.value })
+                                                }
+                                            />
+                                        ) : (
+                                            `$${Number(exp.amount).toFixed(2)}`
+                                        )}
+                                    </td>
+
+                                    <td>
+                                        {isEditing ? (
+                                            <input
+                                                type="text"
+                                                value={editedExpense.description ?? exp.description}
+                                                onChange={(e) =>
+                                                    setEditedExpense({ ...editedExpense, description: e.target.value })
+                                                }
+                                            />
+                                        ) : (
+                                            exp.description || '-'
+                                        )}
+                                    </td>
+
+                                    <td>
+                                        {exp.receiptUrl ? (
+                                            <a href={exp.receiptUrl} target="_blank" rel="noreferrer">View</a>
+                                        ) : 'N/A'}
+                                    </td>
+
+                                    <td>
+                                        {isEditing ? (
+                                            <>
+                                                <Button size="sm" color="success" onClick={() => handleSave(exp._id)}>
+                                                    Save
+                                                </Button>{' '}
+                                                <Button size="sm" color="secondary" onClick={() => setEditingId(null)}>
+                                                    Cancel
+                                                </Button>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Button
+                                                    size="sm"
+                                                    color="primary"
+                                                    onClick={() => {
+                                                        setEditingId(exp._id);
+                                                        setEditedExpense(exp);
+                                                    }}
+                                                >
+                                                    Edit
+                                                </Button>{' '}
+                                                <Button
+                                                    size="sm"
+                                                    color="danger"
+                                                    onClick={() => handleDelete(exp._id)}
+                                                >
+                                                    Delete
+                                                </Button>
+                                            </>
+                                        )}
+                                    </td>
+                                </tr>
+                            );
+                        })}
                     </tbody>
                 </Table>
             )}

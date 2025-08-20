@@ -9,9 +9,13 @@ import {
     Form,
     Pagination,
     Card,
+    Button,
+    InputGroup,
 } from "react-bootstrap";
 
-import CustomerStatsCard  from './CustomerStatsCard';
+import MessageCell from "./MessageCell";
+
+import CustomerStatsCard from './CustomerStatsCard';
 
 const PAGE_SIZE = 5;
 
@@ -21,6 +25,7 @@ const AdminContactDashboard = () => {
     const [selectedStatus, setSelectedStatus] = useState("");
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
+    const [showModal, setShowModal] = useState(false);
 
     const fetchContacts = async (status = "") => {
         setLoading(true);
@@ -164,11 +169,13 @@ const AdminContactDashboard = () => {
                                                 </Badge>
                                             </td>
                                             <td>{new Date(c.createdAt).toLocaleString()}</td>
-                                            <td style={{ maxWidth: "250px" }}>{c.message}</td>
+                                            {/* <td style={{ maxWidth: "250px" }}>{c.message}</td> */}
                                             <td>
-                                                {c.status !== "resolved" ? (
+                                                <MessageCell message={c.message} />
+                                            </td>
+                                            <td>
+                                                <InputGroup size="sm">
                                                     <Form.Select
-                                                        size="sm"
                                                         value={c.status}
                                                         onChange={(e) => updateStatus(c._id, e.target.value)}
                                                     >
@@ -176,16 +183,14 @@ const AdminContactDashboard = () => {
                                                         <option value="in-progress">In Progress</option>
                                                         <option value="resolved">Resolved</option>
                                                     </Form.Select>
-                                                ) : (
-                                                    !c.deleted && (
-                                                        <button
-                                                            className="btn btn-outline-danger btn-sm"
-                                                            onClick={() => archiveForm(c._id)}
-                                                        >
-                                                            Archive
-                                                        </button>
-                                                    )
-                                                )}
+
+                                                    <Button
+                                                        variant="outline-danger"
+                                                        onClick={() => archiveForm(c._id)}
+                                                    >
+                                                        Archive
+                                                    </Button>
+                                                </InputGroup>
                                             </td>
 
                                         </tr>
@@ -202,10 +207,10 @@ const AdminContactDashboard = () => {
             )}
 
             <Row>
-  <Col md={12}>
-    <CustomerStatsCard />
-  </Col>
-</Row>
+                <Col md={12}>
+                    <CustomerStatsCard />
+                </Col>
+            </Row>
 
         </Container>
     );

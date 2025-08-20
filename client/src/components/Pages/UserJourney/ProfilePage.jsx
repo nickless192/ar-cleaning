@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
-  Button,
   Container,
   Row,
   Col,
-  Input,
   Form,
-} from "reactstrap";
+  Button,
+  Card,
+  Spinner,
+  Alert,
+  Table,
+} from "react-bootstrap";
 import Auth from "/src/utils/auth";
 
 import backgroundImage from '/src/assets/img/stock-photo-cropped-shot-woman-rubber-gloves-cleaning-office-table.jpg';
@@ -188,138 +191,137 @@ function ProfilePage() {
     <>
       {/* <Navbar /> */}
       <div className="wrapper light-bg-color mb-0 section-background" style={{ backgroundImage: `url(${backgroundImage})`}}>
-        <div className="content" filter-color="blue">
-            <Form onSubmit={handleSaveClick} >
-              {/* <div className="photo-container">
-                <img alt="..." src={require("assets/img/default-avatar.png")}></img>
-              </div> */}
-              <h3 className="title primary-color">{formData.name}</h3>
-              <p className="category">
+         <Container className="py-5">
+        <Card className="p-4 shadow-lg">
+          <h2 className="text-center primary-color mb-4">{formData.name}</h2>
+
+          <Form onSubmit={handleSaveClick}>
+            {/* Address */}
+            <Row className="mb-3 text-center">
+
+            <Form.Group className="mb-3">
+              <h5>Address</h5>
+              {isEditing ? (
+                <>
+                  <Form.Control
+                    type="text"
+                    name="address"
+                    placeholder="Address"
+                    className="text-cleanar-color form-input mb-2"
+                    value={formData.address}
+                    onChange={handleInputChange}
+                  />
+                  <Row className="mb-3 text-center">
+                    <Col>
+                      <Form.Control
+                        type="text"
+                        name="city"
+                        placeholder="City"
+                        value={formData.city}
+                        className="text-cleanar-color form-input text-center"
+                        onChange={handleInputChange}
+                      />
+                    </Col>
+                    <Col>
+                      <Form.Control
+                        type="text"
+                        name="province"
+                        placeholder="Province"
+                        value={formData.province}
+                        className="text-cleanar-color form-input text-center"
+                        onChange={handleInputChange}
+                      />
+                    </Col>
+                    <Col>
+                      <Form.Control
+                        type="text"
+                        name="postalcode"
+                        placeholder="Postal Code"
+                        value={formData.postalcode}
+                        className="text-cleanar-color form-input text-center"
+                        onChange={handleInputChange}
+                      />
+                    </Col>
+                  </Row>
+                </>
+              ) : (
+                <p>
+                  {formData.address
+                    ? `${formData.address}, ${formData.city}, ${formData.postalcode.toUpperCase()}, ${formData.province}`
+                    : "Add address"}
+                </p>
+              )}
+            </Form.Group>
+            </Row>
+
+            {/* Phone & Email */}
+            <Row className="mb-3 text-center">
+              <Col md={6}>
+                <h5>Phone Number</h5>
                 {isEditing ? (
-                  <>
-                    <Input
-                      type="text"
-                      name="address"
-                      placeholder="Address"
-                      className="mb-3"
-                      value={formData.address}
-                      onChange={handleInputChange}
-                    />
-                    <Input
-                      type="text"
-                      name="city"
-                      className="mb-3"
-                      placeholder="City"
-                      value={formData.city}
-                      onChange={handleInputChange}
-                    />
-                    <Input
-                      type="text"
-                      name="province"
-                      className="mb-3"
-                      placeholder="Province"
-                      value={formData.province}
-                      onChange={handleInputChange}
-                    />
-                    <Input
-                      type="text"
-                      name="postalcode"
-                      className="mb-3"
-                      placeholder="Postal Code"
-                      value={formData.postalcode}
-                      onChange={handleInputChange}
-                    />
-                  </>
+                  <Form.Control
+                    type="text"
+                    name="phonenumber"
+                    value={formData.phonenumber}
+                    className="text-cleanar-color form-input text-center"
+                    onChange={handleInputChange}
+                  />
                 ) : (
-                  (formData.address === undefined || formData.city === undefined || formData.postalcode === undefined || formData.province === undefined)
-                    ?
-                    "Add address" :
-                    `${formData.address}, ${formData.city}, ${formData.postalcode.toUpperCase()}, ${formData.province}`
+                  <p>{formData.phonenumber || "Add phone number"}</p>
                 )}
-              </p>
-              <Row className="content no-gutters">
-                <Col lg="6" xs="12" className="mb-3 secondary-color text-center">
-                  <h5 className="text-bold">Phone Number</h5>
-                  {isEditing ? (
-                    <Input
-                      type="text"
-                      className="mb-3"
-                      name="phonenumber"
-                      value={formData.phonenumber}
-                      onChange={handleInputChange}
-                    />
-                  ) : (
-                    <p>{formData.phonenumber ? formData.phonenumber : "Add phone number"}</p>
-                  )}
-                </Col>
-                <Col lg="6" xs="12" className="mb-3 secondary-color text-center">
-                  <h5 className="text-bold">Email Address</h5>
-                  <p>{formData.email ? formData.email : "Add email"}</p>
-                </Col>
-              </Row>
-              <Row className="content no-gutters text-center">
-                <Col lg="3" xs="0" className="">
-                </Col>
-                <Col lg="6" xs="12" className="mb-3 secondary-color text-center">
-                  <h5 className="text-bold">Company Name</h5>
-                  {isEditing ? (
-                    <Input
-                      type="text"
-                      className="mb-3"
-                      name="companyName"
-                      value={formData.companyName}
-                      onChange={handleInputChange}
-                    />
-                  ) : (
-                    <p>{formData.companyName ? formData.companyName : "Add company Name"}</p>
-                  )}
-                </Col>
-              </Row>
+              </Col>
+              <Col md={6}>
+                <h5>Email Address</h5>
+                <p>{formData.email || "Add email"}</p>
+              </Col>
+            </Row>
 
-              {/* <div className="content">
-            </div> */}
-              <Container className="section bg-transparent mt-3">
-                <div className="button-container ">
-                  {isEditing ? (
-                    <>
-                    <Button className="btn-round primary-bg-color mx-2" size="lg" type="submit">
-                      Save Profile
-                    </Button>
-                    <Button className="btn-round secondary-bg-color mx-2" size="lg" onClick={handleCancelClick}> 
-                    Cancel 
-                    </Button>
-                    </>
+            {/* Company */}
+            <Form.Group className="mb-4 text-center">
+              <h5>Company Name</h5>
+              {isEditing ? (
+                <Form.Control
+                  type="text"
+                  name="companyName"
+                  className="text-cleanar-color form-input text-center"
+                  value={formData.companyName}
+                  onChange={handleInputChange}
+                />
+              ) : (
+                <p>{formData.companyName || "Add company name"}</p>
+              )}
+            </Form.Group>
 
-                  ) : (
-                    <Button className="btn-round secondary-bg-color" size="lg" onClick={handleEditClick}>
-                      Edit Profile
-                    </Button>
-                  )}
-                </div>
-              </Container>
-            </Form>
-          {/* </Container> */}
-        </div>
-        {/* <div className="content"> */}
-        {/* <Row>
-          <Col className="">
-          <h4 className="title text-left">Search your Quotes</h4>
-          <Dropdown isOpen={dropdownOpen} toggle={toggle}>
-            <DropdownToggle caret>
-              {`Select Quote to View Details`}
-            </DropdownToggle>
-            <DropdownMenu className='scrollable-dropdown-menu'>
-              <DropdownItem onClick={(e) => handleQuoteClick(e)} value="">Quotes</DropdownItem>
-              {quotes.map((quote) => (
-                <DropdownItem key={quote._id} onClick={(e) => handleQuoteClick(e)} value={quote.quoteId}>
-                  {"Quote Id:"}{quote.quoteId} - {"Created at:"}{quote.createdAt}
-                </DropdownItem>
-              ))}
-            </DropdownMenu>
-          </Dropdown>
-
-          </Col>
-        </Row> */}
+            <div className="text-center">
+              {isEditing ? (
+                <>
+                  <Button
+                    variant="primary"
+                    type="submit"
+                    className="mx-2"
+                  >
+                    Save Profile
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    className="mx-2"
+                    onClick={handleCancelClick}
+                  >
+                    Cancel
+                  </Button>
+                </>
+              ) : (
+                <Button
+                  variant="secondary"
+                  onClick={(e) => { e.preventDefault(); setIsEditing(true); }}
+                >
+                  Edit Profile
+                </Button>
+              )}
+            </div>
+          </Form>
+        </Card>
+      </Container>
         </div>
       {/* </div> */}
       {/* <Footer /> */}

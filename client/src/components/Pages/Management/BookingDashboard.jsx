@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import BookingForm from '../Booking/BookingForm.jsx';
 import {
   Container, Row, Col,
   Form, FormGroup, Label, Input,
@@ -10,6 +11,7 @@ import moment from 'moment';
 import BookingCalendar from './BookingCalendar';
 import { FaTrash } from 'react-icons/fa';
 import Auth from "/src/utils/auth";
+import BookingList from "../Booking/BookingList.jsx";
 
 
 const BookingDashboard = () => {
@@ -73,9 +75,6 @@ const BookingDashboard = () => {
       // filter out data that is hidden
       const visibleData = data.filter(b => !b.hidden);
       setBookings(visibleData);
-      // Calculate monthly income
-      const thisMonth = moment().month();
-      const thisYear = moment().year();
     } catch (err) {
       console.error('Failed to fetch bookings:', err);
     }
@@ -254,194 +253,17 @@ const BookingDashboard = () => {
   return (
     <section className="py-4 px-5 mx-auto">
       <Row>
-        <Col md={4}>
-          <h4>Create Booking</h4>
-          {message && (
-            <Alert color={message.type}>
-              {message.text}
-            </Alert>
-          )}
-          <Form onSubmit={handleSubmit}>
-            <FormGroup>
-              <Label for="customerSelect">Select Saved Customer</Label>
-              <Input
-                type="select"
-                id="customerSelect"
-                value={selectedCustomerId}
-                onChange={e => {
-                  const selectedId = e.target.value;
-                  setSelectedCustomerId(selectedId);
-                  const selectedCustomer = customers.find(c => c._id === selectedId);
-                  if (selectedCustomer) {
-                    setFormData(prev => ({
-                      ...prev,
-                      customerId: selectedCustomer._id,
-                      customerName: selectedCustomer.firstName + ' ' + selectedCustomer.lastName,
-                      customerEmail: selectedCustomer.email
-                    }));
-                  } else {
-                    // If cleared selection
-                    setFormData(prev => ({
-                      ...prev,
-                      customerId: '',
-                      customerName: '',
-                      customerEmail: ''
-                    }));
-                  }
-                }}
-              >
-                <option value="">-- Select a customer --</option>
-                {customers.map(c => (
-                  <option key={c._id} value={c._id}>
-                    {c.firstName} {c.lastName} ({c.email})
-                  </option>
-                ))}
-              </Input>
-            </FormGroup>
-
-            <FormGroup>
-              <Label for="customerName">Customer Name</Label>
-              <Input
-                type="text"
-                name="customerName"
-                className="text-cleanar-color text-bold form-input"
-                id="customerName"
-                value={formData.customerName}
-                onChange={handleChange}
-                required
-                readOnly={!!formData.customerId}
-              />
-            </FormGroup>
-            <FormGroup>
-              <Label for="customerEmail">Customer Email</Label>
-              <Input
-                type="email"
-                name="customerEmail"
-                className="text-cleanar-color text-bold form-input"
-                id="customerEmail"
-                value={formData.customerEmail}
-                onChange={handleChange}
-                required
-                readOnly={!!formData.customerId}
-              />
-            </FormGroup>
-            {formData.customerId && (
-              <FormGroup>
-                <Label for="customerId">Customer ID</Label>
-                <Input
-                  type="text"
-                  id="customerId"
-                  className="text-cleanar-color text-bold form-input"
-                  value={formData.customerId}
-                  readOnly
-                />
-              </FormGroup>
-            )}
-
-            <FormGroup>
-              <Label for="serviceType">Service Type</Label>
-              <Input
-                type="text"
-                name="serviceType"
-                className="text-cleanar-color text-bold form-input"
-                id="serviceType"
-                value={formData.serviceType}
-                onChange={handleChange}
-                required
-              />
-            </FormGroup>
-            <FormGroup>
-              <Label for="date">Service Date</Label>
-              <Input
-                type="datetime-local"
-                name="date"
-                id="date"
-                className="text-cleanar-color text-bold form-input"
-                value={formData.date}
-                onChange={handleChange}
-                required
-              />
-            </FormGroup>
-            <FormGroup>
-              <Label for="income">Approximate Income (CAD)</Label>
-              <Input
-                type="number"
-                step="0.01"
-                name="income"
-                className="text-cleanar-color text-bold form-input"
-                id="income"
-                value={formData.income || ''}
-                onChange={handleChange}
-              />
-            </FormGroup>
-
-            <p className="text-muted mb-2 d-block">
-              A confirmation email will be sent upon saving unless you override it below.
-            </p>
-
-            <FormGroup check className="mb-3">
-              <Label check>
-                <Input
-                  type="checkbox"
-                  name="scheduleConfirmation"
-                  checked={formData.scheduleConfirmation}
-                  onChange={handleChange}
-                /><span className="form-check-sign"></span>
-                {' '}
-                Schedule Confirmation Email
-              </Label>
-            </FormGroup>
-            <FormGroup>
-              <Label for="confirmationDate">Confirmation Email Date (optional)</Label>
-              <Input
-                type="datetime-local"
-                name="confirmationDate"
-                className="text-cleanar-color text-bold form-input"
-                id="confirmationDate"
-                value={formData.confirmationDate}
-                onChange={handleChange}
-                disabled={!formData.scheduleConfirmation}
-              />
-            </FormGroup>
-
-            <FormGroup check className="mb-3">
-              <Label check>
-                <Input
-                  type="checkbox"
-                  name="disableConfirmation"
-                  checked={formData.disableConfirmation}
-                  onChange={handleChange}
-                /><span className="form-check-sign"></span>
-                {' '}
-                Disable Confirmation Email
-              </Label>
-            </FormGroup>
-
-
-            <FormGroup check className="mb-3">
-              <Label check>
-                <Input
-                  type="checkbox"
-                  name="reminderScheduled"
-                  checked={formData.reminderScheduled}
-                  onChange={handleChange}
-                />
-                {' '}
-                <span className="form-check-sign"></span>
-                Send 24-hour reminder email
-              </Label>
-            </FormGroup>
-
-            <Button type="submit" color="primary" disabled={loading}>
-              {loading ? <Spinner size="sm" /> : 'Submit Booking'}
-            </Button>
-          </Form>
-        </Col>
-
-      
         <Col>
           <h4>Booking Calendar</h4>
-          <BookingCalendar bookings={bookings} />
+          <BookingCalendar bookings={bookings}
+            fetchBookings={fetchBookings}
+            deleteBooking={handleDelete}
+            onPend={handlePend}
+            completeBooking={handleComplete}
+            cancelBooking={handleCancel}
+            hideBooking={handleHide}
+            customers={customers}
+          />
           <div className="mt-3">
           </div>
 
@@ -449,22 +271,19 @@ const BookingDashboard = () => {
       </Row>
       <Row className="">
           <Col>
-          <h4 className="mb-3">All Bookings</h4>
+          {/* <h4 className="mb-3">All Bookings</h4>
           {bookings.length > 0 ? (
             <Table striped bordered hover responsive>
               <thead>
                 <tr>
                   <th>#</th>
                   <th>Customer Name and Email</th>
-                  {/* <th>Email</th> */}
                   <th>Service</th>
                   <th>Income</th>
                   <th>Service Date</th>
                   <th>Confirmation/Reminder Scheduled</th>
-                  {/* <th>Reminder Scheduled</th> */}
                   <th>Booking By</th>
                   <th>Status</th>
-                  {/* <th>Actions</th> */}
                 </tr>
               </thead>
               <tbody>
@@ -473,60 +292,6 @@ const BookingDashboard = () => {
                     <td className="align-top">
                       <div className="d-flex flex-column align-items-start">
                         <div>{index + 1}</div>
-                        <div className="d-flex flex-wrap gap-1 mt-1">
-                          {(b.status === 'confirmed' || b.status === 'cancelled') && (
-                            <Button
-                              onClick={() => handlePend(b._id, b.status)}
-                              color="primary"
-                              size="sm"
-                              title="Revert to Pending"
-                            >
-                              ⏪
-                            </Button>
-                          )}
-                          {b.status === 'pending' && (
-                            <Button
-                              onClick={() => handleConfirmed(b._id, b.status)}
-                              color="success"
-                              size="sm"
-                              title="Confirm"
-                            >
-                              ✅
-                            </Button>
-                          )}
-                          <Button
-                            color="info"
-                            size="sm"
-                            onClick={() => handleComplete(b._id, b.status)}
-                            title="Mark Completed"
-                          >
-                            ✔️
-                          </Button>
-                          <Button
-                            color="secondary"
-                            size="sm"
-                            onClick={() => handleCancel(b._id, b.status)}
-                            title="Cancel"
-                          >
-                            ❌
-                          </Button>
-                          <Button
-                            color="warning"
-                            size="sm"
-                            onClick={() => handleHide(b._id, b.status)}
-                            title="Hide"
-                          >
-                            🙈
-                          </Button>
-                          <Button
-                            color="danger"
-                            size="sm"
-                            onClick={() => handleDelete(b._id)}
-                            title="Delete"
-                          >
-                            <FaTrash />
-                          </Button>
-                        </div>
                       </div>
                     </td>
 
@@ -596,7 +361,8 @@ const BookingDashboard = () => {
             </Table>
           ) : (
             <p>No bookings yet.</p>
-          )}
+          )} */}
+          <BookingList bookings={bookings} />
         </Col>
       </Row>
     </section>

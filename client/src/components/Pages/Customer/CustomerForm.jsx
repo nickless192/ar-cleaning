@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Row, Col, Button, Input, Label, Popover, PopoverBody, FormGroup } from 'reactstrap';
 import { FaQuestionCircle } from 'react-icons/fa';
 
@@ -17,20 +17,11 @@ const tooltipText = {
 };
 
 
-const Customer = () => {
-  const [formData, setFormData] = useState({
-  firstName: '',
-  lastName: '',
-  email: '',
-  telephone: '',
-  address: '',
-  city: '',
-  province: '',
-  postalcode: '',
-  companyName: '',
-  howDidYouHearAboutUs: '',
-//   user: ''
-});
+const Customer = ({ initialData = {}, onSubmit, onCancel }) => {
+  // const [formData, setFormData] = useState(initialData);
+  const [formData, setFormData] = useState(initialData || {});
+
+
   const [popoverOpen, setPopoverOpen] = useState({});
 
   const togglePopover = (field) => {
@@ -41,34 +32,39 @@ const Customer = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   const method = formData._id ? 'PUT' : 'POST';
+  //   const url = formData._id ? `/api/customers/${formData._id}` : '/api/customers';
 
-    const res = await fetch('/api/customers', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData)
-    });
 
-    if (res.ok) {
-      alert('Customer created successfully');
-      setFormData({
-        firstName: '',
-        lastName: '',
-        email: '',
-        telephone: '',
-        address: '',
-        city: '',
-        province: '',
-        postalcode: '',
-        companyName: '',
-        howDidYouHearAboutUs: ''
-      });
-    } else {
-      const error = await res.json();
-      alert(`Error: ${error.message || 'Something went wrong'}`);
-    }
-  };
+  //   const res = await fetch(url, {
+  //   method,
+  //     headers: { 'Content-Type': 'application/json' },
+  //     body: JSON.stringify(formData)
+  //   });
+
+  //   if (res.ok) {
+  //     alert(`Customer ${method === 'POST' ? 'created' : 'updated'} successfully`);
+  //   onSubmit?.(); // Refresh list or close modal
+  //     // alert('Customer created successfully');
+  //     // setFormData({
+  //     //   firstName: '',
+  //     //   lastName: '',
+  //     //   email: '',
+  //     //   telephone: '',
+  //     //   address: '',
+  //     //   city: '',
+  //     //   province: '',
+  //     //   postalcode: '',
+  //     //   companyName: '',
+  //     //   howDidYouHearAboutUs: ''
+  //     // });
+  //   } else {
+  //     const error = await res.json();
+  //     alert(`Error: ${error.message || 'Something went wrong'}`);
+  //   }
+  // };
 
   const fields = [
     { label: 'First Name', name: 'firstName', required: true },
@@ -83,48 +79,52 @@ const Customer = () => {
     // { label: 'User ID', name: 'user', required: false }
   ];
 
-  return (
-    <Form onSubmit={handleSubmit} id="customer-form" className="m-0 p-0">
-      <Row>
-        {fields.map(({ label, name, required }) => {
-  // Determine input type
-  const inputType = name === 'email' ? 'email' : name === 'telephone' ? 'tel' : 'text';
+  useEffect(() => {
+  setFormData(initialData || {});
+}, [initialData]);
+
 
   return (
-    <Col key={name} md={4} xs={12} className="mb-3">
-      <FormGroup>
-        <Label className="text-bold mb-1" for={name}>
-          {label}{required && '*'}
-          <FaQuestionCircle
-            id={`${name}Tooltip`}
-            className="ms-1"
-            onClick={() => togglePopover(name)}
-            style={{ cursor: 'pointer' }}
-          />
-          <Popover
-            placement="top"
-            isOpen={popoverOpen[name]}
-            target={`${name}Tooltip`}
-            toggle={() => togglePopover(name)}
-          >
-            <PopoverBody>{tooltipText[name] || 'Enter value'}</PopoverBody>
-          </Popover>
-        </Label>
-        <Input
-          type={inputType}
-          id={name}
-          name={name}
-          placeholder={label}
-          aria-label={label}
-          className="text-cleanar-color form-input rounded-pill"
-          value={formData[name]}
-          onChange={handleChange}
-          required={required}
-        />
-      </FormGroup>
-    </Col>
-  );
-})}
+    <Form onSubmit={(e) => onSubmit(e, formData)} id="customer-form" className="m-0 p-0">
+      <Row>
+        {fields.map(({ label, name, required }) => {
+          // Determine input type
+          const inputType = name === 'email' ? 'email' : name === 'telephone' ? 'tel' : 'text';
+          return (
+            <Col key={name} md={4} xs={12} className="mb-3">
+              <FormGroup>
+                <Label className="text-bold mb-1" for={name}>
+                  {label}{required && '*'}
+                  <FaQuestionCircle
+                    id={`${name}Tooltip`}
+                    className="ms-1"
+                    onClick={() => togglePopover(name)}
+                    style={{ cursor: 'pointer' }}
+                  />
+                  <Popover
+                    placement="top"
+                    isOpen={popoverOpen[name]}
+                    target={`${name}Tooltip`}
+                    toggle={() => togglePopover(name)}
+                  >
+                    <PopoverBody>{tooltipText[name] || 'Enter value'}</PopoverBody>
+                  </Popover>
+                </Label>
+                <Input
+                  type={inputType}
+                  id={name}
+                  name={name}
+                  placeholder={label}
+                  aria-label={label}
+                  className="text-cleanar-color form-input rounded-pill"
+                  value={formData[name] || ''}
+                  onChange={handleChange}
+                  required={required}
+                />
+              </FormGroup>
+            </Col>
+          );
+        })}
 
       </Row>
 
@@ -141,7 +141,8 @@ const Customer = () => {
         <Col md>
           <Button
             type="button"
-            onClick={() => setFormData(initialForm)}
+            // onClick={() => setFormData(initialData)}
+            onClick={() => setFormData(initialData || {})}
             className="btn-danger rounded-pill"
             data-track="clicked_reset_customer"
           >

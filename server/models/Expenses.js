@@ -68,7 +68,7 @@ const ExpenseSchema = new Schema({
   description: { type: String, required: true },
   category: {
     type: String,
-    enum: expenseCategories,
+    // enum: expenseCategories,
     required: true
     //     // category: { type: String, enum: ['Supplies', 'Rent', 'Utilities', 'Payroll', 'Software', 'Marketing', 'Other'], default: 'Other' },
 //     category: { type: String, required: true }, // Changed to required

@@ -17,6 +17,12 @@ export const createCustomer = async (data) => {
   return res.json();
 };
 
+export const deleteCustomer = async (id) => {
+  const res = await fetch(`/api/customers/${id}`, { method: 'DELETE' });
+  if (!res.ok) throw new Error('Failed to delete customer');
+  return res.json();
+};
+
 export const updateCustomer = async (id, data) => {
   const res = await fetch(`/api/customers/${id}`, {
     method: 'PUT',

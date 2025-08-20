@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Card, Form, Button, Row, Col, Alert } from "react-bootstrap";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
@@ -9,8 +10,15 @@ const ContactUs = () => {
     subject: "",
     message: "",
   });
+  const [captchaValue, setCaptchaValue] = useState(null);
+
 
    const [status, setStatus] = useState({ loading: false, error: "", success: "" });
+
+     const handleCaptcha = (value) => {
+    console.log("Captcha value:", value);
+    setCaptchaValue(value);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -19,15 +27,23 @@ const ContactUs = () => {
 
   const handleSubmit = async (e) => {
   e.preventDefault();
+  if (!captchaValue) {
+      alert("Please complete the CAPTCHA.");
+      return;
+    }
   setStatus({ loading: true, error: "", success: "" });
 
   try {
+    const body = {
+      ...formData,
+      captcha: captchaValue,
+    };
     const response = await fetch("/api/contactForm", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(formData),
+      body: JSON.stringify(body),
     });
 
     const data = await response.json();
@@ -125,6 +141,10 @@ const ContactUs = () => {
                   required
                 />
               </Form.Group>
+              <ReCAPTCHA
+        sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+        onChange={handleCaptcha}
+      />
 
               <Button variant="primary" type="submit" className="w-100 mt-2">
                 Send Message
