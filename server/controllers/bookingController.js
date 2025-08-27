@@ -405,7 +405,18 @@ const bookingControllers = {
 
         try {
             const updatedBooking = await Booking.findByIdAndUpdate(bookingId,
-                { date: new Date(date), updatedBy, updatedAt: new Date() },
+                // { date: new Date(date), updatedBy, updatedAt: new Date() },
+                 {
+                date: new Date(date),
+                updatedBy,
+                updatedAt: new Date(),
+                status: 'pending',
+                scheduledConfirmationDate: null,
+                reminderScheduled: false,
+                confirmationSent: false,
+                reminderSent: false,
+                disableConfirmation: false
+            },
                 { new: true }
             );
             if (!updatedBooking) {

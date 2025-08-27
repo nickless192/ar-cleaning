@@ -184,6 +184,11 @@ const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
   const updateBookingDate = async () => {
     if (!selectedBooking?._id) return;
 
+    if(selectedBooking.status === 'completed' || selectedBooking.status === 'cancelled'){
+      alert("Cannot update date for completed or cancelled bookings.");
+      return;
+    }
+
     try {
       setLoading(true);
 
