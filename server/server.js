@@ -35,6 +35,25 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
 });
 
+// app.get("/oauth2callback", async (req, res) => {
+//   const { code } = req.query;
+//   const { tokens } = await oAuth2Client.getToken(code);
+//   console.log("Tokens:", tokens);
+//   res.send("Tokens acquired, you can close this window.");
+// });
+app.get("/oauth2callback", async (req, res) => {
+  const code = req.query.code;
+  try {
+    const { tokens } = await oAuth2Client.getToken(code);
+    console.log("Tokens:", tokens);
+    // Save tokens.refresh_token somewhere safe
+    res.send("✅ Auth successful, you can close this tab!");
+  } catch (err) {
+    console.error("Error exchanging code:", err);
+    res.status(500).send("Error exchanging code");
+  }
+});
+
 
 // connect to mongo
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/ar-cleaning-local') ;

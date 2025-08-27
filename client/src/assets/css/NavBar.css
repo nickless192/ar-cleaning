@@ -26,8 +26,8 @@
 .social-icons-container {
   display: flex !important;
   flex-direction: row !important;
-  justify-content: left;
-  align-items: left;
+  justify-content: right;
+  align-items: right;
   gap: 0rem!important;
   flex-wrap: nowrap;
 }
@@ -40,7 +40,7 @@
 
 @media (max-width: 768px) {
   .social-icons-container {
-    justify-content: left;
+    justify-content: right;
     /* margin-bottom: 1rem; */
   }
 }
@@ -76,7 +76,7 @@ main,
 .navbar-wrapper {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  
   /* width: 100%; */
 }
 
@@ -222,7 +222,7 @@ main,
   .navbar-collapse {
     background-color: var(--light-color);
     position: absolute;
-    top: 70px;
+    top: 100px;
     left: 0;
     right: 0;
     padding: 1rem;
@@ -238,7 +238,6 @@ main,
 
   .nav-item {
     margin: 0.25rem 0;
-    /* width: 25%; */
   }
 
   .nav-link {

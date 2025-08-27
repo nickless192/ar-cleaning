@@ -91,6 +91,7 @@ function IndexNavbar() {
         window.addEventListener("scroll", updateNavbarColor);
         return function cleanup() {
             window.removeEventListener("scroll", updateNavbarColor);
+            document.documentElement.classList.remove("nav-open");
         };
     }, []);
 
@@ -273,7 +274,7 @@ function IndexNavbar() {
             <Navbar className={" mb-0 navbar-color " + navbarColor} expand="lg">
                 <Container fluid className=" ">
                     <Row className="navbar-wrapper">
-                        <Col md="3" xs="3">
+                        <Col md="3" xs="9">
                             <NavbarBrand
                                 href="/index"
                                 id="navbar-brand"
@@ -287,9 +288,9 @@ function IndexNavbar() {
                                 </div>
                             </NavbarBrand>
                         </Col>
-                        <Col md="9" xs="9">
-                            <div className="">
-                                <div className="navbar-nav social-icons-container">
+                        <Col md="9" xs="3" className="d-flex flex-column align-items-end">
+                            {/* <div className=""> */}
+                                <div className="navbar-nav social-icons-container d-flex">
                                     <NavItem className="nav-item ml-auto">
                                         <NavLink href="https://www.instagram.com/cleanarsolutions/" className="nav-link" target="_blank" rel="noopener noreferrer">
                                             <div className="nav-link-content">
@@ -325,7 +326,7 @@ function IndexNavbar() {
                                     </NavItem>
                                     <LanguageSwitcher />
                                 </div>
-                                <div className="">
+                                <div className="mt-2">
                                     <button
                                         className="navbar-toggler"
                                         type="button"
@@ -335,7 +336,7 @@ function IndexNavbar() {
                                         <FaBars className="navbar-toggler-icon" />
                                     </button>
                                     {/* Navigation links */}
-                                    <Collapse isOpen={collapseOpen} navbar className="navbar-collapse">
+                                    <Collapse isOpen={collapseOpen} navbar className="navbar-collapse pl-0">
                                         <Nav navbar className="navbar-nav ">
                                             <NavItem className="nav-item">
                                                 <NavLink href="/about-us" className="nav-link">
@@ -371,7 +372,7 @@ function IndexNavbar() {
                                         </Nav>
                                     </Collapse>
                                 </div>
-                            </div>
+                            {/* </div> */}
 
 
                         </Col>

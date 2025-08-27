@@ -31,8 +31,17 @@ function Index() {
 
   const [availabilityStatus, setAvailabilityStatus] = useState('');
   const [responseTimeMessage, setResponseTimeMessage] = useState('');
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   const location = useLocation();
   const { t, i18n } = useTranslation();
+
+ const goToQuote = () => {
+  const el = document.getElementById("quote-section");
+  if (el) {
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+};
+
 
   const contactItems = [
     {
@@ -124,6 +133,37 @@ function Index() {
       setResponseTimeMessage(t('response_later'));
     }
 
+    if (isInitialLoad) {
+      // fetch('/api/reviews')
+      //   .then(response => response.json())
+      //   .then(data => {
+      //     // Process the fetched reviews data
+      //     console.log(data);
+      //   })
+      //   .catch(error => {
+      //     console.error('Error fetching reviews:', error);
+      //   });
+      // fetch('/api/reviews/locations/')
+      //   .then(response => response.json())
+      //   .then(data => {
+      //     // Process the fetched reviews data
+      //     console.log("location data", data);
+      //   })
+      //   .catch(error => {
+      //     console.error('Error fetching locations:', error);
+      //   });
+      // fetch('/api/reviews/accounts/')
+      //   .then(response => response.json())
+      //   .then(data => {
+      //     // Process the fetched reviews data
+      //     console.log("account data",data);
+      //   })
+      //   .catch(error => {
+      //     console.error('Error fetching accounts:', error);
+      //   });
+
+    }
+
     document.body.classList.add("index-page");
     document.body.classList.add("sidebar-collapse");
     document.documentElement.classList.remove("nav-open");
@@ -137,7 +177,7 @@ function Index() {
       document.body.classList.remove("index-page");
       document.body.classList.remove("sidebar-collapse");
     };
-  }, [location.search, location.state,i18n.language]);
+  }, [location.search, location.state, i18n.language]);
 
   return (
     <>
@@ -180,18 +220,28 @@ function Index() {
             >
               {/* Say goodbye to stress and hello to sparkle ✨<br /> */}
               {t('intro')} <br />
-              {t('details')} <br />
-              {t('services')} <br />
+              {/* {t('details')} <br />
+              {t('services')} <br /> */}
               {/* <b>CleanAR Solutions</b> brings 10+ years of trusted cleaning to homes and businesses across the GTA.<br /> */}
               {/* From deep cleans to regular maintenance, we tailor services to your needs—efficient, eco-friendly, and always reliable. */}
               {/* <br /><br /> */}
               <b>{t('cta')}</b> <br />
-              {t('ctaNote')}
+              {/* {t('ctaNote')} */}
               {/* <b>Get your personalized quote in under 60 seconds.</b><br /> */}
               {/* It’s fast, free, and commitment-free! */}
             </motion.p>
+            <div className="pb-3">
+
+            <button
+              className="btn btn-success btn-lg w-auto"
+              onClick={goToQuote}
+            >
+              {t('cta')}
+            </button>
+</div>
+
           </Col>
-          <Col className="text-center p-0 m-0" xs='12' md='6'>
+          <Col className="text-center p-0 m-0 d-none d-md-block" xs='12' md='6'>
             <CardImg top className="background-image-index" src={backgroundImage} alt="CleanAR Solutions background - Designed by Freepik" />
           </Col>
         </Row>
@@ -277,17 +327,17 @@ function Index() {
               </Card>
             </motion.div>
           </Col>
-          <Col xs='12' md='6' className="p-0">
+          <Col xs='12' md='6' className="p-0" id="quote-section">
             <QuoteRequest />
           </Col>
         </Row>
-        
-      <ToastContainer position="top-center" autoClose={2000} />
+
+        <ToastContainer position="top-center" autoClose={2000} />
         <Row className="m-0 p-0">
           <Col xs='12' md='12' className="p-0">
             <ContactUs />
           </Col>
-          </Row>
+        </Row>
 
       </div>
 

@@ -42,6 +42,7 @@ const visitorController = {
     try {
 
       const page = req.body.page;
+      let geoInfo;
       const sessionId = req.body.sessionId || crypto.randomUUID();
       let visitor = await VisitorLog.findOne({ sessionId });
       // console.log('Visitor:', visitor);
@@ -56,7 +57,19 @@ const visitorController = {
           req.connection?.remoteAddress ||
           req.socket?.remoteAddress;
         // console.log('IP Address:', ip);
-        const geoInfo = await getGeoInfo(ip);
+        if (process.env.NODE_ENV === 'production') {
+          geoInfo = await getGeoInfo(ip);
+        } else {
+          geoInfo = {
+            country: 'Unknown',
+            region: 'Unknown',
+            city: 'Unknown',
+            postal: 'Unknown',
+            org: 'Unknown',
+            latitude: 0,
+            longitude: 0,
+          };
+        }
         // console.log('Geo Info:', geoInfo);
         const hashedIp = crypto.createHash('sha256').update(ip || '').digest('hex');
         // console.log('Hashed IP:', hashedIp);
@@ -389,85 +402,85 @@ const visitorController = {
     }
   },
   logInteraction: async (req, res) => {
-  try {
-    const { sessionId, action } = req.body;
+    try {
+      const { sessionId, action } = req.body;
 
-    if (!sessionId || !action) {
-      return res.status(400).json({ error: 'Missing sessionId or action' });
+      if (!sessionId || !action) {
+        return res.status(400).json({ error: 'Missing sessionId or action' });
+      }
+
+      console.log('Logging interaction for session:', sessionId, 'action:', action);
+
+      const result = await VisitorLog.findOneAndUpdate(
+        { sessionId },
+        { $push: { interactions: action }, $set: { lastSeenAt: new Date() } },
+        { new: true }
+      );
+
+      if (!result) {
+        return res.status(404).json({ error: 'Session not found' });
+      }
+      await result.save(); // Ensure the interaction is saved
+
+      res.status(200).json({ message: 'Interaction logged' });
+    } catch (error) {
+      console.error('Failed to log interaction:', error);
+      res.status(500).json({ error: 'Internal server error' });
     }
+  },
+  updateSessionDuration: async (req, res) => {
+    try {
+      const { sessionId, duration } = req.body;
 
-    console.log('Logging interaction for session:', sessionId, 'action:', action);
+      if (!sessionId || typeof duration !== 'number') {
+        return res.status(400).json({ error: 'Missing or invalid sessionId or duration' });
+      }
 
-    const result = await VisitorLog.findOneAndUpdate(
-      { sessionId },
-      { $push: { interactions: action }, $set: { lastSeenAt: new Date() } },
-      { new: true }
-    );
+      const result = await VisitorLog.findOneAndUpdate(
+        { sessionId },
+        { $set: { sessionDuration: duration, lastSeenAt: new Date() } },
+        { new: true }
+      );
 
-    if (!result) {
-      return res.status(404).json({ error: 'Session not found' });
+      if (!result) {
+        return res.status(404).json({ error: 'Session not found' });
+      }
+      // Ensure the session duration is updated
+      await result.save();
+
+      res.status(200).json({ message: 'Session duration updated' });
+    } catch (error) {
+      console.error('Error updating session duration:', error);
+      res.status(500).json({ error: 'Failed to update session duration' });
     }
-    await result.save(); // Ensure the interaction is saved
+  },
+  updateScrollDepth: async (req, res) => {
+    try {
+      const { sessionId, scrollDepth } = req.body;
 
-    res.status(200).json({ message: 'Interaction logged' });
-  } catch (error) {
-    console.error('Failed to log interaction:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-},
-updateSessionDuration: async (req, res) => {
-  try {
-    const { sessionId, duration } = req.body;
+      if (!sessionId || typeof scrollDepth !== 'number') {
+        return res.status(400).json({ error: 'Missing or invalid sessionId or scrollDepth' });
+      } 2
+      console.log('Updating scroll depth for session:', sessionId, 'to', scrollDepth);
 
-    if (!sessionId || typeof duration !== 'number') {
-      return res.status(400).json({ error: 'Missing or invalid sessionId or duration' });
+      const result = await VisitorLog.findOneAndUpdate(
+        { sessionId },
+        { $max: { scrollDepth }, $set: { lastSeenAt: new Date() } }, // $max only updates if greater
+        { new: true }
+      );
+
+      if (!result) {
+        return res.status(404).json({ error: 'Session not found' });
+      }
+
+      // Ensure the scroll depth is updated
+      await result.save();
+      res.status(200).json({ message: 'Scroll depth updated' });
+    } catch (error) {
+      console.error('Error updating scroll depth:', error);
+      res.status(500).json({ error: 'Failed to update scroll depth' });
     }
-
-    const result = await VisitorLog.findOneAndUpdate(
-      { sessionId },
-      { $set: { sessionDuration: duration, lastSeenAt: new Date() } },
-      { new: true }
-    );
-
-    if (!result) {
-      return res.status(404).json({ error: 'Session not found' });
-    }
-    // Ensure the session duration is updated
-    await result.save();
-
-    res.status(200).json({ message: 'Session duration updated' });
-  } catch (error) {
-    console.error('Error updating session duration:', error);
-    res.status(500).json({ error: 'Failed to update session duration' });
-  }
-},
-updateScrollDepth: async (req, res) => {
-  try {
-    const { sessionId, scrollDepth } = req.body;
-
-    if (!sessionId || typeof scrollDepth !== 'number') {
-      return res.status(400).json({ error: 'Missing or invalid sessionId or scrollDepth' });
-    }2
-    console.log('Updating scroll depth for session:', sessionId, 'to', scrollDepth);
-
-    const result = await VisitorLog.findOneAndUpdate(
-      { sessionId },
-      { $max: { scrollDepth }, $set: { lastSeenAt: new Date() } }, // $max only updates if greater
-      { new: true }
-    );
-
-    if (!result) {
-      return res.status(404).json({ error: 'Session not found' });
-    }
-
-    // Ensure the scroll depth is updated
-    await result.save();
-    res.status(200).json({ message: 'Scroll depth updated' });
-  } catch (error) {
-    console.error('Error updating scroll depth:', error);
-    res.status(500).json({ error: 'Failed to update scroll depth' });
-  }
-},
+  },
 
 
 
