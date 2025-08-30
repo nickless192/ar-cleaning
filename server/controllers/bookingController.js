@@ -2,6 +2,7 @@ const sgMail = require('@sendgrid/mail');
 const { DateTime } = require('luxon');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const Booking = require('../models/Booking');
+const Customer = require('../models/Customer');
 // const { sendConfirmationEmail } = require('../utils/emailService');
 
 const sendReminderEmail = async ({ customerEmail, customerName, date, serviceType }) => {
@@ -77,6 +78,7 @@ const bookingControllers = {
             serviceType,
             date,
             userId,
+            customerId,
             // scheduleConfirmation,
             // confirmationDate,
             // reminderScheduled,
@@ -102,6 +104,7 @@ const bookingControllers = {
                 createdBy: userId,
                 updatedBy: userId,
                 date: parsedDate,
+                customerId: customerId || null,
                 // reminderScheduled,
                 // scheduleConfirmation: scheduleConfirmation,
                 // scheduledConfirmationDate: confirmationDateLocal,
@@ -112,6 +115,11 @@ const bookingControllers = {
                 income: income || 0
             });
             const savedBooking = await newBooking.save();
+
+            // if a customerId is provided, i need to push it to the customer's bookings array
+            if (customerId) {
+                await Customer.findByIdAndUpdate(customerId, { $push: { bookings: savedBooking._id } });
+            }            
             res.status(201).json(savedBooking);
         } catch (err) {
             console.error('Error creating booking:', err);

@@ -34,7 +34,8 @@ function ProfilePage() {
     companyName: "",
     userId: ""
   });
-  const [quotes, setQuotes] = useState([]);
+  const [bookings, setBookings] = useState({});
+  // const [quotes, setQuotes] = useState([]);
 
   const [displayedQuote, setDisplayedQuote] = useState({ products: [], services: [], name: '', phonenumber: '', companyName: '', email: '', description: '', serviceType: '', howDidYouHearAboutUs: '', subtotalCost: 0, tax: 0, grandTotal: 0 });
 
@@ -51,8 +52,8 @@ function ProfilePage() {
       try {
         const data = await Auth.getProfile().data;
         const response = await fetch(`/api/quotes/user/${Auth.getProfile().data._id}`);
-        const quotesData = await response.json();
-        setQuotes(quotesData);
+        // const quotesData = await response.json();
+        // setQuotes(quotesData);
         // console.log(quotesData);
         // console.log(Auth.getProfile());
         setFormData({
@@ -68,6 +69,13 @@ function ProfilePage() {
           userId: data._id,
           username: data.username
         });
+        // get user bookings
+        const bookingsResponse = await fetch(`/api/users/${data._id}/bookings`);
+        const bookingsData = await bookingsResponse.json();
+        if (bookingsData) {
+          // console.log(bookingsData);
+          setBookings(bookingsData);
+        }
       } catch (err) {
         console.error(err);
       }
@@ -175,154 +183,210 @@ function ProfilePage() {
     const data = await Auth.getProfile().data;
     setFormData({
       name: data.firstName + " " + data.lastName,
-                  email: data.email,
-                  phonenumber: data.telephone,
-                  address: data.address,
-                  city: data.city,
-                  province: data.province,
-                  postalcode: data.postalcode,
-                  howDidYouHearAboutUs: data.howDidYouHearAboutUs,
-                  companyName: data.companyName,
-                  userId: data._id
+      email: data.email,
+      phonenumber: data.telephone,
+      address: data.address,
+      city: data.city,
+      province: data.province,
+      postalcode: data.postalcode,
+      howDidYouHearAboutUs: data.howDidYouHearAboutUs,
+      companyName: data.companyName,
+      userId: data._id
     });
   }
 
   return (
     <>
       {/* <Navbar /> */}
-      <div className="wrapper light-bg-color mb-0 section-background" style={{ backgroundImage: `url(${backgroundImage})`}}>
-         <Container className="py-5">
-        <Card className="p-4 shadow-lg">
-          <h2 className="text-center primary-color mb-4">{formData.name}</h2>
+      <div className="wrapper light-bg-color mb-0 section-background" style={{ backgroundImage: `url(${backgroundImage})` }}>
+        <Container className="py-5">
+          <Card className="p-4 shadow-lg">
+            <h2 className="text-center primary-color mb-4">{formData.name}</h2>
 
-          <Form onSubmit={handleSaveClick}>
-            {/* Address */}
-            <Row className="mb-3 text-center">
+            <Form onSubmit={handleSaveClick}>
+              {/* Address */}
+              <Row className="mb-3 text-center">
 
-            <Form.Group className="mb-3">
-              <h5>Address</h5>
-              {isEditing ? (
-                <>
-                  <Form.Control
-                    type="text"
-                    name="address"
-                    placeholder="Address"
-                    className="text-cleanar-color form-input mb-2"
-                    value={formData.address}
-                    onChange={handleInputChange}
-                  />
-                  <Row className="mb-3 text-center">
-                    <Col>
+                <Form.Group className="mb-3">
+                  <h5>Address</h5>
+                  {isEditing ? (
+                    <>
                       <Form.Control
                         type="text"
-                        name="city"
-                        placeholder="City"
-                        value={formData.city}
-                        className="text-cleanar-color form-input text-center"
+                        name="address"
+                        placeholder="Address"
+                        className="text-cleanar-color form-input mb-2"
+                        value={formData.address}
                         onChange={handleInputChange}
                       />
-                    </Col>
-                    <Col>
-                      <Form.Control
-                        type="text"
-                        name="province"
-                        placeholder="Province"
-                        value={formData.province}
-                        className="text-cleanar-color form-input text-center"
-                        onChange={handleInputChange}
-                      />
-                    </Col>
-                    <Col>
-                      <Form.Control
-                        type="text"
-                        name="postalcode"
-                        placeholder="Postal Code"
-                        value={formData.postalcode}
-                        className="text-cleanar-color form-input text-center"
-                        onChange={handleInputChange}
-                      />
-                    </Col>
-                  </Row>
-                </>
-              ) : (
-                <p>
-                  {formData.address
-                    ? `${formData.address}, ${formData.city}, ${formData.postalcode.toUpperCase()}, ${formData.province}`
-                    : "Add address"}
-                </p>
-              )}
-            </Form.Group>
-            </Row>
+                      <Row className="mb-3 text-center">
+                        <Col>
+                          <Form.Control
+                            type="text"
+                            name="city"
+                            placeholder="City"
+                            value={formData.city}
+                            className="text-cleanar-color form-input text-center"
+                            onChange={handleInputChange}
+                          />
+                        </Col>
+                        <Col>
+                          <Form.Control
+                            type="text"
+                            name="province"
+                            placeholder="Province"
+                            value={formData.province}
+                            className="text-cleanar-color form-input text-center"
+                            onChange={handleInputChange}
+                          />
+                        </Col>
+                        <Col>
+                          <Form.Control
+                            type="text"
+                            name="postalcode"
+                            placeholder="Postal Code"
+                            value={formData.postalcode}
+                            className="text-cleanar-color form-input text-center"
+                            onChange={handleInputChange}
+                          />
+                        </Col>
+                      </Row>
+                    </>
+                  ) : (
+                    <p>
+                      {formData.address
+                        ? `${formData.address}, ${formData.city}, ${formData.postalcode.toUpperCase()}, ${formData.province}`
+                        : "Add address"}
+                    </p>
+                  )}
+                </Form.Group>
+              </Row>
 
-            {/* Phone & Email */}
-            <Row className="mb-3 text-center">
-              <Col md={6}>
-                <h5>Phone Number</h5>
+              {/* Phone & Email */}
+              <Row className="mb-3 text-center">
+                <Col md={6}>
+                  <h5>Phone Number</h5>
+                  {isEditing ? (
+                    <Form.Control
+                      type="text"
+                      name="phonenumber"
+                      value={formData.phonenumber}
+                      className="text-cleanar-color form-input text-center"
+                      onChange={handleInputChange}
+                    />
+                  ) : (
+                    <p>{formData.phonenumber || "Add phone number"}</p>
+                  )}
+                </Col>
+                <Col md={6}>
+                  <h5>Email Address</h5>
+                  <p>{formData.email || "Add email"}</p>
+                </Col>
+              </Row>
+
+              {/* Company */}
+              <Form.Group className="mb-4 text-center">
+                <h5>Company Name</h5>
                 {isEditing ? (
                   <Form.Control
                     type="text"
-                    name="phonenumber"
-                    value={formData.phonenumber}
+                    name="companyName"
                     className="text-cleanar-color form-input text-center"
+                    value={formData.companyName}
                     onChange={handleInputChange}
                   />
                 ) : (
-                  <p>{formData.phonenumber || "Add phone number"}</p>
+                  <p>{formData.companyName || "Add company name"}</p>
                 )}
-              </Col>
-              <Col md={6}>
-                <h5>Email Address</h5>
-                <p>{formData.email || "Add email"}</p>
-              </Col>
-            </Row>
+              </Form.Group>
 
-            {/* Company */}
-            <Form.Group className="mb-4 text-center">
-              <h5>Company Name</h5>
-              {isEditing ? (
-                <Form.Control
-                  type="text"
-                  name="companyName"
-                  className="text-cleanar-color form-input text-center"
-                  value={formData.companyName}
-                  onChange={handleInputChange}
-                />
-              ) : (
-                <p>{formData.companyName || "Add company name"}</p>
-              )}
-            </Form.Group>
-
-            <div className="text-center">
-              {isEditing ? (
-                <>
-                  <Button
-                    variant="primary"
-                    type="submit"
-                    className="mx-2"
-                  >
-                    Save Profile
-                  </Button>
+              <div className="text-center">
+                {isEditing ? (
+                  <>
+                    <Button
+                      variant="primary"
+                      type="submit"
+                      className="mx-2"
+                    >
+                      Save Profile
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      className="mx-2"
+                      onClick={handleCancelClick}
+                    >
+                      Cancel
+                    </Button>
+                  </>
+                ) : (
                   <Button
                     variant="secondary"
-                    className="mx-2"
-                    onClick={handleCancelClick}
+                    onClick={(e) => { e.preventDefault(); setIsEditing(true); }}
                   >
-                    Cancel
+                    Edit Profile
                   </Button>
-                </>
-              ) : (
-                <Button
-                  variant="secondary"
-                  onClick={(e) => { e.preventDefault(); setIsEditing(true); }}
-                >
-                  Edit Profile
-                </Button>
-              )}
-            </div>
-          </Form>
-        </Card>
-      </Container>
-        </div>
+                )}
+              </div>
+            </Form>
+          </Card>
+          <Card className="p-4 mt-4 shadow-lg">
+            <h3 className="text-center primary-color mb-4">My Bookings</h3>
+            {bookings.length === 0 ? (
+              <p className="text-center">No bookings found.</p>
+            ) : (
+              <Table striped bordered hover responsive>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Service Type</th>
+                    <th>Status</th>
+                    <th>Need help?</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {bookings.bookings && bookings.bookings.map((booking) => {
+                    const bookingDate = new Date(booking.date);
+                    const today = new Date();
+                    const isPast = bookingDate < today; // check if booking is in the past
+                    const isDone = booking.status?.toLowerCase() === "completed";
+
+                    return (
+                      <tr key={booking._id}>
+                        <td>{bookingDate.toLocaleDateString()}</td>
+                        <td>{booking.serviceType}</td>
+                        <td className="text-capitalize">{booking.status}</td>
+                        <td>
+                          {(!isPast && !isDone) ? (
+                            <Button
+                              variant="warning"
+                              size="sm"
+                              onClick={() => handleRequestDateChange(booking._id)}
+                            >
+                              Request Service Change
+                            </Button>
+                          ) : (
+                            <span className="text-muted">Not available</span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </Table>
+            )}
+
+            {/* <div className="text-center mt-4">
+              <Button
+                variant="primary"
+                onClick={() => navigate('/bookings/new')}
+              >
+                New Booking
+              </Button>
+            </div> */}
+
+          </Card>
+        </Container>
+      </div>
       {/* </div> */}
       {/* <Footer /> */}
     </>

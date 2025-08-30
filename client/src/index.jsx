@@ -91,7 +91,7 @@ const App = () => {
     <React.StrictMode>
       <BrowserRouter>
         <div className="fixed-top-container">
-          <SiteBanner />
+          {/* <SiteBanner /> */}
           <Navbar />
         </div>
         <div className="light-bg-color-opaque main-content">

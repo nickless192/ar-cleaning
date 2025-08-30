@@ -1,4 +1,5 @@
-const { User } = require('../models');
+const User = require('../models/User');
+const Customer = require('../models/Customer');
 const { signToken } = require('../utils/auth');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
@@ -136,6 +137,21 @@ const userControllers = {
         await user.save();
 
         res.status(200).json({ message: 'Password successfully reset' });
+    },
+    async getUserBookings({ params }, res) {
+        // get userId and check if its linked to customer and get the customer bookings
+        try {
+            // const user = await User.findById(params.userId);
+            // if (!user) return res.status(404).json({ message: 'User not found' });
+
+            const customer = await Customer.findOne({ user: params.userId }).populate('bookings');
+            if (!customer) return res.status(404).json({ message: 'No customer linked to this user' });
+
+            res.json({ bookings: customer.bookings });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ error: 'Failed to fetch user bookings' });
+        }
     }
 };
 

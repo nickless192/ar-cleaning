@@ -6,27 +6,62 @@ import { getBookings } from '/src/components/API/bookingApi';
 import { linkUser, unlinkUser, linkBooking, unlinkBooking } from '/src/components/API/customerApi';
 
 const CustomerRelations = ({ customer, onClose, onRefresh }) => {
+  console.log(customer);
   const [users, setUsers] = useState([]);
   const [bookings, setBookings] = useState([]);
+  // const [customerBookings, setCustomerBookings] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
       setUsers(await getUsers());
-      setBookings(await getBookings());
+      setBookings(await getBookings()); // update to get bookings without a user
+      // setCustomerBookings(await getCustomerBookings());
     };
     fetchData();
   }, []);
 
   const handleLinkUser = async () => {
-    await linkUser(customer._id, selectedUserId);
+    // await linkUser(customer._id, selectedUserId);
+    const data = { userId: selectedUserId };
+    const res = await fetch(`/api/customers/${customer._id}/assign-user`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
     onRefresh();
+    setSelectedUserId('');
+    onClose();
   };
 
   const handleUnlinkUser = async () => {
-    await unlinkUser(customer._id);
+    const data = { userId: null };
+    const res = await fetch(`/api/customers/${customer._id}/assign-user`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
     onRefresh();
+    setSelectedUserId('');
+    onClose();
   };
+
+  // const getCustomerBookings = async () => {
+  //   const res = await fetch(`/api/customers/${customer._id}/bookings`);
+  //   return res.json();
+  // };
+
+  const handleUnlinkBooking = async (bookingId,) => {
+    const res = await fetch(`/api/customers/${customer._id}/bookings/${bookingId}`, {
+      method: 'PUT'
+    });
+    if (!res.ok) {
+      console.error('Failed to unlink booking');
+      return;
+    }
+
+    onRefresh();
+  };  
 
   const handleToggleBooking = async (bookingId, isLinked) => {
     if (isLinked) {
@@ -40,7 +75,10 @@ const CustomerRelations = ({ customer, onClose, onRefresh }) => {
   return (
     <Card className="mb-3">
       <CardBody>
-        <CardTitle tag="h5">Manage Relations for {customer.firstName} {customer.lastName}</CardTitle>
+        <CardTitle tag="h5">Manage Relations for {customer.firstName} {customer.lastName} - {customer.email}</CardTitle>
+        {customer.user && (
+          <p>Linked User: {customer.user.firstName} {customer.user.lastName} - {customer.user.email}</p>
+        )}
 
         <Row className="mb-3">
           <Col md={6}>
@@ -53,7 +91,7 @@ const CustomerRelations = ({ customer, onClose, onRefresh }) => {
             >
               <option value="">Select a user</option>
               {users.map((user) => (
-                <option key={user._id} value={user._id}>{user.username}</option>
+                <option key={user._id} value={user._id}>{user.username} - {user.email}</option>
               ))}
             </Input>
             <div className="mt-2">
@@ -71,8 +109,8 @@ const CustomerRelations = ({ customer, onClose, onRefresh }) => {
           <Col>
             <Label>Bookings:</Label>
             <div className="d-flex flex-wrap gap-2">
-              {bookings.map((booking) => {
-                const isLinked = customer.bookings?.includes(booking._id);
+              {customer.bookings.map((booking) => {
+                // const isLinked = bookings.map(b => b._id).includes(booking._id);
                 return (
                   <div key={booking._id} className="border p-2 rounded shadow-sm">
                     <div><strong>ID:</strong> {booking._id}</div>
@@ -81,15 +119,15 @@ const CustomerRelations = ({ customer, onClose, onRefresh }) => {
                     <div><strong>Customer:</strong> {booking.customerName}</div>
                     <div><strong>Service:</strong> {booking.serviceType}</div>
                     <div><strong>Status:</strong> {booking.status}</div>
-                    <div><strong>Linked:</strong> {isLinked ? 'Yes' : 'No'}</div>
+                    {/* <div><strong>Linked:</strong> {isLinked ? 'Yes' : 'No'}</div> */}
                     <div><strong>Price:</strong> ${booking.income.toFixed(2)}</div>
                     <Button
                       size="sm"
-                      color={isLinked ? 'danger' : 'primary'}
-                      onClick={() => handleToggleBooking(booking._id, isLinked)}
+                      color='danger'
+                      onClick={() => handleUnlinkBooking(booking._id)}
                       className="mt-1"
                     >
-                      {isLinked ? 'Unlink' : 'Link'}
+                      Unlink
                     </Button>
                   </div>
                 );

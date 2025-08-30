@@ -35,12 +35,12 @@ function Index() {
   const location = useLocation();
   const { t, i18n } = useTranslation();
 
- const goToQuote = () => {
-  const el = document.getElementById("quote-section");
-  if (el) {
-    el.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-};
+  const goToQuote = () => {
+    const el = document.getElementById("quote-section");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
 
 
   const contactItems = [
@@ -232,13 +232,13 @@ function Index() {
             </motion.p>
             <div className="pb-3">
 
-            <button
-              className="btn btn-success btn-lg w-auto"
-              onClick={goToQuote}
-            >
-              {t('cta')}
-            </button>
-</div>
+              <button
+                className="btn btn-success btn-lg w-auto"
+                onClick={goToQuote}
+              >
+                {t('cta')}
+              </button>
+            </div>
 
           </Col>
           <Col className="text-center p-0 m-0 d-none d-md-block" xs='12' md='6'>
