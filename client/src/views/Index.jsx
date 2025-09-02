@@ -32,6 +32,7 @@ import { FaInstagram, FaFacebook, FaTiktok } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 
 function StickyQuoteButton() {
+  const { t } = useTranslation();
   const scrollToForm = () => {
     const formEl = document.getElementById("quote-form") || document.getElementById("quote-section");
     if (formEl) {
@@ -48,7 +49,7 @@ function StickyQuoteButton() {
         onClick={scrollToForm}
         className="btn btn-success btn-lg rounded-pill shadow-lg w-100"
       >
-        Get a Quote
+        {t("quick_quote.form.title")}
       </button>
     </div>
   );
