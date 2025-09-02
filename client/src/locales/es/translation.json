@@ -20,8 +20,117 @@
   "contact_services": "Explorar servicios",
   "services_description": "Soluciones de limpieza personalizadas",
   "services_additional": "Paquetes personalizados disponibles",
-  "products_and_services":{
+    "featuredServices": {
+    "heading": "Nuestros Servicios Destacados",
+    "learnMore": "Más Información"
+  },
+    "faq": {
+    "heading": "❓ Preguntas Frecuentes",
+    "services_header": "Servicios",
+    "services_q1": "¿Qué tipos de servicios de limpieza ofrecen?",
+    "services_a1": "Nos especializamos en limpieza residencial y comercial, incluyendo limpieza de alfombras, limpiezas profundas, limpieza de mudanza y limpieza post-renovación.",
 
+    "services_q2": "¿Traen sus propios suministros y equipos?",
+    "services_a2": "Sí, traemos productos de limpieza ecológicos y equipos profesionales para cada trabajo.",
+
+    "services_q3": "¿Sus productos de limpieza son seguros para mascotas y niños?",
+    "services_a3": "Absolutamente. Usamos productos no tóxicos y ecológicos que son seguros tanto para mascotas como para niños.",
+
+    "services_q4": "¿Ofrecen limpieza única o solo servicios recurrentes?",
+    "services_a4": "Ofrecemos limpiezas únicas y planes recurrentes flexibles adaptados a sus necesidades.",
+
+    "services_q5": "¿Puedo solicitar servicios adicionales?",
+    "services_a5": "Sí, puede solicitar extras como lavado de alfombras, limpieza de ventanas y limpieza profunda de electrodomésticos al reservar.",
+"process_header": "Proceso y Políticas",
+    "process_q1": "¿Cómo reservo un servicio de limpieza?",
+    "process_a1": "Puede reservar en línea a través de nuestro formulario web, o llamar/enviar mensaje directamente para una programación rápida.",
+
+    "process_q2": "¿Necesito estar en casa durante la limpieza?",
+    "process_a2": "No necesariamente. Muchos clientes proporcionan instrucciones de acceso y aseguramos que su propiedad esté segura en todo momento.",
+
+    "process_q3": "¿Sus limpiadores están asegurados y tienen verificación de antecedentes?",
+    "process_a3": "Sí, todos nuestros miembros están capacitados, asegurados y verificados para su tranquilidad.",
+
+    "process_q4": "¿Qué áreas atienden?",
+    "process_a4": "Servimos orgullosamente el Área Metropolitana de Toronto (GTA), incluyendo Toronto, Mississauga, Scarborough, North York y regiones cercanas.",
+
+    "process_q5": "¿Cuál es su política de cancelación?",
+    "process_a5": "Solicitamos al menos 24 horas de anticipación para cancelar o reprogramar, de lo contrario puede aplicarse una pequeña tarifa de cancelación.",
+"pricing_header": "Precios y Reservas",
+    "pricing_q1": "¿Cómo se determina el precio?",
+    "pricing_a1": "El precio depende del tamaño de su espacio, tipo de servicio y cualquier complemento solicitado.",
+
+    "pricing_q2": "¿Ofrecen estimaciones gratuitas?",
+    "pricing_a2": "Sí, ofrecemos estimaciones gratuitas en línea y por teléfono, y también puede solicitar un presupuesto personalizado a través de nuestro sitio web.",
+
+    "pricing_q3": "¿Hay un cargo mínimo por los servicios?",
+    "pricing_a3": "Sí, tenemos un cargo mínimo para cubrir viaje y suministros, que se comunica antes de la reserva.",
+
+    "pricing_q4": "¿Qué métodos de pago aceptan?",
+    "pricing_a4": "Aceptamos tarjetas de crédito principales, transferencias electrónicas y efectivo. Siempre se proporcionan facturas para transparencia.",
+
+    "pricing_q5": "¿Ofrecen descuentos o promociones?",
+    "pricing_a5": "Sí, ofrecemos promociones de temporada y descuentos para nuevos clientes. Consulte nuestro sitio web o pregunte al reservar."
+  },
+   "contact": {
+    "heading": "Hablemos 👋",
+    "intro": "¿Todavía tienes preguntas? Envíanos un mensaje y nos pondremos en contacto contigo pronto.",
+    "form": {
+      "name_label": "Tu Nombre",
+      "name_placeholder": "Jane Doe",
+      "email_label": "Correo Electrónico",
+      "email_placeholder": "tucorreo@ejemplo.com",
+      "phone_label": "Número de Teléfono",
+      "phone_placeholder": "(123) 456-7890",
+      "subject_label": "Asunto",
+      "subject_placeholder": "p.ej., Pregunta sobre Reserva",
+      "message_label": "Mensaje",
+      "message_placeholder": "Cuéntanos cómo podemos ayudarte...",
+      "submit": "Enviar Mensaje"
+    },
+    "alerts": {
+      "success": "¡Tu mensaje ha sido enviado!",
+      "captcha": "Por favor completa el CAPTCHA.",
+      "error": "No se pudo enviar el mensaje. Intenta de nuevo más tarde."
+    },
+    "company": {
+      "name": "📍 CleanAR Solutions",
+      "location_label": "Ubicación",
+      "location_value": "Centro de Toronto",
+      "phone_label": "Teléfono",
+      "phone_value": "(437) 440-5514",
+      "email_label": "Correo",
+      "email_value": "info@cleanARsolutions.ca",
+      "description": "¡Estamos aquí para que tu espacio brille! ✨ Si tienes preguntas o necesitas ayuda, no dudes en contactarnos. ¡Esperamos saber de ti!"
+    }
+  },
+    "testimonials": {
+    "heading": "Lo que dicen nuestros clientes",
+    "prev": "Anterior",
+    "next": "Siguiente"
+  },
+   "whyChooseUs": {
+    "heading": "¿Por qué elegir CleanAR Solutions?",
+    "benefits": {
+      "ecoFriendly": {
+        "title": "Productos Ecológicos",
+        "desc": "Seguros para su familia, mascotas y el planeta."
+      },
+      "trustedProfessionals": {
+        "title": "Profesionales Confiables",
+        "desc": "Personal capacitado y asegurado en quien puede confiar."
+      },
+      "flexibleScheduling": {
+        "title": "Horarios Flexibles",
+        "desc": "Tiempos convenientes que se adaptan a su estilo de vida."
+      },
+      "satisfactionGuaranteed": {
+        "title": "Satisfacción Garantizada",
+        "desc": "No estamos contentos hasta que su espacio brille."
+      }
+    }
+  },
+  "products_and_services":{
     "products_services_title": "Productos y Servicios",
     "our_services_title": "Nuestros Servicios",
     "our_products_title": "Nuestros Productos",
@@ -166,7 +275,8 @@
     "google_profile": "Visita nuestro perfil de Google",
     "terms": "Términos y Condiciones",
     "disclaimer": "Aviso Legal",
-    "developer": "Diseñado y desarrollado por"
+    "developer": "Diseñado y desarrollado por",
+    "privacy_policy": "Política de Privacidad"
   },
   "quick_quote": {
     "form": {

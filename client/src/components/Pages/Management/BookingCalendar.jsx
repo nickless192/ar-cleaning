@@ -135,6 +135,7 @@ const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
       confirmationDate: selectedBooking.confirmationDate,
       reminderScheduled: selectedBooking.reminderScheduled,
       disableConfirmation: selectedBooking.disableConfirmation,
+      customerSuggestedBookingAcknowledged: selectedBooking.customerSuggestedBookingAcknowledged,
       updatedBy: Auth.getProfile().data._id, // Assuming you have user authentication
       status: 'confirmed' // Set status to confirmed
     };
@@ -190,7 +191,7 @@ const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
       const res = await fetch(`/api/bookings/${selectedBooking._id}/update-date`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ date: tempDate, updatedBy: Auth.getProfile().data._id }) // Assuming you have user authentication
+        body: JSON.stringify({ date: tempDate, updatedBy: Auth.getProfile().data._id, customerSuggestedBookingAcknowledged: selectedBooking.customerSuggestedBookingAcknowledged }) // Assuming you have user authentication
       });
       // const data = await res.json();
       //     console.log("Update response data:", data);
@@ -211,11 +212,11 @@ const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
   };
 
   const formatForDatetimeLocal = (date) => {
-  const d = new Date(date);
-  const offset = d.getTimezoneOffset(); // minutes
-  const localDate = new Date(d.getTime() - offset * 60000);
-  return localDate.toISOString().slice(0, 16);
-};
+    const d = new Date(date);
+    const offset = d.getTimezoneOffset(); // minutes
+    const localDate = new Date(d.getTime() - offset * 60000);
+    return localDate.toISOString().slice(0, 16);
+  };
 
 
 
@@ -323,7 +324,9 @@ const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
                     <th>Date/Time</th>
                     <td>
                       {isEditing ? (
-                        <div className="d-flex align-items-center gap-2">
+                        <>
+                        <Row className="align-items-center g-2">
+                          <Col xs={12} sm="auto">
                           <Form.Control
                             type="datetime-local"
                             value={tempDate}
@@ -331,6 +334,26 @@ const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
                             onChange={(e) => setTempDate(e.target.value)}
                             style={{ maxWidth: "250px" }}
                           />
+                          </Col>
+                          <Col xs={12} sm="auto">
+                              {/* add a checkbox */}
+                          <FormGroup check>
+                            <Label check>
+                              <Input
+                                type="checkbox"
+                                name="customerSuggestedBookingAcknowledged"
+                                checked={selectedBooking.customerSuggestedBookingAcknowledged}
+                                onChange={handleChange}
+                              />
+                              <span className="form-check-sign"></span>
+                              {' '}
+                              Acknowledge Suggested Date
+                            </Label>
+                          </FormGroup>
+                          </Col>
+                          </Row>
+                          <Row className="align-items-center">
+                          <Col xs={6} sm="auto">
                           <Button
                             variant="success"
                             size="sm"
@@ -339,6 +362,8 @@ const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
                           >
                             Save
                           </Button>
+                          </Col>
+                          <Col xs={6} sm="auto">
                           <Button
                             variant="secondary"
                             size="sm"
@@ -347,7 +372,9 @@ const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
                           >
                             Cancel
                           </Button>
-                        </div>
+                          </Col>
+                        </Row>
+                        </>
                       ) : (
                         <div className="d-flex align-items-center gap-2">
                           {new Date(selectedBooking.date).toLocaleString()}
@@ -387,6 +414,14 @@ const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
                       <Badge bg={statusColors[selectedBooking.status] || "secondary"}>
                         {selectedBooking.status}
                       </Badge>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>New Date Requested</th>
+                    <td>
+                      {selectedBooking.customerSuggestedBookingDate ? new Date(selectedBooking.customerSuggestedBookingDate).toLocaleDateString() : "N/A"}
+                      {selectedBooking.customerSuggestedBookingComment && (<p>{selectedBooking.customerSuggestedBookingComment}</p>)}
+
                     </td>
                   </tr>
                   <tr>

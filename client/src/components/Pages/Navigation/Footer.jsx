@@ -37,6 +37,11 @@ function Footer() {
                   {t("footer.disclaimer")}
                 </Nav.Link>
               </Nav.Item>
+              <Nav.Item as="li" className="ms-md-3">
+                <Nav.Link href="/privacy-policy" className="p-0 text-dark text-decoration-none">
+                  {t("footer.privacy_policy")}
+                </Nav.Link>
+              </Nav.Item>
             </Nav>
           </Col>
 

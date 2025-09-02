@@ -25,23 +25,23 @@ import {
 } from 'react-icons/fa';
 import { generatePDF } from '/src/utils/generatePDF';
 
-const QuoteRequest = () => {
+const QuoteRequest = ( {initialData, onSubmit} ) => {
 
     const location = useLocation();
     const navigate = useNavigate();
     const { t, i18n } = useTranslation();
     const [formData, setFormData] = useState({
-        name: '',
-        companyName: '',
-        email: '',
-        phonenumber: '',
-        postalcode: '',
-        promoCode: '',
+        name: initialData.name || '',
+        companyName: initialData.companyName || '',
+        email: initialData.email || '',
+        phonenumber: initialData.phonenumber || '',
+        postalcode: initialData.postalcode || '',
+        promoCode: initialData.promoCode || '',
         subtotalCost: 0,
         tax: 0,
         grandTotal: 0,
-        services: [],
-        products: [],
+        services: initialData.services || [],
+        products: initialData.products || [],
         // serviceLevel: '', // New field for service level
     });
     const [popoverOpen, setPopoverOpen] = useState({
@@ -55,7 +55,7 @@ const QuoteRequest = () => {
     });
 
     const [categories, setCategories] = useState([]);
-    const [services, setServices] = useState([]);
+    const [services, setServices] = useState( initialData.services || []);
 
     const [, setValidPromoCode] = useState(false);
     const [isLogged] = useState(Auth.loggedIn());
@@ -64,7 +64,7 @@ const QuoteRequest = () => {
     const [scrolledToQuote, setScrolledToQuote] = useState(false);
     const [selectedService, setSelectedService] = useState("");
     const [options, setOptions] = useState([]);
-    const [selectedCategory, setSelectedCategory] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState(initialData.service?.type || '');
     const [customOptions, setCustomOptions] = useState({});
 
     const fetchInitialData = async () => {

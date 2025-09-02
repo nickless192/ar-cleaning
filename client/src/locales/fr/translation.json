@@ -20,8 +20,117 @@
   "contact_services": "Explorer les services",
   "services_description": "Solutions de nettoyage personnalisées",
   "services_additional": "Forfaits personnalisés disponibles",
-  "products_and_services": {
+  "featuredServices": {
+    "heading": "Nos Services Phare",
+    "learnMore": "En Savoir Plus"
+  },
+   "faq": {
+    "heading": "❓ Questions Fréquemment Posées",
+    "services_header": "Services",
+    "services_q1": "Quels types de services de nettoyage proposez-vous ?",
+    "services_a1": "Nous sommes spécialisés dans le nettoyage résidentiel et commercial, y compris le nettoyage de tapis, le nettoyage en profondeur, le nettoyage avant/après déménagement et le nettoyage après rénovation.",
 
+    "services_q2": "Apportez-vous vos propres fournitures et équipements ?",
+    "services_a2": "Oui, nous apportons des produits écologiques et des équipements professionnels pour chaque travail.",
+
+    "services_q3": "Vos produits de nettoyage sont-ils sûrs pour les animaux et les enfants ?",
+    "services_a3": "Absolument. Nous utilisons des produits non toxiques et écologiques, sûrs pour les animaux et les enfants.",
+
+    "services_q4": "Proposez-vous un nettoyage ponctuel ou uniquement des services récurrents ?",
+    "services_a4": "Nous proposons à la fois des nettoyages ponctuels et des plans récurrents flexibles adaptés à vos besoins.",
+
+    "services_q5": "Puis-je demander des services supplémentaires ?",
+    "services_a5": "Oui, vous pouvez demander des extras tels que le shampoing des tapis, le nettoyage des fenêtres et le nettoyage en profondeur des appareils lors de la réservation.",
+"process_header": "Processus et Politiques",
+    "process_q1": "Comment réserver un service de nettoyage ?",
+    "process_a1": "Vous pouvez réserver en ligne via notre formulaire, ou appeler/envoyer un message directement pour une planification rapide.",
+
+    "process_q2": "Dois-je être à la maison pendant le nettoyage ?",
+    "process_a2": "Pas nécessairement. Beaucoup de clients fournissent des instructions d'accès, et nous assurons la sécurité de votre propriété à tout moment.",
+
+    "process_q3": "Vos nettoyeurs sont-ils assurés et vérifiés ?",
+    "process_a3": "Oui, tous nos membres sont formés, assurés et vérifiés pour votre tranquillité d'esprit.",
+
+    "process_q4": "Quelles zones desservez-vous ?",
+    "process_a4": "Nous desservons fièrement la région du Grand Toronto (GTA), y compris Toronto, Mississauga, Scarborough, North York et les régions avoisinantes.",
+
+    "process_q5": "Quelle est votre politique d'annulation ?",
+    "process_a5": "Nous demandons un préavis d'au moins 24 heures pour annuler ou reprogrammer, sinon de petits frais d'annulation peuvent s'appliquer.",
+"pricing_header": "Tarification et Réservation",
+    "pricing_q1": "Comment les prix sont-ils déterminés ?",
+    "pricing_a1": "Les prix dépendent de la taille de votre espace, du type de service et des options supplémentaires demandées.",
+
+    "pricing_q2": "Fournissez-vous des estimations gratuites ?",
+    "pricing_a2": "Oui, nous fournissons des estimations gratuites en ligne et par téléphone, et vous pouvez également demander un devis personnalisé via notre site web.",
+
+    "pricing_q3": "Y a-t-il un tarif minimum pour les services ?",
+    "pricing_a3": "Oui, nous avons un tarif minimum pour couvrir les déplacements et fournitures, communiqué avant la réservation.",
+
+    "pricing_q4": "Quels moyens de paiement acceptez-vous ?",
+    "pricing_a4": "Nous acceptons les principales cartes de crédit, virements électroniques et espèces. Les factures sont toujours fournies pour plus de transparence.",
+
+    "pricing_q5": "Offrez-vous des réductions ou promotions ?",
+    "pricing_a5": "Oui, nous proposons des promotions saisonnières et des réductions pour les nouveaux clients. Consultez notre site web ou demandez lors de la réservation."
+  },
+   "contact": {
+    "heading": "Parlons-en 👋",
+    "intro": "Vous avez encore des questions ? Envoyez-nous un message et nous vous répondrons rapidement.",
+    "form": {
+      "name_label": "Votre Nom",
+      "name_placeholder": "Jane Doe",
+      "email_label": "Adresse Email",
+      "email_placeholder": "vous@exemple.com",
+      "phone_label": "Numéro de Téléphone",
+      "phone_placeholder": "(123) 456-7890",
+      "subject_label": "Sujet",
+      "subject_placeholder": "ex., Question sur la Réservation",
+      "message_label": "Message",
+      "message_placeholder": "Dites-nous comment nous pouvons vous aider...",
+      "submit": "Envoyer le Message"
+    },
+    "alerts": {
+      "success": "Votre message a été envoyé !",
+      "captcha": "Veuillez compléter le CAPTCHA.",
+      "error": "Impossible d'envoyer le message. Réessayez plus tard."
+    },
+    "company": {
+      "name": "📍 CleanAR Solutions",
+      "location_label": "Emplacement",
+      "location_value": "Centre-ville de Toronto",
+      "phone_label": "Téléphone",
+      "phone_value": "(437) 440-5514",
+      "email_label": "Email",
+      "email_value": "info@cleanARsolutions.ca",
+      "description": "Nous sommes là pour faire briller votre espace ! ✨ Si vous avez des questions ou besoin d'assistance, n'hésitez pas à nous contacter. Nous avons hâte d'avoir de vos nouvelles !"
+    }
+  },
+   "testimonials": {
+    "heading": "Ce que nos clients disent",
+    "prev": "Précédent",
+    "next": "Suivant"
+  },
+  "whyChooseUs": {
+    "heading": "Pourquoi choisir CleanAR Solutions ?",
+    "benefits": {
+      "ecoFriendly": {
+        "title": "Produits Écologiques",
+        "desc": "Sûrs pour votre famille, vos animaux et la planète."
+      },
+      "trustedProfessionals": {
+        "title": "Professionnels de Confiance",
+        "desc": "Personnel formé et assuré sur lequel vous pouvez compter."
+      },
+      "flexibleScheduling": {
+        "title": "Horaires Flexibles",
+        "desc": "Des moments pratiques qui s'adaptent à votre style de vie."
+      },
+      "satisfactionGuaranteed": {
+        "title": "Satisfaction Garantie",
+        "desc": "Nous ne sommes pas satisfaits tant que votre espace ne brille pas."
+      }
+    }
+  },
+  "products_and_services": {
     "products_services_title": "Produits et Services",
     "our_services_title": "Nos Services",
     "our_products_title": "Nos Produits",
@@ -164,7 +273,8 @@
     "google_profile": "Visitez notre profil Google",
     "terms": "Conditions générales",
     "disclaimer": "Avertissement",
-    "developer": "Conçu et développé par"
+    "developer": "Conçu et développé par",
+    "privacy_policy": "Politique de confidentialité"
   },
   "quick_quote": {
     "form": {

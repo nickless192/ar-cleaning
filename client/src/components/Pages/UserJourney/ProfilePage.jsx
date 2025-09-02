@@ -7,11 +7,15 @@ import {
   Form,
   Button,
   Card,
-  Spinner,
+  Badge,
   Alert,
   Table,
+  Modal,
+  Pagination
 } from "react-bootstrap";
 import Auth from "/src/utils/auth";
+import QuoteRequest from "/src/components/Pages/UserJourney/QuoteRequest";
+import BookingChangeModal from "/src/components/Pages/UserJourney/BookingChangeModal";
 
 import backgroundImage from '/src/assets/img/stock-photo-cropped-shot-woman-rubber-gloves-cleaning-office-table.jpg';
 
@@ -35,11 +39,68 @@ function ProfilePage() {
     userId: ""
   });
   const [bookings, setBookings] = useState({});
-  // const [quotes, setQuotes] = useState([]);
+  const [quotes, setQuotes] = useState([]);
+  const bookingsArray = bookings.bookings || []; // fallback to empty array
 
-  const [displayedQuote, setDisplayedQuote] = useState({ products: [], services: [], name: '', phonenumber: '', companyName: '', email: '', description: '', serviceType: '', howDidYouHearAboutUs: '', subtotalCost: 0, tax: 0, grandTotal: 0 });
+  const [currentQuotePage, setCurrentQuotePage] = useState(1);
+  const [currentBookingPage, setCurrentBookingPage] = useState(1);
+  const quotesPerPage = 10;
+  const bookingsPerPage = 10;
 
-  const toggle = () => setDropdownOpen(prevState => !prevState);
+  const indexOfLastQuote = currentQuotePage * quotesPerPage;
+  const indexOfFirstQuote = indexOfLastQuote - quotesPerPage;
+  const currentQuotes = quotes.slice(indexOfFirstQuote, indexOfLastQuote);
+  const indexOfLastBooking = currentBookingPage * bookingsPerPage;
+  const indexOfFirstBooking = indexOfLastBooking - bookingsPerPage;
+  const currentBookings = bookingsArray.slice(indexOfFirstBooking, indexOfLastBooking);
+
+  const totalQuotePages = Math.ceil(quotes.length / quotesPerPage);
+  const totalBookingPages = Math.ceil(bookingsArray.length / bookingsPerPage);
+
+  const [showModal, setShowModal] = useState(false);
+  const [selectedQuote, setSelectedQuote] = useState(null);
+  const [showChangeModal, setShowChangeModal] = useState(false);
+  const [selectedBookingId, setSelectedBookingId] = useState(null);
+
+  const handleEditQuote = (quote) => {
+    setSelectedQuote(quote);
+    setShowModal(true);
+  };
+  const handleRequestDateChange = (bookingId) => {
+    setSelectedBookingId(bookingId);
+    setShowChangeModal(true);
+  };
+
+  const handleModalClose = () => {
+    setShowChangeModal(false);
+    setSelectedBookingId(null);
+  };
+
+  const handleModalSubmit = ({ newDate, comment }) => {
+    // Call your API to request the change
+    // console.log("Booking:", selectedBookingId, "New Date:", newDate, "Comment:", comment);
+    fetch(`/api/bookings/${selectedBookingId}/request-change`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ newDate, comment }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          console.log("Change request submitted successfully");
+          alert("Change request submitted successfully");
+        } else {
+          console.error("Error submitting change request");
+          alert("Error submitting change request");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("Error submitting change request");
+      });
+  };
+
 
   useEffect(() => {
 
@@ -52,9 +113,9 @@ function ProfilePage() {
       try {
         const data = await Auth.getProfile().data;
         const response = await fetch(`/api/quotes/user/${Auth.getProfile().data._id}`);
-        // const quotesData = await response.json();
-        // setQuotes(quotesData);
+        const quotesData = await response.json();
         // console.log(quotesData);
+        setQuotes(quotesData);
         // console.log(Auth.getProfile());
         setFormData({
           name: data.firstName + " " + data.lastName,
@@ -329,50 +390,192 @@ function ProfilePage() {
               </div>
             </Form>
           </Card>
+          {/* new: display user quotes */}
+          <Card className="p-4 mt-4 shadow-lg">
+            <h3 className="text-center primary-color mb-4">My Quotes</h3>
+
+            {quotes.length === 0 ? (
+              <p className="text-center">No quotes found.</p>
+            ) : (
+              <>
+                <Table striped bordered hover responsive>
+                  <thead>
+                    <tr>
+                      {/* <th>Customer Name</th>
+          <th>Phone</th>
+          <th>Postal Code</th> */}
+                      <th>Service Info</th>
+                      {/* <th>Service</th> */}
+                      <th>Options</th>
+                      <th>Promo Code</th>
+                      <th>Submitted At</th>
+                      <th>Acknowledged by Sales</th>
+                      {/* <th>Need Help?</th> */}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {/* {quotes.map((quote) => { */}
+                    {currentQuotes.map((quote) => {
+                      const submittedAt = new Date(quote.createdAt);
+
+                      return (
+                        <tr key={quote._id}>
+                          {/* Basic customer info - not needed at the moment, could be useful when dealing with companies */}
+                          {/* <td>{quote.name}</td>
+                              <td>{quote.phonenumber}</td>
+                              <td>{quote.postalcode}</td> */}
+                          {/* Services (loop through array) */}
+                          {quote.services.map((srv, idx) => (
+                            <>
+                              <td>{srv.type} - {srv.service}</td>
+                              {/* <td>{srv.service}</td> */}
+                              <td>
+                                {Object.entries(srv.customOptions || {}).map(([key, opt]) => (
+                                  <div key={opt._id?.$oid || key}>
+                                    <strong>{opt.label}:</strong>{" "}
+                                    {typeof opt.service === "boolean"
+                                      ? opt.service
+                                        ? "Yes"
+                                        : "No"
+                                      : opt.service}
+                                  </div>
+                                ))}
+                              </td>
+                            </>
+                          ))}
+                          {/* Submitted date */}
+                          <td>{quote.promoCode || "N/A"}</td>
+                          <td>{submittedAt.toLocaleDateString()}</td>
+                          <td> {quote.acknowledgedByUser ? "Yes" : "Not yet"}</td>
+                          {/* Status */}
+                          {/* <td className="text-capitalize">{quote.status || "pending"}</td> */}
+
+                          {/* Help action */}
+                          {/* <td>
+                            <Button
+                              variant="info"
+                              size="sm"
+                              onClick={() => handleEditQuote(quote)}
+                            >
+                              Edit Quote
+                            </Button>
+                          </td> */}
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </Table>
+                {/* Pagination controls */}
+                <div className="d-flex justify-content-center mt-3">
+                  <Pagination size="sm" className="mb-0">
+                    <Pagination.Prev
+                      disabled={currentQuotePage === 1}
+                      onClick={() => setCurrentQuotePage(currentQuotePage - 1)}
+                    />
+                    <span className="mx-3 align-self-center">
+                      Page {currentQuotePage} of {totalQuotePages}
+                    </span>
+                    <Pagination.Next
+                      disabled={currentQuotePage === totalQuotePages}
+                      onClick={() => setCurrentQuotePage(currentQuotePage + 1)}
+                    />
+                  </Pagination>
+                </div>
+              </>
+
+            )}
+            {/* Modal for editing a quote */}
+            <Modal show={showModal} onHide={() => setShowModal(false)} size="xl"
+            >
+              <Modal.Header closeButton>
+                <Modal.Title>Edit Quote</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                {selectedQuote && (
+                  <QuoteRequest
+                    initialData={selectedQuote}
+                    onSubmit={(updatedData) => {
+                      // Handle update API call here
+                      console.log("Updated Quote:", updatedData);
+                      setShowModal(false);
+                    }}
+                  />
+                )}
+              </Modal.Body>
+            </Modal>
+          </Card>
+
           <Card className="p-4 mt-4 shadow-lg">
             <h3 className="text-center primary-color mb-4">My Bookings</h3>
             {bookings.length === 0 ? (
               <p className="text-center">No bookings found.</p>
             ) : (
-              <Table striped bordered hover responsive>
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Service Type</th>
-                    <th>Status</th>
-                    <th>Need help?</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {bookings.bookings && bookings.bookings.map((booking) => {
-                    const bookingDate = new Date(booking.date);
-                    const today = new Date();
-                    const isPast = bookingDate < today; // check if booking is in the past
-                    const isDone = booking.status?.toLowerCase() === "completed";
+              <>
+                <Table striped bordered hover responsive>
+                  <thead>
+                    <tr>
+                      <th>Service Date</th>
+                      <th>Service Type</th>
+                      <th>Status</th>
+                      <th>New Date Requested</th>
+                      <th>Need help?</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {/* {bookings.bookings && bookings.bookings.map((booking) => { */}
+                    {currentBookings.map((booking) => {
+                      const bookingDate = new Date(booking.date);
+                      const today = new Date();
+                      const isPast = bookingDate < today; // check if booking is in the past
+                      const isDone = booking.status?.toLowerCase() === "completed";
 
-                    return (
-                      <tr key={booking._id}>
-                        <td>{bookingDate.toLocaleDateString()}</td>
-                        <td>{booking.serviceType}</td>
-                        <td className="text-capitalize">{booking.status}</td>
-                        <td>
-                          {(!isPast && !isDone) ? (
-                            <Button
-                              variant="warning"
-                              size="sm"
-                              onClick={() => handleRequestDateChange(booking._id)}
-                            >
-                              Request Service Change
-                            </Button>
-                          ) : (
-                            <span className="text-muted">Not available</span>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </Table>
+                      return (
+                        <tr key={booking._id}>
+                          <td>{bookingDate.toLocaleDateString()}</td>
+                          <td>{booking.serviceType}</td>
+                          <td className="text-capitalize">{booking.status}</td>
+                          <td>{booking.customerSuggestedBookingDate ? new Date(booking.customerSuggestedBookingDate).toLocaleDateString() : "N/A"}
+                            {booking.customerSuggestedBookingAcknowledged && <Badge pill bg="success" className="ms-2">Acknowledged</Badge>}
+                            {!booking.customerSuggestedBookingAcknowledged && booking.customerSuggestedBookingDate && <Badge pill bg="danger" className="ms-2">Not Yet Acknowledged</Badge>}
+                          </td>
+                          <td>
+                            {(!isPast && !isDone) ? (
+                              <Button
+                                variant="warning"
+                                size="sm"
+                                onClick={() => handleRequestDateChange(booking._id)}
+                              >
+                                Request Service Change
+                              </Button>
+                            ) : (
+                              <span className="text-muted">Not available</span>
+                            )}
+
+                            <BookingChangeModal
+                              show={showChangeModal}
+                              handleClose={handleModalClose}
+                              handleSubmit={handleModalSubmit}
+                              initialDate={booking.date}
+                            // bookingId={selectedBookingId}
+                            />
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </Table>
+                <div className="d-flex justify-content-center mt-3">
+                  <Pagination size="sm" className="mb-0">
+                    {/* <Pagination.First onClick={() => setCurrentBookingPage(1)} disabled={currentBookingPage === 1} /> */}
+                    <Pagination.Prev onClick={() => setCurrentBookingPage(currentBookingPage - 1)} disabled={currentBookingPage === 1} />
+                    <span className="mx-3 align-self-center">
+                      Page {currentBookingPage} of {totalBookingPages}
+                    </span>
+                    <Pagination.Next onClick={() => setCurrentBookingPage(currentBookingPage + 1)} disabled={currentBookingPage === totalBookingPages} />
+                    {/* <Pagination.Last onClick={() => setCurrentBookingPage(totalBookingPages)} disabled={currentBookingPage === totalBookingPages} /> */}
+                  </Pagination>
+                </div>
+              </>
             )}
 
             {/* <div className="text-center mt-4">
@@ -387,6 +590,7 @@ function ProfilePage() {
           </Card>
         </Container>
       </div>
+
       {/* </div> */}
       {/* <Footer /> */}
     </>

@@ -20,6 +20,116 @@
   "contact_services": "Explore Services",
   "services_description": "Tailored Cleaning Solutions",
   "services_additional": "Custom Packages Available",
+   "featuredServices": {
+    "heading": "Our Featured Services",
+    "learnMore": "Learn More"
+  },
+   "faq": {
+    "heading": "❓ Frequently Asked Questions",
+    "services_header": "Services",
+    "services_q1": "What types of cleaning services do you offer?",
+    "services_a1": "We specialize in residential and commercial cleaning, including carpet cleaning, deep cleans, move-in/move-out cleaning, and post-renovation services.",
+
+    "services_q2": "Do you bring your own supplies and equipment?",
+    "services_a2": "Yes, we bring eco-friendly cleaning products and professional-grade equipment to every job.",
+
+    "services_q3": "Are your cleaning products safe for pets and children?",
+    "services_a3": "Absolutely. We use non-toxic, eco-friendly products that are safe for both pets and kids.",
+
+    "services_q4": "Do you offer one-time cleaning or only recurring services?",
+    "services_a4": "We offer both one-time cleanings and flexible recurring plans tailored to your needs.",
+
+    "services_q5": "Can I request add-on services?",
+    "services_a5": "Yes, you can request extras like carpet shampooing, window cleaning, and appliance deep cleans when booking.",
+"process_header": "Process & Policies",
+    "process_q1": "How do I book a cleaning service?",
+    "process_a1": "You can book online through our website form, or call/text us directly for quick scheduling.",
+
+    "process_q2": "Do I need to be home during the cleaning?",
+    "process_a2": "Not necessarily. Many clients provide access instructions, and we ensure your property is secure at all times.",
+
+    "process_q3": "Are your cleaners insured and background-checked?",
+    "process_a3": "Yes, all our team members are trained, insured, and background-checked for your peace of mind.",
+
+    "process_q4": "What areas do you service?",
+    "process_a4": "We proudly serve the Greater Toronto Area (GTA), including Toronto, Mississauga, Scarborough, North York, and nearby regions.",
+
+    "process_q5": "What is your cancellation policy?",
+    "process_a5": "We ask for at least 24 hours’ notice to cancel or reschedule, otherwise a small cancellation fee may apply.",
+"pricing_header": "Pricing & Booking",
+    "pricing_q1": "How is pricing determined?",
+    "pricing_a1": "Pricing depends on the size of your space, type of service, and any custom add-ons requested.",
+
+    "pricing_q2": "Do you provide free estimates?",
+    "pricing_a2": "Yes, we provide free online and phone estimates, and you can also request a custom quote through our website.",
+
+    "pricing_q3": "Is there a minimum charge for services?",
+    "pricing_a3": "Yes, we have a minimum service charge to cover travel and supplies, which we disclose upfront before booking.",
+
+    "pricing_q4": "What payment methods do you accept?",
+    "pricing_a4": "We accept major credit cards, e-transfers, and cash. Invoices are always provided for transparency.",
+
+    "pricing_q5": "Do you offer any discounts or promotions?",
+    "pricing_a5": "Yes, we run seasonal promotions and first-time client discounts. Check our website or ask when booking for current offers."
+  },
+   "contact": {
+    "heading": "Let’s Talk 👋",
+    "intro": "Still have questions? Send us a message and we’ll get back to you shortly.",
+    "form": {
+      "name_label": "Your Name",
+      "name_placeholder": "Jane Doe",
+      "email_label": "Email Address",
+      "email_placeholder": "you@example.com",
+      "phone_label": "Phone Number",
+      "phone_placeholder": "(123) 456-7890",
+      "subject_label": "Subject",
+      "subject_placeholder": "e.g., Booking Question",
+      "message_label": "Message",
+      "message_placeholder": "Let us know how we can help...",
+      "submit": "Send Message"
+    },
+    "alerts": {
+      "success": "Your message has been sent!",
+      "captcha": "Please complete the CAPTCHA.",
+      "error": "Unable to send message. Try again later."
+    },
+    "company": {
+      "name": "📍 CleanAR Solutions",
+      "location_label": "Location",
+      "location_value": "Downtown Toronto",
+      "phone_label": "Phone",
+      "phone_value": "(437) 440-5514",
+      "email_label": "Email",
+      "email_value": "info@cleanARsolutions.ca",
+      "description": "We’re here to make your space sparkle! ✨ If you have any questions or need assistance, feel free to reach out. We look forward to hearing from you!"
+    }
+  },
+    "testimonials": {
+    "heading": "What Our Clients Say",
+    "prev": "Prev",
+    "next": "Next"
+  },
+  "whyChooseUs": {
+    "heading": "Why Choose CleanAR Solutions?",
+    "benefits": {
+      "ecoFriendly": {
+        "title": "Eco-Friendly Products",
+        "desc": "Safe for your family, pets, and the planet."
+      },
+      "trustedProfessionals": {
+        "title": "Trusted Professionals",
+        "desc": "Trained & insured staff you can rely on."
+      },
+      "flexibleScheduling": {
+        "title": "Flexible Scheduling",
+        "desc": "Convenient times that fit your lifestyle."
+      },
+      "satisfactionGuaranteed": {
+        "title": "Satisfaction Guaranteed",
+        "desc": "We’re not happy until your space sparkles."
+      }
+    }
+  },
   "products_and_services": {
     "products_services_title": "Products and Services",
     "our_services_title": "Our Services",
@@ -165,7 +275,8 @@
     "google_profile": "Visit our Google Profile",
     "terms": "Terms & Conditions",
     "disclaimer": "Disclaimer",
-    "developer": "Designed & Built by"
+    "developer": "Designed & Built by",
+    "privacy_policy": "Privacy Policy"
   },
   "quick_quote": {
     "form": {

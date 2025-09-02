@@ -46,7 +46,7 @@ const quoteController = {
     },
     getUserQuotes: async (req, res) => {
         try {
-            const quotes = await Quote.find({ userId: req.params.userId });
+            const quotes = await QuickQuote.find({ userId: req.params.userId }).sort({ createdAt: -1 });
             res.json(quotes);
         } catch (error) {
             console.error('Error getting user quotes: ', error);

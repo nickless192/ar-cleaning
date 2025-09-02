@@ -29,33 +29,33 @@ export default function LanguageSwitcher() {
   };
 
   useEffect(() => {
-    if (isLogged) {
-      // console.log("logged user");
-      const data = Auth.getProfile().data;
-      // console.log(data);
-      if (data.testerFlag === true) {
-        // console.log("its tester - set language for testing");
-        setLanguages([
-          { code: 'en', label: 'English', short: 'EN', enabled: true },
-          { code: 'fr', label: 'Français', short: 'FR', enabled: true },
-          { code: 'es', label: 'Español', short: 'ES', enabled: true },
-        ]);
-      }
-      else {
-        setLanguages([
-          { code: 'en', label: 'English', short: 'EN', enabled: true },
-          { code: 'fr', label: 'Français', short: 'FR', enabled: false },
-          { code: 'es', label: 'Español', short: 'ES', enabled: false },
-        ]);
-      }
-    } else {
+    // if (isLogged) {
+    //   // console.log("logged user");
+    //   const data = Auth.getProfile().data;
+    //   // console.log(data);
+    //   if (data.testerFlag === true) {
+    //     // console.log("its tester - set language for testing");
+    //     setLanguages([
+    //       { code: 'en', label: 'English', short: 'EN', enabled: true },
+    //       { code: 'fr', label: 'Français', short: 'FR', enabled: true },
+    //       { code: 'es', label: 'Español', short: 'ES', enabled: true },
+    //     ]);
+    //   }
+    //   else {
+    //     setLanguages([
+    //       { code: 'en', label: 'English', short: 'EN', enabled: true },
+    //       { code: 'fr', label: 'Français', short: 'FR', enabled: false },
+    //       { code: 'es', label: 'Español', short: 'ES', enabled: false },
+    //     ]);
+    //   }
+    // } else {
 
       setLanguages([
         { code: 'en', label: 'English', short: 'EN', enabled: true },
-        { code: 'fr', label: 'Français', short: 'FR', enabled: false },
-        { code: 'es', label: 'Español', short: 'ES', enabled: false },
+        { code: 'fr', label: 'Français', short: 'FR', enabled: true },
+        { code: 'es', label: 'Español', short: 'ES', enabled: true },
       ]);
-    }
+    // }
   }, [])
 
   return (

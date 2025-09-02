@@ -34,8 +34,11 @@ import LogDashboard from '/src/components/Pages/Management/LogDashboard';
 import QuickQuoteDashboard from "/src/components/Pages/Management/QuickQuoteDashboard";
 import BookingDashboard from '/src/components/Pages/Management/BookingDashboard';
 import ResetPassword from "/src/components/Pages/UserJourney/ResetPassword";
+
 import Terms from "/src/components/Pages/Navigation/Terms";
 import Disclaimer from "/src/components/Pages/Navigation/Disclaimer";
+import PrivacyPolicy from "/src/components/Pages/Navigation/PrivacyPolicy";
+
 import Footer from "/src/components/Pages/Navigation/Footer.jsx";
 import Customer from "/src/components/Pages/Management/Customers.jsx";
 import FinanceDashboard from "/src/components/Pages/Management/FinanceDashboard";
@@ -123,6 +126,7 @@ const App = () => {
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/terms-conditions" element={<Terms />} />
           <Route path="/disclaimer" element={<Disclaimer />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/now" element={<LandingNow />} />
           <Route path="/start" element={<LandingStart />} />
           <Route path="/toronto" element={<LandingToronto />} />

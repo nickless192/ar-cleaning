@@ -20,12 +20,39 @@ import MetaTags from "/src/components/Pages/Management/MetaTags.jsx";
 import QuoteRequest from "../components/Pages/UserJourney/QuoteRequest";
 // import LandingPageHeader from "/src/components/Headers/LandingPageHeader.jsx";
 import BusinessHoursSidebar from "/src/components/Pages/UserJourney/BusinessHourSidebar";
+import WhyChooseUs from "/src/components/Pages/Landing/WhyChooseUs";
+import FeaturedServices from "/src/components/Pages/Landing/FeaturedServices";
+import ReviewsCarousel from "/src/components/Pages/Landing/ReviewsCarousel";
+import FAQAccordion from "/src/components/Pages/Landing/FAQAccordion";
 
 import backgroundImage from '/src/assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg';
 // import Logo from "assets/img/IC CLEAN AR-15-cropped.png";
 import WelcomeModal from "/src/components/Pages/UserJourney/WelcomeModal.jsx";
 import { FaInstagram, FaFacebook, FaTiktok } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
+
+function StickyQuoteButton() {
+  const scrollToForm = () => {
+    const formEl = document.getElementById("quote-form") || document.getElementById("quote-section");
+    if (formEl) {
+      formEl.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  return (
+    <div
+      className="d-md-none position-fixed bottom-0 start-0 end-0 text-center bg-transparent"
+      style={{ zIndex: 1050, padding: "0.75rem" }}
+    >
+      <button
+        onClick={scrollToForm}
+        className="btn btn-success btn-lg rounded-pill shadow-lg w-100"
+      >
+        Get a Quote
+      </button>
+    </div>
+  );
+}
 
 function Index() {
 
@@ -220,8 +247,8 @@ function Index() {
             >
               {/* Say goodbye to stress and hello to sparkle ✨<br /> */}
               {t('intro')} <br />
-              {/* {t('details')} <br />
-              {t('services')} <br /> */}
+              {t('details')} <br />
+              {t('services')} <br />
               {/* <b>CleanAR Solutions</b> brings 10+ years of trusted cleaning to homes and businesses across the GTA.<br /> */}
               {/* From deep cleans to regular maintenance, we tailor services to your needs—efficient, eco-friendly, and always reliable. */}
               {/* <br /><br /> */}
@@ -245,6 +272,10 @@ function Index() {
             <CardImg top className="background-image-index" src={backgroundImage} alt="CleanAR Solutions background - Designed by Freepik" />
           </Col>
         </Row>
+           {/* New Sections */}
+    <WhyChooseUs />
+    <FeaturedServices />
+    <ReviewsCarousel />
         <Row>
           <Col xs='12' md='6'>
             <motion.div
@@ -328,7 +359,9 @@ function Index() {
             </motion.div>
           </Col>
           <Col xs='12' md='6' className="p-0" id="quote-section">
-            <QuoteRequest />
+            <QuoteRequest 
+            initialData={{}}
+            />
           </Col>
         </Row>
 
@@ -338,6 +371,8 @@ function Index() {
             <ContactUs />
           </Col>
         </Row>
+        <FAQAccordion />
+        <StickyQuoteButton />
 
       </div>
 
