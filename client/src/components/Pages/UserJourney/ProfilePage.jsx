@@ -16,11 +16,12 @@ import {
 import Auth from "/src/utils/auth";
 import QuoteRequest from "/src/components/Pages/UserJourney/QuoteRequest";
 import BookingChangeModal from "/src/components/Pages/UserJourney/BookingChangeModal";
-
+import { useTranslation } from "react-i18next";
 import backgroundImage from '/src/assets/img/stock-photo-cropped-shot-woman-rubber-gloves-cleaning-office-table.jpg';
 
 
 function ProfilePage() {
+  const { t } = useTranslation(); // useTranslation hook for translations
   const navigate = useNavigate(); // useNavigate hook to handle navigation
   const location = useLocation(); // useLocation hook to get the current location
   const [isEditing, setIsEditing] = useState(false);
@@ -88,16 +89,16 @@ function ProfilePage() {
     })
       .then((response) => {
         if (response.ok) {
-          console.log("Change request submitted successfully");
-          alert("Change request submitted successfully");
+          // console.log("Change request submitted successfully");
+          alert(t("profile.alerts.change_request_success"));
         } else {
-          console.error("Error submitting change request");
-          alert("Error submitting change request");
+          // console.error("Error submitting change request");
+          alert(t("profile.alerts.change_request_error"));
         }
       })
       .catch((error) => {
-        console.error("Error:", error);
-        alert("Error submitting change request");
+        // console.error("Error:", error);
+        alert(t("profile.alerts.change_request_error"));
       });
   };
 
@@ -269,13 +270,13 @@ function ProfilePage() {
               <Row className="mb-3 text-center">
 
                 <Form.Group className="mb-3">
-                  <h5>Address</h5>
+                  <h5>{t("profile.address.title")}</h5>
                   {isEditing ? (
                     <>
                       <Form.Control
                         type="text"
                         name="address"
-                        placeholder="Address"
+                        placeholder={t("profile.address.placeholder")}
                         className="text-cleanar-color form-input mb-2"
                         value={formData.address}
                         onChange={handleInputChange}
@@ -285,7 +286,7 @@ function ProfilePage() {
                           <Form.Control
                             type="text"
                             name="city"
-                            placeholder="City"
+                            placeholder={t("profile.address.city_placeholder")}
                             value={formData.city}
                             className="text-cleanar-color form-input text-center"
                             onChange={handleInputChange}
@@ -295,7 +296,7 @@ function ProfilePage() {
                           <Form.Control
                             type="text"
                             name="province"
-                            placeholder="Province"
+                            placeholder={t("profile.address.province_placeholder")}
                             value={formData.province}
                             className="text-cleanar-color form-input text-center"
                             onChange={handleInputChange}
@@ -305,7 +306,7 @@ function ProfilePage() {
                           <Form.Control
                             type="text"
                             name="postalcode"
-                            placeholder="Postal Code"
+                            placeholder={t("profile.address.postalcode_placeholder")}
                             value={formData.postalcode}
                             className="text-cleanar-color form-input text-center"
                             onChange={handleInputChange}
@@ -317,7 +318,7 @@ function ProfilePage() {
                     <p>
                       {formData.address
                         ? `${formData.address}, ${formData.city}, ${formData.postalcode.toUpperCase()}, ${formData.province}`
-                        : "Add address"}
+                        : t("profile.address.add_address")}
                     </p>
                   )}
                 </Form.Group>
@@ -326,7 +327,7 @@ function ProfilePage() {
               {/* Phone & Email */}
               <Row className="mb-3 text-center">
                 <Col md={6}>
-                  <h5>Phone Number</h5>
+                  <h5>{t("profile.contact.phone_title")}</h5>
                   {isEditing ? (
                     <Form.Control
                       type="text"
@@ -336,18 +337,18 @@ function ProfilePage() {
                       onChange={handleInputChange}
                     />
                   ) : (
-                    <p>{formData.phonenumber || "Add phone number"}</p>
+                    <p>{formData.phonenumber || t("profile.contact.add_phone")}</p>
                   )}
                 </Col>
                 <Col md={6}>
-                  <h5>Email Address</h5>
-                  <p>{formData.email || "Add email"}</p>
+                  <h5>{t("profile.contact.email_title")}</h5>
+                  <p>{formData.email || t("profile.contact.add_email")}</p>
                 </Col>
               </Row>
 
               {/* Company */}
               <Form.Group className="mb-4 text-center">
-                <h5>Company Name</h5>
+                <h5>{t("profile.company.title")}</h5>
                 {isEditing ? (
                   <Form.Control
                     type="text"
@@ -357,7 +358,7 @@ function ProfilePage() {
                     onChange={handleInputChange}
                   />
                 ) : (
-                  <p>{formData.companyName || "Add company name"}</p>
+                  <p>{formData.companyName || t("profile.company.add_company")}</p>
                 )}
               </Form.Group>
 
@@ -369,14 +370,14 @@ function ProfilePage() {
                       type="submit"
                       className="mx-2"
                     >
-                      Save Profile
+                      {t("profile.buttons.save_profile")}
                     </Button>
                     <Button
                       variant="secondary"
                       className="mx-2"
                       onClick={handleCancelClick}
                     >
-                      Cancel
+                      {t("profile.buttons.cancel")}
                     </Button>
                   </>
                 ) : (
@@ -384,7 +385,7 @@ function ProfilePage() {
                     variant="secondary"
                     onClick={(e) => { e.preventDefault(); setIsEditing(true); }}
                   >
-                    Edit Profile
+                    {t("profile.buttons.edit_profile")}
                   </Button>
                 )}
               </div>
@@ -392,10 +393,10 @@ function ProfilePage() {
           </Card>
           {/* new: display user quotes */}
           <Card className="p-4 mt-4 shadow-lg">
-            <h3 className="text-center primary-color mb-4">My Quotes</h3>
+            <h3 className="text-center primary-color mb-4">{t("profile.quotes.title")}</h3>
 
             {quotes.length === 0 ? (
-              <p className="text-center">No quotes found.</p>
+              <p className="text-center">{t("profile.quotes.no_quotes")}</p>
             ) : (
               <>
                 <Table striped bordered hover responsive>
@@ -404,12 +405,12 @@ function ProfilePage() {
                       {/* <th>Customer Name</th>
           <th>Phone</th>
           <th>Postal Code</th> */}
-                      <th>Service Info</th>
+                      <th>{t("profile.quotes.service_info")}</th>
                       {/* <th>Service</th> */}
-                      <th>Options</th>
-                      <th>Promo Code</th>
-                      <th>Submitted At</th>
-                      <th>Acknowledged by Sales</th>
+                      <th>{t("profile.quotes.options")}</th>
+                      <th>{t("profile.quotes.promo_code")}</th>
+                      <th>{t("profile.quotes.submitted_at")}</th>
+                      <th>{t("profile.quotes.acknowledged")}</th>
                       {/* <th>Need Help?</th> */}
                     </tr>
                   </thead>
@@ -435,8 +436,8 @@ function ProfilePage() {
                                     <strong>{opt.label}:</strong>{" "}
                                     {typeof opt.service === "boolean"
                                       ? opt.service
-                                        ? "Yes"
-                                        : "No"
+                                        ? t("profile.quotes.yes")
+                                        : t("profile.quotes.no")
                                       : opt.service}
                                   </div>
                                 ))}
@@ -444,9 +445,9 @@ function ProfilePage() {
                             </>
                           ))}
                           {/* Submitted date */}
-                          <td>{quote.promoCode || "N/A"}</td>
+                          <td>{quote.promoCode || t("profile.quotes.not_applicable")}</td>
                           <td>{submittedAt.toLocaleDateString()}</td>
-                          <td> {quote.acknowledgedByUser ? "Yes" : "Not yet"}</td>
+                          <td> {quote.acknowledgedByUser ? t("profile.quotes.yes") : t("profile.quotes.not_yet")}</td>
                           {/* Status */}
                           {/* <td className="text-capitalize">{quote.status || "pending"}</td> */}
 
@@ -473,7 +474,7 @@ function ProfilePage() {
                       onClick={() => setCurrentQuotePage(currentQuotePage - 1)}
                     />
                     <span className="mx-3 align-self-center">
-                      Page {currentQuotePage} of {totalQuotePages}
+                     {t("profile.pagination.page_of")} {currentQuotePage} {t("profile.pagination.of")} {totalQuotePages}
                     </span>
                     <Pagination.Next
                       disabled={currentQuotePage === totalQuotePages}
@@ -488,7 +489,7 @@ function ProfilePage() {
             <Modal show={showModal} onHide={() => setShowModal(false)} size="xl"
             >
               <Modal.Header closeButton>
-                <Modal.Title>Edit Quote</Modal.Title>
+                <Modal.Title>{t("profile.quotes.edit_quote")}</Modal.Title>
               </Modal.Header>
               <Modal.Body>
                 {selectedQuote && (
@@ -496,7 +497,7 @@ function ProfilePage() {
                     initialData={selectedQuote}
                     onSubmit={(updatedData) => {
                       // Handle update API call here
-                      console.log("Updated Quote:", updatedData);
+                      // console.log("Updated Quote:", updatedData);
                       setShowModal(false);
                     }}
                   />
@@ -506,19 +507,19 @@ function ProfilePage() {
           </Card>
 
           <Card className="p-4 mt-4 shadow-lg">
-            <h3 className="text-center primary-color mb-4">My Bookings</h3>
+            <h3 className="text-center primary-color mb-4">{t("profile.bookings.title")}</h3>
             {bookings.length === 0 ? (
-              <p className="text-center">No bookings found.</p>
+              <p className="text-center">{t("profile.bookings.no_bookings")}</p>
             ) : (
               <>
                 <Table striped bordered hover responsive>
                   <thead>
                     <tr>
-                      <th>Service Date</th>
-                      <th>Service Type</th>
-                      <th>Status</th>
-                      <th>New Date Requested</th>
-                      <th>Need help?</th>
+                      <th>{t("profile.bookings.service_date")}</th>
+                      <th>{t("profile.bookings.service_type")}</th>
+                      <th>{t("profile.bookings.status")}</th>
+                      <th>{t("profile.bookings.new_date_requested")}</th>
+                      <th>{t("profile.bookings.need_help")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -535,8 +536,8 @@ function ProfilePage() {
                           <td>{booking.serviceType}</td>
                           <td className="text-capitalize">{booking.status}</td>
                           <td>{booking.customerSuggestedBookingDate ? new Date(booking.customerSuggestedBookingDate).toLocaleDateString() : "N/A"}
-                            {booking.customerSuggestedBookingAcknowledged && <Badge pill bg="success" className="ms-2">Acknowledged</Badge>}
-                            {!booking.customerSuggestedBookingAcknowledged && booking.customerSuggestedBookingDate && <Badge pill bg="danger" className="ms-2">Not Yet Acknowledged</Badge>}
+                            {booking.customerSuggestedBookingAcknowledged && <Badge pill bg="success" className="ms-2">{t("profile.bookings.acknowledged_badge")}</Badge>}
+                            {!booking.customerSuggestedBookingAcknowledged && booking.customerSuggestedBookingDate && <Badge pill bg="danger" className="ms-2">{t("profile.bookings.not_acknowledged_badge")}</Badge>}
                           </td>
                           <td>
                             {(!isPast && !isDone) ? (
@@ -545,10 +546,10 @@ function ProfilePage() {
                                 size="sm"
                                 onClick={() => handleRequestDateChange(booking._id)}
                               >
-                                Request Service Change
+                                {t("profile.bookings.request_change")}
                               </Button>
                             ) : (
-                              <span className="text-muted">Not available</span>
+                              <span className="text-muted">{t("profile.bookings.not_available")}</span>
                             )}
 
                             <BookingChangeModal
@@ -569,7 +570,7 @@ function ProfilePage() {
                     {/* <Pagination.First onClick={() => setCurrentBookingPage(1)} disabled={currentBookingPage === 1} /> */}
                     <Pagination.Prev onClick={() => setCurrentBookingPage(currentBookingPage - 1)} disabled={currentBookingPage === 1} />
                     <span className="mx-3 align-self-center">
-                      Page {currentBookingPage} of {totalBookingPages}
+                      {t("profile.pagination.page_of")} {currentBookingPage} {t("profile.pagination.of")} {totalBookingPages}
                     </span>
                     <Pagination.Next onClick={() => setCurrentBookingPage(currentBookingPage + 1)} disabled={currentBookingPage === totalBookingPages} />
                     {/* <Pagination.Last onClick={() => setCurrentBookingPage(totalBookingPages)} disabled={currentBookingPage === totalBookingPages} /> */}

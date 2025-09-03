@@ -3,83 +3,71 @@
   "tagline": "Trusted Clean, Trusted Service",
   "intro": "Say goodbye to stress and hello to sparkle ✨",
   "details": "CleanAR Solutions brings 10+ years of trusted cleaning to homes and businesses across the GTA.",
-  "services": "From deep cleans to regular maintenance, we tailor services to your needs—efficient, eco-friendly, and always reliable.",
+  "services": "From deep cleans to regular maintenance, we tailor services to your needs: efficient, eco-friendly, and always reliable.",
   "cta": "Get your personalized quote in under 60 seconds.",
   "ctaNote": "It’s fast, free, and commitment-free!",
   "status_online": "✅ We are currently available",
   "status_offline": "⏰ We are currently offline",
-  "response_now": "Instant response expected",
-  "response_later": "We will respond within 24 hours",
+  "response_now": "Expect a response from us shortly",
+  "response_later": "We’ll aim to respond within 24 hours",
   "contact_business_hours": "Business Hours",
   "contact_email_support": "Email Support",
   "email_description": "For detailed inquiries or written communication, send us an email",
   "email_additional": "Guaranteed Response Within 24 Hours",
   "contact_feedback": "Customer Feedback",
   "feedback_description": "Your Experience Matters",
-  "feedback_additional": "Help Us Improve, Share Your Thoughts",
+  "feedback_additional": "Help Us Improve, Share Your Thoughts With Us",
   "contact_services": "Explore Services",
   "services_description": "Tailored Cleaning Solutions",
   "services_additional": "Custom Packages Available",
-   "featuredServices": {
+  "featuredServices": {
     "heading": "Our Featured Services",
     "learnMore": "Learn More"
   },
-   "faq": {
+  "faq": {
     "heading": "❓ Frequently Asked Questions",
     "services_header": "Services",
     "services_q1": "What types of cleaning services do you offer?",
     "services_a1": "We specialize in residential and commercial cleaning, including carpet cleaning, deep cleans, move-in/move-out cleaning, and post-renovation services.",
-
     "services_q2": "Do you bring your own supplies and equipment?",
     "services_a2": "Yes, we bring eco-friendly cleaning products and professional-grade equipment to every job.",
-
     "services_q3": "Are your cleaning products safe for pets and children?",
     "services_a3": "Absolutely. We use non-toxic, eco-friendly products that are safe for both pets and kids.",
-
     "services_q4": "Do you offer one-time cleaning or only recurring services?",
-    "services_a4": "We offer both one-time cleanings and flexible recurring plans tailored to your needs.",
-
+    "services_a4": "We offer both one-time cleanings and flexible recurring plans tailored to your needs. Ask us about our tailored options.",
     "services_q5": "Can I request add-on services?",
-    "services_a5": "Yes, you can request extras like carpet shampooing, window cleaning, and appliance deep cleans when booking.",
-"process_header": "Process & Policies",
+    "services_a5": "Yes, you can request extras like window or upholstery cleaning, and appliance deep cleans when booking. Feel free to ask during booking.",
+    "process_header": "Process & Policies",
     "process_q1": "How do I book a cleaning service?",
     "process_a1": "You can book online through our website form, or call/text us directly for quick scheduling.",
-
     "process_q2": "Do I need to be home during the cleaning?",
     "process_a2": "Not necessarily. Many clients provide access instructions, and we ensure your property is secure at all times.",
-
-    "process_q3": "Are your cleaners insured and background-checked?",
-    "process_a3": "Yes, all our team members are trained, insured, and background-checked for your peace of mind.",
-
+    "process_q3": "Are your cleaners insured?",
+    "process_a3": "Yes, all our team members are trained and insured for your peace of mind.",
     "process_q4": "What areas do you service?",
-    "process_a4": "We proudly serve the Greater Toronto Area (GTA), including Toronto, Mississauga, Scarborough, North York, and nearby regions.",
-
+    "process_a4": "We proudly serve the Greater Toronto Area (GTA), including Toronto, Mississauga, Scarborough, North York, and nearby regions. We may service other areas at a transportation service fee to be agreed upon with you during booking.",
     "process_q5": "What is your cancellation policy?",
     "process_a5": "We ask for at least 24 hours’ notice to cancel or reschedule, otherwise a small cancellation fee may apply.",
-"pricing_header": "Pricing & Booking",
+    "pricing_header": "Pricing & Booking",
     "pricing_q1": "How is pricing determined?",
     "pricing_a1": "Pricing depends on the size of your space, type of service, and any custom add-ons requested.",
-
     "pricing_q2": "Do you provide free estimates?",
     "pricing_a2": "Yes, we provide free online and phone estimates, and you can also request a custom quote through our website.",
-
-    "pricing_q3": "Is there a minimum charge for services?",
-    "pricing_a3": "Yes, we have a minimum service charge to cover travel and supplies, which we disclose upfront before booking.",
-
+    "pricing_q3": "Do you charge extra for travel or service area fees?",
+    "pricing_a3": "We provide service within our standard coverage area at no additional travel cost. For locations outside our primary service zone, a small travel fee may apply, which we'll discuss upfront when scheduling your appointment.",
     "pricing_q4": "What payment methods do you accept?",
-    "pricing_a4": "We accept major credit cards, e-transfers, and cash. Invoices are always provided for transparency.",
-
+    "pricing_a4": "We currently accept e-transfers and cash. Invoices are provided for transparency.",
     "pricing_q5": "Do you offer any discounts or promotions?",
     "pricing_a5": "Yes, we run seasonal promotions and first-time client discounts. Check our website or ask when booking for current offers."
   },
-   "contact": {
+  "contact": {
     "heading": "Let’s Talk 👋",
     "intro": "Still have questions? Send us a message and we’ll get back to you shortly.",
     "form": {
       "name_label": "Your Name",
       "name_placeholder": "Jane Doe",
       "email_label": "Email Address",
-      "email_placeholder": "you@example.com",
+      "email_placeholder": "you@example.ca",
       "phone_label": "Phone Number",
       "phone_placeholder": "(123) 456-7890",
       "subject_label": "Subject",
@@ -101,11 +89,11 @@
       "phone_value": "(437) 440-5514",
       "email_label": "Email",
       "email_value": "info@cleanARsolutions.ca",
-      "description": "We’re here to make your space sparkle! ✨ If you have any questions or need assistance, feel free to reach out. We look forward to hearing from you!"
+      "description": "Transform your space with our professional cleaning services! From residential homes to commercial properties, we deliver exceptional results that exceed expectations. Contact us today for a free consultation and discover why customers trust us to keep their spaces spotless and healthy."
     }
   },
-    "testimonials": {
-    "heading": "What Our Clients Say",
+  "testimonials": {
+    "heading": "What Our Clients Say (Shown In Original Language)",
     "prev": "Prev",
     "next": "Next"
   },
@@ -130,6 +118,187 @@
       }
     }
   },
+  "login": {
+    "title": "Log in",
+    "description": "Log in to access your account for faster checkout and to view order history.",
+    "username_label": "Username*",
+    "password_label": "Password*",
+    "username_tooltip": "Enter your registered username.",
+    "password_tooltip": "Enter your account password.",
+    "login_button": "Log In",
+    "reset_password_button": "Reset Your Password",
+    "alerts": {
+      "user_not_found": "User not found",
+      "wrong_password": "Wrong password!",
+      "missing_credentials": "Please enter your username and password",
+      "missing_username_reset": "Please enter your username to reset your password"
+    }
+  },
+  "signup": {
+    "title": "Sign Up",
+    "description": "Please fill out the form below to create an account.",
+    "form_labels": {
+      "first_name": "First Name*",
+      "last_name": "Last Name*",
+      "email": "Email Address*",
+      "telephone": "Telephone*",
+      "username": "Username*",
+      "password": "Password*",
+      "how_heard": "How Did You Hear About Us?",
+      "referral": "Referral",
+      "please_specify": "Please Specify"
+    },
+    "tooltips": {
+      "first_name": "Enter your first name.",
+      "last_name": "Enter your last name.",
+      "email": "Enter your email address.",
+      "telephone": "Enter your telephone number.",
+      "username": "Enter your username.",
+      "password": "Enter your password.",
+      "how_heard": "How did you hear about us?",
+      "referral": "Who referred you?",
+      "other_specify": "How did you hear about us?"
+    },
+    "dropdown_options": {
+      "placeholder": "How Did You Hear About Us?...",
+      "google": "Google",
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "referral": "Referral",
+      "other": "Other"
+    },
+    "button": "Get Started",
+    "alerts": {
+      "username_taken": "Username already taken, please try again with a different username",
+      "missing_fields": "Please fill out all fields before submitting"
+    }
+  },
+   "profile": {
+    "address": {
+      "title": "Address",
+      "placeholder": "Address",
+      "city_placeholder": "City",
+      "province_placeholder": "Province",
+      "postal_code_placeholder": "Postal Code",
+      "add_address": "Add address"
+    },
+    "contact": {
+      "phone_title": "Phone Number",
+      "add_phone": "Add phone number",
+      "email_title": "Email Address",
+      "add_email": "Add email"
+    },
+    "company": {
+      "title": "Company Name",
+      "add_company": "Add company name"
+    },
+    "buttons": {
+      "save_profile": "Save Profile",
+      "cancel": "Cancel",
+      "edit_profile": "Edit Profile"
+    },
+    "quotes": {
+      "title": "My Quotes",
+      "no_quotes": "No quotes found.",
+      "service_info": "Service Info",
+      "options": "Options",
+      "promo_code": "Promo Code",
+      "submitted_at": "Submitted At",
+      "acknowledged": "Acknowledged by Sales",
+      "edit_quote": "Edit Quote",
+      "not_applicable": "N/A",
+      "yes": "Yes",
+      "no": "No",
+      "not_yet": "Not yet"
+    },
+    "bookings": {
+      "title": "My Bookings",
+      "no_bookings": "No bookings found.",
+      "service_date": "Service Date",
+      "service_type": "Service Type",
+      "status": "Status",
+      "new_date_requested": "New Date Requested",
+      "need_help": "Need help?",
+      "acknowledged_badge": "Acknowledged",
+      "not_acknowledged_badge": "Not Yet Acknowledged",
+      "request_change": "Request Service Change",
+      "not_available": "Not available"
+    },
+    "pagination": {
+      "page_of": "Page",
+      "of": "of"
+    },
+    "alerts": {
+      "fill_all_fields": "Please fill out all fields",
+      "profile_updated": "Profile updated!",
+      "change_request_success": "Change request submitted successfully",
+      "change_request_error": "Error submitting change request"
+    }
+  },
+    "welcome_modal": {
+    "title": "Welcome to CleanAR Solutions!",
+    "description": "We're thrilled to have you. Let us make your space sparkle ✨",
+    "variant_a": "New with us? Use promo code WELCOME15 for 15% off!",
+    "variant_b": "💥 First-time customer? Use WELCOME15 for a 15% discount on your first clean!",
+    "buttons": {
+      "start_quote": "Start Now, Get a Quote ✨",
+      "explore_services": "Not sure yet? Explore our services 🔎",
+      "dont_show_again": "Don't show this again"
+    }
+  },
+   "landing_fresh": {
+    "title": "Tap In for a Fresher Space 🧼✨",
+    "description": "Your clean oasis is just a click away. Let's refresh your space together with CleanAR Solutions.",
+    "buttons": {
+      "book_clean": "Book a Clean and Get 15% Off!* 🔥",
+      "call_now": "Call Now"
+    },
+    "tagline": "Trusted Clean, Trusted Service — Serving Toronto with pride.",
+    "terms": "*15% off for first-time customers only. Not valid with other offers.",
+    "see_terms": "See terms."
+  },
+  "landing_now": {
+    "title": "🚨 Toronto, We've Got a Clean Emergency!",
+    "description": "Spills, stains, and surprise guests? Don't stress it — CleanAR Solutions delivers same-day shine! Get your instant quote and let's get scrubbing.",
+    "buttons": {
+      "get_clean": "Get Clean Now and Get 15% Off* 🧼",
+      "speak_cleaner": "Speak to a Cleaner 📞"
+    },
+    "tagline": "Trusted Clean, Trusted Service — because you deserve nothing less.",
+    "terms": "*15% off for first-time customers only. Not valid with other offers.",
+    "see_terms": "See terms."
+  },
+  "landing_secret": {
+    "title": "The Clean Secret Everyone's Talking About… 👇",
+    "description": "Unlock spotless spaces with CleanAR Solutions — Toronto's most trusted for premium carpet, upholstery, and deep cleaning.",
+    "tagline": "Trusted Clean, Trusted Service.",
+    "buttons": {
+      "reveal_secret": "Reveal the Secret and Get 15% Off!* 🔑",
+      "call_now": "Call Now"
+    },
+    "terms": "*15% off for first-time customers only. Not valid with other offers.",
+    "see_terms": "See terms."
+  },
+  "landing_start": {
+    "title": "Your Clean Start Begins Now ✨",
+    "description": "CleanAR Solutions is ready when you are. Book in under 60 seconds or call us for expert advice.",
+    "buttons": {
+      "start_quote": "Start My Free Quote And Get 15% Off* 🚀",
+      "talk_expert": "Talk to an Expert 📞"
+    },
+    "terms": "*15% off for first-time customers only. Not valid with other offers.",
+    "see_terms": "See terms."
+  },
+  "landing_toronto": {
+    "title": "A Cleaner Toronto Starts Here 🧼",
+    "description": "Trusted by your neighbors for spotless results. Book in less than 60 seconds.",
+    "buttons": {
+      "fast_quote": "Get a Fast Quote And 15% Off* 🔥",
+      "speak_expert": "Speak to a Cleaning Expert 📞"
+    },
+    "terms": "*15% off for first-time customers only. Not valid with other offers.",
+    "see_terms": "See terms."
+  },
   "products_and_services": {
     "products_services_title": "Products and Services",
     "our_services_title": "Our Services",
@@ -143,40 +312,43 @@
     "residential_cleaning_condominium": "Condominium Cleaning",
     "residential_cleaning_building": "Residential Building Cleaning",
     "residential_cleaning_description": [
-      "Complete cleaning of homes, apartments, and condominiums.",
-      "Carpet Cleaning to revitalize and maintain the freshness of carpets.",
-      "Furniture cleaning to preserve its beauty and prolong its lifespan."
+      "From kitchen and bathrooms to bedrooms and living areas, we provide thorough top-to-bottom cleaning that leaves every surface spotless and sanitized",
+      "Tailored service packages that address your specific needs, from move-in/move-out cleaning to post-construction cleanup and everything in between",
+      "Weekly, bi-weekly, monthly, or one-time cleaning appointments that work around your busy lifestyle and personal preferences", 
+"We're not satisfied until you are - if anything doesn't meet your expectations, we'll return within 24 hours to make it right at no extra charge"
     ],
-    "residential_cleaning_button": "Add Residential Cleaning to Quote",
+    "residential_cleaning_button": "Get Quote for Residential Cleaning",
     "commercial_cleaning_title": "Commercial Cleaning",
     "commercial_cleaning_office_cleaning": "Office Cleaning",
     "commercial_cleaning_industrial_cleaning": "Industrial Cleaning",
     "commercial_cleaning_retail_cleaning": "Retail Cleaning",
     "commercial_cleaning_description": [
-      "Regular maintenance of offices and commercial spaces.",
-      "Cleaning of shopping centers and supermarkets.",
-      "Specialized services for the film industry and special events."
+      "Daily, weekly, or monthly cleaning of offices, retail spaces, warehouses, and commercial buildings including restrooms, break rooms, lobbies, and workspaces",
+      "Deep steam cleaning, stain removal, and carpet maintenance services that extend carpet life and maintain a professional appearance for your business", 
+      "After-hours, weekend, or customized timing options that won't disrupt your business operations, including emergency cleaning services when needed", 
+"Professional commercial-grade service with comprehensive insurance coverage, ensuring your business is protected while maintaining the highest cleaning standards"
     ],
-    "commercial_cleaning_button": "Add Commercial Cleaning to Quote",
+    "commercial_cleaning_button": "Get Quote for Commercial Cleaning",
     "window_cleaning_title": "Window Cleaning",
     "window_cleaning_interior": "Interior Window Cleaning",
     "window_cleaning_track_sill": "Window Track & Sill Cleaning",
     "window_cleaning_glass_door": "Glass Door Cleaning",
     "window_cleaning_description": [
-      "Professional cleaning of windows in homes and businesses.",
-      "Streak-free shine for a clear view.",
-      "Use of eco-friendly products for safety and sustainability."
+      "Professional streak-free cleaning of all indoor windows, glass doors, and interior glass surfaces using premium squeegees and eco-friendly solutions", 
+      "Complete service includes wiping down window frames, sills, and tracks to remove dust, debris, and buildup for a thorough finish", 
+      "Safe and efficient interior window cleaning for single and two-story homes, including hard-to-reach upper floor windows from the inside", 
+"Crystal-clear interior cleaning of retail storefronts, office buildings, and business facades to maintain a professional image for your customers"
     ],
-    "window_cleaning_button": "Add Window Cleaning to Quote",
+    "window_cleaning_button": "Get Quote for Window Cleaning ",
     "carpet_cleaning_title": "Carpet and Upholstery Cleaning",
     "carpet_cleaning_carpet_cleaning": "Carpet Cleaning",
     "carpet_cleaning_upholstery_cleaning": "Upholstery Cleaning",
     "carpet_cleaning_description": [
-      "Deep cleaning of carpets in homes and commercial spaces.",
-      "Stain removal and odor neutralization.",
-      "Upholstery cleaning to maintain the beauty and comfort of furniture."
+      "Specialized techniques and solutions for tough stains including wine, pet accidents, grease, and high-traffic wear patterns",
+      "Removes dust mites, pet dander, and allergens trapped in carpet fibers, improving indoor air quality for your family or employees.",
+      "Complete service includes careful moving and replacement of furniture to ensure thorough cleaning of all accessible carpet areas."
     ],
-    "carpet_and_upholstery_button": "Add Carpet Cleaning to Quote",
+    "carpet_and_upholstery_button": "Get Quote for Carpet and Upholstery Cleaning",
     "power_washing_title": "Power Washing",
     "power_washing_driveway": "Driveway Cleaning",
     "power_washing_patio_deck": "Patio & Deck Cleaning",
@@ -185,11 +357,11 @@
     "power_washing_fence": "Fence Cleaning",
     "power_washing_garage_floor": "Garage Floor Cleaning",
     "power_washing_description": [
-      "High-pressure cleaning for driveways, sidewalks, and patios.",
-      "Removal of dirt, mold, and mildew from exterior surfaces.",
-      "Preparation of surfaces for painting or sealing."
+      "Professional-grade equipment removes years of built-up dirt, grime, mold, and stains from concrete, brick, vinyl, and other exterior surfaces",
+      "Transform curb appeal with thorough cleaning of driveways, sidewalks, patios, decks, and home exterior surfaces.",
+      "Parking lots, building exteriors, loading docks, and storefront cleaning to maintain professional appearance and safety standards."
     ],
-    "power_pressure_washing_button": "Add Power Washing to Quote"
+    "power_pressure_washing_button": "Get Quote for Power Washing"
   },
   "about": {
     "welcome_heading": "Welcome to CleanAR Solutions",
@@ -208,30 +380,30 @@
       "Sustainability: We promote eco-friendly cleaning practices to protect our environment.",
       "Teamwork: We value collaboration, respect, and unity to achieve success together."
     ],
-    "industries_title": "Industries We Serve",
-    "industries": {
+    "industries_title": "Professional Cleaning Services for Every Industry",
+"industries": {
       "residential": {
-        "title": "Residential Buildings",
+        "title": "Residential & Multi-Family Properties",
         "items": [
-          "General Cleaning: Complete cleaning of common areas such as lobbies, hallways, stairs, and recreational areas.",
-          "Exterior Area Maintenance: Cleaning of sidewalks, courtyards, and parking areas.",
-          "Trash Management: Collection and proper disposal of waste and garbage."
+          "Comprehensive Common Area Cleaning: Professional maintenance of apartment lobbies, hallways, stairwells, elevators, and recreational facilities to maintain property value and tenant satisfaction.",
+          "Exterior Property Maintenance: Power washing of sidewalks, entryways, courtyards, parking areas, and building exteriors to enhance curb appeal and safety.",
+          "Waste Management Services: Reliable trash collection, recycling management, and proper disposal of residential waste with eco-friendly practices."
         ]
       },
       "offices": {
-        "title": "Offices",
+        "title": "Office Buildings & Commercial Spaces",
         "items": [
-          "Daily Cleaning: Cleaning of desks, tables, chairs, and break areas.",
-          "Floor Maintenance: Sweeping, mopping, and polishing of floors.",
-          "Bathroom Cleaning: Disinfection and deep cleaning of bathrooms and sanitary areas."
+          "Daily Office Cleaning Services: Thorough sanitization of workstations, conference rooms, break areas, and reception areas to maintain a healthy, productive workplace environment.",
+          "Professional Floor Care: Expert sweeping, mopping, vacuuming, and floor polishing services for all surface types including carpet, hardwood, and tile flooring.",
+          "Restroom Sanitization: Complete disinfection and deep cleaning of office bathrooms, including supply restocking and odor elimination for employee health and comfort."
         ]
       },
       "festivals": {
-        "title": "Festivals",
+        "title": "Event & Festival Cleaning Services",
         "items": [
-          "Pre-Event Cleaning: Cleaning of the event area before its start, including garbage collection and grounds cleaning.",
-          "Event Maintenance: Continuous maintenance of bathrooms, rest areas, and food areas during the event.",
-          "Post-Event Cleaning: Thorough cleaning of the event area after its conclusion, including garbage collection and site sanitation."
+          "Pre-Event Site Preparation: Complete venue cleaning and sanitization before events, including grounds cleanup, vendor area preparation, and waste station setup.",
+          "During-Event Maintenance: Continuous cleaning services throughout festivals including restroom maintenance, food service area sanitization, and real-time waste management.",
+          "Post-Event Restoration: Comprehensive venue cleanup after events including debris removal, deep sanitization, and complete site restoration to original condition."
         ]
       }
     }
@@ -444,6 +616,6 @@
     }
   },
   "banner": {
-    "comingSoon": "Exciting new features coming in August to our website!"
+    "comingSoon": "Exciting new features coming to our website!"
   }
 }

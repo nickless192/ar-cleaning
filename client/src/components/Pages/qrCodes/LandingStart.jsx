@@ -2,9 +2,12 @@ import { useNavigate } from 'react-router-dom';
 import VisitorCounter from '../Management/VisitorCounter';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
+
 
 const LandingStart = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const goToQuote = () => {
     navigate('/index?promoCode=start15', { state: { scrollToQuote: true } });
@@ -33,7 +36,7 @@ const LandingStart = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
               >
-                Your Clean Start Begins Now ✨
+                {t('landing_start.title')}
               </motion.h1>
 
               <motion.p
@@ -42,7 +45,7 @@ const LandingStart = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.9, delay: 0.2 }}
               >
-                CleanAR Solutions is ready when you are. Book in under 60 seconds or call us for expert advice.
+                {t('landing_start.description')}
               </motion.p>
 
               <motion.div
@@ -52,10 +55,10 @@ const LandingStart = () => {
                 transition={{ duration: 1, delay: 0.4 }}
               >
                 <Button variant="success" size="lg" onClick={goToQuote}>
-                  Start My Free Quote And Get 15% Off* 🚀
+                  {t('landing_start.buttons.start_quote')}
                 </Button>
                 <Button variant="outline-primary" size="lg" href="tel:+14374405514">
-                  Talk to an Expert 📞
+                  {t('landing_start.buttons.talk_expert')}
                 </Button>
               </motion.div>
               <motion.p
@@ -64,8 +67,8 @@ const LandingStart = () => {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
               >
-                *15% off for first-time customers only. Not valid with other offers.
-                <a href="/terms-conditions" className="ms-1">See terms.</a>
+                {t('landing_start.terms')}
+                <a href="/terms-conditions" className="ms-1">{t('landing_start.see_terms')}</a>
               </motion.p>
 
             </Col>

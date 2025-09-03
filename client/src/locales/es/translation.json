@@ -1,6 +1,6 @@
 {
   "companyName": "CleanAR Solutions",
-  "tagline": "Limpieza de confianza, servicio confiable",
+  "tagline": "Limpieza de confianza y servicio confiable",
   "intro": "Di adiós al estrés y hola al brillo ✨",
   "details": "CleanAR Solutions ofrece más de 10 años de limpieza confiable a hogares y negocios en el GTA.",
   "services": "Desde limpiezas profundas hasta mantenimiento regular, adaptamos los servicios a tus necesidades — eficientes, ecológicos y siempre confiables.",
@@ -8,8 +8,8 @@
   "ctaNote": "¡Es rápido, gratuito y sin compromiso!",
   "status_online": "✅ Actualmente estamos disponibles",
   "status_offline": "⏰ Actualmente estamos fuera de horario",
-  "response_now": "Respuesta inmediata esperada",
-  "response_later": "Responderemos dentro de las 24 horas",
+  "response_now": "Espere Respuesta en Breve",
+  "response_later": "Responderemos dentro de las próximas 24 horas",
   "contact_business_hours": "Horario de atención",
   "contact_email_support": "Soporte por correo electrónico",
   "email_description": "Para consultas detalladas o comunicación escrita, envíanos un correo electrónico",
@@ -20,78 +20,66 @@
   "contact_services": "Explorar servicios",
   "services_description": "Soluciones de limpieza personalizadas",
   "services_additional": "Paquetes personalizados disponibles",
-    "featuredServices": {
+  "featuredServices": {
     "heading": "Nuestros Servicios Destacados",
     "learnMore": "Más Información"
   },
-    "faq": {
+  "faq": {
     "heading": "❓ Preguntas Frecuentes",
     "services_header": "Servicios",
     "services_q1": "¿Qué tipos de servicios de limpieza ofrecen?",
     "services_a1": "Nos especializamos en limpieza residencial y comercial, incluyendo limpieza de alfombras, limpiezas profundas, limpieza de mudanza y limpieza post-renovación.",
-
     "services_q2": "¿Traen sus propios suministros y equipos?",
     "services_a2": "Sí, traemos productos de limpieza ecológicos y equipos profesionales para cada trabajo.",
-
     "services_q3": "¿Sus productos de limpieza son seguros para mascotas y niños?",
     "services_a3": "Absolutamente. Usamos productos no tóxicos y ecológicos que son seguros tanto para mascotas como para niños.",
-
     "services_q4": "¿Ofrecen limpieza única o solo servicios recurrentes?",
-    "services_a4": "Ofrecemos limpiezas únicas y planes recurrentes flexibles adaptados a sus necesidades.",
-
+    "services_a4": "Ofrecemos limpiezas únicas y planes recurrentes flexibles adaptados a sus necesidades. Pregúntenos sobre nuestros servicios personalizados.",
     "services_q5": "¿Puedo solicitar servicios adicionales?",
-    "services_a5": "Sí, puede solicitar extras como lavado de alfombras, limpieza de ventanas y limpieza profunda de electrodomésticos al reservar.",
-"process_header": "Proceso y Políticas",
+    "services_a5": "Sí, al reservar puede solicitar extras como limpieza de ventanas y/o muebles y limpieza profunda de electrodomésticos.",
+    "process_header": "Proceso y Políticas",
     "process_q1": "¿Cómo reservo un servicio de limpieza?",
     "process_a1": "Puede reservar en línea a través de nuestro formulario web, o llamar/enviar mensaje directamente para una programación rápida.",
-
     "process_q2": "¿Necesito estar en casa durante la limpieza?",
     "process_a2": "No necesariamente. Muchos clientes proporcionan instrucciones de acceso y aseguramos que su propiedad esté segura en todo momento.",
-
-    "process_q3": "¿Sus limpiadores están asegurados y tienen verificación de antecedentes?",
-    "process_a3": "Sí, todos nuestros miembros están capacitados, asegurados y verificados para su tranquilidad.",
-
+    "process_q3": "¿Sus limpiadores están asegurados?",
+    "process_a3": "Sí, todos nuestros miembros están capacitados y asegurados para su tranquilidad.",
     "process_q4": "¿Qué áreas atienden?",
-    "process_a4": "Servimos orgullosamente el Área Metropolitana de Toronto (GTA), incluyendo Toronto, Mississauga, Scarborough, North York y regiones cercanas.",
-
+    "process_a4": "Servimos orgullosamente el Área Metropolitana de Toronto (GTA), incluyendo Toronto, Mississauga, Scarborough, North York y regiones cercanas. Podemos servir áreas más allá del GTA para un cargo de transporte a ser acordado durante el proceso de reserva.",
     "process_q5": "¿Cuál es su política de cancelación?",
     "process_a5": "Solicitamos al menos 24 horas de anticipación para cancelar o reprogramar, de lo contrario puede aplicarse una pequeña tarifa de cancelación.",
-"pricing_header": "Precios y Reservas",
+    "pricing_header": "Precios y Reservas",
     "pricing_q1": "¿Cómo se determina el precio?",
-    "pricing_a1": "El precio depende del tamaño de su espacio, tipo de servicio y cualquier complemento solicitado.",
-
+    "pricing_a1": "El precio depende del tamaño de su espacio, tipo de servicio y cualquier servicio complementario solicitado.",
     "pricing_q2": "¿Ofrecen estimaciones gratuitas?",
     "pricing_a2": "Sí, ofrecemos estimaciones gratuitas en línea y por teléfono, y también puede solicitar un presupuesto personalizado a través de nuestro sitio web.",
-
-    "pricing_q3": "¿Hay un cargo mínimo por los servicios?",
-    "pricing_a3": "Sí, tenemos un cargo mínimo para cubrir viaje y suministros, que se comunica antes de la reserva.",
-
+    "pricing_q3": "¿Cobran extra por viaje o tarifas de área de servicio?",
+    "pricing_a3": "Proporcionamos servicio dentro de nuestra área de cobertura estándar sin costo adicional de viaje. Para ubicaciones fuera de nuestra zona de servicio principal, puede aplicar una pequeña tarifa de viaje, la cual discutiremos por adelantado al programar su cita.",
     "pricing_q4": "¿Qué métodos de pago aceptan?",
-    "pricing_a4": "Aceptamos tarjetas de crédito principales, transferencias electrónicas y efectivo. Siempre se proporcionan facturas para transparencia.",
-
+    "pricing_a4": "Aceptamos transferencias electrónicas (Interac) y efectivo. Se proporcionan facturas para transparencia.",
     "pricing_q5": "¿Ofrecen descuentos o promociones?",
     "pricing_a5": "Sí, ofrecemos promociones de temporada y descuentos para nuevos clientes. Consulte nuestro sitio web o pregunte al reservar."
   },
-   "contact": {
+  "contact": {
     "heading": "Hablemos 👋",
-    "intro": "¿Todavía tienes preguntas? Envíanos un mensaje y nos pondremos en contacto contigo pronto.",
+    "intro": "¿Todavía tiene preguntas? Envíenos un mensaje y nos pondremos en contacto contigo pronto.",
     "form": {
-      "name_label": "Tu Nombre",
+      "name_label": "Su Nombre",
       "name_placeholder": "Jane Doe",
       "email_label": "Correo Electrónico",
-      "email_placeholder": "tucorreo@ejemplo.com",
+      "email_placeholder": "correo@ejemplo.com",
       "phone_label": "Número de Teléfono",
       "phone_placeholder": "(123) 456-7890",
       "subject_label": "Asunto",
-      "subject_placeholder": "p.ej., Pregunta sobre Reserva",
+      "subject_placeholder": "ej., Pregunta sobre Reserva",
       "message_label": "Mensaje",
-      "message_placeholder": "Cuéntanos cómo podemos ayudarte...",
+      "message_placeholder": "Cuéntenos cómo podemos ayudarle...",
       "submit": "Enviar Mensaje"
     },
     "alerts": {
-      "success": "¡Tu mensaje ha sido enviado!",
+      "success": "¡Su mensaje ha sido enviado!",
       "captcha": "Por favor completa el CAPTCHA.",
-      "error": "No se pudo enviar el mensaje. Intenta de nuevo más tarde."
+      "error": "No se pudo enviar el mensaje. Intente de nuevo más tarde."
     },
     "company": {
       "name": "📍 CleanAR Solutions",
@@ -99,17 +87,17 @@
       "location_value": "Centro de Toronto",
       "phone_label": "Teléfono",
       "phone_value": "(437) 440-5514",
-      "email_label": "Correo",
+      "email_label": "Correo Electrónico",
       "email_value": "info@cleanARsolutions.ca",
-      "description": "¡Estamos aquí para que tu espacio brille! ✨ Si tienes preguntas o necesitas ayuda, no dudes en contactarnos. ¡Esperamos saber de ti!"
+      "description": "Transforma tu espacio con nuestros servicios de limpieza profesional. Desde hogares residenciales hasta propiedades comerciales, ofrecemos resultados excepcionales que superan las expectativas. Contáctanos hoy para una consulta gratuita y descubre por qué los clientes confían en nosotros para mantener sus espacios impecables y saludables."
     }
   },
-    "testimonials": {
-    "heading": "Lo que dicen nuestros clientes",
+  "testimonials": {
+    "heading": "Lo que dicen nuestros clientes (en su idioma original)",
     "prev": "Anterior",
     "next": "Siguiente"
   },
-   "whyChooseUs": {
+  "whyChooseUs": {
     "heading": "¿Por qué elegir CleanAR Solutions?",
     "benefits": {
       "ecoFriendly": {
@@ -130,7 +118,188 @@
       }
     }
   },
-  "products_and_services":{
+  "login": {
+    "title": "Iniciar sesión",
+    "description": "Inicia sesión para acceder a tu cuenta, realizar compras más rápido y ver tu historial de pedidos.",
+    "username_label": "Nombre de usuario*",
+    "password_label": "Contraseña*",
+    "username_tooltip": "Ingresa tu nombre de usuario registrado.",
+    "password_tooltip": "Ingresa la contraseña de tu cuenta.",
+    "login_button": "Iniciar Sesión",
+    "reset_password_button": "Restablecer tu Contraseña",
+    "alerts": {
+      "user_not_found": "Usuario no encontrado",
+      "wrong_password": "¡Contraseña incorrecta!",
+      "missing_credentials": "Por favor ingresa tu nombre de usuario y contraseña",
+      "missing_username_reset": "Por favor ingresa tu nombre de usuario para restablecer tu contraseña"
+    }
+  },
+   "signup": {
+    "title": "Registrarse",
+    "description": "Por favor complete el formulario a continuación para crear una cuenta.",
+    "form_labels": {
+      "first_name": "Nombre*",
+      "last_name": "Apellido*",
+      "email": "Dirección de Correo Electrónico*",
+      "telephone": "Teléfono*",
+      "username": "Nombre de Usuario*",
+      "password": "Contraseña*",
+      "how_heard": "¿Cómo se Enteró de Nosotros?",
+      "referral": "Referencia",
+      "please_specify": "Por Favor Especifique"
+    },
+    "tooltips": {
+      "first_name": "Ingrese su nombre.",
+      "last_name": "Ingrese su apellido.",
+      "email": "Ingrese su dirección de correo electrónico.",
+      "telephone": "Ingrese su número de teléfono.",
+      "username": "Ingrese su nombre de usuario.",
+      "password": "Ingrese su contraseña.",
+      "how_heard": "¿Cómo se enteró de nosotros?",
+      "referral": "¿Quién lo refirió?",
+      "other_specify": "¿Cómo se enteró de nosotros?"
+    },
+    "dropdown_options": {
+      "placeholder": "¿Cómo se Enteró de Nosotros?...",
+      "google": "Google",
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "referral": "Referencia",
+      "other": "Otro"
+    },
+    "button": "Comenzar",
+    "alerts": {
+      "username_taken": "Nombre de usuario ya está en uso, por favor intente con un nombre de usuario diferente",
+      "missing_fields": "Por favor complete todos los campos antes de enviar"
+    }
+  },
+    "profile": {
+    "address": {
+      "title": "Dirección",
+      "placeholder": "Dirección",
+      "city_placeholder": "Ciudad",
+      "province_placeholder": "Provincia",
+      "postal_code_placeholder": "Código Postal",
+      "add_address": "Agregar dirección"
+    },
+    "contact": {
+      "phone_title": "Número de Teléfono",
+      "add_phone": "Agregar número de teléfono",
+      "email_title": "Dirección de Correo Electrónico",
+      "add_email": "Agregar correo electrónico"
+    },
+    "company": {
+      "title": "Nombre de la Empresa",
+      "add_company": "Agregar nombre de empresa"
+    },
+    "buttons": {
+      "save_profile": "Guardar Perfil",
+      "cancel": "Cancelar",
+      "edit_profile": "Editar Perfil"
+    },
+    "quotes": {
+      "title": "Mis Cotizaciones",
+      "no_quotes": "No se encontraron cotizaciones.",
+      "service_info": "Información del Servicio",
+      "options": "Opciones",
+      "promo_code": "Código Promocional",
+      "submitted_at": "Enviado el",
+      "acknowledged": "Reconocido por Ventas",
+      "edit_quote": "Editar Cotización",
+      "not_applicable": "N/A",
+      "yes": "Sí",
+      "no": "No",
+      "not_yet": "Aún no"
+    },
+    "bookings": {
+      "title": "Mis Reservas",
+      "no_bookings": "No se encontraron reservas.",
+      "service_date": "Fecha del Servicio",
+      "service_type": "Tipo de Servicio",
+      "status": "Estado",
+      "new_date_requested": "Nueva Fecha Solicitada",
+      "need_help": "¿Necesita ayuda?",
+      "acknowledged_badge": "Reconocido",
+      "not_acknowledged_badge": "Aún no Reconocido",
+      "request_change": "Solicitar Cambio de Servicio",
+      "not_available": "No disponible"
+    },
+    "pagination": {
+      "page_of": "Página",
+      "of": "de"
+    },
+    "alerts": {
+      "fill_all_fields": "Por favor complete todos los campos",
+      "profile_updated": "¡Perfil actualizado!",
+      "change_request_success": "Solicitud de cambio enviada exitosamente",
+      "change_request_error": "Error al enviar la solicitud de cambio"
+    }
+  },
+    "welcome_modal": {
+    "title": "¡Bienvenido a CleanAR Solutions!",
+    "description": "Estamos encantados de tenerte. Dejanos hacer brillar tu espacio ✨",
+    "variant_a": "¿Nuevo con nosotros? ¡Usa el código promocional WELCOME15 para obtener 15% de descuento!",
+    "variant_b": "💥 ¿Cliente por primera vez? ¡Usa WELCOME15 para un 15% de descuento en tu primera limpieza!",
+    "buttons": {
+      "start_quote": "Comenzar Ahora, Obtener Cotización ✨",
+      "explore_services": "¿No estás seguro? Explora nuestros servicios 🔎",
+      "dont_show_again": "No mostrar esto de nuevo"
+    }
+  },
+    "landing_fresh": {
+    "title": "Conecta para un Espacio Más Fresco 🧼✨",
+    "description": "Tu oasis limpio está a solo un clic de distancia. Refresquemos tu espacio juntos con CleanAR Solutions.",
+    "buttons": {
+      "book_clean": "¡Reserva una Limpieza y Obtén 15% de Descuento!* 🔥",
+      "call_now": "Llamar Ahora"
+    },
+    "tagline": "Limpieza Confiable, Servicio Confiable — Sirviendo a Toronto con orgullo.",
+    "terms": "*15% de descuento solo para clientes nuevos. No válido con otras ofertas.",
+    "see_terms": "Ver términos en inglés."
+  },
+  "landing_now": {
+    "title": "🚨 ¡Toronto, Tenemos una Emergencia de Limpieza!",
+    "description": "¿Derrames, manchas e invitados sorpresa? No te estreses — ¡CleanAR Solutions entrega brillo el mismo día! Obtén tu cotización instantánea y comencemos a limpiar.",
+    "buttons": {
+      "get_clean": "Limpia Ahora y Obtén 15% de Descuento* 🧼",
+      "speak_cleaner": "Hablar con un Limpiador 📞"
+    },
+    "tagline": "Limpieza Confiable, Servicio Confiable — porque mereces nada menos.",
+    "terms": "*15% de descuento solo para clientes nuevos. No válido con otras ofertas.",
+    "see_terms": "Ver términos en inglés."
+  },
+  "landing_secret": {
+    "title": "El Secreto de Limpieza Del Que Todos Hablan… 👇",
+    "description": "Desbloquea espacios impecables con CleanAR Solutions — lo más confiable de Toronto para limpieza premium de alfombras, tapicería y profunda.",
+    "tagline": "Limpieza Confiable, Servicio Confiable.",
+    "buttons": {
+      "reveal_secret": "¡Revela el Secreto y Obtén 15% de Descuento!* 🔑",
+      "call_now": "Llamar Ahora"
+    },
+    "terms": "*15% de descuento solo para clientes nuevos. No válido con otras ofertas.",
+    "see_terms": "Ver términos en inglés."
+  },
+  "landing_start": {
+    "title": "Tu Comienzo Limpio Empieza Ahora ✨",
+    "description": "CleanAR Solutions está listo cuando tú lo estés. Reserva en menos de 60 segundos o llámanos para asesoría experta.",
+    "buttons": {
+      "start_quote": "¡Comienza Mi Cotización Gratuita y Obtén 15% de Descuento!* 🚀",
+      "talk_expert": "Hablar con un Experto 📞"
+    },
+    "terms": "*15% de descuento solo para clientes nuevos. No válido con otras ofertas.",
+    "see_terms": "Ver términos en inglés."
+  },
+  "landing_toronto": {
+    "title": "Un Toronto Más Limpio Comienza Aquí 🧼",
+    "description": "Confiado por tus vecinos para resultados impecables. Reserva en menos de 60 segundos.",
+    "buttons": {
+      "fast_quote": "¡Obtén una Cotización Rápida y 15% de Descuento!* 🔥",
+      "speak_expert": "Hablar con un Experto en Limpieza 📞"
+    },
+    "terms": "*15% de descuento solo para clientes nuevos. No válido con otras ofertas.",
+    "see_terms": "Ver términos en inglés."
+  },
+  "products_and_services": {
     "products_services_title": "Productos y Servicios",
     "our_services_title": "Nuestros Servicios",
     "our_products_title": "Nuestros Productos",
@@ -143,40 +312,43 @@
     "residential_cleaning_condominium": "Limpieza de Condominios",
     "residential_cleaning_building": "Limpieza de Edificios Residenciales",
     "residential_cleaning_description": [
-      "Limpieza completa de casas, apartamentos y condominios.",
-      "Limpieza de alfombras para revitalizar y mantener su frescura.",
-      "Limpieza de muebles para preservar su belleza y prolongar su vida útil."
+      "Desde cocinas y baños hasta dormitorios y salas de estar, ofrecemos una limpieza completa de arriba a abajo que deja cada superficie impecable y desinfectada.",
+      "Paquetes de servicio personalizados que abordan sus necesidades específicas, desde limpieza antes/después de mudanzas hasta limpieza posterior a la construcción y todo lo demás.",
+      "Citas de limpieza semanales, quincenales, mensuales o únicas que se adaptan a su estilo de vida ocupado y preferencias personales.",
+      "No estamos satisfechos hasta que usted lo esté: si algo no cumple con sus expectativas, regresaremos dentro de las 24 horas para corregirlo sin cargo adicional."
     ],
-    "residential_cleaning_button": "Agregar limpieza residencial al presupuesto",
+    "residential_cleaning_button": "Cotizar limpieza residencial",
     "commercial_cleaning_title": "Limpieza Comercial",
     "commercial_cleaning_office_cleaning": "Limpieza de Oficinas",
     "commercial_cleaning_industrial_cleaning": "Limpieza Industrial",
     "commercial_cleaning_retail_cleaning": "Limpieza de Tiendas",
     "commercial_cleaning_description": [
-      "Mantenimiento regular de oficinas y espacios comerciales.",
-      "Limpieza de centros comerciales y supermercados.",
-      "Servicios especializados para la industria cinematográfica y eventos especiales."
+      "Limpieza diaria, semanal o mensual de oficinas, espacios comerciales, almacenes y edificios comerciales, incluyendo baños, salas de descanso, vestíbulos y áreas de trabajo.",
+      "Servicios de limpieza profunda a vapor, eliminación de manchas y mantenimiento de alfombras que extienden la vida útil de las alfombras y mantienen una apariencia profesional para su negocio.",
+      "Opciones de horario personalizadas que no interrumpen las operaciones de su negocio, incluyendo servicios de limpieza de emergencia cuando sea necesario.",
+      "Servicio profesional de grado comercial con cobertura de seguro integral, asegurando que su negocio esté protegido mientras se mantienen los más altos estándares de limpieza."
     ],
-    "commercial_cleaning_button": "Agregar limpieza comercial al presupuesto",
+    "commercial_cleaning_button": "Cotizar limpieza comercial",
     "window_cleaning_title": "Limpieza de Ventanas",
     "window_cleaning_interior": "Limpieza Interior de Ventanas",
     "window_cleaning_track_sill": "Limpieza de Rieles y Marcos",
     "window_cleaning_glass_door": "Limpieza de Puertas de Vidrio",
     "window_cleaning_description": [
-      "Limpieza profesional de ventanas en hogares y negocios.",
-      "Brillo sin rayas para una vista clara.",
-      "Uso de productos ecológicos para seguridad y sostenibilidad."
+      "Limpieza profesional sin rayas de todas las ventanas interiores, puertas de vidrio y superficies de vidrio interior utilizando limpiaparabrisas de primera calidad y soluciones ecológicas",
+      "El servicio completo incluye limpiar los marcos, alféizares y rieles de las ventanas para eliminar el polvo, los escombros y la acumulación para un acabado completo",
+      "Limpieza interior segura y eficiente para hogares de una y dos plantas, incluidas las ventanas de los pisos superiores de difícil acceso desde el interior",
+      "Limpieza interior cristalina de escaparates, edificios de oficinas y fachadas comerciales para mantener una imagen profesional para sus clientes"
     ],
-    "window_cleaning_button": "Agregar limpieza de ventanas al presupuesto",
+    "window_cleaning_button": "Cotizar limpieza de ventanas",
     "carpet_cleaning_title": "Limpieza de Alfombras y Tapicería",
     "carpet_cleaning_carpet_cleaning": "Limpieza de Alfombras",
     "carpet_cleaning_upholstery_cleaning": "Limpieza de Tapicería",
     "carpet_cleaning_description": [
-      "Limpieza profunda de alfombras en casas y comercios.",
-      "Eliminación de manchas y neutralización de olores.",
-      "Limpieza de tapicería para conservar su belleza y comodidad."
+      "Técnicas y soluciones especializadas para manchas difíciles, incluyendo vino, accidentes de mascotas, grasa y patrones de desgaste de alto tráfico",
+      "Elimina ácaros del polvo, caspa de mascotas y alérgenos atrapados en las fibras de la alfombra, mejorando la calidad del aire interior para su familia o empleados.",
+      "El servicio completo incluye mover y reemplazar cuidadosamente los muebles para garantizar una limpieza a fondo de todas las áreas de alfombra accesibles."
     ],
-    "carpet_and_upholstery_button": "Agregar limpieza de alfombras al presupuesto",
+    "carpet_and_upholstery_button": "Cotizar limpieza de alfombras",
     "power_washing_title": "Limpieza a Presión",
     "power_washing_driveway": "Limpieza de Entradas",
     "power_washing_patio_deck": "Limpieza de Patios y Terrazas",
@@ -185,11 +357,11 @@
     "power_washing_fence": "Limpieza de Cercas",
     "power_washing_garage_floor": "Limpieza de Pisos de Garaje",
     "power_washing_description": [
-      "Limpieza a alta presión de entradas, aceras y patios.",
-      "Eliminación de suciedad, moho y hongos de superficies exteriores.",
-      "Preparación de superficies para pintar o sellar."
+      "El equipo de grado profesional elimina años de suciedad, mugre, moho y manchas de superficies exteriores de concreto, ladrillo, vinilo y otros materiales",
+      "Transforma el atractivo de su hogar con una limpieza a fondo de entradas, aceras, patios, terrazas y superficies exteriores.",
+      "Limpieza de estacionamientos, fachadas de edificios, muelles de carga y vitrinas para mantener una apariencia profesional y estándares de seguridad."
     ],
-    "power_pressure_washing_button": "Agregar limpieza a presión al presupuesto"
+    "power_pressure_washing_button": "Cotizar limpieza a presión"
   },
   "about": {
     "welcome_heading": "Bienvenido a CleanAR Solutions",
@@ -208,30 +380,30 @@
       "Sostenibilidad: Promovemos prácticas de limpieza ecológicas para proteger el medio ambiente.",
       "Trabajo en equipo: Valoramos la colaboración, el respeto y la unidad para lograr el éxito juntos."
     ],
-    "industries_title": "Industrias que Atendemos",
+    "industries_title": "Servicios Profesionales de Limpieza para cada Industrias",
     "industries": {
       "residential": {
-        "title": "Edificios Residenciales",
+        "title": "Propiedades Residenciales y unidades multi-familiares",
         "items": [
-          "Limpieza general: Limpieza completa de áreas comunes como vestíbulos, pasillos, escaleras y zonas recreativas.",
-          "Mantenimiento exterior: Limpieza de aceras, patios y zonas de estacionamiento.",
-          "Gestión de residuos: Recolección y eliminación adecuada de basura."
+          "Limpieza general de áreas comunes: Mantenimiento profesional de vestíbulos, pasillos, escaleras, ascensores y áreas recreativas de apartamentos para mantener el valor de la propiedad y la satisfacción de los inquilinos.",
+          "Mantenimiento exterior de la propiedad: Limpieza a presión de aceras, entradas, patios, áreas de estacionamiento y exteriores de edificios para mejorar el atractivo y la seguridad.",
+          "Servicios de gestión de residuos: Recolección confiable de basura, gestión de reciclaje y eliminación adecuada de desechos residenciales con prácticas ecológicas."
         ]
       },
       "offices": {
-        "title": "Oficinas",
+        "title": "Edificios de oficinas y espacios comerciales",
         "items": [
-          "Limpieza diaria: Limpieza de escritorios, mesas, sillas y áreas comunes.",
-          "Mantenimiento de suelos: Barrido, fregado y pulido.",
-          "Limpieza de baños: Desinfección y limpieza profunda de áreas sanitarias."
+          "Servicios de limpieza de oficinas diarias: Desinfección completa de estaciones de trabajo, salas de conferencias, áreas de descanso y áreas de recepción para mantener un ambiente de trabajo saludable y productivo.",
+          "Cuidado profesional de suelos: Servicios expertos de barrido, fregado, aspirado y pulido de suelos para todo tipo de superficies, incluyendo alfombra, madera y baldosas.",
+          "Desinfección de baños: Desinfección completa y limpieza profunda de baños de oficina, incluyendo reposición de suministros y eliminación de olores para la salud y comodidad de los empleados."
         ]
       },
       "festivals": {
-        "title": "Festivales",
+        "title": "Servicios de limpiezas de eventos y festivales",
         "items": [
-          "Limpieza previa al evento: Preparación del sitio y recolección de basura.",
-          "Mantenimiento durante el evento: Limpieza continua de baños, zonas de comida y descanso.",
-          "Limpieza posterior al evento: Limpieza total del lugar, recolección de residuos y desinfección."
+          "Preparación del sitio antes del evento: Limpieza y desinfección completa del lugar antes de los eventos, incluyendo la limpieza de terrenos, la preparación de áreas para proveedores y la instalación de estaciones de residuos.",
+          "Mantenimiento durante el evento: Servicios de limpieza continua durante los festivales, incluyendo el mantenimiento de baños, la desinfección de áreas de servicio de alimentos y la gestión de residuos en tiempo real.",
+          "Restauración posterior al evento: Limpieza integral del lugar después de los eventos, incluyendo la eliminación de escombros, la desinfección profunda y la restauración completa del sitio a su estado original."
         ]
       }
     }
@@ -280,7 +452,7 @@
   },
   "quick_quote": {
     "form": {
-      "title": "Obtén tu cotización gratuita",
+      "title": "Obtenga su cotización gratuita",
       "description": "Complete el formulario a continuación para recibir un presupuesto personalizado para sus necesidades de limpieza. Nuestro equipo revisará su solicitud y se pondrá en contacto con usted lo antes posible.",
       "name": "Nombre",
       "email": "Correo electrónico",
@@ -403,6 +575,6 @@
     }
   },
   "banner": {
-    "comingSoon": "¡Próximamente Estaremos preparando nuevas funcionalidades en nuestro sitio web."
+    "comingSoon": "¡Próximamente estaremos preparando nuevas funcionalidades en nuestro sitio web."
   }
 }
