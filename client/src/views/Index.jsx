@@ -25,10 +25,10 @@ import FeaturedServices from "/src/components/Pages/Landing/FeaturedServices";
 import ReviewsCarousel from "/src/components/Pages/Landing/ReviewsCarousel";
 import FAQAccordion from "/src/components/Pages/Landing/FAQAccordion";
 
-import backgroundImage from '/src/assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg';
+// import backgroundImage from '/src/assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg';
 // import Logo from "assets/img/IC CLEAN AR-15-cropped.png";
 import WelcomeModal from "/src/components/Pages/UserJourney/WelcomeModal.jsx";
-import { FaInstagram, FaFacebook, FaTiktok } from 'react-icons/fa';
+// import { FaInstagram, FaFacebook, FaTiktok } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 
 function StickyQuoteButton() {
@@ -213,161 +213,163 @@ function Index() {
       <VisitorCounter />
       <WelcomeModal />
       {/* <LandingPageHeader /> */}
-      <div>
-        <Row className="m-0 align-items-center">
-          {/* <Col className="m-0 p-0" xs='12' md='6'>
+
+      <Row className="m-0 align-items-center">
+        {/* <Col className="m-0 p-0" xs='12' md='6'>
             <h1 className="primary-color text-bold montserrat-bold text-align-end mr-3">CleanAR Solutions <br /> Getting Started</h1>
             <p className="martel-bold landing-page-intro text-align-end mr-3">Tired of Cleaning? Reclaim your free time with CleanAR Solutions. Serving Toronto and the GTA, we provide sparkling clean spaces so you can focus on what matters. <b>Get a free quote!</b>
             </p>
           </Col> */}
-          <Col xs="12" md="6" className="text-center">
-            <motion.h1
-              className="primary-color montserrat-bold p-0 m-0"
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-            >
-              CleanAR Solutions
-            </motion.h1>
-            <motion.h3
-              className="text-secondary p-0 m-0 text-bold pb-2"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-            >
-              {/* Trusted Clean, Trusted Service */}
-              {t('tagline')}
-            </motion.h3>
-            {/* </Col>
+        <Col xs="12" md="6" className="text-center pt-5 px-3">
+          <motion.h1
+            className="secondary-color montserrat-bold p-0 m-0"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            CleanAR Solutions
+          </motion.h1>
+          <motion.h3
+            className="text-secondary p-0 m-0 text-bold pb-2"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+          >
+            {/* Trusted Clean, Trusted Service */}
+            {t('tagline')}
+          </motion.h3>
+          {/* </Col>
                   <Col xs="12" md="6" className="text-center px-4 mb-5"> */}
-            <motion.p
-              className="martel-bold landing-page-intro"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
+          <motion.p
+            className="martel-bold landing-page-intro"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            {/* Say goodbye to stress and hello to sparkle ✨<br /> */}
+            {t('intro')} <br />
+            {t('details')} <br />
+            {t('services')} <br />
+            {/* <b>CleanAR Solutions</b> brings 10+ years of trusted cleaning to homes and businesses across the GTA.<br /> */}
+            {/* From deep cleans to regular maintenance, we tailor services to your needs—efficient, eco-friendly, and always reliable. */}
+            {/* <br /><br /> */}
+            {/* <b>{t('cta')}</b> <br /> */}
+            {/* {t('ctaNote')} */}
+            {/* <b>Get your personalized quote in under 60 seconds.</b><br /> */}
+            {/* It’s fast, free, and commitment-free! */}
+          </motion.p>
+          <div className="pb-3">
+
+            <button
+              className="btn btn-success btn-lg w-auto"
+              onClick={goToQuote}
             >
-              {/* Say goodbye to stress and hello to sparkle ✨<br /> */}
-              {t('intro')} <br />
-              {t('details')} <br />
-              {t('services')} <br />
-              {/* <b>CleanAR Solutions</b> brings 10+ years of trusted cleaning to homes and businesses across the GTA.<br /> */}
-              {/* From deep cleans to regular maintenance, we tailor services to your needs—efficient, eco-friendly, and always reliable. */}
-              {/* <br /><br /> */}
-              <b>{t('cta')}</b> <br />
-              {/* {t('ctaNote')} */}
-              {/* <b>Get your personalized quote in under 60 seconds.</b><br /> */}
-              {/* It’s fast, free, and commitment-free! */}
-            </motion.p>
-            <div className="pb-3">
+              {t('cta')}
+            </button>
+          </div>
 
-              <button
-                className="btn btn-success btn-lg w-auto"
-                onClick={goToQuote}
-              >
-                {t('cta')}
-              </button>
-            </div>
+        </Col>
+        <Col xs='12' md='6'>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            className="contact-card-container mx-3"
+          >
 
-          </Col>
-          <Col className="text-center p-0 m-0 d-none d-md-block" xs='12' md='6'>
+            <Card className="">
+              {contactItems.map((item, index) => (
+                <motion.div
+                  key={index}
+                  whileHover={{
+                    scale: 1.05,
+                    boxShadow: "0px 5px 15px rgba(0,0,0,0.1)"
+                  }}
+                >
+                  <ListGroupItem className="d-flex align-items-center">
+                    <div className={`me-3 ${item.color}`}>
+                      <i className={`${item.icon} fs-4`}></i>
+                    </div>
+                    <div>
+                      <h6 className="mb-1">
+                        {Array.isArray(item.text) ? item.description : item.text}
+                      </h6>
+                      {Array.isArray(item.link) ? (
+                        <>
+                          {item.link.map((singleLink, index) => (
+                            <div key={index}>
+                              {' | '}
+                              <a
+
+                                href={singleLink}
+                                target="_blank"
+                                data-track="contact-link"
+                                rel="noreferrer noopener"
+                                className="text-bold martel-semibold underline"
+                                title={item.text?.[index] || item.description}
+                              >
+                                {item.icons?.[index]} {item.text?.[index] || new URL(singleLink).hostname.replace("www.", "")}
+                                {/* {item.text?.[index] || new URL(singleLink).hostname.replace("www.", "")} */}
+                              </a>
+                              {' | '}
+                            </div>
+                          ))}
+                        </>
+                      ) : item.link === "business-hours" ? (
+                        <BusinessHoursSidebar />
+                      ) : item.link.startsWith("http") || item.link.startsWith("mailto") ? (
+                        <a
+                          href={item.link}
+                          target="_blank"
+                          rel="noreferrer noopener"
+                          data-track="contact-link"
+                          className="text-bold martel-semibold underline"
+                          title={item.text}
+                        >
+                          {' '}{item.description}
+                        </a>
+                      ) : (
+                        <Link
+                          to={item.link}
+                          className="text-bold martel-semibold underline"
+                          data-track="contact-link"
+                          title={item.description}
+                        >
+                          {' '}{item.description}
+                        </Link>
+                      )}
+
+
+                      {/* <p className="text-muted mb-0 small">{item.description}</p> */}
+                      <br />
+                      <p className="text-muted small">{item.additionalInfo}</p>
+                    </div>
+                  </ListGroupItem>
+                </motion.div>
+              ))}
+            </Card>
+          </motion.div>
+        </Col>
+        {/* <Col className="text-center p-0 m-0 d-none d-md-block" xs='12' md='6'>
             <CardImg top className="background-image-index" src={backgroundImage} alt="CleanAR Solutions background - Designed by Freepik" />
-          </Col>
-        </Row>
-           {/* New Sections */}
-    <WhyChooseUs />
-    <FeaturedServices />
-    <ReviewsCarousel />
+          </Col> */}
+      </Row>
+      <div className="container">
+        {/* New Sections */}
+        <WhyChooseUs />
+        <FeaturedServices />
+        <ReviewsCarousel />
         <Row>
-          <Col xs='12' md='6'>
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="contact-card-container mx-3"
-            >
 
-              <Card className="">
-                {contactItems.map((item, index) => (
-                  <motion.div
-                    key={index}
-                    whileHover={{
-                      scale: 1.05,
-                      boxShadow: "0px 5px 15px rgba(0,0,0,0.1)"
-                    }}
-                  >
-                    <ListGroupItem className="d-flex align-items-center">
-                      <div className={`me-3 ${item.color}`}>
-                        <i className={`${item.icon} fs-4`}></i>
-                      </div>
-                      <div>
-                        <h6 className="mb-1">
-                          {Array.isArray(item.text) ? item.description : item.text}
-                        </h6>
-                        {Array.isArray(item.link) ? (
-                          <>
-                            {item.link.map((singleLink, index) => (
-                              <div key={index}>
-                                {' | '}
-                                <a
-
-                                  href={singleLink}
-                                  target="_blank"
-                                  data-track="contact-link"
-                                  rel="noreferrer noopener"
-                                  className="text-bold martel-semibold underline"
-                                  title={item.text?.[index] || item.description}
-                                >
-                                  {item.icons?.[index]} {item.text?.[index] || new URL(singleLink).hostname.replace("www.", "")}
-                                  {/* {item.text?.[index] || new URL(singleLink).hostname.replace("www.", "")} */}
-                                </a>
-                                {' | '}
-                              </div>
-                            ))}
-                          </>
-                        ) : item.link === "business-hours" ? (
-                          <BusinessHoursSidebar />
-                        ) : item.link.startsWith("http") || item.link.startsWith("mailto") ? (
-                          <a
-                            href={item.link}
-                            target="_blank"
-                            rel="noreferrer noopener"
-                            data-track="contact-link"
-                            className="text-bold martel-semibold underline"
-                            title={item.text}
-                          >
-                            {' '}{item.description}
-                          </a>
-                        ) : (
-                          <Link
-                            to={item.link}
-                            className="text-bold martel-semibold underline"
-                            data-track="contact-link"
-                            title={item.description}
-                          >
-                            {' '}{item.description}
-                          </Link>
-                        )}
-
-
-                        {/* <p className="text-muted mb-0 small">{item.description}</p> */}
-                        <br />
-                        <p className="text-muted small">{item.additionalInfo}</p>
-                      </div>
-                    </ListGroupItem>
-                  </motion.div>
-                ))}
-              </Card>
-            </motion.div>
-          </Col>
-          <Col xs='12' md='6' className="p-0" id="quote-section">
-            <QuoteRequest 
-            initialData={{}}
+          <Col xs='12' md='12' className="p-0" id="quote-section">
+            <QuoteRequest
+              initialData={{}}
             />
           </Col>
         </Row>
 
         <ToastContainer position="top-center" autoClose={2000} />
-        <Row className="m-0 p-0">
+        <Row>
           <Col xs='12' md='12' className="p-0">
             <ContactUs />
           </Col>

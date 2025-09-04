@@ -74,7 +74,10 @@
       "subject_placeholder": "ex., Question sur la Réservation",
       "message_label": "Message",
       "message_placeholder": "Dites-nous comment nous pouvons vous aider...",
-      "submit": "Envoyer le Message"
+      "submit": "Envoyer le Message",
+      "companyName_placeholder": "Compagnie ABC",
+      "postalcode_placeholder": "H0H 0H0",
+      "promoCode_placeholder": "PROMO123"
     },
     "alerts": {
       "success": "Votre message a été envoyé !",
@@ -95,7 +98,9 @@
   "testimonials": {
     "heading": "Ce que nos clients disent (en leur langue d'origine)",
     "prev": "Précédent",
-    "next": "Suivant"
+    "next": "Suivant",
+    "visitGoogleProfile": "Vous pouvez lire ces avis et laisser le vôtre sur notre profil Google:",
+    "googleProfileLink": "CleanAR Solutions"
   },
   "whyChooseUs": {
     "heading": "Pourquoi choisir CleanAR Solutions?",
@@ -118,7 +123,7 @@
       }
     }
   },
-   "login": {
+  "login": {
     "title": "Se connecter",
     "description": "Connectez-vous pour accéder à votre compte, effectuer des achats plus rapidement et consulter votre historique de commandes.",
     "username_label": "Nom d'utilisateur*",
@@ -173,7 +178,7 @@
       "missing_fields": "Veuillez remplir tous les champs avant de soumettre"
     }
   },
-    "profile": {
+  "profile": {
     "address": {
       "title": "Adresse",
       "placeholder": "Adresse",
@@ -235,18 +240,24 @@
       "change_request_error": "Erreur lors de la soumission de la demande de changement"
     }
   },
-    "welcome_modal": {
-    "title": "Bienvenue chez CleanAR Solutions !",
-    "description": "Nous sommes ravis de vous avoir. Laissez-nous faire briller votre espace ✨",
-    "variant_a": "Nouveau chez nous ? Utilisez le code promo WELCOME15 pour 15% de réduction !",
-    "variant_b": "💥 Client pour la première fois ? Utilisez WELCOME15 pour 15% de réduction sur votre premier nettoyage !",
+  "welcome_modal": {
+    "title": "Notre site vient d'être rafraîchi ! 🎉",
+    "description": "Nous avons complètement repensé notre site pour le rendre plus clair, plus facile à utiliser et plus utile pour vous — maintenant disponible en plusieurs langues ! 🌐",
+    "variant_a": "Célébrez avec nous ! Utilisez le code REFRESH15 pour 15 % de réduction sur votre prochain service de nettoyage. 🎁",
+    "variant_b": "🚀 Profitez de notre nouveau look + obtenez 15 % de réduction sur votre prochain nettoyage avec le code REFRESH15 !",
     "buttons": {
-      "start_quote": "Commencer Maintenant, Obtenir un Devis ✨",
-      "explore_services": "Pas encore sûr ? Explorez nos services 🔎",
+      "start_quote": "Obtenez un devis et économisez ✨",
+      "explore_services": "Découvrez les nouveautés 🔎",
       "dont_show_again": "Ne plus afficher ceci"
     }
   },
-    "landing_fresh": {
+  "cookie_consent": {
+    "description": "🍪 Nous utilisons des cookies pour améliorer votre expérience.",
+    "manage_preferences": "Gérez vos préférences à tout moment dans votre navigateur ou ici.",
+    "reject": "Rejeter",
+    "accept_all": "Accepter Tout"
+  },
+  "landing_fresh": {
     "title": "Connectez-vous pour un Espace Plus Frais 🧼✨",
     "description": "Votre oasis propre n'est qu'à un clic. Rafraîchissons votre espace ensemble avec CleanAR Solutions.",
     "buttons": {
@@ -341,10 +352,10 @@
     ],
     "window_cleaning_button": "Ajouter le nettoyage de vitres au devis",
     "carpet_cleaning_title": "Nettoyage de tapis et meubles rembourrés",
-    "carpet_cleaning_description": [        
-        "Techniques et solutions spécialisées pour les taches difficiles, y compris le vin, les accidents d'animaux de compagnie, la graisse et l'usure due au passage fréquent",
-        "Élimine les acariens, les squames d'animaux et les allergènes piégés dans les fibres des tapis, améliorant ainsi la qualité de l'air intérieur pour votre famille ou vos employés.",
-        "Le service complet comprend le déplacement et le remplacement soigneux des meubles pour garantir un nettoyage approfondi de toutes les zones de tapis accessibles."
+    "carpet_cleaning_description": [
+      "Techniques et solutions spécialisées pour les taches difficiles, y compris le vin, les accidents d'animaux de compagnie, la graisse et l'usure due au passage fréquent",
+      "Élimine les acariens, les squames d'animaux et les allergènes piégés dans les fibres des tapis, améliorant ainsi la qualité de l'air intérieur pour votre famille ou vos employés.",
+      "Le service complet comprend le déplacement et le remplacement soigneux des meubles pour garantir un nettoyage approfondi de toutes les zones de tapis accessibles."
     ],
     "carpet_and_upholstery_button": "Ajouter le nettoyage de tapis au devis",
     "power_washing_title": "Nettoyage haute pression",
@@ -363,7 +374,8 @@
   },
   "about": {
     "welcome_heading": "Bienvenue chez CleanAR Solutions",
-    "welcome_text": "Chez CleanAR Solutions, nous offrons des services de nettoyage professionnels à Toronto et dans la région du Grand Toronto. Notre engagement envers l’excellence garantit que chaque projet respecte les normes les plus élevées, créant ainsi un environnement propre et sain. Que vous ayez besoin de services résidentiels, commerciaux ou de nettoyage de tapis, nous adaptons notre approche à vos besoins. Commencez en demandant un devis, ou contactez-nous pour plus d'informations.",
+    "welcome_text": "Chez CleanAR Solutions, nous offrons des services de nettoyage professionnels à Toronto et dans la région du Grand Toronto. Notre engagement envers l’excellence garantit que chaque projet respecte les normes les plus élevées, créant ainsi un environnement propre et sain. Que vous ayez besoin de services résidentiels, commerciaux ou de nettoyage de tapis, nous adaptons notre approche à vos besoins. Commencez en demandant un devis, ou contactez-nous pour plus d'informations.",    
+    "partnership_text": "Nous ne sommes pas seulement des nettoyeurs, nous sommes des partenaires dans la création d'environnements plus sains et sans stress.",
     "learn_more_services": "En savoir plus sur nos services",
     "mission_title": "Notre Mission",
     "mission_text": "Notre mission est de transformer les espaces en environnements plus propres, plus sains et plus accueillants. Nous y parvenons en offrant des services de nettoyage personnalisables et de haute qualité, adaptés aux besoins de nos clients tout en respectant notre engagement envers la durabilité et l’excellence.",
@@ -404,6 +416,11 @@
           "Restauration Après l'Événement: Nettoyage complet du lieu après les événements, y compris l'enlèvement des débris, la désinfection en profondeur et la restauration complète du site à son état d'origine."
         ]
       }
+    },
+    "cta": {
+      "ready": "Prêt pour un espace plus propre et plus sain?",
+      "focus": "Laissez-nous nous occuper du désordre, concentrez-vous sur ce qui compte le plus.",
+      "quote": "Obtenez votre devis gratuit"
     }
   },
   "navbar": {
@@ -446,7 +463,8 @@
     "terms": "Conditions générales",
     "disclaimer": "Avertissement",
     "developer": "Conçu et développé par",
-    "privacy_policy": "Politique de confidentialité"
+    "privacy_policy": "Politique de confidentialité",
+    "cookie_policy": "Changer les préférences en matière de cookies"
   },
   "quick_quote": {
     "form": {
@@ -468,7 +486,45 @@
       "additionalServices": "Veuillez sélectionner tous les services supplémentaires que vous souhaitez ajouter à votre devis.",
       "submit": "Soumettre le devis",
       "reset": "Réinitialiser le formulaire",
-      "confirmationMessage": "Un courriel de confirmation vous sera envoyé après la soumission. Notre équipe examinera votre demande et vous répondra dès que possible. Merci d'avoir choisi CleanAR Solutions !"
+      "confirmationMessage": "Un courriel de confirmation vous sera envoyé après la soumission. Notre équipe examinera votre demande et vous répondra dès que possible. Merci d'avoir choisi CleanAR Solutions !",
+      "invalidPromoCode": "Code promo invalide. Veuillez vérifier votre code et réessayer. Si vous n'avez pas de code promo, laissez le champ vide.",
+      "requiredFields": "Veuillez remplir tous les champs obligatoires :",
+      "submissionSuccess": "Votre demande de devis a été soumise avec succès ! Nous vous contacterons bientôt pour discuter de vos besoins.",
+      "submissionError": "Une erreur s'est produite lors de l'envoi de votre demande de devis. Veuillez vérifier vos informations et réessayer.",
+      "serviceOptions": {
+        "Residential Cleaning": "Nettoyage résidentiel",
+        "Commercial Cleaning": "Nettoyage commercial",
+        "Carpet And Upholstery": "Tapis et rembourrage",
+        "Window Cleaning": "Nettoyage de fenêtres",
+        "Power/Pressure Washing": "Lavage à pression",
+        "Residential Cleaning Options": {
+          "House Cleaning": "Nettoyage de maison",
+          "Move In/Out Cleaning": "Nettoyage avant/après déménagement",
+          "Condominium Cleaning": "Nettoyage de condominium",
+          "Building Cleaning": "Nettoyage d'immeuble résidentiel"
+        },
+        "Commercial Cleaning Options": {
+          "Office Cleaning": "Nettoyage de bureau",
+          "Industrial Cleaning": "Nettoyage industriel",
+          "Retail Cleaning": "Nettoyage de détail"
+        },
+        "Carpet And Upholstery Options": {
+          "Carpet Cleaning": "Nettoyage de tapis",
+          "Upholstery Cleaning": "Nettoyage de tapisserie"
+        },
+        "Window Cleaning Options": {
+          "Interior Window Cleaning": "Nettoyage de fenêtres intérieures",
+          "Exterior Window Cleaning": "Nettoyage de fenêtres extérieures"
+        },
+        "Power/Pressure Washing Options": {
+          "Driveway Cleaning": "Nettoyage d'allée",
+          "Patio & Deck Cleaning": "Nettoyage de patio et de terrasse",
+          "Sidewalk Cleaning": "Nettoyage de trottoir",
+          "Exterior Siding Cleaning": "Nettoyage de revêtement extérieur",
+          "Fence Cleaning": "Nettoyage de clôture",
+          "Garage Floor Cleaning": "Nettoyage de sol de garage"
+        }
+      }
     },
     "tooltips": {
       "name": "Entrez votre nom complet.",
@@ -574,5 +630,17 @@
   },
   "banner": {
     "comingSoon": "De nouvelles fonctionnalités et un nouveau look arrivent prochainement sur notre site web !"
+  },
+  "bookingChangeModal": {
+    "title": "Demande de changement de réservation",
+    "fields": {
+      "date": "Nouvelle date",
+      "comment": "Commentaire",
+      "comment_placeholder": "Ajoutez des détails sur le changement demandé..."
+    },
+    "actions": {
+      "cancel": "Annuler",
+      "submit": "Soumettre la demande"
+    }
   }
 }

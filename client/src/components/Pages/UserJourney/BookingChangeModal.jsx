@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 
 const BookingChangeModal = ({ show, handleClose, handleSubmit, initialDate }) => {
+  const { t } = useTranslation();
   const [newDate, setNewDate] = useState(initialDate || "");
   const [comment, setComment] = useState("");
 
@@ -28,12 +30,12 @@ const BookingChangeModal = ({ show, handleClose, handleSubmit, initialDate }) =>
   return (
     <Modal show={show} onHide={handleClose} size="lg" centered>
       <Modal.Header closeButton>
-        <Modal.Title>Request Service Change</Modal.Title>
+        <Modal.Title>{t("bookingChangeModal.title")}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>
           <Form.Group controlId="formNewDate" className="mb-3">
-            <Form.Label>New Date</Form.Label>
+            <Form.Label>{t("bookingChangeModal.fields.date")}</Form.Label>
             <Form.Control
               type="date"
               value={newDate}
@@ -43,12 +45,12 @@ const BookingChangeModal = ({ show, handleClose, handleSubmit, initialDate }) =>
           </Form.Group>
 
           <Form.Group controlId="formComment" className="mb-3">
-            <Form.Label>Comment</Form.Label>
+            <Form.Label>{t("bookingChangeModal.fields.comment")}</Form.Label>
             <Form.Control
               as="textarea"
               rows={3}
               className="form-input text-cleanar-color"
-              placeholder="Add details about the requested change..."
+              placeholder={t("bookingChangeModal.fields.comment_placeholder")}
               value={comment}
               onChange={(e) => setComment(e.target.value)}
             />
@@ -57,10 +59,10 @@ const BookingChangeModal = ({ show, handleClose, handleSubmit, initialDate }) =>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
-          Cancel
+          {t("bookingChangeModal.actions.cancel")}
         </Button>
         <Button variant="primary" onClick={onSubmit}>
-          Submit Request
+          {t("bookingChangeModal.actions.submit")}
         </Button>
       </Modal.Footer>
     </Modal>

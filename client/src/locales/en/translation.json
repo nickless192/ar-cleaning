@@ -74,7 +74,10 @@
       "subject_placeholder": "e.g., Booking Question",
       "message_label": "Message",
       "message_placeholder": "Let us know how we can help...",
-      "submit": "Send Message"
+      "submit": "Send Message",
+      "companyName_placeholder": "ABC Company",
+      "postalcode_placeholder": "H0H 0H0",
+      "promoCode_placeholder": "PROMO123"
     },
     "alerts": {
       "success": "Your message has been sent!",
@@ -94,8 +97,10 @@
   },
   "testimonials": {
     "heading": "What Our Clients Say (Shown In Original Language)",
-    "prev": "Prev",
-    "next": "Next"
+    "prev": "Previous",
+    "next": "Next",
+    "visitGoogleProfile": "You can read these and leave your own review on our Google profile:",
+    "googleProfileLink": "CleanAR Solutions"
   },
   "whyChooseUs": {
     "heading": "Why Choose CleanAR Solutions?",
@@ -173,7 +178,7 @@
       "missing_fields": "Please fill out all fields before submitting"
     }
   },
-   "profile": {
+  "profile": {
     "address": {
       "title": "Address",
       "placeholder": "Address",
@@ -235,18 +240,24 @@
       "change_request_error": "Error submitting change request"
     }
   },
-    "welcome_modal": {
-    "title": "Welcome to CleanAR Solutions!",
-    "description": "We're thrilled to have you. Let us make your space sparkle ✨",
-    "variant_a": "New with us? Use promo code WELCOME15 for 15% off!",
-    "variant_b": "💥 First-time customer? Use WELCOME15 for a 15% discount on your first clean!",
+  "welcome_modal": {
+    "title": "Our Website Just Got a Refresh! 🎉",
+    "description": "We've completely revamped our site to make it clearer, easier to use, and more helpful for you — now available in multiple languages! 🌐",
+    "variant_a": "Celebrate with us! Use code REFRESH15 for 15% off your next cleaning service. 🎁",
+    "variant_b": "🚀 Enjoy our new look + get 15% off your next clean with code REFRESH15!",
     "buttons": {
-      "start_quote": "Start Now, Get a Quote ✨",
-      "explore_services": "Not sure yet? Explore our services 🔎",
-      "dont_show_again": "Don't show this again"
+      "start_quote": "Get a Quote & Save ✨",
+      "explore_services": "See What's New 🔎",
+      "dont_show_again": "Don't show again"
     }
   },
-   "landing_fresh": {
+  "cookie_consent": {
+    "description": "🍪 We use cookies to improve your experience.",
+    "manage_preferences": "Manage preferences anytime in your browser or here.",
+    "reject": "Reject",
+    "accept_all": "Accept All"
+  },
+  "landing_fresh": {
     "title": "Tap In for a Fresher Space 🧼✨",
     "description": "Your clean oasis is just a click away. Let's refresh your space together with CleanAR Solutions.",
     "buttons": {
@@ -314,8 +325,8 @@
     "residential_cleaning_description": [
       "From kitchen and bathrooms to bedrooms and living areas, we provide thorough top-to-bottom cleaning that leaves every surface spotless and sanitized",
       "Tailored service packages that address your specific needs, from move-in/move-out cleaning to post-construction cleanup and everything in between",
-      "Weekly, bi-weekly, monthly, or one-time cleaning appointments that work around your busy lifestyle and personal preferences", 
-"We're not satisfied until you are - if anything doesn't meet your expectations, we'll return within 24 hours to make it right at no extra charge"
+      "Weekly, bi-weekly, monthly, or one-time cleaning appointments that work around your busy lifestyle and personal preferences",
+      "We're not satisfied until you are - if anything doesn't meet your expectations, we'll return within 24 hours to make it right at no extra charge"
     ],
     "residential_cleaning_button": "Get Quote for Residential Cleaning",
     "commercial_cleaning_title": "Commercial Cleaning",
@@ -324,9 +335,9 @@
     "commercial_cleaning_retail_cleaning": "Retail Cleaning",
     "commercial_cleaning_description": [
       "Daily, weekly, or monthly cleaning of offices, retail spaces, warehouses, and commercial buildings including restrooms, break rooms, lobbies, and workspaces",
-      "Deep steam cleaning, stain removal, and carpet maintenance services that extend carpet life and maintain a professional appearance for your business", 
-      "After-hours, weekend, or customized timing options that won't disrupt your business operations, including emergency cleaning services when needed", 
-"Professional commercial-grade service with comprehensive insurance coverage, ensuring your business is protected while maintaining the highest cleaning standards"
+      "Deep steam cleaning, stain removal, and carpet maintenance services that extend carpet life and maintain a professional appearance for your business",
+      "After-hours, weekend, or customized timing options that won't disrupt your business operations, including emergency cleaning services when needed",
+      "Professional commercial-grade service with comprehensive insurance coverage, ensuring your business is protected while maintaining the highest cleaning standards"
     ],
     "commercial_cleaning_button": "Get Quote for Commercial Cleaning",
     "window_cleaning_title": "Window Cleaning",
@@ -334,10 +345,10 @@
     "window_cleaning_track_sill": "Window Track & Sill Cleaning",
     "window_cleaning_glass_door": "Glass Door Cleaning",
     "window_cleaning_description": [
-      "Professional streak-free cleaning of all indoor windows, glass doors, and interior glass surfaces using premium squeegees and eco-friendly solutions", 
-      "Complete service includes wiping down window frames, sills, and tracks to remove dust, debris, and buildup for a thorough finish", 
-      "Safe and efficient interior window cleaning for single and two-story homes, including hard-to-reach upper floor windows from the inside", 
-"Crystal-clear interior cleaning of retail storefronts, office buildings, and business facades to maintain a professional image for your customers"
+      "Professional streak-free cleaning of all indoor windows, glass doors, and interior glass surfaces using premium squeegees and eco-friendly solutions",
+      "Complete service includes wiping down window frames, sills, and tracks to remove dust, debris, and buildup for a thorough finish",
+      "Safe and efficient interior window cleaning for single and two-story homes, including hard-to-reach upper floor windows from the inside",
+      "Crystal-clear interior cleaning of retail storefronts, office buildings, and business facades to maintain a professional image for your customers"
     ],
     "window_cleaning_button": "Get Quote for Window Cleaning ",
     "carpet_cleaning_title": "Carpet and Upholstery Cleaning",
@@ -366,6 +377,7 @@
   "about": {
     "welcome_heading": "Welcome to CleanAR Solutions",
     "welcome_text": "At CleanAR Solutions, we provide professional cleaning services in Toronto and the GTA. Our focus on excellence ensures every project meets the highest standards, creating a clean and healthy environment. Whether you need residential, commercial, or carpet cleaning, we customize our approach to meet your needs. Get started by requesting a quote, or contact us for more information.",
+    "partnership_text": "We’re more than cleaners — we’re partners in creating healthier, stress-free environments.",
     "learn_more_services": "Learn More About Our Services",
     "mission_title": "Our Mission",
     "mission_text": "Our mission is to transform spaces into cleaner, healthier, and more welcoming environments. We achieve this by offering customizable, high-quality cleaning services that are tailored to our clients’ needs while staying true to our commitment to sustainability and excellence.",
@@ -381,7 +393,7 @@
       "Teamwork: We value collaboration, respect, and unity to achieve success together."
     ],
     "industries_title": "Professional Cleaning Services for Every Industry",
-"industries": {
+    "industries": {
       "residential": {
         "title": "Residential & Multi-Family Properties",
         "items": [
@@ -406,6 +418,11 @@
           "Post-Event Restoration: Comprehensive venue cleanup after events including debris removal, deep sanitization, and complete site restoration to original condition."
         ]
       }
+    },
+    "cta": {
+      "ready": "Ready for a cleaner, healthier space?",
+      "focus": "Let us take care of the mess — you focus on what matters most.",
+      "quote": "Get Your Free Quote"
     }
   },
   "navbar": {
@@ -448,7 +465,8 @@
     "terms": "Terms & Conditions",
     "disclaimer": "Disclaimer",
     "developer": "Designed & Built by",
-    "privacy_policy": "Privacy Policy"
+    "privacy_policy": "Privacy Policy",
+    "cookie_policy": "Change Cookie Preferences"
   },
   "quick_quote": {
     "form": {
@@ -470,7 +488,46 @@
       "additionalServices": "Please select any additional services you would like to add to your quote.",
       "submit": "Submit Quote",
       "reset": "Reset Form",
-      "confirmationMessage": "A confirmation email will be sent to you upon submission. Our team will review your request and get back to you as soon as possible. Thank you for choosing CleanAR Solutions!"
+      "confirmationMessage": "A confirmation email will be sent to you upon submission. Our team will review your request and get back to you as soon as possible. Thank you for choosing CleanAR Solutions!",
+      "submissionSuccess": "Quote submitted successfully! We'll be in touch shortly to discuss your needs. In the meantime, feel free to browse our services.",
+      "submissionError": "Error submitting quote, please ensure all fields are filled out correctly. If the problem persists, please contact us directly with a description of the issue.",
+      "invalidPromoCode": "Invalid promo code. Please review your code and try again. If you do not have a promo code, please leave the field blank.",
+      "requiredFields": "Please fill out all required fields:",
+      "serviceOptions": {
+        "Residential Cleaning": "Residential Cleaning",
+        "Commercial Cleaning": "Commercial Cleaning",
+        "Carpet And Upholstery": "Carpet And Upholstery",
+        "Window Cleaning": "Window Cleaning",
+        "Power/Pressure Washing": "Power/Pressure Washing",
+        "Residential Cleaning Options": {
+          "House Cleaning": "House Cleaning",
+          "Move-In/Out Cleaning": "Move-In/Out Cleaning",
+          "Condominium Cleaning": "Condominium Cleaning",
+          "Residential Building Cleaning": "Residential Building Cleaning"
+        },
+        "Commercial Cleaning Options": {
+          "Office Cleaning": "Office Cleaning",
+          "Retail Cleaning": "Retail Cleaning",
+          "Industrial Cleaning": "Industrial Cleaning"
+        },
+        "Carpet And Upholstery Options": {
+          "Carpet Cleaning": "Carpet Cleaning",
+          "Upholstery Cleaning": "Upholstery Cleaning"
+        },
+        "Window Cleaning Options": {
+          "Interior Window Cleaning": "Interior Window Cleaning",
+          "Window Track & Sill Cleaning": "Window Track & Sill Cleaning",
+          "Glass Door Cleaning": "Glass Door Cleaning"
+        },
+        "Power/Pressure Washing Options": {
+          "Driveway Cleaning": "Driveway Cleaning",
+          "Patio & Deck Cleaning": "Patio & Deck Cleaning",
+          "Sidewalk Cleaning": "Sidewalk Cleaning",
+          "Exterior Siding Cleaning": "Exterior Siding Cleaning",
+          "Fence Cleaning": "Fence Cleaning",
+          "Garage Floor Cleaning": "Garage Floor Cleaning"
+        }
+      }
     },
     "tooltips": {
       "name": "Enter your full name.",
@@ -613,6 +670,19 @@
         "website": "https://www.cleanarsolutions.ca/index",
         "phone": "+1 (437) 440-5514"
       }
+    }
+  },
+  "bookingChangeModal": {
+    "title": "Request Service Change",
+    "description": "Modify your existing booking details.",
+    "fields": {
+      "date": "New Date",
+      "comment": "Comment",
+      "comment_placeholder": "Add details about the requested change..."
+    },
+    "buttons": {
+      "submit": "Submit Request",
+      "cancel": "Cancel"
     }
   },
   "banner": {

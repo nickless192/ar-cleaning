@@ -81,19 +81,19 @@ const ProductsAndServices = () => {
   //   quoteButtonText: t("products_and_services." + (cat.labelKey).toLowerCase().replace(/[\s/]+/g, "_") + "_button", { defaultValue: "Get a Quote For This Service" }),
   // }));
 
-const servicesData = categories.map(cat => ({
-  title: t(`${cat.key}`), 
-  imgSrc: imageMap[normalizeLabel(cat.labelKey)] || residentialCleaningBg,
-  imgAlt: t(`${cat.labelKey}_imgAlt`, "Service image"),
-  description: t(`${cat.descriptionKey}`, { returnObjects: true }),
-  quoteLink: `/index?service=${encodeURIComponent(t(cat.labelKey))}`,
-  quoteButtonText: t(
-    "products_and_services." +
+  const servicesData = categories.map(cat => ({
+    title: t(`${cat.key}`),
+    imgSrc: imageMap[normalizeLabel(cat.labelKey)] || residentialCleaningBg,
+    imgAlt: t(`${cat.labelKey}_imgAlt`, "Service image"),
+    description: t(`${cat.descriptionKey}`, { returnObjects: true }),
+    quoteLink: `/index?service=${encodeURIComponent(t(cat.labelKey))}&scrollToQuote=true`,
+    quoteButtonText: t(
+      "products_and_services." +
       cat.labelKey.toLowerCase().replace(/[\s/]+/g, "_") +
       "_button",
-    { defaultValue: "Get a Quote For This Service" }
-  ),
-}));
+      { defaultValue: "Get a Quote For This Service" }
+    ),
+  }));
 
 
   // const servicesData = [

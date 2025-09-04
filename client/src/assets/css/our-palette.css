@@ -894,7 +894,8 @@ body.nav-open {
     background-color: var(--primary-color) !important;
     /* color: white; */
     text-align: center;
-    padding: 10px;
+     margin-top: 0 !important;
+    padding-top: 10px;
     z-index: 1000;
 }
 

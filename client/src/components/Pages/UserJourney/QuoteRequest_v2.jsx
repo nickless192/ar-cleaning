@@ -292,7 +292,7 @@ const QuoteRequest = () => {
         // if (promoCode === 'welcome10') {
         if (promoCode === 'toronto15' || promoCode === 'follow15'
             || promoCode === 'now15' || promoCode === 'start15' || promoCode === 'fresh15' || promoCode === 'secret15'
-            || promoCode === 'welcome15'
+            || promoCode === 'welcome15' || promoCode === 'refresh15'
         ) {
             setValidPromoCode(true);
             // alert('Valid promo code! 15% discount will be applied to your quote');
@@ -590,7 +590,7 @@ const QuoteRequest = () => {
 
     return (
         <>
-            <Container className="quick-quote-container px-4" id="quote-section">
+            <Container className="quick-quote-container px-4 rounded-2" id="quote-section">
                 <HelmetProvider>
                     <title>CleanAR Solutions</title>
                     <meta name="description" content="Get a quick service estimate from CleanAR Solutions. Fill out our form to receive a personalized quote for your cleaning needs." />

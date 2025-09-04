@@ -74,7 +74,7 @@ const Customer = ({ initialData = {}, onSubmit, onCancel }) => {
     { label: 'Address', name: 'address', required: false },
     { label: 'City', name: 'city', required: false },
     { label: 'Province', name: 'province', required: false },
-    { label: 'Postal Code', name: 'postalcode', required: true },
+    { label: 'Postal Code', name: 'postalcode', required: false },
     { label: 'Company Name', name: 'companyName', required: false },
     // { label: 'User ID', name: 'user', required: false }
   ];

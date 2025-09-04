@@ -26,8 +26,8 @@ function FeaturedServices() {
     }
   ];
   return (
-    <div className="py-3 px-2">
-      <h2 className="text-center mb-4">{t("featuredServices.heading")}</h2>
+    <div className="py-5 px-2">
+      <h2 className="text-center mb-4 secondary-color montserrat-bold">{t("featuredServices.heading")}</h2>
       <Row className="justify-content-center">
         {services.map((s, i) => (
           <Col xs="12" md="4" key={i} className="mb-3">
@@ -40,7 +40,7 @@ function FeaturedServices() {
               <Card className="shadow-sm service-card h-100">
                 <CardImg top src={s.img} alt={s.title} />
                 <CardBody className="text-center">
-                  <h5>{s.title}</h5>
+                  <h5 className="montserrat-bold secondary-color">{s.title}</h5>
                   <Link to={s.link} className="btn btn-outline-success mt-2">
                     {t("featuredServices.learnMore")}
                   </Link>

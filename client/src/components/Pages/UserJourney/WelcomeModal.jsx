@@ -32,17 +32,17 @@ const WelcomeModal = () => {
   };
 
   const handleQuoteClick = (e) => {
-    trackEvent('quote_clicked');
+    // trackEvent('quote_clicked');
     // navigate('/index?promoCode=welcome15', { state: { scrollToQuote: true } }); 
     // localStorage.setItem('welcomeModalDismissed', 'true');
-    navigate('/index?promoCode=welcome15&scrollToQuote=true');    
+    navigate('/index?promoCode=refresh15&scrollToQuote=true');    
     // refresh
     // window.location.reload();
     setShow(false);
   };
 
   const handleProductsAndServicesClick = () => {
-    trackEvent('products_and_services_clicked');
+    // trackEvent('products_and_services_clicked');
     navigate('/products-and-services');
     setShow(false);
   }
@@ -75,10 +75,10 @@ const WelcomeModal = () => {
       centered
       className="welcome-modal"
     >
-      <Modal.Header closeButton className='light-blue-bg-color' >
+      <Modal.Header closeButton className='light-blue-bg-color text-center' >
         <Modal.Title>{t("welcome_modal.title")}</Modal.Title>
       </Modal.Header>
-      <Modal.Body style={{ backgroundColor: 'var(--light-color-opaque)' }}>
+      <Modal.Body className='text-center' style={{ backgroundColor: 'var(--light-color-opaque)' }}>
         <p>{t("welcome_modal.description")}</p>
         {variant === 'A' ? (
           <p>
@@ -88,22 +88,25 @@ const WelcomeModal = () => {
           </p>
         ) : (
           <p className="text-center">
+            <strong>
             {t("welcome_modal.variant_b")}
+            </strong>
           </p>
         )}
-        <div className="d-flex flex-column flex-md-row justify-content-between gap-2 mt-3">
+        <div className="d-flex flex-column flex-md-row justify-content-between mt-3">
           <Button
             variant="success"
             onClick={handleQuoteClick}
             data-track="quote_clicked_modal"
-            className="secondary-bg-color"
+            className="secondary-bg-color px-2 mx-1"
           >
             {t("welcome_modal.buttons.start_quote")}
           </Button>
           <Button
             variant="info"
             data-track="explore_services_modal"
-            onClick={handleProductsAndServicesClick}
+            className='px-2 mx-1'
+            onClick={handleClose}
           >
             {t("welcome_modal.buttons.explore_services")}
           </Button>

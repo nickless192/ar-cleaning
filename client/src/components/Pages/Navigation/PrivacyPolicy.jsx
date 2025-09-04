@@ -223,9 +223,9 @@ export default function CleanARPrivacyPolicy() {
     legalName: "CleanAR Solutions Inc.",
     address: "Toronto, Ontario, Canada",
     email: "info@cleanarsolutions.ca",
-    phone: "+1 (416) 440-5514",
+    phone: "+1(437) 440-5514",
     website: "https://www.cleanarsolutions.ca",
-    privacyOfficer: "Privacy Officer",
+    privacyOfficer: "CEO",
   };
 
   const handlePrint = () => window.print();

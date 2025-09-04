@@ -67,7 +67,7 @@ const ContactUs = () => {
 
 
   return (
-    <section className="py-5 bg-light">
+    <section className="py-5 ">
       <Card className="shadow-lg p-4 mx-auto rounded-4" style={{ maxWidth: "960px" }}>
         <Row>
           {/* Contact Form */}

@@ -157,10 +157,10 @@ function SignUp() {
     <>
       {/* <Navbar /> */}
       {/* <div className="section section-signup light-blue-bg-color pb-0 mb-0"> */}
-      <div className="content content-border">
+      <div className="content content-border bg-light">
         <h1 className="title secondary-color text-center montserrat-bold">{t("signup.title")}</h1>
         <Container className="container">
-          <p className="text-center text-cleanar-color">{t("signup.description")}</p>
+          <p className="text-center text-cleanar-color text-bold">{t("signup.description")}</p>
 
           <Form className="form" onSubmit={(e) => handleFormSubmit(e)}>
             <Row className="justify-content-center">
@@ -454,7 +454,7 @@ function SignUp() {
 
             </Row>
             <Row className="justify-content-center">
-              <Col md='6' xs='6'>
+              <Col md='6' xs='6' className="py-3">
                 <Button
                   className="btn-round light-bg-color rounded-pill"
                   type="submit"

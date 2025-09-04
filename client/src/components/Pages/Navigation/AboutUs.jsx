@@ -54,7 +54,7 @@ function AboutUsPage() {
               alt="CleanAR Solutions Logo"
               src={Logo}
               className="img-fluid"
-              style={{ maxWidth: "250px", transition: "transform 0.3s" }}
+              style={{ maxWidth: "350px", transition: "transform 0.3s" }}
               onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
               onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
             />
@@ -65,8 +65,7 @@ function AboutUsPage() {
             </h1>
             <p className="fs-5 text-secondary">
               {t("about.welcome_text")} <br />
-              We’re more than cleaners — we’re partners in creating healthier,
-              stress-free environments.
+              {t("about.partnership_text")}
             </p>
             <Link to="/products-and-services" className="btn btn-success mt-3">
               {t("about.learn_more_services")}
@@ -164,13 +163,13 @@ function AboutUsPage() {
       {/* Call to Action */}
       <Container className="text-center py-5">
         <h2 className="fw-bold text-dark mb-3">
-          Ready for a cleaner, healthier space?
+          {t("about.cta.ready")}
         </h2>
-        <p className="text-muted mb-4">
-          Let us take care of the mess — you focus on what matters most.
+        <p className="text-bold mb-4">
+          {t("about.cta.focus")}
         </p>
         <Button onClick={goToQuote} className="btn btn-lg primary-bg-color">
-          Get Your Free Quote
+          {t("about.cta.quote")}
         </Button>
       </Container>
     </div>

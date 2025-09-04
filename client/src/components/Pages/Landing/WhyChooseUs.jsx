@@ -32,8 +32,8 @@ function WhyChooseUs() {
   ];
 
   return (
-    <div className="py-3 bg-light px-2">
-      <h2 className="text-center mb-4">{t("whyChooseUs.heading")}</h2>
+    <div className="py-5 secondary-bg-color px-5 mt-4 rounded-4">
+      <h2 className="text-center mb-4 montserrat-bold primary-color">{t("whyChooseUs.heading")}</h2>
       <Row className="justify-content-center">
         {benefits.map((b, i) => (
           <Col xs="12" md="3" key={i} className="mb-3">

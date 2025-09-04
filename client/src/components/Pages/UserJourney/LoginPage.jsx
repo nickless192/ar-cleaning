@@ -176,11 +176,11 @@ function LoginPage() {
     <>
       {/* <Navbar /> */}
       <VisitorCounter page={"login-page"} />
-      <div className="content content-border">
+      <div className="content content-border bg-light">
           <h1 className="title primary-color text-center montserrat-bold">{t("login.title")}</h1>
         {/* <div className="content px-2"> */}
         <Container className="container">
-          <p className="primary-color text-bold text-center">
+          <p className="text-cleanar-color text-bold text-center">
             {t("login.description")}
           </p>
           <Form onSubmit={handleFormSubmit}>
