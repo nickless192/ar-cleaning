@@ -4,6 +4,9 @@ import { Row, Col, Card, CardBody, CardImg } from "reactstrap";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import carpetCleaningBg from "/src/assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg";
+import residentialCleaningBg from "/src/assets/img/man-servant-cleaning-house.jpg";
+import commercialCleaningBg from "/src/assets/img/full-shot-people-cleaning-office.jpg";
 
 
 function FeaturedServices() {
@@ -11,17 +14,17 @@ function FeaturedServices() {
   const services = [
     {
       title: t("products_and_services.carpet_cleaning_title"),
-      img: "/src/assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg",
+      img: carpetCleaningBg,
       link: "/products-and-services#carpet",
     },
     {
       title: t("products_and_services.residential_cleaning_title"),
-      img: "/src/assets/img/man-servant-cleaning-house.jpg",
+      img: residentialCleaningBg,
       link: "/products-and-services#moveout",
     },
     {
       title: t("products_and_services.commercial_cleaning_title"),
-      img: "/src/assets/img/full-shot-people-cleaning-office.jpg",
+      img: commercialCleaningBg,
       link: "/products-and-services#commercial",
     }
   ];

@@ -21,7 +21,7 @@ const LoginSign = () => {
             <Col md='5' className='mx-1'>
                 <LoginPage /> */}
                                 {/* Toggle message */}
-                 <div className="mb-3 d-flex justify-content-center align-items-center">
+                 <div className="mt-5 d-flex justify-content-center align-items-center">
                     {showLogin ? (
                         <>
                             <span className="me-1 align-baseline text-bold text-cleanar-color">
