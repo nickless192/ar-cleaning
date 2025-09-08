@@ -132,6 +132,8 @@
     "password_tooltip": "Enter your account password.",
     "login_button": "Log In",
     "reset_password_button": "Reset Your Password",
+    "signup_prompt": "Don't have an account?",
+    "signup_link": "Create one here",
     "alerts": {
       "user_not_found": "User not found",
       "wrong_password": "Wrong password!",
@@ -142,6 +144,8 @@
   "signup": {
     "title": "Sign Up",
     "description": "Please fill out the form below to create an account.",
+    "login_prompt": "Already have an account?",
+    "login_link": "Log in here",
     "form_labels": {
       "first_name": "First Name*",
       "last_name": "Last Name*",
@@ -151,7 +155,8 @@
       "password": "Password*",
       "how_heard": "How Did You Hear About Us?",
       "referral": "Referral",
-      "please_specify": "Please Specify"
+      "please_specify": "Please Specify",
+      "agree": "I agree to the"
     },
     "tooltips": {
       "first_name": "Enter your first name.",
@@ -255,7 +260,8 @@
     "description": "🍪 We use cookies to improve your experience.",
     "manage_preferences": "Manage preferences anytime in your browser or here.",
     "reject": "Reject",
-    "accept_all": "Accept All"
+    "accept_all": "Accept All",
+    "read_our": "Read our"
   },
   "landing_fresh": {
     "title": "Tap In for a Fresher Space 🧼✨",
@@ -428,7 +434,7 @@
   "navbar": {
     "about_us": "About Us",
     "products_services": "Products & Services",
-    "log_in_signup": "Log In / Sign Up",
+    "log_in_signup": "Log In",
     "log_out": "Log Out",
     "profile": "Profile",
     "admin": {

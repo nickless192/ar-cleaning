@@ -7,13 +7,13 @@ export default function CookieBanner({ show: externalShow, onClose }) {
     // const [preferences, setPreferences] = useState({ analytics: false, marketing: false });
     const { t } = useTranslation();
 
-  useEffect(() => {
-    const consent = localStorage.getItem("cookieConsent");
-    if (!consent && externalShow === undefined) setShow(true);
-  }, [externalShow]);
+    useEffect(() => {
+        const consent = localStorage.getItem("cookieConsent");
+        if (!consent && externalShow === undefined) setShow(true);
+    }, [externalShow]);
 
     // If a parent controls `show`, use that
-  const isVisible = externalShow !== undefined ? externalShow : show;
+    const isVisible = externalShow !== undefined ? externalShow : show;
 
     const handleAcceptAll = () => {
         const pref = { analytics: true, marketing: true };
@@ -21,23 +21,23 @@ export default function CookieBanner({ show: externalShow, onClose }) {
         // setPreferences(pref);
         // setShow(false);
         if (onClose) onClose();
-    else setShow(false);
+        else setShow(false);
 
         // ✅ Fire analytics scripts here
     };
 
     const handleReject = () => {
         // localStorage.setItem("cookieConsent", JSON.stringify(preferences));
-         const pref = { analytics: false, marketing: false };
-    localStorage.setItem("cookieConsent", JSON.stringify(pref));
+        const pref = { analytics: false, marketing: false };
+        localStorage.setItem("cookieConsent", JSON.stringify(pref));
         // setShow(false);
         if (onClose) onClose();
-    else setShow(false);
+        else setShow(false);
 
     };
 
     // if (!show) return null;
-     if (!isVisible) return null;
+    if (!isVisible) return null;
 
     return (
         <Alert
@@ -48,7 +48,15 @@ export default function CookieBanner({ show: externalShow, onClose }) {
             <div className="d-flex flex-column flex-md-row align-items-center justify-content-between text-center text-md-start">
                 <p className="mb-3 mb-md-0 fw-medium">
                     {t("cookie_consent.description")}{" "}
-                    {t("cookie_consent.manage_preferences")}
+                    {t("cookie_consent.read_our")}{" "}
+                    <a href="/privacy-policy" className="text-decoration-underline">
+                        {t("footer.privacy_policy")}
+                    </a>{" "}
+                    &{" "}
+                    <a href="/terms" className="text-decoration-underline">
+                        {t("footer.terms")}.
+                    </a>
+                    {" "}{t("cookie_consent.manage_preferences")}
                     {/* <span className="d-block d-md-inline">
     </span> */}
                 </p>

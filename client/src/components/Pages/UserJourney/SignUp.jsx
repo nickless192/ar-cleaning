@@ -18,6 +18,7 @@ import {
 } from 'react-bootstrap';
 
 import { FaQuestionCircle } from 'react-icons/fa';
+import pageBg from "/src/assets/img/bg1.png";
 
 // core components
 
@@ -30,7 +31,8 @@ function SignUp() {
     howDidYouHearAboutUsSupport: "",
     telephone: "",
     username: "",
-    password: ""
+    password: "",
+    termsConsent: false
   });
   const { t } = useTranslation();
 
@@ -67,7 +69,8 @@ function SignUp() {
       cleanedData.email &&
       cleanedData.username &&
       cleanedData.password &&
-      cleanedData.telephone) {
+      cleanedData.telephone &&
+      cleanedData.termsConsent) {
       try {
         const response = await fetch(`/api/users/`, {
           method: 'post',
@@ -115,7 +118,7 @@ function SignUp() {
           }
 
           // Now call Auth.login after the email has been sent
-          Auth.login(data.token, data.dbUserData.adminFlag);
+          Auth.login(data.token);
 
         } else {
           // alert(response.statusText);
@@ -157,7 +160,7 @@ function SignUp() {
     <>
       {/* <Navbar /> */}
       {/* <div className="section section-signup light-blue-bg-color pb-0 mb-0"> */}
-      <div className="content content-border bg-light">
+      <div className="content content-border bg-light" style={{ backgroundImage: `url(${pageBg})`, backgroundSize: 'cover' }}>
         <h1 className="title secondary-color text-center montserrat-bold">{t("signup.title")}</h1>
         <Container className="container">
           <p className="text-center text-cleanar-color text-bold">{t("signup.description")}</p>
@@ -452,6 +455,31 @@ function SignUp() {
               ) : null
               }
 
+            </Row>
+            <Row className="justify-content-center">
+              <Col md='10' xs='10' className="py-1">
+                <Form.Group controlId="termsCheckbox" className="mb-3">
+                  <Form.Check
+                    type="checkbox"
+                    name="termsConsent"
+                    value={formData.termsConsent}
+                    label={
+                      <>
+                        {t("signup.form_labels.agree")}{" "}
+                        <a href="/terms" target="_blank" rel="noopener noreferrer">
+                          {t("footer.terms")}
+                        </a>{" "}
+                        &{" "}
+                        <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">
+                          {t("footer.privacy_policy")}
+                        </a>
+                        .
+                      </>
+                    }
+                    required
+                  />
+                </Form.Group>
+              </Col>
             </Row>
             <Row className="justify-content-center">
               <Col md='6' xs='6' className="py-3">

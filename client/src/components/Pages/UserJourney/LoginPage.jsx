@@ -24,6 +24,7 @@ import {
 } from 'react-bootstrap';
 
 import { FaQuestionCircle } from 'react-icons/fa';
+import pageBg from "/src/assets/img/bg1.png";
 
 
 function LoginPage() {
@@ -82,7 +83,7 @@ function LoginPage() {
               .then(data => {
                 console.log(data);
                 console.log(data.dbUserData.adminFlag);
-                Auth.login(data.token, data.dbUserData.adminFlag);
+                Auth.login(data.token);
 
 
               });
@@ -176,8 +177,8 @@ function LoginPage() {
     <>
       {/* <Navbar /> */}
       <VisitorCounter page={"login-page"} />
-      <div className="content content-border bg-light">
-          <h1 className="title primary-color text-center montserrat-bold">{t("login.title")}</h1>
+      <div className="content content-border bg-light" style={{ backgroundImage: `url(${pageBg})`, backgroundSize: 'cover' }}>
+        <h1 className="title primary-color text-center montserrat-bold">{t("login.title")}</h1>
         {/* <div className="content px-2"> */}
         <Container className="container">
           <p className="text-cleanar-color text-bold text-center">

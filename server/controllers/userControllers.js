@@ -29,6 +29,13 @@ const userControllers = {
     },
     // create new user
     async createUser({ body }, res) {
+        // check if consent was given
+        if (!body.termsConsent) {
+            return res.status(400).json({ message: 'You must agree to the terms and conditions.' });
+        }
+        // Set the consentReceivedDate to now
+        body.consentReceivedDate = Date.now();
+
         User.create(body).
             then(dbUserData => {
                 console.log(dbUserData);
@@ -152,7 +159,22 @@ const userControllers = {
             console.error(err);
             res.status(500).json({ error: 'Failed to fetch user bookings' });
         }
-    }
+    },
+    async setUserConsent({ params, body }, res) {
+        try {
+            const user = await User.findById(params.userId);
+            if (!user) return res.status(404).json({ message: 'No user found' });
+
+            user.termsConsent = body.termsConsent;
+            user.consentReceivedDate = body.consentReceivedDate;
+            await user.save();
+
+            res.json({ message: 'User consent updated successfully' });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ error: 'Failed to update user consent' });
+        }
+    }    
 };
 
 module.exports = userControllers;

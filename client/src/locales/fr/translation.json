@@ -132,6 +132,8 @@
     "password_tooltip": "Entrez le mot de passe de votre compte.",
     "login_button": "Se Connecter",
     "reset_password_button": "Réinitialiser votre Mot de Passe",
+    "signup_prompt": "Vous n'avez pas de compte?",
+    "signup_link": "Créez-en un ici",
     "alerts": {
       "user_not_found": "Utilisateur non trouvé",
       "wrong_password": "Mot de passe incorrect !",
@@ -142,6 +144,8 @@
   "signup": {
     "title": "S'inscrire",
     "description": "Veuillez remplir le formulaire ci-dessous pour créer un compte.",
+    "login_prompt": "Vous avez déjà un compte?",
+    "login_link": "Connectez-vous ici",
     "form_labels": {
       "first_name": "Prénom*",
       "last_name": "Nom de famille*",
@@ -151,7 +155,8 @@
       "password": "Mot de passe*",
       "how_heard": "Comment avez-vous entendu parler de nous?",
       "referral": "Référence",
-      "please_specify": "Veuillez préciser"
+      "please_specify": "Veuillez préciser",
+      "agree": "J'accepte les"
     },
     "tooltips": {
       "first_name": "Entrez votre prénom.",
@@ -255,7 +260,8 @@
     "description": "🍪 Nous utilisons des cookies pour améliorer votre expérience.",
     "manage_preferences": "Gérez vos préférences à tout moment dans votre navigateur ou ici.",
     "reject": "Rejeter",
-    "accept_all": "Accepter Tout"
+    "accept_all": "Accepter Tout",
+    "read_our": "Lisez notre"
   },
   "landing_fresh": {
     "title": "Connectez-vous pour un Espace Plus Frais 🧼✨",
@@ -426,7 +432,7 @@
   "navbar": {
     "about_us": "À propos de nous",
     "products_services": "Produits et Services",
-    "log_in_signup": "Connexion / Inscription",
+    "log_in_signup": "Connexion",
     "log_out": "Déconnexion",
     "profile": "Profil",
     "admin": {

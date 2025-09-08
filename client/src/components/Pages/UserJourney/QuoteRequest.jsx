@@ -18,6 +18,7 @@ import {
     FaQuestionCircle
 } from 'react-icons/fa';
 import { generatePDF } from '/src/utils/generatePDF';
+import pageBg from "/src/assets/img/bg1.png";
 
 const QuoteRequest = () => {
 
@@ -127,7 +128,11 @@ const QuoteRequest = () => {
         document.documentElement.classList.remove("nav-open");
         // if (location.state?.scrollToQuote) {
         if (scrollToQuote && !scrolledToQuote) {
-            document.getElementById("quote-section")?.scrollIntoView({ behavior: "smooth" });
+            // document.getElementById("quote-section")?.scrollIntoView({ behavior: "smooth" });
+            const nameInput = document.getElementById("floatingName"); // make sure your input has id="name-input"
+            if (nameInput) {
+                nameInput.focus({ preventScroll: false }); // scrolls if needed
+            }
             const promoCode = searchParams.get('promoCode');
             if (promoCode) {
                 setFormData(prevFormData => ({
@@ -841,21 +846,21 @@ const QuoteRequest = () => {
 
     return (
         <>
-            <Container className="quick-quote-container px-4 rounded-2" id="quote-section">
+            <Container className="quick-quote-container px-4 rounded-2" id="quote-section" style={{ backgroundImage: `url(${pageBg})`, backgroundSize: "cover" }}>
                 <HelmetProvider>
                     <title>CleanAR Solutions</title>
                     <meta name="description" content="Get a quick service estimate from CleanAR Solutions. Fill out our form to receive a personalized quote for your cleaning needs." />
                 </HelmetProvider>
                 <VisitorCounter />
-                <h2 className="text-center primary-color text-bold pt-2">{t('quick_quote.form.title', 'Get a Free Quote')}</h2>
+                <h2 className="text-center text-cleanar-color text-bold pt-2">{t('quick_quote.form.title', 'Get a Free Quote')}</h2>
                 {/* <p className="text-center text-sm italic text-gray-500 mb-1">
                     *Translation coming soon in French and Spanish
                 </p> */}
-                <p className="text-center text-secondary-color">
+                <p className="text-cleanar-color text-bold">
                     {t('quick_quote.form.description', 'Fill out the form below to receive a personalized quote for your cleaning needs. Our team will review your request and get back to you as soon as possible.')}
                 </p>
                 <hr />
-                <Form onSubmit={handleSubmit} id="quote-form" className="m-0 p-0">
+                <Form onSubmit={handleSubmit} id="quote-form" className="m-0 p-0" >
                     <Form.Group className="mb-1">
                         <Row>
                             {[
@@ -1007,7 +1012,7 @@ const QuoteRequest = () => {
                     </section>
                     <Row>
                         <Col>
-                            <p className='primary-color text-bold pt-2'>
+                            <p className='text-cleanar-color text-bold pt-2'>
                                 {t('quick_quote.form.confirmationMessage', 'A confirmation email will be sent to you upon submission. Our team will review your request and get back to you as soon as possible. Thank you for choosing CleanAR Solutions!')}
                             </p>
                         </Col>

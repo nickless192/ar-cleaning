@@ -158,7 +158,11 @@ const QuoteRequest = () => {
         document.documentElement.classList.remove("nav-open");
         // if (location.state?.scrollToQuote) {
         if (scrollToQuote && !scrolledToQuote) {
-            document.getElementById("quote-section")?.scrollIntoView({ behavior: "smooth" });
+            // document.getElementById("quote-form")?.scrollIntoView({ behavior: "smooth" });
+            const nameInput = document.getElementById("floatingName"); // make sure your input has id="name-input"
+            if (nameInput) {
+                nameInput.focus({ preventScroll: false }); // scrolls if needed
+            }
             const promoCode = searchParams.get('promoCode');
             if (promoCode) {
                 setFormData(prevFormData => ({

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Card, Form, Button, Row, Col, Alert } from "react-bootstrap";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useTranslation } from "react-i18next";
+import pageBg from "/src/assets/img/bg1.png";
 
 const ContactUs = () => {
   const { t } = useTranslation();
@@ -67,8 +68,10 @@ const ContactUs = () => {
 
 
   return (
-    <section className="py-5 ">
-      <Card className="shadow-lg p-4 mx-auto rounded-4" style={{ maxWidth: "960px" }}>
+    <section className="py-5">
+      <Card className="shadow-lg p-4 mx-auto rounded-4 bg-transparent" 
+      // style={{ maxWidth: "960px", backgroundImage: `url(${pageBg})`, backgroundSize: "cover" }}
+      >
         <Row>
           {/* Contact Form */}
           <Col xs={12} md={6} className="mb-4 mb-md-0">

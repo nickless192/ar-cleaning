@@ -16,8 +16,9 @@ import {
 import Auth from "/src/utils/auth";
 import QuoteRequest from "/src/components/Pages/UserJourney/QuoteRequest";
 import BookingChangeModal from "/src/components/Pages/UserJourney/BookingChangeModal";
+import ConsentModal from "/src/components/Pages/Landing/ConsentModal";
 import { useTranslation } from "react-i18next";
-import backgroundImage from '/src/assets/img/stock-photo-cropped-shot-woman-rubber-gloves-cleaning-office-table.jpg';
+import backgroundImage from '/src/assets/img/bg1.png';
 
 
 function ProfilePage() {
@@ -25,8 +26,9 @@ function ProfilePage() {
   const navigate = useNavigate(); // useNavigate hook to handle navigation
   const location = useLocation(); // useLocation hook to get the current location
   const [isEditing, setIsEditing] = useState(false);
+  const [showConsentModal, setShowConsentModal] = useState(false);
   // const [isLogged] = React.useState(Auth.loggedIn());
-  const [setDropdownOpen] = useState(false);
+  // const [setDropdownOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -67,6 +69,7 @@ function ProfilePage() {
     setSelectedQuote(quote);
     setShowModal(true);
   };
+
   const handleRequestDateChange = (bookingId) => {
     setSelectedBookingId(bookingId);
     setShowChangeModal(true);
@@ -75,6 +78,38 @@ function ProfilePage() {
   const handleModalClose = () => {
     setShowChangeModal(false);
     setSelectedBookingId(null);
+  };
+
+  const handleConsentAccept = async () => {
+    try {
+      // ✅ Call backend to save consent
+      await fetch(`/api/users/${formData.userId}/consent`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          termsConsent: true,
+          consentReceivedDate: new Date().toISOString(),
+        }),
+      });
+
+      setFormData((prev) => ({
+        ...prev,
+        termsConsent: true,
+        consentReceivedDate: new Date().toISOString(),
+      }));
+
+      alert("Consent saved successfully, please log back in for changes to take effect!");
+      setShowConsentModal(false);
+      Auth.logout();
+      navigate("/login-signup");
+    } catch (error) {
+      console.error("Failed to save consent:", error);
+    }
+  };
+
+  const handleConsentReject = () => {
+    // Optionally log out or block access
+    alert("You must accept the terms to continue.");
   };
 
   const handleModalSubmit = ({ newDate, comment }) => {
@@ -113,6 +148,7 @@ function ProfilePage() {
     const userInfo = async () => {
       try {
         const data = await Auth.getProfile().data;
+        // console.log(data);
         const response = await fetch(`/api/quotes/user/${Auth.getProfile().data._id}`);
         const quotesData = await response.json();
         // console.log(quotesData);
@@ -129,8 +165,14 @@ function ProfilePage() {
           howDidYouHearAboutUs: data.howDidYouHearAboutUs,
           companyName: data.companyName,
           userId: data._id,
-          username: data.username
+          username: data.username,
+          termsConsent: data.termsConsent || false,
+          consentReceivedDate: data.consentReceivedDate || null
         });
+        // ✅ If no consent, show modal
+        if (!data.termsConsent) {
+          setShowConsentModal(true);
+        }
         // get user bookings
         const bookingsResponse = await fetch(`/api/users/${data._id}/bookings`);
         const bookingsData = await bookingsResponse.json();
@@ -262,7 +304,7 @@ function ProfilePage() {
       {/* <Navbar /> */}
       <div className="wrapper light-bg-color mb-0 section-background" style={{ backgroundImage: `url(${backgroundImage})` }}>
         <Container className="py-5">
-          <Card className="p-4 shadow-lg">
+          <Card className="p-4 shadow-lg bg-transparent">
             <h2 className="text-center primary-color mb-4">{formData.name}</h2>
 
             <Form onSubmit={handleSaveClick}>
@@ -392,7 +434,7 @@ function ProfilePage() {
             </Form>
           </Card>
           {/* new: display user quotes */}
-          <Card className="p-4 mt-4 shadow-lg">
+          <Card className="p-4 mt-4 shadow-lg bg-transparent">
             <h3 className="text-center primary-color mb-4">{t("profile.quotes.title")}</h3>
 
             {quotes.length === 0 ? (
@@ -427,7 +469,7 @@ function ProfilePage() {
                               <td>{quote.postalcode}</td> */}
                           {/* Services (loop through array) */}
                           {quote.services.map((srv, idx) => (
-                            <>
+                            <React.Fragment key={idx}>
                               <td>{srv.type} - {srv.service}</td>
                               {/* <td>{srv.service}</td> */}
                               <td>
@@ -442,7 +484,7 @@ function ProfilePage() {
                                   </div>
                                 ))}
                               </td>
-                            </>
+                            </React.Fragment>
                           ))}
                           {/* Submitted date */}
                           <td>{quote.promoCode || t("profile.quotes.not_applicable")}</td>
@@ -474,7 +516,7 @@ function ProfilePage() {
                       onClick={() => setCurrentQuotePage(currentQuotePage - 1)}
                     />
                     <span className="mx-3 align-self-center">
-                     {t("profile.pagination.page_of")} {currentQuotePage} {t("profile.pagination.of")} {totalQuotePages}
+                      {t("profile.pagination.page_of")} {currentQuotePage} {t("profile.pagination.of")} {totalQuotePages}
                     </span>
                     <Pagination.Next
                       disabled={currentQuotePage === totalQuotePages}
@@ -506,7 +548,7 @@ function ProfilePage() {
             </Modal>
           </Card>
 
-          <Card className="p-4 mt-4 shadow-lg">
+          <Card className="p-4 mt-4 shadow-lg bg-transparent">
             <h3 className="text-center primary-color mb-4">{t("profile.bookings.title")}</h3>
             {bookings.length === 0 ? (
               <p className="text-center">{t("profile.bookings.no_bookings")}</p>
@@ -591,6 +633,11 @@ function ProfilePage() {
           </Card>
         </Container>
       </div>
+      <ConsentModal
+        show={showConsentModal}
+        onAccept={handleConsentAccept}
+        onReject={handleConsentReject}
+      />
 
       {/* </div> */}
       {/* <Footer /> */}

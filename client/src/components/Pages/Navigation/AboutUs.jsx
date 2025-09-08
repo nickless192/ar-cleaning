@@ -84,13 +84,13 @@ function AboutUsPage() {
             <p className="fs-5 text-secondary">{t("about.vision_text")}</p>
           </Col>
           <Col md="6">
-            <Card className="shadow-sm border-0">
+            <Card className="shadow-sm border-0 bg-transparent">
               <CardHeader className="bg-success text-white fw-bold">
                 {t("about.values_title")}
               </CardHeader>
-              <CardBody>
+              <CardBody className="bg-transparent">
                 <p className="fw-semibold">{t("about.values_intro")}</p>
-                <ul className="list-unstyled">
+                <ul className="list-unstyled bg-transparent">
                   {t("about.values_list", { returnObjects: true }).map(
                     (value, idx) => (
                       <li key={idx} className="mb-2">
@@ -110,13 +110,13 @@ function AboutUsPage() {
       <WhyChooseUs />
 
       {/* Industries We Serve */}
-      <Container className="py-5">
+      <Container className="py-3 ">
         <h2 className="text-center fw-bold mb-4">
           {t("about.industries_title")}
         </h2>
         <Row>
           <Col md="4" className="mb-4">
-            <Card className="h-100 shadow-sm border-0">
+            <Card className="h-100 shadow-sm border-0 bg-transparent">
               <CardHeader className="bg-secondary text-white fw-bold">
                 {t("about.industries.residential.title")}
               </CardHeader>
@@ -124,13 +124,13 @@ function AboutUsPage() {
                 {t("about.industries.residential.items", {
                   returnObjects: true,
                 }).map((item, idx) => (
-                  <ListGroupItem key={idx}>{item}</ListGroupItem>
+                  <ListGroupItem key={idx} className="bg-transparent">{item}</ListGroupItem>
                 ))}
               </ListGroup>
             </Card>
           </Col>
           <Col md="4" className="mb-4">
-            <Card className="h-100 shadow-sm border-0">
+            <Card className="h-100 shadow-sm border-0 bg-transparent">
               <CardHeader className="bg-primary text-white fw-bold">
                 {t("about.industries.offices.title")}
               </CardHeader>
@@ -138,13 +138,13 @@ function AboutUsPage() {
                 {t("about.industries.offices.items", {
                   returnObjects: true,
                 }).map((item, idx) => (
-                  <ListGroupItem key={idx}>{item}</ListGroupItem>
+                  <ListGroupItem key={idx} className="bg-transparent">{item}</ListGroupItem>
                 ))}
               </ListGroup>
             </Card>
           </Col>
           <Col md="4" className="mb-4">
-            <Card className="h-100 shadow-sm border-0">
+            <Card className="h-100 shadow-sm border-0 bg-transparent">
               <CardHeader className="bg-success text-white fw-bold">
                 {t("about.industries.festivals.title")}
               </CardHeader>
@@ -152,7 +152,7 @@ function AboutUsPage() {
                 {t("about.industries.festivals.items", {
                   returnObjects: true,
                 }).map((item, idx) => (
-                  <ListGroupItem key={idx}>{item}</ListGroupItem>
+                  <ListGroupItem key={idx} className="bg-transparent">{item}</ListGroupItem>
                 ))}
               </ListGroup>
             </Card>

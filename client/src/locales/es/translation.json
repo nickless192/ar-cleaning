@@ -132,6 +132,8 @@
     "password_tooltip": "Ingresa la contraseña de tu cuenta.",
     "login_button": "Iniciar Sesión",
     "reset_password_button": "Restablecer tu Contraseña",
+    "signup_prompt": "¿No tienes una cuenta?",
+    "signup_link": "Crea una aquí",
     "alerts": {
       "user_not_found": "Usuario no encontrado",
       "wrong_password": "¡Contraseña incorrecta!",
@@ -142,6 +144,8 @@
   "signup": {
     "title": "Registrarse",
     "description": "Por favor complete el formulario a continuación para crear una cuenta.",
+    "login_prompt": "¿Ya tienes una cuenta?",
+    "login_link": "Inicia sesión aquí",
     "form_labels": {
       "first_name": "Nombre*",
       "last_name": "Apellido*",
@@ -151,7 +155,8 @@
       "password": "Contraseña*",
       "how_heard": "¿Cómo se Enteró de Nosotros?",
       "referral": "Referencia",
-      "please_specify": "Por Favor Especifique"
+      "please_specify": "Por Favor Especifique",
+      "agree": "Estoy de acuerdo con los"
     },
     "tooltips": {
       "first_name": "Ingrese su nombre.",
@@ -255,7 +260,8 @@
     "description": "🍪 Usamos cookies para mejorar tu experiencia.",
     "manage_preferences": "Gestiona tus preferencias en cualquier momento en tu navegador o aquí.",
     "reject": "Rechazar",
-    "accept_all": "Aceptar Todo"
+    "accept_all": "Aceptar Todo",
+    "read_our": "Lee nuestra"
   },
   "landing_fresh": {
     "title": "Conecta para un Espacio Más Fresco 🧼✨",
@@ -428,7 +434,7 @@
   "navbar": {
     "about_us": "Acerca de Nosotros",
     "products_services": "Productos y Servicios",
-    "log_in_signup": "Iniciar Sesión / Registrarse",
+    "log_in_signup": "Iniciar Sesión",
     "log_out": "Cerrar Sesión",
     "profile": "Perfil",
     "admin": {

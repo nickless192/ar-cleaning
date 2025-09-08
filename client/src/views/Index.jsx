@@ -34,10 +34,14 @@ import { useTranslation } from 'react-i18next';
 function StickyQuoteButton() {
   const { t } = useTranslation();
   const scrollToForm = () => {
-    const formEl = document.getElementById("quote-form") || document.getElementById("quote-section");
-    if (formEl) {
-      formEl.scrollIntoView({ behavior: "smooth" });
-    }
+    // const formEl = document.getElementById("quote-form") || document.getElementById("quote-section");
+    // if (formEl) {
+    //   formEl.scrollIntoView({ behavior: "smooth" });
+    // }
+    const nameInput = document.getElementById("floatingName"); // make sure your input has id="name-input"
+if (nameInput) {
+  nameInput.focus({ preventScroll: false }); // scrolls if needed
+}
   };
 
   return (
@@ -64,10 +68,10 @@ function Index() {
   const { t, i18n } = useTranslation();
 
   const goToQuote = () => {
-    const el = document.getElementById("quote-section");
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+     const nameInput = document.getElementById("floatingName"); // make sure your input has id="name-input"
+if (nameInput) {
+  nameInput.focus({ preventScroll: false }); // scrolls if needed
+}
   };
 
 
@@ -82,7 +86,7 @@ function Index() {
     },
     {
       icon: "now-ui-icons ui-1_email-85",
-      link: "mailto:info@cleanARsolutions.ca",
+      link: "mailto:info@cleanARsolutions.ca?subject=Cleaning%20Service%20Request&body=Hi%20CleanAR%20Solutions%2C%0A%0AI'd%20like%20to%20request%20a%20information%20for...",
       text: t('contact_email_support'),
       description: t('email_description'),
       additionalInfo: t('email_additional'),
@@ -214,7 +218,7 @@ function Index() {
       <WelcomeModal />
       {/* <LandingPageHeader /> */}
 
-      <Row className="m-0 align-items-center">
+      <Row className="m-0 align-items-center justify-content-center">
         {/* <Col className="m-0 p-0" xs='12' md='6'>
             <h1 className="primary-color text-bold montserrat-bold text-align-end mr-3">CleanAR Solutions <br /> Getting Started</h1>
             <p className="martel-bold landing-page-intro text-align-end mr-3">Tired of Cleaning? Reclaim your free time with CleanAR Solutions. Serving Toronto and the GTA, we provide sparkling clean spaces so you can focus on what matters. <b>Get a free quote!</b>
@@ -247,8 +251,11 @@ function Index() {
             transition={{ delay: 0.3 }}
           >
             {/* Say goodbye to stress and hello to sparkle ✨<br /> */}
-            {t('intro')} <br />
-            {t('details')} <br />
+            <strong>
+              {t('intro')}
+            </strong> <br />
+            {t('details')} {" "}
+            {/* <br /> */}
             {t('services')} <br />
             {/* <b>CleanAR Solutions</b> brings 10+ years of trusted cleaning to homes and businesses across the GTA.<br /> */}
             {/* From deep cleans to regular maintenance, we tailor services to your needs—efficient, eco-friendly, and always reliable. */}
@@ -269,7 +276,7 @@ function Index() {
           </div>
 
         </Col>
-        <Col xs='12' md='6'>
+        <Col xs='12' md='3' className=" pt-5">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -277,7 +284,7 @@ function Index() {
             className="contact-card-container mx-3"
           >
 
-            <Card className="">
+            <Card className="bg-transparent">
               {contactItems.map((item, index) => (
                 <motion.div
                   key={index}
@@ -286,7 +293,7 @@ function Index() {
                     boxShadow: "0px 5px 15px rgba(0,0,0,0.1)"
                   }}
                 >
-                  <ListGroupItem className="d-flex align-items-center">
+                  <ListGroupItem className="d-flex align-items-center bg-transparent">
                     <div className={`me-3 ${item.color}`}>
                       <i className={`${item.icon} fs-4`}></i>
                     </div>
@@ -320,8 +327,7 @@ function Index() {
                       ) : item.link.startsWith("http") || item.link.startsWith("mailto") ? (
                         <a
                           href={item.link}
-                          target="_blank"
-                          rel="noreferrer noopener"
+                             {...(item.link.startsWith("http") && { target: "_blank", rel: "noreferrer noopener" })}
                           data-track="contact-link"
                           className="text-bold martel-semibold underline"
                           title={item.text}
@@ -344,6 +350,7 @@ function Index() {
                       <br />
                       <p className="text-muted small">{item.additionalInfo}</p>
                     </div>
+                    
                   </ListGroupItem>
                 </motion.div>
               ))}
