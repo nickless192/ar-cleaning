@@ -37,11 +37,11 @@ class AuthService {
     return localStorage.getItem('id_token');
   }
 
-  async login(id_token, adminFlag) {
+  async login(id_token) {
     // Saves user token to localStorage
     // console.log(id_token, adminFlag);
     localStorage.setItem('id_token', id_token);
-    localStorage.setItem('adminFlag', adminFlag);
+    // localStorage.setItem('adminFlag', adminFlag);
     
     window.location.assign('/profile-page');
 
@@ -49,7 +49,7 @@ class AuthService {
   logout() {
     // Clear user token and profile data from localStorage
     localStorage.removeItem('id_token');
-    localStorage.removeItem('adminFlag');
+    // localStorage.removeItem('adminFlag');
     // sessionStorage.removeItem('id_token');
     // sessionStorage.removeItem('adminFlag');
     // this will reload the page and reset the state of the application

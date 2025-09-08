@@ -71,6 +71,13 @@ const UserSchema = new Schema({
     resetTokenExpires: {
         type: Date
     },
+    termsConsent: {
+        type: Boolean,
+        default: false
+    },
+    consentReceivedDate: {
+        type: Date
+    },
     roles: [{
         type: Schema.Types.ObjectId,
         ref: 'Role',

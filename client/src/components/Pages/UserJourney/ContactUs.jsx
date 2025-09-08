@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { Card, Form, Button, Row, Col, Alert } from "react-bootstrap";
 import ReCAPTCHA from "react-google-recaptcha";
+import { useTranslation } from "react-i18next";
+import pageBg from "/src/assets/img/bg1.png";
 
 const ContactUs = () => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -16,7 +19,7 @@ const ContactUs = () => {
    const [status, setStatus] = useState({ loading: false, error: "", success: "" });
 
      const handleCaptcha = (value) => {
-    console.log("Captcha value:", value);
+    // console.log("Captcha value:", value);
     setCaptchaValue(value);
   };
 
@@ -28,7 +31,7 @@ const ContactUs = () => {
   const handleSubmit = async (e) => {
   e.preventDefault();
   if (!captchaValue) {
-      alert("Please complete the CAPTCHA.");
+      alert(t("contact.alerts.captcha"));
       return;
     }
   setStatus({ loading: true, error: "", success: "" });
@@ -52,12 +55,12 @@ const ContactUs = () => {
       throw new Error(data.message || "Something went wrong.");
     }
 
-    setStatus({ loading: false, error: "", success: "Your message has been sent!" });
+    setStatus({ loading: false, error: "", success: t("contact.alerts.success") });
     setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
   } catch (error) {
     setStatus({
       loading: false,
-      error: error.message || "Unable to send message. Try again later.",
+      error: error.message || t("contact.alerts.error"),
       success: "",
     });
   }
@@ -65,78 +68,80 @@ const ContactUs = () => {
 
 
   return (
-    <section className="py-5 bg-light">
-      <Card className="shadow-lg p-4 mx-auto rounded-4" style={{ maxWidth: "960px" }}>
+    <section className="py-5">
+      <Card className="shadow-lg p-4 mx-auto rounded-4 bg-transparent" 
+      // style={{ maxWidth: "960px", backgroundImage: `url(${pageBg})`, backgroundSize: "cover" }}
+      >
         <Row>
           {/* Contact Form */}
           <Col xs={12} md={6} className="mb-4 mb-md-0">
-            <h3 className="mb-3">Let’s Talk 👋</h3>
+            <h3 className="mb-3">{t("contact.heading")}</h3>
             <p className="text-muted">
-              Still have questions? Send us a message and we’ll get back to you shortly.
+              {t("contact.intro")}
             </p>
             <Form onSubmit={handleSubmit}>
                {status.success && <Alert variant="success">{status.success}</Alert>}
               {status.error && <Alert variant="danger">{status.error}</Alert>}
               <Form.Group className="mb-3" controlId="name">
-                <Form.Label>Your Name</Form.Label>
+                <Form.Label>{t("contact.form.name_label")}</Form.Label>
                 <Form.Control
                   type="text"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  placeholder="Jane Doe"
+                  placeholder={t("contact.form.name_placeholder")}
                   className="text-cleanar-color form-input"
                   required
                 />
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="email">
-                <Form.Label>Email Address</Form.Label>
+                <Form.Label>{t("contact.form.email_label")}</Form.Label>
                 <Form.Control
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder="you@example.com"
+                  placeholder={t("contact.form.email_placeholder")}
                   className="text-cleanar-color form-input"
                   required
                 />
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="phone">
-                <Form.Label>Phone Number</Form.Label>
+                <Form.Label>{t("contact.form.phone_label")}</Form.Label>
                 <Form.Control
                   type="tel"
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  placeholder="(123) 456-7890"
+                  placeholder={t("contact.form.phone_placeholder")}
                   className="text-cleanar-color form-input"
                 />
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="subject">
-                <Form.Label>Subject</Form.Label>
+                <Form.Label>{t("contact.form.subject_label")}</Form.Label>
                 <Form.Control
                   type="text"
                   name="subject"
                   value={formData.subject}
                   onChange={handleChange}
                   className="text-cleanar-color form-input"
-                  placeholder="e.g., Booking Question"
+                  placeholder={t("contact.form.subject_placeholder")}
                   required
                 />
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="message">
-                <Form.Label>Message</Form.Label>
+                <Form.Label>{t("contact.form.message_label")}</Form.Label>
                 <Form.Control
                   as="textarea"
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
                   rows={4}
-                  placeholder="Let us know how we can help..."
+                  placeholder={t("contact.form.message_placeholder")}
                   className="text-cleanar-color form-input"
                   required
                 />
@@ -147,7 +152,7 @@ const ContactUs = () => {
       />
 
               <Button variant="primary" type="submit" className="w-100 mt-2">
-                Send Message
+                {t("contact.form.submit")}
               </Button>
             </Form>
           </Col>
@@ -155,14 +160,14 @@ const ContactUs = () => {
           {/* Company Info */}
           <Col xs={12} md={6} className="ps-md-4 d-flex flex-column justify-content-center">
             <h4 className="mb-3">📍 CleanAR Solutions</h4>
-            <p className="mb-2"><strong>Location:</strong> Downtown Toronto</p>
-            <p className="mb-2"><strong>Phone:</strong> (437) 440-5514</p>
-            <p className="mb-2"><strong>Email:</strong> <a href="mailto:info@cleanarsolutions.ca" className="text-decoration-none">
+            <p className="mb-2"><strong>{t("contact.company.location_label")}:</strong> {t("contact.company.location_value")}</p>
+            <p className="mb-2"><strong>{t("contact.company.phone_label")}:</strong> {t("contact.company.phone_value")}</p>
+            <p className="mb-2"><strong>{t("contact.company.email_label")}:</strong> <a href="mailto:info@cleanarsolutions.ca" className="text-decoration-none">
              info@cleanARsolutions.ca
             </a>
              </p>
             <p className="text-muted mt-3">
-                We’re here to make your space sparkle! ✨ If you have any questions or need assistance, feel free to reach out. We look forward to hearing from you!
+                {t("contact.company.description")}
             </p>
           </Col>
         </Row>

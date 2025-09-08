@@ -1,4 +1,5 @@
-const { User } = require('../models');
+const User = require('../models/User');
+const Customer = require('../models/Customer');
 const { signToken } = require('../utils/auth');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
@@ -28,6 +29,13 @@ const userControllers = {
     },
     // create new user
     async createUser({ body }, res) {
+        // check if consent was given
+        if (!body.termsConsent) {
+            return res.status(400).json({ message: 'You must agree to the terms and conditions.' });
+        }
+        // Set the consentReceivedDate to now
+        body.consentReceivedDate = Date.now();
+
         User.create(body).
             then(dbUserData => {
                 console.log(dbUserData);
@@ -136,7 +144,37 @@ const userControllers = {
         await user.save();
 
         res.status(200).json({ message: 'Password successfully reset' });
-    }
+    },
+    async getUserBookings({ params }, res) {
+        // get userId and check if its linked to customer and get the customer bookings
+        try {
+            // const user = await User.findById(params.userId);
+            // if (!user) return res.status(404).json({ message: 'User not found' });
+
+            const customer = await Customer.findOne({ user: params.userId }).populate('bookings');
+            if (!customer) return res.status(404).json({ message: 'No customer linked to this user' });
+
+            res.json({ bookings: customer.bookings });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ error: 'Failed to fetch user bookings' });
+        }
+    },
+    async setUserConsent({ params, body }, res) {
+        try {
+            const user = await User.findById(params.userId);
+            if (!user) return res.status(404).json({ message: 'No user found' });
+
+            user.termsConsent = body.termsConsent;
+            user.consentReceivedDate = body.consentReceivedDate;
+            await user.save();
+
+            res.json({ message: 'User consent updated successfully' });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ error: 'Failed to update user consent' });
+        }
+    }    
 };
 
 module.exports = userControllers;

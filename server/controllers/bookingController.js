@@ -2,6 +2,7 @@ const sgMail = require('@sendgrid/mail');
 const { DateTime } = require('luxon');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const Booking = require('../models/Booking');
+const Customer = require('../models/Customer');
 // const { sendConfirmationEmail } = require('../utils/emailService');
 
 const sendReminderEmail = async ({ customerEmail, customerName, date, serviceType }) => {
@@ -77,6 +78,7 @@ const bookingControllers = {
             serviceType,
             date,
             userId,
+            customerId,
             // scheduleConfirmation,
             // confirmationDate,
             // reminderScheduled,
@@ -102,6 +104,7 @@ const bookingControllers = {
                 createdBy: userId,
                 updatedBy: userId,
                 date: parsedDate,
+                customerId: customerId || null,
                 // reminderScheduled,
                 // scheduleConfirmation: scheduleConfirmation,
                 // scheduledConfirmationDate: confirmationDateLocal,
@@ -112,6 +115,11 @@ const bookingControllers = {
                 income: income || 0
             });
             const savedBooking = await newBooking.save();
+
+            // if a customerId is provided, i need to push it to the customer's bookings array
+            if (customerId) {
+                await Customer.findByIdAndUpdate(customerId, { $push: { bookings: savedBooking._id } });
+            }            
             res.status(201).json(savedBooking);
         } catch (err) {
             console.error('Error creating booking:', err);
@@ -210,6 +218,7 @@ const bookingControllers = {
                 confirmationDate,
                 reminderScheduled,
                 disableConfirmation,
+                // customerSuggestedBookingAcknowledged,
                 status
             } = req.body; // Use payload if available, otherwise fall back to req.body
             // console.log('Confirm booking body:', req.body);
@@ -228,6 +237,7 @@ const bookingControllers = {
             // updatedBooking.updatedBy = req.body.updatedBy; // Assuming userId is passed in the request body
             // await updatedBooking.save(); // Save the updated booking
             // res.json(updatedBooking);
+            
             const updatedBooking = await Booking.findByIdAndUpdate(
                 bookingId,
                 {
@@ -243,6 +253,10 @@ const bookingControllers = {
                 },
                 { new: true }
             );
+            // if (customerSuggestedBookingAcknowledged) {
+            //     updatedBooking.customerSuggestedBookingAcknowledged = true;
+            // }
+            // updatedBooking.save();
             res.status(200).json(updatedBooking);
         } catch (err) {
             console.error('Error confirming booking:', err);
@@ -401,7 +415,7 @@ const bookingControllers = {
     },
     updateBookingDate: async (req, res) => {
         const bookingId = req.params.id;
-        const { date, updatedBy } = req.body;
+        const { date, updatedBy, customerSuggestedBookingAcknowledged } = req.body;
 
         try {
             const updatedBooking = await Booking.findByIdAndUpdate(bookingId,
@@ -422,11 +436,35 @@ const bookingControllers = {
             if (!updatedBooking) {
                 return res.status(404).json({ error: 'Booking not found' });
             }
+            if (customerSuggestedBookingAcknowledged) {
+                updatedBooking.customerSuggestedBookingAcknowledged = true;
+            }
+            updatedBooking.save();
 
             res.status(200).json(updatedBooking);
         } catch (err) {
             console.error('Error updating booking date:', err);
             res.status(500).json({ error: 'Failed to update booking date' });
+        }
+    },
+    submitNewDateRequest: async (req, res) => {
+        const bookingId = req.params.id;
+        const { newDate, comment } = req.body;
+
+        try {
+            // Here you would typically send the new date request to the relevant service
+            // For demonstration, we'll just log it
+            console.log(`New date request for booking ${bookingId}:`, newDate, comment);
+            await Booking.findByIdAndUpdate(bookingId, {
+                customerSuggestedBookingDate: newDate,
+                customerSuggestedBookingComment: comment,
+                customerSuggestedBookingAcknowledged: false
+            });
+
+            res.status(200).json({ message: 'New date request submitted successfully' });
+        } catch (err) {
+            console.error('Error submitting new date request:', err);
+            res.status(500).json({ error: 'Failed to submit new date request' });
         }
     }
 };

@@ -1,6 +1,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import Auth from "/src/utils/auth";
+import { useTranslation } from "react-i18next";
 // reactstrap components
 import {
   Container,
@@ -17,6 +18,7 @@ import {
 } from 'react-bootstrap';
 
 import { FaQuestionCircle } from 'react-icons/fa';
+import pageBg from "/src/assets/img/bg1.png";
 
 // core components
 
@@ -29,8 +31,10 @@ function SignUp() {
     howDidYouHearAboutUsSupport: "",
     telephone: "",
     username: "",
-    password: ""
+    password: "",
+    termsConsent: false
   });
+  const { t } = useTranslation();
 
   const [popoverOpen, setPopoverOpen] = useState({
     firstName: false,
@@ -65,7 +69,8 @@ function SignUp() {
       cleanedData.email &&
       cleanedData.username &&
       cleanedData.password &&
-      cleanedData.telephone) {
+      cleanedData.telephone &&
+      cleanedData.termsConsent) {
       try {
         const response = await fetch(`/api/users/`, {
           method: 'post',
@@ -76,7 +81,7 @@ function SignUp() {
         });
 
         if (response.ok) {
-          console.log("New account created!");
+          // console.log("New account created!");
           const data = await response.json();
 
           // Call API to notify user of account creation
@@ -89,7 +94,7 @@ function SignUp() {
           });
 
           if (emailResponse.ok) {
-            console.log("Notification sent!");
+            // console.log("Notification sent!");
             // const emailData = await emailResponse.json();
             // console.log(emailData);
           } else {
@@ -105,7 +110,7 @@ function SignUp() {
           });
 
           if (emailNotificationResponse.ok) {
-            console.log("Notification sent!");
+            // console.log("Notification sent!");
             // const emailData = await emailNotificationResponse.json();
             // console.log(emailData);
           } else {
@@ -113,17 +118,17 @@ function SignUp() {
           }
 
           // Now call Auth.login after the email has been sent
-          Auth.login(data.token, data.dbUserData.adminFlag);
+          Auth.login(data.token);
 
         } else {
           // alert(response.statusText);
-          alert("Username already taken, please try again with a different username")
+          alert(t("signup.alerts.username_taken"));
         }
       } catch (err) {
         console.error(err);
       }
     } else {
-      alert("Please fill out all fields before submitting");
+      alert(t("signup.alerts.missing_fields"));
     }
   };
 
@@ -155,22 +160,22 @@ function SignUp() {
     <>
       {/* <Navbar /> */}
       {/* <div className="section section-signup light-blue-bg-color pb-0 mb-0"> */}
-      <div className="content content-border">
-        <h1 className="title secondary-color text-center montserrat-bold">Sign Up</h1>
+      <div className="content content-border bg-light" style={{ backgroundImage: `url(${pageBg})`, backgroundSize: 'cover' }}>
+        <h1 className="title secondary-color text-center montserrat-bold">{t("signup.title")}</h1>
         <Container className="container">
-          <p className="text-center text-cleanar-color">Please fill out the form below to create an account.</p>
+          <p className="text-center text-cleanar-color text-bold">{t("signup.description")}</p>
 
           <Form className="form" onSubmit={(e) => handleFormSubmit(e)}>
             <Row className="justify-content-center">
               <Col md='10' xs='10' className="py-1">
                 <FloatingLabel
                   controlId="floatingFirstName"
-                  label="First Name*"
+                  label={`${t("signup.form_labels.first_name")}`}
                   className="text-cleanar-color"
                 >
                   <Form.Control
                     type="text"
-                    placeholder="First Name"
+                    placeholder={t("signup.form_labels.first_name")}
                     className="form-input text-cleanar-color rounded-pill"
                     name="firstName"
                     value={formData.firstName}
@@ -188,7 +193,7 @@ function SignUp() {
                   transition={transitionProps}
                 >
                   <PopoverBody>
-                    Enter your first name.
+                    {t("signup.tooltips.first_name")}
                   </PopoverBody>
                 </Popover>
               </Col>
@@ -197,12 +202,12 @@ function SignUp() {
               <Col md='10' xs='10' className="py-1">
                 <FloatingLabel
                   controlId="floatingLastName"
-                  label="Last Name*"
+                  label={`${t("signup.form_labels.last_name")}`}
                   className="text-cleanar-color"
                 >
                   <Form.Control
                     type="text"
-                    placeholder="Last Name"
+                    placeholder={t("signup.form_labels.last_name")}
                     className="text-cleanar-color form-input rounded-pill"
                     name="lastName"
                     value={formData.lastName}
@@ -218,7 +223,7 @@ function SignUp() {
                   transition={transitionProps}
                 >
                   <PopoverBody>
-                    Enter your last name.
+                    {t("signup.tooltips.last_name")}
                   </PopoverBody>
                 </Popover>
               </Col>
@@ -227,12 +232,12 @@ function SignUp() {
               <Col md='10' xs='10' className="py-1">
                 <FloatingLabel
                   controlId="floatingEmail"
-                  label="Email Address*"
+                  label={`${t("signup.form_labels.email")}`}
                   className="text-cleanar-color"
                 >
                   <Form.Control
                     type="text"
-                    placeholder="Email"
+                    placeholder={t("signup.form_labels.email")}
                     className="text-cleanar-color form-input rounded-pill"
                     name="email"
                     value={formData.email}
@@ -248,7 +253,7 @@ function SignUp() {
                   transition={transitionProps}
                 >
                   <PopoverBody>
-                    Enter your email address.
+                    {t("signup.tooltips.email")}
                   </PopoverBody>
                 </Popover>
               </Col>
@@ -257,12 +262,12 @@ function SignUp() {
               <Col md='10' xs='10' className="py-1">
                 <FloatingLabel
                   controlId="floatingTelephone"
-                  label="Telephone*"
+                  label={`${t("signup.form_labels.telephone")}`}
                   className="text-cleanar-color"
                 >
                   <Form.Control
                     type="text"
-                    placeholder="Telephone"
+                    placeholder={t("signup.form_labels.telephone")}
                     className="text-cleanar-color form-input rounded-pill"
                     name="telephone"
                     value={formData.telephone}
@@ -278,7 +283,7 @@ function SignUp() {
                   transition={transitionProps}
                 >
                   <PopoverBody>
-                    Enter your telephone number.
+                    {t("signup.tooltips.telephone")}
                   </PopoverBody>
                 </Popover>
               </Col>
@@ -287,12 +292,12 @@ function SignUp() {
               <Col md='10' xs='10' className="py-1">
                 <FloatingLabel
                   controlId="floatingUsername"
-                  label="Username*"
+                  label={`${t("signup.form_labels.username")}`}
                   className="text-cleanar-color"
                 >
                   <Form.Control
                     type="text"
-                    placeholder="Username"
+                    placeholder={t("signup.form_labels.username")}
                     className="text-cleanar-color form-input rounded-pill"
                     name="username"
                     value={formData.username}
@@ -308,7 +313,7 @@ function SignUp() {
                   transition={transitionProps}
                 >
                   <PopoverBody>
-                    Enter your username.
+                    {t("signup.tooltips.username")}
                   </PopoverBody>
                 </Popover>
               </Col>
@@ -317,12 +322,12 @@ function SignUp() {
               <Col md='10' xs='10' className="py-1">
                 <FloatingLabel
                   controlId="floatingPasswordSignUp"
-                  label="Password*"
+                  label={`${t("signup.form_labels.password")}`}
                   className="text-cleanar-color"
                 >
                   <Form.Control
                     type="password"
-                    placeholder="Password"
+                    placeholder={t("signup.form_labels.password")}
                     className="text-cleanar-color form-input rounded-pill"
                     name="password"
                     value={formData.password}
@@ -338,7 +343,7 @@ function SignUp() {
                   transition={transitionProps}
                 >
                   <PopoverBody>
-                    Enter your password.
+                    {t("signup.tooltips.password")}
                   </PopoverBody>
                 </Popover>
               </Col>
@@ -347,23 +352,23 @@ function SignUp() {
               <Col md='10' xs='10' className="py-1">
                 <FloatingLabel
                   controlId="floatingHowDidYouHearAboutUs"
-                  label="How Did You Hear About Us?"
+                  label={`${t("signup.form_labels.how_heard")}`}
                   className="text-cleanar-color"
                 >
                   <Form.Select
                     type="select"
-                    placeholder="How Did You Hear About Us?"
+                    placeholder={t("signup.form_labels.how_heard")}
                     className="text-cleanar-color form-input  rounded-pill"
                     name="howDidYouHearAboutUs"
                     value={formData.howDidYouHearAboutUs}
                     onChange={(e) => handleChange(e)}
                   >
-                    <option value="">How Did You Hear About Us?...</option>
-                    <option value="Google">Google</option>
-                    <option value="Facebook">Facebook</option>
-                    <option value="Instagram">Instagram</option>
-                    <option value="Referral">Referral</option>
-                    <option value="Other">Other</option>
+                    <option value="">{t("signup.form_labels.how_heard")}</option>
+                    <option value="Google">{t("signup.dropdown_options.google")}</option>
+                    <option value="Facebook">{t("signup.dropdown_options.facebook")}</option>
+                    <option value="Instagram">{t("signup.dropdown_options.instagram")}</option>
+                    <option value="Referral">{t("signup.dropdown_options.referral")}</option>
+                    <option value="Other">{t("signup.dropdown_options.other")}</option>
                   </Form.Select>
                 </FloatingLabel>
               </Col>
@@ -375,7 +380,7 @@ function SignUp() {
                   transition={transitionProps}
                 >
                   <PopoverBody>
-                    How did you hear about us?
+                    {t("signup.tooltips.how_heard")}
                   </PopoverBody>
                 </Popover>
               </Col>
@@ -387,12 +392,12 @@ function SignUp() {
                   <Col md='10' xs='10' className="py-1">
                     <FloatingLabel
                       controlId="floatingReferral"
-                      label="Referral"
+                      label={t("signup.form_labels.referral")}
                       className="text-cleanar-color"
                     >
                       <Form.Control
                         type="text"
-                        placeholder="Referral"
+                        placeholder={t("signup.form_labels.referral")}
                         className="text-cleanar-color form-input  rounded-pill"
                         name="howDidYouHearAboutUs"
                         value={formData.howDidYouHearAboutUsSupport}
@@ -410,7 +415,7 @@ function SignUp() {
                       transition={transitionProps}
                     >
                       <PopoverBody>
-                        Who referred you?
+                        {t("signup.tooltips.referral")}
                       </PopoverBody>
                     </Popover>
                   </Col>
@@ -423,12 +428,12 @@ function SignUp() {
                   <Col md='10' xs='10' className="py-1">
                     <FloatingLabel
                       controlId="floatingOther"
-                      label="Please Specify"
+                      label={t("signup.form_labels.please_specify")}
                       className="text-cleanar-color"
                     >
                       <Form.Control
                         type="text"
-                        placeholder="Other"
+                        placeholder={t("signup.form_labels.please_specify")}
                         className="text-cleanar-color form-input  rounded-pill"
                         name="howDidYouHearAboutUs"
                         value={formData.howDidYouHearAboutUsSupport}
@@ -442,7 +447,7 @@ function SignUp() {
                       transition={transitionProps}
                     >
                       <PopoverBody>
-                        How did you hear about us?
+                        {t("signup.tooltips.how_heard")}
                       </PopoverBody>
                     </Popover>
                   </Col>
@@ -452,7 +457,32 @@ function SignUp() {
 
             </Row>
             <Row className="justify-content-center">
-              <Col md='6' xs='6'>
+              <Col md='10' xs='10' className="py-1">
+                <Form.Group controlId="termsCheckbox" className="mb-3">
+                  <Form.Check
+                    type="checkbox"
+                    name="termsConsent"
+                    value={formData.termsConsent}
+                    label={
+                      <>
+                        {t("signup.form_labels.agree")}{" "}
+                        <a href="/terms" target="_blank" rel="noopener noreferrer">
+                          {t("footer.terms")}
+                        </a>{" "}
+                        &{" "}
+                        <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">
+                          {t("footer.privacy_policy")}
+                        </a>
+                        .
+                      </>
+                    }
+                    required
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row className="justify-content-center">
+              <Col md='6' xs='6' className="py-3">
                 <Button
                   className="btn-round light-bg-color rounded-pill"
                   type="submit"
@@ -460,7 +490,7 @@ function SignUp() {
                   // onClick={(e) => handleFormSubmit(e)}
                   size="lg"
                 >
-                  Get Started
+                  {t("signup.button")}
                 </Button>
               </Col>
             </Row>

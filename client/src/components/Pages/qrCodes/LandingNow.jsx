@@ -1,9 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import VisitorCounter from '../Management/VisitorCounter';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 const LandingNow = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const goToQuote = () => {
     navigate('/index?promoCode=now15', { state: { scrollToQuote: true } });
@@ -27,7 +29,7 @@ const LandingNow = () => {
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.6 }}
         >
-          🚨 Toronto, We’ve Got a Clean Emergency!
+          {t('landing_now.title')}
         </motion.h1>
 
         <motion.p
@@ -37,7 +39,7 @@ const LandingNow = () => {
           transition={{ delay: 0.3 }}
           style={{ maxWidth: '700px' }}
         >
-          Spills, stains, and surprise guests? Don’t stress it — <strong>CleanAR Solutions</strong> delivers same-day shine! Get your instant quote and let’s get scrubbing.
+          {t('landing_now.description')}
         </motion.p>
 
         <motion.div
@@ -50,13 +52,13 @@ const LandingNow = () => {
             className="btn btn-warning btn-lg fw-bold px-4 py-2"
             onClick={goToQuote}
           >
-            Get Clean Now and Get 15% Off* 🧼
+            {t('landing_now.buttons.get_clean')}
           </button>
           <a
             className="btn btn-outline-light btn-lg fw-bold px-4 py-2"
             href="tel:+14374405514"
           >
-            Speak to a Cleaner 📞
+            {t('landing_now.buttons.speak_cleaner')}
           </a>
         </motion.div>
 
@@ -66,7 +68,7 @@ const LandingNow = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 1 }}
         >
-          "Trusted Clean, Trusted Service" – because you deserve nothing less.
+          {t('landing_now.tagline')}
         </motion.p>
         <motion.p
           className="text-muted small mt-3"
@@ -74,8 +76,8 @@ const LandingNow = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          *15% off for first-time customers only. Not valid with other offers.
-          <a href="/terms-conditions" className="ms-1">See terms.</a>
+          {t('landing_now.terms')}
+          <a href="/terms-conditions" className="ms-1">{t('landing_now.see_terms')}</a>
         </motion.p>
       </div>
     </>

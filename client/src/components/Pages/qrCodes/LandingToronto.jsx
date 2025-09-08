@@ -2,9 +2,11 @@ import { useNavigate } from 'react-router-dom';
 import VisitorCounter from '../Management/VisitorCounter';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 const LandingToronto = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const goToQuote = () => {
     navigate('/index?promoCode=toronto15', { state: { scrollToQuote: true } });
@@ -33,7 +35,7 @@ const LandingToronto = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
               >
-                A Cleaner Toronto Starts Here 🧼
+                {t('landing_toronto.title')}
               </motion.h1>
 
               <motion.p
@@ -42,7 +44,7 @@ const LandingToronto = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.9, delay: 0.2 }}
               >
-                Trusted by your neighbors for spotless results. Book in less than 60 seconds.
+                {t('landing_toronto.description')}
               </motion.p>
 
               <motion.div
@@ -52,10 +54,10 @@ const LandingToronto = () => {
                 transition={{ duration: 1, delay: 0.4 }}
               >
                 <Button variant="primary" size="lg" onClick={goToQuote}>
-                  Get a Fast Quote And 15% Off* 🔥
+                  {t('landing_toronto.buttons.fast_quote')}
                 </Button>
                 <Button variant="outline-info" size="lg" href="tel:+14374405514">
-                  Speak to a Cleaning Expert 📞
+                  {t('landing_toronto.buttons.speak_expert')}
                 </Button>
               </motion.div>
               <motion.p
@@ -64,8 +66,8 @@ const LandingToronto = () => {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
               >
-                *15% off for first-time customers only. Not valid with other offers.
-                <a href="/terms-conditions" className="ms-1">See terms.</a>
+                {t('landing_toronto.terms')}
+                <a href="/terms-conditions" className="ms-1">{t('landing_toronto.see_terms')}</a>
               </motion.p>
 
             </Col>

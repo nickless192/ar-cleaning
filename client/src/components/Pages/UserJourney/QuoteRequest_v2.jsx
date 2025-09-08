@@ -158,7 +158,11 @@ const QuoteRequest = () => {
         document.documentElement.classList.remove("nav-open");
         // if (location.state?.scrollToQuote) {
         if (scrollToQuote && !scrolledToQuote) {
-            document.getElementById("quote-section")?.scrollIntoView({ behavior: "smooth" });
+            // document.getElementById("quote-form")?.scrollIntoView({ behavior: "smooth" });
+            const nameInput = document.getElementById("floatingName"); // make sure your input has id="name-input"
+            if (nameInput) {
+                nameInput.focus({ preventScroll: false }); // scrolls if needed
+            }
             const promoCode = searchParams.get('promoCode');
             if (promoCode) {
                 setFormData(prevFormData => ({
@@ -292,7 +296,7 @@ const QuoteRequest = () => {
         // if (promoCode === 'welcome10') {
         if (promoCode === 'toronto15' || promoCode === 'follow15'
             || promoCode === 'now15' || promoCode === 'start15' || promoCode === 'fresh15' || promoCode === 'secret15'
-            || promoCode === 'welcome15'
+            || promoCode === 'welcome15' || promoCode === 'refresh15'
         ) {
             setValidPromoCode(true);
             // alert('Valid promo code! 15% discount will be applied to your quote');
@@ -590,7 +594,7 @@ const QuoteRequest = () => {
 
     return (
         <>
-            <Container className="quick-quote-container px-4" id="quote-section">
+            <Container className="quick-quote-container px-4 rounded-2" id="quote-section">
                 <HelmetProvider>
                     <title>CleanAR Solutions</title>
                     <meta name="description" content="Get a quick service estimate from CleanAR Solutions. Fill out our form to receive a personalized quote for your cleaning needs." />

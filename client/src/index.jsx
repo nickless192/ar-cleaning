@@ -34,8 +34,11 @@ import LogDashboard from '/src/components/Pages/Management/LogDashboard';
 import QuickQuoteDashboard from "/src/components/Pages/Management/QuickQuoteDashboard";
 import BookingDashboard from '/src/components/Pages/Management/BookingDashboard';
 import ResetPassword from "/src/components/Pages/UserJourney/ResetPassword";
+
 import Terms from "/src/components/Pages/Navigation/Terms";
 import Disclaimer from "/src/components/Pages/Navigation/Disclaimer";
+import PrivacyPolicy from "/src/components/Pages/Navigation/PrivacyPolicy";
+
 import Footer from "/src/components/Pages/Navigation/Footer.jsx";
 import Customer from "/src/components/Pages/Management/Customers.jsx";
 import FinanceDashboard from "/src/components/Pages/Management/FinanceDashboard";
@@ -48,7 +51,8 @@ import LandingNow from "/src/components/Pages/qrCodes/LandingNow";
 import LandingSecret from "/src/components/Pages/qrCodes/LandingSecret";
 import LandingStart from "/src/components/Pages/qrCodes/LandingStart";
 import LandingToronto from "/src/components/Pages/qrCodes/LandingToronto";
-
+import backgroundImage from '/src/assets/img/natural-marble-pattern-background.jpg';
+import CookieConsent from "/src/components/Pages/Landing/CookieConsent";
 import SiteBanner from "/src/components/Pages/Navigation/SiteBanner.jsx";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -72,18 +76,31 @@ const App = () => {
     // console.log('-------------------------');
     // --- END DEBUG ---
 
-    // The rest of your ResizeObserver logic...
-    const resizeObserver = new ResizeObserver(() => {
-      const headerHeight = 2*header.offsetHeight/5;
-      content.style.paddingTop = `${headerHeight}px`;
-    });
-    // ...
-    resizeObserver.observe(header);
+const consent = JSON.parse(localStorage.getItem("cookieConsent") || "{}");
+ if (consent.analytics) {
+      // ✅ Load Google Analytics
+      const gaScript = document.createElement("script");
+      gaScript.async = true;
+      gaScript.src = "https://www.googletagmanager.com/gtag/js?id=G-PTN1K0J7Q8";
+      document.head.appendChild(gaScript);
 
-    // 2. Return a cleanup function. This runs when the component unmounts.
-    return () => {
-      resizeObserver.disconnect(); // Stop observing to prevent memory leaks.
-    };
+      gaScript.onload = () => {
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+          window.dataLayer.push(arguments);
+        }
+        window.gtag = gtag;
+        gtag("js", new Date());
+        gtag("config", "G-PTN1K0J7Q8");
+      };
+
+      // ✅ Load Ahrefs Analytics
+      const ahrefsScript = document.createElement("script");
+      ahrefsScript.src = "https://analytics.ahrefs.com/analytics.js";
+      ahrefsScript.defer = true;
+      ahrefsScript.dataset.key = "uBTWwx1doWAXuF07h1ukDA";
+      document.head.appendChild(ahrefsScript);
+    }
   }, []);
 
 
@@ -91,47 +108,60 @@ const App = () => {
     <React.StrictMode>
       <BrowserRouter>
         <div className="fixed-top-container">
-          <SiteBanner />
+          {/* <SiteBanner /> */}
           <Navbar />
         </div>
-        <div className="light-bg-color-opaque main-content">
-        <Routes>
-          <Route path="/index" element={<Index />} />
-          <Route path="/profile-page" element={<ProtectedRoute element={<ProfilePage />} />} />
-          <Route path="/manage-categories" element={<ProtectedRoute element={<ManageCategories />} />} />
-          <Route path="/manage-service" element={<ProtectedRoute element={<ManageService />} />} />
-          <Route path="/manage-product" element={<ProtectedRoute element={<ManageProduct />} />} />
-          <Route path="/manage-user" element={<ProtectedRoute element={<ManageUser />} />} />
-          <Route path="/manage-gift-card" element={<ProtectedRoute element={<GiftCard />} />} />
-          <Route path="/manage-customers" element={<ProtectedRoute element={<Customer />} />} />
-          <Route path="/manage-finance" element={<ProtectedRoute element={<FinanceDashboard />} />} />
-          <Route path="/view-quotes" element={<ProtectedRoute element={<QuickQuoteDashboard />} />} />
-          <Route path="/manage-expenses" element={<ProtectedRoute element={<ExpenseDashboard />} />} />
-          <Route path="/quick-request-v2" element={<ProtectedRoute element={<QuickRequest_v2 />} />} />
-          <Route path="/admin-contact-dashboard" element={<ProtectedRoute element={<AdminContactDashboard />} />} />
-          {/* <Route path="/view-quotes/:quoteId" element={<ProtectedRoute element={<ViewQuotes />} />} /> */}
-          <Route path="/dashboard" element={<ProtectedRoute element={<LogDashboard />} />} />
-          <Route path="/booking-dashboard" element={<ProtectedRoute element={<BookingDashboard />} />} />
-          {/* <Route path="/login-page" element={<LoginPage />} /> */}
-          {/* <Route path="/signup-page" element={<SignUp />} /> */}
-          <Route path='/login-signup' element={<LoginSign />} />
-          {/* <Route path='/request-quote' element={<RequestQuote />} /> */}
-          <Route path='/chat-tool' element={<ChatTool />} />
-          <Route path="/careers" element={<Career />} />
-          <Route path="/about-us" element={<AboutUsPage />} />
-          <Route path="/products-and-services" element={<ProductsAndServices />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/terms-conditions" element={<Terms />} />
-          <Route path="/disclaimer" element={<Disclaimer />} />
-          <Route path="/now" element={<LandingNow />} />
-          <Route path="/start" element={<LandingStart />} />
-          <Route path="/toronto" element={<LandingToronto />} />
-          <Route path="/fresh" element={<LandingFresh />} />
-          <Route path="/secret" element={<LandingSecret />} />
-          <Route path="/" element={<Navigate to="/index" />} />
-          <Route path="*" element={<Navigate to="/index" replace />} />
-        </Routes>
+      <div
+  className="light-bg-color-opaque d-flex flex-column min-vh-100"
+  style={{
+    background: `linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), url(${backgroundImage})`,
+    backgroundRepeat: 'repeat',        // repeat the image like a mosaic
+  backgroundSize: '100px 100px',     // size of each tile
+  backgroundPosition: 'top left',    // starting position
+  }}
+>
+  <main className="flex-grow-1 main-content">
+
+          <Routes>
+            <Route path="/index" element={<Index />} />
+            <Route path="/profile-page" element={<ProtectedRoute element={<ProfilePage />} />} />
+            <Route path="/manage-categories" element={<ProtectedRoute element={<ManageCategories />} />} />
+            <Route path="/manage-service" element={<ProtectedRoute element={<ManageService />} />} />
+            <Route path="/manage-product" element={<ProtectedRoute element={<ManageProduct />} />} />
+            <Route path="/manage-user" element={<ProtectedRoute element={<ManageUser />} />} />
+            <Route path="/manage-gift-card" element={<ProtectedRoute element={<GiftCard />} />} />
+            <Route path="/manage-customers" element={<ProtectedRoute element={<Customer />} />} />
+            <Route path="/manage-finance" element={<ProtectedRoute element={<FinanceDashboard />} />} />
+            <Route path="/view-quotes" element={<ProtectedRoute element={<QuickQuoteDashboard />} />} />
+            <Route path="/manage-expenses" element={<ProtectedRoute element={<ExpenseDashboard />} />} />
+            <Route path="/quick-request-v2" element={<ProtectedRoute element={<QuickRequest_v2 />} />} />
+            <Route path="/admin-contact-dashboard" element={<ProtectedRoute element={<AdminContactDashboard />} />} />
+            {/* <Route path="/view-quotes/:quoteId" element={<ProtectedRoute element={<ViewQuotes />} />} /> */}
+            <Route path="/dashboard" element={<ProtectedRoute element={<LogDashboard />} />} />
+            <Route path="/booking-dashboard" element={<ProtectedRoute element={<BookingDashboard />} />} />
+            {/* <Route path="/login-page" element={<LoginPage />} /> */}
+            {/* <Route path="/signup-page" element={<SignUp />} /> */}
+            <Route path='/login-signup' element={<LoginSign />} />
+            {/* <Route path='/request-quote' element={<RequestQuote />} /> */}
+            <Route path='/chat-tool' element={<ChatTool />} />
+            <Route path="/careers" element={<Career />} />
+            <Route path="/about-us" element={<AboutUsPage />} />
+            <Route path="/products-and-services" element={<ProductsAndServices />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/terms-conditions" element={<Terms />} />
+            <Route path="/disclaimer" element={<Disclaimer />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/now" element={<LandingNow />} />
+            <Route path="/start" element={<LandingStart />} />
+            <Route path="/toronto" element={<LandingToronto />} />
+            <Route path="/fresh" element={<LandingFresh />} />
+            <Route path="/secret" element={<LandingSecret />} />
+            <Route path="/" element={<Navigate to="/index" />} />
+            <Route path="*" element={<Navigate to="/index" replace />} />
+          </Routes>
+  </main>
         </div>
+        <CookieConsent />
         <Footer />
       </BrowserRouter>
     </React.StrictMode>

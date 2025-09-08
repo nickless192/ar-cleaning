@@ -18,6 +18,7 @@ import {
     FaQuestionCircle
 } from 'react-icons/fa';
 import { generatePDF } from '/src/utils/generatePDF';
+import pageBg from "/src/assets/img/bg1.png";
 
 const QuoteRequest = () => {
 
@@ -31,7 +32,6 @@ const QuoteRequest = () => {
         phonenumber: '',
         postalcode: '',
         promoCode: '',
-        userId: '',
         subtotalCost: 0,
         tax: 0,
         grandTotal: 0,
@@ -128,7 +128,11 @@ const QuoteRequest = () => {
         document.documentElement.classList.remove("nav-open");
         // if (location.state?.scrollToQuote) {
         if (scrollToQuote && !scrolledToQuote) {
-            document.getElementById("quote-section")?.scrollIntoView({ behavior: "smooth" });
+            // document.getElementById("quote-section")?.scrollIntoView({ behavior: "smooth" });
+            const nameInput = document.getElementById("floatingName"); // make sure your input has id="name-input"
+            if (nameInput) {
+                nameInput.focus({ preventScroll: false }); // scrolls if needed
+            }
             const promoCode = searchParams.get('promoCode');
             if (promoCode) {
                 setFormData(prevFormData => ({
@@ -235,7 +239,7 @@ const QuoteRequest = () => {
         // if (promoCode === 'welcome10') {
         if (promoCode === 'toronto15' || promoCode === 'follow15'
             || promoCode === 'now15' || promoCode === 'start15' || promoCode === 'fresh15' || promoCode === 'secret15'
-            || promoCode === 'welcome15'
+            || promoCode === 'welcome15' || promoCode === 'refresh15'
         ) {
             setValidPromoCode(true);
             // alert('Valid promo code! 15% discount will be applied to your quote');
@@ -243,7 +247,7 @@ const QuoteRequest = () => {
         }
         else {
             setValidPromoCode(false);
-            alert('Invalid promo code. Please review your code and try again. If you do not have a promo code, please leave the field blank.');
+            alert(t('quick_quote.form.invalidPromoCode'));
             return false;
         }
     };
@@ -324,8 +328,8 @@ const QuoteRequest = () => {
                 });
 
                 if (response.ok) {
-                    alert(`Quote submitted successfully! We'll be in touch shortly to discuss your needs. In the meantime, feel free to browse our services.`);
-                    await generatePDF(updatedFormData);
+                    alert(t(`quick_quote.form.submissionSuccess`));
+                    await generatePDF(updatedFormData, t);
                     // disable for testing
                     resetForm();
                     // Generate and download the PDF
@@ -333,8 +337,8 @@ const QuoteRequest = () => {
                     navigate('/products-and-services');
                 }
             } catch (error) {
-                console.error('Error submitting quote:', error);
-                alert('Error submitting quote, please ensure all fields are filled out correctly. If the problem persists, please contact us directly with a description of the issue.');
+                // console.error('Error submitting quote:', error);
+                alert(t(`quick_quote.form.submissionError`));
             }
 
 
@@ -352,7 +356,7 @@ const QuoteRequest = () => {
         }
 
         if (missingFields.length > 0) {
-            alert(`Please fill out all required fields: ${missingFields.join(', ')}`);
+            alert(t(`quick_quote.form.requiredFields`) + ` ${missingFields.join(', ')}`);
             return false;
         }
         return true;
@@ -360,18 +364,14 @@ const QuoteRequest = () => {
 
     const resetForm = () => {
         setFormData({
-             name: '',
-        companyName: '',
-        email: '',
-        phonenumber: '',
-        postalcode: '',
-        promoCode: '',
-        userId: '',
-        subtotalCost: 0,
-        tax: 0,
-        grandTotal: 0,
-        services: [],
-        products: []
+            name: '',
+            companyName: '',
+            email: '',
+            phonenumber: '',
+            postalcode: '',
+            promoCode: '',
+            services: [],
+            products: [],
         });
         setSelectedService("");
         setOptions([]);
@@ -417,21 +417,21 @@ const QuoteRequest = () => {
                             {/* Frequency */}
                             <Col xs={12} md={6}>
                                 <Form.Group controlId={`frequency-${type}`}>
-                                    <Form.Label className="fw-semibold">🕒 Frequency</Form.Label>
+                                    <Form.Label className="fw-semibold">{t('quick_quote.customOptions.frequency')}</Form.Label>
                                     <Form.Select
-                                        aria-label="Cleaning Frequency"
+                                        aria-label={t('quick_quote.customOptions.frequency')}
                                         name="frequency"
                                         size="sm"
                                         className="text-cleanar-color text-bold form-input"
                                         value={formData.services.find(s => s.type === type)?.customOptions?.frequency?.service || ''}
                                         onChange={(e) => handleCustomOptionChange(type, 'frequency', e)}
                                     >
-                                        <option value="">Select...</option>
-                                        <option value="One Time">One Time</option>
-                                        <option value="Weekly">Weekly</option>
-                                        <option value="Bi-Weekly">Bi-Weekly</option>
-                                        <option value="Monthly">Monthly</option>
-                                        <option value="Other">Other</option>
+                                        <option value="">{t('quick_quote.customOptions.selectText')}</option>
+                                        <option value="One Time">{t('quick_quote.customOptions.oneTime')}</option>
+                                        <option value="Weekly">{t('quick_quote.customOptions.weekly')}</option>
+                                        <option value="Bi-Weekly">{t('quick_quote.customOptions.biWeekly')}</option>
+                                        <option value="Monthly">{t('quick_quote.customOptions.monthly')}</option>
+                                        <option value="Other">{t('quick_quote.customOptions.other')}</option>
                                     </Form.Select>
                                 </Form.Group>
                             </Col>
@@ -439,21 +439,21 @@ const QuoteRequest = () => {
                             {/* Unit Size */}
                             <Col xs={12} md={6}>
                                 <Form.Group controlId={`unitSize-${type}`}>
-                                    <Form.Label className="fw-semibold">📏 Unit Size</Form.Label>
+                                    <Form.Label className="fw-semibold">{t('quick_quote.customOptions.unitSize')}</Form.Label>
                                     <Form.Select
-                                        aria-label="Unit Size"
+                                        aria-label={t('quick_quote.customOptions.unitSize')}
                                         name="unitSize"
                                         size="sm"
                                         className="text-cleanar-color text-bold form-input"
                                         value={formData.services.find(s => s.type === type)?.customOptions?.squareFootage?.service || ''}
                                         onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e)}
                                     >
-                                        <option value="">Select...</option>
-                                        <option value="0-499 sqft">0–499 sqft</option>
-                                        <option value="500-999 sqft">500–999 sqft</option>
-                                        <option value="1000-1499 sqft">1000–1499 sqft</option>
-                                        <option value="1500-1999 sqft">1500–1999 sqft</option>
-                                        <option value="2000+ sqft">2000+ sqft</option>
+                                        <option value="">{t('quick_quote.customOptions.selectText')}</option>
+                                        <option value="0-499 sqft">0–499 {t('quick_quote.customOptions.area')}</option>
+                                        <option value="500-999 sqft">500–999 {t('quick_quote.customOptions.area')}</option>
+                                        <option value="1000-1499 sqft">1000–1499 {t('quick_quote.customOptions.area')}</option>
+                                        <option value="1500-1999 sqft">1500–1999 {t('quick_quote.customOptions.area')}</option>
+                                        <option value="2000+ sqft">2000+ {t('quick_quote.customOptions.area')}</option>
                                     </Form.Select>
                                 </Form.Group>
                             </Col>
@@ -461,16 +461,16 @@ const QuoteRequest = () => {
                             {/* Bedrooms */}
                             <Col xs={12} md={6}>
                                 <Form.Group controlId={`bedrooms-${type}`}>
-                                    <Form.Label className="fw-semibold">🛏️ Bedrooms</Form.Label>
+                                    <Form.Label className="fw-semibold">{t('quick_quote.customOptions.bedrooms')}</Form.Label>
                                     <Form.Select
-                                        aria-label="Number of Bedrooms"
+                                        aria-label={t('quick_quote.customOptions.bedrooms')}
                                         name="bedrooms"
                                         size="sm"
                                         className="text-cleanar-color text-bold form-input"
                                         value={formData.services.find(s => s.type === type)?.customOptions?.bedrooms?.service || ''}
                                         onChange={(e) => handleCustomOptionChange(type, 'bedrooms', e)}
                                     >
-                                        <option value="">Select...</option>
+                                        <option value="">{t('quick_quote.customOptions.selectText')}</option>
                                         {Array.from({ length: 6 }, (_, i) => (
                                             <option key={i} value={i.toString()}>{i === 5 ? '5+' : i}</option>
                                         ))}
@@ -481,16 +481,16 @@ const QuoteRequest = () => {
                             {/* Bathrooms */}
                             <Col xs={12} md={6}>
                                 <Form.Group controlId={`bathrooms-${type}`}>
-                                    <Form.Label className="fw-semibold">🚿 Bathrooms</Form.Label>
+                                    <Form.Label className="fw-semibold">{t('quick_quote.customOptions.bathrooms')}</Form.Label>
                                     <Form.Select
-                                        aria-label="Number of Bathrooms"
+                                        aria-label={t('quick_quote.customOptions.bathrooms')}
                                         name="bathrooms"
                                         size="sm"
                                         className="text-cleanar-color text-bold form-input"
                                         value={formData.services.find(s => s.type === type)?.customOptions?.bathrooms?.service || ''}
                                         onChange={(e) => handleCustomOptionChange(type, 'bathrooms', e)}
                                     >
-                                        <option value="">Select...</option>
+                                        <option value="">{t('quick_quote.customOptions.selectText')}</option>
                                         {Array.from({ length: 6 }, (_, i) => (
                                             <option key={i} value={i.toString()}>{i === 5 ? '5+' : i}</option>
                                         ))}
@@ -501,11 +501,11 @@ const QuoteRequest = () => {
                             {/* Start Date */}
                             <Col xs={12} md={6}>
                                 <Form.Group controlId={`startDate-${type}`}>
-                                    <Form.Label className="fw-semibold">📅 Start Date</Form.Label>
+                                    <Form.Label className="fw-semibold">{t('quick_quote.customOptions.startDate')}</Form.Label>
                                     <Form.Control
                                         type="date"
                                         name="startDate"
-                                        aria-label="Desired Start Date"
+                                        aria-label={t('quick_quote.customOptions.startDate')}
                                         size="sm"
                                         className="text-cleanar-color text-bold form-input"
                                         value={formData.services.find(s => s.type === type)?.customOptions?.startDate?.service || ''}
@@ -519,12 +519,12 @@ const QuoteRequest = () => {
                             {type === 'House Cleaning' && (
                                 <Col xs={12} md={12}>
                                     <Form.Group controlId={`additionalOptions-${type}`}>
-                                        <Form.Label className="fw-semibold">🧼 Additional Options</Form.Label>
+                                        <Form.Label className="fw-semibold">{t('quick_quote.customOptions.additionalOptions')}</Form.Label>
                                         <Row className="">
                                             {[
-                                                { label: 'Deep Cleaning', key: 'deepCleaning' },
-                                                { label: 'Window Cleaning', key: 'windowCleaning' },
-                                                { label: 'Laundry Service', key: 'laundryService' }
+                                                { label: t('quick_quote.customOptions.deepCleaning'), key: 'deepCleaning' },
+                                                { label: t('quick_quote.customOptions.windowCleaning'), key: 'windowCleaning' },
+                                                { label: t('quick_quote.customOptions.laundryService'), key: 'laundryService' }
                                             ].map(({ label, key }) => (
                                                 <Col xs={12} sm={6} lg={4} key={key}>
                                                     <Form.Check
@@ -558,21 +558,21 @@ const QuoteRequest = () => {
                         <Row className="mb-3">
                             <Col xs={12}>
                                 <Form.Group controlId={`carpetType-${type}`}>
-                                    <Form.Label className="text-bold">Carpet Material</Form.Label>
+                                    <Form.Label className="text-bold">{t('quick_quote.customOptions.carpetMaterial')}</Form.Label>
                                     <Form.Select
-                                        aria-label="Select carpet material"
+                                        aria-label={t('quick_quote.customOptions.chooseMaterial')}
                                         className="transparent form-border"
                                         name="carpetType"
                                         size="sm"
                                         value={formData.services.find(s => s.type === type)?.customOptions?.carpetType?.service || ''}
                                         onChange={(e) => handleCustomOptionChange(type, 'carpetType', e)}
                                     >
-                                        <option value="">Choose a material...</option>
-                                        <option value="Wool">Wool</option>
-                                        <option value="Nylon">Nylon</option>
-                                        <option value="Polyester">Polyester</option>
-                                        <option value="Olefin">Olefin</option>
-                                        <option value="Other">Other</option>
+                                        <option value="">{t('quick_quote.customOptions.chooseMaterial')}</option>
+                                        <option value="Wool">{t('quick_quote.customOptions.wool')}</option>
+                                        <option value="Nylon">{t('quick_quote.customOptions.nylon')}</option>
+                                        <option value="Polyester">{t('quick_quote.customOptions.polyester')}</option>
+                                        <option value="Olefin">{t('quick_quote.customOptions.olefin')}</option>
+                                        <option value="Other">{t('quick_quote.customOptions.other')}</option>
                                     </Form.Select>
                                 </Form.Group>
                             </Col>
@@ -581,14 +581,14 @@ const QuoteRequest = () => {
                         <Row className="mb-3">
                             <Col xs={12}>
                                 <Form.Group controlId={`carpetArea-${type}`}>
-                                    <Form.Label className="text-bold">Approximate Carpet Area (sqft)</Form.Label>
+                                    <Form.Label className="text-bold">{t('quick_quote.customOptions.carpetArea')}</Form.Label>
                                     <Form.Control
                                         type="number"
                                         min={0}
                                         inputMode="numeric"
                                         pattern="[0-9]*"
                                         size="sm"
-                                        aria-label="Enter carpet area in square feet"
+                                        aria-label={t('quick_quote.customOptions.enterCarpetArea')}
                                         name="carpetArea"
                                         placeholder="e.g. 500"
                                         className="text-cleanar-color text-bold form-border"
@@ -602,30 +602,30 @@ const QuoteRequest = () => {
                         <Row className="mb-3">
                             <Col xs={12} md={6}>
                                 <Form.Group controlId={`stains-${type}`}>
-                                    <Form.Label className="text-bold">Stain Level</Form.Label>
+                                    <Form.Label className="text-bold">{t('quick_quote.customOptions.carpetStains')}</Form.Label>
                                     <Form.Select
-                                        aria-label="Select stain severity"
+                                        aria-label={t('quick_quote.customOptions.selectStainSeverity')}
                                         className="transparent form-border"
                                         name="stains"
                                         size="sm"
                                         value={formData.services.find(s => s.type === type)?.customOptions?.stains?.service || ''}
                                         onChange={(e) => handleCustomOptionChange(type, 'stains', e)}
                                     >
-                                        <option value="">How severe are the stains?</option>
-                                        <option value="None">None</option>
-                                        <option value="Light">Light</option>
-                                        <option value="Moderate">Moderate</option>
-                                        <option value="Heavy">Heavy</option>
+                                        <option value="">{t('quick_quote.customOptions.howSevereAreTheStains')}</option>
+                                        <option value="None">{t('quick_quote.customOptions.none')}</option>
+                                        <option value="Light">{t('quick_quote.customOptions.light')}</option>
+                                        <option value="Moderate">{t('quick_quote.customOptions.moderate')}</option>
+                                        <option value="Heavy">{t('quick_quote.customOptions.heavy')}</option>
                                     </Form.Select>
                                 </Form.Group>
                             </Col>
 
                             <Col xs={12} md={6}>
                                 <Form.Group controlId={`startDate-${type}`}>
-                                    <Form.Label className="text-bold">Preferred Cleaning Date</Form.Label>
+                                    <Form.Label className="text-bold">{t('quick_quote.customOptions.preferredCleaningDate')}</Form.Label>
                                     <Form.Control
                                         type="date"
-                                        aria-label="Select preferred service date"
+                                        aria-label={t('quick_quote.customOptions.preferredCleaningDate')}
                                         name="startDate"
                                         size="sm"
                                         placeholder="Select a date"
@@ -647,7 +647,7 @@ const QuoteRequest = () => {
                         <Row className="mb-3">
                             <Col>
                                 <Form.Group controlId={`surfaceType-${type}`}>
-                                    <Form.Label className="text-bold">Type of Surface</Form.Label>
+                                    <Form.Label className="text-bold">{t('quick_quote.customOptions.surfaceType')}</Form.Label>
                                     <Form.Select
                                         aria-label="Type of Surface"
                                         className="transparent form-border"
@@ -732,7 +732,7 @@ const QuoteRequest = () => {
                                             type="number"
                                             aria-label="Upholstery Area"
                                             name={`upholsteryArea-${index}`}
-                                            placeholder="Enter area in square feet"
+                                            placeholder={t("quick_quote.customOptions.upholsteryArea")}
                                             className="text-cleanar-color text-bold form-border"
                                             onChange={(e) => handleCustomOptionChange(type, `upholsteryArea-${index}`, e)}
                                             value={formData.services.find(s => s.type === type)?.customOptions?.[`upholsteryArea-${index}`]?.service || ''}
@@ -741,7 +741,7 @@ const QuoteRequest = () => {
                                             type="number"
                                             aria-label="Upholstery Pieces"
                                             name={`upholsteryPieces-${index}`}
-                                            placeholder="Enter number of pieces"
+                                            placeholder={t("quick_quote.customOptions.upholsteryPieces")}
                                             className="text-cleanar-color text-bold form-border mt-2"
                                             onChange={(e) => handleCustomOptionChange(type, `upholsteryPieces-${index}`, e)}
                                             value={formData.services.find(s => s.type === type)?.customOptions?.[`upholsteryPieces-${index}`]?.service || ''}
@@ -749,29 +749,29 @@ const QuoteRequest = () => {
                                         <Form.Select
                                             aria-label="Upholstery Fabric Type"
                                             name={`upholsteryFabric-${index}`}
-                                            placeholder="Select fabric type"
+                                            placeholder={t("quick_quote.customOptions.selectFabric")}
                                             className="transparent form-border mt-2"
                                             onChange={(e) => handleCustomOptionChange(type, `upholsteryFabric-${index}`, e)}
                                             value={formData.services.find(s => s.type === type)?.customOptions?.[`upholsteryFabric-${index}`]?.service || ''}
                                         >
-                                            <option value="">Select Fabric Type...</option>
-                                            <option value="Leather">Leather</option>
-                                            <option value="Cotton">Cotton</option>
-                                            <option value="Polyester">Polyester</option>
-                                            <option value="Nylon">Nylon</option>
-                                            <option value="Other">Other</option>
+                                            <option value="">{t("quick_quote.customOptions.selectFabric")}</option>
+                                            <option value="Leather">{t("quick_quote.customOptions.leather")}</option>
+                                            <option value="Cotton">{t("quick_quote.customOptions.cotton")}</option>
+                                            <option value="Polyester">{t("quick_quote.customOptions.polyester")}</option>
+                                            <option value="Nylon">{t("quick_quote.customOptions.nylon")}</option>
+                                            <option value="Other">{t("quick_quote.customOptions.other")}</option>
                                         </Form.Select>
                                     </Form.Group>
                                 </Col>
                             ))}
                             <Col md={12} xs={12}>
                                 <Form.Group controlId={`startDate-${type}`}>
-                                    <Form.Label className="text-bold">Desired Service Date</Form.Label>
+                                    <Form.Label className="text-bold">{t("quick_quote.customOptions.desiredDate")}</Form.Label>
                                     <Form.Control
                                         type="date"
-                                        aria-label="Desired Service Date"
+                                        aria-label={t("quick_quote.customOptions.desiredDate")}
                                         name='startDate'
-                                        placeholder="Desired Service Date"
+                                        placeholder={t("quick_quote.customOptions.desiredDate")}
                                         className="text-cleanar-color text-bold form-border"
                                         min={new Date().toISOString().split('T')[0]} // Prevent dates before today
                                         onChange={(e) => handleCustomOptionChange(type, 'startDate', e)}
@@ -789,13 +789,13 @@ const QuoteRequest = () => {
                         <Row className="mb-3">
                             <Col>
                                 <Form.Group controlId={`description-${type}`} className="mb-3">
-                                    <Form.Label className="text-bold">Description*</Form.Label>
+                                    <Form.Label className="text-bold">{t("quick_quote.customOptions.description")}</Form.Label>
                                     <Form.Control
                                         as="textarea"
                                         rows={3}
-                                        aria-label="Description"
+                                        aria-label={t("quick_quote.customOptions.description")}
                                         name="description"
-                                        placeholder="Provide a description of the services you require. We will be in touch shortly to schedule a consultation."
+                                        placeholder={t("quick_quote.customOptions.descriptionDetail")}
                                         value={formData.services.find(s => s.type === type)?.customOptions?.description?.service || ''}
                                         onChange={(e) => handleCustomOptionChange(type, 'description', e)}
                                         className="text-cleanar-color text-bold form-input"
@@ -804,13 +804,13 @@ const QuoteRequest = () => {
                             </Col>
                             <Col md={12} xs={12}>
                                 <Form.Group controlId={`startDate-${type}`}>
-                                    <Form.Label className="text-bold">Desired Service Date</Form.Label>
+                                    <Form.Label className="text-bold">{t("quick_quote.customOptions.desiredDate")}</Form.Label>
                                     <Form.Control
                                         type="date"
-                                        aria-label="Desired Service Date"
+                                        aria-label={t("quick_quote.customOptions.desiredDate")}
                                         name='startDate'
                                         size='sm'
-                                        placeholder="Desired Service Date"
+                                        placeholder={t("quick_quote.customOptions.desiredDate")}
                                         className="text-cleanar-color text-bold form-border"
                                         min={new Date().toISOString().split('T')[0]} // Prevent dates before today
                                         onChange={(e) => handleCustomOptionChange(type, 'startDate', e)}
@@ -828,17 +828,17 @@ const QuoteRequest = () => {
     const getTooltipText = (name) => {
         switch (name) {
             case 'name':
-                return 'Enter your full name.';
+                return t('quick_quote.tooltips.name', 'Enter your full name.');
             case 'email':
-                return 'Enter your email address.';
+                return t('quick_quote.tooltips.email', 'Enter your email address.');
             case 'phonenumber':
-                return 'Enter your phone number.';
+                return t('quick_quote.tooltips.phonenumber', 'Enter your phone number.');
             case 'companyName':
-                return 'Enter your company name.';
+                return t('quick_quote.tooltips.companyName', 'Enter your company name.');
             case 'postalcode':
-                return 'Enter your postal code.';
+                return t('quick_quote.tooltips.postalcode', 'Enter your postal code.');
             case 'promoCode':
-                return 'Enter your promo code. Discount will be reflected on the quote if eligible. Promos cannot be combined.';
+                return t('quick_quote.tooltips.promoCode', 'Enter your promo code. Discount will be reflected on the quote if eligible. Promos cannot be combined.');
             default:
                 return '';
         }
@@ -846,30 +846,30 @@ const QuoteRequest = () => {
 
     return (
         <>
-            <Container className="quick-quote-container px-4" id="quote-section">
+            <Container className="quick-quote-container px-4 rounded-2" id="quote-section" style={{ backgroundImage: `url(${pageBg})`, backgroundSize: "cover" }}>
                 <HelmetProvider>
                     <title>CleanAR Solutions</title>
                     <meta name="description" content="Get a quick service estimate from CleanAR Solutions. Fill out our form to receive a personalized quote for your cleaning needs." />
                 </HelmetProvider>
-                {/* <VisitorCounter /> */}
-                <h2 className="text-center primary-color text-bold pt-2">Get a Free Quote</h2>
+                <VisitorCounter />
+                <h2 className="text-center text-cleanar-color text-bold pt-2">{t('quick_quote.form.title', 'Get a Free Quote')}</h2>
                 {/* <p className="text-center text-sm italic text-gray-500 mb-1">
                     *Translation coming soon in French and Spanish
                 </p> */}
-                <p className="text-center text-secondary-color">
-                    Fill out the form below to receive a personalized quote for your cleaning needs. Our team will review your request and get back to you as soon as possible.
+                <p className="text-cleanar-color text-bold">
+                    {t('quick_quote.form.description', 'Fill out the form below to receive a personalized quote for your cleaning needs. Our team will review your request and get back to you as soon as possible.')}
                 </p>
                 <hr />
-                <Form onSubmit={handleSubmit} id="quote-form" className="m-0 p-0">
+                <Form onSubmit={handleSubmit} id="quote-form" className="m-0 p-0" >
                     <Form.Group className="mb-1">
                         <Row>
                             {[
-                                { label: 'Name', name: 'name', placeholder: 'Full Name', required: true },
-                                { label: 'Email', name: 'email', placeholder: 'Email', required: true },
-                                { label: 'Phone No', name: 'phonenumber', placeholder: 'Phone Number', required: true },
-                                { label: 'Company', name: 'companyName', placeholder: 'Company Name' },
-                                { label: 'Postal Code', name: 'postalcode', placeholder: 'Postal Code', required: true },
-                                { label: 'Promo Code', name: 'promoCode', placeholder: 'Promo Code' }
+                                { label: t('quick_quote.form.name', 'Name'), name: 'name', placeholder: t('contact.form.name_placeholder', 'Full Name'), required: true },
+                                { label: t('quick_quote.form.email', 'Email'), name: 'email', placeholder: t('contact.form.email_placeholder', 'Email'), required: true },
+                                { label: t('quick_quote.form.phonenumber', 'Phone No'), name: 'phonenumber', placeholder: t('contact.form.phone_placeholder', 'Phone Number'), required: true },
+                                { label: t('quick_quote.form.companyName', 'Company'), name: 'companyName', placeholder: t('contact.form.companyName_placeholder', 'Company Name') },
+                                { label: t('quick_quote.form.postalcode', 'Postal Code'), name: 'postalcode', placeholder: t('contact.form.postalcode_placeholder', 'Postal Code'), required: true },
+                                { label: t('quick_quote.form.promoCode', 'Promo Code'), name: 'promoCode', placeholder: t('contact.form.promoCode_placeholder', 'Promo Code') }
                             ].map(({ label, name, placeholder, required }) => (
                                 <Col key={name} md={3} xs={6} className="mb-2 ">
                                     <Form.Label className="text-bold mb-1">
@@ -893,7 +893,7 @@ const QuoteRequest = () => {
                                         id={`floating${label.replace(' ', '')}`}
                                         placeholder={placeholder}
                                         aria-label={label}
-                                        className="text-cleanar-color form-input "
+                                        className="text-cleanar-color form-input rounded-pill"
                                         name={name}
                                         value={formData[name]}
                                         onChange={handleChange}
@@ -910,7 +910,7 @@ const QuoteRequest = () => {
                             <Col md={3} xs={12} className="mb-3 radio-group">
                                 <Form.Group className="mb-3">
                                     <Form.Label className="text-bold mb-1">
-                                        Service Required*
+                                        {t('quick_quote.form.serviceRequired', 'Service Required*')}
                                         <FaQuestionCircle
                                             id="servicesTooltip"
                                             className="ms-1"
@@ -922,7 +922,7 @@ const QuoteRequest = () => {
                                             target="servicesTooltip"
                                             toggle={() => togglePopover('services')}
                                         >
-                                            <PopoverBody>Please add service type and level to customize your order</PopoverBody>
+                                            <PopoverBody>{t('quick_quote.form.serviceDescription', 'Please add service type and level to customize your order')}</PopoverBody>
                                         </Popover>
                                     </Form.Label>
                                 </Form.Group>
@@ -938,14 +938,14 @@ const QuoteRequest = () => {
                                             onChange={() => handleServiceChange(service)}
                                             className="me-2"
                                         />
-                                        {service}
+                                        {t(`quick_quote.form.serviceOptions.${service}`)}
                                     </label>
                                 ))}
                             </Col>
                             <Col md={3} xs={12} className="mb-3">
                                 <Form.Group className="mb-3">
                                     <Form.Label className="text-bold mb-1">
-                                        Service Type*
+                                        {t('quick_quote.form.serviceType', 'Service Type*')}
                                         <FaQuestionCircle
                                             id="serviceLevelTooltip"
                                             className="ms-1"
@@ -957,7 +957,7 @@ const QuoteRequest = () => {
                                             target="serviceLevelTooltip"
                                             toggle={() => togglePopover('serviceLevel')}
                                         >
-                                            <PopoverBody>Please select a service level to customize your order</PopoverBody>
+                                            <PopoverBody>{t('quick_quote.form.serviceLevel', 'Please select a service level to customize your order')}</PopoverBody>
                                         </Popover>
                                     </Form.Label>
                                 </Form.Group>
@@ -974,18 +974,18 @@ const QuoteRequest = () => {
                                                     onChange={handleAddService}
                                                     className="me-2"
                                                 />
-                                                {option}
+                                                {t(`quick_quote.form.serviceOptions.${selectedService} Options.${option}`)}
                                             </label>
                                         ))}
                                     </div>
                                 ) : (
-                                    <p className="text-danger text-bold">Please Add Service First</p>
+                                    <p className="text-danger text-bold">{t('quick_quote.customOptions.pleaseAddService', 'Please Add Service First')}</p>
                                 )}
                             </Col>
                             <Col md={6} xs={12}>
                                 <Form.Group className="mb-3">
                                     <Form.Label className="text-bold mb-1">
-                                        Your Custom Options
+                                        {t('quick_quote.form.customOptions', 'Your Custom Options')}
                                         <FaQuestionCircle
                                             id="additionalServicesTooltip"
                                             className="ms-1"
@@ -997,7 +997,7 @@ const QuoteRequest = () => {
                                             target="additionalServicesTooltip"
                                             toggle={() => togglePopover('additionalServices')}
                                         >
-                                            <PopoverBody>Please select any additional services you would like to add to your quote.</PopoverBody>
+                                            <PopoverBody>{t('quick_quote.form.additionalServices', 'Please select any additional services you would like to add to your quote.')}</PopoverBody>
                                         </Popover>
                                     </Form.Label>
                                 </Form.Group>
@@ -1012,30 +1012,26 @@ const QuoteRequest = () => {
                     </section>
                     <Row>
                         <Col>
-                            <p className='primary-color text-bold pt-2'>
-                                A confirmation email will be sent to you upon submission. Our team will review your request and get back to you as soon as possible. Thank you for choosing CleanAR Solutions!
+                            <p className='text-cleanar-color text-bold pt-2'>
+                                {t('quick_quote.form.confirmationMessage', 'A confirmation email will be sent to you upon submission. Our team will review your request and get back to you as soon as possible. Thank you for choosing CleanAR Solutions!')}
                             </p>
                         </Col>
                     </Row>
                     <Row className='pb-3'>
                         <Col md className="">
-                            <Button type="submit" className='secondary-bg-color rounded-pill' data-track="clicked_submit_quote">Submit Quote</Button>
+                            <Button type="submit" className='secondary-bg-color rounded-pill' data-track="clicked_submit_quote">{t('quick_quote.form.submit', 'Submit Quote')}</Button>
                         </Col>
                         <Col md className="">
                             <Button data-track="clicked_reset_quote" onClick={() => setFormData({
                                 name: '',
-        companyName: '',
-        email: '',
-        phonenumber: '',
-        postalcode: '',
-        promoCode: '',
-        userId: '',
-        subtotalCost: 0,
-        tax: 0,
-        grandTotal: 0,
-        services: [],
-        products: [],
-                            })} className='btn-danger rounded-pill'>Reset Form</Button>
+                                companyName: '',
+                                email: '',
+                                postalcode: '',
+                                phonenumber: '',
+                                promoCode: '',
+                                services: [],
+                                products: []
+                            })} className='btn-danger rounded-pill'>{t('quick_quote.form.reset', 'Reset Form')}</Button>
                         </Col>
                     </Row>
                 </Form>

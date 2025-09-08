@@ -1,6 +1,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import Auth from "/src/utils/auth";
+import { useTranslation } from "react-i18next";
 import VisitorCounter from "/src/components/Pages/Management/VisitorCounter";
 // import Logo from "../../assets/svg/cleanmart-blue.svg";
 // import 'bootstrap/dist/css/bootstrap.min.css';
@@ -23,9 +24,11 @@ import {
 } from 'react-bootstrap';
 
 import { FaQuestionCircle } from 'react-icons/fa';
+import pageBg from "/src/assets/img/bg1.png";
 
 
 function LoginPage() {
+  const { t } = useTranslation();
 
   const [formData, setFormData] = useState({
     username: "",
@@ -75,12 +78,12 @@ function LoginPage() {
       })
         .then(response => {
           if (response.ok) {
-            console.log("you're logged!");
+            // console.log("you're logged!");
             response.json()
               .then(data => {
                 console.log(data);
                 console.log(data.dbUserData.adminFlag);
-                Auth.login(data.token, data.dbUserData.adminFlag);
+                Auth.login(data.token);
 
 
               });
@@ -88,10 +91,10 @@ function LoginPage() {
           else {
             // alert(response.statusText)
             if (response.status === 404) {
-              alert("User not found")
+              alert(t("login.alerts.user_not_found"));
             }
             else if (response.status === 401) {
-              alert("Wrong password!")
+              alert(t("login.alerts.wrong_password"));
             }
             console.log(response)
           }
@@ -101,7 +104,7 @@ function LoginPage() {
 
     }
     else {
-      alert("Please enter your username and password");
+      alert(t("login.alerts.missing_credentials"));
     }
   }
 
@@ -128,10 +131,10 @@ function LoginPage() {
           else {
             // alert(response.statusText)
             if (response.status === 404) {
-              alert("User not found")
+              alert(t("login.alerts.user_not_found"));
             }
             else if (response.status === 401) {
-              alert("Wrong password!")
+              alert(t("login.alerts.wrong_password"));
             }
             // console.log(response)
           }
@@ -139,7 +142,7 @@ function LoginPage() {
         .catch(err => console.log(err))
     }
     else {
-      alert("Please enter your username to reset your password");
+      alert(t("login.alerts.missing_username_reset"));
     }
   }
 
@@ -174,19 +177,19 @@ function LoginPage() {
     <>
       {/* <Navbar /> */}
       <VisitorCounter page={"login-page"} />
-      <div className="content content-border">
-          <h1 className="title primary-color text-center montserrat-bold">Log in</h1>
+      <div className="content content-border bg-light" style={{ backgroundImage: `url(${pageBg})`, backgroundSize: 'cover' }}>
+        <h1 className="title primary-color text-center montserrat-bold">{t("login.title")}</h1>
         {/* <div className="content px-2"> */}
         <Container className="container">
-          <p className="primary-color text-bold text-center">
-            Log in to access your account for faster checkout and to view order history.
+          <p className="text-cleanar-color text-bold text-center">
+            {t("login.description")}
           </p>
           <Form onSubmit={handleFormSubmit}>
             <Row className="justify-content-center">
               <Col className="py-3" md="10" xs='10'>
                 <FloatingLabel
                   controlId="floatingInput"
-                  label="Username*"
+                  label={`${t("login.username_label")}`}
                   // className="mb-3"
                   className="text-cleanar-color"
                 >
@@ -213,13 +216,13 @@ function LoginPage() {
                   toggle={() => togglePopover('username')}
                   transition={transitionProps}
                 >
-                  <PopoverBody>Enter your registered username.</PopoverBody>
+                  <PopoverBody>{t("login.username_tooltip")}</PopoverBody>
                 </Popover>
               </Col>
             </Row>
             <Row className="justify-content-center">
               <Col className="py-3" md="10" xs='10'>
-                <FloatingLabel controlId="floatingPassword" label="Password*"
+                <FloatingLabel controlId="floatingPassword" label={`${t("login.password_label")}`}
                   className="text-cleanar-color"
                 >
                   <Form.Control type="password" placeholder=""
@@ -247,7 +250,7 @@ function LoginPage() {
                   toggle={() => togglePopover('password')}
                   transition={transitionProps}
                 >
-                  <PopoverBody>Enter your account password.</PopoverBody>
+                  <PopoverBody>{t("login.password_tooltip")}</PopoverBody>
                 </Popover>
               </Col>
             </Row>
@@ -260,7 +263,7 @@ function LoginPage() {
                     data-track="login"
                     size="lg"
                   >
-                    Log In
+                    {t("login.login_button")}
                   </Button>
                   </Col>
                   <Col className="py-3" md='6' xs='6'>
@@ -271,7 +274,7 @@ function LoginPage() {
                     onClick={handleResetPassword}
                     size="lg"
                   >
-                    Reset Your Password
+                    {t("login.reset_password_button")}
                   </Button>
                 {/* </div> */}
                 {/* </Form> */}

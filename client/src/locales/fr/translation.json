@@ -8,8 +8,8 @@
   "ctaNote": "C’est rapide, gratuit et sans engagement !",
   "status_online": "✅ Nous sommes actuellement disponibles",
   "status_offline": "⏰ Nous sommes actuellement hors ligne",
-  "response_now": "Réponse immédiate attendue",
-  "response_later": "Nous vous répondrons dans les 24 heures",
+  "response_now": "Attendez-vous à une réponse de notre part sous peu",
+  "response_later": "Nous viserons à répondre dans les 24 heures",
   "contact_business_hours": "Heures d’ouverture",
   "contact_email_support": "Assistance par courriel",
   "email_description": "Pour des questions détaillées ou des communications écrites, envoyez-nous un courriel",
@@ -20,8 +20,303 @@
   "contact_services": "Explorer les services",
   "services_description": "Solutions de nettoyage personnalisées",
   "services_additional": "Forfaits personnalisés disponibles",
+  "featuredServices": {
+    "heading": "Nos Services Phare",
+    "learnMore": "En Savoir Plus"
+  },
+  "faq": {
+    "heading": "❓ Questions Fréquemment Posées",
+    "services_header": "Services",
+    "services_q1": "Quels types de services de nettoyage proposez-vous?",
+    "services_a1": "Nous sommes spécialisés dans le nettoyage résidentiel et commercial, y compris le nettoyage de tapis, le nettoyage en profondeur, le nettoyage avant/après déménagement et le nettoyage après rénovation.",
+    "services_q2": "Apportez-vous vos propres fournitures et équipements?",
+    "services_a2": "Oui, nous apportons des produits écologiques et des équipements professionnels pour chaque travail.",
+    "services_q3": "Vos produits de nettoyage sont-ils sûrs pour les animaux et les enfants?",
+    "services_a3": "Absolument. Nous utilisons des produits non toxiques et écologiques, sûrs pour les animaux et les enfants.",
+    "services_q4": "Proposez-vous un nettoyage ponctuel ou uniquement des services récurrents?",
+    "services_a4": "Nous proposons à la fois des nettoyages ponctuels et des plans récurrents flexibles adaptés à vos besoins.",
+    "services_q5": "Puis-je demander des services supplémentaires?",
+    "services_a5": "Oui, vous pouvez demander des extras tels que le nettoyage des fenêtres, le nettoyage des tapis et le nettoyage en profondeur des appareils lors de la réservation. N'hésitez pas à demander lors de la réservation.",
+    "process_header": "Processus et Politiques",
+    "process_q1": "Comment réserver un service de nettoyage?",
+    "process_a1": "Vous pouvez réserver en ligne via notre formulaire, ou appeler/envoyer un message directement pour une planification rapide.",
+    "process_q2": "Dois-je être à la maison pendant le nettoyage?",
+    "process_a2": "Pas nécessairement. Beaucoup de clients fournissent des instructions d'accès, et nous assurons la sécurité de votre propriété à tout moment.",
+    "process_q3": "Vos nettoyeurs sont-ils assurés?",
+    "process_a3": "Oui, tous nos membres sont formés et assurés pour votre tranquillité d'esprit.",
+    "process_q4": "Quelles zones desservez-vous?",
+    "process_a4": "Nous desservons fièrement la région du Grand Toronto (GTA), y compris Toronto, Mississauga, Scarborough, North York et les régions avoisinantes. Nous pouvons également desservir d'autres zones moyennant des frais de transport à convenir avec vous lors de la réservation.",
+    "process_q5": "Quelle est votre politique d'annulation?",
+    "process_a5": "Nous demandons un préavis d'au moins 24 heures pour annuler ou reprogrammer, sinon de petits frais d'annulation peuvent s'appliquer.",
+    "pricing_header": "Tarification et Réservation",
+    "pricing_q1": "Comment les prix sont-ils déterminés?",
+    "pricing_a1": "Les prix dépendent de la taille de votre espace, du type de service et des options supplémentaires demandées.",
+    "pricing_q2": "Fournissez-vous des estimations gratuites?",
+    "pricing_a2": "Oui, nous fournissons des estimations gratuites en ligne et par téléphone, et vous pouvez également demander un devis personnalisé via notre site web.",
+    "pricing_q3": "Facturez-vous des frais supplémentaires pour le déplacement ou les frais de zone de service?",
+    "pricing_a3": "Nous fournissons le service dans notre zone de couverture standard sans frais de déplacement supplémentaires. Pour les emplacements en dehors de notre zone de service principale, des frais de déplacement minimes peuvent s'appliquer, que nous discuterons à l'avance lors de la planification de votre rendez-vous.",
+    "pricing_q4": "Quels moyens de paiement acceptez-vous?",
+    "pricing_a4": "Nous acceptons les virements électroniques (Interac) et espèces. Les factures sont fournies pour plus de transparence.",
+    "pricing_q5": "Offrez-vous des réductions ou promotions?",
+    "pricing_a5": "Oui, nous proposons des promotions saisonnières et des réductions pour les nouveaux clients. Consultez notre site web ou demandez lors de la réservation."
+  },
+  "contact": {
+    "heading": "Parlons-en 👋",
+    "intro": "Vous avez encore des questions? Envoyez-nous un message et nous vous répondrons rapidement.",
+    "form": {
+      "name_label": "Votre Nom",
+      "name_placeholder": "Jane Doe",
+      "email_label": "Adresse Email",
+      "email_placeholder": "vous@exemple.com",
+      "phone_label": "Numéro de Téléphone",
+      "phone_placeholder": "(123) 456-7890",
+      "subject_label": "Sujet",
+      "subject_placeholder": "ex., Question sur la Réservation",
+      "message_label": "Message",
+      "message_placeholder": "Dites-nous comment nous pouvons vous aider...",
+      "submit": "Envoyer le Message",
+      "companyName_placeholder": "Compagnie ABC",
+      "postalcode_placeholder": "H0H 0H0",
+      "promoCode_placeholder": "PROMO123"
+    },
+    "alerts": {
+      "success": "Votre message a été envoyé !",
+      "captcha": "Veuillez compléter le CAPTCHA.",
+      "error": "Impossible d'envoyer le message. Réessayez plus tard."
+    },
+    "company": {
+      "name": "📍 CleanAR Solutions",
+      "location_label": "Emplacement",
+      "location_value": "Centre-ville de Toronto",
+      "phone_label": "Téléphone",
+      "phone_value": "(437) 440-5514",
+      "email_label": "Email",
+      "email_value": "info@cleanARsolutions.ca",
+      "description": "Transformez votre espace avec nos services de nettoyage professionnels ! Des maisons résidentielles aux propriétés commerciales, nous livrons des résultats exceptionnels qui dépassent les attentes. Contactez-nous dès aujourd'hui pour une consultation gratuite et découvrez pourquoi les clients nous font confiance pour garder leurs espaces impeccables et sains."
+    }
+  },
+  "testimonials": {
+    "heading": "Ce que nos clients disent (en leur langue d'origine)",
+    "prev": "Précédent",
+    "next": "Suivant",
+    "visitGoogleProfile": "Vous pouvez lire ces avis et laisser le vôtre sur notre profil Google:",
+    "googleProfileLink": "CleanAR Solutions"
+  },
+  "whyChooseUs": {
+    "heading": "Pourquoi choisir CleanAR Solutions?",
+    "benefits": {
+      "ecoFriendly": {
+        "title": "Produits Écologiques",
+        "desc": "Sûrs pour votre famille, vos animaux et la planète."
+      },
+      "trustedProfessionals": {
+        "title": "Professionnels de Confiance",
+        "desc": "Personnel formé et assuré sur lequel vous pouvez compter."
+      },
+      "flexibleScheduling": {
+        "title": "Horaires Flexibles",
+        "desc": "Des moments pratiques qui s'adaptent à votre style de vie."
+      },
+      "satisfactionGuaranteed": {
+        "title": "Satisfaction Garantie",
+        "desc": "Nous ne sommes pas satisfaits tant que votre espace ne brille pas."
+      }
+    }
+  },
+  "login": {
+    "title": "Se connecter",
+    "description": "Connectez-vous pour accéder à votre compte, effectuer des achats plus rapidement et consulter votre historique de commandes.",
+    "username_label": "Nom d'utilisateur*",
+    "password_label": "Mot de passe*",
+    "username_tooltip": "Entrez votre nom d'utilisateur enregistré.",
+    "password_tooltip": "Entrez le mot de passe de votre compte.",
+    "login_button": "Se Connecter",
+    "reset_password_button": "Réinitialiser votre Mot de Passe",
+    "signup_prompt": "Vous n'avez pas de compte?",
+    "signup_link": "Créez-en un ici",
+    "alerts": {
+      "user_not_found": "Utilisateur non trouvé",
+      "wrong_password": "Mot de passe incorrect !",
+      "missing_credentials": "Veuillez saisir votre nom d'utilisateur et mot de passe",
+      "missing_username_reset": "Veuillez saisir votre nom d'utilisateur pour réinitialiser votre mot de passe"
+    }
+  },
+  "signup": {
+    "title": "S'inscrire",
+    "description": "Veuillez remplir le formulaire ci-dessous pour créer un compte.",
+    "login_prompt": "Vous avez déjà un compte?",
+    "login_link": "Connectez-vous ici",
+    "form_labels": {
+      "first_name": "Prénom*",
+      "last_name": "Nom de famille*",
+      "email": "Adresse e-mail*",
+      "telephone": "Téléphone*",
+      "username": "Nom d'utilisateur*",
+      "password": "Mot de passe*",
+      "how_heard": "Comment avez-vous entendu parler de nous?",
+      "referral": "Référence",
+      "please_specify": "Veuillez préciser",
+      "agree": "J'accepte les"
+    },
+    "tooltips": {
+      "first_name": "Entrez votre prénom.",
+      "last_name": "Entrez votre nom de famille.",
+      "email": "Entrez votre adresse e-mail.",
+      "telephone": "Entrez votre numéro de téléphone.",
+      "username": "Entrez votre nom d'utilisateur.",
+      "password": "Entrez votre mot de passe.",
+      "how_heard": "Comment avez-vous entendu parler de nous?",
+      "referral": "Qui vous a référé?",
+      "other_specify": "Comment avez-vous entendu parler de nous?"
+    },
+    "dropdown_options": {
+      "placeholder": "Comment avez-vous entendu parler de nous?...",
+      "google": "Google",
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "referral": "Référence",
+      "other": "Autre"
+    },
+    "button": "Commencer",
+    "alerts": {
+      "username_taken": "Nom d'utilisateur déjà pris, veuillez essayer avec un nom d'utilisateur différent",
+      "missing_fields": "Veuillez remplir tous les champs avant de soumettre"
+    }
+  },
+  "profile": {
+    "address": {
+      "title": "Adresse",
+      "placeholder": "Adresse",
+      "city_placeholder": "Ville",
+      "province_placeholder": "Province",
+      "postal_code_placeholder": "Code Postal",
+      "add_address": "Ajouter une adresse"
+    },
+    "contact": {
+      "phone_title": "Numéro de Téléphone",
+      "add_phone": "Ajouter un numéro de téléphone",
+      "email_title": "Adresse E-mail",
+      "add_email": "Ajouter un e-mail"
+    },
+    "company": {
+      "title": "Nom de l'Entreprise",
+      "add_company": "Ajouter le nom de l'entreprise"
+    },
+    "buttons": {
+      "save_profile": "Sauvegarder le Profil",
+      "cancel": "Annuler",
+      "edit_profile": "Modifier le Profil"
+    },
+    "quotes": {
+      "title": "Mes Devis",
+      "no_quotes": "Aucun devis trouvé.",
+      "service_info": "Information du Service",
+      "options": "Options",
+      "promo_code": "Code Promotionnel",
+      "submitted_at": "Soumis le",
+      "acknowledged": "Reconnu par les Ventes",
+      "edit_quote": "Modifier le Devis",
+      "not_applicable": "N/A",
+      "yes": "Oui",
+      "no": "Non",
+      "not_yet": "Pas encore"
+    },
+    "bookings": {
+      "title": "Mes Réservations",
+      "no_bookings": "Aucune réservation trouvée.",
+      "service_date": "Date du Service",
+      "service_type": "Type de Service",
+      "status": "Statut",
+      "new_date_requested": "Nouvelle Date Demandée",
+      "need_help": "Besoin d'aide?",
+      "acknowledged_badge": "Reconnu",
+      "not_acknowledged_badge": "Pas Encore Reconnu",
+      "request_change": "Demander un Changement de Service",
+      "not_available": "Non disponible"
+    },
+    "pagination": {
+      "page_of": "Page",
+      "of": "de"
+    },
+    "alerts": {
+      "fill_all_fields": "Veuillez remplir tous les champs",
+      "profile_updated": "Profil mis à jour !",
+      "change_request_success": "Demande de changement soumise avec succès",
+      "change_request_error": "Erreur lors de la soumission de la demande de changement"
+    }
+  },
+  "welcome_modal": {
+    "title": "Notre site vient d'être rafraîchi ! 🎉",
+    "description": "Nous avons complètement repensé notre site pour le rendre plus clair, plus facile à utiliser et plus utile pour vous — maintenant disponible en plusieurs langues ! 🌐",
+    "variant_a": "Célébrez avec nous ! Utilisez le code REFRESH15 pour 15 % de réduction sur votre prochain service de nettoyage. 🎁",
+    "variant_b": "🚀 Profitez de notre nouveau look + obtenez 15 % de réduction sur votre prochain nettoyage avec le code REFRESH15 !",
+    "buttons": {
+      "start_quote": "Obtenez un devis et économisez ✨",
+      "explore_services": "Découvrez les nouveautés 🔎",
+      "dont_show_again": "Ne plus afficher ceci"
+    }
+  },
+  "cookie_consent": {
+    "description": "🍪 Nous utilisons des cookies pour améliorer votre expérience.",
+    "manage_preferences": "Gérez vos préférences à tout moment dans votre navigateur ou ici.",
+    "reject": "Rejeter",
+    "accept_all": "Accepter Tout",
+    "read_our": "Lisez notre"
+  },
+  "landing_fresh": {
+    "title": "Connectez-vous pour un Espace Plus Frais 🧼✨",
+    "description": "Votre oasis propre n'est qu'à un clic. Rafraîchissons votre espace ensemble avec CleanAR Solutions.",
+    "buttons": {
+      "book_clean": "Réservez un Nettoyage et Obtenez 15% de Réduction !* 🔥",
+      "call_now": "Appelez Maintenant"
+    },
+    "tagline": "Nettoyage de Confiance, Service de Confiance — Servant Toronto avec fierté.",
+    "terms": "*15% de réduction pour les nouveaux clients uniquement. Non valide avec d'autres offres.",
+    "see_terms": "Voir les conditions en anglais."
+  },
+  "landing_now": {
+    "title": "🚨 Toronto, Nous Avons une Urgence de Nettoyage !",
+    "description": "Déversements, taches et invités surprises ? Ne vous stressez pas — CleanAR Solutions livre un éclat le jour même ! Obtenez votre devis instantané et commençons à nettoyer.",
+    "buttons": {
+      "get_clean": "Nettoyez Maintenant et Obtenez 15% de Réduction* 🧼",
+      "speak_cleaner": "Parler à un Nettoyeur 📞"
+    },
+    "tagline": "Nettoyage de Confiance, Service de Confiance — parce que vous méritez rien de moins.",
+    "terms": "*15% de réduction pour les nouveaux clients uniquement. Non valide avec d'autres offres.",
+    "see_terms": "Voir les conditions en anglais."
+  },
+  "landing_secret": {
+    "title": "Le Secret de Nettoyage Dont Tout le Monde Parle… 👇",
+    "description": "Débloquez des espaces impeccables avec CleanAR Solutions — le plus fiable de Toronto pour le nettoyage premium de tapis, tapisserie et en profondeur.",
+    "tagline": "Nettoyage de Confiance, Service de Confiance.",
+    "buttons": {
+      "reveal_secret": "Révélez le Secret et Obtenez 15% de Réduction !* 🔑",
+      "call_now": "Appelez Maintenant"
+    },
+    "terms": "*15% de réduction pour les nouveaux clients uniquement. Non valide avec d'autres offres.",
+    "see_terms": "Voir les conditions en anglais."
+  },
+  "landing_start": {
+    "title": "Votre Nouveau Départ Propre Commence Maintenant ✨",
+    "description": "CleanAR Solutions est prêt quand vous l'êtes. Réservez en moins de 60 secondes ou appelez-nous pour des conseils d'experts.",
+    "buttons": {
+      "start_quote": "Commencez Mon Devis Gratuit et Obtenez 15% de Réduction !* 🚀",
+      "talk_expert": "Parler à un Expert 📞"
+    },
+    "terms": "*15% de réduction pour les nouveaux clients uniquement. Non valide avec d'autres offres.",
+    "see_terms": "Voir les conditions en anglais."
+  },
+  "landing_toronto": {
+    "title": "Un Toronto Plus Propre Commence Ici 🧼",
+    "description": "Fait confiance par vos voisins pour des résultats impeccables. Réservez en moins de 60 secondes.",
+    "buttons": {
+      "fast_quote": "Obtenez un Devis Rapide et 15% de Réduction !* 🔥",
+      "speak_expert": "Parler à un Expert en Nettoyage 📞"
+    },
+    "terms": "*15% de réduction pour les nouveaux clients uniquement. Non valide avec d'autres offres.",
+    "see_terms": "Voir les conditions en anglais."
+  },
   "products_and_services": {
-
     "products_services_title": "Produits et Services",
     "our_services_title": "Nos Services",
     "our_products_title": "Nos Produits",
@@ -34,9 +329,10 @@
     "residential_cleaning_condominium": "Nettoyage de condominium",
     "residential_cleaning_building": "Nettoyage d'immeuble résidentiel",
     "residential_cleaning_description": [
-      "Nettoyage complet des maisons, appartements et condominiums.",
-      "Nettoyage de tapis pour revitaliser et préserver leur fraîcheur.",
-      "Nettoyage des meubles pour prolonger leur durée de vie."
+      "De la cuisine et des salles de bains aux chambres et aux espaces de vie, nous fournissons un nettoyage complet de haut en bas qui laisse chaque surface impeccable et désinfectée.",
+      "Des forfaits de services sur mesure qui répondent à vos besoins spécifiques, du nettoyage avant/après déménagement au nettoyage après construction et tout le reste.",
+      "Des rendez-vous de nettoyage hebdomadaires, bi-hebdomadaires, mensuels ou ponctuels qui s'adaptent à votre mode de vie chargé et à vos préférences personnelles.",
+      "Nous ne sommes pas satisfaits tant que vous ne l'êtes pas - si quoi que ce soit ne répond pas à vos attentes, nous reviendrons dans les 24 heures pour corriger le tir sans frais supplémentaires."
     ],
     "residential_cleaning_button": "Ajouter le nettoyage résidentiel au devis",
     "commercial_cleaning_title": "Nettoyage commercial",
@@ -44,9 +340,10 @@
     "commercial_cleaning_industrial_cleaning": "Nettoyage industriel",
     "commercial_cleaning_retail_cleaning": "Nettoyage de magasin",
     "commercial_cleaning_description": [
-      "Entretien régulier des bureaux et des espaces commerciaux.",
-      "Nettoyage des centres commerciaux et supermarchés.",
-      "Services spécialisés pour l'industrie cinématographique et les événements spéciaux."
+      "Nettoyage quotidien, hebdomadaire ou mensuel des bureaux, des espaces de vente au détail, des entrepôts et des bâtiments commerciaux, y compris les toilettes, les salles de pause, les halls et les espaces de travail.",
+      "Services de nettoyage en profondeur à la vapeur, d'élimination des taches et d'entretien des tapis qui prolongent la durée de vie des tapis et maintiennent une apparence professionnelle pour votre entreprise.",
+      "Options de nettoyage après les heures d'ouverture, le week-end ou à des horaires personnalisés qui ne perturberont pas vos opérations commerciales, y compris des services de nettoyage d'urgence si nécessaire.",
+      "Service professionnel de qualité commerciale avec une couverture d'assurance complète, garantissant que votre entreprise est protégée tout en maintenant les normes de nettoyage les plus élevées."
     ],
     "commercial_cleaning_button": "Ajouter le nettoyage commercial au devis",
     "window_cleaning_title": "Nettoyage de vitres",
@@ -54,16 +351,17 @@
     "window_cleaning_track_sill": "Nettoyage des cadres et rails",
     "window_cleaning_glass_door": "Nettoyage des portes vitrées",
     "window_cleaning_description": [
-      "Nettoyage professionnel des vitres pour les maisons et les entreprises.",
-      "Finition sans traces pour une vue claire.",
-      "Produits écologiques pour plus de sécurité et de durabilité."
+      "Nettoyage sans traces professionnel de toutes les fenêtres intérieures, portes vitrées et surfaces en verre intérieures à l'aide de raclettes haut de gamme et de solutions écologiques",
+      "Le service complet comprend l'essuyage des cadres de fenêtres, des rebords et des rails pour éliminer la poussière, les débris et les accumulations pour une finition complète",
+      "Nettoyage intérieur sûr et efficace des fenêtres pour les maisons à un ou deux étages, y compris les fenêtres du deuxième étage difficiles d'accès depuis l'intérieur",
+      "Nettoyage intérieur cristallin des vitrines de magasins, des immeubles de bureaux et des façades commerciales pour maintenir une image professionnelle pour vos clients"
     ],
     "window_cleaning_button": "Ajouter le nettoyage de vitres au devis",
     "carpet_cleaning_title": "Nettoyage de tapis et meubles rembourrés",
     "carpet_cleaning_description": [
-      "Nettoyage en profondeur des tapis dans les maisons et les entreprises.",
-      "Élimination des taches et neutralisation des odeurs.",
-      "Nettoyage des meubles pour conserver leur beauté et confort."
+      "Techniques et solutions spécialisées pour les taches difficiles, y compris le vin, les accidents d'animaux de compagnie, la graisse et l'usure due au passage fréquent",
+      "Élimine les acariens, les squames d'animaux et les allergènes piégés dans les fibres des tapis, améliorant ainsi la qualité de l'air intérieur pour votre famille ou vos employés.",
+      "Le service complet comprend le déplacement et le remplacement soigneux des meubles pour garantir un nettoyage approfondi de toutes les zones de tapis accessibles."
     ],
     "carpet_and_upholstery_button": "Ajouter le nettoyage de tapis au devis",
     "power_washing_title": "Nettoyage haute pression",
@@ -74,15 +372,16 @@
     "power_washing_fence": "Nettoyage de clôture",
     "power_washing_garage_floor": "Nettoyage de plancher de garage",
     "power_washing_description": [
-      "Nettoyage haute pression des allées, trottoirs et terrasses.",
-      "Élimination de la saleté, de la moisissure et des champignons.",
-      "Préparation des surfaces pour la peinture ou le scellement."
+      "L'équipement de qualité professionnelle élimine des années de saleté, de crasse, de moisissure et de taches des surfaces extérieures en béton, en brique, en vinyle et autres",
+      "Transformez l'attrait de votre maison avec un nettoyage approfondi des allées, des trottoirs, des patios, des terrasses et des surfaces extérieures.",
+      "Nettoyage des parkings, des façades de bâtiments, des quais de chargement et des vitrines pour maintenir une apparence professionnelle et des normes de sécurité."
     ],
     "power_pressure_washing_button": "Ajouter le nettoyage haute pression au devis"
   },
   "about": {
     "welcome_heading": "Bienvenue chez CleanAR Solutions",
-    "welcome_text": "Chez CleanAR Solutions, nous offrons des services de nettoyage professionnels à Toronto et dans la région du Grand Toronto. Notre engagement envers l’excellence garantit que chaque projet respecte les normes les plus élevées, créant ainsi un environnement propre et sain. Que vous ayez besoin de services résidentiels, commerciaux ou de nettoyage de tapis, nous adaptons notre approche à vos besoins. Commencez en demandant un devis, ou contactez-nous pour plus d'informations.",
+    "welcome_text": "Chez CleanAR Solutions, nous offrons des services de nettoyage professionnels à Toronto et dans la région du Grand Toronto. Notre engagement envers l’excellence garantit que chaque projet respecte les normes les plus élevées, créant ainsi un environnement propre et sain. Que vous ayez besoin de services résidentiels, commerciaux ou de nettoyage de tapis, nous adaptons notre approche à vos besoins. Commencez en demandant un devis, ou contactez-nous pour plus d'informations.",    
+    "partnership_text": "Nous ne sommes pas seulement des nettoyeurs, nous sommes des partenaires dans la création d'environnements plus sains et sans stress.",
     "learn_more_services": "En savoir plus sur nos services",
     "mission_title": "Notre Mission",
     "mission_text": "Notre mission est de transformer les espaces en environnements plus propres, plus sains et plus accueillants. Nous y parvenons en offrant des services de nettoyage personnalisables et de haute qualité, adaptés aux besoins de nos clients tout en respectant notre engagement envers la durabilité et l’excellence.",
@@ -91,44 +390,49 @@
     "values_title": "Nos Valeurs",
     "values_intro": "Chez CleanAR Solutions, nous sommes guidés par les valeurs suivantes :",
     "values_list": [
-      "Intégrité : Nous menons nos activités avec honnêteté, transparence et responsabilité.",
-      "Qualité : Nous offrons des services de nettoyage de premier ordre avec souci du détail et excellence.",
-      "Orientation client : Nous mettons les besoins uniques de nos clients au premier plan, en bâtissant la confiance grâce à des solutions personnalisées.",
-      "Durabilité : Nous encourageons des pratiques de nettoyage respectueuses de l’environnement.",
-      "Travail d’équipe : Nous valorisons la collaboration, le respect et l’unité pour réussir ensemble."
+      "Intégrité: Nous menons nos activités avec honnêteté, transparence et responsabilité.",
+      "Qualité: Nous offrons des services de nettoyage de premier ordre avec souci du détail et excellence.",
+      "Orientation client: Nous mettons les besoins uniques de nos clients au premier plan, en bâtissant la confiance grâce à des solutions personnalisées.",
+      "Durabilité: Nous encourageons des pratiques de nettoyage respectueuses de l’environnement.",
+      "Travail d’équipe: Nous valorisons la collaboration, le respect et l’unité pour réussir ensemble."
     ],
-    "industries_title": "Secteurs que nous desservons",
+    "industries_title": "Services de Nettoyage Professionnels pour Tous les Secteurs",
     "industries": {
       "residential": {
-        "title": "Bâtiments Résidentiels",
+        "title": "Propriétés Résidentielles et Multi-Familiales",
         "items": [
-          "Nettoyage général : Nettoyage complet des espaces communs tels que les halls, couloirs, escaliers et zones de loisirs.",
-          "Entretien des espaces extérieurs : Nettoyage des trottoirs, cours et parkings.",
-          "Gestion des déchets : Collecte et élimination appropriée des ordures."
+          "Nettoyage Complet des Espaces Communs: Entretien professionnel des halls d'entrée, couloirs, escaliers, ascenseurs et installations récréatives pour maintenir la valeur de la propriété et la satisfaction des locataires.",
+          "Entretien des Espaces Extérieurs: Nettoyage haute pression des trottoirs, entrées, cours, parkings et façades de bâtiments pour améliorer l'attrait et la sécurité.",
+          "Services de Gestion des Déchets: Collecte fiable des déchets, gestion du recyclage et élimination appropriée des déchets résidentiels avec des pratiques respectueuses de l'environnement."
         ]
       },
       "offices": {
-        "title": "Bureaux",
+        "title": "Bâtiments de Bureau et Espaces Commerciaux",
         "items": [
-          "Nettoyage quotidien : Nettoyage des bureaux, tables, chaises et espaces de pause.",
-          "Entretien des sols : Balayage, nettoyage humide et polissage.",
-          "Nettoyage des sanitaires : Désinfection et nettoyage en profondeur."
+          "Services de Nettoyage Quotidien des Bureaux: Désinfection approfondie des postes de travail, salles de conférence, espaces de pause et zones d'accueil pour maintenir un environnement de travail sain et productif.",
+          "Entretien Professionnel des Sols: Services d'expertise en balayage, nettoyage humide, aspiration et polissage des sols pour tous les types de surfaces, y compris les moquettes, les parquets et les carrelages.",
+          "Désinfection des Sanitaires: Nettoyage en profondeur et désinfection des salles de bains de bureau, y compris le réapprovisionnement des fournitures et l'élimination des odeurs pour la santé et le confort des employés."
         ]
       },
       "festivals": {
-        "title": "Festivals",
+        "title": "Services de Nettoyage pour Événements et Festivals",
         "items": [
-          "Nettoyage avant l’événement : Nettoyage du site avant le début, collecte des déchets.",
-          "Maintenance durant l’événement : Entretien continu des toilettes, aires de repos et zones alimentaires.",
-          "Nettoyage après l’événement : Nettoyage approfondi, collecte des déchets et désinfection des lieux."
+          "Préparation du Site Avant l'Événement: Nettoyage complet et désinfection du lieu avant les événements, y compris le nettoyage des terrains, la préparation des zones de vendeurs et la mise en place des stations de déchets.",
+          "Maintenance Pendant l'Événement: Services de nettoyage continus tout au long des festivals, y compris l'entretien des toilettes, la désinfection des zones de restauration et la gestion des déchets en temps réel.",
+          "Restauration Après l'Événement: Nettoyage complet du lieu après les événements, y compris l'enlèvement des débris, la désinfection en profondeur et la restauration complète du site à son état d'origine."
         ]
       }
+    },
+    "cta": {
+      "ready": "Prêt pour un espace plus propre et plus sain?",
+      "focus": "Laissez-nous nous occuper du désordre, concentrez-vous sur ce qui compte le plus.",
+      "quote": "Obtenez votre devis gratuit"
     }
   },
   "navbar": {
     "about_us": "À propos de nous",
     "products_services": "Produits et Services",
-    "log_in_signup": "Connexion / Inscription",
+    "log_in_signup": "Connexion",
     "log_out": "Déconnexion",
     "profile": "Profil",
     "admin": {
@@ -164,7 +468,9 @@
     "google_profile": "Visitez notre profil Google",
     "terms": "Conditions générales",
     "disclaimer": "Avertissement",
-    "developer": "Conçu et développé par"
+    "developer": "Conçu et développé par",
+    "privacy_policy": "Politique de confidentialité",
+    "cookie_policy": "Changer les préférences en matière de cookies"
   },
   "quick_quote": {
     "form": {
@@ -186,7 +492,45 @@
       "additionalServices": "Veuillez sélectionner tous les services supplémentaires que vous souhaitez ajouter à votre devis.",
       "submit": "Soumettre le devis",
       "reset": "Réinitialiser le formulaire",
-      "confirmationMessage": "Un courriel de confirmation vous sera envoyé après la soumission. Notre équipe examinera votre demande et vous répondra dès que possible. Merci d'avoir choisi CleanAR Solutions !"
+      "confirmationMessage": "Un courriel de confirmation vous sera envoyé après la soumission. Notre équipe examinera votre demande et vous répondra dès que possible. Merci d'avoir choisi CleanAR Solutions !",
+      "invalidPromoCode": "Code promo invalide. Veuillez vérifier votre code et réessayer. Si vous n'avez pas de code promo, laissez le champ vide.",
+      "requiredFields": "Veuillez remplir tous les champs obligatoires :",
+      "submissionSuccess": "Votre demande de devis a été soumise avec succès ! Nous vous contacterons bientôt pour discuter de vos besoins.",
+      "submissionError": "Une erreur s'est produite lors de l'envoi de votre demande de devis. Veuillez vérifier vos informations et réessayer.",
+      "serviceOptions": {
+        "Residential Cleaning": "Nettoyage résidentiel",
+        "Commercial Cleaning": "Nettoyage commercial",
+        "Carpet And Upholstery": "Tapis et rembourrage",
+        "Window Cleaning": "Nettoyage de fenêtres",
+        "Power/Pressure Washing": "Lavage à pression",
+        "Residential Cleaning Options": {
+          "House Cleaning": "Nettoyage de maison",
+          "Move In/Out Cleaning": "Nettoyage avant/après déménagement",
+          "Condominium Cleaning": "Nettoyage de condominium",
+          "Building Cleaning": "Nettoyage d'immeuble résidentiel"
+        },
+        "Commercial Cleaning Options": {
+          "Office Cleaning": "Nettoyage de bureau",
+          "Industrial Cleaning": "Nettoyage industriel",
+          "Retail Cleaning": "Nettoyage de détail"
+        },
+        "Carpet And Upholstery Options": {
+          "Carpet Cleaning": "Nettoyage de tapis",
+          "Upholstery Cleaning": "Nettoyage de tapisserie"
+        },
+        "Window Cleaning Options": {
+          "Interior Window Cleaning": "Nettoyage de fenêtres intérieures",
+          "Exterior Window Cleaning": "Nettoyage de fenêtres extérieures"
+        },
+        "Power/Pressure Washing Options": {
+          "Driveway Cleaning": "Nettoyage d'allée",
+          "Patio & Deck Cleaning": "Nettoyage de patio et de terrasse",
+          "Sidewalk Cleaning": "Nettoyage de trottoir",
+          "Exterior Siding Cleaning": "Nettoyage de revêtement extérieur",
+          "Fence Cleaning": "Nettoyage de clôture",
+          "Garage Floor Cleaning": "Nettoyage de sol de garage"
+        }
+      }
     },
     "tooltips": {
       "name": "Entrez votre nom complet.",
@@ -216,7 +560,7 @@
       "wool": "Laine",
       "stains": "Niveau de taches",
       "selectStainSeverity": "Sélectionner le niveau de taches",
-      "howSevereAreTheStains": "À quel point les taches sont-elles sévères ?",
+      "howSevereAreTheStains": "À quel point les taches sont-elles sévères?",
       "light": "Légères",
       "moderate": "Modérées",
       "heavy": "Sévères",
@@ -290,7 +634,19 @@
       }
     }
   },
-   "banner": {
+  "banner": {
     "comingSoon": "De nouvelles fonctionnalités et un nouveau look arrivent prochainement sur notre site web !"
+  },
+  "bookingChangeModal": {
+    "title": "Demande de changement de réservation",
+    "fields": {
+      "date": "Nouvelle date",
+      "comment": "Commentaire",
+      "comment_placeholder": "Ajoutez des détails sur le changement demandé..."
+    },
+    "actions": {
+      "cancel": "Annuler",
+      "submit": "Soumettre la demande"
+    }
   }
 }

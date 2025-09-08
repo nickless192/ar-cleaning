@@ -24,7 +24,7 @@ export const deleteCustomer = async (id) => {
 };
 
 export const updateCustomer = async (id, data) => {
-  const res = await fetch(`/api/customers/${id}`, {
+  const res = await fetch(`/api/customers/${id}/assign-user`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data)

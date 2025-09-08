@@ -1,12 +1,15 @@
-import React from "react";
-import { Container, Row, Col, Nav } from "react-bootstrap";
+import React, {useState} from "react";
+import { Button, Row, Col, Nav } from "react-bootstrap";
 import {useTranslation} from "react-i18next";
+import CookieConsent from "/src/components/Pages/Landing/CookieConsent";
 
 function Footer() {
   const currentYear = new Date().getFullYear();
   const { t } = useTranslation();
+  const [showCookiePrefs, setShowCookiePrefs] = useState(false);
 
   return (
+    <>
     <footer className="footer text-dark pl-2 py-4">
       <section>
         <Row className="align-items-center">
@@ -37,6 +40,23 @@ function Footer() {
                   {t("footer.disclaimer")}
                 </Nav.Link>
               </Nav.Item>
+              <Nav.Item as="li" className="ms-md-3">
+                <Nav.Link href="/privacy-policy" className="p-0 text-dark text-decoration-none">
+                  {t("footer.privacy_policy")}
+                </Nav.Link>
+              </Nav.Item>
+              <Nav.Item as="li" className="ms-md-3">
+                <Nav.Link className="p-0 text-dark text-decoration-none" onClick={() => setShowCookiePrefs(true)}>
+                  {t("footer.cookie_policy")}
+                </Nav.Link>
+             {/* <Button
+            variant="link"
+            className="p-0 text-bold"
+            onClick={() => setShowCookiePrefs(true)}
+          >
+            {t("footer.cookie_policy")}
+          </Button> */}
+              </Nav.Item>
             </Nav>
           </Col>
 
@@ -53,9 +73,13 @@ function Footer() {
               </a>
             </small>
           </Col>
+          
         </Row>
       </section>
     </footer>
+     <CookieConsent show={showCookiePrefs} onClose={() => setShowCookiePrefs(false)} />
+    </>
+    
   );
 }
 
