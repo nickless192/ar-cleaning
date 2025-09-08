@@ -32,7 +32,7 @@ function AboutUsPage() {
   const { t } = useTranslation();
 
   const goToQuote = () => {
-    navigate('/index', { state: { scrollToQuote: true } });
+    navigate('/index?scrollToQuote=true');
   };
 
   useEffect(() => {
