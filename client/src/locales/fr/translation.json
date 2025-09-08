@@ -242,7 +242,9 @@
       "fill_all_fields": "Veuillez remplir tous les champs",
       "profile_updated": "Profil mis à jour !",
       "change_request_success": "Demande de changement soumise avec succès",
-      "change_request_error": "Erreur lors de la soumission de la demande de changement"
+      "change_request_error": "Erreur lors de la soumission de la demande de changement",
+      "terms_not_accepted": "Vous devez accepter les termes pour continuer.",
+      "consent_saved": "Consentement enregistré avec succès, veuillez vous reconnecter pour que les modifications prennent effet."
     }
   },
   "welcome_modal": {

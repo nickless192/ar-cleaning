@@ -80,7 +80,12 @@ function ProfilePage() {
     setSelectedBookingId(null);
   };
 
-  const handleConsentAccept = async () => {
+  const handleConsentAccept = async (consentGiven) => {
+    if (!consentGiven) {
+      alert(t("profile.alerts.terms_not_accepted"));
+      return;
+    }
+
     try {
       // ✅ Call backend to save consent
       await fetch(`/api/users/${formData.userId}/consent`, {
@@ -98,7 +103,7 @@ function ProfilePage() {
         consentReceivedDate: new Date().toISOString(),
       }));
 
-      alert("Consent saved successfully, please log back in for changes to take effect!");
+      alert(t("profile.alerts.consent_saved"));
       setShowConsentModal(false);
       Auth.logout();
       navigate("/login-signup");
@@ -109,7 +114,7 @@ function ProfilePage() {
 
   const handleConsentReject = () => {
     // Optionally log out or block access
-    alert("You must accept the terms to continue.");
+    alert(t("profile.alerts.terms_not_accepted"));
   };
 
   const handleModalSubmit = ({ newDate, comment }) => {
