@@ -11,7 +11,7 @@ const WelcomeModal = () => {
 
 
   useEffect(() => {
-    const dismissed = localStorage.getItem('welcomeModalDismissed');
+    const dismissed = localStorage.getItem('welcomeBackModalDismissed');
     if (!dismissed) {
       const savedVariant = localStorage.getItem('welcomeModalVariant');
       const chosenVariant = savedVariant || (Math.random() > 0.5 ? 'A' : 'B');
@@ -27,7 +27,7 @@ const WelcomeModal = () => {
   };
 
   const handleDontShowAgain = () => {
-    localStorage.setItem('welcomeModalDismissed', 'true');
+    localStorage.setItem('welcomeBackModalDismissed', 'true');
     setShow(false);
   };
 
