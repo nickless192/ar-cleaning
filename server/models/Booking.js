@@ -83,15 +83,15 @@ const BookingSchema = new Schema({
         type: Date,
         default: null
     }, // date when the customer suggested booking was created
-        customerSuggestedBookingComment: {
-            type: String,
-            default: ''
-        }, // comment from the customer about the suggested booking
-        // add acknowledgment field
-        customerSuggestedBookingAcknowledged: {
-            type: Boolean,
-            default: false
-        },
+    customerSuggestedBookingComment: {
+        type: String,
+        default: ''
+    }, // comment from the customer about the suggested booking
+    // add acknowledgment field
+    customerSuggestedBookingAcknowledged: {
+        type: Boolean,
+        default: false
+    },
     updatedAt: { type: Date, default: Date.now },
     createdAt: { type: Date, default: Date.now },
 });

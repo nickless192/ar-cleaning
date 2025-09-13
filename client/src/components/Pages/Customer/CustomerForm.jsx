@@ -68,7 +68,7 @@ const Customer = ({ initialData = {}, onSubmit, onCancel }) => {
 
   const fields = [
     { label: 'First Name', name: 'firstName', required: true },
-    { label: 'Last Name', name: 'lastName', required: true },
+    { label: 'Last Name', name: 'lastName', required: false },
     { label: 'Email', name: 'email', required: true },
     { label: 'Phone Number', name: 'telephone', required: false },
     { label: 'Address', name: 'address', required: false },

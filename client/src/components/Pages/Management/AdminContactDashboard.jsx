@@ -15,7 +15,7 @@ import {
 
 import MessageCell from "./MessageCell";
 
-import CustomerStatsCard from './CustomerStatsCard';
+
 
 const PAGE_SIZE = 5;
 
@@ -205,12 +205,6 @@ const AdminContactDashboard = () => {
                     </div>
                 </>
             )}
-
-            <Row>
-                <Col md={12}>
-                    <CustomerStatsCard />
-                </Col>
-            </Row>
 
         </Container>
     );

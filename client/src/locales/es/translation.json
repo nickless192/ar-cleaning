@@ -446,12 +446,17 @@
       "manage_services": "Administrar Servicios",
       "manage_users": "Administrar Usuarios",
       "manage_customers": "Administrar Clientes",
+      "manage_customers_contact": "Administrar Contacto con Clientes",
       "view_quotes": "Ver Solicitudes de Cotización",
       "manage_gift_cards": "Administrar Tarjetas de Regalo",
       "visitor_dashboard": "Panel de Visitantes",
       "booking_dashboard": "Panel de Reservas",
       "manage_finance": "Administrar Finanzas",
-      "manage_expenses": "Administrar Deudas"
+      "manage_expenses": "Administrar Gastos",
+      "inventory_management": "Administrar Inventario",
+      "customer_management": "Administrar Experiencia del Cliente",
+      "accounting_management": "Administrar Contabilidad",
+      "admin_management": "Administración"
     }
   },
   "daysOfTheWeek": {

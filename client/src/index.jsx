@@ -45,7 +45,9 @@ import FinanceDashboard from "/src/components/Pages/Management/FinanceDashboard"
 import ExpenseDashboard from "/src/components/Pages/Management/ExpenseDashboard";
 import QuickRequest_v2 from "/src/components/Pages/UserJourney/QuoteRequest_v2"; // version in-dev for testing
 import AdminContactDashboard from "/src/components/Pages/Management/AdminContactDashboard"; // version in-dev for testing
-
+import InventoryManagementTabbedView from "/src/components/Pages/ManagementViews/InventoryManagementTabbedView";
+import ContactManagementTabbedView from "/src/components/Pages/ManagementViews/ContactManagementTabbedView";
+import AccountingTabbedView from "/src/components/Pages/ManagementViews/AccountingTabbedView";
 import LandingFresh from "/src/components/Pages/qrCodes/LandingFresh";
 import LandingNow from "/src/components/Pages/qrCodes/LandingNow";
 import LandingSecret from "/src/components/Pages/qrCodes/LandingSecret";
@@ -54,6 +56,7 @@ import LandingToronto from "/src/components/Pages/qrCodes/LandingToronto";
 import backgroundImage from '/src/assets/img/natural-marble-pattern-background.jpg';
 import CookieConsent from "/src/components/Pages/Landing/CookieConsent";
 import SiteBanner from "/src/components/Pages/Navigation/SiteBanner.jsx";
+import AdminManagementPage from "/src/components/Pages/ManagementViews/AdminManagementPage.jsx";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -125,20 +128,24 @@ const consent = JSON.parse(localStorage.getItem("cookieConsent") || "{}");
           <Routes>
             <Route path="/index" element={<Index />} />
             <Route path="/profile-page" element={<ProtectedRoute element={<ProfilePage />} />} />
-            <Route path="/manage-categories" element={<ProtectedRoute element={<ManageCategories />} />} />
-            <Route path="/manage-service" element={<ProtectedRoute element={<ManageService />} />} />
-            <Route path="/manage-product" element={<ProtectedRoute element={<ManageProduct />} />} />
-            <Route path="/manage-user" element={<ProtectedRoute element={<ManageUser />} />} />
-            <Route path="/manage-gift-card" element={<ProtectedRoute element={<GiftCard />} />} />
-            <Route path="/manage-customers" element={<ProtectedRoute element={<Customer />} />} />
-            <Route path="/manage-finance" element={<ProtectedRoute element={<FinanceDashboard />} />} />
-            <Route path="/view-quotes" element={<ProtectedRoute element={<QuickQuoteDashboard />} />} />
-            <Route path="/manage-expenses" element={<ProtectedRoute element={<ExpenseDashboard />} />} />
+            {/* <Route path="/manage-categories" element={<ProtectedRoute element={<ManageCategories />} />} /> */}
+            {/* <Route path="/manage-service" element={<ProtectedRoute element={<ManageService />} />} /> */}
+            {/* <Route path="/manage-product" element={<ProtectedRoute element={<ManageProduct />} />} /> */}
+            {/* <Route path="/manage-user" element={<ProtectedRoute element={<ManageUser />} />} /> */}
+            {/* <Route path="/manage-gift-card" element={<ProtectedRoute element={<GiftCard />} />} /> */}
+            {/* <Route path="/manage-customers" element={<ProtectedRoute element={<Customer />} />} /> */}
+            {/* <Route path="/manage-finance" element={<ProtectedRoute element={<FinanceDashboard />} />} /> */}
+            {/* <Route path="/view-quotes" element={<ProtectedRoute element={<QuickQuoteDashboard />} />} /> */}
+            {/* <Route path="/manage-expenses" element={<ProtectedRoute element={<ExpenseDashboard />} />} /> */}
             <Route path="/quick-request-v2" element={<ProtectedRoute element={<QuickRequest_v2 />} />} />
+            <Route path="/admin-management" element={<ProtectedRoute element={<AdminManagementPage />} />} />
+            <Route path="/inventory-management" element={<ProtectedRoute element={<InventoryManagementTabbedView />} />} />
             <Route path="/admin-contact-dashboard" element={<ProtectedRoute element={<AdminContactDashboard />} />} />
+            <Route path="/contact-management" element={<ProtectedRoute element={<ContactManagementTabbedView />} />} />
+            <Route path="/accounting-management" element={<ProtectedRoute element={<AccountingTabbedView />} />} />
             {/* <Route path="/view-quotes/:quoteId" element={<ProtectedRoute element={<ViewQuotes />} />} /> */}
-            <Route path="/dashboard" element={<ProtectedRoute element={<LogDashboard />} />} />
-            <Route path="/booking-dashboard" element={<ProtectedRoute element={<BookingDashboard />} />} />
+            {/* <Route path="/dashboard" element={<ProtectedRoute element={<LogDashboard />} />} /> */}
+            {/* <Route path="/booking-dashboard" element={<ProtectedRoute element={<BookingDashboard />} />} /> */}
             {/* <Route path="/login-page" element={<LoginPage />} /> */}
             {/* <Route path="/signup-page" element={<SignUp />} /> */}
             <Route path='/login-signup' element={<LoginSign />} />

@@ -1,0 +1,32 @@
+/* management-tabs.css */
+#management-tabs, #admin-management-tabs {
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: nowrap;
+}
+
+
+#management-tabs .nav-link, #admin-management-tabs .nav-link {
+  border-radius: 0.5rem;
+  background-color: #f1f3f5 !important;
+  color: #212529 !important;
+  font-weight: 500;
+  border: 1px solid #dee2e6;
+  transition: all 0.2s ease-in-out;
+  min-width: 140px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+#management-tabs .nav-link.active, #admin-management-tabs .nav-link.active {
+  background-color: #0d6efd !important;
+  color: #ffffff !important;
+  border-color: #0d6efd;
+  box-shadow: 0 2px 8px rgba(13, 110, 253, 0.25);
+  font-weight: 600;
+}
+
+#management-tabs .nav-link:hover, #admin-management-tabs .nav-link:hover {
+  background-color: #e9ecef !important;
+  border-color: #ced4da;
+}

@@ -5,6 +5,7 @@ import LogChart from './LogChart.jsx';
 import LogTable from './LogTable.jsx';
 import CustomPagination from './CustomPagination.jsx';
 import ReportDownloadButton from './ReportDownloadButton.jsx';
+import CustomerStatsCard from './CustomerStatsCard';
 import { Row, Col, Card, Spinner } from 'react-bootstrap';
 import { FaUsers, FaGlobe, FaMobile, FaDesktop, FaTablet, FaUserClock } from 'react-icons/fa';
 
@@ -18,13 +19,13 @@ const LogDashboard = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [weeklyReport, setWeeklyReport] = useState(null);
 
-    
+
     // New filter states
     const [deviceFilter, setDeviceFilter] = useState('');
     const [browserFilter, setBrowserFilter] = useState('');
     const [countryFilter, setCountryFilter] = useState('');
     const [visitorTypeFilter, setVisitorTypeFilter] = useState('');
-    
+
     // Stats
     const [stats, setStats] = useState({
         total: 0,
@@ -34,7 +35,7 @@ const LogDashboard = () => {
         topCountries: [],
         topReferrers: []
     });
-    
+
     const logsPerPage = 10;
 
     useEffect(() => {
@@ -47,11 +48,11 @@ const LogDashboard = () => {
                         'Content-Type': 'application/json',
                     },
                 });
-                
+
                 if (!response.ok) {
                     throw new Error('Failed to fetch logs');
                 }
-                
+
                 const data = await response.json();
                 setLogs(data);
                 setFilteredLogs(data);
@@ -73,16 +74,16 @@ const LogDashboard = () => {
             }
         };
 
-            const fetchWeeklyReport = async () => {
-        try {
-            const res = await fetch('/api/visitors/weekly-report');
-            if (!res.ok) throw new Error('Failed to fetch weekly report');
-            const report = await res.json();
-            setWeeklyReport(report);
-        } catch (err) {
-            console.error('Error fetching weekly report:', err);
-        }
-    };
+        const fetchWeeklyReport = async () => {
+            try {
+                const res = await fetch('/api/visitors/weekly-report');
+                if (!res.ok) throw new Error('Failed to fetch weekly report');
+                const report = await res.json();
+                setWeeklyReport(report);
+            } catch (err) {
+                console.error('Error fetching weekly report:', err);
+            }
+        };
 
         fetchLogs();
         fetchWeeklyReport();
@@ -106,19 +107,19 @@ const LogDashboard = () => {
                 return visit >= start && visit <= end;
             });
         }
-        
+
         if (deviceFilter) {
             filtered = filtered.filter(log => log.deviceType === deviceFilter);
         }
-        
+
         if (browserFilter) {
             filtered = filtered.filter(log => log.browser === browserFilter);
         }
-        
+
         if (countryFilter) {
             filtered = filtered.filter(log => log.geo?.country === countryFilter);
         }
-        
+
         if (visitorTypeFilter === 'new') {
             filtered = filtered.filter(log => !log.isReturningVisitor);
         } else if (visitorTypeFilter === 'returning') {
@@ -138,11 +139,11 @@ const LogDashboard = () => {
                 const device = log.deviceType?.toLowerCase() || 'unknown';
                 deviceCounts[device] = (deviceCounts[device] || 0) + 1;
             });
-            
+
             // Count visitor types
             const newVisitors = filteredLogs.filter(log => !log.isReturningVisitor).length;
             const returningVisitors = filteredLogs.filter(log => log.isReturningVisitor).length;
-            
+
             // Count countries
             const countryCount = {};
             filteredLogs.forEach(log => {
@@ -150,13 +151,13 @@ const LogDashboard = () => {
                     countryCount[log.geo.country] = (countryCount[log.geo.country] || 0) + 1;
                 }
             });
-            
+
             // Get top 5 countries
             const topCountries = Object.entries(countryCount)
                 .sort((a, b) => b[1] - a[1])
                 .slice(0, 5)
                 .map(([country, count]) => ({ country, count }));
-                
+
             // Count referrers
             const referrerCount = {};
             filteredLogs.forEach(log => {
@@ -169,13 +170,13 @@ const LogDashboard = () => {
                     }
                 }
             });
-            
+
             // Get top 5 referrers
             const topReferrers = Object.entries(referrerCount)
                 .sort((a, b) => b[1] - a[1])
                 .slice(0, 5)
                 .map(([referrer, count]) => ({ referrer, count }));
-            
+
             setStats({
                 total: filteredLogs.length,
                 newVisitors,
@@ -195,7 +196,7 @@ const LogDashboard = () => {
             });
         }
     }, [filteredLogs]);
-    
+
     // Calculate pagination
     const totalPages = Math.ceil(filteredLogs.length / logsPerPage);
     const paginatedLogs = filteredLogs.slice(
@@ -222,48 +223,48 @@ const LogDashboard = () => {
                     <ReportDownloadButton />
                 </div>
                 {weeklyReport && (
-    <Row className="mb-4">
-        <Col md={6} lg={4} className="mb-3">
-            <Card>
-                <Card.Body className="text-center">
-                    <FaUsers className="mb-2 text-primary" size={24} />
-                    <Card.Title>Weekly Sessions</Card.Title>
-                    <h3>{weeklyReport.totalSessions}</h3>
-                </Card.Body>
-            </Card>
-        </Col>
-        <Col md={6} lg={4} className="mb-3">
-            <Card>
-                <Card.Body className="text-center">
-                    <FaUserClock className="mb-2 text-success" size={24} />
-                    <Card.Title>Unique Visitors</Card.Title>
-                    <h3>{weeklyReport.uniqueVisitors}</h3>
-                </Card.Body>
-            </Card>
-        </Col>
-        <Col md={6} lg={4} className="mb-3">
-            <Card>
-                <Card.Body className="text-center">
-                    <FaGlobe className="mb-2 text-danger" size={24} />
-                    <Card.Title>Top Country</Card.Title>
-                    {weeklyReport.topCountries?.[0] ? (
-                        <>
-                            <h4>{weeklyReport.topCountries[0]._id}</h4>
-                            <div className="small text-muted">
-                                {weeklyReport.topCountries[0].visitors} visits
-                            </div>
-                        </>
-                    ) : (
-                        <div className="text-muted">No data</div>
-                    )}
-                </Card.Body>
-            </Card>
-        </Col>
-    </Row>
-)}
+                    <Row className="mb-4">
+                        <Col md={6} lg={4} className="mb-3">
+                            <Card>
+                                <Card.Body className="text-center">
+                                    <FaUsers className="mb-2 text-primary" size={24} />
+                                    <Card.Title>Weekly Sessions</Card.Title>
+                                    <h3>{weeklyReport.totalSessions}</h3>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                        <Col md={6} lg={4} className="mb-3">
+                            <Card>
+                                <Card.Body className="text-center">
+                                    <FaUserClock className="mb-2 text-success" size={24} />
+                                    <Card.Title>Unique Visitors</Card.Title>
+                                    <h3>{weeklyReport.uniqueVisitors}</h3>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                        <Col md={6} lg={4} className="mb-3">
+                            <Card>
+                                <Card.Body className="text-center">
+                                    <FaGlobe className="mb-2 text-danger" size={24} />
+                                    <Card.Title>Top Country</Card.Title>
+                                    {weeklyReport.topCountries?.[0] ? (
+                                        <>
+                                            <h4>{weeklyReport.topCountries[0]._id}</h4>
+                                            <div className="small text-muted">
+                                                {weeklyReport.topCountries[0].visitors} visits
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <div className="text-muted">No data</div>
+                                    )}
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                    </Row>
+                )}
 
             </div>
-            
+
             <FilterBar
                 logs={logs}
                 pages={pages}
@@ -280,7 +281,12 @@ const LogDashboard = () => {
                 visitorTypeFilter={visitorTypeFilter}
                 setVisitorTypeFilter={setVisitorTypeFilter}
             />
-            
+            <Row>
+                <Col md={12}>
+                    <CustomerStatsCard />
+                </Col>
+            </Row>
+
             {/* Stats Summary Cards */}
             <Row className="mb-4">
                 <Col lg={3} md={6} className="mb-3 mb-lg-0">

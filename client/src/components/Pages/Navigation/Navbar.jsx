@@ -134,74 +134,109 @@ function IndexNavbar() {
             return (
                 <>
                     {Auth.getProfile().data.adminFlag === true && (
-                        <UncontrolledDropdown nav className="nav-item-dropdown">
-                            <DropdownToggle
-                                nav
-                                className="nav-link-dropdown"
-                            >
-                                <div className="nav-link-content">
-                                    <FaUsersCog className="nav-icon" />
-                                    <span>{t('navbar.admin.configure')}</span>
-                                </div>
-                            </DropdownToggle>
+                        // <UncontrolledDropdown nav className="nav-item-dropdown">
+                        //     <DropdownToggle
+                        //         nav
+                        //         className="nav-link-dropdown"
+                        //     >
+                        //         <div className="nav-link-content">
+                        //             <FaUsersCog className="nav-icon" />
+                        //             <span>{t('navbar.admin.configure')}</span>
+                        //         </div>
+                        //     </DropdownToggle>
 
-                            <DropdownMenu className="dropdown-menu">
-                                <DropdownItem to="/admin-contact-dashboard" tag={Link} className="dropdown-item">
-                                    <FaBoxOpen className="dropdown-icon" />
-                                    <span>{t('Admin Contact Dashboard')}</span>
-                                </DropdownItem>
-                                <DropdownItem to="/manage-categories" tag={Link} className="dropdown-item">
-                                    <FaBoxOpen className="dropdown-icon" />
-                                    <span>{t('navbar.admin.manage_categories')}</span>
-                                </DropdownItem>
-                                <DropdownItem to="/manage-product" tag={Link} className="dropdown-item">
-                                    <FaBoxOpen className="dropdown-icon" />
-                                    <span>{t('navbar.admin.manage_products')}</span>
-                                </DropdownItem>
+                        //     <DropdownMenu className="dropdown-menu">
+                        //         {/* <DropdownItem to="/admin-contact-dashboard" tag={Link} className="dropdown-item">
+                        //             <FaBoxOpen className="dropdown-icon" />
+                        //             <span>{t('Admin Contact Dashboard')}</span>
+                        //         </DropdownItem> */}
+                        //         {/* <DropdownItem to="/manage-categories" tag={Link} className="dropdown-item">
+                        //             <FaBoxOpen className="dropdown-icon" />
+                        //             <span>{t('navbar.admin.manage_categories')}</span>
+                        //         </DropdownItem> */}
+                        //         {/* <DropdownItem to="/manage-product" tag={Link} className="dropdown-item">
+                        //             <FaBoxOpen className="dropdown-icon" />
+                        //             <span>{t('navbar.admin.manage_products')}</span>
+                        //         </DropdownItem>
 
-                                <DropdownItem to="/manage-service" tag={Link} className="dropdown-item">
-                                    <FaConciergeBell className="dropdown-icon" />
-                                    <span>{t('navbar.admin.manage_services')}</span>
-                                </DropdownItem>
+                        //         <DropdownItem to="/manage-service" tag={Link} className="dropdown-item">
+                        //             <FaConciergeBell className="dropdown-icon" />
+                        //             <span>{t('navbar.admin.manage_services')}</span>
+                        //         </DropdownItem>
 
-                                <DropdownItem to="/manage-user" tag={Link} className="dropdown-item">
-                                    <FaUsersCog className="dropdown-icon" />
-                                    <span>{t('navbar.admin.manage_users')}</span>
-                                </DropdownItem>
-                                <DropdownItem to="/manage-customers" tag={Link} className="dropdown-item">
-                                    <FaUsersCog className="dropdown-icon" />
-                                    <span>{t('navbar.admin.manage_customers')}</span>
-                                </DropdownItem>                               
-                                <DropdownItem to="/view-quotes" tag={Link} className="dropdown-item">
-                                    <FaRegFileAlt className="dropdown-icon" />
-                                    <span>{t('navbar.admin.view_quotes')}</span>
-                                </DropdownItem>
+                        //         <DropdownItem to="/manage-user" tag={Link} className="dropdown-item">
+                        //             <FaUsersCog className="dropdown-icon" />
+                        //             <span>{t('navbar.admin.manage_users')}</span>
+                        //         </DropdownItem>
+                        //         <DropdownItem to="/manage-customers" tag={Link} className="dropdown-item">
+                        //             <FaUsersCog className="dropdown-icon" />
+                        //             <span>{t('navbar.admin.manage_customers')}</span>
+                        //         </DropdownItem>                                */}
+                        //         {/* <DropdownItem to="/view-quotes" tag={Link} className="dropdown-item">
+                        //             <FaRegFileAlt className="dropdown-icon" />
+                        //             <span>{t('navbar.admin.view_quotes')}</span>
+                        //         </DropdownItem> */}
 
-                                <DropdownItem to="/manage-gift-card" tag={Link} className="dropdown-item">
-                                    <FaGift className="dropdown-icon" />
-                                    <span>{t('navbar.admin.manage_gift_cards')}</span>
-                                </DropdownItem>
+                        //         {/* <DropdownItem to="/manage-gift-card" tag={Link} className="dropdown-item">
+                        //             <FaGift className="dropdown-icon" />
+                        //             <span>{t('navbar.admin.manage_gift_cards')}</span>
+                        //         </DropdownItem> */}
 
-                                <DropdownItem to="/dashboard" tag={Link} className="dropdown-item">
-                                    <FaTachometerAlt className="dropdown-icon" />
-                                    <span>{t('navbar.admin.visitor_dashboard')}</span>
-                                </DropdownItem>
+                        //         {/* <DropdownItem to="/dashboard" tag={Link} className="dropdown-item">
+                        //             <FaTachometerAlt className="dropdown-icon" />
+                        //             <span>{t('navbar.admin.visitor_dashboard')}</span>
+                        //         </DropdownItem> */}
 
-                                <DropdownItem to="/booking-dashboard" tag={Link} className="dropdown-item">
-                                    <FaCalendarCheck className="dropdown-icon" />
-                                    <span>{t('navbar.admin.booking_dashboard')}</span>
-                                </DropdownItem>
+                        //         {/* <DropdownItem to="/booking-dashboard" tag={Link} className="dropdown-item">
+                        //             <FaCalendarCheck className="dropdown-icon" />
+                        //             <span>{t('navbar.admin.booking_dashboard')}</span>
+                        //         </DropdownItem> */}
 
-                                <DropdownItem to="/manage-finance" tag={Link} className="dropdown-item">
-                                    <FaCalendarCheck className="dropdown-icon" />
-                                    <span>{t('navbar.admin.manage_finance')}</span>
-                                </DropdownItem>
-                                <DropdownItem to="/manage-expenses" tag={Link} className="dropdown-item">
-                                    <FaCalendarCheck className="dropdown-icon" />
-                                    <span>{t('navbar.admin.manage_expenses')}</span>
-                                </DropdownItem>
-                            </DropdownMenu>
-                        </UncontrolledDropdown>
+                        //         {/* <DropdownItem to="/manage-finance" tag={Link} className="dropdown-item">
+                        //             <FaCalendarCheck className="dropdown-icon" />
+                        //             <span>{t('navbar.admin.manage_finance')}</span>
+                        //         </DropdownItem>
+                        //         <DropdownItem to="/manage-expenses" tag={Link} className="dropdown-item">
+                        //             <FaCalendarCheck className="dropdown-icon" />
+                        //             <span>{t('navbar.admin.manage_finance')}</span>
+                        //         </DropdownItem> */}
+                        //     </DropdownMenu>
+                        // </UncontrolledDropdown>
+                        <>
+                         {/* <NavItem className="nav-item">
+                        <NavLink href="/inventory-management" className="nav-link">
+                            <div className="nav-link-content">
+                                <FaUserCircle className="nav-icon" />
+                                <span>{t('navbar.admin.inventory_management')}</span>
+                            </div>
+                        </NavLink>
+                        
+                    </NavItem>
+                    <NavItem className="nav-item">
+                        <NavLink href="/contact-management" className="nav-link">
+                            <div className="nav-link-content">
+                                <FaUserCircle className="nav-icon" />
+                                <span>{t('navbar.admin.contact_management')}</span>
+                            </div>
+                        </NavLink>
+                    </NavItem>
+                    <NavItem className="nav-item">
+                        <NavLink href="/accounting-management" className="nav-link">
+                            <div className="nav-link-content">
+                                <FaUserCircle className="nav-icon" />
+                                <span>{t('navbar.admin.accounting_management')}</span>
+                            </div>
+                        </NavLink>
+                    </NavItem> */}
+                    <NavItem className="nav-item">
+                        <NavLink href="/admin-management" className="nav-link">
+                            <div className="nav-link-content">
+                                <FaUserCircle className="nav-icon" />
+                                <span>{t('navbar.admin.admin_management')}</span>
+                            </div>
+                        </NavLink>
+                    </NavItem>
+                    </>
                     )}
 
 

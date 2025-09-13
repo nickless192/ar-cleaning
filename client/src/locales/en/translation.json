@@ -446,12 +446,17 @@
       "manage_services": "Manage Services",
       "manage_users": "Manage Users",
       "manage_customers": "Manage Customers",
+      "manage_customers_contact": "Manage Customer Contacts",
       "view_quotes": "View Quote Requests",
       "manage_gift_cards": "Manage Gift Cards",
       "visitor_dashboard": "Visitor Log Dashboard",
       "booking_dashboard": "Bookings Dashboard",
       "manage_finance": "Financial Dashboard",
-      "manage_expenses": "Manage Expenses"
+      "manage_expenses": "Manage Expenses",
+      "inventory_management": "Inventory Management",
+      "customer_management": "Customer Experience Management",
+      "accounting_management": "Accounting Management",
+      "admin_management": "Management"
     }
   },
   "daysOfTheWeek": {

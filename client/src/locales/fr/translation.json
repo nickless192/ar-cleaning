@@ -444,12 +444,17 @@
       "manage_services": "Gérer les Services",
       "manage_users": "Gérer les Utilisateurs",
       "manage_customers": "Gérer les Clients",
+      "manage_customers_contacts": "Gérer les Contacts Clients",
       "view_quotes": "Voir les Demandes de Devis",
       "manage_gift_cards": "Gérer les Cartes-Cadeaux",
       "visitor_dashboard": "Tableau de Bord des Visiteurs",
       "booking_dashboard": "Tableau de Bord des Réservations",
       "manage_finance": "Gérer les finances",
-      "manage_expenses": "Gérer les dépanses"
+      "manage_expenses": "Gérer les dépenses",
+      "inventory_management": "Gestion des stocks",
+      "customer_management": "Gestion de l'expérience client",
+      "accounting_management": "Gestion comptable",
+      "admin_management": "Gestion"
     }
   },
   "daysOfTheWeek": {

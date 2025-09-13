@@ -33,7 +33,7 @@ const sendReminderEmail = async ({ customerEmail, customerName, date, serviceTyp
         bcc: 'info@cleanarsolutions.ca',
         html: `
             <h2>Your service is almost here!</h2>
-            <p>Hi ${customerName},</p>
+            <p>Hello,</p>
             <p>This is a friendly reminder that your cleaning appointment is scheduled for <strong>${formattedDateTime}</strong>.</p>
             <p>Details:</p>
             <p>${serviceType}</p>
@@ -245,7 +245,7 @@ const bookingControllers = {
                     scheduleConfirmation: scheduleConfirmation || false,
                     scheduledConfirmationDate: confirmationDate
                         ? DateTime.fromISO(confirmationDate, { zone: 'America/Toronto' }).toJSDate()
-                        : null,
+                        : new Date(),
                     reminderScheduled: reminderScheduled || false,
                     disableConfirmation: disableConfirmation || false,
                     updatedAt: new Date(),
@@ -294,6 +294,7 @@ const bookingControllers = {
             scheduledConfirmationDate: { $lte: now },
             // scheduleConfirmation: true, // so it auto sends after confirmed, or after the confirmation date
             confirmationSent: false,
+            disableConfirmation: false,
             // status: { $ne: 'cancelled' } // Exclude cancelled bookings
             status: { $eq: 'confirmed' } // include confirmed bookings
         });
@@ -326,7 +327,7 @@ const bookingControllers = {
                         subject: `✅ CleanAR Solutions: Booking Confirmation for ${subjectDate}`,
                         html: `
                   <h2>Thanks for booking with CleanAR Solutions!</h2>
-                  <p>Hi ${booking.customerName},</p>
+                  <p>Hello,</p>
                   <p>Your service is confirmed for <strong>${formattedDateTime}</strong>.</p>
                   <p>Details:</p>
                   <p>${booking.serviceType}</p>
