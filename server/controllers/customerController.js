@@ -31,6 +31,7 @@ module.exports = {
 
   updateCustomer: async (req, res) => {
     try {
+      console.log("Updating customer with data:", req.body);
       const updated = await Customer.findByIdAndUpdate(req.params.id, req.body, { new: true });
       if (!updated) return res.status(404).json({ error: 'Customer not found' });
       res.status(200).json(updated);

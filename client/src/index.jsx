@@ -32,7 +32,7 @@ import Navbar from "/src/components/Pages/Navigation/Navbar.jsx";
 import Career from "/src/components/Pages/Navigation/Career.jsx";
 import LogDashboard from '/src/components/Pages/Management/LogDashboard';
 import QuickQuoteDashboard from "/src/components/Pages/Management/QuickQuoteDashboard";
-import BookingDashboard from '/src/components/Pages/Management/BookingDashboard';
+import BookingList from '/src/components/Pages/Management/BookingList';
 import ResetPassword from "/src/components/Pages/UserJourney/ResetPassword";
 
 import Terms from "/src/components/Pages/Navigation/Terms";
@@ -145,7 +145,7 @@ const consent = JSON.parse(localStorage.getItem("cookieConsent") || "{}");
             <Route path="/accounting-management" element={<ProtectedRoute element={<AccountingTabbedView />} />} />
             {/* <Route path="/view-quotes/:quoteId" element={<ProtectedRoute element={<ViewQuotes />} />} /> */}
             {/* <Route path="/dashboard" element={<ProtectedRoute element={<LogDashboard />} />} /> */}
-            {/* <Route path="/booking-dashboard" element={<ProtectedRoute element={<BookingDashboard />} />} /> */}
+            {/* <Route path="/booking-dashboard" element={<ProtectedRoute element={<BookingList />} />} /> */}
             {/* <Route path="/login-page" element={<LoginPage />} /> */}
             {/* <Route path="/signup-page" element={<SignUp />} /> */}
             <Route path='/login-signup' element={<LoginSign />} />

@@ -108,7 +108,8 @@ const BookingForm = ({
                                 ...prev,
                                 customerId: selectedCustomer._id,
                                 customerName: selectedCustomer.firstName + ' ' + selectedCustomer.lastName,
-                                customerEmail: selectedCustomer.email
+                                customerEmail: selectedCustomer.email,
+                                serviceType: selectedCustomer.defaultService                                
                             }));
                         } else {
                             // If cleared selection
@@ -116,7 +117,8 @@ const BookingForm = ({
                                 ...prev,
                                 customerId: '',
                                 customerName: '',
-                                customerEmail: ''
+                                customerEmail: '',
+                                serviceType: ''
                             }));
                         }
                     }}

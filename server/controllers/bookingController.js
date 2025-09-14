@@ -119,7 +119,7 @@ const bookingControllers = {
             // if a customerId is provided, i need to push it to the customer's bookings array
             if (customerId) {
                 await Customer.findByIdAndUpdate(customerId, { $push: { bookings: savedBooking._id } });
-            }            
+            }
             res.status(201).json(savedBooking);
         } catch (err) {
             console.error('Error creating booking:', err);
@@ -237,7 +237,7 @@ const bookingControllers = {
             // updatedBooking.updatedBy = req.body.updatedBy; // Assuming userId is passed in the request body
             // await updatedBooking.save(); // Save the updated booking
             // res.json(updatedBooking);
-            
+
             const updatedBooking = await Booking.findByIdAndUpdate(
                 bookingId,
                 {
@@ -266,7 +266,8 @@ const bookingControllers = {
     pendBookingById: async (req, res) => {
         try {
             const bookingId = req.params.id;
-            const updatedBooking = await Booking.findByIdAndUpdate(bookingId, { status: 'pending',
+            const updatedBooking = await Booking.findByIdAndUpdate(bookingId, {
+                status: 'pending',
                 updatedAt: new Date(),
                 updatedBy: req.body.updatedBy,
                 scheduledConfirmationDate: null,
@@ -274,7 +275,7 @@ const bookingControllers = {
                 confirmationSent: false,
                 reminderSent: false,
                 disableConfirmation: false
-             }, { new: true });
+            }, { new: true });
             if (!updatedBooking) {
                 return res.status(404).json({ error: 'Booking not found' });
             }
@@ -421,17 +422,17 @@ const bookingControllers = {
         try {
             const updatedBooking = await Booking.findByIdAndUpdate(bookingId,
                 // { date: new Date(date), updatedBy, updatedAt: new Date() },
-                 {
-                date: new Date(date),
-                updatedBy,
-                updatedAt: new Date(),
-                status: 'pending',
-                scheduledConfirmationDate: null,
-                reminderScheduled: false,
-                confirmationSent: false,
-                reminderSent: false,
-                disableConfirmation: false
-            },
+                {
+                    date: new Date(date),
+                    updatedBy,
+                    updatedAt: new Date(),
+                    status: 'pending',
+                    scheduledConfirmationDate: null,
+                    reminderScheduled: false,
+                    confirmationSent: false,
+                    reminderSent: false,
+                    disableConfirmation: false
+                },
                 { new: true }
             );
             if (!updatedBooking) {
@@ -446,6 +447,31 @@ const bookingControllers = {
         } catch (err) {
             console.error('Error updating booking date:', err);
             res.status(500).json({ error: 'Failed to update booking date' });
+        }
+    },
+    updateBooking: async (req, res) => {
+        try {
+            const bookingId = req.params.id;
+            const customerSuggestedBookingAcknowledged = req.body.customerSuggestedBookingAcknowledged;
+            const updated = await Booking.findByIdAndUpdate(bookingId, {
+                ...req.body,
+                updatedAt: new Date()
+            }, { new: true });
+            if (!updated) return res.status(404).json({ error: 'Booking not found' });
+            if (customerSuggestedBookingAcknowledged) {
+                updated.customerSuggestedBookingAcknowledged = true;
+                updated.status = 'pending';
+                updated.scheduledConfirmationDate = null;
+                updated.reminderScheduled = false;
+                updated.confirmationSent = false;
+                updated.reminderSent = false;
+                updated.disableConfirmation = false;
+            }
+            updated.save();
+            res.status(200).json(updated);
+        } catch (err) {
+            console.error('Error updating booking:', err);
+            res.status(500).json({ error: 'Failed to update booking' });
         }
     },
     submitNewDateRequest: async (req, res) => {

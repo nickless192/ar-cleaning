@@ -57,6 +57,14 @@ const CustomerSchema = new Schema({
     enum: ["one-time", "recurring", "other"],
     default: "one-time",
   },
+  defaultService: {
+    type: String,    
+  },
+  status: {
+    type: String,
+    // enum: ["active", "inactive", "archived"],
+    default: "active",
+  },
   createdAt: {
     type: Date,
     default: Date.now,

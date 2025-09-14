@@ -12,7 +12,6 @@ import {
 } from "react-bootstrap";
 import '/src/assets/css/bookingcalendar.css';
 import Auth from "/src/utils/auth";
-import { HideImage } from '@mui/icons-material';
 import BookingForm from '../Booking/BookingForm';
 
 const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
@@ -27,15 +26,45 @@ const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
 
   const [isEditing, setIsEditing] = useState(false);
   const [tempDate, setTempDate] = useState("");
+  const [tempServiceType, setTempServiceType] = useState("");
+  // const [tempDate, setTempDate] = useState(selectedBooking.date);
+  const [tempIncome, setTempIncome] = useState(0);
+  const [customerAcknowledged, setCustomerAcknowledged] = useState(false);
 
   useEffect(() => {
     if (selectedBooking?.date) {
       setTempDate(new Date(selectedBooking.date).toISOString().slice(0, 16));
+      setTempServiceType(selectedBooking.serviceType);
+      setTempIncome(selectedBooking.income);
     }
   }, [selectedBooking]);
 
   const handleSave = async () => {
-    await updateBookingDate();
+    // await updateBookingDate();
+    const updatedBooking = {
+      ...selectedBooking,
+      serviceType: tempServiceType,
+      date: tempDate,
+      income: tempIncome
+    };
+    try {
+      const res = await fetch(`/api/bookings/${selectedBooking._id}/update`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedBooking)
+      });
+      if (res.ok) {
+        const data = await res.json();
+        console.log('Booking updated:', data);
+        fetchBookings();
+      } else {
+        console.error('Error updating booking:', res.statusText);
+      }
+    } catch (err) {
+      console.error('Error updating booking:', err);
+    }
     setIsEditing(false);
   };
 
@@ -185,7 +214,7 @@ const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
   const updateBookingDate = async () => {
     if (!selectedBooking?._id) return;
 
-    if(selectedBooking.status === 'completed' || selectedBooking.status === 'cancelled'){
+    if (selectedBooking.status === 'completed' || selectedBooking.status === 'cancelled') {
       alert("Cannot update date for completed or cancelled bookings.");
       return;
     }
@@ -323,6 +352,118 @@ const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
                   </tr>
                   <tr>
                     <th>Service</th>
+                    <td>
+                      {isEditing ? (
+                        <Form.Control
+                          type="text"
+                          value={tempServiceType}
+                          className="text-cleanar-color form-input"
+                          onChange={(e) => setTempServiceType(e.target.value)}
+                          style={{ maxWidth: "250px" }}
+                        />
+                      ) : (
+                        selectedBooking.serviceType
+                      )}
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <th>Date/Time</th>
+                    <td>
+                      {isEditing ? (
+                        <>
+                          <Row className="align-items-center g-2">
+                            <Col xs={12} sm="auto">
+                              <Form.Control
+                                type="datetime-local"
+                                value={tempDate}
+                                className="text-cleanar-color form-input"
+                                onChange={(e) => setTempDate(e.target.value)}
+                                style={{ maxWidth: "250px" }}
+                              />
+                            </Col>
+                            <Col xs={12} sm="auto">
+                              <FormGroup check>
+                                <Label check>
+                                  <Input
+                                    type="checkbox"
+                                    name="customerSuggestedBookingAcknowledged"
+                                    checked={customerAcknowledged}
+                                    onChange={e => setCustomerAcknowledged(e.target.checked)}
+                                  />
+                                  <span className="form-check-sign"></span>{' '}
+                                  Acknowledge Changes to Date/Service
+                                </Label>
+                              </FormGroup>
+                            </Col>
+                          </Row>
+                        </>
+                      ) : (
+                        <div className="d-flex align-items-center gap-2">
+                          {new Date(selectedBooking.date).toLocaleString()}
+                          <Button
+                            variant="outline-primary"
+                            size="sm"
+                            onClick={() => setIsEditing(true)}
+                            className="rounded-pill"
+                          >
+                            Edit
+                          </Button>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <th>Income</th>
+                    <td>
+                      {isEditing ? (
+                        <Form.Control
+                          type="number"
+                          step="1"
+                          min="0"
+                          value={tempIncome}
+                          className="text-cleanar-color form-input"
+                          onChange={(e) => setTempIncome(e.target.value)}
+                          style={{ maxWidth: "150px" }}
+                        />
+                      ) : (
+                        `$${selectedBooking.income} CAD`
+                      )}
+                    </td>
+                  </tr>
+
+                  {isEditing && (
+                    <tr>
+                      <td colSpan={2}>
+                        <Row className="align-items-center">
+                          <Col xs={6} sm="auto">
+                            <Button
+                              variant="success"
+                              size="sm"
+                              onClick={handleSave}
+                              className="rounded-pill"
+                            >
+                              Save
+                            </Button>
+                          </Col>
+                          <Col xs={6} sm="auto">
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              onClick={handleCancel}
+                              className="rounded-pill"
+                            >
+                              Cancel
+                            </Button>
+                          </Col>
+                        </Row>
+                      </td>
+                    </tr>
+                  )}
+
+                  {/* <tr>
+                    <th>Service</th>
                     <td>{selectedBooking.serviceType}</td>
                   </tr>
                   <tr>
@@ -342,7 +483,7 @@ const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
                           </Col>
                           <Col xs={12} sm="auto">
                               {/* add a checkbox */}
-                          <FormGroup check>
+                  {/* <FormGroup check>
                             <Label check>
                               <Input
                                 type="checkbox"
@@ -398,7 +539,7 @@ const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
                   <tr>
                     <th>Income</th>
                     <td>${selectedBooking.income} CAD</td>
-                  </tr>
+                  </tr> */}
                   {/* <tr>
                     <th>Confirmation Email</th>
                     <td>
@@ -596,7 +737,7 @@ const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
           <Modal.Title>Add New Booking</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {/* Here you’ll embed BookingDashboard form later */}
+          {/* Here you’ll embed BookingList form later */}
           <BookingForm
             customers={customers}
             prefillDate={prefillDate}

@@ -24,7 +24,7 @@ const BookingSchema = new Schema({
     paidAt: { type: Date },                      // when money was *actually* received
     status: {
         type: String,
-        enum: ['pending', 'confirmed', 'completed', 'cancelled'],
+        enum: ['pending', 'confirmed', 'completed', 'cancelled', 'paid', 'in progress'],
         default: 'pending'
     }, // booking status
     hidden: {
@@ -92,6 +92,19 @@ const BookingSchema = new Schema({
         type: Boolean,
         default: false
     },
+      // --- Key timestamps for workflow automation ---
+  confirmedAt: { type: Date }, // when booking was confirmed
+  completedAt: { type: Date }, // when service marked as completed
+  invoicedAt: { type: Date },  // when invoice was sent
+  paidAt: { type: Date },      // when payment confirmed
+
+  // --- Workflow checklist flags ---
+  workflow: {
+    confirmedWithClient: { type: Boolean, default: false },
+    serviceCompleted: { type: Boolean, default: false },
+    invoiceSent: { type: Boolean, default: false },
+    paymentReceived: { type: Boolean, default: false },
+  },
     updatedAt: { type: Date, default: Date.now },
     createdAt: { type: Date, default: Date.now },
 });

@@ -24,20 +24,12 @@ export const deleteCustomer = async (id) => {
 };
 
 export const updateCustomer = async (id, data) => {
-  const res = await fetch(`/api/customers/${id}/assign-user`, {
+  const res = await fetch(`/api/customers/${id}/`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data)
   });
   return res.json();
-};
-
-export const linkUser = async (customerId, userId) => {
-  return updateCustomer(customerId, { user: userId });
-};
-
-export const unlinkUser = async (customerId) => {
-  return updateCustomer(customerId, { user: null });
 };
 
 export const linkBooking = async (customerId, bookingId) => {

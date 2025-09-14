@@ -4,7 +4,7 @@
 // import AdminContactDashboard from "/src/components/Pages/Management/AdminContactDashboard"; // version in-dev for testing
 // import QuickQuoteDashboard from "/src/components/Pages/Management/QuickQuoteDashboard";
 // import LogDashboard from "/src/components/Pages/Management/LogDashboard";
-// import BookingDashboard from '/src/components/Pages/Management/BookingDashboard';
+// import BookingList from '/src/components/Pages/Management/BookingList';
 // import {useTranslation} from "react-i18next";
 
 // const ContactManagementTabbedView = () => {
@@ -20,7 +20,7 @@
 //                     <AdminContactDashboard />
 //                 </Tab>
 //                 <Tab eventKey="booking-dashboard" title={t('navbar.admin.booking_dashboard')}>
-//                     <BookingDashboard />
+//                     <BookingList />
 //                 </Tab>
 //                 <Tab eventKey="view-quotes" title={t('navbar.admin.view_quotes')}>
 //                     <QuickQuoteDashboard />
@@ -41,6 +41,7 @@ import Customers from '/src/components/Pages/Management/Customers';
 import ManageUser from '/src/components/Pages/Management/ManageUser';
 import LogDashboard from '/src/components/Pages/Management/LogDashboard';
 import BookingDashboard from '/src/components/Pages/Management/BookingDashboard';
+import BookingList from '/src/components/Pages/Management/BookingList';
 import { useTranslation } from 'react-i18next';
 
 const ContactManagementTabbedView = () => {
@@ -64,12 +65,20 @@ const ContactManagementTabbedView = () => {
                             <LogDashboard />
                         </div>
                     </Tab>
+                    <Tab
+                        eventKey="booking-dashboard-main"
+                        title={<span className="px-3 py-2 text-sm sm:text-base">{t('navbar.admin.booking_overview', "Booking Workflow Overview")}</span>}
+                    >
+                        <div className="p-2 sm:p-4">
+                            <BookingDashboard />
+                        </div>
+                    </Tab>
                      <Tab
                         eventKey="booking-dashboard"
                         title={<span className="px-3 py-2 text-sm sm:text-base">{t('navbar.admin.booking_dashboard')}</span>}
                     >
                         <div className="p-2 sm:p-4">
-                            <BookingDashboard />
+                            <BookingList />
                         </div>
                     </Tab>
                    

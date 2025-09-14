@@ -3,7 +3,8 @@ const isDev = process.env.NODE_ENV !== "production";
 const cron = require('node-cron');
 const { createBooking, getBookings, deleteBooking, completeBooking, hideBooking, sendScheduledReminder, sendScheduledConfirmationEmail, confirmBooking, cancelBooking, pendBookingById,
   updateBookingDate,
-  submitNewDateRequest
+  submitNewDateRequest,
+  updateBooking
  } = require('../../controllers/bookingController');
 
 
@@ -17,6 +18,7 @@ router.put('/:id/confirm', confirmBooking);
 router.put('/:id/cancel', cancelBooking);
 router.put('/:id/pending', pendBookingById);
 router.put('/:id/request-change', submitNewDateRequest);
+router.put('/:id/update', updateBooking);
 
 
 // Reminder Scheduler

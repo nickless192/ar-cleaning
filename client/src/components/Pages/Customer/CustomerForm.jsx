@@ -13,7 +13,9 @@ const tooltipText = {
   postalcode: 'Format: A1A 1A1',
   companyName: 'If you are representing a business.',
   howDidYouHearAboutUs: 'Optional feedback helps us improve.',
-  user: 'The associated user ID in the system.'
+  user: 'The associated user ID in the system.',
+  defaultService: 'The service you most frequently use.',
+  status: 'The current status of the customer (active, inactive, archived).'
 };
 
 
@@ -76,6 +78,8 @@ const Customer = ({ initialData = {}, onSubmit, onCancel }) => {
     { label: 'Province', name: 'province', required: false },
     { label: 'Postal Code', name: 'postalcode', required: false },
     { label: 'Company Name', name: 'companyName', required: false },
+    { label: 'Default Service', name: 'defaultService', required: false },
+    { label: 'Status', name: 'status', required: false }    
     // { label: 'User ID', name: 'user', required: false }
   ];
 

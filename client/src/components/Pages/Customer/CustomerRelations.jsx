@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardBody, CardTitle, Row, Col, Button, Input, Label } from 'reactstrap';
 import { getUsers } from '/src/components/API/userApi';
 import { getBookings } from '/src/components/API/bookingApi';
-import { linkUser, unlinkUser, linkBooking, unlinkBooking } from '/src/components/API/customerApi';
+import { linkBooking, unlinkBooking } from '/src/components/API/customerApi';
 
 const CustomerRelations = ({ customer, onClose, onRefresh }) => {
   console.log(customer);

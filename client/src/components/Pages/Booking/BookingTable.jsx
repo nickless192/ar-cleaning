@@ -7,7 +7,7 @@ import {
 } from 'reactstrap';
 import moment from 'moment';
 
-const BookingList = ({bookings}) => {
+const BookingTable = ({bookings}) => {
   return (
     <div>
       <h4 className="mb-3">All Bookings</h4>
@@ -105,4 +105,4 @@ const BookingList = ({bookings}) => {
   );
 };
 
-export default BookingList;
+export default BookingTable;

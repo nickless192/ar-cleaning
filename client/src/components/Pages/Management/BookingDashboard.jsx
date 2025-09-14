@@ -1,372 +1,178 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import BookingForm from '../Booking/BookingForm.jsx';
-import {
-  Container, Row, Col,
-  Form, FormGroup, Label, Input,
-  Button, Alert, Spinner,
-  Table
-} from 'reactstrap';
-import moment from 'moment';
-import BookingCalendar from './BookingCalendar';
-import { FaTrash } from 'react-icons/fa';
-import Auth from "/src/utils/auth";
-import BookingList from "../Booking/BookingList.jsx";
+import React, { useState, useEffect } from 'react';
+import { Container, Row, Col, Card, Table, Button, Form, Badge, Alert } from 'react-bootstrap';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
-
-const BookingDashboard = () => {
-  // const navigate = useNavigate();
-  const [customers, setCustomers] = useState([]);
-  const location = useLocation();
-  const [selectedCustomerId, setSelectedCustomerId] = useState('');
-  const [monthlyIncome, setMonthlyIncome] = useState(0);
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
+export default function BookingDashboard() {
   const [bookings, setBookings] = useState([]);
-  const [formData, setFormData] = useState({
-    customerId: '',
-    customerName: '',
-    customerEmail: '',
-    serviceType: '',
-    date: '',
-    scheduleConfirmation: false,
-    confirmationDate: '',
-    reminderScheduled: false,
-    disableConfirmation: false,
-    income: 0
-  });
-
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState(null);
+  const [selectedBooking, setSelectedBooking] = useState(null);
+  const [alerts, setAlerts] = useState([]);
+  const [filters, setFilters] = useState({ status: '', search: '' });
 
   useEffect(() => {
-
-    const fetchCustomers = async () => {
-      try {
-        const res = await fetch('/api/customers');
-        if (!res.ok) throw new Error('Failed to fetch customers');
-        const data = await res.json();
-        setCustomers(data);
-      } catch (err) {
-        console.error('Error fetching customers:', err);
-      }
-    };
-    if (isInitialLoad) {
-      setIsInitialLoad(false);
-      fetchBookings();
-      fetchCustomers();
-      const searchParams = new URLSearchParams(location.search);
-      const customerName = searchParams.get('name');
-      const customerEmail = searchParams.get('email');
-      const serviceType = searchParams.get('serviceType');
-      setFormData(prev => ({
-        ...prev,
-        customerName: customerName || prev.customerName,
-        customerEmail: customerEmail || prev.customerEmail,
-        serviceType: serviceType || prev.serviceType
-      }));
-    }
+    fetch('/api/bookings')
+      .then(res => res.json())
+      .then(data => {
+        setBookings(data);
+        updateAlerts(data);
+      });
   }, []);
 
-  const fetchBookings = async () => {
-    try {
-      const res = await fetch('/api/bookings');
-      if (!res.ok) throw new Error('Failed to fetch bookings');
-      const data = await res.json();
-      // filter out data that is hidden
-      const visibleData = data.filter(b => !b.hidden);
-      setBookings(visibleData);
-    } catch (err) {
-      console.error('Failed to fetch bookings:', err);
-    }
+  const updateAlerts = (data) => {
+    const actionable = data.filter(b => b.status !== 'Paid' && b.status !== 'Completed');
+    setAlerts(actionable);
   };
 
-  const handleChange = e => {
-    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: value
-    }));
+  const handleSave = () => {
+    fetch(`/api/bookings/${selectedBooking._id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(selectedBooking)
+    }).then(() => {
+      const updated = bookings.map(b => b._id === selectedBooking._id ? selectedBooking : b);
+      setBookings(updated);
+      updateAlerts(updated);
+      setSelectedBooking(null);
+    });
   };
 
-  const handleDelete = async (bookingId) => {
-    if (!window.confirm('Are you sure you want to delete this booking?')) return;
+  const filteredBookings = bookings.filter(b => {
+    return (
+      (!filters.status || b.status === filters.status) &&
+      (!filters.search || b.customerName.toLowerCase().includes(filters.search.toLowerCase()))
+    );
+  });
 
-    try {
-      const res = await fetch(`/api/bookings/${bookingId}`, { method: 'DELETE' });
-      if (!res.ok) throw new Error('Failed to delete');
-      fetchBookings();
-    } catch (err) {
-      alert('Error deleting booking.');
-    }
-  };
-
-  const handleComplete = async (bookingId, status) => {
-    if (status === 'completed') {
-      alert('This booking is already marked as completed.');
-      return;
-    }
-    if (status === 'cancelled') {
-      alert('You cannot mark a cancelled booking as completed.');
-      return;
-    }
-    if (!window.confirm('Are you sure you want to mark this booking as completed?')) return;
-    try {
-      const res = await fetch(`/api/bookings/${bookingId}/complete`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: 'completed', updatedBy: Auth.getProfile().data._id }) // Assuming you have user authentication
-      });
-      if (!res.ok) throw new Error('Failed to mark as completed');
-      fetchBookings();
-    } catch (err) {
-      alert('Error marking booking as completed.');
-    }
-  };
-
-  const handleHide = async (bookingId, status) => {
-    if (status === 'pending' || status === 'confirmed') {
-      alert('You can only hide completed or cancelled bookings.');
-      return;
-    }
-    if (!window.confirm('Are you sure you want to hide this booking?')) return;
-    try {
-      const res = await fetch(`/api/bookings/${bookingId}/hide`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ hidden: true, updatedBy: Auth.getProfile().data._id }) // Assuming you have user authentication
-      });
-      if (!res.ok) throw new Error('Failed to hide booking');
-      fetchBookings();
-    } catch (err) {
-      alert('Error hiding booking.');
-    }
-  };
-
-  const handleSubmit = async e => {
-    e.preventDefault();
-    setLoading(true);
-    setMessage(null);
-    if (!formData.customerName || !formData.customerEmail || !formData.serviceType || !formData.date) {
-      setMessage({ type: 'danger', text: 'Please fill in all required fields.' });
-      setLoading(false);
-      return;
-    }
-    // Validate date
-    if (formData.income < 0) {
-      setMessage({ type: 'danger', text: 'Income cannot be negative.' });
-      setLoading(false);
-      return;
-    }
-    try {
-      const body = {
-        ...formData,
-        userId: Auth.getProfile().data._id // Assuming you have user authentication
-      };
-      const res = await fetch('/api/bookings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-      });
-      if (!res.ok) throw new Error('Failed to submit booking');
-
-      setMessage({ type: 'success', text: 'Booking submitted successfully!' });
-      setFormData({
-        customerName: '',
-        customerEmail: '',
-        serviceType: '',
-        date: '',
-        scheduleConfirmation: false,
-        confirmationDate: '',
-        reminderScheduled: false,
-        disableConfirmation: false,
-        income: 0
-      });
-      setSelectedCustomerId('');
-      fetchBookings();
-
-    } catch (err) {
-      setMessage({ type: 'danger', text: 'Error submitting booking.' });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleConfirmed = async (bookingId, status) => {
-    if (status !== 'pending') {
-      alert('You can only confirm bookings that are pending.');
-      return;
-    }
-    if (!window.confirm('Are you sure you want to confirm this booking?')) return;
-    try {
-      const res = await fetch(`/api/bookings/${bookingId}/confirm`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: 'confirmed', updatedBy: Auth.getProfile().data._id }) // Assuming you have user authentication
-      });
-      if (!res.ok) throw new Error('Failed to confirm booking');
-      fetchBookings();
-    } catch (err) {
-      alert('Error confirming booking.');
-    }
-  };
-
-  const handleCancel = async (bookingId, status) => {
-    if (status === 'completed' || status === 'cancelled') {
-      alert('You cannot cancel a completed or already cancelled booking.');
-      return;
-    }
-    if (!window.confirm('Are you sure you want to cancel this booking?')) return;
-    // return async () => {
-    try {
-      const res = await fetch(`/api/bookings/${bookingId}/cancel`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: 'cancelled', updatedBy: Auth.getProfile().data._id }) // Assuming you have user authentication
-      });
-      if (!res.ok) throw new Error('Failed to cancel booking');
-      fetchBookings();
-    } catch (err) {
-      alert('Error cancelling booking.');
-    }
-    // };
-  };
-
-  const handlePend = async (bookingId, status) => {
-    if (status !== 'confirmed' && status !== 'cancelled') {
-      alert('You can only pend bookings that are confirmed or cancelled.');
-      return;
-    }
-    if (!window.confirm('Are you sure you want to pend this booking?')) return;
-    try {
-      const res = await fetch(`/api/bookings/${bookingId}/pending`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: 'pending', updatedBy: Auth.getProfile().data._id }) // Assuming you have user authentication
-      });
-      if (!res.ok) throw new Error('Failed to pend booking');
-      fetchBookings();
-    } catch (err) {
-      alert('Error pending booking.');
-    }
-  };
+  const incomeByDay = bookings.reduce((acc, b) => {
+    const day = new Date(b.date).toLocaleDateString();
+    acc[day] = (acc[day] || 0) + b.income;
+    return acc;
+  }, {});
+  const chartData = Object.keys(incomeByDay).map(day => ({ day, income: incomeByDay[day] }));
 
   return (
-    <section className="py-4 px-5 mx-auto">
+    <Container fluid className="py-4">
+      {/* KPI Cards */}
+      <Row className="mb-4">
+        <Col md={4}><Card className="shadow-sm p-3"><h6>Upcoming Jobs</h6><h3>{bookings.filter(b => b.status === 'Scheduled').length}</h3></Card></Col>
+        <Col md={4}><Card className="shadow-sm p-3"><h6>Projected Income</h6><h3>${bookings.reduce((s, b) => s + b.income, 0)}</h3></Card></Col>
+        <Col md={4}><Card className="shadow-sm p-3"><h6>Follow-Ups Needed</h6><h3>{bookings.filter(b => b.status === 'Completed').length}</h3></Card></Col>
+      </Row>
+
+      {/* Alerts */}
+      {alerts.length > 0 && <Alert variant="warning">⚠️ {alerts.length} jobs need action (Scheduled/In Progress).</Alert>}
+
+      {/* Filters */}
+      <Row className="mb-3">
+        <Col md={3}>
+          <Form.Select value={filters.status} onChange={e => setFilters({ ...filters, status: e.target.value })}>
+            <option value="">All Statuses</option>
+            <option value="Scheduled">Scheduled</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+            <option value="Paid">Paid</option>
+          </Form.Select>
+        </Col>
+        <Col md={4}>
+          <Form.Control type="text" placeholder="Search by customer" value={filters.search} onChange={e => setFilters({ ...filters, search: e.target.value })} />
+        </Col>
+      </Row>
+
+      {/* Bookings Table */}
       <Row>
-        <Col>
-          <h4>Booking Calendar</h4>
-          <BookingCalendar bookings={bookings}
-            fetchBookings={fetchBookings}
-            deleteBooking={handleDelete}
-            onPend={handlePend}
-            completeBooking={handleComplete}
-            cancelBooking={handleCancel}
-            hideBooking={handleHide}
-            customers={customers}
-          />
-          <div className="mt-3">
-          </div>
-
-        </Col>
-      </Row>
-      <Row className="">
-          <Col>
-          {/* <h4 className="mb-3">All Bookings</h4>
-          {bookings.length > 0 ? (
-            <Table striped bordered hover responsive>
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Customer Name and Email</th>
-                  <th>Service</th>
-                  <th>Income</th>
-                  <th>Service Date</th>
-                  <th>Confirmation/Reminder Scheduled</th>
-                  <th>Booking By</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {bookings.map((b, index) => (
-                  <tr key={b._id}>
-                    <td className="align-top">
-                      <div className="d-flex flex-column align-items-start">
-                        <div>{index + 1}</div>
-                      </div>
-                    </td>
-
-                    <td>
-                      <div className="fw-bold">{b.customerName}</div>
-                      <div className="text-muted small">{b.customerEmail}</div>
-                    </td>
-
-                    <td>{b.serviceType}</td>
-                    <td>{b.income ? `$${parseFloat(b.income).toFixed(2)}` : 'N/A'}</td>
-                    <td>{moment(b.date).format('YYYY-MM-DD HH:mm')}</td>
-                    <td>
-                      <div className="mb-1">
-                        <strong>Confirmation:</strong>{' '}
-                        {b.disableConfirmation
-                          ? 'Disabled'
-                          : b.confirmationSent
-                            ? '✅ Sent'
-                            : b.scheduleConfirmation
-                              ? 'Scheduled'
-                              : 'Not Scheduled'}
-                        {b.confirmationDate && (
-                          <div className="text-muted small">
-                            @ {moment(b.confirmationDate).format('MM-DD HH:mm')}
-                          </div>
-                        )}
-                      </div>
-
-                      <div>
-                        <strong>Reminder:</strong>{' '}
-                        {b.reminderScheduled ? '✅ Scheduled' : '❌ Not Scheduled'}
-                        {b.reminderDate && (
-                          <div className="text-muted small">
-                            @ {moment(b.reminderDate).format('MM-DD HH:mm')}
-                          </div>
-                        )}
-                        <div className="text-muted small">
-                          {b.reminderScheduled && (b.reminderSent ? 'Sent' : 'Send Pending')}
-                        </div>
-                      </div>
-                    </td>
-
-                    <td>
-                      <div className="fw-bold mb-1">
-                        {b.createdBy ? `${b.createdBy.firstName} ${b.createdBy.lastName}` : 'N/A'}
-                      </div>
-                      <div className="fw-bold">
-                        {moment(b.createdAt).format('YYYY-MM-DD')} @ {moment(b.createdAt).format('HH:mm')}
-                      </div>
-                      <div className="small">
-                        <div className="fw-semibold">Last Updated By:</div>
-                        {b.updatedBy?.firstName ? (
-                          <>
-                            <div>{b.updatedBy.firstName} {b.updatedBy.lastName}</div>
-                            <div className="text-muted">{b.updatedBy.email}</div>
-                          </>
-                        ) : (
-                          <div className="text-muted">Unknown</div>
-                        )}
-                      </div>
-                    </td>
-
-                    <td>{b.status}</td>
+        <Col lg={8}>
+          <Card className="shadow-sm">
+            <Card.Header><h5>Bookings</h5></Card.Header>
+            <Card.Body className="p-0">
+              <Table hover responsive className="mb-0">
+                <thead>
+                  <tr>
+                    <th>Customer</th>
+                    <th>Service</th>
+                    <th>Date</th>
+                    <th>Income</th>
+                    <th>Status</th>
+                    <th></th>
                   </tr>
-                ))}
-              </tbody>
-            </Table>
-          ) : (
-            <p>No bookings yet.</p>
-          )} */}
-          <BookingList bookings={bookings} />
+                </thead>
+                <tbody>
+                  {filteredBookings.map(b => (
+                    <tr key={b._id}>
+                      <td>{b.customerName}</td>
+                      <td>{b.serviceType}</td>
+                      <td>{new Date(b.date).toLocaleString()}</td>
+                      <td>${b.income}</td>
+                      <td><Badge bg={b.status === 'confirmed' ? 'info' : b.status === 'completed' ? 'success' : b.status === 'cancelled' ? 'danger' : 'secondary'}>{b.status}</Badge></td>
+                      <td><Button size="sm" variant="outline-primary" onClick={() => setSelectedBooking(b)}>Edit</Button></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </Card.Body>
+          </Card>
+        </Col>
+
+        {/* Quick Edit & Workflow Panel */}
+        <Col lg={4}>
+          {selectedBooking && (
+            <Card className="shadow-sm p-3">
+              <h5>Update Booking</h5>
+              <Form>
+                <Form.Group className="mb-3">
+                  <Form.Label>Service Type</Form.Label>
+                  <Form.Control type="text" value={selectedBooking.serviceType} onChange={e => setSelectedBooking({ ...selectedBooking, serviceType: e.target.value })} />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label>Date/Time</Form.Label>
+                  <Form.Control type="datetime-local" value={new Date(selectedBooking.date).toISOString().slice(0, 16)} onChange={e => setSelectedBooking({ ...selectedBooking, date: e.target.value })} />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label>Income (CAD)</Form.Label>
+                  <Form.Control type="number" value={selectedBooking.income} onChange={e => setSelectedBooking({ ...selectedBooking, income: Number(e.target.value) })} />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label>Status</Form.Label>
+                  <Form.Select value={selectedBooking.status} onChange={e => setSelectedBooking({ ...selectedBooking, status: e.target.value })}>
+                    <option value="Scheduled">Scheduled</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Paid">Paid</option>
+                  </Form.Select>
+                </Form.Group>
+                <div className="mb-3">
+                  <strong>Workflow Checklist:</strong>
+                  <ul>
+                    <li><Form.Check type="checkbox" label="Confirmed with client" /></li>
+                    <li><Form.Check type="checkbox" label="Service completed" /></li>
+                    <li><Form.Check type="checkbox" label="Invoice sent" /></li>
+                    <li><Form.Check type="checkbox" label="Payment received" /></li>
+                  </ul>
+                </div>
+                <div className="d-flex gap-2">
+                  <Button variant="success" onClick={handleSave}>Save</Button>
+                  <Button variant="secondary" onClick={() => setSelectedBooking(null)}>Cancel</Button>
+                </div>
+              </Form>
+            </Card>
+          )}
         </Col>
       </Row>
-    </section>
-  );
-};
 
-export default BookingDashboard;
+      {/* Chart Section */}
+      <Row className="mt-4">
+        <Col>
+          <Card className="shadow-sm p-3">
+            <h5>Income by Day</h5>
+            <ResponsiveContainer width="100%" height={250}>
+              <BarChart data={chartData}>
+                <XAxis dataKey="day" />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="income" fill="#007bff" />
+              </BarChart>
+            </ResponsiveContainer>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
+  );
+}
