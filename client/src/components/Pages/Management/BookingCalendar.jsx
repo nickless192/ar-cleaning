@@ -106,10 +106,10 @@ const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
   };
 
   // Format date for display
-  const formatTime = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  };
+  // const formatTime = (dateString) => {
+  //   const date = new Date(dateString);
+  //   return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  // };
 
   // Get month name
   const monthNames = [
@@ -332,7 +332,10 @@ const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
       <Modal
         show={!!selectedBooking}
         onHide={() => setSelectedBooking(null)}
-        centered
+        // centered
+        // className="modal-90w"
+        // size="lg"
+        fullscreen={true}
       >
         {selectedBooking && (
           <>

@@ -1,6 +1,8 @@
 // src/components/Terms.jsx
 import React from 'react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
+import NewIconAnimated from "/src/components/Pages/Navigation/NewIconAnimated";
+
 
 const Terms = () => {
   return (
@@ -13,7 +15,8 @@ const Terms = () => {
           <h1 className="fw-bold text-primary">
             CleanAR Solutions — Terms & Conditions
           </h1>
-          <p className="text-muted">Updated April 2025</p>
+          {/* <p className="text-muted">Updated April 2025</p> */}
+          <p className="text-muted">Last updated: September 2025</p>
         </Col>
       </Row>
 
@@ -201,10 +204,58 @@ const Terms = () => {
               traffic, or other unforeseen events.
             </p>
           </section>
+          {/* Referral Program Terms & Conditions
+
+Referral discounts apply only after the referred client’s first cleaning service is completed and paid in full.
+
+Referral discounts are non-transferable and must be used by the referring client.
+
+Referral discounts cannot be combined with other promotions, discounts, or coupons.
+
+Discounts are applied to the next scheduled service after the referral is confirmed.
+
+For multiple referrals, discounts are applied according to CleanAR Solutions’ Referral Rewards program:
+
+1–3 referrals: 10% off each booking
+
+4–7 referrals: 20% off each booking
+
+8+ referrals: 50% off one full-service cleaning
+
+CleanAR Solutions reserves the right to modify or discontinue the Referral Program at any time without notice. */}
+
+<section className="mb-5">
+            <h4 className="fw-bold">9. Referral Program Terms & Conditions<NewIconAnimated /></h4>
+            <ol type="1" className="ps-3">
+              <li>
+                Referral discounts apply only after the referred client’s first cleaning service is completed and paid in full.
+              </li>
+              <li>
+                Referral discounts are non-transferable and must be used by the referring client.
+              </li>
+              <li>
+                Referral discounts cannot be combined with other promotions, discounts, or coupons.
+              </li>
+              <li>
+                Discounts are applied to the next scheduled service after the referral is confirmed.
+              </li>
+              <li>
+                For multiple referrals, discounts are applied according to CleanAR Solutions’ Referral Rewards program:
+                <ul>
+                  <li>1–3 referrals: 10% off each booking</li>
+                  <li>4–7 referrals: 20% off each booking</li>
+                  <li>8+ referrals: 50% off one full-service cleaning</li>
+                </ul>
+              </li>
+              <li>
+                CleanAR Solutions reserves the right to modify or discontinue the Referral Program at any time without notice.
+              </li>
+            </ol>
+          </section>
 
           {/* 9. Changes to These Terms */}
           <section className="mb-5">
-            <h4 className="fw-bold">9. Changes to These Terms</h4>
+            <h4 className="fw-bold">10. Changes to These Terms</h4>
             <p>
               We reserve the right to update these Terms at any time. Your
               continued use of the website or our services after changes have

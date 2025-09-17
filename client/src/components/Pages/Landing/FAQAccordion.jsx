@@ -4,6 +4,7 @@ import { FiChevronDown } from "react-icons/fi";
 import { MdCleaningServices } from "react-icons/md";
 import { FaKey, FaDollarSign } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
+import NewIconAnimated from "/src/components/Pages/Navigation/NewIconAnimated";
 
 
 
@@ -34,7 +35,7 @@ function FAQAccordion() {
 };
   return (
     <Container className="mb-0 pb-0">
-      <h2 className="text-center fw-bold mb-4">{t("faq.heading")}</h2>
+      <h2 className="text-center fw-bold mb-4">{t("faq.heading")}<NewIconAnimated /></h2>
 
       {Object.entries(categories).map(([category, items], cIdx) => {
         const Icon =

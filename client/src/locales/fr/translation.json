@@ -61,7 +61,7 @@
     "pricing_a5": "Oui, nous proposons des promotions saisonnières et des réductions pour les nouveaux clients. Consultez notre site web ou demandez lors de la réservation."
   },
   "contact": {
-    "heading": "Parlons-en 👋",
+    "heading": "Contactez-nous 👋",
     "intro": "Vous avez encore des questions? Envoyez-nous un message et nous vous répondrons rapidement.",
     "form": {
       "name_label": "Votre Nom",
@@ -481,7 +481,7 @@
   },
   "quick_quote": {
     "form": {
-      "title": "Obtenez votre devis gratuit",
+      "title": "Votre devis gratuit",
       "description": "Remplissez le formulaire ci-dessous pour recevoir un devis personnalisé pour vos besoins de nettoyage. Notre équipe examinera votre demande et vous répondra dans les plus brefs délais.",
       "name": "Nom",
       "email": "Email",
@@ -648,6 +648,7 @@
     "title": "Demande de changement de réservation",
     "fields": {
       "date": "Nouvelle date",
+      "serviceType": "Service Requis",
       "comment": "Commentaire",
       "comment_placeholder": "Ajoutez des détails sur le changement demandé..."
     },

@@ -3,6 +3,7 @@ import { Card, Form, Button, Row, Col, Alert } from "react-bootstrap";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useTranslation } from "react-i18next";
 import pageBg from "/src/assets/img/bg1.png";
+import NewIconAnimated from "/src/components/Pages/Navigation/NewIconAnimated";
 
 const ContactUs = () => {
   const { t } = useTranslation();
@@ -75,7 +76,7 @@ const ContactUs = () => {
         <Row>
           {/* Contact Form */}
           <Col xs={12} md={6} className="mb-4 mb-md-0">
-            <h3 className="mb-3">{t("contact.heading")}</h3>
+            <h3 className="mb-3">{t("contact.heading")}<NewIconAnimated /></h3>
             <p className="text-muted">
               {t("contact.intro")}
             </p>

@@ -476,15 +476,20 @@ const bookingControllers = {
     },
     submitNewDateRequest: async (req, res) => {
         const bookingId = req.params.id;
-        const { newDate, comment } = req.body;
+        const { newDate, comment, serviceType } = req.body;
+        // the update to either newDate or serviceType is done if theyre not missing
+        // if (!newDate || !serviceType) {
+        //     return res.status(400).json({ error: 'New date and service type are required' });
+        // } 
 
         try {
             // Here you would typically send the new date request to the relevant service
             // For demonstration, we'll just log it
-            console.log(`New date request for booking ${bookingId}:`, newDate, comment);
+            console.log(`New date request for booking ${bookingId}:`, newDate, comment, serviceType);
             await Booking.findByIdAndUpdate(bookingId, {
                 customerSuggestedBookingDate: newDate,
                 customerSuggestedBookingComment: comment,
+                customerSuggestedServiceType: serviceType,
                 customerSuggestedBookingAcknowledged: false
             });
 

@@ -4,6 +4,7 @@ import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
+import NewIconAnimated from "/src/components/Pages/Navigation/NewIconAnimated";
 
 function ReviewsCarousel() {
   const { t } = useTranslation();
@@ -47,7 +48,7 @@ function ReviewsCarousel() {
   return (
     <div className="py-5">
       <Container>
-        <h2 className="text-center mb-4 montserrat-bold">{t("testimonials.heading")}</h2>
+        <h2 className="text-center mb-4 montserrat-bold">{t("testimonials.heading")}<NewIconAnimated /></h2>
         <Row className="justify-content-center">
           <Col xs={10} md={8} className="text-center">
             <AnimatePresence mode="wait">

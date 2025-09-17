@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import VisitorCounter from "/src/components/Pages/Management/VisitorCounter.jsx";
-import ContactUs from "../components/Pages/UserJourney/ContactUs";
+import ContactUs from "../components/Pages/Landing/ContactUs";
 import {
   Card,
   // CardBody,
@@ -24,6 +24,8 @@ import WhyChooseUs from "/src/components/Pages/Landing/WhyChooseUs";
 import FeaturedServices from "/src/components/Pages/Landing/FeaturedServices";
 import ReviewsCarousel from "/src/components/Pages/Landing/ReviewsCarousel";
 import FAQAccordion from "/src/components/Pages/Landing/FAQAccordion";
+import NewIconAnimated from "/src/components/Pages/Navigation/NewIconAnimated";
+import StickyButtons from "/src/components/Pages/Landing/StickyButtons.jsx";
 
 // import backgroundImage from '/src/assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg';
 // import Logo from "assets/img/IC CLEAN AR-15-cropped.png";
@@ -53,7 +55,7 @@ if (nameInput) {
         onClick={scrollToForm}
         className="btn btn-success btn-lg rounded-pill shadow-lg w-100"
       >
-        {t("quick_quote.form.title")}
+        {t("quick_quote.form.title")} <NewIconAnimated />
       </button>
     </div>
   );
@@ -224,7 +226,7 @@ if (nameInput) {
             <p className="martel-bold landing-page-intro text-align-end mr-3">Tired of Cleaning? Reclaim your free time with CleanAR Solutions. Serving Toronto and the GTA, we provide sparkling clean spaces so you can focus on what matters. <b>Get a free quote!</b>
             </p>
           </Col> */}
-        <Col xs="12" md="6" className="text-center pt-5 px-3">
+        <Col xs="12" md="5" className="text-center pt-5 px-3">
           <motion.h1
             className="secondary-color montserrat-bold p-0 m-0"
             initial={{ opacity: 0, y: -20 }}
@@ -276,7 +278,7 @@ if (nameInput) {
           </div>
 
         </Col>
-        <Col xs='12' md='3' className=" pt-5">
+        <Col xs='12' md='4' className=" pt-5">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -367,7 +369,6 @@ if (nameInput) {
         <FeaturedServices />
         <ReviewsCarousel />
         <Row>
-
           <Col xs='12' md='12' className="p-0" id="quote-section">
             <QuoteRequest
               initialData={{}}
@@ -382,7 +383,8 @@ if (nameInput) {
           </Col>
         </Row>
         <FAQAccordion />
-        <StickyQuoteButton />
+        {/* <StickyQuoteButton /> */}
+        <StickyButtons />
 
       </div>
 

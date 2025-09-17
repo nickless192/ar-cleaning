@@ -15,7 +15,8 @@ const tooltipText = {
   howDidYouHearAboutUs: 'Optional feedback helps us improve.',
   user: 'The associated user ID in the system.',
   defaultService: 'The service you most frequently use.',
-  status: 'The current status of the customer (active, inactive, archived).'
+  status: 'The current status of the customer (active, inactive, archived).',
+  type: 'Type of customer (one-time, recurring, other).'
 };
 
 
@@ -79,7 +80,8 @@ const Customer = ({ initialData = {}, onSubmit, onCancel }) => {
     { label: 'Postal Code', name: 'postalcode', required: false },
     { label: 'Company Name', name: 'companyName', required: false },
     { label: 'Default Service', name: 'defaultService', required: false },
-    { label: 'Status', name: 'status', required: false }    
+    { label: 'Status', name: 'status', required: false },
+    { label: 'Type', name: 'type', required: false, options: ["one-time", "recurring", "other"] },    
     // { label: 'User ID', name: 'user', required: false }
   ];
 
@@ -93,7 +95,7 @@ const Customer = ({ initialData = {}, onSubmit, onCancel }) => {
       <Row>
         {fields.map(({ label, name, required }) => {
           // Determine input type
-          const inputType = name === 'email' ? 'email' : name === 'telephone' ? 'tel' : 'text';
+          const inputType = name === 'email' ? 'email' : name === 'telephone' ? 'tel' : name === 'type' ? 'select' : 'text';          
           return (
             <Col key={name} md={4} xs={12} className="mb-3">
               <FormGroup>
@@ -114,6 +116,22 @@ const Customer = ({ initialData = {}, onSubmit, onCancel }) => {
                     <PopoverBody>{tooltipText[name] || 'Enter value'}</PopoverBody>
                   </Popover>
                 </Label>
+                {inputType === 'select' ? (
+                  <Input
+                    type="select"
+                    id={name}
+                    name={name}
+                    className="text-cleanar-color form-input rounded-pill"
+                    value={formData[name] || ''}
+                    onChange={handleChange}
+                    required={required}
+                  >
+                    <option value="">-- Select --</option>
+                    <option value="one-time">One-time</option>
+                    <option value="recurring">Recurring</option>
+                    <option value="other">Other</option>
+                  </Input>
+                ) : (
                 <Input
                   type={inputType}
                   id={name}
@@ -125,6 +143,7 @@ const Customer = ({ initialData = {}, onSubmit, onCancel }) => {
                   onChange={handleChange}
                   required={required}
                 />
+                )}
               </FormGroup>
             </Col>
           );

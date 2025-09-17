@@ -239,7 +239,7 @@ const QuoteRequest = () => {
         // if (promoCode === 'welcome10') {
         if (promoCode === 'toronto15' || promoCode === 'follow15'
             || promoCode === 'now15' || promoCode === 'start15' || promoCode === 'fresh15' || promoCode === 'secret15'
-            || promoCode === 'welcome15' || promoCode === 'refresh15'
+            || promoCode === 'welcome15' || promoCode === 'refresh15' || promoCode === 'thankyou10'
         ) {
             setValidPromoCode(true);
             // alert('Valid promo code! 15% discount will be applied to your quote');

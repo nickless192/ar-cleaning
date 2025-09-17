@@ -35,8 +35,8 @@ const AccountingTabbedView = () => {
     const { t } = useTranslation();
 
     return (
-        <Container fluid className="p-3 sm:p-4">
-            <div className="rounded-2xl shadow-md bg-white p-2">
+        <Container fluid className="overflow-x-auto">
+            {/* <div className="rounded-2xl shadow-md bg-white p-2 overflow-x-auto"> */}
                 <Tabs
                     defaultActiveKey="finance-dashboard"
                     id="management-tabs"
@@ -71,7 +71,7 @@ const AccountingTabbedView = () => {
                         </div>
                     </Tab>
                 </Tabs>
-            </div>
+            {/* </div> */}
 
         </Container>
     );

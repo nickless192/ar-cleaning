@@ -54,8 +54,8 @@ const InventoryManagementTabbedView = () => {
   const { t } = useTranslation();
 
   return (
-    <Container fluid className="p-3 sm:p-4">
-      <div className="rounded-2xl shadow-md bg-white p-2">
+    <Container fluid className="">
+      <div className="rounded-2xl shadow-md bg-white">
         <div className="overflow-x-auto hide-scrollbar">
           <Tabs
             defaultActiveKey="manage-service"
@@ -66,7 +66,7 @@ const InventoryManagementTabbedView = () => {
           >
 
             <Tab eventKey="manage-service" title={<span className="px-3 py-2 text-sm sm:text-base">{t('navbar.admin.manage_services')}</span>}>
-              <div className="p-2 sm:p-4"><ManageService /></div>
+              <div className=""><ManageService /></div>
             </Tab>
 
             <Tab eventKey="manage-categories" title={<span className="px-3 py-2 text-sm sm:text-base">{t('navbar.admin.manage_categories')}</span>}>

@@ -15,8 +15,6 @@ import {
 
 import MessageCell from "./MessageCell";
 
-
-
 const PAGE_SIZE = 5;
 
 const AdminContactDashboard = () => {

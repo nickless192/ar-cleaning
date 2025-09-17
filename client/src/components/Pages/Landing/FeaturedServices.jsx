@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import carpetCleaningBg from "/src/assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg";
 import residentialCleaningBg from "/src/assets/img/man-servant-cleaning-house.jpg";
 import commercialCleaningBg from "/src/assets/img/full-shot-people-cleaning-office.jpg";
-
+import NewIconAnimated from "/src/components/Pages/Navigation/NewIconAnimated";
 
 function FeaturedServices() {
   const { t } = useTranslation();
@@ -30,7 +30,7 @@ function FeaturedServices() {
   ];
   return (
     <div className="py-5 px-2">
-      <h2 className="text-center mb-4 secondary-color montserrat-bold">{t("featuredServices.heading")}</h2>
+      <h2 className="text-center mb-4 secondary-color montserrat-bold">{t("featuredServices.heading")}<NewIconAnimated /></h2>
       <Row className="justify-content-center">
         {services.map((s, i) => (
           <Col xs="12" md="4" key={i} className="mb-3">

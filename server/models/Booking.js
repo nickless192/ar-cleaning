@@ -83,6 +83,10 @@ const BookingSchema = new Schema({
         type: Date,
         default: null
     }, // date when the customer suggested booking was created
+    customerSuggestedServiceType: {
+        type: String,
+        default: ''
+    }, // service type suggested by the customer
     customerSuggestedBookingComment: {
         type: String,
         default: ''
@@ -92,19 +96,19 @@ const BookingSchema = new Schema({
         type: Boolean,
         default: false
     },
-      // --- Key timestamps for workflow automation ---
-  confirmedAt: { type: Date }, // when booking was confirmed
-  completedAt: { type: Date }, // when service marked as completed
-  invoicedAt: { type: Date },  // when invoice was sent
-  paidAt: { type: Date },      // when payment confirmed
+    // --- Key timestamps for workflow automation ---
+    confirmedAt: { type: Date }, // when booking was confirmed
+    completedAt: { type: Date }, // when service marked as completed
+    invoicedAt: { type: Date },  // when invoice was sent
+    paidAt: { type: Date },      // when payment confirmed
 
-  // --- Workflow checklist flags ---
-  workflow: {
-    confirmedWithClient: { type: Boolean, default: false },
-    serviceCompleted: { type: Boolean, default: false },
-    invoiceSent: { type: Boolean, default: false },
-    paymentReceived: { type: Boolean, default: false },
-  },
+    // --- Workflow checklist flags ---
+    workflow: {
+        confirmedWithClient: { type: Boolean, default: false },
+        serviceCompleted: { type: Boolean, default: false },
+        invoiceSent: { type: Boolean, default: false },
+        paymentReceived: { type: Boolean, default: false },
+    },
     updatedAt: { type: Date, default: Date.now },
     createdAt: { type: Date, default: Date.now },
 });

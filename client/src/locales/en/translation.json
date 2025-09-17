@@ -61,7 +61,7 @@
     "pricing_a5": "Yes, we run seasonal promotions and first-time client discounts. Check our website or ask when booking for current offers."
   },
   "contact": {
-    "heading": "Let’s Talk 👋",
+    "heading": "Message Us Directly 👋",
     "intro": "Still have questions? Send us a message and we’ll get back to you shortly.",
     "form": {
       "name_label": "Your Name",
@@ -132,7 +132,7 @@
     "password_tooltip": "Enter your account password.",
     "login_button": "Log In",
     "reset_password_button": "Reset Your Password",
-    "signup_prompt": "Don't have an account?",
+    "signup_prompt": "Don't have an account yet?",
     "signup_link": "Create one here",
     "alerts": {
       "user_not_found": "User not found",
@@ -325,7 +325,7 @@
     "our_products_description": "Discover our range of cleaning products and solutions that ensure a spotless home and workplace.",
     "our_products_title": "Our Products",
     "coming_soon": "COMING SOON!",
-    "residential_cleaning_title": "Residential Cleaning",
+    "residential_cleaning_title": "Residential",
     "residential_cleaning_house_cleaning": "House Cleaning",
     "residential_cleaning_move_in_out": "Move-In/Out Cleaning",
     "residential_cleaning_condominium": "Condominium Cleaning",
@@ -337,7 +337,7 @@
       "We're not satisfied until you are - if anything doesn't meet your expectations, we'll return within 24 hours to make it right at no extra charge"
     ],
     "residential_cleaning_button": "Get Quote for Residential Cleaning",
-    "commercial_cleaning_title": "Commercial Cleaning",
+    "commercial_cleaning_title": "Commercial",
     "commercial_cleaning_office_cleaning": "Office Cleaning",
     "commercial_cleaning_industrial_cleaning": "Industrial Cleaning",
     "commercial_cleaning_retail_cleaning": "Retail Cleaning",
@@ -348,7 +348,7 @@
       "Professional commercial-grade service with comprehensive insurance coverage, ensuring your business is protected while maintaining the highest cleaning standards"
     ],
     "commercial_cleaning_button": "Get Quote for Commercial Cleaning",
-    "window_cleaning_title": "Window Cleaning",
+    "window_cleaning_title": "Window",
     "window_cleaning_interior": "Interior Window Cleaning",
     "window_cleaning_track_sill": "Window Track & Sill Cleaning",
     "window_cleaning_glass_door": "Glass Door Cleaning",
@@ -359,7 +359,7 @@
       "Crystal-clear interior cleaning of retail storefronts, office buildings, and business facades to maintain a professional image for your customers"
     ],
     "window_cleaning_button": "Get Quote for Window Cleaning ",
-    "carpet_cleaning_title": "Carpet and Upholstery Cleaning",
+    "carpet_cleaning_title": "Carpet and Upholstery",
     "carpet_cleaning_carpet_cleaning": "Carpet Cleaning",
     "carpet_cleaning_upholstery_cleaning": "Upholstery Cleaning",
     "carpet_cleaning_description": [
@@ -436,7 +436,7 @@
   "navbar": {
     "about_us": "About Us",
     "products_services": "Products & Services",
-    "log_in_signup": "Log In",
+    "log_in_signup": "Your Account",
     "log_out": "Log Out",
     "profile": "Profile",
     "admin": {
@@ -690,6 +690,7 @@
     "description": "Modify your existing booking details.",
     "fields": {
       "date": "New Date",
+      "serviceType": "Service Required",
       "comment": "Comment",
       "comment_placeholder": "Add details about the requested change..."
     },

@@ -10,6 +10,58 @@
     --accordion-bg-color: #acb9c7;
 }
 
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(255, 193, 7, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0); }
+}
+
+.feature-highlight {
+  animation: pulse 1.5s infinite;
+  border-radius: 8px;
+}
+
+.new-badge-animated {
+  display: inline-block; /* This ensures it stays inline */
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+  color: white;
+  padding: 2px 8px; /* Reduced padding for better inline flow */
+  border-radius: 12px; /* Slightly smaller radius */
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  box-shadow: 0 2px 5px rgba(238, 90, 111, 0.5);
+  animation: pulse 2s infinite;
+  position: relative;
+  vertical-align: middle; /* Aligns with text baseline */
+  margin: 0 4px; /* Small margin for spacing */
+  line-height: 1; /* Prevents extra height */
+  
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 2px 5px rgba(238, 90, 111, 0.5);
+  }
+  50% {
+    box-shadow: 0 2px 20px rgba(238, 90, 111, 0.8);
+  }
+  100% {
+    box-shadow: 0 2px 5px rgba(238, 90, 111, 0.5);
+  }
+}
+.language-switcher-container {
+  position: relative;
+}
+
+.language-switcher-container .language-new-badge {
+  position: absolute;
+  top: -10px;
+  right: -20px;
+  z-index: 10;
+}
+
 .fixed-top-container {
   /* --- Positioning --- */
   position: fixed;

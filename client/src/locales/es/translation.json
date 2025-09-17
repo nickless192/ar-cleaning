@@ -61,7 +61,7 @@
     "pricing_a5": "Sí, ofrecemos promociones de temporada y descuentos para nuevos clientes. Consulte nuestro sitio web o pregunte al reservar."
   },
   "contact": {
-    "heading": "Hablemos 👋",
+    "heading": "Contáctanos 👋",
     "intro": "¿Todavía tiene preguntas? Envíenos un mensaje y nos pondremos en contacto contigo pronto.",
     "form": {
       "name_label": "Su Nombre",
@@ -483,7 +483,7 @@
   },
   "quick_quote": {
     "form": {
-      "title": "Obtenga su cotización gratuita",
+      "title": "Obtenga su cotización",
       "description": "Complete el formulario a continuación para recibir un presupuesto personalizado para sus necesidades de limpieza. Nuestro equipo revisará su solicitud y se pondrá en contacto con usted lo antes posible.",
       "name": "Nombre",
       "email": "Correo electrónico",
@@ -650,6 +650,7 @@
     "title": "Solicitar cambio de servicio",
     "fields": {
       "date": "Nueva fecha",
+      "serviceType": "Servicio Requerido",
       "comment": "Comentario",
       "comment_placeholder": "Agregue detalles sobre el cambio solicitado..."
     },

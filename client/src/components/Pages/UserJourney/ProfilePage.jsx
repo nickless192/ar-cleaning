@@ -20,6 +20,7 @@ import BookingChangeModal from "/src/components/Pages/UserJourney/BookingChangeM
 import ConsentModal from "/src/components/Pages/Landing/ConsentModal";
 import { useTranslation } from "react-i18next";
 import backgroundImage from '/src/assets/img/bg1.png';
+import NewIconAnimated from "/src/components/Pages/Navigation/NewIconAnimated";
 
 
 function ProfilePage() {
@@ -118,7 +119,7 @@ function ProfilePage() {
     alert(t("profile.alerts.terms_not_accepted"));
   };
 
-  const handleModalSubmit = ({ newDate, comment }) => {
+  const handleModalSubmit = ({ newDate, comment, serviceType }) => {
     // Call your API to request the change
     // console.log("Booking:", selectedBookingId, "New Date:", newDate, "Comment:", comment);
     fetch(`/api/bookings/${selectedBookingId}/request-change`, {
@@ -126,7 +127,7 @@ function ProfilePage() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ newDate, comment }),
+      body: JSON.stringify({ newDate, comment, serviceType }),
     })
       .then((response) => {
         if (response.ok) {
@@ -309,14 +310,16 @@ function ProfilePage() {
     <>
       {/* <Navbar /> */}
       <div className="wrapper light-bg-color mb-0 section-background" style={{ backgroundImage: `url(${backgroundImage})` }}>
-        <Container className="py-5">
+        <Container className="py-5 overflow-x-auto">
           <Tabs
             defaultActiveKey="user-profile"
-            id="management-tabs"
+            id="profile-tabs"
             className="mb-3 custom-tabs"
             justify
           >
-            <Tab eventKey="user-profile" title={t('navbar.profile')}>
+            <Tab eventKey="user-profile" title={<span>
+              {t('navbar.profile')}
+            </span>}>
               <Card className="p-4 shadow-lg bg-transparent">
                 <h2 className="text-center primary-color mb-4">{formData.name}</h2>
 
@@ -361,7 +364,7 @@ function ProfilePage() {
                               <Form.Control
                                 type="text"
                                 name="postalcode"
-                                placeholder={t("profile.address.postalcode_placeholder")}
+                                placeholder={t("profile.address.postal_code_placeholder")}
                                 value={formData.postalcode}
                                 className="text-cleanar-color form-input text-center"
                                 onChange={handleInputChange}
@@ -447,7 +450,7 @@ function ProfilePage() {
                 </Form>
               </Card>
             </Tab>
-            <Tab eventKey="quote-requests" title={t('profile.quotes.title')}>
+            <Tab eventKey="quote-requests" title={<span>{t('profile.quotes.title')} <NewIconAnimated /></span>}>
               {/* new: display user quotes */}
               <Card className="p-4 mt-4 shadow-lg bg-transparent">
                 <h3 className="text-center primary-color mb-4">{t("profile.quotes.title")}</h3>
@@ -563,7 +566,7 @@ function ProfilePage() {
                 </Modal>
               </Card>
             </Tab>
-            <Tab eventKey="user-bookings" title={t('profile.bookings.title')}>
+            <Tab eventKey="user-bookings" title={<span>{t('profile.bookings.title')} <NewIconAnimated /></span>}>
               <Card className="p-4 mt-4 shadow-lg bg-transparent">
                 <h3 className="text-center primary-color mb-4">{t("profile.bookings.title")}</h3>
                 {bookings.length === 0 ? (
@@ -615,6 +618,7 @@ function ProfilePage() {
                                   handleClose={handleModalClose}
                                   handleSubmit={handleModalSubmit}
                                   initialDate={booking.date}
+                                  initialServiceType={booking.serviceType}
                                 // bookingId={selectedBookingId}
                                 />
                               </td>

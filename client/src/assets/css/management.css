@@ -30,3 +30,15 @@
   background-color: #92b7da !important;
   border-color: #ced4da;
 }
+
+#profile-tabs .nav-link, #admin-management-tabs .nav-link {
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+@media (max-width: 576px) {
+  #profile-tabs .nav-item, #admin-management-tabs .nav-item {
+    flex: 1 1 auto;
+    text-align: center;
+  }
+}
