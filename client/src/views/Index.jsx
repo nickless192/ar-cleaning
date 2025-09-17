@@ -365,9 +365,9 @@ if (nameInput) {
       </Row>
       <div className="container">
         {/* New Sections */}
+        <ReviewsCarousel />
         <WhyChooseUs />
         <FeaturedServices />
-        <ReviewsCarousel />
         <Row>
           <Col xs='12' md='12' className="p-0" id="quote-section">
             <QuoteRequest
