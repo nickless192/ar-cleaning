@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import './i18n'; // Import i18n configuration
+import { registerSW } from 'virtual:pwa-register';
 
 // styles for this kit
 // import 'bootstrap/dist/css/bootstrap.min.css';
@@ -58,6 +59,17 @@ import backgroundImage from '/src/assets/img/natural-marble-pattern-background.j
 import CookieConsent from "/src/components/Pages/Landing/CookieConsent";
 import SiteBanner from "/src/components/Pages/Navigation/SiteBanner.jsx";
 import AdminManagementPage from "/src/components/Pages/ManagementViews/AdminManagementPage.jsx";
+
+registerSW({
+  onNeedRefresh() {
+    if (confirm("New content available. Reload?")) {
+      window.location.reload();
+    }
+  },
+  onOfflineReady() {
+    console.log("App is ready to work offline");
+  },
+});
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
