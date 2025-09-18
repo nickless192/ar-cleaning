@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { HelmetProvider } from 'react-helmet-async';
+// import { HelmetProvider } from 'react-helmet-async';
+import { Helmet } from "react-helmet";
 import { useTranslation } from 'react-i18next';
 import {
     Popover, PopoverBody
@@ -842,10 +843,10 @@ const QuoteRequest = () => {
     return (
         <>
             <Container className="quick-quote-container px-4 rounded-2" id="quote-section">
-                <HelmetProvider>
+                <Helmet>
                     <title>CleanAR Solutions</title>
                     <meta name="description" content="Get a quick service estimate from CleanAR Solutions. Fill out our form to receive a personalized quote for your cleaning needs." />
-                </HelmetProvider>
+                </Helmet>
                 <VisitorCounter />
                 <h2 className="text-center primary-color text-bold pt-2">{t('quick_quote.form.title', 'Get a Free Quote')}</h2>
                 {/* <p className="text-center text-sm italic text-gray-500 mb-1">
