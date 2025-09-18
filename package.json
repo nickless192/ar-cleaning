@@ -13,7 +13,6 @@
     "start:dev": "concurrently \"cd server && npm run watch\" \"cd client && npm start\"",
     "install": "cd server && npm i --force && cd ../client && npm i --force ",
     "seed": "cd server && npm run seed",
-    "heroku-prebuild": "npm config set scripts-prepend-node-path true",
     "heroku-postbuild": "cd client && npm run build"
   },
   "author": "",
