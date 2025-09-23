@@ -438,6 +438,7 @@ const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
 
                   {isEditing && (
                     <tr>
+                      <th>Save Changes</th>
                       <td colSpan={2}>
                         <Row className="align-items-center">
                           <Col xs={6} sm="auto">
