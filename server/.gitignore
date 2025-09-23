@@ -7,3 +7,5 @@ node_modules
 tessdata/
 
 uploads
+addCustomerType.js
+get-token.js

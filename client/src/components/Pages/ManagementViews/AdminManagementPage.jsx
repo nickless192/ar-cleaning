@@ -10,7 +10,7 @@ const AdminManagementPage = () => {
   const { t } = useTranslation();
 
   return (
-    <Container fluid className="p-3 sm:p-4">
+    <Container fluid className="p-5 sm:p-5">
       <Tabs defaultActiveKey="accounting" id="admin-management-tabs" className="mb-3">
         <Tab eventKey="accounting" title={t('navbar.admin.accounting_management')}>
           <AccountingTabbedView />
