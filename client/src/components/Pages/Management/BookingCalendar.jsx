@@ -13,6 +13,8 @@ import {
 import '/src/assets/css/bookingcalendar.css';
 import Auth from "/src/utils/auth";
 import BookingForm from '../Booking/BookingForm';
+import GenerateInvoiceModal from '../Booking/GenerateInvoiceModal';
+
 
 const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
   completeBooking, cancelBooking, hideBooking, customers
@@ -23,6 +25,7 @@ const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
   const [hoveredDay, setHoveredDay] = useState(null);   // NEW
   const [showAddModal, setShowAddModal] = useState(false); // NEW
   const [prefillDate, setPrefillDate] = useState(null);    // NEW
+  const [showInvoiceModal, setShowInvoiceModal] = useState(false);
 
   const [isEditing, setIsEditing] = useState(false);
   const [tempDate, setTempDate] = useState("");
@@ -709,6 +712,15 @@ const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
                         >
                           Hide
                         </Button>
+                        <Button
+                          variant="dark"
+                          size="sm"
+                          onClick={() => {
+                            setShowInvoiceModal(true);
+                          }}
+                        >
+                          Generate Invoice
+                        </Button>
 
                         <Button
                           variant="danger"
@@ -741,7 +753,6 @@ const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
           <Modal.Title>Add New Booking</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {/* Here you’ll embed BookingList form later */}
           <BookingForm
             customers={customers}
             prefillDate={prefillDate}
@@ -756,6 +767,12 @@ const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
           {/* <Button variant="primary">Save Booking</Button> */}
         </Modal.Footer>
       </Modal>
+      <GenerateInvoiceModal
+  show={showInvoiceModal}
+  onHide={() => setShowInvoiceModal(false)}
+  booking={selectedBooking}
+/>
+
     </div>
   );
 };

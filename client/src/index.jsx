@@ -59,6 +59,7 @@ import backgroundImage from '/src/assets/img/natural-marble-pattern-background.j
 import CookieConsent from "/src/components/Pages/Landing/CookieConsent";
 import SiteBanner from "/src/components/Pages/Navigation/SiteBanner.jsx";
 import AdminManagementPage from "/src/components/Pages/ManagementViews/AdminManagementPage.jsx";
+import InvoiceDetail from "/src/components/Pages/Booking/InvoiceDetail.jsx";
 
 registerSW({
   onNeedRefresh() {
@@ -157,6 +158,7 @@ const App = () => {
               <Route path="/admin-contact-dashboard" element={<ProtectedRoute element={<AdminContactDashboard />} />} />
               <Route path="/contact-management" element={<ProtectedRoute element={<ContactManagementTabbedView />} />} />
               <Route path="/accounting-management" element={<ProtectedRoute element={<AccountingTabbedView />} />} />
+              <Route path="/invoices/:id" element={<InvoiceDetail />} />
               {/* <Route path="/view-quotes/:quoteId" element={<ProtectedRoute element={<ViewQuotes />} />} /> */}
               {/* <Route path="/dashboard" element={<ProtectedRoute element={<LogDashboard />} />} /> */}
               {/* <Route path="/booking-dashboard" element={<ProtectedRoute element={<BookingList />} />} /> */}

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect } from 'react';
 // import './LoginSign.css';
 import LoginPage from '/src/components/Pages/UserJourney/LoginPage';
 import SignUp from '/src/components/Pages/UserJourney/SignUp';
@@ -8,10 +8,24 @@ import {
     Button 
 } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
 
 const LoginSign = () => {
     const [showLogin, setShowLogin] = useState(true);
     const { t } = useTranslation();
+    const location = useLocation();
+
+    
+    // On mount, read URL query param to decide initial state
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const view = params.get('view');
+        if (view === 'signup') {
+            setShowLogin(false);
+        } else if (view === 'login') {
+            setShowLogin(true);
+        }
+    }, [location.search]);
 
     return (
         <Row className='justify-content-center align-items-center'>
@@ -66,7 +80,7 @@ const LoginSign = () => {
                 </div>
 
                 {/* Form toggle */}
-                {showLogin ? <LoginPage /> : <SignUp />}
+                {showLogin ? <LoginPage focus /> : <SignUp focus />}
             
             </Col>
         </Row>

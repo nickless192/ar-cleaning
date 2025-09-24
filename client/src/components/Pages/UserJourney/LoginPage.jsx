@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef  } from "react";
 import Auth from "/src/utils/auth";
 import { useTranslation } from "react-i18next";
 import VisitorCounter from "/src/components/Pages/Management/VisitorCounter";
@@ -27,13 +27,21 @@ import { FaQuestionCircle } from 'react-icons/fa';
 import pageBg from "/src/assets/img/bg1.png";
 
 
-function LoginPage() {
+function LoginPage({ focus }) {
   const { t } = useTranslation();
 
   const [formData, setFormData] = useState({
     username: "",
     password: ""
   });
+
+  const usernameRef = useRef(null);
+
+    useEffect(() => {
+        if (focus && usernameRef.current) {
+            usernameRef.current.focus();
+        }
+    }, [focus]);
 
   // const [tooltipOpen, setTooltipOpen] = useState({
   //   username: false,
@@ -192,8 +200,12 @@ function LoginPage() {
                   label={`${t("login.username_label")}`}
                   // className="mb-3"
                   className="text-cleanar-color"
-                >
-                  <Form.Control type="text" className='form-input rounded-pill text-cleanar-color' placeholder="" onChange={(e) => handleChange(e)} name="username"/>
+                  >
+                  <Form.Control type="text" 
+                  className='form-input rounded-pill text-cleanar-color' 
+                  placeholder="" 
+                  ref={usernameRef}
+                  onChange={(e) => handleChange(e)} name="username"/>
                 </FloatingLabel>
               </Col>
               <Col className="py-3" md="1" xs='1'>

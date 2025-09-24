@@ -1,37 +1,3 @@
-// import React from 'react';
-// import { Tabs, Tab, Container } from 'react-bootstrap';
-
-// import AdminContactDashboard from "/src/components/Pages/Management/AdminContactDashboard"; // version in-dev for testing
-// import QuickQuoteDashboard from "/src/components/Pages/Management/QuickQuoteDashboard";
-// import LogDashboard from "/src/components/Pages/Management/LogDashboard";
-// import BookingList from '/src/components/Pages/Management/BookingList';
-// import {useTranslation} from "react-i18next";
-
-// const ContactManagementTabbedView = () => {
-//     const { t } = useTranslation();
-
-//     return (
-//         <Container className="mt-4">
-//             <Tabs defaultActiveKey="dashboard" id="management-tabs" className="mb-3">
-//                 <Tab eventKey="dashboard" title={t('navbar.admin.dashboard')}>
-//                                     <LogDashboard />
-//                                 </Tab>
-//                 <Tab eventKey="contact-dashboard" title={t('navbar.admin.manage_contacts')}>
-//                     <AdminContactDashboard />
-//                 </Tab>
-//                 <Tab eventKey="booking-dashboard" title={t('navbar.admin.booking_dashboard')}>
-//                     <BookingList />
-//                 </Tab>
-//                 <Tab eventKey="view-quotes" title={t('navbar.admin.view_quotes')}>
-//                     <QuickQuoteDashboard />
-//                 </Tab>
-//             </Tabs>
-//         </Container>
-//     );
-// };
-
-// export default ContactManagementTabbedView;
-
 import React from 'react';
 import { Tabs, Tab, Container } from 'react-bootstrap';
 
@@ -42,6 +8,7 @@ import ManageUser from '/src/components/Pages/Management/ManageUser';
 import LogDashboard from '/src/components/Pages/Management/LogDashboard';
 import BookingDashboard from '/src/components/Pages/Management/BookingDashboard';
 import BookingList from '/src/components/Pages/Management/BookingList';
+import InvoiceList from '/src/components/Pages/Booking/InvoiceList';
 import { useTranslation } from 'react-i18next';
 
 const ContactManagementTabbedView = () => {
@@ -81,7 +48,14 @@ const ContactManagementTabbedView = () => {
                             <BookingList />
                         </div>
                     </Tab>
-                   
+                   <Tab
+                        eventKey="invoices"
+                        title={<span className="px-3 py-2 text-sm sm:text-base">{t('navbar.admin.invoices')}</span>}
+                    >
+                        <div className="p-2 sm:p-4">
+                            <InvoiceList />
+                        </div>
+                    </Tab>
                     <Tab
                         eventKey="contact-dashboard"
                         title={<span className="px-3 py-2 text-sm sm:text-base">{t('navbar.admin.manage_customers_contact')}</span>}

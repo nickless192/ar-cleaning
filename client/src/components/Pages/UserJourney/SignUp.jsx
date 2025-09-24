@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Auth from "/src/utils/auth";
 import { useTranslation } from "react-i18next";
 // reactstrap components
@@ -22,7 +22,7 @@ import pageBg from "/src/assets/img/bg1.png";
 
 // core components
 
-function SignUp() {
+function SignUp({ focus }) {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -35,6 +35,14 @@ function SignUp() {
     termsConsent: false
   });
   const { t } = useTranslation();
+
+  const emailRef = useRef(null);
+
+  useEffect(() => {
+    if (focus && emailRef.current) {
+      emailRef.current.focus();
+    }
+  }, [focus]);
 
   const [popoverOpen, setPopoverOpen] = useState({
     firstName: false,
@@ -166,6 +174,38 @@ function SignUp() {
           <p className="text-center text-cleanar-color text-bold">{t("signup.description")}</p>
 
           <Form className="form" onSubmit={(e) => handleFormSubmit(e)}>
+
+            <Row className="justify-content-center">
+              <Col md='10' xs='10' className="py-1">
+                <FloatingLabel
+                  controlId="floatingEmail"
+                  label={`${t("signup.form_labels.email")}`}
+                  className="text-cleanar-color"
+                >
+                  <Form.Control
+                    type="text"
+                    placeholder={t("signup.form_labels.email")}
+                    className="text-cleanar-color form-input rounded-pill"
+                    name="email"
+                    ref={emailRef}
+                    value={formData.email}
+                    onChange={(e) => handleChange(e)}
+                  />
+                </FloatingLabel>
+              </Col>
+              <Col md='1' xs='1' className="py-1">
+                {/* <Button id="Popover3" type="button" tabIndex='-1' className="btn-round btn-icon"> */}
+                <FaQuestionCircle id="Popover3" />
+                {/* </Button> */}
+                <Popover placement="right" isOpen={popoverOpen.email} target="Popover3" toggle={() => togglePopover('email')}
+                  transition={transitionProps}
+                >
+                  <PopoverBody>
+                    {t("signup.tooltips.email")}
+                  </PopoverBody>
+                </Popover>
+              </Col>
+            </Row>
             <Row className="justify-content-center">
               <Col md='10' xs='10' className="py-1">
                 <FloatingLabel
@@ -224,36 +264,6 @@ function SignUp() {
                 >
                   <PopoverBody>
                     {t("signup.tooltips.last_name")}
-                  </PopoverBody>
-                </Popover>
-              </Col>
-            </Row>
-            <Row className="justify-content-center">
-              <Col md='10' xs='10' className="py-1">
-                <FloatingLabel
-                  controlId="floatingEmail"
-                  label={`${t("signup.form_labels.email")}`}
-                  className="text-cleanar-color"
-                >
-                  <Form.Control
-                    type="text"
-                    placeholder={t("signup.form_labels.email")}
-                    className="text-cleanar-color form-input rounded-pill"
-                    name="email"
-                    value={formData.email}
-                    onChange={(e) => handleChange(e)}
-                  />
-                </FloatingLabel>
-              </Col>
-              <Col md='1' xs='1' className="py-1">
-                {/* <Button id="Popover3" type="button" tabIndex='-1' className="btn-round btn-icon"> */}
-                <FaQuestionCircle id="Popover3" />
-                {/* </Button> */}
-                <Popover placement="right" isOpen={popoverOpen.email} target="Popover3" toggle={() => togglePopover('email')}
-                  transition={transitionProps}
-                >
-                  <PopoverBody>
-                    {t("signup.tooltips.email")}
                   </PopoverBody>
                 </Popover>
               </Col>
