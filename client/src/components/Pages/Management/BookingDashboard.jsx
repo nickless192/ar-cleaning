@@ -349,7 +349,9 @@ export default function BookingDashboard() {
             <option value="completed">Completed</option>
             <option value="cancelled">Cancelled</option>
             <option value="confirmed">Confirmed</option>
+            <option value="invoiced">Invoiced</option>
             <option value="paid">Paid</option>
+            <option value="done">Done</option>
           </Form.Select>
         </Col>
         <Col md={4}>
@@ -425,8 +427,10 @@ export default function BookingDashboard() {
                     <option value="confirmed">Confirmed</option>
                     <option value="in progress">In Progress</option>
                     <option value="completed">Completed</option>
-                    <option value="cancelled">Cancelled</option>
+                    <option value="invoiced">Invoiced</option>
                     <option value="paid">Paid</option>
+                    <option value="done">Done</option>
+                    <option value="cancelled">Cancelled</option>
                   </Form.Select>
                 </Form.Group>
                 <div className="mb-3">

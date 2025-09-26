@@ -320,21 +320,21 @@ info@cleanARsolutions.ca
             const { email, user } = req.body;
             const emailText = `Dear ${user.firstName} ${user.lastName},
 
-            Welcome to CleanAR Solutions! We are excited to have you join our community and look forward to providing you with exceptional cleaning services. 
+Welcome to CleanAR Solutions! We are excited to have you join our community and look forward to providing you with exceptional cleaning services. 
 
-            Remember to log in to your account to request quotes, view your quotes, and manage your account.
+Remember to log in to your account to request quotes, view your quotes, and manage your account.
 
-            If you have any questions or need assistance, please don't hesitate to reach out to us. 
+If you have any questions or need assistance, please don't hesitate to reach out to us. 
 
-            Best regards,
+Best regards,
 
-            CleanAR Solutions
-            info@cleanARsolutions.ca
-            (437) 440-5514`;
+CleanAR Solutions
+info@cleanARsolutions.ca
+(437) 440-5514`;
             const msg = {
                 to: email, // Change to your recipient
                 from: 'info@cleanARsolutions.ca', // Change to your verified sender
-                bcc: 'info@cleanARsolutions.ca',
+                // bcc: 'info@cleanARsolutions.ca',
                 subject: 'Welcome to CleanAR Solutions',
                 text: emailText, // plain text body
 
@@ -359,13 +359,13 @@ info@cleanARsolutions.ca
             // const { email, user } = req.body;
             const emailText = `This is an automated notification email from CleanAR Solutions.
 
-            An new user has joined our community!
+An new user has joined our community!
 
-            Best regards,
+Best regards,
 
-            CleanAR Solutions`;
+CleanAR Solutions`;
             const msg = {
-                to: ['omar.rguez26@gmail.com', 'filiberto_2305@outlook.com', 'info@cleanARsolutions.ca'], // Change to your recipient
+                to: ['omar.rguez26@gmail.com', 'filiberto_2305@outlook.com'], // Change to your recipient
                 from: 'info@cleanARsolutions.ca', // Change to your verified sender
                 subject: 'New User Notification: Welcome to CleanAR Solutions',
                 text: emailText, // plain text body
@@ -386,8 +386,8 @@ info@cleanARsolutions.ca
         }
     },
     emailPasswordResetRequest: async (req, res) => {
-        const { username } = req.body;
-        const user = await User.findOne({ username });
+        const { email } = req.body;
+        const user = await User.findOne({ email });
 
         if (!user) {
             return res.status(404).send('User not found');
@@ -480,10 +480,6 @@ info@cleanARsolutions.ca
             console.error('Error emailing quote: ', error);
             res.status(500).json({ message: 'Error emailing quote' });
         }
-
-
-
-
 
     },
     emailQuickNotePDF: async (req, res) => {

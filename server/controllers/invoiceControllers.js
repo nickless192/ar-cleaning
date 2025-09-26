@@ -42,6 +42,10 @@ module.exports = {
         totalCost,
         bookingId
       });
+      // set booking status to 'invoiced' if bookingId is provided
+      if (bookingId) {
+        await Booking.findByIdAndUpdate(bookingId, { status: 'invoiced' });
+      }
 
       res.status(201).json(newInvoice);
     } catch (err) {
@@ -51,9 +55,22 @@ module.exports = {
 
   // Update invoice
   async updateInvoice(req, res) {
-    try {
-      const updatedInvoice = await Invoice.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    try { 
+      //update this function to mark the invoice and booking as paid and update the payment method
+      if (req.body.status !== 'paid') {
+        return res.status(400).json({ error: 'Only status update to "paid" is allowed' });
+      }
+      const updatedInvoice = await Invoice.findByIdAndUpdate(req.params.id, { status: 'paid', payment: { paymentMethod: req.body.paymentMethod, amount: req.body.amount,
+        paymentDate: Date.now()
+
+      } }, { new: true });
       if (!updatedInvoice) return res.status(404).json({ error: 'Invoice not found' });
+
+      // Also update the related booking status
+      if (updatedInvoice.bookingId) {
+        await Booking.findByIdAndUpdate(updatedInvoice.bookingId, { status: 'paid' });
+      }
+
       res.json(updatedInvoice);
     } catch (err) {
       res.status(500).json({ error: 'Failed to update invoice', details: err.message });
@@ -65,6 +82,10 @@ module.exports = {
     try {
       const deleted = await Invoice.findByIdAndDelete(req.params.id);
       if (!deleted) return res.status(404).json({ error: 'Invoice not found' });
+      // change the booking status back to 'completed' if it was linked to this invoice
+      if (deleted.bookingId) {
+        await Booking.findByIdAndUpdate(deleted.bookingId, { status: 'completed' });
+      }
       res.json({ message: 'Invoice deleted successfully' });
     } catch (err) {
       res.status(500).json({ error: 'Failed to delete invoice', details: err.message });

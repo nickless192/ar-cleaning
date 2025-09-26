@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect, useState, useRef  } from "react";
+import { useEffect, useState, useRef } from "react";
 import Auth from "/src/utils/auth";
 import { useTranslation } from "react-i18next";
 import VisitorCounter from "/src/components/Pages/Management/VisitorCounter";
@@ -31,17 +31,18 @@ function LoginPage({ focus }) {
   const { t } = useTranslation();
 
   const [formData, setFormData] = useState({
-    username: "",
+    // username: "",
+    email: "",
     password: ""
   });
 
-  const usernameRef = useRef(null);
+  const emailRef = useRef(null);
 
-    useEffect(() => {
-        if (focus && usernameRef.current) {
-            usernameRef.current.focus();
-        }
-    }, [focus]);
+  useEffect(() => {
+    if (focus && emailRef.current) {
+      emailRef.current.focus();
+    }
+  }, [focus]);
 
   // const [tooltipOpen, setTooltipOpen] = useState({
   //   username: false,
@@ -49,7 +50,8 @@ function LoginPage({ focus }) {
   // });
 
   const [popoverOpen, setPopoverOpen] = useState({
-    username: false,
+    // username: false,
+    email: false,
     password: false
   });
 
@@ -74,7 +76,7 @@ function LoginPage({ focus }) {
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
-    if (formData.username && formData.password) {
+    if (formData.email && formData.password) {
       // console.log(body);
       await fetch('/api/users/login/', {
         method: 'post',
@@ -89,8 +91,8 @@ function LoginPage({ focus }) {
             // console.log("you're logged!");
             response.json()
               .then(data => {
-                console.log(data);
-                console.log(data.dbUserData.adminFlag);
+                // console.log(data);
+                // console.log(data.dbUserData.adminFlag);
                 Auth.login(data.token);
 
 
@@ -99,7 +101,7 @@ function LoginPage({ focus }) {
           else {
             // alert(response.statusText)
             if (response.status === 404) {
-              alert(t("login.alerts.user_not_found"));
+              alert(t("login.alerts.email_not_found"));
             }
             else if (response.status === 401) {
               alert(t("login.alerts.wrong_password"));
@@ -122,7 +124,7 @@ function LoginPage({ focus }) {
       await fetch('/api/email/request-password-reset', {
         method: 'post',
         // mode: 'no-cors',
-        body: JSON.stringify({ username: formData.username.toLowerCase() }),
+        body: JSON.stringify({ email: formData.email }),
         headers: {
           'Content-Type': 'application/json',
         }
@@ -139,7 +141,7 @@ function LoginPage({ focus }) {
           else {
             // alert(response.statusText)
             if (response.status === 404) {
-              alert(t("login.alerts.user_not_found"));
+              alert(t("login.alerts.email_not_found"));
             }
             else if (response.status === 401) {
               alert(t("login.alerts.wrong_password"));
@@ -162,10 +164,10 @@ function LoginPage({ focus }) {
     setFormData({ ...formData, [name]: value.trim() });
   };
 
-    // Define transition props for Popover to avoid warning
-    const transitionProps = {
-      timeout: 150 // Set a timeout value for the transition (in milliseconds)
-    };
+  // Define transition props for Popover to avoid warning
+  const transitionProps = {
+    timeout: 150 // Set a timeout value for the transition (in milliseconds)
+  };
 
 
   useEffect(() => {
@@ -194,46 +196,46 @@ function LoginPage({ focus }) {
           </p>
           <Form onSubmit={handleFormSubmit}>
             <Row className="justify-content-center">
-              <Col className="py-3" md="10" xs='10'>
+              <Col className="py-1" md="8" xs='10'>
                 <FloatingLabel
                   controlId="floatingInput"
-                  label={`${t("login.username_label")}`}
+                  label={`${t("login.email_label")}`}
                   // className="mb-3"
                   className="text-cleanar-color"
-                  >
-                  <Form.Control type="text" 
-                  className='form-input rounded-pill text-cleanar-color' 
-                  placeholder="" 
-                  ref={usernameRef}
-                  onChange={(e) => handleChange(e)} name="username"/>
+                >
+                  <Form.Control type="email"
+                    className='form-input rounded-pill text-cleanar-color'
+                    placeholder=""
+                    ref={emailRef}
+                    onChange={(e) => handleChange(e)} name="email" />
                 </FloatingLabel>
               </Col>
-              <Col className="py-3" md="1" xs='1'>
+              <Col className="py-1" md="1" xs='1'>
                 {/* <Button
                   type="button"
                   tabIndex='-1'
                   // color="link"
                   className="primary-bg-color btn-round btn-icon"
                   > */}
-                  <FaQuestionCircle
-                  onClick={() => togglePopover('username')}
+                <FaQuestionCircle
+                  onClick={() => togglePopover('email')}
                   id="Tooltip1"
-                  
-                  />
+
+                />
                 {/* </Button> */}
                 <Popover
                   placement="top"
-                  isOpen={popoverOpen.username}
-                  target="Tooltip1"                  
-                  toggle={() => togglePopover('username')}
+                  isOpen={popoverOpen.email}
+                  target="Tooltip1"
+                  toggle={() => togglePopover('email')}
                   transition={transitionProps}
                 >
-                  <PopoverBody>{t("login.username_tooltip")}</PopoverBody>
+                  <PopoverBody>{t("login.email_tooltip")}</PopoverBody>
                 </Popover>
               </Col>
             </Row>
             <Row className="justify-content-center">
-              <Col className="py-3" md="10" xs='10'>
+              <Col className="py-1" md="8" xs='10'>
                 <FloatingLabel controlId="floatingPassword" label={`${t("login.password_label")}`}
                   className="text-cleanar-color"
                 >
@@ -242,18 +244,18 @@ function LoginPage({ focus }) {
                     onChange={(e) => handleChange(e)} name="password" />
                 </FloatingLabel>
               </Col>
-              <Col className="py-3" md="1" xs='1'>
+              <Col className="py-1" md="1" xs='1'>
                 {/* <Button
                   type="button"
                   tabIndex='-1'
                   // color="link"
                   className="primary-bg-color btn-round btn-icon"
                   > */}
-                  <FaQuestionCircle
+                <FaQuestionCircle
                   id="Tooltip2"
                   onClick={() => togglePopover('password')}
-                  
-                  />
+
+                />
                 {/* </Button> */}
                 <Popover
                   placement="top"
@@ -266,28 +268,28 @@ function LoginPage({ focus }) {
                 </Popover>
               </Col>
             </Row>
-            <Row className="justify-content-center">
-              <Col className="py-3" md="6" xs='6'>
+            <Row className="justify-content-center mt-3">
+              <Col className="py-1" md="6" xs='10'>
                 {/* <div className="text-center"> */}
-                  <Button
-                    className="btn rounded-pill primary-bg-color"
-                    type="submit"
-                    data-track="login"
-                    size="lg"
-                  >
-                    {t("login.login_button")}
-                  </Button>
-                  </Col>
-                  <Col className="py-3" md='6' xs='6'>
-                  <Button
-                    className="btn-info rounded-pill"
-                    type="button"
-                    data-track="reset-password"
-                    onClick={handleResetPassword}
-                    size="lg"
-                  >
-                    {t("login.reset_password_button")}
-                  </Button>
+                <Button
+                  className="btn rounded-pill primary-bg-color"
+                  type="submit"
+                  data-track="login"
+                  size="lg"
+                >
+                  {t("login.login_button")}
+                </Button>
+              </Col>
+              <Col className="py-1" md='6' xs='10'>
+                <Button
+                  className="btn-info rounded-pill"
+                  type="button"
+                  data-track="reset-password"
+                  onClick={handleResetPassword}
+                  size="lg"
+                >
+                  {t("login.reset_password_button")}
+                </Button>
                 {/* </div> */}
                 {/* </Form> */}
                 {/* </Card> */}

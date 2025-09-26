@@ -126,19 +126,19 @@
   "login": {
     "title": "Iniciar sesión",
     "description": "Inicia sesión para acceder a tu cuenta, realizar compras más rápido y ver tu historial de pedidos.",
-    "username_label": "Nombre de usuario*",
+    "email_label": "Correo Electrónico*",
     "password_label": "Contraseña*",
-    "username_tooltip": "Ingresa tu nombre de usuario registrado.",
+    "email_tooltip": "Ingresa tu correo electrónico registrado.",
     "password_tooltip": "Ingresa la contraseña de tu cuenta.",
     "login_button": "Iniciar Sesión",
     "reset_password_button": "Restablecer tu Contraseña",
     "signup_prompt": "¿No tienes una cuenta?",
     "signup_link": "Crea una aquí",
     "alerts": {
-      "user_not_found": "Usuario no encontrado",
+      "email_not_found": "Correo electrónico no encontrado",
       "wrong_password": "¡Contraseña incorrecta!",
-      "missing_credentials": "Por favor ingresa tu nombre de usuario y contraseña",
-      "missing_username_reset": "Por favor ingresa tu nombre de usuario para restablecer tu contraseña"
+      "missing_credentials": "Por favor ingresa tu correo electrónico y contraseña",
+      "missing_email_reset": "Por favor ingresa tu correo electrónico para restablecer tu contraseña"
     }
   },
   "signup": {

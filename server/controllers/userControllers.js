@@ -73,11 +73,11 @@ const userControllers = {
             .catch(err => res.status(500).json(err));
     },
     async login({ body }, res) {
-        const dbUserData = await User.findOne({ username: body.username.toLowerCase() });
+        const dbUserData = await User.findOne({ email: body.email });
 
         // if (dbUserData) {
         if (!dbUserData) {
-            res.status(404).json({ message: 'No user found by this username' });
+            res.status(404).json({ message: 'No user found by this email' });
             return;
         }
         const correctPassword = await dbUserData.isCorrectPassword(body.password)

@@ -126,19 +126,19 @@
   "login": {
     "title": "Log in",
     "description": "Log in to access your account for faster checkout and to view order history.",
-    "username_label": "Username*",
+    "email_label": "Email Address*",
     "password_label": "Password*",
-    "username_tooltip": "Enter your registered username.",
+    "email_tooltip": "Enter your registered email address.",
     "password_tooltip": "Enter your account password.",
     "login_button": "Log In",
     "reset_password_button": "Reset Your Password",
     "signup_prompt": "Don't have an account yet?",
     "signup_link": "Create one here",
     "alerts": {
-      "user_not_found": "User not found",
+      "email_not_found": "Email not found",
       "wrong_password": "Wrong password!",
-      "missing_credentials": "Please enter your username and password",
-      "missing_username_reset": "Please enter your username to reset your password"
+      "missing_credentials": "Please enter your email and password",
+      "missing_email_reset": "Please enter your email to reset your password"
     }
   },
   "signup": {

@@ -85,7 +85,11 @@ const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
     pending: "warning",     // Yellow
     confirmed: "primary",   // Blue
     completed: "success",   // Green
-    cancelled: "danger"     // Red
+    cancelled: "danger",     // Red
+    invoiced: "info",       // Light Blue
+    paid: "dark",           // Dark Grey
+    "in progress": "secondary", // Grey
+    done: "success"         // Green
   };
 
   // Navigate to previous month
@@ -344,8 +348,79 @@ const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
           <>
             <Modal.Header closeButton>
               <Modal.Title>Booking Details</Modal.Title>
+              {/* add a modal footer with the buttongroup for the actions */}
             </Modal.Header>
             <Modal.Body>
+              <ButtonGroup className="d-flex justify-content-center gap-2 mb-3">
+                <Button
+                  variant="warning"
+                  size="sm"
+                  onClick={() => {
+                    onPend(selectedBooking._id, selectedBooking.status);
+                    setSelectedBooking(null);
+                    setLoading(false);
+                  }}
+                >
+                  Pending
+                </Button>
+
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={() => {
+                    cancelBooking(selectedBooking._id, selectedBooking.status);
+                    setSelectedBooking(null);
+                    setLoading(false);
+                  }}
+                >
+                  Cancel
+                </Button>
+
+                <Button
+                  variant="success"
+                  size="sm"
+                  onClick={() => {
+                    completeBooking(selectedBooking._id, selectedBooking.status);
+                    setSelectedBooking(null);
+                    setLoading(false);
+                  }}
+                >
+                  Complete
+                </Button>
+
+                <Button
+                  variant="info"
+                  size="sm"
+                  onClick={() => {
+                    hideBooking(selectedBooking._id, selectedBooking.status);
+                    setSelectedBooking(null);
+                    setLoading(false);
+                  }}
+                >
+                  Hide
+                </Button>
+                
+                <Button
+                  variant="dark"
+                  size="sm"
+                  onClick={() => {
+                    setShowInvoiceModal(true);
+                  }}
+                >
+                  Generate Invoice
+                </Button>
+
+                <Button
+                  variant="danger"
+                  onClick={() => {
+                    deleteBooking(selectedBooking._id);
+                    setSelectedBooking(null);
+                    setLoading(false);
+                  }}
+                >
+                  Delete
+                </Button>
+              </ButtonGroup>
               <Table bordered size="sm">
                 <tbody>
                   <tr>
@@ -421,7 +496,7 @@ const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
                   </tr>
 
                   <tr>
-                    <th>Income</th>
+                    <th>Cost</th>
                     <td>
                       {isEditing ? (
                         <Form.Control
@@ -468,95 +543,6 @@ const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
                       </td>
                     </tr>
                   )}
-
-                  {/* <tr>
-                    <th>Service</th>
-                    <td>{selectedBooking.serviceType}</td>
-                  </tr>
-                  <tr>
-                    <th>Date/Time</th>
-                    <td>
-                      {isEditing ? (
-                        <>
-                        <Row className="align-items-center g-2">
-                          <Col xs={12} sm="auto">
-                          <Form.Control
-                            type="datetime-local"
-                            value={tempDate}
-                            className="text-cleanar-color form-input"
-                            onChange={(e) => setTempDate(e.target.value)}
-                            style={{ maxWidth: "250px" }}
-                          />
-                          </Col>
-                          <Col xs={12} sm="auto">
-                              {/* add a checkbox */}
-                  {/* <FormGroup check>
-                            <Label check>
-                              <Input
-                                type="checkbox"
-                                name="customerSuggestedBookingAcknowledged"
-                                checked={selectedBooking.customerSuggestedBookingAcknowledged}
-                                onChange={handleChange}
-                              />
-                              <span className="form-check-sign"></span>
-                              {' '}
-                              Acknowledge Suggested Date
-                            </Label>
-                          </FormGroup>
-                          </Col>
-                          </Row>
-                          <Row className="align-items-center">
-                          <Col xs={6} sm="auto">
-                          <Button
-                            variant="success"
-                            size="sm"
-                            onClick={handleSave}
-                            className="rounded-pill"
-                          >
-                            Save
-                          </Button>
-                          </Col>
-                          <Col xs={6} sm="auto">
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            onClick={handleCancel}
-                            className="rounded-pill"
-                          >
-                            Cancel
-                          </Button>
-                          </Col>
-                        </Row>
-                        </>
-                      ) : (
-                        <div className="d-flex align-items-center gap-2">
-                          {new Date(selectedBooking.date).toLocaleString()}
-                          <Button
-                            variant="outline-primary"
-                            size="sm"
-                            onClick={() => setIsEditing(true)}
-                            className="rounded-pill"
-                          >
-                            Edit
-                          </Button>
-                        </div>
-                      )}
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>Income</th>
-                    <td>${selectedBooking.income} CAD</td>
-                  </tr> */}
-                  {/* <tr>
-                    <th>Confirmation Email</th>
-                    <td>
-                      {selectedBooking.scheduleConfirmation
-                        ? `Scheduled for ${new Date(
-                          selectedBooking.confirmationDate
-                        ).toLocaleString()}`
-                        : "Not scheduled"}
-                    </td>
-                  </tr> */}
                   <tr>
                     <th>24hr Reminder</th>
                     <td>{selectedBooking.reminderScheduled ? "Yes" : "No"}</td>
@@ -661,80 +647,12 @@ const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
 
                     </td>
                   </tr>
-                  <tr>
+                  {/* <tr>
                     <th>Actions</th>
                     <td>
-                      <ButtonGroup className="d-flex justify-content-center gap-2 mt-3">
-                        <Button
-                          variant="warning"
-                          size="sm"
-                          onClick={() => {
-                            onPend(selectedBooking._id, selectedBooking.status);
-                            setSelectedBooking(null);
-                            setLoading(false);
-                          }}
-                        >
-                          Pend
-                        </Button>
-
-                        <Button
-                          variant="primary"
-                          size="sm"
-                          onClick={() => {
-                            cancelBooking(selectedBooking._id, selectedBooking.status);
-                            setSelectedBooking(null);
-                            setLoading(false);
-                          }}
-                        >
-                          Cancel
-                        </Button>
-
-                        <Button
-                          variant="success"
-                          size="sm"
-                          onClick={() => {
-                            completeBooking(selectedBooking._id, selectedBooking.status);
-                            setSelectedBooking(null);
-                            setLoading(false);
-                          }}
-                        >
-                          Complete
-                        </Button>
-
-                        <Button
-                          variant="info"
-                          size="sm"
-                          onClick={() => {
-                            hideBooking(selectedBooking._id, selectedBooking.status);
-                            setSelectedBooking(null);
-                            setLoading(false);
-                          }}
-                        >
-                          Hide
-                        </Button>
-                        <Button
-                          variant="dark"
-                          size="sm"
-                          onClick={() => {
-                            setShowInvoiceModal(true);
-                          }}
-                        >
-                          Generate Invoice
-                        </Button>
-
-                        <Button
-                          variant="danger"
-                          onClick={() => {
-                            deleteBooking(selectedBooking._id);
-                            setSelectedBooking(null);
-                            setLoading(false);
-                          }}
-                        >
-                          Delete
-                        </Button>
-                      </ButtonGroup>
+                     
                     </td>
-                  </tr>
+                  </tr> */}
                 </tbody>
               </Table>
             </Modal.Body>
@@ -768,10 +686,10 @@ const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
         </Modal.Footer>
       </Modal>
       <GenerateInvoiceModal
-  show={showInvoiceModal}
-  onHide={() => setShowInvoiceModal(false)}
-  booking={selectedBooking}
-/>
+        show={showInvoiceModal}
+        onHide={() => { setShowInvoiceModal(false); fetchBookings(); }} // i need to also refresh the booking list to show updated status
+        booking={selectedBooking}
+      />
 
     </div>
   );

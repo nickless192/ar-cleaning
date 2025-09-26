@@ -38,6 +38,7 @@ const QuoteRequest = () => {
         grandTotal: 0,
         services: [],
         products: [],
+        userId: ''
         // serviceLevel: '', // New field for service level
     });
     const [popoverOpen, setPopoverOpen] = useState({
@@ -154,9 +155,9 @@ const QuoteRequest = () => {
                 name: `${data.firstName} ${data.lastName}`,
                 email: data.email,
                 phonenumber: data.telephone,
-                postalcode: data.postalcode,
-                companyName: data.companyName,
-                userId: data._id
+                postalcode: data.postalcode || '',
+                companyName: data.companyName || '',
+                userId: data._id || ''
             }));
         }
     }, [isLogged]);
@@ -373,6 +374,10 @@ const QuoteRequest = () => {
             promoCode: '',
             services: [],
             products: [],
+            userId: '',
+            subtotalCost: 0,
+            tax: 0,
+            grandTotal: 0
         });
         setSelectedService("");
         setOptions([]);

@@ -29,7 +29,7 @@ const LoginSign = () => {
 
     return (
         <Row className='justify-content-center align-items-center'>
-            <Col md='4' className='mx-1'>
+            <Col md='8' className='mx-1'>
                 {/* <SignUp />
             </Col>
             <Col md='5' className='mx-1'>

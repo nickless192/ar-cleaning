@@ -24,7 +24,7 @@ const BookingSchema = new Schema({
     paidAt: { type: Date },                      // when money was *actually* received
     status: {
         type: String,
-        enum: ['pending', 'confirmed', 'completed', 'cancelled', 'paid', 'in progress'],
+        enum: ['pending', 'confirmed', 'completed', 'invoiced','cancelled', 'paid', 'in progress', 'done'],
         default: 'pending'
     }, // booking status
     hidden: {

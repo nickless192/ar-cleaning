@@ -126,19 +126,19 @@
   "login": {
     "title": "Se connecter",
     "description": "Connectez-vous pour accéder à votre compte, effectuer des achats plus rapidement et consulter votre historique de commandes.",
-    "username_label": "Nom d'utilisateur*",
+    "email_label": "Adresse e-mail*",
     "password_label": "Mot de passe*",
-    "username_tooltip": "Entrez votre nom d'utilisateur enregistré.",
+    "email_tooltip": "Entrez votre adresse e-mail enregistrée.",
     "password_tooltip": "Entrez le mot de passe de votre compte.",
     "login_button": "Se Connecter",
     "reset_password_button": "Réinitialiser votre Mot de Passe",
     "signup_prompt": "Vous n'avez pas de compte?",
     "signup_link": "Créez-en un ici",
     "alerts": {
-      "user_not_found": "Utilisateur non trouvé",
+      "email_not_found": "Email non trouvé",
       "wrong_password": "Mot de passe incorrect !",
-      "missing_credentials": "Veuillez saisir votre nom d'utilisateur et mot de passe",
-      "missing_username_reset": "Veuillez saisir votre nom d'utilisateur pour réinitialiser votre mot de passe"
+      "missing_credentials": "Veuillez saisir votre adresse e-mail et mot de passe",
+      "missing_email_reset": "Veuillez saisir votre adresse e-mail pour réinitialiser votre mot de passe"
     }
   },
   "signup": {

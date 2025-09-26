@@ -78,7 +78,7 @@ const GenerateInvoiceModal = ({ show, onHide, booking }) => {
             }
 
             const createdInvoice = await response.json();
-            console.log("Invoice created:", createdInvoice);
+            // console.log("Invoice created:", createdInvoice);
             onHide();
         } catch (err) {
             console.error("Network error creating invoice:", err);

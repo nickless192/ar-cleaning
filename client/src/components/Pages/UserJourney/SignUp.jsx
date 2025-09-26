@@ -69,9 +69,12 @@ function SignUp({ focus }) {
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     const cleanedData = Object.fromEntries(
-      Object.entries(formData).map(([key, val]) => [key, val.trim()])
+      Object.entries(formData).map(([key, val]) => [
+        key,
+        typeof val === "string" ? val.trim() : val
+      ])
     );
-
+console.log(cleanedData);
     if (cleanedData.firstName &&
       cleanedData.lastName &&
       cleanedData.email &&
@@ -473,6 +476,7 @@ function SignUp({ focus }) {
                     type="checkbox"
                     name="termsConsent"
                     value={formData.termsConsent}
+                    onChange={(e) => setFormData({ ...formData, termsConsent: e.target.checked })}
                     label={
                       <>
                         {t("signup.form_labels.agree")}{" "}
@@ -492,7 +496,7 @@ function SignUp({ focus }) {
               </Col>
             </Row>
             <Row className="justify-content-center">
-              <Col md='6' xs='6' className="py-3">
+              <Col md='10' xs='10' className="py-3">
                 <Button
                   className="btn-round light-bg-color rounded-pill"
                   type="submit"
