@@ -14,6 +14,8 @@ import '/src/assets/css/bookingcalendar.css';
 import Auth from "/src/utils/auth";
 import BookingForm from '../Booking/BookingForm';
 import GenerateInvoiceModal from '../Booking/GenerateInvoiceModal';
+import BookingActions from '../Booking/BookingActions';
+import { FaEyeSlash, FaTrash } from "react-icons/fa";
 
 
 const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
@@ -348,10 +350,44 @@ const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
           <>
             <Modal.Header closeButton>
               <Modal.Title>Booking Details</Modal.Title>
-              {/* add a modal footer with the buttongroup for the actions */}
+              <div className="d-flex gap-2">
+                <FaEyeSlash
+                  className="text-secondary cursor-pointer"
+                  title="Hide Booking"
+                  onClick={() => {
+                    hideBooking(selectedBooking._id, selectedBooking.status);
+                    setSelectedBooking(null);
+                    setLoading(false);
+                  }}
+                />
+                <FaTrash
+                  className="text-danger cursor-pointer"
+                  title="Delete Booking"
+                  onClick={() => {
+                    deleteBooking(selectedBooking._id);
+                    setSelectedBooking(null);
+                    setLoading(false);
+                  }}
+                />
+              </div>
             </Modal.Header>
             <Modal.Body>
-              <ButtonGroup className="d-flex justify-content-center gap-2 mb-3">
+              <BookingActions
+                selectedBooking={selectedBooking}
+                setSelectedBooking={setSelectedBooking}
+                setLoading={setLoading}
+                onPend={onPend}
+                cancelBooking={cancelBooking}
+                completeBooking={completeBooking}
+                hideBooking={hideBooking}
+                deleteBooking={deleteBooking}
+                setShowInvoiceModal={setShowInvoiceModal}
+                handleSubmit={handleSubmit}
+                handleChange={handleChange}
+                loading={loading}
+              />
+              {/* Action Buttons */}
+              {/* <ButtonGroup className="d-flex justify-content-center gap-2 mb-3">
                 <Button
                   variant="warning"
                   size="sm"
@@ -420,7 +456,7 @@ const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
                 >
                   Delete
                 </Button>
-              </ButtonGroup>
+              </ButtonGroup> */}
               <Table bordered size="sm">
                 <tbody>
                   <tr>
@@ -558,17 +594,22 @@ const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
                   <tr>
                     <th>New Date Requested</th>
                     <td>
-                      {selectedBooking.customerSuggestedBookingDate ? new Date(selectedBooking.customerSuggestedBookingDate).toLocaleDateString() : "N/A"}
-                      {selectedBooking.customerSuggestedBookingComment && (<p>{selectedBooking.customerSuggestedBookingComment}</p>)}
-
+                      {selectedBooking.customerSuggestedBookingDate ? new Date(selectedBooking.customerSuggestedBookingDate).toLocaleDateString() : "N/A"} <br />
                     </td>
                   </tr>
                   <tr>
-                    <th>Confirm Booking</th>
+                    <th>New Service Requested</th>
                     <td>
-                      {selectedBooking.status === 'confirmed' ? (
-                        <p className="text-success">Booking information:
-                          <br />
+                      {selectedBooking.customerSuggestedServiceType ? `${selectedBooking.customerSuggestedServiceType}` : ""} <br />
+                      Comments: {selectedBooking.customerSuggestedBookingComment && (<p>{selectedBooking.customerSuggestedBookingComment}</p>)}
+
+                    </td>
+                  </tr>
+                  {selectedBooking.status === 'confirmed' ? (
+                    <tr>
+                      <th>Confirm Booking</th>
+                      <td>
+                        <p className="text-success">
                           Confirmation Email Disabled? {selectedBooking.disableConfirmation ? 'Yes' : 'No'}
                           <br />
                           Scheduled Confirmation? {selectedBooking.scheduleConfirmation ? 'Yes' : 'No'}
@@ -581,78 +622,74 @@ const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
                           <br />
                           24-hour Reminder Sent Date: {selectedBooking.scheduledReminderDate ? new Date(selectedBooking.scheduledReminderDate).toLocaleString() : 'N/A'}
                         </p>
-                      ) : selectedBooking.status === 'pending' ? (
-                        <>
-                          <p className="text-muted mb-2 d-block">
-                            A confirmation email will be sent upon saving unless you override it below.
-                          </p>
-                          <Form onSubmit={handleSubmit}>
-                            <FormGroup check className="mb-3">
-                              <Label check>
-                                <Input
-                                  type="checkbox"
-                                  name="scheduleConfirmation"
-                                  checked={selectedBooking.scheduleConfirmation}
-                                  onChange={handleChange}
-                                /><span className="form-check-sign"></span>
-                                {' '}
-                                Schedule Confirmation Email
-                              </Label>
-                            </FormGroup>
-                            <FormGroup>
-                              <Label for="confirmationDate">Confirmation Email Date (optional)</Label>
-                              <Input
-                                type="datetime-local"
-                                name="confirmationDate"
-                                className="text-cleanar-color text-bold form-input"
-                                id="confirmationDate"
-                                value={selectedBooking.confirmationDate}
-                                onChange={handleChange}
-                                disabled={!selectedBooking.scheduleConfirmation}
-                              />
-                            </FormGroup>
-                            <FormGroup check className="mb-3">
-                              <Label check>
-                                <Input
-                                  type="checkbox"
-                                  name="disableConfirmation"
-                                  checked={selectedBooking.disableConfirmation}
-                                  onChange={handleChange}
-                                /><span className="form-check-sign"></span>
-                                {' '}
-                                Disable Confirmation Email
-                              </Label>
-                            </FormGroup>
-                            <FormGroup check className="mb-3">
-                              <Label check>
-                                <Input
-                                  type="checkbox"
-                                  name="reminderScheduled"
-                                  checked={selectedBooking.reminderScheduled}
-                                  onChange={handleChange}
-                                />
-                                {' '}
-                                <span className="form-check-sign"></span>
-                                Send 24-hour reminder email
-                              </Label>
-                            </FormGroup>
-                            <Button type="submit" color="primary" disabled={loading}>
-                              {loading ? <Spinner size="sm" /> : 'Confirm Booking'}
-                            </Button>
-                          </Form>
-                        </>
-                      ) : (
-                        <p className="text-danger">Booking is not active anymore.</p>
-                      )}
+                      </td>
+                    </tr>
+                  ) : selectedBooking.status === 'pending' ? (null
+                    // <>
+                    //   <p className="text-muted mb-2 d-block">
+                    //     A confirmation email will be sent upon saving unless you override it below.
+                    //   </p>
+                    //   <Form onSubmit={handleSubmit}>
+                    //     <FormGroup check className="mb-3">
+                    //       <Label check>
+                    //         <Input
+                    //           type="checkbox"
+                    //           name="scheduleConfirmation"
+                    //           checked={selectedBooking.scheduleConfirmation}
+                    //           onChange={handleChange}
+                    //         /><span className="form-check-sign"></span>
+                    //         {' '}
+                    //         Schedule Confirmation Email
+                    //       </Label>
+                    //     </FormGroup>
+                    //     <FormGroup>
+                    //       <Label for="confirmationDate">Confirmation Email Date (optional)</Label>
+                    //       <Input
+                    //         type="datetime-local"
+                    //         name="confirmationDate"
+                    //         className="text-cleanar-color text-bold form-input"
+                    //         id="confirmationDate"
+                    //         value={selectedBooking.confirmationDate}
+                    //         onChange={handleChange}
+                    //         disabled={!selectedBooking.scheduleConfirmation}
+                    //       />
+                    //     </FormGroup>
+                    //     <FormGroup check className="mb-3">
+                    //       <Label check>
+                    //         <Input
+                    //           type="checkbox"
+                    //           name="disableConfirmation"
+                    //           checked={selectedBooking.disableConfirmation}
+                    //           onChange={handleChange}
+                    //         /><span className="form-check-sign"></span>
+                    //         {' '}
+                    //         Disable Confirmation Email
+                    //       </Label>
+                    //     </FormGroup>
+                    //     <FormGroup check className="mb-3">
+                    //       <Label check>
+                    //         <Input
+                    //           type="checkbox"
+                    //           name="reminderScheduled"
+                    //           checked={selectedBooking.reminderScheduled}
+                    //           onChange={handleChange}
+                    //         />
+                    //         {' '}
+                    //         <span className="form-check-sign"></span>
+                    //         Send 24-hour reminder email
+                    //       </Label>
+                    //     </FormGroup>
+                    //     <Button type="submit" color="primary" disabled={loading}>
+                    //       {loading ? <Spinner size="sm" /> : 'Confirm Booking'}
+                    //     </Button>
+                    //   </Form>
+                    // </>
+                  ) : null
+                    // (
+                    //   <p className="text-danger">Booking is not active anymore.</p>
+                    // )
+                  }
 
-                    </td>
-                  </tr>
-                  {/* <tr>
-                    <th>Actions</th>
-                    <td>
-                     
-                    </td>
-                  </tr> */}
                 </tbody>
               </Table>
             </Modal.Body>

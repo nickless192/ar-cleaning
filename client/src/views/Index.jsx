@@ -41,9 +41,9 @@ function StickyQuoteButton() {
     //   formEl.scrollIntoView({ behavior: "smooth" });
     // }
     const nameInput = document.getElementById("floatingName"); // make sure your input has id="name-input"
-if (nameInput) {
-  nameInput.focus({ preventScroll: false }); // scrolls if needed
-}
+    if (nameInput) {
+      nameInput.focus({ preventScroll: false }); // scrolls if needed
+    }
   };
 
   return (
@@ -66,14 +66,17 @@ function Index() {
   const [availabilityStatus, setAvailabilityStatus] = useState('');
   const [responseTimeMessage, setResponseTimeMessage] = useState('');
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [modalText, setModalText] = useState('');
+  const [show, setShow] = useState(false);
+  const [variant, setVariant] = useState('A');
   const location = useLocation();
   const { t, i18n } = useTranslation();
 
   const goToQuote = () => {
-     const nameInput = document.getElementById("floatingName"); // make sure your input has id="name-input"
-if (nameInput) {
-  nameInput.focus({ preventScroll: false }); // scrolls if needed
-}
+    const nameInput = document.getElementById("floatingName"); // make sure your input has id="name-input"
+    if (nameInput) {
+      nameInput.focus({ preventScroll: false }); // scrolls if needed
+    }
   };
 
 
@@ -94,41 +97,14 @@ if (nameInput) {
       additionalInfo: t('email_additional'),
       color: "text-success"
     },
-    // {
-    //   icon: "now-ui-icons objects_spaceship",
-    //   link: ["https://www.instagram.com/cleanarsolutions/",
-    //     "https://www.facebook.com/share/18X3sPR1vf/?mibextid=wwXIfr",
-    //     "https://www.tiktok.com/@cleanar.solutions",
-    //     // "tel:437-440-5514",
-    //   ],
-    //   text: [
-    //     // "Follow Us on Instagram",
-    //     // "Join Our Facebook Community",
-    //     // "Follow Us on TikTok",
-    //     // "Call or Message Us",
-    //     'Instagram',
-    // 'Facebook Community',
-    // 'TikTok',
-    // // 'Call or Message Us',
-    //   ],
-    //   icons: [
-    //     <FaInstagram />,
-    //     <FaFacebook />,
-    //     <FaTiktok />,
-    //     // <FiPhoneCall />,
-    //   ],
-    //   description: "Social Connection, Real-Time Updates & Engagement",
-    //   additionalInfo: "Get Inspired & Informed",
-    //   color: "text-facebook"
-    // },
-    // {
-    //   icon: "now-ui-icons objects_spaceship",
-    //   link: "https://www.facebook.com/share/18X3sPR1vf/?mibextid=wwXIfr",
-    //   text: "CleanAR Solutions Facebook Community",
-    //   description: "Join Our Community",
-    //   additionalInfo: "Connect & Share with Us",
-    //   color: "text-facebook"
-    // },
+    {
+      icon: "now-ui-icons tech_mobile",
+      link: "/index?promoCode=refresh15&scrollToQuote=true'",
+      text: t('welcome_modal.title'),
+      description: modalText,
+      additionalInfo: t('welcome_modal.description'),
+      color: "text-info"
+    },
     {
       icon: "now-ui-icons business_bulb-63",
       link: "https://g.page/r/Cek9dkmHVuBKEAE/review",
@@ -168,34 +144,16 @@ if (nameInput) {
     }
 
     if (isInitialLoad) {
-      // fetch('/api/reviews')
-      //   .then(response => response.json())
-      //   .then(data => {
-      //     // Process the fetched reviews data
-      //     console.log(data);
-      //   })
-      //   .catch(error => {
-      //     console.error('Error fetching reviews:', error);
-      //   });
-      // fetch('/api/reviews/locations/')
-      //   .then(response => response.json())
-      //   .then(data => {
-      //     // Process the fetched reviews data
-      //     console.log("location data", data);
-      //   })
-      //   .catch(error => {
-      //     console.error('Error fetching locations:', error);
-      //   });
-      // fetch('/api/reviews/accounts/')
-      //   .then(response => response.json())
-      //   .then(data => {
-      //     // Process the fetched reviews data
-      //     console.log("account data",data);
-      //   })
-      //   .catch(error => {
-      //     console.error('Error fetching accounts:', error);
-      //   });
 
+      const savedVariant = localStorage.getItem('welcomeModalVariant');
+      const chosenVariant = savedVariant || (Math.random() > 0.5 ? 'A' : 'B');
+      if (chosenVariant === 'A') {
+        setModalText(t('welcome_modal.variant_a'));
+      } else {
+        setModalText(t('welcome_modal.variant_b'));
+      }
+      setVariant(chosenVariant);
+      setIsInitialLoad(false);
     }
 
     document.body.classList.add("index-page");
@@ -329,7 +287,7 @@ if (nameInput) {
                       ) : item.link.startsWith("http") || item.link.startsWith("mailto") ? (
                         <a
                           href={item.link}
-                             {...(item.link.startsWith("http") && { target: "_blank", rel: "noreferrer noopener" })}
+                          {...(item.link.startsWith("http") && { target: "_blank", rel: "noreferrer noopener" })}
                           data-track="contact-link"
                           className="text-bold martel-semibold underline"
                           title={item.text}
@@ -352,7 +310,7 @@ if (nameInput) {
                       <br />
                       <p className="text-muted small">{item.additionalInfo}</p>
                     </div>
-                    
+
                   </ListGroupItem>
                 </motion.div>
               ))}

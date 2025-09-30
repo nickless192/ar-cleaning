@@ -228,18 +228,34 @@ export default function BookingDashboard() {
           text: `Upcoming: ${b.customerName} (${b.serviceType}) — ${bd.toLocaleString()}`
         });
       }
-      if (b.status === 'Completed' && !b.tasks?.paid) {
+      if (b.status === 'completed' && !b.tasks?.paid) {
         newAlerts.push({
           id: `a-${b._id}-unpaid`,
           level: 'warning',
           text: `Completed but unpaid: ${b.customerName} — $${b.income}`
         });
       }
-      if (bd < now && b.status === 'Scheduled') {
+      if (bd < now && b.status === 'confirmed') {
         newAlerts.push({
           id: `a-${b._id}-missed`,
           level: 'danger',
           text: `Missed: ${b.customerName} — ${bd.toLocaleString()}`
+        });
+      }
+      if (b.status === 'completed' || (b.status === 'confirmed' && bd < now)) {
+        if (!b.tasks?.invoiced) {
+          newAlerts.push({
+            id: `a-${b._id}-invoice`,
+            level: 'warning',
+            text: `Needs Invoice: ${b.customerName} — $${b.income}`
+          });
+        }
+      }
+      if ((b.customerSuggestedBookingDate || b.customerSuggestedServiceType) && !b.customerSuggestedBookingAcknowledged) {
+        newAlerts.push({
+          id: `a-${b._id}-customer_request`,
+          level: 'info',
+          text: `Customer Request: ${b.customerName} — ${b.customerSuggestedServiceType || ''} ${b.customerSuggestedBookingDate ? `on ${new Date(b.customerSuggestedBookingDate).toLocaleDateString()}` : ''}`
         });
       }
     });
