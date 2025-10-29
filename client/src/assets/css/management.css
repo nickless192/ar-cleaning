@@ -1,12 +1,12 @@
 /* management-tabs.css */
-#management-tabs, #admin-management-tabs {
+#management-tabs, #admin-management-tabs, #booking-tabs {
   gap: 0.5rem;
   margin-bottom: 1rem;
   flex-wrap: nowrap;
 }
 
 
-#management-tabs .nav-link, #admin-management-tabs .nav-link {
+#management-tabs .nav-link, #admin-management-tabs .nav-link, #booking-tabs .nav-link {
   border-radius: 0.5rem;
   background-color: #f1f3f5 !important;
   color: #212529 !important;
@@ -18,7 +18,7 @@
   white-space: nowrap;
 }
 
-#management-tabs .nav-link.active, #admin-management-tabs .nav-link.active {
+#management-tabs .nav-link.active, #admin-management-tabs .nav-link.active, #booking-tabs .nav-link.active {
   background-color: #0d6efd !important;
   color: #ffffff !important;
   border-color: #0d6efd;
@@ -26,7 +26,7 @@
   font-weight: 600;
 }
 
-#management-tabs .nav-link:hover, #admin-management-tabs .nav-link:hover {
+#management-tabs .nav-link:hover, #admin-management-tabs .nav-link:hover, #booking-tabs .nav-link:hover {
   background-color: #92b7da !important;
   border-color: #ced4da;
 }
@@ -41,4 +41,19 @@
     flex: 1 1 auto;
     text-align: center;
   }
+}
+
+.nav-link {
+  transition: all 0.2s ease-in-out;
+}
+
+.nav-link:hover {
+  background-color: rgba(0, 123, 255, 0.1);
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+.active {
+  background-color: rgba(0, 123, 255, 0.15);
+  border-radius: 8px;
 }

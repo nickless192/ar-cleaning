@@ -1,0 +1,150 @@
+/* src/pages/admin/AdminManagementLayout.css */
+
+/* ===== Layout Container ===== */
+.admin-layout {
+  min-height: 85vh;
+}
+
+/* ===== Mobile Header ===== */
+.admin-mobile-header {
+  z-index: 1020;
+  background-color: #f8f9fa !important;
+}
+
+.admin-toggle-btn {
+  width: 40px;
+  height: 40px;
+  padding: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-header-spacer {
+  width: 40px;
+  flex-shrink: 0;
+}
+
+/* ===== Desktop Sidebar ===== */
+.admin-sidebar {
+  width: 240px;
+  min-height: 100%;
+  max-height: 100vh;
+  overflow-y: auto;
+  position: sticky;
+  top: 0;
+  flex-shrink: 0;
+}
+
+/* Custom scrollbar for sidebar */
+.admin-sidebar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+.admin-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.admin-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.admin-sidebar::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.admin-sidebar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* ===== Navigation Links ===== */
+.admin-nav-link {
+  transition: all 0.2s ease-in-out;
+  text-decoration: none;
+  display: block;
+}
+
+/* Hover effect for non-active links */
+.admin-nav-link:not(.active):hover {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+  transform: translateX(4px);
+}
+
+/* Active link styling */
+.admin-nav-link.active {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== Main Content Area ===== */
+.admin-main-content {
+  overflow-x: hidden;
+}
+
+/* ===== Responsive Adjustments ===== */
+@media (max-width: 767.98px) {
+  .admin-main-content {
+    padding-top: 0.5rem !important;
+  }
+}
+
+/* Ensure layout doesn't break on very small screens */
+@media (max-width: 359px) {
+  .admin-toggle-btn {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .admin-header-spacer {
+    width: 36px;
+  }
+}
+
+/* Tablet optimization */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .admin-sidebar {
+    width: 220px;
+  }
+}
+
+/* Large desktop optimization */
+@media (min-width: 1400px) {
+  .admin-sidebar {
+    width: 260px;
+  }
+}
+
+/* ===== Print Styles ===== */
+@media print {
+  .admin-mobile-header,
+  .admin-sidebar,
+  .admin-toggle-btn {
+    display: none !important;
+  }
+  
+  .admin-main-content {
+    padding: 0 !important;
+  }
+}
+
+/* ===== Accessibility Enhancements ===== */
+.admin-nav-link:focus-visible {
+  outline: 2px solid var(--bs-primary);
+  outline-offset: 2px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .admin-nav-link,
+  .admin-sidebar {
+    transition: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .admin-nav-link.active {
+    border-left-width: 4px !important;
+  }
+}

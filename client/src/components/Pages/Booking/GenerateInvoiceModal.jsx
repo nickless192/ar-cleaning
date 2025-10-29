@@ -77,7 +77,7 @@ const GenerateInvoiceModal = ({ show, onHide, booking }) => {
                 return;
             }
 
-            const createdInvoice = await response.json();
+            // const createdInvoice = await response.json();
             // console.log("Invoice created:", createdInvoice);
             onHide();
         } catch (err) {

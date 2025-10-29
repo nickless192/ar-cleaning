@@ -54,13 +54,14 @@ const InventoryManagementTabbedView = () => {
   const { t } = useTranslation();
 
   return (
-    <Container fluid className="">
+    <Container fluid className="p-3 sm:p-4">
       <div className="rounded-2xl shadow-md bg-white">
-        <div className="overflow-x-auto hide-scrollbar">
+        {/* <div classN
+        ame="overflow-x-auto hide-scrollbar"> */}
           <Tabs
             defaultActiveKey="manage-service"
             id="management-tabs"
-            className="flex-nowrap d-flex justify-content-start gap-2 mb-3"
+            className="flex flex-wrap gap-2 mb-3"
             mountOnEnter
             unmountOnExit
           >
@@ -81,7 +82,7 @@ const InventoryManagementTabbedView = () => {
               <div className="p-2 sm:p-4"><ManageGiftCard /></div>
             </Tab>
           </Tabs>
-        </div>
+        {/* </div> */}
       </div>
 
     </Container>

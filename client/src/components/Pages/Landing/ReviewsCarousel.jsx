@@ -12,6 +12,30 @@ function ReviewsCarousel() {
 
   const reviews = [
     {
+      text: "CleaAR Solutions has been outstanding each time I've used them. They leave every room absolutely spotless, paying attention to every corner and surface. The team is not only thorough but also incredibly kind and professional throughout the entire process. This is hands-down the best cleaning service I've ever used, and I highly recommend CleaAR Solutions to anyone seeking top-notch cleaning.",
+      author: "James F.M.",
+      stars: 5,
+      source: "Google Reviews",
+    },
+    {
+      text: "Excellent services, windows cleaning, washroom deep clean and regular cleaning. Always on time! I’m really happy with their service, price and quality!",
+      author: "Luis BM",
+      stars: 5,
+      source: "Google Reviews",
+    },
+    {
+      text: "Absolutely amazing service! The team was professional, punctual, and very detail-oriented. My home looked spotless and fresh after their visit. They went above and beyond to make sure everything was perfect. I highly recommend this cleaning company to anyone looking for reliable and top-quality service.",
+      author: "Maria B.",
+      stars: 5,
+      source: "Google Reviews",
+    },
+    {
+      text: "I’ve used CleanAR Solutions a number of times over the past few months, and every single time they’ve gone above and beyond. Walking into a spotless home after a long day feels incredible, and their attention to detail never disappoints. Reliable, thorough, and truly professional - I wouldn’t hesitate for a second to recommend them!",
+      author: "Mark B.",
+      stars: 5,
+      source: "Google Reviews",
+    },
+    {
       text: "Highly recommend the team at CleanARSolutions! My house was sparkling from top to bottom! They even got some stains out that my previous cleaner couldn’t!",
       author: "Shimki C.",
       stars: 5,

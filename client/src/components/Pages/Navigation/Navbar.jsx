@@ -146,7 +146,7 @@ function IndexNavbar() {
                     {Auth.getProfile().data.adminFlag === true && (
                         <>
                             <NavItem className="nav-item">
-                                <NavLink href="/admin-management" className="nav-link" onClick={handleNavClick}>
+                                <NavLink href="/admin" className="nav-link" onClick={handleNavClick}>
                                     <div className="nav-link-content">
                                         {/* <FaUserCircle className="nav-icon" /> */}
                                         <span>{t('navbar.admin.admin_management')}</span>

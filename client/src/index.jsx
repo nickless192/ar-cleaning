@@ -47,6 +47,9 @@ import FinanceDashboard from "/src/components/Pages/Management/FinanceDashboard"
 import ExpenseDashboard from "/src/components/Pages/Management/ExpenseDashboard";
 import QuickRequest_v2 from "/src/components/Pages/UserJourney/QuoteRequest_v2"; // version in-dev for testing
 import AdminContactDashboard from "/src/components/Pages/Management/AdminContactDashboard"; // version in-dev for testing
+import AdminManagementLayout from "/src/components/Pages/ManagementViews/AdminManagementLayout.jsx";
+import BookingTabbedView from "/src/components/Pages/ManagementViews/BookingTabbedView";
+
 import InventoryManagementTabbedView from "/src/components/Pages/ManagementViews/InventoryManagementTabbedView";
 import ContactManagementTabbedView from "/src/components/Pages/ManagementViews/ContactManagementTabbedView";
 import AccountingTabbedView from "/src/components/Pages/ManagementViews/AccountingTabbedView";
@@ -153,11 +156,18 @@ const App = () => {
               {/* <Route path="/view-quotes" element={<ProtectedRoute element={<QuickQuoteDashboard />} />} /> */}
               {/* <Route path="/manage-expenses" element={<ProtectedRoute element={<ExpenseDashboard />} />} /> */}
               <Route path="/quick-request-v2" element={<ProtectedRoute element={<QuickRequest_v2 />} />} />
-              <Route path="/admin-management" element={<ProtectedRoute element={<AdminManagementPage />} />} />
+              {/* <Route path="/admin-management" element={<ProtectedRoute element={<AdminManagementPage />} />} />
               <Route path="/inventory-management" element={<ProtectedRoute element={<InventoryManagementTabbedView />} />} />
               <Route path="/admin-contact-dashboard" element={<ProtectedRoute element={<AdminContactDashboard />} />} />
               <Route path="/contact-management" element={<ProtectedRoute element={<ContactManagementTabbedView />} />} />
-              <Route path="/accounting-management" element={<ProtectedRoute element={<AccountingTabbedView />} />} />
+              <Route path="/accounting-management" element={<ProtectedRoute element={<AccountingTabbedView />} />} /> */}
+                   <Route path="/admin" element={<AdminManagementLayout />}>
+        <Route index element={<Navigate to="accounting" replace />} />
+        <Route path="accounting" element={<AccountingTabbedView />} />
+        <Route path="booking" element={<BookingTabbedView />} />
+        <Route path="customer" element={<ContactManagementTabbedView />} />
+        <Route path="inventory" element={<InventoryManagementTabbedView />} />
+      </Route>
               <Route path="/invoices/:id" element={<InvoiceDetail />} />
               {/* <Route path="/view-quotes/:quoteId" element={<ProtectedRoute element={<ViewQuotes />} />} /> */}
               {/* <Route path="/dashboard" element={<ProtectedRoute element={<LogDashboard />} />} /> */}

@@ -33,6 +33,9 @@ module.exports = {
       }
 
       const totalCost = services.reduce((acc, s) => acc + (s.amount || 0), 0);
+      // console.log("Total Cost Calculated:", totalCost);
+      console.log("invoice Number:", invoiceNumber);
+
 
       const newInvoice = await Invoice.create({
         invoiceNumber,

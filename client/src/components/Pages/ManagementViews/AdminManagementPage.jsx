@@ -3,6 +3,7 @@ import { Tabs, Tab, Container } from 'react-bootstrap';
 import AccountingTabbedView from './AccountingTabbedView';
 import ContactManagementTabbedView from './ContactManagementTabbedView';
 import InventoryManagementTabbedView from './InventoryManagementTabbedView';
+import BookingTabbedView from './BookingTabbedView';
 import '/src/assets/css/management.css';
 import { useTranslation } from 'react-i18next';
 
@@ -15,7 +16,9 @@ const AdminManagementPage = () => {
         <Tab eventKey="accounting" title={t('navbar.admin.accounting_management')}>
           <AccountingTabbedView />
         </Tab>
-
+        <Tab eventKey="booking" title={t('navbar.admin.booking_management')}>
+          <BookingTabbedView />
+        </Tab>
         <Tab eventKey="customer" title={t('navbar.admin.customer_management')}>
           <ContactManagementTabbedView />
         </Tab>
