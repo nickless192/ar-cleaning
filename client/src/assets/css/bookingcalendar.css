@@ -55,7 +55,7 @@
   font-size: 16px;
 }
 
-.weekday-header {
+/* .weekday-header {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   background-color: #f0f0f0;
@@ -71,7 +71,87 @@
   gap: 1px;
   background-color: #ddd;
   border: 1px solid #ddd;
+} */
+
+/* Weekday header and calendar grid: consistent column sizing */
+.weekday-header,
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0; /* ensures perfect alignment */
 }
+
+/* Weekday header */
+.weekday-header {
+  background: var(--bs-primary, #0d6efd);
+  color: white;
+  border-radius: 10px 10px 0 0;
+  overflow: hidden;
+  text-align: center;
+  font-weight: 600;
+}
+.weekday-cell {
+  padding: 10px 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.15);
+  font-size: 0.85rem;
+}
+.weekday-cell:last-child {
+  border-right: none;
+}
+
+/* Calendar grid */
+.calendar-grid {
+  border: 1px solid #dee2e6;
+  border-top: none;
+}
+.calendar-cell {
+  border-right: 1px solid #dee2e6;
+  border-bottom: 1px solid #dee2e6;
+  min-height: 110px;
+  background: #fff;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  transition: box-shadow .12s ease;
+}
+.calendar-cell:nth-child(7n) {
+  border-right: none;
+}
+
+/* Make the cells evenly stretch across the full width */
+.booking-calendar-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  overflow-x: hidden;
+}
+
+/* Responsive: adjust evenly for mobile */
+@media (max-width: 768px) {
+  .weekday-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    font-size: 0.75rem;
+  }
+  .calendar-cell {
+    min-height: 90px;
+  }
+}
+@media (max-width: 480px) {
+  .weekday-header {
+    grid-template-columns: repeat(7, 1fr);
+    font-size: 0.7rem;
+  }
+  .calendar-grid {
+    grid-template-columns: repeat(7, 1fr);
+  }
+  .calendar-cell {
+    padding: 6px;
+    min-height: 80px;
+  }
+}
+
 
 .calendar-day {
   min-height: 120px;
@@ -186,3 +266,199 @@
     max-height: 70px;
   }
 }
+
+/* Calendar container */
+.booking-calendar-container {
+  padding: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+/* Header */
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.nav-button {
+  background: transparent;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+.calendar-title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+/* Weekday header (grid) */
+.weekday-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: var(--bs-primary, #0d6efd);
+  color: white;
+  padding: 6px 4px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  font-weight: 600;
+  text-align: center;
+}
+.weekday-cell {
+  padding: 6px 4px;
+  border-right: 1px solid rgba(255,255,255,0.08);
+  font-size: 0.85rem;
+}
+.weekday-cell:last-child {
+  border-right: none;
+}
+
+/* Grid calendar */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+/* Day cell */
+.calendar-cell {
+  background: #fff;
+  border: 1px solid #e9ecef;
+  min-height: 110px;
+  padding: 6px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  transition: box-shadow .12s ease;
+}
+.calendar-cell:hover {
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+
+/* empty day styling */
+.calendar-cell.empty {
+  background: #f8f9fa;
+  opacity: 0.95;
+}
+
+/* header inside cell */
+.cell-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.day-number {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+/* Add button - hover visible on desktop; always visible on small screens */
+.add-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: #28a745;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .12s ease, color .12s ease;
+  opacity: 0;
+}
+.calendar-cell:hover .add-btn {
+  opacity: 1;
+  background: rgba(40,167,69,0.08);
+}
+
+/* Bookings list and card */
+.bookings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow: hidden;
+}
+.booking-card {
+  padding: 6px 8px;
+  border-radius: 6px;
+  color: white;
+  font-size: 0.78rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+.booking-card:focus,
+.booking-card:hover {
+  outline: 2px solid rgba(0,0,0,0.06);
+  transform: translateY(-1px);
+}
+
+/* booking content lines */
+.booking-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+.booking-sub {
+  font-size: 0.72rem;
+  opacity: 0.95;
+  font-weight: 500;
+}
+
+/* booking colors by status (fallbacks) */
+.status-pending { background-color: #ffc107; color: #212529; }
+.status-confirmed { background-color: #0d6efd; }
+.status-completed, .status-done { background-color: #28a745; }
+.status-cancelled { background-color: #dc3545; }
+.status-invoiced { background-color: #17a2b8; }
+.status-paid { background-color: #343a40; }
+.status-secondary { background-color: #6c757d; }
+
+/* empty bookings placeholder */
+.no-bookings {
+  color: #adb5bd;
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 8px 0;
+}
+
+/* responsive rules */
+@media (max-width: 1024px) {
+  .calendar-grid { gap: 6px; }
+  .calendar-cell { min-height: 90px; padding: 6px; }
+  .weekday-cell { font-size: 0.82rem; padding: 5px 3px; }
+}
+
+/* Tablet: compress to 2 columns for vertical stacking of weeks */
+@media (max-width: 768px) {
+  .weekday-header { display: none; } /* optional: saves vertical space on mobile */
+  .calendar-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .calendar-cell { min-height: auto; }
+  /* show add button on mobile always */
+  .add-btn { opacity: 1; background: rgba(40,167,69,0.06); color: #28a745; }
+}
+
+/* Mobile: single column stack for best readability */
+@media (max-width: 480px) {
+  .calendar-grid {
+    grid-template-columns: 1fr;
+  }
+  .calendar-cell {
+    border-radius: 10px;
+    padding: 10px;
+  }
+  .booking-card { padding: 10px; font-size: 0.9rem; }
+  .day-number { font-size: 1rem; }
+  .nav-button { padding: 8px 12px; }
+}
+
