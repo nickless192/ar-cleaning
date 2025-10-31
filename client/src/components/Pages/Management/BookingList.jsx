@@ -264,8 +264,6 @@ const BookingList = () => {
             hideBooking={handleHide}
             customers={customers}
           />
-          <div className="mt-3">
-          </div>
 
         </Col>
       </Row>

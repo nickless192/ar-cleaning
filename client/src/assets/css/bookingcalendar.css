@@ -119,13 +119,13 @@
   border-right: none;
 }
 
-/* Make the cells evenly stretch across the full width */
+/* Make the cells evenly stretch across the full width
 .booking-calendar-container {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   overflow-x: hidden;
-}
+} */
 
 /* Responsive: adjust evenly for mobile */
 @media (max-width: 768px) {
