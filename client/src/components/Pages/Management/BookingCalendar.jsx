@@ -420,6 +420,211 @@ const BookingCalendar = ({ bookings, fetchBookings, deleteBooking, onPend,
 
                 {/* Date/time, cost, status, etc. — copy the rest of your table rows exactly as they are */}
                 {/* ... (leave rest unchanged) */}
+                 <tr>
+                                    <th>Date/Time</th>
+                                    <td>
+                                      {isEditing ? (
+                                        <>
+                                          <Row className="align-items-center g-2">
+                                            <Col xs={12} sm="auto">
+                                              <Form.Control
+                                                type="datetime-local"
+                                                value={tempDate}
+                                                className="text-cleanar-color form-input"
+                                                onChange={(e) => setTempDate(e.target.value)}
+                                                style={{ maxWidth: "250px" }}
+                                              />
+                                            </Col>
+                                            <Col xs={12} sm="auto">
+                                              <FormGroup check>
+                                                <Label check>
+                                                  <Input
+                                                    type="checkbox"
+                                                    name="customerSuggestedBookingAcknowledged"
+                                                    checked={customerAcknowledged}
+                                                    onChange={e => setCustomerAcknowledged(e.target.checked)}
+                                                  />
+                                                  <span className="form-check-sign"></span>{' '}
+                                                  Acknowledge Changes to Date/Service
+                                                </Label>
+                                              </FormGroup>
+                                            </Col>
+                                          </Row>
+                                        </>
+                                      ) : (
+                                        <div className="d-flex align-items-center gap-2">
+                                          {new Date(selectedBooking.date).toLocaleString()}
+                                          <Button
+                                            variant="outline-primary"
+                                            size="sm"
+                                            onClick={() => setIsEditing(true)}
+                                            className="rounded-pill"
+                                          >
+                                            Edit
+                                          </Button>
+                                        </div>
+                                      )}
+                                    </td>
+                                  </tr>
+                
+                                  <tr>
+                                    <th>Cost</th>
+                                    <td>
+                                      {isEditing ? (
+                                        <Form.Control
+                                          type="number"
+                                          step="1"
+                                          min="0"
+                                          value={tempIncome}
+                                          className="text-cleanar-color form-input"
+                                          onChange={(e) => setTempIncome(e.target.value)}
+                                          style={{ maxWidth: "150px" }}
+                                        />
+                                      ) : (
+                                        `$${selectedBooking.income} CAD`
+                                      )}
+                                    </td>
+                                  </tr>
+                
+                                  {isEditing && (
+                                    <tr>
+                                      <th>Save Changes</th>
+                                      <td colSpan={2}>
+                                        <Row className="align-items-center">
+                                          <Col xs={6} sm="auto">
+                                            <Button
+                                              variant="success"
+                                              size="sm"
+                                              onClick={handleSave}
+                                              className="rounded-pill"
+                                            >
+                                              Save
+                                            </Button>
+                                          </Col>
+                                          <Col xs={6} sm="auto">
+                                            <Button
+                                              variant="secondary"
+                                              size="sm"
+                                              onClick={handleCancel}
+                                              className="rounded-pill"
+                                            >
+                                              Cancel
+                                            </Button>
+                                          </Col>
+                                        </Row>
+                                      </td>
+                                    </tr>
+                                  )}
+                                  <tr>
+                                    <th>24hr Reminder</th>
+                                    <td>{selectedBooking.reminderScheduled ? "Yes" : "No"}</td>
+                                  </tr>
+                                  <tr>
+                                    <th>Status</th>
+                                    <td>
+                                      <Badge bg={statusColors[selectedBooking.status] || "secondary"}>
+                                        {selectedBooking.status}
+                                      </Badge>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <th>New Date Requested</th>
+                                    <td>
+                                      {selectedBooking.customerSuggestedBookingDate ? new Date(selectedBooking.customerSuggestedBookingDate).toLocaleDateString() : "N/A"} <br />
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <th>New Service Requested</th>
+                                    <td>
+                                      {selectedBooking.customerSuggestedServiceType ? `${selectedBooking.customerSuggestedServiceType}` : ""} <br />
+                                      Comments: {selectedBooking.customerSuggestedBookingComment && (<p>{selectedBooking.customerSuggestedBookingComment}</p>)}
+                
+                                    </td>
+                                  </tr>
+                                  {selectedBooking.status === 'confirmed' ? (
+                                    <tr>
+                                      <th>Confirm Booking</th>
+                                      <td>
+                                        <p className="text-success">
+                                          Confirmation Email Disabled? {selectedBooking.disableConfirmation ? 'Yes' : 'No'}
+                                          <br />
+                                          Scheduled Confirmation? {selectedBooking.scheduleConfirmation ? 'Yes' : 'No'}
+                                          <br />
+                                          Confirmation Date: {selectedBooking.confirmationDate ? new Date(selectedBooking.confirmationDate).toLocaleString() : 'N/A'}
+                                          <br />
+                                          Confirmation Email Sent Date: {selectedBooking.scheduledConfirmationDate ? new Date(selectedBooking.scheduledConfirmationDate).toLocaleString() : 'N/A'}
+                                          <br />
+                                          24-hour Reminder Scheduled? {selectedBooking.reminderScheduled ? 'Yes' : 'No'}
+                                          <br />
+                                          24-hour Reminder Sent Date: {selectedBooking.scheduledReminderDate ? new Date(selectedBooking.scheduledReminderDate).toLocaleString() : 'N/A'}
+                                        </p>
+                                      </td>
+                                    </tr>
+                                  ) : selectedBooking.status === 'pending' ? (null
+                                    // <>
+                                    //   <p className="text-muted mb-2 d-block">
+                                    //     A confirmation email will be sent upon saving unless you override it below.
+                                    //   </p>
+                                    //   <Form onSubmit={handleSubmit}>
+                                    //     <FormGroup check className="mb-3">
+                                    //       <Label check>
+                                    //         <Input
+                                    //           type="checkbox"
+                                    //           name="scheduleConfirmation"
+                                    //           checked={selectedBooking.scheduleConfirmation}
+                                    //           onChange={handleChange}
+                                    //         /><span className="form-check-sign"></span>
+                                    //         {' '}
+                                    //         Schedule Confirmation Email
+                                    //       </Label>
+                                    //     </FormGroup>
+                                    //     <FormGroup>
+                                    //       <Label for="confirmationDate">Confirmation Email Date (optional)</Label>
+                                    //       <Input
+                                    //         type="datetime-local"
+                                    //         name="confirmationDate"
+                                    //         className="text-cleanar-color text-bold form-input"
+                                    //         id="confirmationDate"
+                                    //         value={selectedBooking.confirmationDate}
+                                    //         onChange={handleChange}
+                                    //         disabled={!selectedBooking.scheduleConfirmation}
+                                    //       />
+                                    //     </FormGroup>
+                                    //     <FormGroup check className="mb-3">
+                                    //       <Label check>
+                                    //         <Input
+                                    //           type="checkbox"
+                                    //           name="disableConfirmation"
+                                    //           checked={selectedBooking.disableConfirmation}
+                                    //           onChange={handleChange}
+                                    //         /><span className="form-check-sign"></span>
+                                    //         {' '}
+                                    //         Disable Confirmation Email
+                                    //       </Label>
+                                    //     </FormGroup>
+                                    //     <FormGroup check className="mb-3">
+                                    //       <Label check>
+                                    //         <Input
+                                    //           type="checkbox"
+                                    //           name="reminderScheduled"
+                                    //           checked={selectedBooking.reminderScheduled}
+                                    //           onChange={handleChange}
+                                    //         />
+                                    //         {' '}
+                                    //         <span className="form-check-sign"></span>
+                                    //         Send 24-hour reminder email
+                                    //       </Label>
+                                    //     </FormGroup>
+                                    //     <Button type="submit" color="primary" disabled={loading}>
+                                    //       {loading ? <Spinner size="sm" /> : 'Confirm Booking'}
+                                    //     </Button>
+                                    //   </Form>
+                                    // </>
+                                  ) : null
+                                    // (
+                                    //   <p className="text-danger">Booking is not active anymore.</p>
+                                    // )
+                                  }
               </tbody>
             </Table>
           </Modal.Body>
