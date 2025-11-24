@@ -36,6 +36,8 @@ import LogDashboard from '/src/components/Pages/Management/LogDashboard';
 import QuickQuoteDashboard from "/src/components/Pages/Management/QuickQuoteDashboard";
 import BookingList from '/src/components/Pages/Management/BookingList';
 import ResetPassword from "/src/components/Pages/UserJourney/ResetPassword";
+import CertificationsMembershipsPage from "/src/components/Pages/Certifications/CertificationsMembershipsPage";
+import CleanARJoinsISSACanada from "/src/components/Pages/Blogs/CleanARJoinsISSACanada";
 
 import Terms from "/src/components/Pages/Navigation/Terms";
 import Disclaimer from "/src/components/Pages/Navigation/Disclaimer";
@@ -161,13 +163,18 @@ const App = () => {
               <Route path="/admin-contact-dashboard" element={<ProtectedRoute element={<AdminContactDashboard />} />} />
               <Route path="/contact-management" element={<ProtectedRoute element={<ContactManagementTabbedView />} />} />
               <Route path="/accounting-management" element={<ProtectedRoute element={<AccountingTabbedView />} />} /> */}
-                   <Route path="/admin" element={<AdminManagementLayout />}>
-        <Route index element={<Navigate to="accounting" replace />} />
-        <Route path="accounting" element={<AccountingTabbedView />} />
-        <Route path="booking" element={<BookingTabbedView />} />
-        <Route path="customer" element={<ContactManagementTabbedView />} />
-        <Route path="inventory" element={<InventoryManagementTabbedView />} />
-      </Route>
+              <Route path="/certifications-memberships" element={<CertificationsMembershipsPage />} />
+              <Route
+  path="/blog/cleanar-solutions-joins-issa-canada"
+  element={<CleanARJoinsISSACanada />}
+/>
+              <Route path="/admin" element={<AdminManagementLayout />}>
+                <Route index element={<Navigate to="accounting" replace />} />
+                <Route path="accounting" element={<AccountingTabbedView />} />
+                <Route path="booking" element={<BookingTabbedView />} />
+                <Route path="customer" element={<ContactManagementTabbedView />} />
+                <Route path="inventory" element={<InventoryManagementTabbedView />} />
+              </Route>
               <Route path="/invoices/:id" element={<InvoiceDetail />} />
               {/* <Route path="/view-quotes/:quoteId" element={<ProtectedRoute element={<ViewQuotes />} />} /> */}
               {/* <Route path="/dashboard" element={<ProtectedRoute element={<LogDashboard />} />} /> */}

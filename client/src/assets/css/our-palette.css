@@ -1167,3 +1167,61 @@ body.nav-open {
   }
   
    */
+   .issa-membership-badge {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-radius: 0.9rem;
+  background: #f5f7fb;
+  border: 1px solid #e0e6f5;
+  max-width: 640px;
+  font-size: 0.9rem;
+}
+
+.issa-membership-badge--stacked {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.issa-membership-badge__logo-wrapper {
+  flex-shrink: 0;
+}
+
+.issa-membership-badge__logo {
+  display: block;
+  max-width: 130px; /* keep aspect ratio, don’t stretch */
+  height: auto;
+}
+
+.issa-membership-badge__content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.issa-membership-badge__eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.7rem;
+  opacity: 0.65;
+  margin: 0;
+}
+
+.issa-membership-badge__headline {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.issa-membership-badge__body {
+  margin: 0;
+  line-height: 1.4;
+  opacity: 0.9;
+}
+
+@media (max-width: 600px) {
+  .issa-membership-badge {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

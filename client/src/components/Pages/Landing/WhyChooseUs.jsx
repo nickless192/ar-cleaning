@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { FaLeaf, FaUserShield, FaClock, FaCheckCircle, FaChevronDown } from "react-icons/fa";
 import NewIconAnimated from "/src/components/Pages/Navigation/NewIconAnimated";
+import issaLogo from "/src/assets/img/ISSA_CANADA_LogoCMYK.jpg";
 
 function WhyChooseUs() {
   const { t } = useTranslation();
@@ -32,6 +33,18 @@ function WhyChooseUs() {
       title: t("whyChooseUs.benefits.satisfactionGuaranteed.title"),
       desc: t("whyChooseUs.benefits.satisfactionGuaranteed.desc"),
     },
+    // {
+    //   icon: <div className="issa-membership-badge__logo-wrapper">
+    //           <img
+    //             src={issaLogo}
+    //             alt="ISSA Canada Member"
+    //             className="issa-membership-badge__logo"
+    //             loading="lazy"
+    //           />
+    //         </div>,
+    //   title: 'CleanAR Solutions is a proud ISSA Canada Member',
+    //   desc: 'As members of ISSA Canada – the national division of the worldwide cleaning industry association – we follow recognized best practices for quality, safety, and professionalism in every service we provide.',
+    // }
   ];
 
   return (

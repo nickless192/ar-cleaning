@@ -26,6 +26,7 @@ import ReviewsCarousel from "/src/components/Pages/Landing/ReviewsCarousel";
 import FAQAccordion from "/src/components/Pages/Landing/FAQAccordion";
 import NewIconAnimated from "/src/components/Pages/Navigation/NewIconAnimated";
 import StickyButtons from "/src/components/Pages/Landing/StickyButtons.jsx";
+import ISSAMembershipBadge from "/src/components/Pages/Certifications/ISSAMembershipBadge.jsx";
 
 // import backgroundImage from '/src/assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg';
 // import Logo from "assets/img/IC CLEAN AR-15-cropped.png";
@@ -193,6 +194,7 @@ function Index() {
           >
             CleanAR Solutions
           </motion.h1>
+          
           <motion.h3
             className="text-secondary p-0 m-0 text-bold pb-2"
             initial={{ opacity: 0 }}
@@ -314,7 +316,15 @@ function Index() {
                   </ListGroupItem>
                 </motion.div>
               ))}
+
             </Card>
+          <ISSAMembershipBadge className="mb-2" layout="horizontal" />
+          <Link
+  to="/blog/cleanar-solutions-joins-issa-canada"
+  className="text-primary small"
+>
+  Learn why ISSA membership matters →
+</Link>
           </motion.div>
         </Col>
         {/* <Col className="text-center p-0 m-0 d-none d-md-block" xs='12' md='6'>
