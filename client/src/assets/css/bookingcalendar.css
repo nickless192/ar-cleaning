@@ -212,7 +212,7 @@
 
 /* Booking card */
 .booking-card {
-  padding: 5px 6px;
+  /* padding: 5px 6px; */
   border-radius: 6px;
   color: white;
   font-size: 0.75rem;
@@ -309,6 +309,19 @@
   }
   .nav-button {
     padding: 6px 8px;
+  }
+}
+
+/* Mobile: hide it – let the modal show full details */
+@media (max-width: 768px) {
+  .booking-status {
+    display: none;
+  }
+  .booking-customer {
+    font-size: 0.4rem;
+  }
+  .booking-sub {
+    font-size: 0.55rem;
   }
 }
 
