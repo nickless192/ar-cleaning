@@ -317,12 +317,12 @@
   .booking-status {
     display: none;
   }
-  .booking-customer {
+  /* .booking-customer {
     font-size: 0.4rem;
   }
   .booking-sub {
     font-size: 0.55rem;
-  }
+  } */
 }
 
 /* Ensure modals scroll nicely on small screens (Bootstrap handles most) */
