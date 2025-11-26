@@ -46,7 +46,7 @@ const AdminManagementLayout = () => {
   return (
     <div className="d-flex flex-column flex-md-row admin-layout">
       {/* ===== Mobile Header (Toggle Button) ===== */}
-      <div className="d-md-none bg-light border-bottom p-3 d-flex justify-content-between align-items-center sticky-top shadow-sm admin-mobile-header">
+      <div className="d-md-none bg-light border-bottom py-3 d-flex justify-content-between align-items-center sticky-top shadow-sm admin-mobile-header">
         <Button 
           variant="outline-primary" 
           onClick={handleShow}
@@ -64,7 +64,7 @@ const AdminManagementLayout = () => {
       </div>
 
       {/* ===== Desktop Sidebar ===== */}
-      <aside className="d-none d-md-flex flex-column p-3 bg-light border-end admin-sidebar">
+      <aside className="d-none d-md-flex flex-column py-3 bg-light border-end admin-sidebar">
         <h5 className="mb-4 text-center text-uppercase fw-bold pb-3 border-bottom">
           {t('navbar.admin.admin_management') || 'Admin'}
         </h5>
@@ -94,7 +94,7 @@ const AdminManagementLayout = () => {
       </Offcanvas>
 
       {/* ===== Main Content Area ===== */}
-      <main className="flex-grow-1 p-3 p-md-4 admin-main-content">
+      <main className="flex-grow-1 py-3 py-md-4 admin-main-content">
         <Outlet />
       </main>
     </div>

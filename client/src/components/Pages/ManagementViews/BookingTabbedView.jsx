@@ -15,8 +15,8 @@ const BookingTabbedView = () => {
     const { t } = useTranslation();
 
     return (
-        <Container fluid className="p-3 sm:p-4">
-            <div className="rounded-2xl shadow-md bg-white p-2">
+        <Container fluid className="py-3 sm:py-4">
+            <div className="rounded-2xl shadow-md bg-white">
                 <Tabs
                     defaultActiveKey="booking-dashboard-main"
                     id="booking-tabs"
@@ -26,25 +26,25 @@ const BookingTabbedView = () => {
                 >
                     <Tab
                         eventKey="booking-dashboard-main"
-                        title={<span className="px-3 py-2 text-sm sm:text-base">{t('navbar.admin.booking_overview', "Booking Workflow Overview")}</span>}
+                        title={<span className="py-2 text-sm sm:text-base">{t('navbar.admin.booking_overview', "Booking Workflow Overview")}</span>}
                     >
-                        <div className="p-2 sm:p-4">
+                        <div className="py-2 sm:py-4">
                             <BookingDashboard />
                         </div>
                     </Tab>
                      <Tab
                         eventKey="booking-dashboard"
-                        title={<span className="px-3 py-2 text-sm sm:text-base">{t('navbar.admin.booking_dashboard')}</span>}
+                        title={<span className="py-2 text-sm sm:text-base">{t('navbar.admin.booking_dashboard')}</span>}
                     >
-                        <div className="p-2 sm:p-4">
+                        <div className="py-2 sm:py-4">
                             <BookingList />
                         </div>
                     </Tab>
                    <Tab
                         eventKey="invoices"
-                        title={<span className="px-3 py-2 text-sm sm:text-base">{t('navbar.admin.invoices')}</span>}
+                        title={<span className="py-2 text-sm sm:text-base">{t('navbar.admin.invoices')}</span>}
                     >
-                        <div className="p-2 sm:p-4">
+                        <div className="py-2 sm:py-4">
                             <InvoiceList />
                         </div>
                     </Tab>

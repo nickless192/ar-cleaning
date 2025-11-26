@@ -11,7 +11,7 @@ const AdminManagementPage = () => {
   const { t } = useTranslation();
 
   return (
-    <Container fluid className="p-5 sm:p-5">
+    <Container fluid className="py-5 sm:py-5">
       <Tabs defaultActiveKey="accounting" id="admin-management-tabs" className="mb-3">
         <Tab eventKey="accounting" title={t('navbar.admin.accounting_management')}>
           <AccountingTabbedView />

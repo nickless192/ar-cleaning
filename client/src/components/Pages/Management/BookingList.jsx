@@ -251,7 +251,7 @@ const BookingList = () => {
   };
 
   return (
-    <section className="py-4 px-5 mx-auto">
+    <section className="py-4  mx-auto">
       <Row>
         <Col>
           <h4>Booking Calendar</h4>
