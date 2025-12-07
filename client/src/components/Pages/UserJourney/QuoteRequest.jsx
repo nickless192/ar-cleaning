@@ -857,7 +857,7 @@ const QuoteRequest = () => {
                     <title>CleanAR Solutions</title>
                     <meta name="description" content="Get a quick service estimate from CleanAR Solutions. Fill out our form to receive a personalized quote for your cleaning needs." />
                 </Helmet>
-                <VisitorCounter />
+                {/* <VisitorCounter /> */}
                 <h2 className="text-center text-cleanar-color text-bold pt-2">{t('quick_quote.form.title', 'Get a Free Quote')}</h2>
                 {/* <p className="text-center text-sm italic text-gray-500 mb-1">
                     *Translation coming soon in French and Spanish

@@ -37,12 +37,15 @@ class AuthService {
     return localStorage.getItem('id_token');
   }
 
-  async login(id_token) {
+  async login(id_token, adminFlag) {
     // Saves user token to localStorage
     // console.log(id_token, adminFlag);
     localStorage.setItem('id_token', id_token);
     // localStorage.setItem('adminFlag', adminFlag);
-    
+    if (adminFlag) {
+      window.location.assign('/admin/booking');
+      return;
+    }
     window.location.assign('/profile-page');
 
   }

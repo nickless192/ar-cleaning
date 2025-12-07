@@ -93,7 +93,7 @@ function LoginPage({ focus }) {
               .then(data => {
                 // console.log(data);
                 // console.log(data.dbUserData.adminFlag);
-                Auth.login(data.token);
+                Auth.login(data.token, data.dbUserData.adminFlag);
 
 
               });

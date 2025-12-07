@@ -81,8 +81,7 @@ const VisitorLogSchema = new Schema({
     default: Date.now
   },
 
-  // NEW 📐 System Info
-  screenResolution: {
+    screenResolution: {
     type: String // e.g., "1920x1080"
   },
   language: {
@@ -90,18 +89,18 @@ const VisitorLogSchema = new Schema({
   },
 
   // NEW 🔁 Engagement Tracking
-  scrollDepth: {
-    type: Number, // 0–100%
-    default: 0
-  },
+  // scrollDepth: {
+  //   type: Number, // 0–100%
+  //   default: 0
+  // },
   interactions: {
     type: [String],
     default: []
   },
-  sessionDuration: {
-    type: Number, // seconds
-    default: 0
-  },
+  // sessionDuration: {
+  //   type: Number, // seconds
+  //   default: 0
+  // },
   engagementScore: {
     type: Number,
     default: 0
@@ -127,15 +126,15 @@ const VisitorLogSchema = new Schema({
   segment: {
     type: String // optional manual/automated tagging
   },
-  interactions: {
-    type: [String],
-    default: [],
-    validate: {
-      validator: arr => arr.length <= 100, // optional limit
-      message: 'Too many interaction events recorded'
-    }
-  },
-  sessionDuration: { type: Number, default: 0 },       // ms
+  // interactions: {
+  //   type: [String],
+  //   default: [],
+  //   validate: {
+  //     validator: arr => arr.length <= 100, // optional limit
+  //     message: 'Too many interaction events recorded'
+  //   }
+  // },
+  sessionDuration: { type: Number, default: 0 },      
   scrollDepth: { type: Number, default: 0 },           // percentage
   isBot: { type: Boolean, default: false },
 

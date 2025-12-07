@@ -67,18 +67,7 @@ const BookingList = () => {
     }
   }, []);
 
-  const fetchBookings = async () => {
-    try {
-      const res = await fetch('/api/bookings');
-      if (!res.ok) throw new Error('Failed to fetch bookings');
-      const data = await res.json();
-      // filter out data that is hidden
-      const visibleData = data.filter(b => !b.hidden);
-      setBookings(visibleData);
-    } catch (err) {
-      console.error('Failed to fetch bookings:', err);
-    }
-  };
+  
 
   const handleChange = e => {
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
@@ -88,59 +77,7 @@ const BookingList = () => {
     }));
   };
 
-  const handleDelete = async (bookingId) => {
-    if (!window.confirm('Are you sure you want to delete this booking?')) return;
 
-    try {
-      const res = await fetch(`/api/bookings/${bookingId}`, { method: 'DELETE' });
-      if (!res.ok) throw new Error('Failed to delete');
-      fetchBookings();
-    } catch (err) {
-      alert('Error deleting booking.');
-    }
-  };
-
-  const handleComplete = async (bookingId, status) => {
-    if (status === 'completed') {
-      alert('This booking is already marked as completed.');
-      return;
-    }
-    if (status === 'cancelled') {
-      alert('You cannot mark a cancelled booking as completed.');
-      return;
-    }
-    if (!window.confirm('Are you sure you want to mark this booking as completed?')) return;
-    try {
-      const res = await fetch(`/api/bookings/${bookingId}/complete`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: 'completed', updatedBy: Auth.getProfile().data._id }) // Assuming you have user authentication
-      });
-      if (!res.ok) throw new Error('Failed to mark as completed');
-      fetchBookings();
-    } catch (err) {
-      alert('Error marking booking as completed.');
-    }
-  };
-
-  const handleHide = async (bookingId, status) => {
-    if (status === 'pending' || status === 'confirmed') {
-      alert('You can only hide completed or cancelled bookings.');
-      return;
-    }
-    if (!window.confirm('Are you sure you want to hide this booking?')) return;
-    try {
-      const res = await fetch(`/api/bookings/${bookingId}/hide`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ hidden: true, updatedBy: Auth.getProfile().data._id }) // Assuming you have user authentication
-      });
-      if (!res.ok) throw new Error('Failed to hide booking');
-      fetchBookings();
-    } catch (err) {
-      alert('Error hiding booking.');
-    }
-  };
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -210,45 +147,112 @@ const BookingList = () => {
     }
   };
 
-  const handleCancel = async (bookingId, status) => {
-    if (status === 'completed' || status === 'cancelled') {
-      alert('You cannot cancel a completed or already cancelled booking.');
-      return;
-    }
-    if (!window.confirm('Are you sure you want to cancel this booking?')) return;
-    // return async () => {
+  const fetchBookings = async () => {
     try {
-      const res = await fetch(`/api/bookings/${bookingId}/cancel`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: 'cancelled', updatedBy: Auth.getProfile().data._id }) // Assuming you have user authentication
-      });
-      if (!res.ok) throw new Error('Failed to cancel booking');
-      fetchBookings();
+      const res = await fetch('/api/bookings');
+      if (!res.ok) throw new Error('Failed to fetch bookings');
+      const data = await res.json();
+      // filter out data that is hidden
+      const visibleData = data.filter(b => !b.hidden);
+      setBookings(visibleData);
     } catch (err) {
-      alert('Error cancelling booking.');
+      console.error('Failed to fetch bookings:', err);
     }
-    // };
   };
 
-  const handlePend = async (bookingId, status) => {
-    if (status !== 'confirmed' && status !== 'cancelled') {
-      alert('You can only pend bookings that are confirmed or cancelled.');
-      return;
-    }
-    if (!window.confirm('Are you sure you want to pend this booking?')) return;
-    try {
-      const res = await fetch(`/api/bookings/${bookingId}/pending`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: 'pending', updatedBy: Auth.getProfile().data._id }) // Assuming you have user authentication
-      });
-      if (!res.ok) throw new Error('Failed to pend booking');
-      fetchBookings();
-    } catch (err) {
-      alert('Error pending booking.');
-    }
-  };
+  // const handleCancel = async (bookingId, status) => {
+  //   if (status === 'completed' || status === 'cancelled') {
+  //     alert('You cannot cancel a completed or already cancelled booking.');
+  //     return;
+  //   }
+  //   if (!window.confirm('Are you sure you want to cancel this booking?')) return;
+  //   // return async () => {
+  //   try {
+  //     const res = await fetch(`/api/bookings/${bookingId}/cancel`, {
+  //       method: 'PUT',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ status: 'cancelled', updatedBy: Auth.getProfile().data._id }) // Assuming you have user authentication
+  //     });
+  //     if (!res.ok) throw new Error('Failed to cancel booking');
+  //     fetchBookings();
+  //   } catch (err) {
+  //     alert('Error cancelling booking.');
+  //   }
+  //   // };
+  // };
+
+  // const handlePend = async (bookingId, status) => {
+  //   if (status !== 'confirmed' && status !== 'cancelled') {
+  //     alert('You can only pend bookings that are confirmed or cancelled.');
+  //     return;
+  //   }
+  //   if (!window.confirm('Are you sure you want to pend this booking?')) return;
+  //   try {
+  //     const res = await fetch(`/api/bookings/${bookingId}/pending`, {
+  //       method: 'PUT',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ status: 'pending', updatedBy: Auth.getProfile().data._id }) // Assuming you have user authentication
+  //     });
+  //     if (!res.ok) throw new Error('Failed to pend booking');
+  //     fetchBookings();
+  //   } catch (err) {
+  //     alert('Error pending booking.');
+  //   }
+  // };
+
+  //   const handleDelete = async (bookingId) => {
+  //   if (!window.confirm('Are you sure you want to delete this booking?')) return;
+
+  //   try {
+  //     const res = await fetch(`/api/bookings/${bookingId}`, { method: 'DELETE' });
+  //     if (!res.ok) throw new Error('Failed to delete');
+  //     fetchBookings();
+  //   } catch (err) {
+  //     alert('Error deleting booking.');
+  //   }
+  // };
+
+  // const handleComplete = async (bookingId, status) => {
+  //   if (status === 'completed') {
+  //     alert('This booking is already marked as completed.');
+  //     return;
+  //   }
+  //   if (status === 'cancelled') {
+  //     alert('You cannot mark a cancelled booking as completed.');
+  //     return;
+  //   }
+  //   if (!window.confirm('Are you sure you want to mark this booking as completed?')) return;
+  //   try {
+  //     const res = await fetch(`/api/bookings/${bookingId}/complete`, {
+  //       method: 'PUT',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ status: 'completed', updatedBy: Auth.getProfile().data._id }) // Assuming you have user authentication
+  //     });
+  //     if (!res.ok) throw new Error('Failed to mark as completed');
+  //     fetchBookings();
+  //   } catch (err) {
+  //     alert('Error marking booking as completed.');
+  //   }
+  // };
+
+  // const handleHide = async (bookingId, status) => {
+  //   if (status === 'pending' || status === 'confirmed') {
+  //     alert('You can only hide completed or cancelled bookings.');
+  //     return;
+  //   }
+  //   if (!window.confirm('Are you sure you want to hide this booking?')) return;
+  //   try {
+  //     const res = await fetch(`/api/bookings/${bookingId}/hide`, {
+  //       method: 'PUT',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ hidden: true, updatedBy: Auth.getProfile().data._id }) // Assuming you have user authentication
+  //     });
+  //     if (!res.ok) throw new Error('Failed to hide booking');
+  //     fetchBookings();
+  //   } catch (err) {
+  //     alert('Error hiding booking.');
+  //   }
+  // };
 
   return (
     <section className="py-4  mx-auto">
@@ -256,12 +260,12 @@ const BookingList = () => {
         <Col>
           <h4>Booking Calendar</h4>
           <BookingCalendar bookings={bookings}
-            fetchBookings={fetchBookings}
-            deleteBooking={handleDelete}
-            onPend={handlePend}
-            completeBooking={handleComplete}
-            cancelBooking={handleCancel}
-            hideBooking={handleHide}
+            // fetchBookings={fetchBookings}
+            // deleteBooking={handleDelete}
+            // onPend={handlePend}
+            // completeBooking={handleComplete}
+            // cancelBooking={handleCancel}
+            // hideBooking={handleHide}
             customers={customers}
           />
 

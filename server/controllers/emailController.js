@@ -6,112 +6,911 @@ const { Parser } = require('json2csv');
 const { signTokenForPasswordReset } = require('../utils/auth');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
+const Booking = require('../models/Booking');
 const VisitorLog = require('../models/VisitorLog');
 
+
 const generateWeeklyReport = async () => {
-    const oneWeekAgo = new Date();
-    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+  const now = new Date();
 
-    const logs = await VisitorLog.find({ visitDate: { $gte: oneWeekAgo } });
+  // ---- TIME WINDOWS ----
+  const endOfThisWeek = now;
+  const startOfThisWeek = new Date();
+  startOfThisWeek.setDate(startOfThisWeek.getDate() - 7);
 
-    // console.log('logs: ', logs);
+  const startOfLastWeek = new Date(startOfThisWeek);
+  startOfLastWeek.setDate(startOfLastWeek.getDate() - 7);
 
-    const totalVisits = logs.length;
-    const pageCounts = {};
-    const userAgents = {};
-    const ipAddress = {};
-
-    logs.forEach((log) => {
-        pageCounts[log.page] = (pageCounts[log.page] || 0) + 1;
-        userAgents[log.userAgent] = (userAgents[log.userAgent] || 0) + 1;
-        ipAddress[log.ip] = (ipAddress[log.ip] || 0) + 1;
+  // ---- HELPERS ----
+  const formatDate = (date) =>
+    date.toLocaleDateString('en-CA', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
     });
 
-    const parser = new Parser();
-    const csv = parser.parse(logs.map(log => ({
-        date: log.visitDate,
-        page: log.page,
-        // userAgent: log.userAgent,
-        ipAddress: log.ip,
-        browser: log.browser,
-        os: log.os,
-        sessionDuration: log.sessionDuration,
-        referrer: log.referrer,
-        country: log.geo.country,
-        city: log.geo.city,
-        isBot: log.isBot,
-        scrollDepth: log.scrollDepth,
-        trafficSource: log.trafficSource,
-        deviceType: log.deviceType,
-    })));
+  const countBy = (items, getKey) =>
+    items.reduce((acc, item) => {
+      const key = getKey(item) || 'Unknown';
+      acc[key] = (acc[key] || 0) + 1;
+      return acc;
+    }, {});
 
-    //   <p><strong>User Agents:</strong></p>
-    //   <ul>${Object.entries(userAgents).map(([ua, count]) => `<li>${ua}: ${count}</li>`).join('')}</ul>
-    const htmlSummary = `
-      <h2>Weekly Visitor Report</h2>
-      <p><strong>Total Visits:</strong> ${totalVisits}</p>
-      <p><strong>Page Views:</strong></p>
-      <ul>${Object.entries(pageCounts).map(([page, count]) => `<li>${page}: ${count}</li>`).join('')}</ul>
-        <p><strong>IP Addresses:</strong></p>
-        <ul>${Object.entries(ipAddress).map(([ip, count]) => `<li>${ip}: ${count}</li>`).join('')}</ul>
-        <p><strong>Country:</strong></p>
-        <ul>${Object.entries(logs.reduce((acc, log) => {
-            acc[log.geo.country] = (acc[log.geo.country] || 0) + 1;
-            return acc;
-        }, {})).map(([country, count]) => `<li>${country}: ${count}</li>`).join('')}</ul>
-        <p><strong>City:</strong></p>
-        <ul>${Object.entries(logs.reduce((acc, log) => {
-            acc[log.geo.city] = (acc[log.geo.city] || 0) + 1;
-            return acc;
-        }, {})).map(([city, count]) => `<li>${city}: ${count}</li>`).join('')}</ul>
-        <p><strong>Is Bot:</strong></p>
-        <ul>${Object.entries(logs.reduce((acc, log) => {
-            acc[log.isBot ? 'Yes' : 'No'] = (acc[log.isBot ? 'Yes' : 'No'] || 0) + 1;
-            return acc;
-        }, {})).map(([isBot, count]) => `<li>${isBot}: ${count}</li>`).join('')}</ul>
-        <p><strong>Browser:</strong></p>
-        <ul>${Object.entries(logs.reduce((acc, log) => {
-            acc[log.browser] = (acc[log.browser] || 0) + 1;
-            return acc;
-        }, {})).map(([browser, count]) => `<li>${browser}: ${count}</li>`).join('')}</ul>
-        <p><strong>Operating System:</strong></p>
-        <ul>${Object.entries(logs.reduce((acc, log) => {
-            acc[log.os] = (acc[log.os] || 0) + 1;
-            return acc;
-        }, {})).map(([os, count]) => `<li>${os}: ${count}</li>`).join('')}</ul>
-        <p><strong>Session Duration:</strong></p>
-        <ul>${Object.entries(logs.reduce((acc, log) => {
-            acc[log.sessionDuration] = (acc[log.sessionDuration] || 0) + 1;
-            return acc;
-        }, {})).map(([duration, count]) => `<li>${duration}: ${count}</li>`).join('')}</ul>
-        <p><strong>Referrers:</strong></p>
-        <ul>${Object.entries(logs.reduce((acc, log) => {
-            acc[log.referrer] = (acc[log.referrer] || 0) + 1;
-            return acc;
-        }, {})).map(([referrer, count]) => `<li>${referrer}: ${count}</li>`).join('')}</ul>
-    <p><strong>Scroll Depth:</strong></p>
-    <ul>${Object.entries(logs.reduce((acc, log) => {
-        acc[log.scrollDepth] = (acc[log.scrollDepth] || 0) + 1;
-        return acc;
-    }, {})).map(([depth, count]) => `<li>${depth}: ${count}</li>`).join('')}</ul>
-    <p><strong>Traffic Source</strong></p>
-    <ul>${Object.entries(logs.reduce((acc, log) => {
-        acc[log.trafficSource] = (acc[log.trafficSource] || 0) + 1;
-        return acc;
-    }, {})).map(([source, count]) => `<li>${source}: ${count}</li>`).join('')}</ul>
-    <p><strong>Device Type:</strong></p>
-    <ul>${Object.entries(logs.reduce((acc, log) => {
-        acc[log.deviceType] = (acc[log.deviceType] || 0) + 1;
-        return acc;
-    }, {})).map(([device, count]) => `<li>${device}: ${count}</li>`).join('')}</ul>    
+  const sortCounts = (obj, limit) => {
+    const entries = Object.entries(obj).sort((a, b) => b[1] - a[1]);
+    return typeof limit === 'number' ? entries.slice(0, limit) : entries;
+  };
 
+  const formatChange = (current, previous) => {
+    if (!previous) {
+      if (!current) return '0%';
+      return 'n/a';
+    }
+    const diff = current - previous;
+    const pct = (diff / previous) * 100;
+    const arrow = diff > 0 ? '⬆️' : diff < 0 ? '⬇️' : '➡️';
+    return `${arrow} ${pct.toFixed(1)}%`;
+  };
+
+  const bucketSessionDuration = (secondsRaw) => {
+    // If you're storing ms, change to: const seconds = (Number(secondsRaw) || 0) / 1000;
+    const seconds = Number(secondsRaw) || 0;
+    if (seconds <= 10) return '0–10s';
+    if (seconds <= 30) return '11–30s';
+    if (seconds <= 60) return '31–60s';
+    if (seconds <= 180) return '1–3 min';
+    if (seconds <= 600) return '3–10 min';
+    return '10+ min';
+  };
+
+  const bucketScrollDepth = (depth) => {
+    let d = depth;
+    if (typeof d === 'string') d = d.replace('%', '');
+    d = Number(d) || 0;
+
+    if (d < 25) return '0–24%';
+    if (d < 50) return '25–49%';
+    if (d < 75) return '50–74%';
+    return '75–100%';
+  };
+
+  const bucketEngagementScore = (scoreRaw) => {
+    const s = Number(scoreRaw) || 0;
+    if (s <= 10) return '0–10 (Low)';
+    if (s <= 30) return '11–30 (Medium)';
+    if (s <= 60) return '31–60 (High)';
+    return '60+ (Very High)';
+  };
+
+  const formatAvgDuration = (seconds) => {
+    const s = Math.round(seconds);
+    const m = Math.floor(s / 60);
+    const rem = s % 60;
+    if (m === 0) return `${s}s`;
+    return `${m}m ${rem}s`;
+  };
+
+  const joinPath = (paths) => {
+    if (!paths || !paths.length) return null;
+    // limit length so sequences don't get insane
+    const trimmed = paths.slice(0, 5);
+    return trimmed.join(' → ');
+  };
+
+  const aggregatePeriod = (logs) => {
+    const totalVisits = logs.length;
+    const humans = logs.filter((l) => !l.isBot);
+    const bots = logs.filter((l) => l.isBot);
+
+    const uniqueIps = new Set(logs.map((l) => l.ip).filter(Boolean)).size;
+    const uniqueVisitors = new Set(
+      logs.map((l) => l.visitorId).filter(Boolean)
+    ).size;
+
+    const uniqueHumanIps = new Set(
+      humans.map((l) => l.ip).filter(Boolean)
+    ).size;
+    const uniqueHumanVisitors = new Set(
+      humans.map((l) => l.visitorId).filter(Boolean)
+    ).size;
+
+    const newVisitors = humans.filter((l) => !l.isReturningVisitor).length;
+    const returningVisitors = humans.filter((l) => l.isReturningVisitor).length;
+
+    const bounceVisits = humans.filter((l) => l.isBounce).length;
+    const bounceRate = humans.length
+      ? (bounceVisits / humans.length) * 100
+      : 0;
+
+    // Engagement metrics
+    const totalDurationSeconds = humans.reduce(
+      (sum, l) => sum + (Number(l.sessionDuration) || 0),
+      0
+    );
+    const avgSessionDuration = humans.length
+      ? totalDurationSeconds / humans.length
+      : 0;
+
+    const avgPagesPerSession = humans.length
+      ? humans.reduce((sum, l) => {
+          const pages = (l.pathsVisited && l.pathsVisited.length) || 1;
+          return sum + pages;
+        }, 0) / humans.length
+      : 0;
+
+    const multiPageSessions = humans.filter(
+      (l) => l.pathsVisited && l.pathsVisited.length > 1
+    ).length;
+
+    const pageCounts = countBy(humans, (l) => l.page);
+    const countryCounts = countBy(humans, (l) => l.geo && l.geo.country);
+    const cityCounts = countBy(humans, (l) => l.geo && l.geo.city);
+    const deviceCounts = countBy(humans, (l) => l.deviceType);
+    const browserCounts = countBy(humans, (l) => l.browser);
+    const osCounts = countBy(humans, (l) => l.os);
+    const languageCounts = countBy(humans, (l) => l.language);
+    const resolutionCounts = countBy(humans, (l) => l.screenResolution);
+
+    const referrerCounts = countBy(humans, (l) => l.referrer || 'Direct');
+    const trafficSourceCounts = countBy(humans, (l) => l.trafficSource);
+    const utmSourceCounts = countBy(humans, (l) => l.utm && l.utm.source);
+    const utmMediumCounts = countBy(humans, (l) => l.utm && l.utm.medium);
+    const utmCampaignCounts = countBy(humans, (l) => l.utm && l.utm.campaign);
+
+    const segmentCounts = countBy(humans, (l) => l.segment);
+
+    const durationBuckets = countBy(humans, (l) =>
+      bucketSessionDuration(l.sessionDuration)
+    );
+    const scrollDepthBuckets = countBy(humans, (l) =>
+      bucketScrollDepth(l.scrollDepth)
+    );
+    const engagementBuckets = countBy(humans, (l) =>
+      bucketEngagementScore(l.engagementScore)
+    );
+
+    const interactionCounts = humans.reduce((acc, l) => {
+      (l.interactions || []).forEach((event) => {
+        const key = event || 'Unknown';
+        acc[key] = (acc[key] || 0) + 1;
+      });
+      return acc;
+    }, {});
+
+    // path funnels
+    const pathSequenceCounts = humans.reduce((acc, l) => {
+      const seq = joinPath(l.pathsVisited);
+      if (!seq) return acc;
+      acc[seq] = (acc[seq] || 0) + 1;
+      return acc;
+    }, {});
+
+    const dailyCounts = countBy(humans, (l) =>
+      new Date(l.visitDate).toLocaleDateString('en-CA', {
+        month: 'short',
+        day: 'numeric',
+      })
+    );
+
+    // average engagement score
+    const totalEngagementScore = humans.reduce(
+      (sum, l) => sum + (Number(l.engagementScore) || 0),
+      0
+    );
+    const avgEngagementScore = humans.length
+      ? totalEngagementScore / humans.length
+      : 0;
+
+    return {
+      totalVisits,
+      humanVisits: humans.length,
+      botVisits: bots.length,
+
+      uniqueIps,
+      uniqueVisitors,
+      uniqueHumanIps,
+      uniqueHumanVisitors,
+
+      newVisitors,
+      returningVisitors,
+      bounceVisits,
+      bounceRate,
+
+      avgSessionDuration,
+      avgPagesPerSession,
+      multiPageSessions,
+      avgEngagementScore,
+
+      pageCounts,
+      countryCounts,
+      cityCounts,
+      deviceCounts,
+      browserCounts,
+      osCounts,
+      languageCounts,
+      resolutionCounts,
+      referrerCounts,
+      trafficSourceCounts,
+      utmSourceCounts,
+      utmMediumCounts,
+      utmCampaignCounts,
+      segmentCounts,
+      durationBuckets,
+      scrollDepthBuckets,
+      engagementBuckets,
+      interactionCounts,
+      pathSequenceCounts,
+      dailyCounts,
+    };
+  };
+
+  // ---- FETCH LOGS ----
+  const [thisWeekLogs, lastWeekLogs] = await Promise.all([
+    VisitorLog.find({
+      visitDate: { $gte: startOfThisWeek, $lt: endOfThisWeek },
+    }),
+    VisitorLog.find({
+      visitDate: { $gte: startOfLastWeek, $lt: startOfThisWeek },
+    }),
+  ]);
+
+  const thisWeekStats = aggregatePeriod(thisWeekLogs);
+  const lastWeekStats = aggregatePeriod(lastWeekLogs);
+
+  const totalVisits = thisWeekStats.totalVisits;
+
+  // ---- CSV (this week only) ----
+  const parser = new Parser();
+  const csv = parser.parse(
+    thisWeekLogs.map((log) => ({
+      date: log.visitDate,
+      visitorId: log.visitorId,
+      sessionId: log.sessionId,
+      page: log.page,
+      pathsVisited: (log.pathsVisited || []).join(' > '),
+      isReturningVisitor: log.isReturningVisitor,
+      isBounce: log.isBounce,
+      ipAddress: log.ip,
+      browser: log.browser,
+      os: log.os,
+      deviceType: log.deviceType,
+      screenResolution: log.screenResolution,
+      language: log.language,
+      sessionDuration: log.sessionDuration,
+      engagementScore: log.engagementScore,
+      scrollDepth: log.scrollDepth,
+      referrer: log.referrer,
+      country: log.geo?.country,
+      region: log.geo?.region,
+      city: log.geo?.city,
+      trafficSource: log.trafficSource,
+      utmSource: log.utm?.source,
+      utmMedium: log.utm?.medium,
+      utmCampaign: log.utm?.campaign,
+      segment: log.segment,
+      interactions: (log.interactions || []).join(','),
+      isBot: log.isBot,
+    }))
+  );
+
+  // ---- TOP LISTS ----
+  const topPages = sortCounts(thisWeekStats.pageCounts, 5);
+  const topCountries = sortCounts(thisWeekStats.countryCounts, 5);
+  const topTrafficSources = sortCounts(thisWeekStats.trafficSourceCounts, 5);
+  const topReferrers = sortCounts(thisWeekStats.referrerCounts, 5);
+  const deviceBreakdown = sortCounts(thisWeekStats.deviceCounts);
+  const languageBreakdown = sortCounts(thisWeekStats.languageCounts, 5);
+  const resolutionBreakdown = sortCounts(thisWeekStats.resolutionCounts, 5);
+  const topSegments = sortCounts(thisWeekStats.segmentCounts, 5);
+  const topInteractions = sortCounts(thisWeekStats.interactionCounts, 5);
+  const topCampaigns = sortCounts(thisWeekStats.utmCampaignCounts, 5);
+  const topPathSequences = sortCounts(thisWeekStats.pathSequenceCounts, 5);
+  const dailyBreakdown = sortCounts(thisWeekStats.dailyCounts);
+
+  // ---- INSIGHTS (very simple rules) ----
+  const insights = [];
+
+  if (thisWeekStats.humanVisits && lastWeekStats.humanVisits) {
+    const diffHumanVisits =
+      thisWeekStats.humanVisits - lastWeekStats.humanVisits;
+    const pct =
+      (diffHumanVisits / lastWeekStats.humanVisits) * 100;
+    const trend =
+      diffHumanVisits > 0 ? 'increased' : diffHumanVisits < 0 ? 'decreased' : 'stayed flat';
+    insights.push(
+      `Human visits ${trend} by ${Math.abs(pct).toFixed(
+        1
+      )}% vs last week.`
+    );
+  }
+
+  if (thisWeekStats.bounceRate > 70) {
+    insights.push(
+      `Bounce rate is high at ${thisWeekStats.bounceRate.toFixed(
+        1
+      )}%. Consider reviewing top landing pages and load speed.`
+    );
+  } else if (thisWeekStats.bounceRate > 0) {
+    insights.push(
+      `Bounce rate is ${thisWeekStats.bounceRate.toFixed(
+        1
+      )}%, which is within a normal range but still worth monitoring.`
+    );
+  }
+
+  if (topTrafficSources.length) {
+    const [topSource, topSourceCount] = topTrafficSources[0];
+    insights.push(
+      `Top traffic source this week is <strong>${topSource}</strong> with ${topSourceCount} visits.`
+    );
+  }
+
+  if (topSegments.length) {
+    const [seg, count] = topSegments[0];
+    insights.push(
+      `Segment <strong>${seg}</strong> is the most active with ${count} sessions.`
+    );
+  }
+
+  if (thisWeekStats.avgPagesPerSession > 2) {
+    insights.push(
+      `Average pages per session is ${thisWeekStats.avgPagesPerSession.toFixed(
+        1
+      )}, indicating good content exploration.`
+    );
+  }
+
+  const htmlSummary = `
+    <h2>Weekly Visitor Report</h2>
+    <p><strong>Period:</strong> ${formatDate(startOfThisWeek)} – ${formatDate(
+      endOfThisWeek
+    )}</p>
+    <p><strong>Compared to:</strong> ${formatDate(
+      startOfLastWeek
+    )} – ${formatDate(startOfThisWeek)}</p>
+
+    ${
+      insights.length
+        ? `<h3>Automatic Insights</h3><ul>${insights
+            .map((i) => `<li>${i}</li>`)
+            .join('')}</ul>`
+        : ''
+    }
+
+    <h3>Key Metrics</h3>
+    <table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse; max-width: 650px;">
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>This Week</th>
+          <th>Last Week</th>
+          <th>Change</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Total Visits</td>
+          <td>${thisWeekStats.totalVisits}</td>
+          <td>${lastWeekStats.totalVisits}</td>
+          <td>${formatChange(
+            thisWeekStats.totalVisits,
+            lastWeekStats.totalVisits
+          )}</td>
+        </tr>
+        <tr>
+          <td>Human Visits</td>
+          <td>${thisWeekStats.humanVisits}</td>
+          <td>${lastWeekStats.humanVisits}</td>
+          <td>${formatChange(
+            thisWeekStats.humanVisits,
+            lastWeekStats.humanVisits
+          )}</td>
+        </tr>
+        <tr>
+          <td>Bot Visits</td>
+          <td>${thisWeekStats.botVisits}</td>
+          <td>${lastWeekStats.botVisits}</td>
+          <td>${formatChange(
+            thisWeekStats.botVisits,
+            lastWeekStats.botVisits
+          )}</td>
+        </tr>
+        <tr>
+          <td>Unique Visitors (IDs, Humans)</td>
+          <td>${thisWeekStats.uniqueHumanVisitors}</td>
+          <td>${lastWeekStats.uniqueHumanVisitors}</td>
+          <td>${formatChange(
+            thisWeekStats.uniqueHumanVisitors,
+            lastWeekStats.uniqueHumanVisitors
+          )}</td>
+        </tr>
+        <tr>
+          <td>New vs Returning (Humans)</td>
+          <td>${thisWeekStats.newVisitors} new / ${
+    thisWeekStats.returningVisitors
+  } returning</td>
+          <td>${lastWeekStats.newVisitors} new / ${
+    lastWeekStats.returningVisitors
+  } returning</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>Bounce Rate (Humans)</td>
+          <td>${thisWeekStats.bounceRate.toFixed(1)}%</td>
+          <td>${lastWeekStats.bounceRate.toFixed(1)}%</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>Avg. Session Duration (Humans)</td>
+          <td>${formatAvgDuration(thisWeekStats.avgSessionDuration)}</td>
+          <td>${formatAvgDuration(lastWeekStats.avgSessionDuration)}</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>Avg. Pages per Session (Humans)</td>
+          <td>${thisWeekStats.avgPagesPerSession.toFixed(1)}</td>
+          <td>${lastWeekStats.avgPagesPerSession.toFixed(1)}</td>
+          <td>—</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Visits by Day (This Week)</h3>
+    <table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse; max-width: 400px;">
+      <thead>
+        <tr>
+          <th>Day</th>
+          <th>Visits</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${
+          dailyBreakdown.length
+            ? dailyBreakdown
+                .map(
+                  ([day, count]) =>
+                    `<tr><td>${day}</td><td>${count}</td></tr>`
+                )
+                .join('')
+            : '<tr><td colspan="2">No data</td></tr>'
+        }
+      </tbody>
+    </table>
+
+    <h3>Top Pages (Humans)</h3>
+    <ul>
+      ${
+        topPages.length
+          ? topPages
+              .map(([page, count]) => `<li>${page}: ${count} visits</li>`)
+              .join('')
+          : '<li>No page data</li>'
+      }
+    </ul>
+
+    <h3>Top Path Flows (Humans)</h3>
+    <ul>
+      ${
+        topPathSequences.length
+          ? topPathSequences
+              .map(
+                ([seq, count]) =>
+                  `<li>${seq}: ${count} sessions</li>`
+              )
+              .join('')
+          : '<li>No multi-page path data</li>'
+      }
+    </ul>
+
+    <h3>Audience & Location (Humans)</h3>
+    <p><strong>Top Countries:</strong></p>
+    <ul>
+      ${
+        topCountries.length
+          ? topCountries
+              .map(([country, count]) => `<li>${country}: ${count}</li>`)
+              .join('')
+          : '<li>No country data</li>'
+      }
+    </ul>
+
+    <p><strong>Segments:</strong></p>
+    <ul>
+      ${
+        topSegments.length
+          ? topSegments
+              .map(([seg, count]) => `<li>${seg}: ${count}</li>`)
+              .join('')
+          : '<li>No segment data</li>'
+      }
+    </ul>
+
+    <p><strong>Languages:</strong></p>
+    <ul>
+      ${
+        languageBreakdown.length
+          ? languageBreakdown
+              .map(([lang, count]) => `<li>${lang}: ${count}</li>`)
+              .join('')
+          : '<li>No language data</li>'
+      }
+    </ul>
+
+    <h3>Devices & Tech (Humans)</h3>
+    <p><strong>Devices:</strong></p>
+    <ul>
+      ${
+        deviceBreakdown.length
+          ? deviceBreakdown
+              .map(([device, count]) => `<li>${device}: ${count}</li>`)
+              .join('')
+          : '<li>No device data</li>'
+      }
+    </ul>
+
+    <p><strong>Screen Resolutions:</strong></p>
+    <ul>
+      ${
+        resolutionBreakdown.length
+          ? resolutionBreakdown
+              .map(([res, count]) => `<li>${res}: ${count}</li>`)
+              .join('')
+          : '<li>No resolution data</li>'
+      }
+    </ul>
+
+    <h3>Marketing & Attribution (Humans)</h3>
+    <p><strong>Traffic Sources:</strong></p>
+    <ul>
+      ${
+        topTrafficSources.length
+          ? topTrafficSources
+              .map(
+                ([source, count]) =>
+                  `<li>${source}: ${count} visits</li>`
+              )
+              .join('')
+          : '<li>No traffic source data</li>'
+      }
+    </ul>
+
+    <p><strong>Top Campaigns (UTM):</strong></p>
+    <ul>
+      ${
+        topCampaigns.length
+          ? topCampaigns
+              .map(
+                ([campaign, count]) =>
+                  `<li>${campaign || 'Unspecified'}: ${count} visits</li>`
+              )
+              .join('')
+          : '<li>No campaign data</li>'
+      }
+    </ul>
+
+    <p><strong>Top Referrers:</strong></p>
+    <ul>
+      ${
+        topReferrers.length
+          ? topReferrers
+              .map(
+                ([ref, count]) =>
+                  `<li>${ref || 'Direct'}: ${count} visits</li>`
+              )
+              .join('')
+          : '<li>No referrer data</li>'
+      }
+    </ul>
+
+    <h3>Engagement (Humans)</h3>
+    <p><strong>Session Duration Buckets:</strong></p>
+    <ul>
+      ${
+        Object.keys(thisWeekStats.durationBuckets).length
+          ? sortCounts(thisWeekStats.durationBuckets)
+              .map(([bucket, count]) => `<li>${bucket}: ${count}</li>`)
+              .join('')
+          : '<li>No duration data</li>'
+      }
+    </ul>
+
+    <p><strong>Scroll Depth Buckets:</strong></p>
+    <ul>
+      ${
+        Object.keys(thisWeekStats.scrollDepthBuckets).length
+          ? sortCounts(thisWeekStats.scrollDepthBuckets)
+              .map(([bucket, count]) => `<li>${bucket}: ${count}</li>`)
+              .join('')
+          : '<li>No scroll depth data</li>'
+      }
+    </ul>
+
+    <p><strong>Engagement Score Buckets:</strong></p>
+    <ul>
+      ${
+        Object.keys(thisWeekStats.engagementBuckets).length
+          ? sortCounts(thisWeekStats.engagementBuckets)
+              .map(([bucket, count]) => `<li>${bucket}: ${count}</li>`)
+              .join('')
+          : '<li>No engagement score data</li>'
+      }
+    </ul>
+
+    <p><strong>Top Interactions:</strong></p>
+    <ul>
+      ${
+        topInteractions.length
+          ? topInteractions
+              .map(
+                ([event, count]) =>
+                  `<li>${event}: ${count} events</li>`
+              )
+              .join('')
+          : '<li>No interaction events recorded</li>'
+      }
+    </ul>
+
+    <p style="margin-top: 20px; font-size: 0.9em; color: #666;">
+      Full raw data for this week is attached as CSV.
+    </p>
+  `;
+
+  return { csv, htmlSummary, totalVisits };
+};
+
+
+
+
+// const generateWeeklyReport = async () => {
+//     const oneWeekAgo = new Date();
+//     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+//     const logs = await VisitorLog.find({ visitDate: { $gte: oneWeekAgo } });
+
+//     // console.log('logs: ', logs);
+
+//     const totalVisits = logs.length;
+//     const pageCounts = {};
+//     const userAgents = {};
+//     const ipAddress = {};
+
+//     logs.forEach((log) => {
+//         pageCounts[log.page] = (pageCounts[log.page] || 0) + 1;
+//         userAgents[log.userAgent] = (userAgents[log.userAgent] || 0) + 1;
+//         ipAddress[log.ip] = (ipAddress[log.ip] || 0) + 1;
+//     });
+
+//     const parser = new Parser();
+//     const csv = parser.parse(logs.map(log => ({
+//         date: log.visitDate,
+//         page: log.page,
+//         // userAgent: log.userAgent,
+//         ipAddress: log.ip,
+//         browser: log.browser,
+//         os: log.os,
+//         sessionDuration: log.sessionDuration,
+//         referrer: log.referrer,
+//         country: log.geo.country,
+//         city: log.geo.city,
+//         isBot: log.isBot,
+//         scrollDepth: log.scrollDepth,
+//         trafficSource: log.trafficSource,
+//         deviceType: log.deviceType,
+//     })));
+
+//     //   <p><strong>User Agents:</strong></p>
+//     //   <ul>${Object.entries(userAgents).map(([ua, count]) => `<li>${ua}: ${count}</li>`).join('')}</ul>
+//     const htmlSummary = `
+//       <h2>Weekly Visitor Report</h2>
+//       <p><strong>Total Visits:</strong> ${totalVisits}</p>
+//       <p><strong>Page Views:</strong></p>
+//       <ul>${Object.entries(pageCounts).map(([page, count]) => `<li>${page}: ${count}</li>`).join('')}</ul>
+//         <p><strong>IP Addresses:</strong></p>
+//         <ul>${Object.entries(ipAddress).map(([ip, count]) => `<li>${ip}: ${count}</li>`).join('')}</ul>
+//         <p><strong>Country:</strong></p>
+//         <ul>${Object.entries(logs.reduce((acc, log) => {
+//             acc[log.geo.country] = (acc[log.geo.country] || 0) + 1;
+//             return acc;
+//         }, {})).map(([country, count]) => `<li>${country}: ${count}</li>`).join('')}</ul>
+//         <p><strong>City:</strong></p>
+//         <ul>${Object.entries(logs.reduce((acc, log) => {
+//             acc[log.geo.city] = (acc[log.geo.city] || 0) + 1;
+//             return acc;
+//         }, {})).map(([city, count]) => `<li>${city}: ${count}</li>`).join('')}</ul>
+//         <p><strong>Is Bot:</strong></p>
+//         <ul>${Object.entries(logs.reduce((acc, log) => {
+//             acc[log.isBot ? 'Yes' : 'No'] = (acc[log.isBot ? 'Yes' : 'No'] || 0) + 1;
+//             return acc;
+//         }, {})).map(([isBot, count]) => `<li>${isBot}: ${count}</li>`).join('')}</ul>
+//         <p><strong>Browser:</strong></p>
+//         <ul>${Object.entries(logs.reduce((acc, log) => {
+//             acc[log.browser] = (acc[log.browser] || 0) + 1;
+//             return acc;
+//         }, {})).map(([browser, count]) => `<li>${browser}: ${count}</li>`).join('')}</ul>
+//         <p><strong>Operating System:</strong></p>
+//         <ul>${Object.entries(logs.reduce((acc, log) => {
+//             acc[log.os] = (acc[log.os] || 0) + 1;
+//             return acc;
+//         }, {})).map(([os, count]) => `<li>${os}: ${count}</li>`).join('')}</ul>
+//         <p><strong>Session Duration:</strong></p>
+//         <ul>${Object.entries(logs.reduce((acc, log) => {
+//             acc[log.sessionDuration] = (acc[log.sessionDuration] || 0) + 1;
+//             return acc;
+//         }, {})).map(([duration, count]) => `<li>${duration}: ${count}</li>`).join('')}</ul>
+//         <p><strong>Referrers:</strong></p>
+//         <ul>${Object.entries(logs.reduce((acc, log) => {
+//             acc[log.referrer] = (acc[log.referrer] || 0) + 1;
+//             return acc;
+//         }, {})).map(([referrer, count]) => `<li>${referrer}: ${count}</li>`).join('')}</ul>
+//     <p><strong>Scroll Depth:</strong></p>
+//     <ul>${Object.entries(logs.reduce((acc, log) => {
+//         acc[log.scrollDepth] = (acc[log.scrollDepth] || 0) + 1;
+//         return acc;
+//     }, {})).map(([depth, count]) => `<li>${depth}: ${count}</li>`).join('')}</ul>
+//     <p><strong>Traffic Source</strong></p>
+//     <ul>${Object.entries(logs.reduce((acc, log) => {
+//         acc[log.trafficSource] = (acc[log.trafficSource] || 0) + 1;
+//         return acc;
+//     }, {})).map(([source, count]) => `<li>${source}: ${count}</li>`).join('')}</ul>
+//     <p><strong>Device Type:</strong></p>
+//     <ul>${Object.entries(logs.reduce((acc, log) => {
+//         acc[log.deviceType] = (acc[log.deviceType] || 0) + 1;
+//         return acc;
+//     }, {})).map(([device, count]) => `<li>${device}: ${count}</li>`).join('')}</ul>    
+
+//     `;
+
+//     // console.log('csv: ', csv);
+//     // console.log('htmlSummary: ', htmlSummary);
+//     // console.log('totalVisits: ', totalVisits);
+
+//     return { csv, htmlSummary, totalVisits };
+// };
+
+const formatDate = (d) => {
+    return new Date(d).toLocaleString('en-CA', {
+        timeZone: 'America/Toronto',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+    });
+};
+
+const buildEmailContent = (bookings, days) => {
+    if (!bookings.length) {
+        const subject = `No upcoming bookings in next ${days} day(s)`;
+        const text = `There are currently no bookings scheduled in the next ${days} day(s).`;
+        const html = `<p>There are currently <strong>no bookings</strong> scheduled in the next ${days} day(s).</p>`;
+        return { subject, text, html };
+    }
+
+    const subject = `Upcoming bookings (next ${days} day${days > 1 ? 's' : ''})`;
+
+    const lines = bookings.map((b) => {
+        return [
+            `Date: ${formatDate(b.date)}`,
+            `Customer: ${b.customerName || 'N/A'}`,
+            `Status: ${b.status}`,
+            b.location ? `Location: ${b.location}` : '',
+            b.notes ? `Notes: ${b.notes}` : '',
+        ]
+            .filter(Boolean)
+            .join(' | ');
+    });
+
+    const text = `Here are the upcoming bookings for the next ${days} day(s):\n\n${lines
+        .map((l) => `• ${l}`)
+        .join('\n')}`;
+
+    const htmlListItems = bookings
+        .map(
+            (b) => `
+            <li>
+                <strong>${formatDate(b.date)}</strong><br/>
+                Customer: ${b.customerName || 'N/A'}<br/>
+                Status: ${b.status}<br/>
+                ${b.location ? `Location: ${b.location}<br/>` : ''}
+                ${b.notes ? `Notes: ${b.notes}<br/>` : ''}
+            </li>`
+        )
+        .join('');
+
+    const html = `
+        <p>Here are the upcoming bookings for the next <strong>${days}</strong> day(s):</p>
+        <ul>
+            ${htmlListItems}
+        </ul>
     `;
 
-    // console.log('csv: ', csv);
-    // console.log('htmlSummary: ', htmlSummary);
-    // console.log('totalVisits: ', totalVisits);
+    return { subject, text, html };
+};
 
-    return { csv, htmlSummary, totalVisits };
+const sendUpcomingBookingsEmail = async (req, res) => {
+    try {
+        console.log("sendUpcomingBookingsEmail called");
+        const rawDays = Number(req.body.days || req.query.days || 1);
+        const days = Number.isFinite(rawDays) && rawDays > 0 ? rawDays : 1;
+
+        const now = new Date();
+        const to = new Date();
+        to.setDate(to.getDate() + days);
+
+        const bookings = await Booking.find({
+            date: { $gte: now, $lte: to },
+            status: { $in: ['confirmed', 'pending'] },
+        })
+            .sort({ date: 1 })
+            .lean();
+
+        const admins = await User.find({
+            adminFlag: true,
+            email: { $exists: true, $ne: '' },
+        })
+            .select('email name')
+            .lean();
+
+        if (!admins.length) {
+            return res.status(200).json({
+                message: 'No admin users with email found. Nothing sent.',
+                bookingsCount: bookings.length,
+            });
+        }
+
+        const { subject, text, html } = buildEmailContent(bookings, days);
+
+                const message = {
+            to: admins.map(admin => admin.email), // Update with admin email
+            from: 'no-reply@cleanarsolutions.ca',
+            subject: subject,
+            html: html,
+            // attachments: [
+            //     {
+            //         content: Buffer.from(csv).toString('base64'),
+            //         filename: 'visitor-report.csv',
+            //         type: 'text/csv',
+            //         disposition: 'attachment',
+            //     },
+            // ],
+        };
+
+        try {
+            await sgMail.send(message);
+            // console.log('Email sent successfully');
+            // res.status(200).json({ message: 'Email sent successfully' });
+        } catch (error) {
+            console.error('Error sending email:', error);
+            if (error.response) {
+                console.error(error.response.body);
+            }
+            // res.status(500).json({ message: 'Error sending email' });
+        }
+
+        // const sendPromises = admins.map((admin) =>
+        //     sendMail({
+        //         to: admin.email,
+        //         subject,
+        //         text,
+        //         html,
+        //     })
+        // );
+
+        // await Promise.all(sendPromises);
+
+        return res.status(200).json({
+            message: 'Upcoming bookings email sent to all admins.',
+            adminsNotified: admins.map((a) => a.email),
+            bookingsCount: bookings.length,
+            days,
+        });
+    } catch (err) {
+        console.error('Error sending upcoming bookings email:', err);
+        return res.status(500).json({
+            message: 'Failed to send upcoming bookings email.',
+            error: err.message,
+        });
+    }
 };
 
 // Define your email controller
@@ -676,7 +1475,8 @@ CleanAR Solutions`;
             console.error('Manual report error:', err);
             res.status(500).json({ error: 'Failed to generate report' });
         }
-    }
+    },
+    sendUpcomingBookingsEmail,
 
 };
 

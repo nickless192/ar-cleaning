@@ -36,6 +36,11 @@ module.exports = {
       // console.log("Total Cost Calculated:", totalCost);
       console.log("invoice Number:", invoiceNumber);
 
+      // search for existing invoice with same bookingId
+      const existingInvoice = await Invoice.findOne({ bookingId });
+      if (existingInvoice) {
+        return res.status(400).json({ error: 'Invoice already exists for this booking' });
+      }
 
       const newInvoice = await Invoice.create({
         invoiceNumber,
@@ -45,9 +50,9 @@ module.exports = {
         totalCost,
         bookingId
       });
-      // set booking status to 'invoiced' if bookingId is provided
+      // // set booking status to 'invoiced' if bookingId is provided
       if (bookingId) {
-        await Booking.findByIdAndUpdate(bookingId, { status: 'invoiced' });
+        await Booking.findByIdAndUpdate(bookingId, { invoiced: true, invoiceCreatedAt: new Date() });
       }
 
       res.status(201).json(newInvoice);

@@ -126,7 +126,7 @@ const BookingActions = ({
                         </>
                     )}
 
-                    {status === "completed" && (
+                    {/* {status === "completed" && ( */}
                         <>
 
                             <Button
@@ -137,7 +137,7 @@ const BookingActions = ({
                             </Button>
 
                         </>
-                    )}
+                    {/* )} */}
                 </ButtonGroup>
             </ButtonToolbar>
             <Modal

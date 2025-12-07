@@ -32,14 +32,14 @@ const BookingTabbedView = () => {
                             <BookingDashboard />
                         </div>
                     </Tab>
-                     <Tab
+                     {/* <Tab
                         eventKey="booking-dashboard"
                         title={<span className="py-2 text-sm sm:text-base">{t('navbar.admin.booking_dashboard')}</span>}
                     >
                         <div className="py-2 sm:py-4">
                             <BookingList />
                         </div>
-                    </Tab>
+                    </Tab> */}
                    <Tab
                         eventKey="invoices"
                         title={<span className="py-2 text-sm sm:text-base">{t('navbar.admin.invoices')}</span>}

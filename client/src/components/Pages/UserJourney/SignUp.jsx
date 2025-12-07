@@ -129,7 +129,7 @@ console.log(cleanedData);
           }
 
           // Now call Auth.login after the email has been sent
-          Auth.login(data.token);
+          Auth.login(data.token, data.dbUserData.adminFlag);
 
         } else {
           // alert(response.statusText);

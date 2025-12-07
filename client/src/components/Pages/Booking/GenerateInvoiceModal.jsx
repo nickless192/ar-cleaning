@@ -63,7 +63,7 @@ const GenerateInvoiceModal = ({ show, onHide, booking }) => {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    invoiceNumber: `INV-${Date.now()}`, // you can replace with real generator
+                    invoiceNumber: `INV-${Date.now()}`, 
                     customerName,
                     description,
                     services,
