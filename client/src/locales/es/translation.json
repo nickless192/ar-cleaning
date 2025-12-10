@@ -139,7 +139,8 @@
       "email_not_found": "Correo electrónico no encontrado",
       "wrong_password": "¡Contraseña incorrecta!",
       "missing_credentials": "Por favor ingresa tu correo electrónico y contraseña",
-      "missing_email_reset": "Por favor ingresa tu correo electrónico para restablecer tu contraseña"
+      "missing_email_reset": "Por favor ingresa tu correo electrónico para restablecer tu contraseña",
+      "generic_error": "Ocurrió un error. Por favor intenta de nuevo más tarde."
     }
   },
   "signup": {

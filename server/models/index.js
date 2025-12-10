@@ -11,5 +11,9 @@ const QuickQuote = require('./QuickQuote');
 const Booking = require('./Booking');
 const Role = require('./Role');
 const Permission = require('./Permission');
+const UserNotificationSettings = require('./UserNotificationSettings');
+const CompanyNotificationDefaults = require('./CompanyNotificationDefaults');
+const NotificationTemplate = require('./NotificationTemplate');
+const NotificationLog = require('./NotificationLog');
 
-module.exports = {User, Supplier, Service, Product, Invoice, Quote, VisitorLog, GiftCard, VisitorCount, QuickQuote, Booking, Role, Permission};
+module.exports = {User, Supplier, Service, Product, Invoice, Quote, VisitorLog, GiftCard, VisitorCount, QuickQuote, Booking, Role, Permission, UserNotificationSettings, CompanyNotificationDefaults, NotificationTemplate, NotificationLog};

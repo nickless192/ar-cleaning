@@ -3,178 +3,237 @@ import { useEffect, useState, useRef } from "react";
 import Auth from "/src/utils/auth";
 import { useTranslation } from "react-i18next";
 import VisitorCounter from "/src/components/Pages/Management/VisitorCounter";
-// import Logo from "../../assets/svg/cleanmart-blue.svg";
-// import 'bootstrap/dist/css/bootstrap.min.css';
 
 // reactstrap components
 import {
-  // Button,
   Row,
   Col,
-  // Tooltip,
-  Popover, PopoverBody
+  Popover,
+  PopoverBody
 } from "reactstrap";
 
 import {
-  FloatingLabel,
   Button,
   Form,
   Container,
-  // InputGroup
-} from 'react-bootstrap';
+  Spinner
+} from "react-bootstrap";
 
-import { FaQuestionCircle } from 'react-icons/fa';
+import { FaQuestionCircle, FaEye, FaEyeSlash } from "react-icons/fa";
 import pageBg from "/src/assets/img/bg1.png";
-
 
 function LoginPage({ focus }) {
   const { t } = useTranslation();
 
   const [formData, setFormData] = useState({
-    // username: "",
     email: "",
-    password: ""
+    password: "",
+    rememberMe: true,
   });
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [emailPrefilled, setEmailPrefilled] = useState(false);
+  const [infoMessage, setInfoMessage] = useState("");
+  const [isMagicSending, setIsMagicSending] = useState(false);
+
+
+  const passwordRef = useRef(null);
 
   const emailRef = useRef(null);
 
+  // useEffect(() => {
+  //   if (focus && emailRef.current) {
+  //     emailRef.current.focus();
+  //   }
+  // }, [focus]);
   useEffect(() => {
-    if (focus && emailRef.current) {
+    if (emailPrefilled && passwordRef.current) {
+      // Email was auto-loaded, go straight to password
+      passwordRef.current.focus();
+    } else if (!emailPrefilled && focus && emailRef.current) {
+      // Normal behavior when no saved email
       emailRef.current.focus();
     }
-  }, [focus]);
+  }, [emailPrefilled, focus]);
 
-  // const [tooltipOpen, setTooltipOpen] = useState({
-  //   username: false,
-  //   password: false
-  // });
+  const handleClearRememberedEmail = () => {
+    localStorage.removeItem("remembered_email");
+    setFormData((prev) => ({
+      ...prev,
+      email: "",
+      rememberMe: false,
+    }));
+    setEmailPrefilled(false);
+    if (emailRef.current) {
+      emailRef.current.focus();
+    }
+  };
+
+  const handleMagicLink = async (event) => {
+    event.preventDefault();
+    setErrorMessage("");
+    setInfoMessage("");
+
+    if (!formData.email) {
+      setErrorMessage(
+        t(
+          "login.alerts.missing_email_magic",
+          "Please enter your email to receive a login link."
+        )
+      );
+      return;
+    }
+
+    setIsMagicSending(true);
+    try {
+      const response = await fetch("/api/auth/magic-link", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: formData.email.trim() }),
+      });
+
+      if (response.ok) {
+        const data = await response.json().catch(() => ({}));
+        setInfoMessage(
+          data.message ||
+          t(
+            "login.magic_link_sent",
+            "We sent you a login link. Please check your email."
+          )
+        );
+      } else if (response.status === 404) {
+        setErrorMessage(t("login.alerts.email_not_found"));
+      } else {
+        setErrorMessage(t("login.alerts.generic_error"));
+      }
+    } catch (err) {
+      console.error(err);
+      setErrorMessage(t("login.alerts.generic_error"));
+    } finally {
+      setIsMagicSending(false);
+    }
+  };
+
+
 
   const [popoverOpen, setPopoverOpen] = useState({
-    // username: false,
     email: false,
-    password: false
+    password: false,
   });
-
-  // const toggleTooltip = (field) => {
-  //   setTooltipOpen({ ...tooltipOpen, [field]: !tooltipOpen[field] });
-  // };
 
   const togglePopover = (field) => {
     setPopoverOpen((prevState) => {
-      // Reset all fields to false
       const newState = Object.keys(prevState).reduce((acc, key) => {
         acc[key] = false;
         return acc;
       }, {});
 
-      // Toggle the selected field
       return { ...newState, [field]: !prevState[field] };
     });
   };
 
-
   const handleFormSubmit = async (event) => {
     event.preventDefault();
+    setErrorMessage("");
 
     if (formData.email && formData.password) {
-      // console.log(body);
-      await fetch('/api/users/login/', {
-        method: 'post',
-        // mode: 'no-cors',
-        body: JSON.stringify(formData),
+      setIsSubmitting(true);
+      await fetch("/api/users/login/", {
+        method: "post",
+        body: JSON.stringify({
+          email: formData.email.trim(),
+          password: formData.password,
+        }),
         headers: {
-          'Content-Type': 'application/json',
-        }
+          "Content-Type": "application/json",
+        },
       })
-        .then(response => {
+        .then((response) => {
           if (response.ok) {
-            // console.log("you're logged!");
-            response.json()
-              .then(data => {
-                // console.log(data);
-                // console.log(data.dbUserData.adminFlag);
-                Auth.login(data.token, data.dbUserData.adminFlag);
-
-
+            response.json().then((data) => {
+              Auth.login(data.token, data.dbUserData.adminFlag, {
+                rememberMe: formData.rememberMe,
               });
-          }
-          else {
-            // alert(response.statusText)
+              // ✅ store or clear remembered email
+              if (formData.rememberMe) {
+                localStorage.setItem("remembered_email", formData.email.trim());
+              } else {
+                localStorage.removeItem("remembered_email");
+              }
+            });
+          } else {
             if (response.status === 404) {
-              alert(t("login.alerts.email_not_found"));
+              setErrorMessage(t("login.alerts.email_not_found"));
+            } else if (response.status === 401) {
+              setErrorMessage(t("login.alerts.wrong_password"));
+            } else {
+              setErrorMessage(t("login.alerts.generic_error"));
             }
-            else if (response.status === 401) {
-              alert(t("login.alerts.wrong_password"));
-            }
-            console.log(response)
           }
         })
-        .catch(err => console.log(err))
-
-
+        .catch((err) => {
+          console.log(err);
+          setErrorMessage(t("login.alerts.generic_error"));
+        })
+        .finally(() => {
+          setIsSubmitting(false);
+        });
+    } else {
+      setErrorMessage(t("login.alerts.missing_credentials"));
     }
-    else {
-      alert(t("login.alerts.missing_credentials"));
-    }
-  }
+  };
 
   const handleResetPassword = async (event) => {
     event.preventDefault();
-    if (formData.username) {
-      await fetch('/api/email/request-password-reset', {
-        method: 'post',
-        // mode: 'no-cors',
+    setErrorMessage("");
+    if (formData.email) {
+      await fetch("/api/email/request-password-reset", {
+        method: "post",
         body: JSON.stringify({ email: formData.email }),
         headers: {
-          'Content-Type': 'application/json',
-        }
+          "Content-Type": "application/json",
+        },
       })
-        .then(response => {
+        .then((response) => {
           if (response.ok) {
-            // console.log("Password reset request sent!");
-            response.json()
-              .then(data => {
-                // console.log(data);
-                alert(data.message);
-              });
-          }
-          else {
-            // alert(response.statusText)
+            response.json().then((data) => {
+              alert(data.message);
+            });
+          } else {
             if (response.status === 404) {
-              alert(t("login.alerts.email_not_found"));
+              setErrorMessage(t("login.alerts.email_not_found"));
+            } else {
+              setErrorMessage(t("login.alerts.generic_error"));
             }
-            else if (response.status === 401) {
-              alert(t("login.alerts.wrong_password"));
-            }
-            // console.log(response)
           }
         })
-        .catch(err => console.log(err))
+        .catch((err) => {
+          console.log(err);
+          setErrorMessage(t("login.alerts.generic_error"));
+        });
+    } else {
+      setErrorMessage(t("login.alerts.missing_email_reset"));
     }
-    else {
-      alert(t("login.alerts.missing_username_reset"));
-    }
-  }
+  };
 
   const handleChange = (event) => {
-    event.preventDefault();
-    const { name, value } = event.target;
-    // console.log(name, value);
-    // console.log(formData);
-    setFormData({ ...formData, [name]: value.trim() });
+    const { name, value, type, checked } = event.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
-  // Define transition props for Popover to avoid warning
   const transitionProps = {
-    timeout: 150 // Set a timeout value for the transition (in milliseconds)
+    timeout: 150,
   };
-
 
   useEffect(() => {
     document.body.classList.add("login-page");
     document.body.classList.add("sidebar-collapse");
     document.documentElement.classList.remove("nav-open");
-    // window.scrollTo(0, 0);
     document.body.scrollTop = 0;
     return function cleanup() {
       document.body.classList.remove("login-page");
@@ -182,105 +241,219 @@ function LoginPage({ focus }) {
     };
   }, []);
 
+  useEffect(() => {
+    const rememberedEmail = localStorage.getItem("remembered_email");
+    if (rememberedEmail) {
+      setFormData((prev) => ({
+        ...prev,
+        email: rememberedEmail,
+        rememberMe: true,
+      }));
+      setEmailPrefilled(true);
+    }
+  }, []);
+
 
   return (
     <>
-      {/* <Navbar /> */}
       <VisitorCounter page={"login-page"} />
-      <div className="content content-border bg-light" style={{ backgroundImage: `url(${pageBg})`, backgroundSize: 'cover' }}>
-        <h1 className="title primary-color text-center montserrat-bold">{t("login.title")}</h1>
-        {/* <div className="content px-2"> */}
+      <div
+        className="content content-border bg-light"
+        style={{ backgroundImage: `url(${pageBg})`, backgroundSize: "cover" }}
+      >
+        <h1 className="title primary-color text-center montserrat-bold">
+          {t("login.title")}
+        </h1>
         <Container className="container">
           <p className="text-cleanar-color text-bold text-center">
             {t("login.description")}
           </p>
+
+          {errorMessage && (
+            <p className="text-danger text-center mb-2">{errorMessage}</p>
+          )}
+
           <Form onSubmit={handleFormSubmit}>
+            {/* Email */}
             <Row className="justify-content-center">
-              <Col className="py-1" md="8" xs='10'>
-                <FloatingLabel
-                  controlId="floatingInput"
-                  label={`${t("login.email_label")}`}
-                  // className="mb-3"
-                  className="text-cleanar-color"
-                >
-                  <Form.Control type="email"
-                    className='form-input rounded-pill text-cleanar-color'
+              <Col className="py-1" md="10" xs="10">
+                <Form.Group controlId="loginEmail">
+                  <Form.Label className="text-cleanar-color">
+                    {t("login.email_label")} {' '}
+                    <FaQuestionCircle
+                      onClick={() => togglePopover("email")}
+                      id="Tooltip1"
+                    />
+                    <Popover
+                      placement="top"
+                      isOpen={popoverOpen.email}
+                      target="Tooltip1"
+                      toggle={() => togglePopover("email")}
+                      transition={transitionProps}
+                    >
+                      <PopoverBody>{t("login.email_tooltip")}</PopoverBody>
+                    </Popover>
+                  </Form.Label>
+
+
+                  <Form.Control
+                    type="email"
+                    className="form-input rounded-pill text-cleanar-color"
                     placeholder=""
                     ref={emailRef}
-                    onChange={(e) => handleChange(e)} name="email" />
-                </FloatingLabel>
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    autoComplete="email"
+                  />
+                </Form.Group>
+                {emailPrefilled && (
+                  // <div className="text-end mt-1">
+                  <Button
+                    variant="link"
+                    type="button"
+                    className="p-0 small"
+                    onClick={handleClearRememberedEmail}
+                  >
+                    {t("login.clear_saved_email", "Not you? Clear saved email")}
+                  </Button>
+                  // </div>
+                )}
               </Col>
-              <Col className="py-1" md="1" xs='1'>
-                {/* <Button
-                  type="button"
-                  tabIndex='-1'
-                  // color="link"
-                  className="primary-bg-color btn-round btn-icon"
-                  > */}
+              {/* <Col className="py-1" md="1" xs="1">
                 <FaQuestionCircle
-                  onClick={() => togglePopover('email')}
+                  onClick={() => togglePopover("email")}
                   id="Tooltip1"
-
                 />
-                {/* </Button> */}
                 <Popover
                   placement="top"
                   isOpen={popoverOpen.email}
                   target="Tooltip1"
-                  toggle={() => togglePopover('email')}
+                  toggle={() => togglePopover("email")}
                   transition={transitionProps}
                 >
                   <PopoverBody>{t("login.email_tooltip")}</PopoverBody>
                 </Popover>
-              </Col>
+              </Col> */}
             </Row>
+
+            {/* Password */}
             <Row className="justify-content-center">
-              <Col className="py-1" md="8" xs='10'>
-                <FloatingLabel controlId="floatingPassword" label={`${t("login.password_label")}`}
-                  className="text-cleanar-color"
-                >
-                  <Form.Control type="password" placeholder=""
-                    className="form-input rounded-pill text-cleanar-color"
-                    onChange={(e) => handleChange(e)} name="password" />
-                </FloatingLabel>
+              <Col className="py-1" md="10" xs="10">
+                <Form.Group controlId="loginPassword">
+                  <Form.Label className="text-cleanar-color">
+                    {t("login.password_label")} {' '}
+                    <FaQuestionCircle
+                      id="Tooltip2"
+                      onClick={() => togglePopover("password")}
+                    />
+                    <Popover
+                      placement="top"
+                      isOpen={popoverOpen.password}
+                      target="Tooltip2"
+                      toggle={() => togglePopover("password")}
+                      transition={transitionProps}
+                    >
+                      <PopoverBody>{t("login.password_tooltip")}</PopoverBody>
+                    </Popover>
+                  </Form.Label>
+                  <div className="position-relative">
+                    <Form.Control
+                      type={showPassword ? "text" : "password"}
+                      placeholder=""
+                      ref={passwordRef}
+                      className="form-input rounded-pill text-cleanar-color pe-5"
+                      name="password"
+                      value={formData.password}
+                      onChange={handleChange}
+                      autoComplete="current-password"
+                    />
+                    <span
+                      className="position-absolute top-50 end-0 translate-middle-y me-3"
+                      style={{
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: "1.75rem",
+                        height: "1.75rem",
+                      }}
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        setShowPassword((prev) => !prev);
+                      }}
+                      aria-label={
+                        showPassword
+                          ? t("login.hide_password", "Hide password")
+                          : t("login.show_password", "Show password")
+                      }
+                    >
+                      {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    </span>
+                  </div>
+                </Form.Group>
               </Col>
-              <Col className="py-1" md="1" xs='1'>
-                {/* <Button
-                  type="button"
-                  tabIndex='-1'
-                  // color="link"
-                  className="primary-bg-color btn-round btn-icon"
-                  > */}
+              {/* <Col className="py-1" md="1" xs="1">
                 <FaQuestionCircle
                   id="Tooltip2"
-                  onClick={() => togglePopover('password')}
-
+                  onClick={() => togglePopover("password")}
                 />
-                {/* </Button> */}
                 <Popover
                   placement="top"
                   isOpen={popoverOpen.password}
                   target="Tooltip2"
-                  toggle={() => togglePopover('password')}
+                  toggle={() => togglePopover("password")}
                   transition={transitionProps}
                 >
                   <PopoverBody>{t("login.password_tooltip")}</PopoverBody>
                 </Popover>
+              </Col> */}
+            </Row>
+
+            {/* Remember me */}
+            <Row className="justify-content-center mt-2">
+              <Col md="8" xs="10">
+                <Form.Check
+                  type="checkbox"
+                  id="rememberMe"
+                  name="rememberMe"
+                  label={t(
+                    "login.remember_me_label",
+                    "Remember me on this device"
+                  )}
+                  checked={formData.rememberMe}
+                  onChange={handleChange}
+                />
               </Col>
             </Row>
+
+            {/* Buttons */}
             <Row className="justify-content-center mt-3">
-              <Col className="py-1" md="6" xs='10'>
-                {/* <div className="text-center"> */}
+              <Col className="py-1" md="6" xs="10">
                 <Button
                   className="btn rounded-pill primary-bg-color"
                   type="submit"
                   data-track="login"
                   size="lg"
+                  disabled={isSubmitting}
                 >
-                  {t("login.login_button")}
+                  {isSubmitting ? (
+                    <>
+                      <Spinner
+                        as="span"
+                        animation="border"
+                        size="sm"
+                        role="status"
+                        className="me-2"
+                      />
+                      {t("login.logging_in", "Logging in...")}
+                    </>
+                  ) : (
+                    t("login.login_button")
+                  )}
                 </Button>
               </Col>
-              <Col className="py-1" md='6' xs='10'>
+              <Col className="py-1" md="6" xs="10">
                 <Button
                   className="btn-info rounded-pill"
                   type="button"
@@ -290,11 +463,24 @@ function LoginPage({ focus }) {
                 >
                   {t("login.reset_password_button")}
                 </Button>
-                {/* </div> */}
-                {/* </Form> */}
-                {/* </Card> */}
               </Col>
             </Row>
+            {/* <Row className="justify-content-center mt-2">
+  <Col md="12" xs="10" className="text-center">
+    <Button
+      variant="outline-secondary"
+      type="button"
+      size="sm"
+      onClick={handleMagicLink}
+      disabled={isMagicSending || isSubmitting}
+    >
+      {isMagicSending
+        ? t("login.sending_magic_link", "Sending magic link...")
+        : t("login.magic_link_button", "Send me a magic login link")}
+    </Button>
+  </Col>
+</Row> */}
+
           </Form>
         </Container>
       </div>

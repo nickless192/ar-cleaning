@@ -139,7 +139,8 @@
       "email_not_found": "Email non trouvé",
       "wrong_password": "Mot de passe incorrect !",
       "missing_credentials": "Veuillez saisir votre adresse e-mail et mot de passe",
-      "missing_email_reset": "Veuillez saisir votre adresse e-mail pour réinitialiser votre mot de passe"
+      "missing_email_reset": "Veuillez saisir votre adresse e-mail pour réinitialiser votre mot de passe",
+      "generic_error": "Une erreur est survenue. Veuillez réessayer plus tard."
     }
   },
   "signup": {
