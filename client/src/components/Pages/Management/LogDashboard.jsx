@@ -200,7 +200,8 @@ const LogDashboard = () => {
       setInsights([]);
       return;
     }
-
+const botVisits = filteredLogs.filter((l) => l.isBot).length;
+const humanVisits = filteredLogs.length - botVisits;
     const humans = filteredLogs.filter((log) => !log.isBot);
     const total = filteredLogs.length;
 
@@ -319,6 +320,8 @@ const LogDashboard = () => {
       avgPagesPerSession,
       topTrafficSources,
       topSegments,
+       botVisits,
+  humanVisits,
     };
 
     setStats(nextStats);
@@ -519,6 +522,18 @@ const LogDashboard = () => {
             </Card.Body>
           </Card>
         </Col>
+        <Col lg={3} md={6} className="mb-3 mb-lg-0">
+  <Card className="h-100">
+    <Card.Body className="text-center">
+      <Card.Title>Bots</Card.Title>
+      <h3>{stats.botVisits}</h3>
+      <div className="small text-muted">
+        Humans: {stats.humanVisits}
+      </div>
+    </Card.Body>
+  </Card>
+</Col>
+
 
         <Col lg={3} md={6} className="mb-3 mb-lg-0">
           <Card className="h-100">
