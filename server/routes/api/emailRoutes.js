@@ -2,7 +2,7 @@ const cron = require('node-cron');
 const { emailQuote, emailQuoteNotification, emailNewUser, emailNewUserNotification, emailPasswordResetRequest, emailQuickQuote, emailQuickNotePDF, generateWeeklyReport, sendWeeklyReportEmail, generateManualReport,
     sendUpcomingBookingsEmail
 } = require('../../controllers/emailController');
-const NotificationService = require('../../services/notificationService');
+const NotificationService = require('../../services/NotificationService');
 
 const router = require('express').Router();
 const isDev = process.env.NODE_ENV !== "production";
