@@ -132,7 +132,7 @@
     "email_tooltip": "Enter your registered email address.",
     "password_tooltip": "Enter your account password.",
     "login_button": "Log In",
-    "reset_password_button": "Reset Your Password",
+    "reset_password_button": "Reset Password",
     "signup_prompt": "Don't have an account yet?",
     "signup_link": "Create one here",
     "alerts": {
@@ -703,5 +703,50 @@
   },
   "banner": {
     "comingSoon": "Exciting new features coming to our website!"
+  },
+    "certification": {
+    "title": "Professional Certifications & Memberships",
+    "intro": "Your home or business deserves cleaners who follow <strong>recognized industry standards</strong>, not guesswork. Our memberships and certifications show our commitment to professional, safe, and healthy cleaning practices in Toronto.",
+    "ctaPrimary": "Get a Free Quote",
+    "ctaSecondary": "Learn why ISSA membership matters →"
+  },
+
+  "issa": {
+    "sectionTitle": "What is ISSA Canada and why does it matter?",
+    "description1": "<strong>ISSA</strong> is the worldwide cleaning industry association, representing more than 11,000 members around the globe, including building service contractors, distributors, manufacturers, and residential cleaners.",
+    "learnMore": "Learn more about ISSA",
+    "description2": "<strong>ISSA Canada</strong> is the Canadian division, supporting the local cleaning industry with education, standards, and advocacy. As members, we stay informed on best practices for <strong>health, safety, and quality</strong> in cleaning services across Canada.",
+    "aboutCanada": "About ISSA Canada",
+    "description3": "For our clients, this means you’re working with a company that takes cleaning seriously – not just as a task, but as an investment in a <strong>healthier and safer environment</strong> for your family, staff, and visitors.",
+        "prefix": "CleanAR Solutions is a proud member of",
+    "linkText": "ISSA Canada, a division of ISSA – the worldwide cleaning industry association",
+    "suffix": ". This membership reflects our ongoing commitment to professional standards in the cleaning industry.",
+
+    "cardTitle": "What ISSA membership means for you",
+    "benefits": {
+      "standards": "Alignment with international cleaning standards",
+      "health": "Added focus on health, hygiene, and safety",
+      "ethics": "Commitment to professional conduct and ethics",
+      "environment": "Better practices for environmentally-conscious cleaning"
+    }
+  },
+
+  "roadmap": {
+    "title": "Growing our professional standards",
+    "description1": "Our ISSA Canada membership is an important step, and we’re not stopping there. CleanAR Solutions is continuously exploring additional training and certifications that align with our focus on <strong>quality, safety, and sustainability</strong>.",
+    "description2": "As we add new certifications, this page will be kept up to date so you can always see how we’re investing in better service for your home or business."
+  },
+
+  "certification-cta": {
+    "title": "Bring certified standards to your space",
+    "description": "Whether it’s a condo, house, or office, we apply the same level of care and professionalism backed by our ISSA Canada membership.",
+    "button": "Request Your Cleaning Quote",
+    "link": "View our cleaning services"
+  },
+
+  "badge": {
+    "eyebrow": "Professional cleaning you can trust",
+    "headline": "CleanAR Solutions is a proud <strong>ISSA Canada Member</strong>",
+    "body": "As members of ISSA Canada – the national division of the worldwide cleaning industry association – we follow recognized best practices for quality, safety, and professionalism in every service we provide."
   }
 }

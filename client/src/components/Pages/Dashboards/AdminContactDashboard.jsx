@@ -13,7 +13,7 @@ import {
     InputGroup,
 } from "react-bootstrap";
 
-import MessageCell from "./MessageCell";
+import MessageCell from "../Management/MessageCell";
 
 const PAGE_SIZE = 5;
 

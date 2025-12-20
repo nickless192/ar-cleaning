@@ -73,7 +73,13 @@ const userControllers = {
             .catch(err => res.status(500).json(err));
     },
     async login({ body }, res) {
-        const dbUserData = await User.findOne({ email: body.email });
+        // const dbUserData = await User.findOne({ email: body.email });
+          const dbUserData = await User.findOne({ email: body.email })
+        .select('-resetToken -resetTokenExpires') // keep sensitive tokens out
+        .populate({
+          path: 'roles',
+          select: 'name label', // so signToken can derive role names
+        });
 
         // if (dbUserData) {
         if (!dbUserData) {
@@ -87,7 +93,23 @@ const userControllers = {
             return res.status(401).json({ message: 'Wrong password!' });
         }
         const token = signToken(dbUserData);
-        res.status(200).json({ token, dbUserData });
+
+          // Build the user profile object to send to the frontend
+      const userObj = dbUserData.toObject ? dbUserData.toObject() : dbUserData;
+
+      // Never send the password hash to the front-end
+      delete userObj.password;
+
+      // Normalize roles into an array of role names for easy use in React
+      const roleNames = Array.isArray(userObj.roles)
+        ? userObj.roles.map((r) => (r && r.name ? r.name : r)).filter(Boolean)
+        : [];
+
+      const sanitizedUser = {
+        ...userObj,
+        roles: roleNames,
+      };
+        res.status(200).json({ token, dbUserData: sanitizedUser });
         // }
         // )
         // .catch(err => console.log(err))

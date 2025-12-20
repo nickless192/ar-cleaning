@@ -1,80 +1,88 @@
-// import React from 'react';
-// import { Tabs, Tab, Container } from 'react-bootstrap';
-// import {useTranslation} from "react-i18next";
+import React, { useEffect, useMemo, useState } from "react";
+import { Container, Card, Nav } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 
-// import ExpenseDashboard from "/src/components/Pages/Management/ExpenseDashboard";
-// import FinanceDashboard from "/src/components/Pages/Management/FinanceDashboard";
+import ExpenseDashboard from "/src/components/Pages/Dashboards/ExpenseDashboard";
+import FinanceDashboard from "/src/components/Pages/Dashboards/FinanceDashboard";
+import InventoryManagementTabbedView from "/src/components/Pages/ManagementViews/InventoryManagementTabbedView"; // adjust path if needed
 
-// const AccountingTabbedView = () => {
-//     const { t } = useTranslation();
-
-//     return (
-//         <Container className="mt-4">
-//             <Tabs defaultActiveKey="expense-dashboard" id="management-tabs" className="mb-3">
-//                 <Tab eventKey="expense-dashboard" title={t('navbar.admin.manage_finance')}>
-//                     <ExpenseDashboard />
-//                 </Tab>
-//                 <Tab eventKey="finance-dashboard" title={t('navbar.admin.manage_expenses')}>
-//                     <FinanceDashboard />
-//                 </Tab>
-//             </Tabs>
-//         </Container>
-//     );
-// };
-
-// export default AccountingTabbedView;
-
-import React from 'react';
-import { Tabs, Tab, Container } from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
-
-import ExpenseDashboard from '/src/components/Pages/Management/ExpenseDashboard';
-import FinanceDashboard from '/src/components/Pages/Management/FinanceDashboard';
+const LS_KEY = "accountingHubActiveTab";
 
 const AccountingTabbedView = () => {
-    const { t } = useTranslation();
+  const { t } = useTranslation();
 
-    return (
-        <Container fluid className="overflow-x-auto">
-            {/* <div className="rounded-2xl shadow-md bg-white p-2 overflow-x-auto"> */}
-                <Tabs
-                    defaultActiveKey="finance-dashboard"
-                    id="management-tabs"
-                    className="flex flex-wrap gap-2 mb-3"
-                    mountOnEnter
-                    unmountOnExit
-                >
-                    
+  const tabs = useMemo(
+    () => [
+      {
+        key: "finance",
+        title: t("navbar.admin.manage_finance"),
+        component: <FinanceDashboard />,
+      },
+      {
+        key: "expenses",
+        title: t("navbar.admin.manage_expenses"),
+        component: <ExpenseDashboard />,
+      },
+      {
+        key: "inventory",
+        title: t("navbar.admin.manage_inventory") || "Inventory",
+        component: <InventoryManagementTabbedView />, // see embedded note below
+      },
+    ],
+    [t]
+  );
 
-                    <Tab
-                        eventKey="finance-dashboard"
-                        title={
-                            <span className="px-3 py-2 text-sm sm:text-base font-medium">
-                                {t('navbar.admin.manage_finance')}
-                            </span>
-                        }
-                    >
-                        <div className="p-2 sm:p-4">
-                            <FinanceDashboard />
-                        </div>
-                    </Tab>
-                    <Tab
-                        eventKey="expense-dashboard"
-                        title={
-                            <span className="px-3 py-2 text-sm sm:text-base font-medium">
-                                {t('navbar.admin.manage_expenses')}
-                            </span>
-                        }
-                    >
-                        <div className="p-2 sm:p-4">
-                            <ExpenseDashboard />
-                        </div>
-                    </Tab>
-                </Tabs>
-            {/* </div> */}
+  const [activeTab, setActiveTab] = useState("finance");
 
-        </Container>
-    );
+  // restore last selected tab
+  useEffect(() => {
+    const saved = localStorage.getItem(LS_KEY);
+    if (saved && tabs.some((x) => x.key === saved)) setActiveTab(saved);
+  }, [tabs]);
+
+  // persist tab selection
+  useEffect(() => {
+    localStorage.setItem(LS_KEY, activeTab);
+  }, [activeTab]);
+
+  const active = tabs.find((x) => x.key === activeTab) || tabs[0];
+
+  return (
+    <Container fluid className="p-3 p-sm-4">
+      {/* Header */}
+      <div className="mb-3">
+        <h3 className="mb-0">Accounting</h3>
+        <div className="text-muted small">
+          Finance, expenses, and inventory configuration in one place.
+        </div>
+      </div>
+
+      <Card className="shadow-sm">
+        <Card.Body className="p-0">
+          {/* Primary tabs */}
+          <div className="p-2 border-bottom">
+            <Nav
+              variant="pills"
+              activeKey={activeTab}
+              onSelect={(k) => k && setActiveTab(k)}
+              className="gap-2 flex-wrap"
+            >
+              {tabs.map((tab) => (
+                <Nav.Item key={tab.key}>
+                  <Nav.Link eventKey={tab.key} style={{ whiteSpace: "nowrap" }}>
+                    {tab.title}
+                  </Nav.Link>
+                </Nav.Item>
+              ))}
+            </Nav>
+          </div>
+
+          {/* Content */}
+          <div className="p-2 p-sm-4">{active.component}</div>
+        </Card.Body>
+      </Card>
+    </Container>
+  );
 };
 
 export default AccountingTabbedView;

@@ -1,14 +1,16 @@
 import React from 'react';
 import { Tabs, Tab, Container } from 'react-bootstrap';
 
-import AdminContactDashboard from '/src/components/Pages/Management/AdminContactDashboard';
-import QuickQuoteDashboard from '/src/components/Pages/Management/QuickQuoteDashboard';
+// import AdminContactDashboard from '/src/components/Pages/Management/AdminContactDashboard';
+// import QuickQuoteDashboard from '/src/components/Pages/Management/QuickQuoteDashboard';
+import CommunicationsHub from '/src/components/Pages/Dashboards/CommunicationsHub';
 import Customers from '/src/components/Pages/Management/Customers';
 import ManageUser from '/src/components/Pages/Management/ManageUser';
 import LogDashboard from '/src/components/Pages/Management/LogDashboard';
-import BookingDashboard from '/src/components/Pages/Management/BookingDashboard';
-import BookingList from '/src/components/Pages/Management/BookingList';
-import InvoiceList from '/src/components/Pages/Booking/InvoiceList';
+import NotificationAdminPage from '/src/components/Pages/UserJourney/NotificationAdminPage';
+// import BookingDashboard from '/src/components/Pages/Management/BookingDashboard';
+// import BookingList from '/src/components/Pages/Management/BookingList';
+// import InvoiceList from '/src/components/Pages/Booking/InvoiceList';
 import { useTranslation } from 'react-i18next';
 
 const ContactManagementTabbedView = () => {
@@ -37,17 +39,26 @@ const ContactManagementTabbedView = () => {
                         title={<span className="px-3 py-2 text-sm sm:text-base">{t('navbar.admin.manage_customers_contact')}</span>}
                     >
                         <div className="p-2 sm:p-4">
-                            <AdminContactDashboard />
+                            {/* <AdminContactDashboard /> */}
+                            <CommunicationsHub />
                         </div>
                     </Tab>
                     <Tab
+                        eventKey="notifications"
+                        title={<span className="px-3 py-2 text-sm sm:text-base">{t('navbar.admin.notifications')}</span>}
+                    >
+                        <div className="p-2 sm:p-4">
+                            <NotificationAdminPage />
+                        </div>
+                    </Tab>
+                    {/* <Tab
                         eventKey="view-quotes"
                         title={<span className="px-3 py-2 text-sm sm:text-base">{t('navbar.admin.view_quotes')}</span>}
                     >
                         <div className="p-2 sm:p-4">
                             <QuickQuoteDashboard />
                         </div>
-                    </Tab>
+                    </Tab> */}
                      <Tab eventKey="customers" title={<span className="px-3 py-2 text-sm sm:text-base">{t('navbar.admin.manage_customers')}</span>}>
                         <div className="p-2 sm:p-4"><Customers /></div>
                     </Tab>

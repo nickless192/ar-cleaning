@@ -450,7 +450,7 @@ function ProfilePage() {
                 </Form>
               </Card>
             </Tab>
-            <Tab eventKey="quote-requests" title={<span>{t('profile.quotes.title')} <NewIconAnimated /></span>}>
+            <Tab eventKey="quote-requests" title={<span>{t('profile.quotes.title')} </span>}>
               {/* new: display user quotes */}
               <Card className="p-4 mt-4 shadow-lg bg-transparent">
                 <h3 className="text-center primary-color mb-4">{t("profile.quotes.title")}</h3>
@@ -566,7 +566,7 @@ function ProfilePage() {
                 </Modal>
               </Card>
             </Tab>
-            <Tab eventKey="user-bookings" title={<span>{t('profile.bookings.title')} <NewIconAnimated /></span>}>
+            <Tab eventKey="user-bookings" title={<span>{t('profile.bookings.title')} </span>}>
               <Card className="p-4 mt-4 shadow-lg bg-transparent">
                 <h3 className="text-center primary-color mb-4">{t("profile.bookings.title")}</h3>
                 {bookings.length === 0 ? (

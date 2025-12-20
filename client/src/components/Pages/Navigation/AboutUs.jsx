@@ -108,17 +108,18 @@ function AboutUsPage() {
       <Container className="my-5">
         <Row>
           <Col md="12" className="text-center">
-      <p className="fs-6 text-cleanar-color mt-3">
-  CleanAR Solutions is a proud member of{" "}
+      <p className="fs-6 text-cleanar-color mt-3">{t("issa.prefix")}
+  {/* CleanAR Solutions is a proud member of */}
+  {" "}
   <a
     href="https://issa-canada.com/en/issa-canada-en/about-issa-canada-en"
     target="_blank"
     rel="noopener noreferrer"
-  >
-    ISSA Canada, a division of ISSA – the worldwide cleaning industry association
-  </a>
-  . This membership reflects our ongoing commitment to professional standards
-  in the cleaning industry.
+  >{t("issa.linkText")}
+    {/* ISSA Canada, a division of ISSA – the worldwide cleaning industry association */}
+  </a>{t("issa.suffix")}
+  {/* . This membership reflects our ongoing commitment to professional standards
+  in the cleaning industry. */}
 </p>
           </Col>
         </Row>

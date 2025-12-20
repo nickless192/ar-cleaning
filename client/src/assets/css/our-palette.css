@@ -22,23 +22,30 @@
 }
 
 .new-badge-animated {
-  display: inline-block; /* This ensures it stays inline */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
   background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
-  color: white;
-  padding: 2px 8px; /* Reduced padding for better inline flow */
-  border-radius: 12px; /* Slightly smaller radius */
-  font-size: 11px;
-  font-weight: bold;
-  letter-spacing: 0.5px;
+  color: #fff;
+
+  padding: 2px 6px;
+  border-radius: 10px;
+
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
   text-transform: uppercase;
-  box-shadow: 0 2px 5px rgba(238, 90, 111, 0.5);
+
+  box-shadow: 0 2px 5px rgba(238, 90, 111, 0.4);
   animation: pulse 2s infinite;
-  position: relative;
-  vertical-align: middle; /* Aligns with text baseline */
-  margin: 0 4px; /* Small margin for spacing */
-  line-height: 1; /* Prevents extra height */
-  
+
+  margin-left: 6px;
+
+  line-height: 1;
+  vertical-align: middle;
 }
+
 
 @keyframes pulse {
   0% {
@@ -1167,61 +1174,101 @@ body.nav-open {
   }
   
    */
-   .issa-membership-badge {
+/* =========================================================
+   ISSA MEMBERSHIP BADGE – STACKED BY DEFAULT (ALL SCREENS)
+   ========================================================= */
+
+.issa-membership-badge {
   display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem 1.25rem;
+  flex-direction: column;          /* STACKED ALWAYS */
+  align-items: flex-start;
+  gap: 0.75rem;
+
+  padding: 1.1rem 1.25rem;
   border-radius: 0.9rem;
   background: #f5f7fb;
   border: 1px solid #e0e6f5;
-  max-width: 640px;
-  font-size: 0.9rem;
+
+  font-size: 0.95rem;
+  width: 100%;
 }
 
-.issa-membership-badge--stacked {
-  flex-direction: column;
-  align-items: flex-start;
+/* Optional modifier if you EVER want horizontal again */
+.issa-membership-badge--horizontal {
+  flex-direction: row;
+  align-items: center;
 }
+
+/* =========================================================
+   LOGO
+   ========================================================= */
 
 .issa-membership-badge__logo-wrapper {
-  flex-shrink: 0;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.issa-membership-badge__link {
+  display: inline-flex;
 }
 
 .issa-membership-badge__logo {
-  display: block;
-  max-width: 130px; /* keep aspect ratio, don’t stretch */
+  width: 150px;
+  max-width: 100%;
   height: auto;
+  object-fit: contain;
 }
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
 
 .issa-membership-badge__content {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0.4rem;
 }
 
 .issa-membership-badge__eyebrow {
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   opacity: 0.65;
   margin: 0;
 }
 
 .issa-membership-badge__headline {
   margin: 0;
-  font-size: 0.95rem;
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
+.issa-membership-badge__headline-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.issa-membership-badge__headline-link:hover {
+  text-decoration: underline;
 }
 
 .issa-membership-badge__body {
   margin: 0;
-  line-height: 1.4;
+  line-height: 1.45;
   opacity: 0.9;
 }
 
-@media (max-width: 600px) {
+/* =========================================================
+   OPTIONAL: tighten very small screens
+   ========================================================= */
+
+@media (max-width: 480px) {
   .issa-membership-badge {
-    flex-direction: column;
-    align-items: flex-start;
+    padding: 0.95rem 1rem;
+  }
+
+  .issa-membership-badge__logo {
+    width: 135px;
   }
 }

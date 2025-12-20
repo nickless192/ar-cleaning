@@ -15,6 +15,9 @@ import {
   FaTablet,
   FaUserClock,
 } from 'react-icons/fa';
+import WeeklyQualityCards from '../Dashboards/WeeklyQualityCards.jsx';
+import TopQualifiedTables from '../Dashboards/TopQualifiedTables.jsx';
+
 
 const LogDashboard = () => {
   const [logs, setLogs] = useState([]);
@@ -480,6 +483,12 @@ const LogDashboard = () => {
           </Col>
         </Row>
       )} */}
+{weeklyReport && (
+  <>
+    <WeeklyQualityCards report={weeklyReport} />
+    <TopQualifiedTables report={weeklyReport} />
+  </>
+)}
 
       {/* Filters */}
       <FilterBar

@@ -1,234 +1,323 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-// const expiry = 60 * 60 * 1000; // 1 hour
-// const timestamp = localStorage.getItem('sessionTimestamp');
-// // import Auth from 'utils/auth';
 
-// if (!timestamp || Date.now() - timestamp > expiry) {
-//     sessionStorage.removeItem('sessionId');
-//     sessionStorage.removeItem('pathsVisited');
-//     localStorage.setItem('sessionTimestamp', Date.now());
-//   }
+/**
+ * Storage keys
+ */
+const LS_VISITOR_ID = 'visitorId';
+const LS_SELF_TRACKING_DISABLED = 'disableVisitorTracking'; // set to "true" to stop tracking (admin/dev)
+const SS_SESSION_ID = 'sessionId';
+const SS_SESSION_STARTED_AT = 'sessionStart';
+const SS_PATHS_VISITED = 'pathsVisited';
+const SS_SENT_PAGEVIEWS = 'sentPageViews'; // dedupe per session
 
-const getSessionId = () => {
-    let sessionId = sessionStorage.getItem('sessionId');
-    if (!sessionId) {
-        sessionId = uuidv4();
-        sessionStorage.setItem('sessionId', sessionId);
-    }
-    return sessionId;
-}
+/**
+ * Config
+ */
+const HEARTBEAT_SECONDS = 30; // optional - reduce to 0 to disable
+const MAX_PATHS = 50;
 
-const getPathsVisited = () => {
-    let pathsVisited = JSON.parse(sessionStorage.getItem('pathsVisited'));
-    if (!pathsVisited) {
-        pathsVisited = [];
-    }
-    return pathsVisited;
-}
+const safeJsonParse = (str, fallback) => {
+  if (!str) return fallback; // ✅ handles null, undefined, empty string
+  try {
+    const parsed = JSON.parse(str);
+    return parsed ?? fallback; // ✅ handles JSON.parse("null") => null
+  } catch {
+    return fallback;
+  }
+};
 
-const addPathToVisited = (newPath) => {
-    const pathsVisited = getPathsVisited();
-    if (!pathsVisited.includes(newPath)) {
-        pathsVisited.push(newPath);
-        sessionStorage.setItem('pathsVisited', JSON.stringify(pathsVisited));
-    }
-}
+
+const getOrCreateVisitorId = () => {
+  let id = localStorage.getItem(LS_VISITOR_ID);
+  if (!id) {
+    id = uuidv4();
+    localStorage.setItem(LS_VISITOR_ID, id);
+  }
+  return id;
+};
+
+const getOrCreateSessionId = () => {
+  let sessionId = sessionStorage.getItem(SS_SESSION_ID);
+  if (!sessionId) {
+    sessionId = uuidv4();
+    sessionStorage.setItem(SS_SESSION_ID, sessionId);
+    sessionStorage.setItem(SS_SESSION_STARTED_AT, String(Date.now()));
+    sessionStorage.setItem(SS_PATHS_VISITED, JSON.stringify([]));
+    sessionStorage.setItem(SS_SENT_PAGEVIEWS, JSON.stringify({}));
+  }
+  return sessionId;
+};
+
+const getPathsVisited = () =>
+  safeJsonParse(sessionStorage.getItem(SS_PATHS_VISITED), []);
+
+const addPathToVisited = (path) => {
+  const paths = getPathsVisited();
+  if (!paths.includes(path)) {
+    const next = [...paths, path].slice(-MAX_PATHS);
+    sessionStorage.setItem(SS_PATHS_VISITED, JSON.stringify(next));
+  }
+};
 
 const getUTMParams = () => {
-    const params = new URLSearchParams(window.location.search);
-    return {
-        source: params.get('utm_source'),
-        medium: params.get('utm_medium'),
-        campaign: params.get('utm_campaign'),
-    };
+  const params = new URLSearchParams(window.location.search);
+  return {
+    source: params.get('utm_source'),
+    medium: params.get('utm_medium'),
+    campaign: params.get('utm_campaign'),
+  };
 };
 
 const getTrafficSource = (referrer) => {
-    if (!referrer) return 'direct';
-
-    const hostname = new URL(referrer).hostname;
+  if (!referrer) return 'direct';
+  try {
+    const hostname = new URL(referrer).hostname.toLowerCase();
 
     if (hostname.includes('google')) return 'organic';
-    if (hostname.includes('facebook') || hostname.includes('instagram') || hostname.includes('tiktok')) return 'social';
-    if (hostname === window.location.hostname) return 'internal';
+    if (
+      hostname.includes('facebook') ||
+      hostname.includes('instagram') ||
+      hostname.includes('tiktok')
+    )
+      return 'social';
 
+    if (hostname === window.location.hostname.toLowerCase()) return 'internal';
     return 'referral';
+  } catch {
+    return 'referral';
+  }
 };
 
+// --- Self-tracking prevention strategies ---
+// 1) disable tracking flag in localStorage (easy admin toggle)
+// 2) don't track in localhost/dev
+// 3) optionally add a “known internal IP” rule on backend too (best place)
+const shouldTrack = () => {
+  const disabled = localStorage.getItem(LS_SELF_TRACKING_DISABLED) === 'true';
+  if (disabled) return false;
+
+  const host = window.location.hostname;
+  if (host === 'localhost' || host === '127.0.0.1') return false;
+
+  return true;
+};
+
+// Beacon-first fetch helper for unload events
+const send = (url, payload, { useBeacon = false } = {}) => {
+  const body = JSON.stringify(payload);
+
+  // try sendBeacon for unload/hidden events
+  if (useBeacon && navigator.sendBeacon) {
+    const blob = new Blob([body], { type: 'application/json' });
+    navigator.sendBeacon(url, blob);
+    return;
+  }
+
+  // keepalive helps on page unload in modern browsers
+  fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body,
+    keepalive: useBeacon, // best-effort
+  }).catch(() => {});
+};
 
 const VisitorCounter = ({ page }) => {
+  const maxScrollRef = useRef(0);
+  const lastActiveAtRef = useRef(Date.now());
+  const heartbeatTimerRef = useRef(null);
 
+  useEffect(() => {
+    if (!shouldTrack()) return;
 
-    useEffect(() => {
-        // Increment the visitor count silently
-        // console.log('Incrementing visitor count for page:', page);    
-        // console.log('Pathname:', window.location.pathname);  
-        // Update the visited pages
-        const sessionStart = Date.now();
+    const effectivePage = page || window.location.pathname;
+    const visitorId = getOrCreateVisitorId();
+    const sessionId = getOrCreateSessionId();
 
-        const sendSessionDuration = () => {
-            const duration = Math.round((Date.now() - sessionStart) / 1000); // in seconds
-            const sessionId = getSessionId();
+    // mark page path
+    addPathToVisited(effectivePage);
+    const pathsVisited = getPathsVisited();
 
-            fetch('/api/visitors/session-duration', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ sessionId, duration })
-            });
-        };
-
-        window.addEventListener('beforeunload', sendSessionDuration);
-        document.addEventListener('visibilitychange', () => {
-            if (document.visibilityState === 'hidden') sendSessionDuration();
-        });
-        const effectivePage = page || window.location.pathname;
-        addPathToVisited(window.location.pathname);
-        const pathsVisited = getPathsVisited();  // Fetch paths visited from localStorage
-        const sessionId = getSessionId();
-        const screenResolution = `${window.screen.width}x${window.screen.height}`;
-        const language = navigator.language;
-        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        const utm = getUTMParams();
-        const referrer = document.referrer || null;
-        const trafficSource = getTrafficSource(referrer);
-        fetch('/api/visitors/logs/', {
-            method: 'POST',
-            body: JSON.stringify({
-                page: effectivePage,
-                userAgent: navigator.userAgent,
-                sessionId,
-                pathsVisited,
-                screenResolution,
-                language,
-                timezone,
-                utm,
-                referrer,
-                trafficSource
-            }),
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-
-        return () => {
-            window.removeEventListener('beforeunload', sendSessionDuration);
-            document.removeEventListener('visibilitychange', sendSessionDuration);
-        };
+    // returning visitor detection: visitorId exists => returning after first ever pageview
+    const firstSeenKey = `firstSeenAt:${visitorId}`;
+    const firstSeenAt =
+      localStorage.getItem(firstSeenKey) || new Date().toISOString();
+    if (!localStorage.getItem(firstSeenKey)) {
+      localStorage.setItem(firstSeenKey, firstSeenAt);
     }
-        , [page]);
+    const isReturningVisitor = localStorage.getItem(firstSeenKey) !== null;
 
-    useEffect(() => {
-        let maxScroll = 0;
+    // Deduplicate: avoid sending the same pageview twice per session
+    const sentMap = safeJsonParse(sessionStorage.getItem(SS_SENT_PAGEVIEWS), {});
+    if (sentMap[effectivePage]) {
+      // Still update pathsVisited on backend if you want, but skip counting.
+      // If your backend supports "upsert by sessionId+page", you can still send as an update:
+      send('/api/visitors/logs', {
+        visitorId,
+        sessionId,
+        page: effectivePage,
+        pathsVisited,
+        lastSeenAt: new Date().toISOString(),
+        // lightweight "update" payload
+      });
+      return;
+    }
+    sentMap[effectivePage] = true;
+    sessionStorage.setItem(SS_SENT_PAGEVIEWS, JSON.stringify(sentMap));
 
-        const updateScrollDepth = () => {
-            const scrollTop = window.scrollY;
-            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const percent = Math.round((scrollTop / docHeight) * 100);
-            if (percent > maxScroll) maxScroll = percent;
-        };
+    const screenResolution = `${window.screen.width}x${window.screen.height}`;
+    const language = navigator.language;
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-        const sendScrollDepth = () => {
-            const sessionId = getSessionId();
+    const utm = getUTMParams();
+    const referrer = document.referrer || null;
+    const trafficSource = getTrafficSource(referrer);
 
-            fetch('/api/visitors/scroll-depth', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ sessionId, scrollDepth: maxScroll })
+    // initial pageview (count once)
+    send('/api/visitors/logs', {
+      visitorId,
+      sessionId,
+      page: effectivePage,
+      userAgent: navigator.userAgent,
+      pathsVisited,
+      screenResolution,
+      language,
+      timezone,
+      utm,
+      referrer,
+      trafficSource,
+      isReturningVisitor,
+      firstSeenAt,
+      lastSeenAt: new Date().toISOString(),
+      // optional fields to support better analytics:
+      pageTitle: document.title,
+    });
+
+    // Track “active time” (optional): consider active if user interacts / scrolls.
+    const markActive = () => {
+      lastActiveAtRef.current = Date.now();
+    };
+
+    const onScroll = () => {
+      markActive();
+      const docHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
+      if (docHeight <= 0) return;
+
+      const percent = Math.round((window.scrollY / docHeight) * 100);
+      if (percent > maxScrollRef.current) maxScrollRef.current = percent;
+    };
+
+    const onClick = (e) => {
+      markActive();
+
+      // Track custom CTA interactions
+      const trackEl = e.target.closest('[data-track]');
+      if (trackEl) {
+        const action = trackEl.getAttribute('data-track');
+        send('/api/visitors/interaction', { sessionId, action });
+      }
+
+      // Track outbound clicks (growth insight)
+      const link = e.target.closest('a[href]');
+      if (link) {
+        try {
+          const url = new URL(link.href, window.location.href);
+          const isOutbound = url.hostname !== window.location.hostname;
+          if (isOutbound) {
+            send('/api/visitors/interaction', {
+              sessionId,
+              action: 'outbound_click',
+              meta: { href: url.href, hostname: url.hostname },
             });
-        };
+          }
+        } catch {
+          // ignore
+        }
+      }
+    };
 
-        window.addEventListener('scroll', updateScrollDepth);
-        window.addEventListener('beforeunload', sendScrollDepth);
+    // Heartbeat: lets you compute "still here" and improves lastSeenAt accuracy
+    const heartbeat = () => {
+      const now = Date.now();
+      const secondsSinceActive = Math.round((now - lastActiveAtRef.current) / 1000);
 
-        return () => {
-            window.removeEventListener('scroll', updateScrollDepth);
-            window.removeEventListener('beforeunload', sendScrollDepth);
-        };
-    }, []);
+      // if user hasn't been active in a while, you may skip to reduce noise
+      send('/api/visitors/session-heartbeat', {
+        sessionId,
+        page: effectivePage,
+        lastSeenAt: new Date().toISOString(),
+        secondsSinceActive,
+        scrollDepth: maxScrollRef.current,
+        pathsVisited: getPathsVisited(),
+      });
+    };
 
-    useEffect(() => {
-  const sessionStart = Date.now();
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        // flush scroll + duration
+        flush(true);
+      } else {
+        markActive();
+      }
+    };
 
-  const sendSessionDuration = () => {
-    const duration = Math.round((Date.now() - sessionStart) / 1000); // in seconds
-    const sessionId = getSessionId();
+    const flush = (useBeacon) => {
+      const startedAt = Number(sessionStorage.getItem(SS_SESSION_STARTED_AT)) || Date.now();
+      const durationSeconds = Math.max(0, Math.round((Date.now() - startedAt) / 1000));
 
-    fetch('/api/visitors/session-duration', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ sessionId, duration })
-    });
-  };
+      // Scroll depth
+      send('/api/visitors/scroll-depth', {
+        sessionId,
+        scrollDepth: maxScrollRef.current,
+      }, { useBeacon });
 
-  window.addEventListener('beforeunload', sendSessionDuration);
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'hidden') sendSessionDuration();
-  });
+      // Duration
+      send('/api/visitors/session-duration', {
+        sessionId,
+        duration: durationSeconds,
+      }, { useBeacon });
 
-  return () => {
-    window.removeEventListener('beforeunload', sendSessionDuration);
-    document.removeEventListener('visibilitychange', sendSessionDuration);
-  };
-}, []);
+      // Optional: page exit
+      send('/api/visitors/session-exit', {
+        sessionId,
+        page: effectivePage,
+        lastSeenAt: new Date().toISOString(),
+      }, { useBeacon });
+    };
 
+    // register listeners once per mount
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('click', onClick);
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    window.addEventListener('beforeunload', () => flush(true));
 
-useEffect(() => {
-  let maxScroll = 0;
+    // start heartbeat
+    if (HEARTBEAT_SECONDS > 0) {
+      heartbeatTimerRef.current = window.setInterval(
+        heartbeat,
+        HEARTBEAT_SECONDS * 1000
+      );
+    }
 
-  const updateScrollDepth = () => {
-    const scrollTop = window.scrollY;
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const percent = Math.round((scrollTop / docHeight) * 100);
-    // console.log('Scroll percent:', percent); // Debugging line
-    // console.log('Max scroll so far:', maxScroll); // Debugging line
-    // console.log('Document height:', docHeight); // Debugging line
-    // console.log('Scroll top:', scrollTop); // Debugging line
-    if (percent > maxScroll) maxScroll = percent;
-  };
+    return () => {
+      // cleanup
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('click', onClick);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
 
-  const sendScrollDepth = () => {
-    const sessionId = getSessionId();
+      if (heartbeatTimerRef.current) {
+        clearInterval(heartbeatTimerRef.current);
+        heartbeatTimerRef.current = null;
+      }
 
-    fetch('/api/visitors/scroll-depth', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ sessionId, scrollDepth: maxScroll })
-    });
-  };
+      // flush on unmount (SPA route change)
+      flush(false);
+    };
+  }, [page]);
 
-  window.addEventListener('scroll', updateScrollDepth);
-  window.addEventListener('beforeunload', sendScrollDepth);
-
-  return () => {
-    window.removeEventListener('scroll', updateScrollDepth);
-    window.removeEventListener('beforeunload', sendScrollDepth);
-  };
-}, []);
-
-
-useEffect(() => {
-  const handleClick = (e) => {
-    const target = e.target.closest('[data-track]');
-    if (!target) return;
-
-    const sessionId = getSessionId();
-    const action = target.getAttribute('data-track');
-
-    fetch('/api/visitors/interaction', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ sessionId, action })
-    });
-  };
-
-  window.addEventListener('click', handleClick);
-  return () => window.removeEventListener('click', handleClick);
-}, []);
-
-
-
-    return null; // No UI component is displayed
+  return null;
 };
 
 export default VisitorCounter;

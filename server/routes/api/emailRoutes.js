@@ -2,7 +2,7 @@ const cron = require('node-cron');
 const { emailQuote, emailQuoteNotification, emailNewUser, emailNewUserNotification, emailPasswordResetRequest, emailQuickQuote, emailQuickNotePDF, generateWeeklyReport, sendWeeklyReportEmail, generateManualReport,
     sendUpcomingBookingsEmail
 } = require('../../controllers/emailController');
-
+const NotificationService = require('../../services/notificationService');
 
 const router = require('express').Router();
 const isDev = process.env.NODE_ENV !== "production";
@@ -46,12 +46,13 @@ cron.schedule(
 "0 7 * * *",
     async () => {
         try {
-            await sendUpcomingBookingsEmail(
-                { body: { days: 7 }, query: {} },
-                {
-                    status: () => ({ json: () => null }),
-                }
-            );
+            // await sendUpcomingBookingsEmail(
+            //     { body: { days: 7 }, query: {} },
+            //     {
+            //         status: () => ({ json: () => null }),
+            //     }
+            // );
+            await NotificationService.sendAdminUpcomingBookingsDigestForPeriod(7);
         } catch (err) {
             console.error('[Cron] Failed to send upcoming bookings email:', err);
         }

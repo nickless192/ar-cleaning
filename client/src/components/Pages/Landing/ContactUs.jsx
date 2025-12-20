@@ -76,7 +76,7 @@ const ContactUs = () => {
         <Row>
           {/* Contact Form */}
           <Col xs={12} md={6} className="mb-4 mb-md-0">
-            <h3 className="mb-3">{t("contact.heading")}<NewIconAnimated /></h3>
+            <h3 className="mb-3">{t("contact.heading")}</h3>
             <p className="text-muted">
               {t("contact.intro")}
             </p>

@@ -25,6 +25,7 @@ import GiftCard from "/src/components/Pages/Management/ManageGiftCard.jsx";
 import ManageCategories from "/src/components/Pages/Management/ManageCategories.jsx";
 // import RequestQuote from "../src/components/Pages/RequestQuote";
 import LoginSign from "/src/components/Pages/UserJourney/LoginSign";
+import SignUp from "/src/components/Pages/UserJourney/SignUp";
 import ViewQuotes from "./components/Pages/Management/ViewQuotes";
 import ProductsAndServices from "/src/components/Pages/Navigation/ProductsAndServices";
 import ProtectedRoute from "/src/components/Pages/Management/ProtectedRoute";
@@ -33,11 +34,12 @@ import Navbar from "/src/components/Pages/Navigation/Navbar.jsx";
 import NavigationBar from "/src/components/Pages/Navigation/NavigationBar";
 import Career from "/src/components/Pages/Navigation/Career.jsx";
 import LogDashboard from '/src/components/Pages/Management/LogDashboard';
-import QuickQuoteDashboard from "/src/components/Pages/Management/QuickQuoteDashboard";
+// import QuickQuoteDashboard from "/src/components/Pages/Management/QuickQuoteDashboard";
 import BookingList from '/src/components/Pages/Management/BookingList';
 import ResetPassword from "/src/components/Pages/UserJourney/ResetPassword";
 import CertificationsMembershipsPage from "/src/components/Pages/Certifications/CertificationsMembershipsPage";
 import CleanARJoinsISSACanada from "/src/components/Pages/Blogs/CleanARJoinsISSACanada";
+import NotificationAdminPage from "/src/components/Pages/UserJourney/NotificationAdminPage.jsx";
 
 import Terms from "/src/components/Pages/Navigation/Terms";
 import Disclaimer from "/src/components/Pages/Navigation/Disclaimer";
@@ -45,10 +47,10 @@ import PrivacyPolicy from "/src/components/Pages/Navigation/PrivacyPolicy";
 
 import Footer from "/src/components/Pages/Navigation/Footer.jsx";
 import Customer from "/src/components/Pages/Management/Customers.jsx";
-import FinanceDashboard from "/src/components/Pages/Management/FinanceDashboard";
-import ExpenseDashboard from "/src/components/Pages/Management/ExpenseDashboard";
+// import FinanceDashboard from "/src/components/Pages/Management/FinanceDashboard";
+// import ExpenseDashboard from "/src/components/Pages/Management/ExpenseDashboard";
 import QuickRequest_v2 from "/src/components/Pages/UserJourney/QuoteRequest_v2"; // version in-dev for testing
-import AdminContactDashboard from "/src/components/Pages/Management/AdminContactDashboard"; // version in-dev for testing
+// import AdminContactDashboard from "/src/components/Pages/Management/AdminContactDashboard"; // version in-dev for testing
 import AdminManagementLayout from "/src/components/Pages/ManagementViews/AdminManagementLayout.jsx";
 import BookingTabbedView from "/src/components/Pages/ManagementViews/BookingTabbedView";
 
@@ -63,7 +65,7 @@ import LandingToronto from "/src/components/Pages/qrCodes/LandingToronto";
 import backgroundImage from '/src/assets/img/natural-marble-pattern-background.jpg';
 import CookieConsent from "/src/components/Pages/Landing/CookieConsent";
 import SiteBanner from "/src/components/Pages/Navigation/SiteBanner.jsx";
-import AdminManagementPage from "/src/components/Pages/ManagementViews/AdminManagementPage.jsx";
+// import AdminManagementPage from "/src/components/Pages/ManagementViews/AdminManagementPage.jsx";
 import InvoiceDetail from "/src/components/Pages/Booking/InvoiceDetail.jsx";
 
 registerSW({
@@ -148,6 +150,7 @@ const App = () => {
             <Routes>
               <Route path="/index" element={<Index />} />
               <Route path="/profile-page" element={<ProtectedRoute element={<ProfilePage />} />} />
+              <Route path="/notification-management" element={<ProtectedRoute element={<NotificationAdminPage />} />} />
               {/* <Route path="/manage-categories" element={<ProtectedRoute element={<ManageCategories />} />} /> */}
               {/* <Route path="/manage-service" element={<ProtectedRoute element={<ManageService />} />} /> */}
               {/* <Route path="/manage-product" element={<ProtectedRoute element={<ManageProduct />} />} /> */}
@@ -165,9 +168,9 @@ const App = () => {
               <Route path="/accounting-management" element={<ProtectedRoute element={<AccountingTabbedView />} />} /> */}
               <Route path="/certifications-memberships" element={<CertificationsMembershipsPage />} />
               <Route
-  path="/blog/cleanar-solutions-joins-issa-canada"
-  element={<CleanARJoinsISSACanada />}
-/>
+                path="/blog/cleanar-solutions-joins-issa-canada"
+                element={<CleanARJoinsISSACanada />}
+              />
               <Route path="/admin" element={<AdminManagementLayout />}>
                 <Route index element={<Navigate to="accounting" replace />} />
                 <Route path="accounting" element={<AccountingTabbedView />} />
@@ -180,7 +183,7 @@ const App = () => {
               {/* <Route path="/dashboard" element={<ProtectedRoute element={<LogDashboard />} />} /> */}
               {/* <Route path="/booking-dashboard" element={<ProtectedRoute element={<BookingList />} />} /> */}
               {/* <Route path="/login-page" element={<LoginPage />} /> */}
-              {/* <Route path="/signup-page" element={<SignUp />} /> */}
+              <Route path="/signup-page" element={<SignUp />} />
               <Route path='/login-signup' element={<LoginSign />} />
               {/* <Route path='/request-quote' element={<RequestQuote />} /> */}
               <Route path='/chat-tool' element={<ChatTool />} />

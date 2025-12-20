@@ -20,8 +20,11 @@ import {
 import VisitorCounter from "/src/components/Pages/Management/VisitorCounter.jsx";
 import ISSAMembershipBadge from "/src/components/Pages/Certifications/ISSAMembershipBadge.jsx";
 import Logo from "/src/assets/img/IC CLEAN AR-15-cropped.png";
+// import { t } from "i18next";
+import { useTranslation, Trans } from "react-i18next";
 
 function CertificationsMembershipsPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const goToQuote = () => {
@@ -61,21 +64,24 @@ function CertificationsMembershipsPage() {
             />
           </Col>
           <Col xs="12" md="6">
-            <h1 className="text-primary fw-bold mb-3">
-              Professional Certifications & Memberships
+            <h1 className="text-primary fw-bold mb-3">{t('certification.title')}
+              {/* Professional Certifications & Memberships */}
             </h1>
             <p className="fs-5 text-secondary">
-              Your home or business deserves cleaners who follow{" "}
+              <Trans i18nKey="certification.intro"
+                components={{ strong: <strong /> }}
+              />
+              {/* Your home or business deserves cleaners who follow{" "}
               <strong>recognized industry standards</strong>, not guesswork.
               Our memberships and certifications show our commitment to
-              professional, safe, and healthy cleaning practices in Toronto.
+              professional, safe, and healthy cleaning practices in Toronto. */}
             </p>
             <Button
               color="success"
               className="mt-3"
               onClick={goToQuote}
-            >
-              Get a Free Quote
+            >{t('certification.ctaPrimary')}
+              {/* Get a Free Quote */}
             </Button>
           </Col>
         </Row>
@@ -89,70 +95,86 @@ function CertificationsMembershipsPage() {
 
             <Row className="mt-4">
               <Col md="7" className="mb-4 mb-md-0">
-                <h2 className="fw-bold mb-3">
-                  What is ISSA Canada and why does it matter?
+                <h2 className="fw-bold mb-3">{t('issa.sectionTitle')}
+                  {/* What is ISSA Canada and why does it matter? */}
                 </h2>
                 <p className="fs-6 text-secondary">
-                  <strong>ISSA</strong> is the worldwide cleaning industry
+                  <Trans i18nKey="issa.description1"
+                    components={{ strong: <strong /> }}
+                  />
+                  
+                  {/* <strong>ISSA</strong> is the worldwide cleaning industry
                   association, representing more than 11,000 members around
                   the globe, including building service contractors,
-                  distributors, manufacturers, and residential cleaners.{" "}
+                  distributors, manufacturers, and residential cleaners. */}
+                  {" "}
                   <a
                     href="https://www.issa.com/"
                     target="_blank"
                     rel="noopener noreferrer"
-                  >
-                    Learn more about ISSA
+                  >{t('issa.learnMore')}
+                    {/* Learn more about ISSA */}
                   </a>
                   .
                 </p>
                 <p className="fs-6 text-secondary">
-                  <strong>ISSA Canada</strong> is the Canadian division,
+                  <Trans i18nKey="issa.description2"
+                    components={{ strong: <strong /> }}
+                  />
+                  
+                  {/* <strong>ISSA Canada</strong> is the Canadian division,
                   supporting the local cleaning industry with education,
                   standards, and advocacy. As members, we stay informed on
                   best practices for{" "}
                   <strong>health, safety, and quality</strong> in cleaning
-                  services across Canada.{" "}
+                  services across Canada. */}
+                  {" "}
                   <a
                     href="https://issa-canada.com/en/issa-canada-en/about-issa-canada-en"
                     target="_blank"
                     rel="noopener noreferrer"
-                  >
-                    About ISSA Canada
+                  >{t('issa.aboutCanada')}
+                    {/* About ISSA Canada */}
                   </a>
                   .
                 </p>
                 <p className="fs-6 text-secondary mb-0">
-                  For our clients, this means you’re working with a company
+                  <Trans i18nKey="issa.description3"
+                    components={{ strong: <strong /> }}
+                  />
+                  {/* For our clients, this means you’re working with a company
                   that takes cleaning seriously – not just as a task, but as
                   an investment in a{" "}
                   <strong>healthier and safer environment</strong> for your
-                  family, staff, and visitors.
+                  family, staff, and visitors. */}
                 </p>
               </Col>
 
               <Col md="5">
                 <Card className="shadow-sm border-0 bg-transparent h-100">
-                  <CardHeader className="bg-primary text-white fw-bold">
-                    What ISSA membership means for you
+                  <CardHeader className="bg-primary text-white fw-bold">{t('issa.cardTitle')}
+                    {/* What ISSA membership means for you */}
                   </CardHeader>
                   <CardBody className="bg-transparent">
                     <ul className="list-unstyled mb-0">
                       <li className="mb-2">
-                        <FaAward className="text-primary me-2" />
-                        Alignment with international cleaning standards
+                        <FaAward className="text-primary me-2" />{t('issa.benefits.standards')}
+                        {/* Alignment with international cleaning standards */}
                       </li>
                       <li className="mb-2">
                         <FaShieldAlt className="text-primary me-2" />
-                        Added focus on health, hygiene, and safety
+                        {t('issa.benefits.health')}
+                        {/* Added focus on health, hygiene, and safety */}
                       </li>
                       <li className="mb-2">
                         <FaCheckCircle className="text-primary me-2" />
-                        Commitment to professional conduct and ethics
+                        {t('issa.benefits.ethics')}
+                        {/* Commitment to professional conduct and ethics */}
                       </li>
                       <li className="mb-2">
                         <FaLeaf className="text-primary me-2" />
-                        Better practices for environmentally-conscious cleaning
+                        {t('issa.benefits.environment')}
+                        {/* Better practices for environmentally-conscious cleaning */}
                       </li>
                     </ul>
                   </CardBody>
@@ -167,17 +189,24 @@ function CertificationsMembershipsPage() {
       <Container className="my-5">
         <Row className="justify-content-center">
           <Col md="10">
-            <h2 className="fw-bold mb-3">Growing our professional standards</h2>
+            <h2 className="fw-bold mb-3">{t('roadmap.title')}</h2>
             <p className="fs-6 text-secondary">
-              Our ISSA Canada membership is an important step, and we’re
+              <Trans i18nKey="roadmap.description1"
+                components={{ strong: <strong /> }}
+              />
+              {/* Our ISSA Canada membership is an important step, and we’re
               not stopping there. CleanAR Solutions is continuously exploring
               additional training and certifications that align with our
-              focus on <strong>quality, safety, and sustainability</strong>.
+              focus on <strong>quality, safety, and sustainability</strong>. */}
             </p>
             <p className="fs-6 text-secondary mb-0">
-              As we add new certifications, this page will be kept up to
+              <Trans i18nKey="roadmap.description2"
+                components={{ strong: <strong /> }}
+              />
+              
+              {/* As we add new certifications, this page will be kept up to
               date so you can always see how we’re investing in better
-              service for your home or business.
+              service for your home or business. */}
             </p>
           </Col>
         </Row>
@@ -185,22 +214,22 @@ function CertificationsMembershipsPage() {
 
       {/* Call to Action */}
       <Container className="text-center py-5">
-        <h2 className="fw-bold text-dark mb-3">
-          Bring certified standards to your space
+        <h2 className="fw-bold text-dark mb-3">{t('certification-cta.title')}
+          {/* Bring certified standards to your space */}
         </h2>
-        <p className="mb-4 text-secondary">
-          Whether it’s a condo, house, or office, we apply the same level of
-          care and professionalism backed by our ISSA Canada membership.
+        <p className="mb-4 text-secondary">{t('certification-cta.description')}
+          {/* Whether it’s a condo, house, or office, we apply the same level of
+          care and professionalism backed by our ISSA Canada membership. */}
         </p>
         <Button
           onClick={goToQuote}
           className="btn btn-lg primary-bg-color"
-        >
-          Request Your Cleaning Quote
+        >{t('certification-cta.button')}
+          {/* Request Your Cleaning Quote */}
         </Button>
         <div className="mt-3">
-          <Link to="/products-and-services">
-            View our cleaning services
+          <Link to="/products-and-services">{t('certification-cta.link')}
+            {/* View our cleaning services */}
           </Link>
         </div>
       </Container>

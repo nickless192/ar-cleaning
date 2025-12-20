@@ -67,7 +67,7 @@ function WhyChooseUs() {
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
         >
-          {t("whyChooseUs.heading")}<NewIconAnimated />
+          {t("whyChooseUs.heading")}
           <motion.span
             animate={{ rotate: isOpen ? 180 : 0 }}
             transition={{ duration: 0.3 }}

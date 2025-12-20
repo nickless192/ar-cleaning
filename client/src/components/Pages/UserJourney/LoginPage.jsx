@@ -258,16 +258,16 @@ function LoginPage({ focus }) {
     <>
       <VisitorCounter page={"login-page"} />
       <div
-        className="content content-border bg-light"
-        style={{ backgroundImage: `url(${pageBg})`, backgroundSize: "cover" }}
+        className=" bg-light "
+      // style={{ backgroundImage: `url(${pageBg})`, backgroundSize: "cover" }}
       >
-        <h1 className="title primary-color text-center montserrat-bold">
+        {/* <h1 className="title primary-color text-center montserrat-bold">
           {t("login.title")}
-        </h1>
+        </h1> */}
         <Container className="container">
-          <p className="text-cleanar-color text-bold text-center">
+          {/* <p className="text-cleanar-color text-bold text-center">
             {t("login.description")}
-          </p>
+          </p> */}
 
           {errorMessage && (
             <p className="text-danger text-center mb-2">{errorMessage}</p>
@@ -276,7 +276,7 @@ function LoginPage({ focus }) {
           <Form onSubmit={handleFormSubmit}>
             {/* Email */}
             <Row className="justify-content-center">
-              <Col className="py-1" md="10" xs="10">
+              <Col className="py-1" md="12" xs="12">
                 <Form.Group controlId="loginEmail">
                   <Form.Label className="text-cleanar-color">
                     {t("login.email_label")} {' '}
@@ -309,14 +309,16 @@ function LoginPage({ focus }) {
                 </Form.Group>
                 {emailPrefilled && (
                   // <div className="text-end mt-1">
-                  <Button
-                    variant="link"
-                    type="button"
+                  <a
+                    // variant="link"
+                    // type="button"
+                    href="#"
                     className="p-0 small"
+                    tabIndex="999"
                     onClick={handleClearRememberedEmail}
                   >
                     {t("login.clear_saved_email", "Not you? Clear saved email")}
-                  </Button>
+                  </a>
                   // </div>
                 )}
               </Col>
@@ -339,7 +341,7 @@ function LoginPage({ focus }) {
 
             {/* Password */}
             <Row className="justify-content-center">
-              <Col className="py-1" md="10" xs="10">
+              <Col className="py-1" md="12" xs="12">
                 <Form.Group controlId="loginPassword">
                   <Form.Label className="text-cleanar-color">
                     {t("login.password_label")} {' '}
@@ -412,7 +414,7 @@ function LoginPage({ focus }) {
 
             {/* Remember me */}
             <Row className="justify-content-center mt-2">
-              <Col md="8" xs="10">
+              <Col md="12" xs="10">
                 <Form.Check
                   type="checkbox"
                   id="rememberMe"
@@ -429,12 +431,12 @@ function LoginPage({ focus }) {
 
             {/* Buttons */}
             <Row className="justify-content-center mt-3">
-              <Col className="py-1" md="6" xs="10">
+              <Col className="py-1" md="12" xs="12">
                 <Button
-                  className="btn rounded-pill primary-bg-color"
+                  className="btn  primary-bg-color"
                   type="submit"
                   data-track="login"
-                  size="lg"
+                  // size="lg"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? (
@@ -453,18 +455,21 @@ function LoginPage({ focus }) {
                   )}
                 </Button>
               </Col>
-              <Col className="py-1" md="6" xs="10">
+              {/* <Col className="py-1" md="8" xs="12">
                 <Button
-                  className="btn-info rounded-pill"
+                  className="btn-info "
                   type="button"
                   data-track="reset-password"
                   onClick={handleResetPassword}
-                  size="lg"
                 >
                   {t("login.reset_password_button")}
                 </Button>
-              </Col>
+              </Col> */}
             </Row>
+            <div className="small mt-2 d-flex justify-content-between">
+              <a href="/signup-page">Create account</a>
+              <a href="#" onClick={handleResetPassword}>Forgot your password?</a>
+            </div>
             {/* <Row className="justify-content-center mt-2">
   <Col md="12" xs="10" className="text-center">
     <Button

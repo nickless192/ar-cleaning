@@ -89,7 +89,7 @@ function ReviewsCarousel() {
   return (
     <div className="py-5">
       <Container>
-        <h2 className="text-center mb-4 montserrat-bold">{t("testimonials.heading")}<NewIconAnimated /></h2>
+        <h2 className="text-center mb-4 montserrat-bold">{t("testimonials.heading")}</h2>
         <h6 className="text-center mb-4 fst-italic">{t("testimonials.subheading")}</h6>
         <Row className="justify-content-center">
           <Col xs={10} md={8} className="text-center">

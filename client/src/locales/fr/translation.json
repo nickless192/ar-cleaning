@@ -658,5 +658,49 @@
       "cancel": "Annuler",
       "submit": "Soumettre la demande"
     }
+  },
+ "certification": {
+    "title": "Certifications et Adhésions Professionnelles",
+    "intro": "Votre domicile ou votre entreprise mérite des professionnels du nettoyage qui respectent des <strong>normes reconnues de l’industrie</strong>, et non des approximations. Nos adhésions et certifications démontrent notre engagement envers des pratiques de nettoyage professionnelles, sécuritaires et saines à Toronto.",
+    "ctaPrimary": "Obtenir une Soumission Gratuite",
+    "ctaSecondary": "Apprenez pourquoi l’adhésion ISSA est importante →"
+  },
+
+  "issa": {
+    "sectionTitle": "Qu’est-ce que ISSA Canada et pourquoi est-ce important ?",
+    "description1": "<strong>ISSA</strong> est l’association mondiale de l’industrie du nettoyage, représentant plus de 11 000 membres à travers le monde, incluant des entrepreneurs en services de nettoyage, des distributeurs, des fabricants et des spécialistes du nettoyage résidentiel.",
+    "learnMore": "En savoir plus sur ISSA",
+    "description2": "<strong>ISSA Canada</strong> est la division canadienne, soutenant l’industrie locale du nettoyage par l’éducation, les normes et la représentation. En tant que membres, nous suivons les meilleures pratiques en matière de <strong>santé, sécurité et qualité</strong> partout au Canada.",
+    "aboutCanada": "À propos d’ISSA Canada",
+    "description3": "Pour nos clients, cela signifie travailler avec une entreprise qui considère le nettoyage comme bien plus qu’une tâche — mais comme un investissement dans un <strong>environnement plus sain et plus sécuritaire</strong> pour votre famille, vos employés et vos visiteurs.",
+ "prefix": "CleanAR Solutions est fièrement membre de",
+    "linkText": "ISSA Canada, une division d’ISSA — l’association mondiale de l’industrie du nettoyage",
+    "suffix": ". Cette adhésion reflète notre engagement continu envers des normes professionnelles dans l’industrie du nettoyage.",
+    "cardTitle": "Ce que l’adhésion à ISSA signifie pour vous",
+    "benefits": {
+      "standards": "Conformité aux normes internationales de nettoyage",
+      "health": "Accent accru sur la santé, l’hygiène et la sécurité",
+      "ethics": "Engagement envers une conduite professionnelle et éthique",
+      "environment": "Meilleures pratiques de nettoyage respectueuses de l’environnement"
+    }
+  },
+
+  "roadmap": {
+    "title": "Élever nos normes professionnelles",
+    "description1": "Notre adhésion à ISSA Canada est une étape importante, et nous ne nous arrêtons pas là. CleanAR Solutions continue d’explorer des formations et certifications supplémentaires alignées avec notre engagement envers la <strong>qualité, la sécurité et la durabilité</strong>.",
+    "description2": "À mesure que de nouvelles certifications seront ajoutées, cette page sera mise à jour afin que vous puissiez toujours voir comment nous investissons dans un meilleur service pour votre domicile ou votre entreprise."
+  },
+
+  "certification-cta": {
+    "title": "Apportez des normes certifiées à votre espace",
+    "description": "Qu’il s’agisse d’un condo, d’une maison ou d’un bureau, nous appliquons le même niveau de soin et de professionnalisme, appuyé par notre adhésion à ISSA Canada.",
+    "button": "Demander une Soumission de Nettoyage",
+    "link": "Voir nos services de nettoyage"
+  },
+
+  "badge": {
+    "eyebrow": "Un nettoyage professionnel digne de confiance",
+    "headline": "CleanAR Solutions est fièrement <strong>Membre d’ISSA Canada</strong>",
+    "body": "En tant que membres d’ISSA Canada — la division nationale de l’association mondiale de l’industrie du nettoyage — nous appliquons des pratiques reconnues en matière de qualité, de sécurité et de professionnalisme dans chacun de nos services."
   }
 }

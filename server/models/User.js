@@ -121,6 +121,70 @@ UserSchema.methods.isCorrectPassword = async function (password) {
     return await bcrypt.compare(password, this.password);
 };
 
+// Convenience virtual: "First Last"
+UserSchema.virtual('fullName').get(function () {
+    return `${this.firstName} ${this.lastName}`.trim();
+});
+
+/**
+ * Check if user has a given role name (e.g. 'admin', 'tester', 'customer')
+ * Looks at Role documents AND legacy flags for now.
+ */
+UserSchema.methods.hasRole = async function (roleName) {
+    const Role = require('./Role'); // avoid circular dep issues
+    const target = (roleName || '').toLowerCase().trim();
+    if (!target) return false;
+
+    // Map legacy flags for backward compatibility
+    if (target === 'admin' && this.adminFlag) return true;
+    if (target === 'tester' && this.testerFlag) return true;
+
+    if (!this.roles || this.roles.length === 0) return false;
+
+    // Ensure roles are populated or fetch minimal fields
+    const roleIds = this.roles.map((r) => r._id ? r._id : r);
+    const roles = await Role.find({ _id: { $in: roleIds } }).select('name');
+
+    return roles.some((r) => r.name === target);
+};
+
+/**
+ * Check if user has a given permission (e.g. 'notifications.manage_templates')
+ * This walks the roles and their inherited permissions.
+ */
+UserSchema.methods.hasPermission = async function (permissionKey) {
+    if (!permissionKey) return false;
+
+    // Quick path: adminFlag can bypass permissions if you want
+    if (this.adminFlag) return true;
+
+    const Role = require('./Role');
+    const Permission = require('./Permission'); // assuming you have this
+
+    if (!this.roles || this.roles.length === 0) return false;
+
+    const roleIds = this.roles.map((r) => (r._id ? r._id : r));
+    const roles = await Role.find({ _id: { $in: roleIds } });
+
+    // Collect all permission ids from all roles (with inheritance)
+    const permIdsSet = new Set();
+
+    for (const role of roles) {
+        const effective = await role.getEffectivePermissions();
+        effective.forEach((id) => permIdsSet.add(id.toString()));
+    }
+
+    if (permIdsSet.size === 0) return false;
+
+    // Check if any of those permissions match the key
+    const perms = await Permission.find({
+        _id: { $in: Array.from(permIdsSet) },
+    }).select('key');
+
+    return perms.some((p) => p.key === permissionKey);
+};
+
+
 const User = model('User', UserSchema);
 
 module.exports = User;

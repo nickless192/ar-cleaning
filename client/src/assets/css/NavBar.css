@@ -1,16 +1,23 @@
 :root {
-    --primary-color: #00a5ce;
-    --secondary-color: #89c97f;
-    --accent-color: #4db1b3;
-    --light-color: #95d3c3;
-    --light-color-opaque: #b5dad0;
-    --light-blue-color: #64acc4;
-    --brown-color: #5c5d60;
-    --text-cleanar-color: #374357;
-    --accordion-bg-color: #acb9c7;
+  --primary-color: #00a5ce;
+  --secondary-color: #89c97f;
+  --accent-color: #4db1b3;
+  --light-color: #95d3c3;
+  --light-color-opaque: #b5dad0;
+  --light-blue-color: #64acc4;
+  --brown-color: #5c5d60;
+  --text-cleanar-color: #374357;
+  --accordion-bg-color: #acb9c7;
 }
 
-/* Fixed navbar styling */
+/* =========================================================
+   NAVBAR BASE
+   ========================================================= */
+
+.navbar {
+  position: relative; /* anchor the absolute mobile panel */
+}
+
 .navbar-custom {
   position: fixed;
   top: 0;
@@ -22,99 +29,156 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-
-.social-icons-container {
-  display: flex !important;
-  flex-direction: row !important;
-  justify-content: right;
-  align-items: right;
-  gap: 0rem!important;
-  flex-wrap: nowrap;
+/* Your component toggles these */
+.navbar-color {
+  background-color: var(--light-color) !important;
 }
 
-
-
-.social-icons-container .nav-item {
-  flex: none !important;
+.navbar-transparent {
+  background-color: rgba(149, 211, 195, 0.95) !important;
 }
 
-@media (max-width: 768px) {
-  .social-icons-container {
-    justify-content: right;
-    /* margin-bottom: 1rem; */
-  }
-}
-
-/* For mobile screens, possibly increase the padding if your mobile navbar is taller */
-@media (max-width: 768px) {
-  body {
-    padding-top: 120px;
-  }
-}
-
-/* Ensure all main content containers respect the navbar */
-.main-content, 
-#root > div:first-child, 
+/* Prevent page containers from adding their own top spacing */
+.main-content,
+#root > div:first-child,
 main,
 .page-container {
   margin-top: 0 !important;
 }
 
-/* To ensure content flows correctly on all pages */
 .container-fluid {
   padding-top: 0 !important;
 }
 
-.navbar-color {
-  background-color: #ffffff;
-}
+/* =========================================================
+   SHELL LAYOUT (DESKTOP)
+   Brand (left) | Main links (center) | Account (right) | Utilities (far right)
+   ========================================================= */
 
-.navbar-transparent {
-  background-color: rgba(255, 255, 255, 0.95);
-}
-
-.navbar-wrapper {
+.nav-shell {
   display: flex;
-  justify-content: space-between;
-  
-  /* width: 100%; */
+  align-items: flex-start; /* allows toggler to sit higher */
+  gap: 12px;
 }
 
-/* Logo styling */
-.navbar-brand {
-  margin-right: 2rem;
-  padding: 0;
+/* Collapse wrapper row on desktop (do NOT force display globally!) */
+.nav-collapse {
+  flex: 1;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
 }
 
-.logo-container {
+/* Desktop: make the collapse area a row */
+@media (min-width: 992px) {
+  .nav-collapse {
+    display: flex;
+  }
+}
+
+/* Center links */
+.nav-main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  min-width: 0;
+}
+
+/* Account sits before far-right utilities */
+.nav-account {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 }
 
+/* FAR RIGHT utilities (2 lines: socials row + language row) */
+.nav-utils {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column; /* two lines */
+  align-items: flex-end;  /* far right */
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.utils-social,
+.utils-lang {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.utils-social .nav-link,
+.utils-lang .nav-link {
+  padding: 6px 6px;
+}
+
+/* Optional: wrapper if you implement Account | Social | Language on mobile */
+.nav-bottom-row {
+  display: block;
+}
+.nav-bottom-center {
+  display: block;
+}
+
+/* =========================================================
+   BRAND (LOGO ABOVE NAME)
+   ========================================================= */
+
+.navbar-brand,
+.brand {
+  display: flex;
+  flex-direction: column; /* logo on top, name below */
+  align-items: flex-start;
+  justify-content: center;
+  gap: 4px;
+  margin-right: 12px;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.navbarlogo,
 .navbar-logo {
-  height: 40px;
-  margin-right: 10px;
+  height: 42px;
+  width: auto;
+  display: block;
 }
 
-.navbar-title {
-  font-size: 1.2rem;
-  font-weight: 700;
-  margin: 0;
-  color: #333;
-  font-family: 'Montserrat', sans-serif;
+.brand-text {
+  font-weight: 800;
+  line-height: 1.05;
+  color: var(--primary-color);
+  background: transparent !important;
+  border: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
 }
 
-/* Toggle button styling */
+/* Legacy text classes (safe) */
+.navlogotext,
+.navbarh1 {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1.05;
+  color: var(--text-cleanar-color);
+}
+
+/* =========================================================
+   TOGGLER (Hamburger / X)
+   ========================================================= */
+
 .navbar-toggler {
   border: none;
   background: transparent;
-  padding: 0.5rem;
-  align-items: center;
-  /* display: inline-flex !important; */
   width: auto !important;
-  padding: 4px 8px; /* tighter padding */
+  padding: 6px 10px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .navbar-toggler:focus {
@@ -122,65 +186,61 @@ main,
   box-shadow: none;
 }
 
-/* .navbar-toggler {
-  display: inline-flex !important; 
+.navbar-toggler-icon {
+  color: var(--text-cleanar-color);
+  font-size: 1.6rem;
+}
+
+/* Add this class to your toggler button: className="navbar-toggler cleanar-toggler ..." */
+.cleanar-toggler {
+  margin-left: auto;
+  align-self: flex-start; /* top align */
+  display: inline-flex;
   justify-content: center;
   align-items: center;
-  width: auto !important;
-  padding: 4px 8px; 
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  transition: all 0.3s ease;
 }
 
-
-.navbar-toggler:focus {
-  outline: none;
-  box-shadow: none !important;
-} */
-
-
-.navbar-toggler-icon {
-  color: #333;
-  font-size: 1.5rem;
+/* When menu is open, give a subtle background */
+.cleanar-toggler.is-open {
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
 }
 
-/* Navigation items */
+/* =========================================================
+   NAV LINKS / ITEMS
+   ========================================================= */
+
 .navbar-nav {
   display: flex;
   align-items: center;
-  margin-left: auto;
+  margin-left: 0;
 }
 
-  .navbar-nav {
-    flex-direction: column;
-    /* width: 100%; */
-  }
+/* IMPORTANT: no global column forcing here */
 
 .nav-item {
   margin: 0 0.25rem;
-  /* color:#ffffff!important */
 }
 
 .nav-link {
-  color: #fff   ;
-  font-weight: 500;
-  padding: 0.75rem 1rem;
-  transition: all 0.3s ease;
-  border-radius: 4px;
+  color: var(--text-cleanar-color) !important;
+  font-weight: 700;
+  padding: 0.6rem 0.9rem;
+  transition: all 0.2s ease;
+  border-radius: 6px;
+  white-space: nowrap;
 }
 
 .nav-link:hover {
-  background-color: rgba(0, 0, 0, 0.05);
-  color: #007bff;
+  background-color: rgba(0, 0, 0, 0.06);
+  color: var(--primary-color) !important;
 }
 
 .nav-link-content {
   display: flex;
   align-items: center;
   font-size: 1rem;
-  font-weight: bold;
+  font-weight: 700;
 }
 
 .nav-icon {
@@ -188,25 +248,33 @@ main,
   font-size: 1rem;
 }
 
-/* Dropdown styling */
-.nav-item-dropdown .nav-link-dropdown {
-  display: flex;
-  align-items: center;
-  color: #fff;
-  font-weight: 500;
-  padding: 0.75rem 1rem;
-  border-radius: 4px;
+/* Signup/Login "button-like" link */
+.nav-link-signup {
+  color: white !important;
+  background-color: var(--primary-color);
+  border-radius: 8px;
+  padding: 0.55rem 0.95rem;
+  font-weight: 800;
 }
 
-.nav-item-dropdown .nav-link-dropdown:hover {
-  background-color: rgba(0, 0, 0, 0.05);
-  color: #007bff;
+.nav-link-signup:hover {
+  background-color: #0092b6;
+  color: white !important;
 }
+
+/* Small icon-only links (bell, etc.) */
+.icon-link.nav-link {
+  padding: 6px 10px;
+}
+
+/* =========================================================
+   DROPDOWNS
+   ========================================================= */
 
 .dropdown-menu {
   border: none;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
   padding: 0.5rem 0;
   min-width: 220px;
 }
@@ -214,71 +282,249 @@ main,
 .dropdown-item {
   display: flex;
   align-items: center;
-  padding: 0.75rem 1.25rem;
+  padding: 0.75rem 1.1rem;
   color: #333;
-  font-weight: 500;
-  transition: all 0.2s ease;
+  font-weight: 600;
+  transition: all 0.15s ease;
 }
 
 .dropdown-item:hover {
   background-color: rgba(0, 0, 0, 0.05);
-  color: #007bff;
+  color: var(--primary-color);
 }
 
-.dropdown-icon {
-  margin-right: 0.75rem;
-  font-size: 1rem;
-  width: 20px;
-  text-align: center;
+/* Account toggle */
+.account-toggle.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  white-space: nowrap;
 }
 
-/* Signup/Login button styling */
-.nav-link-signup {
-  /* background-color: #007bff; */
-  color: white !important;
-  border-radius: 4px;
-  padding: 0.5rem 1rem;
-  font-weight: 500;
-  transition: all 0.3s ease;
+/* Inline login dropdown */
+.login-dropdown {
+  width: 380px;
 }
 
-.nav-link-signup:hover {
-  background-color: #0069d9;
-  color: white !important;
+/* =========================================================
+   OPTIONAL LEGACY: If you still render this container anywhere
+   ========================================================= */
+
+.social-icons-container {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0 !important;
+  flex-wrap: nowrap;
 }
 
-/* Responsive adjustments */
-@media (max-width: 991.98px) {
+.social-icons-container .nav-item {
+  flex: none !important;
+}
+
+/* =========================================================
+   TABLET OVERRIDE (768-991)
+   Hide hamburger + show full nav (if you keep expand="lg")
+   If you change JSX to expand="md", you can remove this block.
+   ========================================================= */
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .navbar-toggler {
+    display: none !important;
+  }
+
   .navbar-collapse {
-    background-color: var(--light-color);
-    position: absolute;
-    top: 100px;
-    left: 0;
-    right: 0;
-    padding: 1rem;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 0 0 8px 8px;
-    z-index: 1000;
+    display: flex !important;
+    flex-basis: auto !important;
+  }
+
+  .navbar-collapse.collapse:not(.show) {
+    display: flex !important;
   }
 
 
-  .nav-item {
-    margin: 0.25rem 0;
+  .nav-collapse {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 14px !important;
   }
 
-  .nav-link {
-    padding: 0.75rem;
+  .nav-main {
+    flex-direction: row !important;
+    justify-content: center !important;
+  }
+
+  .nav-utils {
+    align-items: flex-end !important;
+  }
+}
+
+/* =========================================================
+   MOBILE (COLLAPSE)
+   Fix: only style the panel when OPEN (.show)
+   + Compact layout
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+  /* CLOSED: do NOT force a panel — let bootstrap hide it */
+  .navbar-collapse {
+    position: static !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+  }
+
+  /* OPEN: green dropdown panel */
+  .navbar-collapse.show {
+    background-color: var(--light-color) !important;
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0.6rem 0.75rem !important;
+    box-shadow: 0 10px 18px rgba(0, 0, 0, 0.12) !important;
+    border-radius: 0 0 12px 12px !important;
+    z-index: 1000 !important;
+  }
+
+  /* Stack content */
+  .navbar-collapse.show .nav-collapse {
+    display: flex !important;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px !important;
+  }
+
+  /* Nav links vertical */
+  .navbar-collapse.show .navbar-nav {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .navbar-collapse.show .nav-main {
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .navbar-collapse.show .nav-item {
+    margin: 0.15rem 0;
+  }
+
+  .navbar-collapse.show .nav-link {
     width: 100%;
     display: block;
+    padding: 0.55rem 0.65rem !important;
+    font-size: 0.95rem;
+    text-align: center;
   }
 
-  .dropdown-menu {
+  /* Optional bottom row: Account | Social | Language (if you add .nav-bottom-row wrapper in JSX) */
+  .navbar-collapse.show .nav-bottom-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 8px !important;
+    padding-top: 6px !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
+    /* When menu is OPEN, center the account/login area */
+  .navbar-collapse.show .nav-account {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100%;
+  }
+
+  .navbar-collapse.show .nav-account,
+  .navbar-collapse.show .nav-utils {
+    padding-top: 0 !important;
+    border-top: 0 !important;
+  }
+    /* Make the account toggle/button look centered and not hug edges */
+  .navbar-collapse.show .account-toggle.nav-link {
+    justify-content: center;
+    width: auto;
+    min-width: 140px;
+  }
+
+  .navbar-collapse.show .nav-bottom-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .navbar-collapse.show .nav-utils {
+    margin-left: 0 !important;
+    flex-direction: column; /* keep 2 lines inside right column */
+    align-items: flex-end;
+    gap: 6px;
+  }
+
+  .utils-social,
+  .utils-lang {
+    gap: 8px !important;
+  }
+
+  .utils-social .nav-link,
+  .utils-lang .nav-link {
+    padding: 4px 4px !important;
+  }
+
+  /* Dropdowns on mobile */
+  .navbar-collapse.show .dropdown-menu {
     position: static !important;
     box-shadow: none;
-    border-radius: 4px;
-    background-color: #f8f9fa;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.5);
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
     width: 100%;
+  }
+    /* Brand + toggler should align vertically */
+  .nav-shell {
+    align-items: center !important;
+  }
+
+  /* Brand stays stacked and frees horizontal space */
+  .navbar-brand,
+  .brand {
+    align-items: flex-start;
+    /* margin-right: 0; */
+  }
+
+  .navbarlogo,
+  .navbar-logo {
+    height: 40px;
+  }
+
+  .brand-text {
+    font-size: 1rem;
+  }
+    /* Center hamburger/X vertically with brand block */
+  .cleanar-toggler {
+    align-self: center !important;
+    margin-top: 0 !important;
+  }
+  .cleanar-toggler.is-open {
+    padding: 8px 12px;
+    border-radius: 12px;
+  }
+}
+
+
+
+/* Extra small tweaks */
+@media (max-width: 480px) {
+  .login-dropdown {
+    width: 92vw;
+    max-width: 320px;
   }
 }

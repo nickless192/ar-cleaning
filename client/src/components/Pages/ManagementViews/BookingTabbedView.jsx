@@ -1,8 +1,8 @@
 import React from 'react';
 import { Tabs, Tab, Container } from 'react-bootstrap';
 
-import AdminContactDashboard from '/src/components/Pages/Management/AdminContactDashboard';
-import QuickQuoteDashboard from '/src/components/Pages/Management/QuickQuoteDashboard';
+// import AdminContactDashboard from '/src/components/Pages/Management/AdminContactDashboard';
+// import QuickQuoteDashboard from '/src/components/Pages/Management/QuickQuoteDashboard';
 import Customers from '/src/components/Pages/Management/Customers';
 import ManageUser from '/src/components/Pages/Management/ManageUser';
 import LogDashboard from '/src/components/Pages/Management/LogDashboard';

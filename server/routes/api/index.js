@@ -15,7 +15,8 @@ const financeRoutes = require('./financeRoutes');
 const expensesRoutes = require('./expensesRoutes');
 const contactFormRoutes = require('./contactFormRoutes');
 const invoiceRoutes = require('./invoiceRoutes');
-
+const notificationRoutes = require('./notificationRoutes');
+const adminUserRoutes = require('./adminUserRoutes');
 
 router.use('/users', userRoutes);
 router.use('/services', serviceRoutes);
@@ -33,5 +34,7 @@ router.use('/finance', financeRoutes);
 router.use('/expenses', expensesRoutes);
 router.use('/contactForm', contactFormRoutes);
 router.use('/invoices', invoiceRoutes);
+router.use('/notifications', notificationRoutes);
+router.use('/admin', adminUserRoutes);
 
 module.exports = router;

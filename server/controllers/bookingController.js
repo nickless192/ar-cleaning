@@ -301,6 +301,8 @@ const bookingControllers = {
         await Customer.findByIdAndUpdate(customerId, {
           $push: { bookings: savedBooking._id },
         });
+        //  // TODO: make sure this does not overlap with the current sendConfirmationEmail function
+        // await NotificationService.sendBookingConfirmationCustomer(savedBooking._id);
       }
 
       res.status(201).json(savedBooking);

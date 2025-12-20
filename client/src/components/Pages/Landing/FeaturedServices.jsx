@@ -30,7 +30,7 @@ function FeaturedServices() {
   ];
   return (
     <div className="py-5 px-2">
-      <h2 className="text-center mb-4 secondary-color montserrat-bold">{t("featuredServices.heading")}<NewIconAnimated /></h2>
+      <h2 className="text-center mb-4 secondary-color montserrat-bold">{t("featuredServices.heading")}</h2>
       <Row className="justify-content-center">
         {services.map((s, i) => (
           <Col xs="12" md="4" key={i} className="mb-3">

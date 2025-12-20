@@ -12,7 +12,8 @@ const VisitorLogSchema = new Schema({
   },
 
   sessionId: {
-    type: String
+    type: String,
+    required: true,
   },
 
   page: {
@@ -95,7 +96,11 @@ const VisitorLogSchema = new Schema({
   // },
   interactions: {
     type: [String],
-    default: []
+    default: [],
+    validate: {
+    validator: arr => arr.length <= 100,
+    message: 'Too many interaction events recorded'
+  }
   },
   // sessionDuration: {
   //   type: Number, // seconds
@@ -137,10 +142,25 @@ const VisitorLogSchema = new Schema({
   sessionDuration: { type: Number, default: 0 },      
   scrollDepth: { type: Number, default: 0 },           // percentage
   isBot: { type: Boolean, default: false },
+  // Session summary fields
+exitPage: { type: String, default: null },
+qualified: { type: Boolean, default: false },
+qualifiedReason: { type: [String], default: [] }, // store which rules matched
+
 
 }, {
   timestamps: true
 });
+
+// Enforce "one session = one document"
+VisitorLogSchema.index({ sessionId: 1 }, { unique: true, sparse: true });
+
+// Helpful for reporting queries (optional but recommended)
+VisitorLogSchema.index({ visitDate: -1 });
+VisitorLogSchema.index({ visitorId: 1, visitDate: -1 });
+VisitorLogSchema.index({ 'geo.country': 1 });
+VisitorLogSchema.index({ page: 1 });
+
 
 const VisitorLog = model('VisitorLog', VisitorLogSchema);
 module.exports = VisitorLog;

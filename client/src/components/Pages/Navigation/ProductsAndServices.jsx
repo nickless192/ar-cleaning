@@ -181,18 +181,19 @@ const ProductsAndServices = () => {
   </a>
   , the global benchmark for quality-focused cleaning organizations.
 </p> */}
- <p className="fs-6 text-cleanar-color mt-3">
-  CleanAR Solutions is a proud member of{" "}
-  <a
-    href="https://issa-canada.com/en/issa-canada-en/about-issa-canada-en"
-    target="_blank"
-    rel="noopener noreferrer"
-  >
-    ISSA Canada, a division of ISSA – the worldwide cleaning industry association
-  </a>
-  . This membership reflects our ongoing commitment to professional standards
-  in the cleaning industry.
-</p>
+            <p className="fs-6 text-cleanar-color mt-3">{t("issa.prefix")}
+              {/* CleanAR Solutions is a proud member of */}
+              {" "}
+              <a
+                href="https://issa-canada.com/en/issa-canada-en/about-issa-canada-en"
+                target="_blank"
+                rel="noopener noreferrer"
+              >{t("issa.linkText")}
+                {/* ISSA Canada, a division of ISSA – the worldwide cleaning industry association */}
+              </a>{t("issa.suffix")}
+              {/* . This membership reflects our ongoing commitment to professional standards
+              in the cleaning industry. */}
+            </p>
             <Row className='justify-content-center'> {/* Responsive Grid: 1 col on xs, 2 on md, 3 on lg. g-4 adds gutters */}
               {servicesData.map((service, index) => (
                 <Col xs={12} md={4} key={index} className="d-flex align-items-stretch  mb-1 mt-1"> {/* Ensure cols stretch to content height */}
@@ -206,7 +207,7 @@ const ProductsAndServices = () => {
 
           <div className="product-selector">
             <h2 className="title primary-color mb-4 text-bold">{t("products_and_services.our_products_title")}</h2>
-            <Row  className="g-4 justify-content-center">
+            <Row className="g-4 justify-content-center">
               <Col xs={12} md={4} className="d-flex align-items-stretch">
                 {/* // You could create a ProductCard component here too */}
                 <Card className="h-100 card-border shadow-sm">

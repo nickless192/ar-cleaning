@@ -56,7 +56,8 @@ function StickyQuoteButton() {
         onClick={scrollToForm}
         className="btn btn-success btn-lg rounded-pill shadow-lg w-100"
       >
-        {t("quick_quote.form.title")} <NewIconAnimated />
+        {t("quick_quote.form.title")} 
+        {/* <NewIconAnimated /> */}
       </button>
     </div>
   );
@@ -98,14 +99,14 @@ function Index() {
       additionalInfo: t('email_additional'),
       color: "text-success"
     },
-    {
-      icon: "now-ui-icons tech_mobile",
-      link: "/index?promoCode=refresh15&scrollToQuote=true'",
-      text: t('welcome_modal.title'),
-      description: modalText,
-      additionalInfo: t('welcome_modal.description'),
-      color: "text-info"
-    },
+    // {
+    //   icon: "now-ui-icons tech_mobile",
+    //   link: "/index?promoCode=refresh15&scrollToQuote=true'",
+    //   text: t('welcome_modal.title'),
+    //   description: modalText,
+    //   additionalInfo: t('welcome_modal.description'),
+    //   color: "text-info"
+    // },
     {
       icon: "now-ui-icons business_bulb-63",
       link: "https://g.page/r/Cek9dkmHVuBKEAE/review",
@@ -179,13 +180,13 @@ function Index() {
       <WelcomeModal />
       {/* <LandingPageHeader /> */}
 
-      <Row className="m-0 align-items-center justify-content-center">
+      <Row className="m-0 px-0 align-items-center justify-content-center">
         {/* <Col className="m-0 p-0" xs='12' md='6'>
             <h1 className="primary-color text-bold montserrat-bold text-align-end mr-3">CleanAR Solutions <br /> Getting Started</h1>
             <p className="martel-bold landing-page-intro text-align-end mr-3">Tired of Cleaning? Reclaim your free time with CleanAR Solutions. Serving Toronto and the GTA, we provide sparkling clean spaces so you can focus on what matters. <b>Get a free quote!</b>
             </p>
           </Col> */}
-        <Col xs="12" md="5" className="text-center pt-5 px-3">
+        <Col xs="12" md="6" className="text-center pt-5 pl-3">
           <motion.h1
             className="secondary-color montserrat-bold p-0 m-0"
             initial={{ opacity: 0, y: -20 }}
@@ -194,7 +195,7 @@ function Index() {
           >
             CleanAR Solutions
           </motion.h1>
-          
+
           <motion.h3
             className="text-secondary p-0 m-0 text-bold pb-2"
             initial={{ opacity: 0 }}
@@ -238,7 +239,7 @@ function Index() {
           </div>
 
         </Col>
-        <Col xs='12' md='4' className=" pt-5">
+        <Col xs='12' md='5' className=" pt-5">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -318,13 +319,13 @@ function Index() {
               ))}
 
             </Card>
-          <ISSAMembershipBadge className="mb-2" layout="horizontal" />
-          <Link
-  to="/blog/cleanar-solutions-joins-issa-canada"
-  className="text-primary small"
->
-  Learn why ISSA membership matters →
-</Link>
+            <ISSAMembershipBadge className="mb-2" layout="vertical" />
+            <Link
+              to="/blog/cleanar-solutions-joins-issa-canada"
+              className="text-primary small"
+            >{t('certification.ctaSecondary')}
+              {/* Learn why ISSA membership matters → */}
+            </Link>
           </motion.div>
         </Col>
         {/* <Col className="text-center p-0 m-0 d-none d-md-block" xs='12' md='6'>

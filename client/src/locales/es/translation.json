@@ -660,5 +660,49 @@
       "cancel": "Cancelar",
       "submit": "Enviar solicitud"
     }
+  },
+  "certification": {
+    "title": "Certificaciones y Membresías Profesionales",
+    "intro": "Tu hogar o negocio merece profesionales de limpieza que sigan <strong>estándares reconocidos de la industria</strong>, no suposiciones. Nuestras membresías y certificaciones reflejan nuestro compromiso con prácticas de limpieza profesionales, seguras y saludables en Toronto.",
+    "ctaPrimary": "Solicita una Cotización Gratis",
+    "ctaSecondary": "Aprende por qué la membresía ISSA es importante →"
+  },
+
+  "issa": {
+    "sectionTitle": "¿Qué es ISSA Canada y por qué es importante?",
+    "description1": "<strong>ISSA</strong> es la asociación mundial de la industria de la limpieza, que representa a más de 11,000 miembros en todo el mundo, incluyendo contratistas de servicios de limpieza, distribuidores, fabricantes y limpiadores residenciales.",
+    "learnMore": "Conoce más sobre ISSA",
+    "description2": "<strong>ISSA Canada</strong> es la división canadiense, que apoya a la industria local de limpieza mediante educación, estándares y representación. Como miembros, nos mantenemos actualizados sobre las mejores prácticas en <strong>salud, seguridad y calidad</strong> en todo Canadá.",
+    "aboutCanada": "Sobre ISSA Canada",
+    "description3": "Para nuestros clientes, esto significa trabajar con una empresa que toma la limpieza en serio — no solo como una tarea, sino como una inversión en un <strong>entorno más saludable y seguro</strong> para tu familia, empleados y visitantes.",
+ "prefix": "CleanAR Solutions es orgullosamente miembro de",
+    "linkText": "ISSA Canada, una división de ISSA — la asociación mundial de la industria de la limpieza",
+    "suffix": ". Esta membresía refleja nuestro compromiso continuo con estándares profesionales en la industria de la limpieza.",
+    "cardTitle": "Lo que significa la membresía ISSA para ti",
+    "benefits": {
+      "standards": "Alineación con estándares internacionales de limpieza",
+      "health": "Mayor enfoque en salud, higiene y seguridad",
+      "ethics": "Compromiso con la conducta profesional y la ética",
+      "environment": "Mejores prácticas de limpieza responsables con el medio ambiente"
+    }
+  },
+
+  "roadmap": {
+    "title": "Elevando nuestros estándares profesionales",
+    "description1": "Nuestra membresía en ISSA Canada es un paso importante, y no nos detenemos ahí. CleanAR Solutions continúa explorando capacitaciones y certificaciones adicionales alineadas con nuestro enfoque en <strong>calidad, seguridad y sostenibilidad</strong>.",
+    "description2": "A medida que incorporemos nuevas certificaciones, esta página se mantendrá actualizada para que siempre puedas ver cómo invertimos en un mejor servicio para tu hogar o negocio."
+  },
+
+  "certification-cta": {
+    "title": "Lleva estándares certificados a tu espacio",
+    "description": "Ya sea un condominio, casa u oficina, aplicamos el mismo nivel de cuidado y profesionalismo respaldado por nuestra membresía en ISSA Canada.",
+    "button": "Solicita tu Cotización de Limpieza",
+    "link": "Ver nuestros servicios de limpieza"
+  },
+
+  "badge": {
+    "eyebrow": "Limpieza profesional en la que puedes confiar",
+    "headline": "CleanAR Solutions es orgullosamente <strong>Miembro de ISSA Canada</strong>",
+    "body": "Como miembros de ISSA Canada — la división nacional de la asociación mundial de la industria de la limpieza — seguimos prácticas reconocidas de calidad, seguridad y profesionalismo en cada servicio que ofrecemos."
   }
 }
