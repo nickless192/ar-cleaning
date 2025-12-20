@@ -341,7 +341,7 @@ const visitorController = {
           sessionId: effectiveSessionId,
           visitDate: now,
           firstSeenAt: now,
-          isBot,
+          // isBot,
           ip: hashedIp,
           geo: geoInfo,
           userAgent: uaString,
