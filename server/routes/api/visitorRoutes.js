@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const {logVisit, getDailyVisitors, migrateData, getVisits, generateWeeklyReport, logInteraction, updateScrollDepth, updateSessionDuration,
-    sessionHeartbeat, sessionExit
+    sessionHeartbeat, sessionExit,
+    getWeeklyReport, getDailyReport
  } = require('../../controllers/visitorController');
 
 // router.route('/').get(getVisitorCount).post(incrementVisitorCount);
@@ -17,8 +18,11 @@ router.route('/daily')
 router.route('/migrate')
 .post(migrateData);
 
-router.route('/weekly-report')
-.get(generateWeeklyReport); // Generate weekly report
+// router.route('/weekly-report')
+// .get(generateWeeklyReport); // Generate weekly report
+
+router.get('/daily-report', getDailyReport);
+router.get('/weekly-reporting', getWeeklyReport);
 
 router.post('/session-duration', updateSessionDuration);
 router.post('/scroll-depth', updateScrollDepth);

@@ -7,6 +7,7 @@ import CommunicationsHub from '/src/components/Pages/Dashboards/CommunicationsHu
 import Customers from '/src/components/Pages/Management/Customers';
 import ManageUser from '/src/components/Pages/Management/ManageUser';
 import LogDashboard from '/src/components/Pages/Management/LogDashboard';
+import ReportsDashboard from '/src/components/Pages/Dashboards/ReportsDashboard';
 import NotificationAdminPage from '/src/components/Pages/UserJourney/NotificationAdminPage';
 // import BookingDashboard from '/src/components/Pages/Management/BookingDashboard';
 // import BookingList from '/src/components/Pages/Management/BookingList';
@@ -32,6 +33,14 @@ const ContactManagementTabbedView = () => {
                     >
                         <div className="p-2 sm:p-4">
                             <LogDashboard />
+                        </div>
+                    </Tab>
+                    <Tab
+                        eventKey="reports"
+                        title={<span className="px-3 py-2 text-sm sm:text-base">{t('navbar.admin.reports_dashboard')}</span>}
+                    >
+                        <div className="p-2 sm:p-4">
+                            <ReportsDashboard />
                         </div>
                     </Tab>
                     <Tab
