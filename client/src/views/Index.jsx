@@ -147,14 +147,14 @@ function Index() {
 
     if (isInitialLoad) {
 
-      const savedVariant = localStorage.getItem('welcomeModalVariant');
-      const chosenVariant = savedVariant || (Math.random() > 0.5 ? 'A' : 'B');
-      if (chosenVariant === 'A') {
-        setModalText(t('welcome_modal.variant_a'));
-      } else {
-        setModalText(t('welcome_modal.variant_b'));
-      }
-      setVariant(chosenVariant);
+      // const savedVariant = localStorage.getItem('welcomeModalVariant');
+      // const chosenVariant = savedVariant || (Math.random() > 0.5 ? 'A' : 'B');
+      // if (chosenVariant === 'A') {
+      //   setModalText(t('welcome_modal.variant_a'));
+      // } else {
+      //   setModalText(t('welcome_modal.variant_b'));
+      // }
+      // setVariant(chosenVariant);
       setIsInitialLoad(false);
     }
 
@@ -177,7 +177,7 @@ function Index() {
     <>
       <MetaTags />
       <VisitorCounter />
-      <WelcomeModal />
+      {/* <WelcomeModal /> */}
       {/* <LandingPageHeader /> */}
 
       <Row className="m-0 px-0 align-items-center justify-content-center">

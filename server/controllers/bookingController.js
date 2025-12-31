@@ -83,12 +83,15 @@ const buildServicesHtml = (booking) => {
 
     return `
       <p><strong>Service:</strong> ${name}</p>
-      ${
-        total !== null
-          ? `<p><strong>Estimated Total:</strong> $${total} CAD</p>`
-          : ''
-      }
     `;
+    //  return `
+    //   <p><strong>Service:</strong> ${name}</p>
+    //   ${
+    //     total !== null
+    //       ? `<p><strong>Estimated Total:</strong> $${total} CAD</p>`
+    //       : ''
+    //   }
+    // `;
   }
 
   const rows = services
@@ -133,12 +136,26 @@ const buildServicesHtml = (booking) => {
         ${rows}
       </tbody>
     </table>
-    ${
-      total !== null
-        ? `<p><strong>Estimated Total:</strong> $${total} CAD</p>`
-        : ''
-    }
   `;
+  //  return `
+  //   <p><strong>Services:</strong></p>
+  //   <table style="width:100%; font-family: Arial, sans-serif; font-size:14px; border-collapse: collapse; margin-bottom: 8px;">
+  //     <thead>
+  //       <tr>
+  //         <th style="padding: 4px 8px; border: 1px solid #ddd; text-align:left;">Service</th>
+  //         <th style="padding: 4px 8px; border: 1px solid #ddd; text-align:left;">Description</th>
+  //       </tr>
+  //     </thead>
+  //     <tbody>
+  //       ${rows}
+  //     </tbody>
+  //   </table>
+  //   ${
+  //     total !== null
+  //       ? `<p><strong>Estimated Total:</strong> $${total} CAD</p>`
+  //       : ''
+  //   }
+  // `;
 };
 
 

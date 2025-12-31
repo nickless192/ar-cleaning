@@ -57,17 +57,17 @@ const AdminManagementLayout = () => {
         >
           <FaBars size={18} />
         </Button>
-        <h6 className="mb-0 text-uppercase fw-bold flex-grow-1 text-center">
+        {/* <h6 className="mb-0 text-uppercase fw-bold flex-grow-1 text-center">
           {t('navbar.admin.admin_management') || 'Admin'} 
         </h6>
-        <div className="admin-header-spacer"></div>
+        <div className="admin-header-spacer"></div> */}
       </div>
 
       {/* ===== Desktop Sidebar ===== */}
       <aside className="d-none d-md-flex flex-column py-3 bg-light border-end admin-sidebar">
-        <h5 className="mb-4 text-center text-uppercase fw-bold pb-3 border-bottom">
+        {/* <h5 className="mb-4 text-center text-uppercase fw-bold pb-3 border-bottom">
           {t('navbar.admin.admin_management') || 'Admin'}
-        </h5>
+        </h5> */}
         <Nav className="flex-column" role="navigation" aria-label="Admin navigation">
           {renderNavLinks(false)}
         </Nav>

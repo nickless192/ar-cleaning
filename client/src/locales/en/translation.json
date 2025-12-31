@@ -446,6 +446,7 @@
       "manage_categories": "Manage Categories",
       "manage_products": "Manage Products",
       "manage_services": "Manage Services",
+      "booking_management": "Booking Management",
       "manage_users": "Manage Users",
       "manage_customers": "Manage Customers",
       "manage_customers_contact": "Manage Customer Contacts",
@@ -456,7 +457,7 @@
       "manage_finance": "Financial Dashboard",
       "manage_expenses": "Manage Expenses",
       "inventory_management": "Inventory Management",
-      "customer_management": "Customer Experience Management",
+      "customer_management": "Customer Experience",
       "accounting_management": "Accounting Management",
       "admin_management": "Management"
     }

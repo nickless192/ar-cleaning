@@ -15,17 +15,17 @@ const AccountingTabbedView = () => {
     () => [
       {
         key: "finance",
-        title: t("navbar.admin.manage_finance"),
+        title: "Income & Finance Overview",
         component: <FinanceDashboard />,
       },
       {
         key: "expenses",
-        title: t("navbar.admin.manage_expenses"),
+        title: "Expense Management",
         component: <ExpenseDashboard />,
       },
       {
         key: "inventory",
-        title: t("navbar.admin.manage_inventory") || "Inventory",
+        title: "Services & Products Configuration",
         component: <InventoryManagementTabbedView />, // see embedded note below
       },
     ],
@@ -50,12 +50,12 @@ const AccountingTabbedView = () => {
   return (
     <Container fluid className="p-3 p-sm-4">
       {/* Header */}
-      <div className="mb-3">
+      {/* <div className="mb-3">
         <h3 className="mb-0">Accounting</h3>
         <div className="text-muted small">
           Finance, expenses, and inventory configuration in one place.
         </div>
-      </div>
+      </div> */}
 
       <Card className="shadow-sm">
         <Card.Body className="p-0">

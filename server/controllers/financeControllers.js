@@ -1,114 +1,504 @@
 // /controllers/financeController.js
 const Booking = require('../models/Booking.js');
 const Expense = require('../models/Expenses.js');
+const { startOfDay, endOfDay, startOfMonth, endOfMonth, addMonths } = require('date-fns');
+// const { addMonths } = require('date-fns');
 
 // --- Helper functions for native Date ---
-function startOfDay(date) {
-  const d = new Date(date);
-  d.setHours(0, 0, 0, 0);
-  return d;
+// function startOfDay(date) {
+//   const d = new Date(date);
+//   d.setHours(0, 0, 0, 0);
+//   return d;
+// }
+
+// function endOfDay(date) {
+//   const d = new Date(date);
+//   d.setHours(23, 59, 59, 999);
+//   return d;
+// }
+
+// function startOfMonth(date) {
+//   const d = new Date(date);
+//   d.setDate(1);
+//   d.setHours(0, 0, 0, 0);
+//   return d;
+// }
+
+// function endOfMonth(date) {
+//   const d = new Date(date);
+//   d.setMonth(d.getMonth() + 1, 0); // set to last day of current month
+//   d.setHours(23, 59, 59, 999);
+//   return d;
+// }
+
+const STATUS = {
+  EARNED: ['completed', 'done'],
+  CASH: ['paid'],
+  PIPELINE: ['pending', 'confirmed', 'in progress'],
+  CANCELLED: ['cancelled'],
+};
+
+function toInt(v, fallback) {
+  const n = Number(v);
+  return Number.isFinite(n) ? n : fallback;
+}
+function safeBool(v, fallback = false) {
+  if (v === undefined || v === null) return fallback;
+  if (typeof v === 'boolean') return v;
+  return String(v).toLowerCase() === 'true';
+}
+function parseCsv(str) {
+  if (!str) return null;
+  return String(str).split(',').map(s => s.trim()).filter(Boolean);
+}
+function monthKeyUTC(date) {
+  const y = date.getUTCFullYear();
+  const m = date.getUTCMonth() + 1;
+  return `${y}-${String(m).padStart(2, '0')}`;
 }
 
-function endOfDay(date) {
-  const d = new Date(date);
-  d.setHours(23, 59, 59, 999);
-  return d;
+// Fiscal helpers (optional, keep if you want FY support)
+function fiscalYearRange(fiscalYear, fyStartMonth = 6) {
+  const fy = toInt(fiscalYear, null);
+  const sm = toInt(fyStartMonth, 1);
+  if (!fy || sm < 1 || sm > 12) return null;
+  const startYear = sm === 1 ? fy : fy - 1;
+  const start = new Date(Date.UTC(startYear, sm - 1, 1, 0, 0, 0));
+  const endExclusive = new Date(Date.UTC(startYear + 1, sm - 1, 1, 0, 0, 0));
+  return { start, endExclusive };
 }
 
-function startOfMonth(date) {
-  const d = new Date(date);
-  d.setDate(1);
-  d.setHours(0, 0, 0, 0);
-  return d;
+// function getPeriodFromQuery(q) {
+//   const now = new Date();
+//   const fyStartMonth = toInt(q.fyStartMonth, 6);
+
+//   if (q.from && q.to) {
+//     return {
+//       start: startOfDay(new Date(q.from)),
+//       end: endOfDay(new Date(q.to)),
+//       mode: 'custom',
+//       fyStartMonth,
+//     };
+//   }
+
+//   if (q.fiscalYear) {
+//     const fy = fiscalYearRange(q.fiscalYear, fyStartMonth);
+//     if (!fy) throw new Error('Invalid fiscalYear or fyStartMonth');
+//     return {
+//       start: startOfDay(fy.start),
+//       end: endOfDay(new Date(fy.endExclusive.getTime() - 1)),
+//       mode: 'fiscalYear',
+//       fiscalYear: toInt(q.fiscalYear),
+//       fyStartMonth,
+//     };
+//   }
+
+//   // default: this month
+//   return {
+//     start: startOfDay(startOfMonth(now)),
+//     end: endOfDay(endOfMonth(now)),
+//     mode: 'thisMonth',
+//     fyStartMonth,
+//   };
+// }
+function parseDateOnlyLocal(dateStr, endOfDayFlag = false) {
+  // dateStr like "2025-12-01"
+  // Force local-time parsing (not UTC) so it doesn't shift a day.
+  if (!dateStr) return null;
+  const d = new Date(`${dateStr}T00:00:00`);
+  if (endOfDayFlag) return endOfDay(d);
+  return startOfDay(d);
 }
 
-function endOfMonth(date) {
-  const d = new Date(date);
-  d.setMonth(d.getMonth() + 1, 0); // set to last day of current month
-  d.setHours(23, 59, 59, 999);
-  return d;
+function getPeriodFromQuery(q) {
+  const now = new Date();
+  const fyStartMonth = toInt(q.fyStartMonth, 6);
+
+  // ✅ Only treat as "custom" if BOTH from and to are present
+  if (q.from && q.to) {
+    const start = parseDateOnlyLocal(q.from, false);
+    const end = parseDateOnlyLocal(q.to, true);
+    return {
+      start,
+      end,
+      mode: 'custom',
+      fyStartMonth,
+    };
+  }
+
+  if (q.fiscalYear) {
+    const fy = fiscalYearRange(q.fiscalYear, fyStartMonth);
+    if (!fy) throw new Error('Invalid fiscalYear or fyStartMonth');
+    return {
+      start: startOfDay(fy.start),
+      end: endOfDay(new Date(fy.endExclusive.getTime() - 1)),
+      mode: 'fiscalYear',
+      fiscalYear: toInt(q.fiscalYear),
+      fyStartMonth,
+    };
+  }
+
+  // ✅ default: current month (backend decides)
+  return {
+    start: startOfDay(startOfMonth(now)),
+    end: endOfDay(endOfMonth(now)),
+    mode: 'thisMonth',
+    fyStartMonth,
+  };
 }
 
+
+/**
+ * GET /api/finance/summary
+ * Query:
+ *  - from,to OR fiscalYear (+fyStartMonth)
+ *  - includeHidden=false
+ *  - customerField=customerId|customerEmail|customerName (default customerId)
+ *  - forecastMonths=6
+ *  - forecastLookbackMonths=6
+ *  - weightConfirmed=1.0
+ *  - weightPending=0.6
+ *  - weightInProgress=0.8
+ */
 const getFinanceSummary = async (req, res) => {
   try {
-    const {
-      from,
-      to,
-      statuses,          // comma separated
-      includeHidden = 'false'
-    } = req.query;
+    const period = getPeriodFromQuery(req.query);
 
-    const now = new Date();
-    const start = from ? startOfDay(new Date(from)) : startOfMonth(now);
-    const end   = to   ? endOfDay(new Date(to))     : endOfMonth(now);
-    console.log(start);
-    console.log(end);
+    const includeHidden = safeBool(req.query.includeHidden, false);
+    const customerField = req.query.customerField || 'customerId';
 
-    const statusArr = statuses ? statuses.split(',') : undefined;
+    const forecastMonths = Math.max(1, toInt(req.query.forecastMonths, 3));
+    const lookbackMonths = Math.max(1, toInt(req.query.forecastLookbackMonths, 6));
 
-    const bookingMatch = {
-      date: { $gte: start, $lte: end },
-    };
-    if (!JSON.parse(includeHidden)) bookingMatch.hidden = { $ne: true };
-    if (statusArr && statusArr.length) bookingMatch.status = { $in: statusArr };
+    const wConfirmed = Number(req.query.weightConfirmed ?? 1.0);
+    const wPending = Number(req.query.weightPending ?? 0.6);
+    const wInProgress = Number(req.query.weightInProgress ?? 0.8);
 
-    const expenseMatch = {
-      date: { $gte: start, $lte: end },
+    // Base match for the reporting window uses Booking.date (scheduled service date).
+    const baseMatch = {
+      date: { $gte: period.start, $lte: period.end },
+      ...(includeHidden ? {} : { hidden: { $ne: true } }),
     };
 
-    const [incomeAgg, expenseAgg] = await Promise.all([
-      Booking.aggregate([
-        { $match: bookingMatch },
-        {
-          $group: {
-            _id: '$status',
-            total: { $sum: { $ifNull: ['$income', 0] } },
-            count: { $sum: 1 }
-          }
-        }
-      ]),
-      Expense.aggregate([
-        { $match: expenseMatch },
-        {
-          $group: {
-            _id: '$category',
-            total: { $sum: '$amount' },
-            count: { $sum: 1 }
-          }
-        }
-      ])
+    // 1) Totals by status (raw)
+    const byStatusAgg = await Booking.aggregate([
+      { $match: baseMatch },
+      {
+        $group: {
+          _id: '$status',
+          total: { $sum: { $ifNull: ['$income', 0] } },
+          count: { $sum: 1 },
+        },
+      },
     ]);
 
-    const totalsByStatus = incomeAgg.reduce((acc, cur) => {
+    const byStatus = byStatusAgg.reduce((acc, cur) => {
       acc[cur._id] = { total: cur.total, count: cur.count };
       return acc;
     }, {});
 
-    const recognizedIncome = (totalsByStatus.completed?.total || 0);
-    const projectedIncome  = (totalsByStatus.pending?.total || 0) + (totalsByStatus.confirmed?.total || 0);
-    const cancelledIncome  = (totalsByStatus.cancelled?.total || 0);
+    // 2) Bucket totals (earned/cash/pipeline/cancelled)
+    const earnedTotal =
+      (byStatus.completed?.total || 0) + (byStatus.done?.total || 0);
 
-    const totalExpenses = expenseAgg.reduce((s, e) => s + e.total, 0);
+    const cashTotal =
+      (byStatus.paid?.total || 0); // you can also calculate by paidAt if you prefer
+
+    const pipelineTotalRaw =
+      (byStatus.confirmed?.total || 0) +
+      (byStatus.pending?.total || 0) +
+      (byStatus['in progress']?.total || 0);
+
+    const pipelineWeighted =
+      (byStatus.confirmed?.total || 0) * (Number.isFinite(wConfirmed) ? wConfirmed : 1.0) +
+      (byStatus.pending?.total || 0) * (Number.isFinite(wPending) ? wPending : 0.6) +
+      (byStatus['in progress']?.total || 0) * (Number.isFinite(wInProgress) ? wInProgress : 0.8);
+
+    const cancelledTotal = (byStatus.cancelled?.total || 0);
+
+    // 3) Monthly series:
+    // - Earned should ideally use completedAt when present, else fallback to date.
+    // - Cash should use paidAt when present, else fallback to date.
+    const monthlyAgg = await Booking.aggregate([
+      { $match: baseMatch },
+      {
+        $addFields: {
+          earnedDate: { $ifNull: ['$completedAt', '$date'] },
+          cashDate: { $ifNull: ['$paidAt', '$date'] },
+        },
+      },
+      {
+        $project: {
+          status: 1,
+          income: { $ifNull: ['$income', 0] },
+          earnedMonth: { $dateToString: { format: '%Y-%m', date: '$earnedDate' } },
+          cashMonth: { $dateToString: { format: '%Y-%m', date: '$cashDate' } },
+        },
+      },
+      {
+        $facet: {
+          earned: [
+            { $match: { status: { $in: STATUS.EARNED } } },
+            {
+              $group: {
+                _id: '$earnedMonth',
+                total: { $sum: '$income' },
+                count: { $sum: 1 },
+              },
+            },
+            { $sort: { _id: 1 } },
+          ],
+          cash: [
+            { $match: { status: { $in: STATUS.CASH } } },
+            {
+              $group: {
+                _id: '$cashMonth',
+                total: { $sum: '$income' },
+                count: { $sum: 1 },
+              },
+            },
+            { $sort: { _id: 1 } },
+          ],
+          pipeline: [
+            { $match: { status: { $in: STATUS.PIPELINE } } },
+            {
+              $group: {
+                _id: '$earnedMonth',
+                total: { $sum: '$income' },
+                count: { $sum: 1 },
+              },
+            },
+            { $sort: { _id: 1 } },
+          ],
+        },
+      },
+    ]);
+
+    const earnedSeries = (monthlyAgg?.[0]?.earned || []).map(x => ({ month: x._id, total: x.total, count: x.count }));
+    const cashSeries = (monthlyAgg?.[0]?.cash || []).map(x => ({ month: x._id, total: x.total, count: x.count }));
+    const pipelineSeries = (monthlyAgg?.[0]?.pipeline || []).map(x => ({ month: x._id, total: x.total, count: x.count }));
+
+    // 4) By customer (Top 50)
+    const customerAgg = await Booking.aggregate([
+      { $match: baseMatch },
+      {
+        $group: {
+          _id: `$${customerField}`,
+          earned: {
+            $sum: {
+              $cond: [{ $in: ['$status', STATUS.EARNED] }, { $ifNull: ['$income', 0] }, 0],
+            },
+          },
+          cash: {
+            $sum: {
+              $cond: [{ $in: ['$status', STATUS.CASH] }, { $ifNull: ['$income', 0] }, 0],
+            },
+          },
+          confirmed: {
+            $sum: { $cond: [{ $eq: ['$status', 'confirmed'] }, { $ifNull: ['$income', 0] }, 0] },
+          },
+          pending: {
+            $sum: { $cond: [{ $eq: ['$status', 'pending'] }, { $ifNull: ['$income', 0] }, 0] },
+          },
+          inProgress: {
+            $sum: { $cond: [{ $eq: ['$status', 'in progress'] }, { $ifNull: ['$income', 0] }, 0] },
+          },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $addFields: {
+          pipelineWeighted: {
+            $add: [
+              { $multiply: ['$confirmed', Number.isFinite(wConfirmed) ? wConfirmed : 1.0] },
+              { $multiply: ['$pending', Number.isFinite(wPending) ? wPending : 0.6] },
+              { $multiply: ['$inProgress', Number.isFinite(wInProgress) ? wInProgress : 0.8] },
+            ],
+          },
+        },
+      },
+      { $sort: { earned: -1 } },
+      { $limit: 50 },
+    ]);
+
+    const byCustomer = customerAgg.map(r => ({
+      customer: r._id ?? 'Unknown',
+      earned: r.earned,
+      cash: r.cash,
+      pipelineWeighted: r.pipelineWeighted,
+      bookings: r.count,
+    }));
+
+    // 5) Forecast: avg earned/month over last X months (service completion-based)
+    const forecastStart = period.end; // or new Date() if you want “from now”
+    const lookbackStart = addMonths(forecastStart, -lookbackMonths);
+
+    const historyAgg = await Booking.aggregate([
+      {
+        $match: {
+          ...(includeHidden ? {} : { hidden: { $ne: true } }),
+          status: { $in: STATUS.EARNED },
+          // Use completedAt if you want more accurate earned history; fallback to date in $addFields.
+          date: { $lte: forecastStart }, // coarse filter
+        },
+      },
+      {
+        $addFields: {
+          earnedDate: { $ifNull: ['$completedAt', '$date'] },
+        },
+      },
+      {
+        $match: {
+          earnedDate: { $gte: lookbackStart, $lte: forecastStart },
+        },
+      },
+      {
+        $group: {
+          _id: { $dateToString: { format: '%Y-%m', date: '$earnedDate' } },
+          total: { $sum: { $ifNull: ['$income', 0] } },
+        },
+      },
+      { $sort: { _id: 1 } },
+    ]);
+
+    const historyMap = new Map(historyAgg.map(x => [x._id, x.total]));
+    const historyTotals = [];
+    for (let i = lookbackMonths - 1; i >= 0; i--) {
+      const d = addMonths(forecastStart, -i);
+      historyTotals.push(historyMap.get(monthKeyUTC(d)) || 0);
+    }
+
+    const avgEarnedPerMonth =
+      historyTotals.reduce((a, b) => a + b, 0) / Math.max(1, historyTotals.length);
+
+    const forecast = [];
+    for (let i = 1; i <= forecastMonths; i++) {
+      const d = addMonths(forecastStart, i);
+      forecast.push({
+        month: monthKeyUTC(d),
+        forecastEarned: avgEarnedPerMonth,
+      });
+    }
 
     res.json({
-      period: { from: start, to: end },
+      period: {
+        from: period.start,
+        to: period.end,
+        mode: period.mode,
+        fiscalYear: period.fiscalYear,
+        fyStartMonth: period.fyStartMonth,
+      },
       income: {
-        recognized: recognizedIncome,
-        projected: projectedIncome,
-        cancelled: cancelledIncome,
-        byStatus: totalsByStatus
+        earned: earnedTotal,
+        cashReceived: cashTotal,
+        pipelineRaw: pipelineTotalRaw,
+        pipelineWeighted,
+        cancelled: cancelledTotal,
+        byStatus,
       },
-      expenses: {
-        total: totalExpenses,
-        byCategory: expenseAgg
+      series: {
+        earned: earnedSeries,
+        cash: cashSeries,
+        pipeline: pipelineSeries,
       },
-      netProfit: recognizedIncome - totalExpenses
+      customers: {
+        field: customerField,
+        top: byCustomer,
+      },
+      forecast: {
+        months: forecastMonths,
+        lookbackMonths,
+        avgEarnedPerMonth,
+        items: forecast,
+        weights: { confirmed: wConfirmed, pending: wPending, inProgress: wInProgress },
+      },
     });
   } catch (err) {
     console.error('getFinanceSummary error', err);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: err.message || 'Internal server error' });
   }
 };
+
+// const getFinanceSummary = async (req, res) => {
+//   try {
+//     const {
+//       from,
+//       to,
+//       statuses,          // comma separated
+//       includeHidden = 'false'
+//     } = req.query;
+
+//     const now = new Date();
+//     const start = from ? startOfDay(new Date(from)) : startOfMonth(now);
+//     const end   = to   ? endOfDay(new Date(to))     : endOfMonth(now);
+//     console.log(start);
+//     console.log(end);
+
+//     const statusArr = statuses ? statuses.split(',') : undefined;
+
+//     const bookingMatch = {
+//       date: { $gte: start, $lte: end },
+//     };
+//     if (!JSON.parse(includeHidden)) bookingMatch.hidden = { $ne: true };
+//     if (statusArr && statusArr.length) bookingMatch.status = { $in: statusArr };
+
+//     const expenseMatch = {
+//       date: { $gte: start, $lte: end },
+//     };
+
+//     const [incomeAgg, expenseAgg] = await Promise.all([
+//       Booking.aggregate([
+//         { $match: bookingMatch },
+//         {
+//           $group: {
+//             _id: '$status',
+//             total: { $sum: { $ifNull: ['$income', 0] } },
+//             count: { $sum: 1 }
+//           }
+//         }
+//       ]),
+//       Expense.aggregate([
+//         { $match: expenseMatch },
+//         {
+//           $group: {
+//             _id: '$category',
+//             total: { $sum: '$amount' },
+//             count: { $sum: 1 }
+//           }
+//         }
+//       ])
+//     ]);
+
+//     const totalsByStatus = incomeAgg.reduce((acc, cur) => {
+//       acc[cur._id] = { total: cur.total, count: cur.count };
+//       return acc;
+//     }, {});
+
+//     const recognizedIncome = (totalsByStatus.completed?.total || 0);
+//     const projectedIncome  = (totalsByStatus.pending?.total || 0) + (totalsByStatus.confirmed?.total || 0);
+//     const cancelledIncome  = (totalsByStatus.cancelled?.total || 0);
+
+//     const totalExpenses = expenseAgg.reduce((s, e) => s + e.total, 0);
+
+//     res.json({
+//       period: { from: start, to: end },
+//       income: {
+//         recognized: recognizedIncome,
+//         projected: projectedIncome,
+//         cancelled: cancelledIncome,
+//         byStatus: totalsByStatus
+//       },
+//       expenses: {
+//         total: totalExpenses,
+//         byCategory: expenseAgg
+//       },
+//       netProfit: recognizedIncome - totalExpenses
+//     });
+//   } catch (err) {
+//     console.error('getFinanceSummary error', err);
+//     res.status(500).json({ error: 'Internal server error' });
+//   }
+// };
 
 const getMonthlySeries = async (req, res) => {
   try {

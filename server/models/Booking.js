@@ -158,6 +158,13 @@ invoiceSentAt: { type: Date, default: null },      // when invoice was emailed /
   createdAt: { type: Date, default: Date.now },
 });
 
+BookingSchema.index({ date: 1, status: 1, hidden: 1 });
+BookingSchema.index({ completedAt: 1 });
+BookingSchema.index({ paidAt: 1 });
+BookingSchema.index({ customerId: 1 });
+BookingSchema.index({ customerEmail: 1 });
+
+
 const Booking = model('Booking', BookingSchema);
 
 module.exports = Booking;
