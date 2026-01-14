@@ -16,7 +16,8 @@ const Terms = () => {
             CleanAR Solutions — Terms & Conditions
           </h1>
           {/* <p className="text-muted">Updated April 2025</p> */}
-          <p className="text-muted">Last updated: September 2025</p>
+          {/* <p className="text-muted">Last updated: September 2025</p> */}
+          <p className="text-muted">Last updated: January 2026</p>
         </Col>
       </Row>
 
