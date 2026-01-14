@@ -56,6 +56,11 @@ function monthKeyUTC(date) {
   const m = date.getUTCMonth() + 1;
   return `${y}-${String(m).padStart(2, '0')}`;
 }
+function addMonthsUTC(date, months) {
+  const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), 1, 0, 0, 0));
+  d.setUTCMonth(d.getUTCMonth() + months);
+  return d;
+}
 
 // Fiscal helpers (optional, keep if you want FY support)
 function fiscalYearRange(fiscalYear, fyStartMonth = 6) {
@@ -604,9 +609,103 @@ const getFinanceOverview = async (req, res) => {
   }
 };
 
+async function getMonthlyProfitSeries(req, res) {
+  try {
+    const { from, to } = req.query;
+    if (!from || !to) {
+      return res.status(400).json({ error: 'from and to are required (YYYY-MM-DD)' });
+    }
+
+    const incomeMethod = String(req.query.incomeMethod || 'accrual'); // 'accrual'|'cash'
+    const includeHidden = String(req.query.includeHidden || 'false').toLowerCase() === 'true';
+
+    const start = parseDateOnlyLocal(from, false);
+    const end = parseDateOnlyLocal(to, true);
+
+    // Build months list inclusive (used to fill 0s)
+    const months = [];
+    const startMonth = new Date(Date.UTC(start.getFullYear(), start.getMonth(), 1, 0, 0, 0));
+    const endMonth = new Date(Date.UTC(end.getFullYear(), end.getMonth(), 1, 0, 0, 0));
+    let cur = startMonth;
+    while (cur <= endMonth) {
+      months.push(monthKeyUTC(cur));
+      cur = addMonthsUTC(cur, 1);
+    }
+
+    const bookingMatch = {
+      ...(includeHidden ? {} : { hidden: { $ne: true } }),
+      date: { $lte: end }, // coarse filter
+    };
+
+    // Accrual groups by completedAt||date with earned statuses
+    // Cash groups by paidAt||date with paid status
+    const incomeAggPipeline =
+      incomeMethod === 'cash'
+        ? [
+            { $match: { ...bookingMatch, status: { $in: STATUS.CASH } } },
+            { $addFields: { basisDate: { $ifNull: ['$paidAt', '$date'] } } },
+            { $match: { basisDate: { $gte: start, $lte: end } } },
+            {
+              $group: {
+                _id: { $dateToString: { format: '%Y-%m', date: '$basisDate' } },
+                total: { $sum: { $ifNull: ['$income', 0] } },
+              },
+            },
+            { $sort: { _id: 1 } },
+          ]
+        : [
+            { $match: { ...bookingMatch, status: { $in: STATUS.EARNED } } },
+            { $addFields: { basisDate: { $ifNull: ['$completedAt', '$date'] } } },
+            { $match: { basisDate: { $gte: start, $lte: end } } },
+            {
+              $group: {
+                _id: { $dateToString: { format: '%Y-%m', date: '$basisDate' } },
+                total: { $sum: { $ifNull: ['$income', 0] } },
+              },
+            },
+            { $sort: { _id: 1 } },
+          ];
+
+    const expenseAggPipeline = [
+      { $match: { date: { $gte: start, $lte: end } } },
+      {
+        $group: {
+          _id: { $dateToString: { format: '%Y-%m', date: '$date' } },
+          total: { $sum: { $ifNull: ['$amount', 0] } },
+        },
+      },
+      { $sort: { _id: 1 } },
+    ];
+
+    const [incomeAgg, expenseAgg] = await Promise.all([
+      Booking.aggregate(incomeAggPipeline),
+      Expense.aggregate(expenseAggPipeline),
+    ]);
+
+    const incomeMap = new Map(incomeAgg.map(x => [x._id, x.total]));
+    const expenseMap = new Map(expenseAgg.map(x => [x._id, x.total]));
+
+    const series = months.map(m => {
+      const income = Number(incomeMap.get(m) || 0);
+      const expenses = Number(expenseMap.get(m) || 0);
+      return { month: m, income, expenses, net: income - expenses };
+    });
+
+    res.json({
+      period: { from: start, to: end },
+      incomeMethod,
+      items: series,
+    });
+  } catch (err) {
+    console.error('getMonthlyProfitSeries error', err);
+    res.status(500).json({ error: err.message || 'Internal server error' });
+  }
+}
+
 
 module.exports = {
   getFinanceSummary,
   getMonthlySeries,
-  getFinanceOverview
+  getFinanceOverview,
+  getMonthlyProfitSeries,
 };

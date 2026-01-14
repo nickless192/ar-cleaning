@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import ExpenseDashboard from "/src/components/Pages/Dashboards/ExpenseDashboard";
 import FinanceDashboard from "/src/components/Pages/Dashboards/FinanceDashboard";
 import InventoryManagementTabbedView from "/src/components/Pages/ManagementViews/InventoryManagementTabbedView"; // adjust path if needed
+import MonthlyProfitCompare from "/src/components/Pages/Dashboards/MonthlyProfitCompare";
 
 const LS_KEY = "accountingHubActiveTab";
 
@@ -28,6 +29,11 @@ const AccountingTabbedView = () => {
         title: "Services & Products Configuration",
         component: <InventoryManagementTabbedView />, // see embedded note below
       },
+      {
+        key: "reports",
+        title: "Financial Reports",
+        component: <MonthlyProfitCompare />,
+      }
     ],
     [t]
   );

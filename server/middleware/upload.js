@@ -2,38 +2,39 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// Ensure uploads directory exists
-const uploadDir = path.join(__dirname, '..', 'uploads', 'receipts');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
+// Base uploads directory
+const baseUploadDir = path.join(__dirname, '..', 'uploads');
+
+function ensureDir(dir) {
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 }
 
-// Configure storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, uploadDir);
+    // receipt => uploads/receipts
+    // statement => uploads/bank-statements
+    const subdir = file.fieldname === 'statement' ? 'bank-statements' : 'receipts';
+    const dir = path.join(baseUploadDir, subdir);
+    ensureDir(dir);
+    cb(null, dir);
   },
   filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
     cb(null, uniqueSuffix + path.extname(file.originalname));
-  }
+  },
 });
 
-// File filter (optional)
 const fileFilter = (req, file, cb) => {
   const allowed = ['.jpg', '.jpeg', '.png', '.pdf'];
   const ext = path.extname(file.originalname).toLowerCase();
-  if (allowed.includes(ext)) {
-    cb(null, true);
-  } else {
-    cb(new Error('Only images and PDFs are allowed'), false);
-  }
+  if (allowed.includes(ext)) cb(null, true);
+  else cb(new Error('Only images and PDFs are allowed'), false);
 };
 
 const upload = multer({
   storage,
   fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 } // 5 MB limit
+  limits: { fileSize: 10 * 1024 * 1024 }, // bump to 10MB; statements can be bigger
 });
 
 module.exports = upload;

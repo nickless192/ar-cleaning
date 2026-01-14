@@ -73,6 +73,185 @@ const PDFParser = require('pdf2json');
 
 //     return transactions;
 // }
+
+function toNumber(v, fallback = 0) {
+    const n = Number(v);
+    return Number.isFinite(n) ? n : fallback;
+}
+function safeBool(v, fallback = false) {
+    if (v === undefined || v === null) return fallback;
+    if (typeof v === 'boolean') return v;
+    return String(v).toLowerCase() === 'true';
+}
+function toNumber(v, fallback = 0) {
+    const n = Number(v);
+    return Number.isFinite(n) ? n : fallback;
+}
+function normalizePaymentMethod(v) {
+    if (!v) return 'unknown';
+    const s = String(v).toLowerCase().trim();
+    if (s === 'cash') return 'cash';
+    if (['credit card', 'credit_card', 'credit', 'visa', 'mastercard', 'amex'].includes(s)) return 'credit_card';
+    if (['debit card', 'debit_card', 'debit'].includes(s)) return 'debit_card';
+    if (['bank transfer', 'bank_transfer', 'transfer', 'ach', 'eft'].includes(s)) return 'bank_transfer';
+    if (['e-transfer', 'etransfer', 'e transfer', 'interac'].includes(s)) return 'e-transfer';
+    if (s === 'paypal') return 'paypal';
+    if (['cheque', 'check'].includes(s)) return 'cheque';
+    if (s === 'other') return 'other';
+    return 'unknown';
+}
+
+// Minimal mapping to CRA lines (adjust over time)
+function inferCraLine(category = '') {
+    const c = String(category).toLowerCase();
+    if (c.includes('meal') || c.includes('entertainment')) return 'meals_entertainment';
+    if (c.includes('advert') || c.includes('promo') || c.includes('wrapping')) return 'advertising';
+    if (c.includes('rent') || c.includes('lease')) return 'rent';
+    if (c.includes('repair') || c.includes('maintenance')) return 'repairs_maintenance';
+    if (c.includes('suppl')) return 'supplies';
+    if (c.includes('labor') || c.includes('wage') || c.includes('subcontract')) return 'salaries_wages_subcontracts';
+    if (c.includes('legal') || c.includes('professional')) return 'legal_accounting';
+    if (c.includes('insurance')) return 'insurance';
+    if (c.includes('interest') || c.includes('bank charge')) return 'interest_bank';
+    if (c.includes('cell') || c.includes('phone') || c.includes('internet') || c.includes('hosting')) return 'telephone_internet';
+    if (c.includes('travel') || c.includes('airfare') || c.includes('hotel')) return 'travel';
+    if (c.includes('car') || c.includes('parking') || c.includes('vehicle')) return 'motor_vehicle';
+    if (c.includes('utilit')) return 'utilities';
+    if (c.includes('office')) return 'office';
+    return 'other';
+}
+
+function normalizeExpensePayload(body) {
+    const amount = toNumber(body.amount, 0);
+
+    const incurredAt =
+        body.incurredAt ? new Date(body.incurredAt)
+            : (body.date ? new Date(body.date) : new Date());
+
+    const status = body.status ? String(body.status).toLowerCase() : 'paid';
+
+    const paidAt =
+        body.paidAt ? new Date(body.paidAt)
+            : (status === 'paid' ? incurredAt : null);
+
+    const category = body.category ?? '';
+    const craLine = body.craLine || inferCraLine(category);
+
+    return {
+        description: body.description ?? '',
+        category,
+        categoryCode: body.categoryCode ?? '',
+        craLine,
+
+        currency: body.currency ?? 'CAD',
+
+        amountSubtotal: toNumber(body.amountSubtotal, 0),
+        taxAmount: toNumber(body.taxAmount, 0),
+        amountTotal: toNumber(body.amountTotal, 0) || amount,
+        amount, // legacy compatibility
+
+        taxRate: toNumber(body.taxRate, 0),
+        taxIncluded: body.taxIncluded === true || String(body.taxIncluded).toLowerCase() === 'true',
+
+        incurredAt,
+        paidAt,
+        date: body.date ? new Date(body.date) : incurredAt, // legacy
+
+        status: ['due', 'paid', 'issued', 'unpaid'].includes(status) ? status : 'paid',
+        paymentMethod: normalizePaymentMethod(body.paymentMethod),
+
+        vendorName: body.vendorName ?? '',
+        vendorTaxId: body.vendorTaxId ?? '',
+        invoiceNumber: body.invoiceNumber ?? '',
+
+        source: body.source ?? 'manual',
+        externalId: body.externalId ?? '',
+        externalRef: body.externalRef ?? '',
+        reconciled: body.reconciled === true || String(body.reconciled).toLowerCase() === 'true',
+        reconciledTo: body.reconciledTo ?? '',
+
+        bookingId: body.bookingId || null,
+        customerId: body.customerId || null,
+
+        hidden: body.hidden === true || String(body.hidden).toLowerCase() === 'true',
+    };
+}
+
+
+function normalizePaymentMethod(v) {
+    if (!v) return 'unknown';
+    const s = String(v).toLowerCase().trim();
+
+    if (['cash'].includes(s)) return 'cash';
+    if (['credit card', 'credit_card', 'credit', 'visa', 'mastercard', 'amex'].includes(s)) return 'credit_card';
+    if (['debit card', 'debit_card', 'debit'].includes(s)) return 'debit_card';
+    if (['bank transfer', 'bank_transfer', 'transfer', 'ach', 'eft'].includes(s)) return 'bank_transfer';
+    if (['e-transfer', 'etransfer', 'e transfer', 'interac'].includes(s)) return 'e-transfer';
+    if (['paypal'].includes(s)) return 'paypal';
+    if (['cheque', 'check'].includes(s)) return 'cheque';
+    if (['other'].includes(s)) return 'other';
+
+    return 'unknown';
+}
+
+// Backwards-compatible mapping:
+// UI sends `date` => treat as incurredAt (accrual date)
+function normalizeExpensePayload(body) {
+    const amount = toNumber(body.amount, 0);
+
+    const incurredAt = body.incurredAt
+        ? new Date(body.incurredAt)
+        : (body.date ? new Date(body.date) : new Date());
+
+    const status = body.status ? String(body.status).toLowerCase() : 'paid';
+
+    const paidAt =
+        body.paidAt ? new Date(body.paidAt)
+            : (status === 'paid' ? incurredAt : null);
+
+    return {
+        description: body.description ?? '',
+        category: body.category ?? '',
+        categoryCode: body.categoryCode ?? '',
+        currency: body.currency ?? 'CAD',
+
+        // If you’re not collecting tax yet, keep it simple:
+        amountSubtotal: toNumber(body.amountSubtotal, 0),
+        taxAmount: toNumber(body.taxAmount, 0),
+        amountTotal: toNumber(body.amountTotal, 0) || amount, // prefer amountTotal if provided
+        amount, // keep legacy field aligned (schema pre-validate also aligns)
+
+        taxRate: toNumber(body.taxRate, 0),
+        taxIncluded: String(body.taxIncluded).toLowerCase() === 'true' || body.taxIncluded === true,
+
+        incurredAt,
+        paidAt,
+
+        status: ['due', 'paid', 'issued', 'unpaid'].includes(status) ? status : 'paid',
+        paymentMethod: normalizePaymentMethod(body.paymentMethod),
+
+        accountLabel: body.accountLabel ?? '',
+
+        vendorName: body.vendorName ?? '',
+        vendorAddress: body.vendorAddress ?? '',
+        vendorTaxId: body.vendorTaxId ?? '',
+
+        receiptRequired: body.receiptRequired === undefined ? true : !!body.receiptRequired,
+
+        source: body.source ?? 'manual',
+        externalId: body.externalId ?? '',
+        externalRef: body.externalRef ?? '',
+        reconciled: body.reconciled === true || String(body.reconciled).toLowerCase() === 'true',
+        reconciledTo: body.reconciledTo ?? '',
+
+        bookingId: body.bookingId || null,
+        customerId: body.customerId || null,
+
+        businessUsePercent: body.businessUsePercent !== undefined ? toNumber(body.businessUsePercent, 100) : 100,
+        hidden: body.hidden === true || String(body.hidden).toLowerCase() === 'true',
+    };
+}
+
 function parseBankStatement(rawText) {
     const lines = rawText.split('\n').map(l => l.trim()).filter(Boolean);
 
@@ -145,40 +324,137 @@ function parseBankStatement(rawText) {
 
 
 const expensesControllers = {
-    getExpenses: async (req, res) => {
-        const expenses = await Expenses.find().sort({ date: -1 });
-        res.json(expenses);
-    },
-    createExpense: async (req, res) => {
-        const { amount, category, date, description } = req.body;
-        const receiptUrl = req.file ? `/uploads/${req.file.filename}` : null;
+    // getExpenses: async (req, res) => {
+    //     // const expenses = await Expenses.find().sort({ date: -1 });
+    //     const expenses = await Expenses.find().sort({ incurredAt: -1, date: -1 });
 
-        const expense = new Expenses({ amount, category, date, description, receiptUrl });
-        await expense.save();
-        res.json(expense);
+    //     res.json(expenses);
+    // },
+  getExpenses: async (req, res) => {
+  try {
+    const method = req.query.method === 'cash' ? 'cash' : 'accrual';
+    const dateField = method === 'cash' ? 'paidAt' : 'incurredAt';
+
+    const from = req.query.from ? new Date(req.query.from) : null;
+    const to = req.query.to ? new Date(req.query.to) : null;
+
+    const includeHidden = safeBool(req.query.includeHidden, false);
+
+    const match = {
+      ...(includeHidden ? {} : { hidden: { $ne: true } }),
+    };
+
+    if (from && to) {
+      match[dateField] = { $gte: from, $lte: to };
+      // cash requires a paidAt
+      if (method === 'cash') match.paidAt = { $ne: null };
+    }
+
+    const expenses = await Expenses.find(match).sort({ [dateField]: -1 });
+    res.json(expenses);
+  } catch (err) {
+    console.error('getExpenses error', err);
+    res.status(500).json({ error: err.message || 'Failed to fetch expenses' });
+  }
+},
+
+
+    // createExpense: async (req, res) => {
+    //     const { amount, category, date, description } = req.body;
+    //     const receiptUrl = req.file ? `/uploads/${req.file.filename}` : null;
+
+    //     const expense = new Expenses({ amount, category, date, description, receiptUrl });
+    //     await expense.save();
+    //     res.json(expense);
+    // },
+    createExpense: async (req, res) => {
+        try {
+            const payload = normalizeExpensePayload(req.body);
+
+            let receiptUrl = '';
+            if (req.file) {
+                // IMPORTANT: your static route should serve /uploads/*
+                // and multer saves under /uploads/receipts or /uploads/bank-statements
+                const relFolder = req.file.fieldname === 'statement' ? 'bank-statements' : 'receipts';
+                receiptUrl = `/uploads/${relFolder}/${req.file.filename}`;
+            }
+
+            const expense = new Expenses({
+                ...payload,
+                receiptUrl,
+                receiptFilename: req.file?.originalname || '',
+                receiptMimeType: req.file?.mimetype || '',
+                receiptSize: req.file?.size || 0,
+            });
+
+            await expense.save();
+            res.json(expense);
+        } catch (err) {
+            console.error('createExpense error', err);
+            res.status(400).json({ error: err.message || 'Failed to create expense' });
+        }
     },
+
+
+    // updateExpense: async (req, res) => {
+    //     const { id } = req.params;
+    //     const { amount, category, date, description } = req.body;
+    //     const receiptUrl = req.file ? `/uploads/${req.file.filename}` : null;
+    //     const updatedExpense = await Expenses.findByIdAndUpdate(id, {
+    //         amount,
+    //         category,
+    //         date,
+    //         description,
+    //         receiptUrl
+    //     }, { new: true });
+    //     res.json(updatedExpense);
+    // },
     updateExpense: async (req, res) => {
-        const { id } = req.params;
-        const { amount, category, date, description } = req.body;
-        const receiptUrl = req.file ? `/uploads/${req.file.filename}` : null;
-        const updatedExpense = await Expenses.findByIdAndUpdate(id, {
-            amount,
-            category,
-            date,
-            description,
-            receiptUrl
-        }, { new: true });
-        res.json(updatedExpense);
+        try {
+            const { id } = req.params;
+            const payload = normalizeExpensePayload(req.body);
+
+            const update = { ...payload };
+
+            if (req.file) {
+                const relFolder = req.file.fieldname === 'statement' ? 'bank-statements' : 'receipts';
+                update.receiptUrl = `/uploads/${relFolder}/${req.file.filename}`;
+                update.receiptFilename = req.file.originalname || '';
+                update.receiptMimeType = req.file.mimetype || '';
+                update.receiptSize = req.file.size || 0;
+            }
+
+            const updatedExpense = await Expenses.findByIdAndUpdate(id, update, { new: true });
+            res.json(updatedExpense);
+        } catch (err) {
+            console.error('updateExpense error', err);
+            res.status(400).json({ error: err.message || 'Failed to update expense' });
+        }
     },
+
+
     deleteExpense: async (req, res) => {
         await Expenses.findByIdAndDelete(req.params.id);
         res.json({ success: true });
     },
-    bulkInsert: async (req, res) => {
-        const { expenses } = req.body;
-        await Expenses.insertMany(expenses);
-        res.json({ success: true });
-    },
+    // bulkInsert: async (req, res) => {
+    //     const { expenses } = req.body;
+    //     await Expenses.insertMany(expenses);
+    //     res.json({ success: true });
+    // },
+  bulkInsert: async (req, res) => {
+  try {
+    const { expenses } = req.body;
+    const normalized = (expenses || []).map((e) => normalizeExpensePayload(e));
+    await Expenses.insertMany(normalized);
+    res.json({ success: true, inserted: normalized.length });
+  } catch (err) {
+    console.error('bulkInsert error', err);
+    res.status(400).json({ error: err.message || 'Failed to bulk insert' });
+  }
+},
+
+
     ocrReceipt: async (req, res) => {
         const filePath = req.file.path;
         const ext = path.extname(req.file.originalname).toLowerCase();
@@ -290,30 +566,51 @@ const expensesControllers = {
             console.log(JSON.stringify(transactions, null, 2));
             console.log('---------------------------');
 
-            const expensesToInsert = transactions
-                .map(tx => ({
-                    description: tx.description,
-                    category: 'Bank Import from file ' + req.file.originalname, // or detect dynamically
-                    amount: tx.amount,
-                    date: tx.date || tx.postingDate || new Date(), // fallback
-                    status: 'paid',
-                    paymentMethod: 'Cash',
-                    bookedOn: new Date()
-                }))
-                .filter(exp => exp.date && !isNaN(new Date(exp.date))); // remove invalid
+            // const expensesToInsert = transactions
+            //     .map(tx => ({
+            //         description: tx.description,
+            //         category: 'Bank Import from file ' + req.file.originalname, // or detect dynamically
+            //         amount: tx.amount,
+            //         date: tx.date || tx.postingDate || new Date(), // fallback
+            //         status: 'paid',
+            //         paymentMethod: 'Cash',
+            //         bookedOn: new Date()
+            //     }))
+            //     .filter(exp => exp.date && !isNaN(new Date(exp.date))); // remove invalid
+           const expensesToInsert = transactions
+  .map(tx => {
+    const incurredAt = tx.date || tx.postingDate || new Date();
+    return {
+      description: tx.description,
+      category: `Bank Import: ${req.file.originalname}`,
+      craLine: 'interest_bank', // default; you can change later in UI
+      amount: tx.amount,
+      amountTotal: tx.amount,
+      incurredAt,
+      paidAt: incurredAt,              // bank statement = cash movement
+      status: 'paid',
+      paymentMethod: 'bank_transfer',  // safer default than 'cash'
+      source: 'bank_import',
+      externalRef: req.file.originalname,
+      bookedOn: new Date(),
+    };
+  })
+  .filter(exp => exp.incurredAt && !isNaN(new Date(exp.incurredAt)));
+
+
 
             console.log('--- Expenses To Insert After Filtering ---');
             console.log(JSON.stringify(expensesToInsert, null, 2));
             console.log('-----------------------------------------');
 
 
-            const expenses = transactions.map(txn => ({
-                date: txn.transactionDate, // Or convert to proper Date object
-                description: txn.description,
-                amount: txn.amount,
-                category: 'Bank Import from file ' + req.file.originalname, // or detect dynamically
-                source: 'Bank Statement OCR'
-            }));
+            // const expenses = transactions.map(txn => ({
+            //     date: txn.transactionDate, // Or convert to proper Date object
+            //     description: txn.description,
+            //     amount: txn.amount,
+            //     category: 'Bank Import from file ' + req.file.originalname, // or detect dynamically
+            //     source: 'Bank Statement OCR'
+            // }));
 
             const insertedExpenses = await Expenses.insertMany(expensesToInsert);
 
@@ -356,20 +653,41 @@ const expensesControllers = {
                     return await expensesControllers.bankStatementOCR(req, res); // Fallback to OCR if no text found
                 }
                 const parsedStatements = parseBankStatement(rawText);
-                 const expensesToInsert = parsedStatements.map(tx => ({
-                    description: tx.description,
-                    category: 'Bank Import from file ' + req.file.originalname, // or detect dynamically
-                    amount: tx.amount,
-                    date: tx.date || tx.postingDate || new Date(), // fallback
-                    status: 'paid',
-                    paymentMethod: 'Cash',
-                    bookedOn: new Date()
-                }))
-                .filter(exp => exp.date && !isNaN(new Date(exp.date))); // remove invalid
+                //  const expensesToInsert = parsedStatements.map(tx => ({
+                //     description: tx.description,
+                //     category: 'Bank Import from file ' + req.file.originalname, // or detect dynamically
+                //     amount: tx.amount,
+                //     date: tx.date || tx.postingDate || new Date(), // fallback
+                //     status: 'paid',
+                //     paymentMethod: 'Cash',
+                //     bookedOn: new Date()
+                // }))
+                // .filter(exp => exp.date && !isNaN(new Date(exp.date))); // remove invalid
+             const expensesToInsert = parsedStatements
+  .map(tx => {
+    const incurredAt = tx.date || tx.postingDate || new Date();
+    return {
+      description: tx.description,
+      category: `Bank Import: ${req.file.originalname}`,
+      craLine: 'interest_bank', // default; you can change later in UI
+      amount: tx.amount,
+      amountTotal: tx.amount,
+      incurredAt,
+      paidAt: incurredAt,              // bank statement = cash movement
+      status: 'paid',
+      paymentMethod: 'bank_transfer',  // safer default than 'cash'
+      source: 'bank_import',
+      externalRef: req.file.originalname,
+      bookedOn: new Date(),
+    };
+  })
+  .filter(exp => exp.incurredAt && !isNaN(new Date(exp.incurredAt)));
+
+
 
                 // return res.json({ statements: parsedStatements });
                 const insertedExpenses = await Expenses.insertMany(expensesToInsert);
-    
+
                 return res.json({
                     message: `Inserted ${insertedExpenses.length} expenses from bank statement.`,
                     rawText,
@@ -378,14 +696,65 @@ const expensesControllers = {
                 });
             });
             pdfParser.loadPDF(filePath);
-            
+
 
             // return res.json({ expenses });
         } catch (err) {
             console.error('Error parsing PDF:', err);
             return res.status(500).json({ message: 'Failed to parse statement', error: err.message });
         }
+    },
+    monthlySummary: async (req, res) => {
+  try {
+    const method = req.query.method === 'cash' ? 'cash' : 'accrual';
+    const dateField = method === 'cash' ? '$paidAt' : '$incurredAt';
+
+    const from = req.query.from ? new Date(req.query.from) : null;
+    const to = req.query.to ? new Date(req.query.to) : null;
+    const includeHidden = safeBool(req.query.includeHidden, false);
+
+    const match = {
+      ...(includeHidden ? {} : { hidden: { $ne: true } }),
+    };
+
+    if (from && to) {
+      match[method === 'cash' ? 'paidAt' : 'incurredAt'] = { $gte: from, $lte: to };
+      if (method === 'cash') match.paidAt = { $ne: null };
     }
+
+    const items = await Expenses.aggregate([
+      { $match: match },
+      {
+        $project: {
+          amountTotal: { $ifNull: ['$amountTotal', '$amount'] },
+          month: { $dateToString: { format: '%Y-%m', date: dateField } },
+        },
+      },
+      {
+        $group: {
+          _id: '$month',
+          total: { $sum: '$amountTotal' },
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { _id: 1 } },
+      {
+        $project: {
+          _id: 0,
+          month: '$_id',
+          total: 1,
+          count: 1,
+        },
+      },
+    ]);
+
+    res.json({ method, items });
+  } catch (err) {
+    console.error('monthlySummary error', err);
+    res.status(500).json({ error: err.message || 'Failed to compute monthly summary' });
+  }
+},
+
 }
 
 module.exports = expensesControllers;

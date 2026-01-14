@@ -7,10 +7,67 @@ import moment from 'moment';
 
 const currency = (n) => `$${Number(n || 0).toFixed(2)}`;
 
+const FY_START_MONTH = 6; // June (1-12)
+
 const ExpenseDashboard = () => {
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [periodMode, setPeriodMode] = useState('thisMonth');
+  const [expenseMethod, setExpenseMethod] = useState(
+    () => localStorage.getItem('expenses.method') || 'accrual'
+  );
+  useEffect(() => {
+    localStorage.setItem('expenses.method', expenseMethod);
+  }, [expenseMethod]);
+
+  const dateKey = expenseMethod === 'cash' ? 'paidAt' : 'incurredAt';
+    const [fiscalYear, setFiscalYear] = useState(() => {
+    const now = moment();
+    // FY label: FY2025 means Jun 2024 -> May 2025 when startMonth=6
+    return (now.month() + 1) >= FY_START_MONTH ? now.year() + 1 : now.year();
+  });
+  
+  const [filterFrom, setFilterFrom] = useState(moment().subtract(30, 'days').format('YYYY-MM-DD'));
+  const [filterTo, setFilterTo] = useState(moment().format('YYYY-MM-DD'));
+
+  const effectivePeriod = useMemo(() => {
+    if (periodMode === 'thisMonth') {
+      return {
+        from: moment().startOf('month'),
+        to: moment().endOf('month'),
+        label: 'This Month',
+      };
+    }
+
+    if (periodMode === 'fiscalYear') {
+      const { start, end } = getFiscalYearRange(fiscalYear, FY_START_MONTH);
+      return {
+        from: start,
+        to: end,
+        label: `FY${fiscalYear} (Jun–May)`,
+      };
+    }
+
+    // custom uses the date inputs
+    const from = filterFrom ? moment(filterFrom, 'YYYY-MM-DD').startOf('day') : null;
+    const to = filterTo ? moment(filterTo, 'YYYY-MM-DD').endOf('day') : null;
+    return {
+      from,
+      to,
+      label: 'Custom',
+    };
+  }, [periodMode, fiscalYear, filterFrom, filterTo]);
+
+  const effectiveFromTo = useMemo(() => {
+    const from = effectivePeriod?.from?.format('YYYY-MM-DD') || '';
+    const to = effectivePeriod?.to?.format('YYYY-MM-DD') || '';
+    return { from, to };
+  }, [effectivePeriod]);
+
+  // 'thisMonth' | 'fiscalYear' | 'custom'
+
+
 
   const [formData, setFormData] = useState({
     amount: '',
@@ -30,8 +87,6 @@ const ExpenseDashboard = () => {
   // Client-side filters (no backend changes)
   const [q, setQ] = useState('');
   const [filterCategory, setFilterCategory] = useState('');
-  const [filterFrom, setFilterFrom] = useState(moment().subtract(30, 'days').format('YYYY-MM-DD'));
-  const [filterTo, setFilterTo] = useState(moment().format('YYYY-MM-DD'));
 
   const expenseCategories = [
     // Marketing & Promotions
@@ -61,10 +116,17 @@ const ExpenseDashboard = () => {
     'Penalties & Settlements', 'Bad Debts', 'Interest Expense', 'Taxes & Licenses'
   ];
 
+
   const fetchExpenses = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/expenses');
+      const qs = new URLSearchParams({
+        method: expenseMethod,
+        ...(effectiveFromTo.from && effectiveFromTo.to ? effectiveFromTo : {}),
+        // includeHidden: 'false', // add later if you want a toggle
+      }).toString();
+
+      const res = await fetch(`/api/expenses?${qs}`);
       if (!res.ok) throw new Error('Failed to fetch expenses');
       const json = await res.json();
       setExpenses(Array.isArray(json) ? json : []);
@@ -75,9 +137,14 @@ const ExpenseDashboard = () => {
     }
   };
 
+
+
+
   useEffect(() => {
     fetchExpenses();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [expenseMethod, effectiveFromTo.from, effectiveFromTo.to]);
+
 
   const parseAmountFromText = (text) => {
     const matches = [...String(text).matchAll(/(\$?\s?)(\d+\.\d{2})/g)].map(m => parseFloat(m[2]));
@@ -156,18 +223,23 @@ const ExpenseDashboard = () => {
     setUploading(true);
 
     try {
-      const body = new FormData();
-      Object.keys(formData).forEach(key => {
-        if (formData[key] !== null && formData[key] !== undefined) body.append(key, formData[key]);
-      });
+         const body = new FormData();
 
-      const res = await fetch('/api/expenses', {
-        method: 'POST',
-        body
-      });
-      if (!res.ok) throw new Error('Failed to add expense');
+    // map formData.date => incurredAt / paidAt
+    const iso = moment(formData.date, 'YYYY-MM-DD').toISOString();
+    body.append('incurredAt', iso);
+    if (expenseMethod === 'cash') body.append('paidAt', iso);
 
-      await fetchExpenses();
+    // amount/category/description/receipt
+    body.append('amount', formData.amount);
+    body.append('category', formData.category);
+    body.append('description', formData.description || '');
+    if (formData.receipt) body.append('receipt', formData.receipt);
+
+    const res = await fetch('/api/expenses', { method: 'POST', body });
+    if (!res.ok) throw new Error('Failed to add expense');
+
+    await fetchExpenses();
 
       setFormData({
         amount: '',
@@ -200,70 +272,105 @@ const ExpenseDashboard = () => {
     }
   };
 
-  const startEdit = (exp) => {
-    setEditingId(exp._id);
-    setEditedExpense({
-      amount: exp.amount,
-      category: exp.category,
-      date: moment(exp.date).format('YYYY-MM-DD'),
-      description: exp.description || ''
-    });
-  };
+const startEdit = (exp) => {
+  const rawDate = exp?.[dateKey] || exp?.date;
+  setEditingId(exp._id);
+  setEditedExpense({
+    amount: exp.amountTotal ?? exp.amount, // better default
+    category: exp.category,
+    date: rawDate ? moment(rawDate).format('YYYY-MM-DD') : moment().format('YYYY-MM-DD'),
+    description: exp.description || ''
+  });
+};
+
 
   const cancelEdit = () => {
     setEditingId(null);
     setEditedExpense({});
   };
 
-  const handleSave = async (id) => {
-    try {
-      const updated = {
-        ...editedExpense,
-        amount: Number(editedExpense.amount),
-      };
+const handleSave = async (id) => {
+  try {
+    const updated = {
+      ...editedExpense,
+      amount: Number(editedExpense.amount),
+    };
 
-      const res = await fetch(`/api/expenses/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updated),
-      });
-      if (!res.ok) throw new Error('Failed to update');
-
-      const updatedExp = await res.json();
-      setExpenses(prev => prev.map(e => (e._id === id ? updatedExp : e)));
-      cancelEdit();
-    } catch (err) {
-      console.error(err);
-      alert('Update failed');
+    // Map editedExpense.date -> correct model field
+    const iso = editedExpense.date ? moment(editedExpense.date, 'YYYY-MM-DD').toISOString() : null;
+    if (expenseMethod === 'cash') {
+      updated.paidAt = iso;
+    } else {
+      updated.incurredAt = iso;
     }
-  };
+    delete updated.date;
+
+    const res = await fetch(`/api/expenses/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updated),
+    });
+    if (!res.ok) throw new Error('Failed to update');
+
+    const updatedExp = await res.json();
+    setExpenses(prev => prev.map(e => (e._id === id ? updatedExp : e)));
+    cancelEdit();
+  } catch (err) {
+    console.error(err);
+    alert('Update failed');
+  }
+};
+
+
+
 
   const filteredExpenses = useMemo(() => {
-    const from = filterFrom ? moment(filterFrom, 'YYYY-MM-DD') : null;
-    const to = filterTo ? moment(filterTo, 'YYYY-MM-DD') : null;
+    const from = effectivePeriod.from;
+    const to = effectivePeriod.to;
     const query = q.trim().toLowerCase();
 
     return expenses
       .filter((e) => {
-        const d = moment(e.date);
+        const rawDate = e?.[dateKey] || e?.date; // fallback for old docs
+        const d = rawDate ? moment(rawDate) : null;
+        if (!d || !d.isValid()) return false;
+
         if (from && d.isBefore(from, 'day')) return false;
         if (to && d.isAfter(to, 'day')) return false;
         if (filterCategory && e.category !== filterCategory) return false;
 
         if (query) {
-          const hay = `${e.category || ''} ${e.description || ''} ${e.amount || ''}`.toLowerCase();
+          const hay = `${e.category || ''} ${e.description || ''} ${e.amountTotal ?? e.amount ?? ''}`.toLowerCase();
           if (!hay.includes(query)) return false;
         }
         return true;
       })
-      .sort((a, b) => new Date(b.date) - new Date(a.date));
-  }, [expenses, q, filterCategory, filterFrom, filterTo]);
+      .sort((a, b) => {
+        const da = new Date(a?.[dateKey] || a?.date || 0);
+        const db = new Date(b?.[dateKey] || b?.date || 0);
+        return db - da;
+      });
+  }, [expenses, q, filterCategory, effectivePeriod, dateKey]);
 
-  const totals = useMemo(() => {
-    const total = filteredExpenses.reduce((sum, e) => sum + Number(e.amount || 0), 0);
-    const count = filteredExpenses.length;
-    return { total, count };
-  }, [filteredExpenses]);
+
+const totals = useMemo(() => {
+  const total = filteredExpenses.reduce(
+    (sum, e) => sum + Number(e.amountTotal ?? e.amount ?? 0),
+    0
+  );
+  return { total, count: filteredExpenses.length };
+}, [filteredExpenses]);
+
+
+  function getFiscalYearRange(fyLabel, fyStartMonth = 6) {
+    // FY2025 => start Jun 1 2024, end May 31 2025
+    const startYear = fyStartMonth === 1 ? fyLabel : fyLabel - 1;
+    const start = moment({ year: startYear, month: fyStartMonth - 1, day: 1 }).startOf('day');
+    const end = start.clone().add(1, 'year').subtract(1, 'day').endOf('day');
+    return { start, end };
+  }
+
+
 
   return (
     <section className="py-4 px-1 mx-auto">
@@ -389,7 +496,7 @@ const ExpenseDashboard = () => {
             <CardBody>
               <h5 className="mb-3">Find Expenses</h5>
 
-              <Row className="g-2">
+              {/* <Row className="g-2">
                 <Col md={4}>
                   <FormGroup>
                     <Label>Search</Label>
@@ -427,7 +534,93 @@ const ExpenseDashboard = () => {
                     <Input type="date" value={filterTo} onChange={(e) => setFilterTo(e.target.value)} />
                   </FormGroup>
                 </Col>
+              </Row> */}
+              <Row className="g-2">
+                <Col md={3}>
+                  <FormGroup>
+                    <Label>Period</Label>
+                    <Input
+                      type="select"
+                      value={periodMode}
+                      onChange={(e) => setPeriodMode(e.target.value)}
+                    >
+                      <option value="thisMonth">This Month</option>
+                      <option value="fiscalYear">Fiscal Year (Jun–May)</option>
+                      <option value="custom">Custom</option>
+                    </Input>
+                  </FormGroup>
+                </Col>
+
+                {periodMode === 'fiscalYear' && (
+                  <Col md={3}>
+                    <FormGroup>
+                      <Label>Fiscal Year</Label>
+                      <Input
+                        type="number"
+                        min={2000}
+                        max={2100}
+                        value={fiscalYear}
+                        onChange={(e) => setFiscalYear(Number(e.target.value))}
+                      />
+                      <div className="small text-muted">
+                        FY{fiscalYear}: Jun {fiscalYear - 1} → May {fiscalYear}
+                      </div>
+                    </FormGroup>
+                  </Col>
+                )}
+
+                {periodMode === 'custom' && (
+                  <>
+                    <Col md={3}>
+                      <FormGroup>
+                        <Label>From</Label>
+                        <Input type="date" value={filterFrom} onChange={(e) => setFilterFrom(e.target.value)} />
+                      </FormGroup>
+                    </Col>
+                    <Col md={3}>
+                      <FormGroup>
+                        <Label>To</Label>
+                        <Input type="date" value={filterTo} onChange={(e) => setFilterTo(e.target.value)} />
+                      </FormGroup>
+                    </Col>
+                  </>
+                )}
+
+                <Col md={periodMode === 'custom' ? 3 : 3}>
+                  <FormGroup>
+                    <Label>Category</Label>
+                    <Input
+                      type="select"
+                      value={filterCategory}
+                      onChange={(e) => setFilterCategory(e.target.value)}
+                    >
+                      <option value="">All categories</option>
+                      {expenseCategories.map(cat => (
+                        <option key={cat} value={cat}>{cat}</option>
+                      ))}
+                    </Input>
+                  </FormGroup>
+                </Col>
               </Row>
+
+              <Row className="g-2">
+                <Col md={6}>
+                  <FormGroup>
+                    <Label>Search</Label>
+                    <Input
+                      value={q}
+                      onChange={(e) => setQ(e.target.value)}
+                      placeholder="category, description, amount…"
+                    />
+                  </FormGroup>
+                </Col>
+                <Col md={6} className="d-flex align-items-end justify-content-end">
+                  <Badge color="light" className="text-dark border">
+                    {effectivePeriod.label}
+                  </Badge>
+                </Col>
+              </Row>
+
 
               <div className="d-flex justify-content-between align-items-center mt-2">
                 <div className="small text-muted">
@@ -437,12 +630,24 @@ const ExpenseDashboard = () => {
                   size="sm"
                   color="secondary"
                   outline
+                  // onClick={() => {
+                  //   setQ('');
+                  //   setFilterCategory('');
+                  //   setFilterFrom(moment().subtract(30, 'days').format('YYYY-MM-DD'));
+                  //   setFilterTo(moment().format('YYYY-MM-DD'));
+                  // }}
                   onClick={() => {
                     setQ('');
                     setFilterCategory('');
+                    setPeriodMode('thisMonth');
+                    setFiscalYear((() => {
+                      const now = moment();
+                      return (now.month() + 1) >= FY_START_MONTH ? now.year() + 1 : now.year();
+                    })());
                     setFilterFrom(moment().subtract(30, 'days').format('YYYY-MM-DD'));
                     setFilterTo(moment().format('YYYY-MM-DD'));
                   }}
+
                 >
                   Reset filters
                 </Button>
@@ -488,7 +693,8 @@ const ExpenseDashboard = () => {
                                   onChange={(e) => setEditedExpense({ ...editedExpense, date: e.target.value })}
                                 />
                               ) : (
-                                moment(exp.date).format('YYYY-MM-DD')
+                                moment(exp?.[dateKey] || exp?.date).format('YYYY-MM-DD')
+
                               )}
                             </td>
 

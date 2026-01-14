@@ -14,8 +14,8 @@ const AdminManagementLayout = () => {
   const handleShow = () => setShow(true);
 
   const navLinks = [
-    { to: '/admin/accounting', label: t('navbar.admin.accounting_management') },
     { to: '/admin/booking', label: t('navbar.admin.booking_management') },
+    { to: '/admin/accounting', label: t('navbar.admin.accounting_management') },
     { to: '/admin/customer', label: t('navbar.admin.customer_management') },
     // { to: '/admin/inventory', label: t('navbar.admin.inventory_management') },
   ];

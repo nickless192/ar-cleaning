@@ -142,6 +142,7 @@ function LoginPage({ focus }) {
       setIsSubmitting(true);
       await fetch("/api/users/login/", {
         method: "post",
+         credentials: "include", // 🔑 enables refresh cookie
         body: JSON.stringify({
           email: formData.email.trim(),
           password: formData.password,

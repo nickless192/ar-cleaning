@@ -74,12 +74,12 @@ const userControllers = {
     },
     async login({ body }, res) {
         // const dbUserData = await User.findOne({ email: body.email });
-          const dbUserData = await User.findOne({ email: body.email })
-        .select('-resetToken -resetTokenExpires') // keep sensitive tokens out
-        .populate({
-          path: 'roles',
-          select: 'name label', // so signToken can derive role names
-        });
+        const dbUserData = await User.findOne({ email: body.email })
+            .select('-resetToken -resetTokenExpires') // keep sensitive tokens out
+            .populate({
+                path: 'roles',
+                select: 'name label', // so signToken can derive role names
+            });
 
         // if (dbUserData) {
         if (!dbUserData) {
@@ -92,27 +92,81 @@ const userControllers = {
         if (!correctPassword) {
             return res.status(401).json({ message: 'Wrong password!' });
         }
-        const token = signToken(dbUserData);
+        const token = signToken(dbUserData, process.env.ACCESS_SECRET_KEY, process.env.ACCESS_KEY_EXPIRATION || "2h");
+        const refreshToken = jwt.sign({ id: dbUserData._id }, process.env.REFRESH_SECRET_KEY, { expiresIn: process.env.REFRESH_KEY_EXPIRATION || '30d' });
+        dbUserData.refreshToken = refreshToken;
+        await dbUserData.save();
 
-          // Build the user profile object to send to the frontend
-      const userObj = dbUserData.toObject ? dbUserData.toObject() : dbUserData;
+        // Build the user profile object to send to the frontend
+        const userObj = dbUserData.toObject ? dbUserData.toObject() : dbUserData;
 
-      // Never send the password hash to the front-end
-      delete userObj.password;
+        // Never send the password hash to the front-end
+        delete userObj.password;
 
-      // Normalize roles into an array of role names for easy use in React
-      const roleNames = Array.isArray(userObj.roles)
-        ? userObj.roles.map((r) => (r && r.name ? r.name : r)).filter(Boolean)
-        : [];
+        // Normalize roles into an array of role names for easy use in React
+        const roleNames = Array.isArray(userObj.roles)
+            ? userObj.roles.map((r) => (r && r.name ? r.name : r)).filter(Boolean)
+            : [];
 
-      const sanitizedUser = {
-        ...userObj,
-        roles: roleNames,
-      };
+        const sanitizedUser = {
+            ...userObj,
+            roles: roleNames,
+        };
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "Strict",
+            maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+        });
         res.status(200).json({ token, dbUserData: sanitizedUser });
         // }
         // )
         // .catch(err => console.log(err))
+    },
+    async logout(req, res) {
+        const token = req.cookies.refreshToken;
+
+        if (token) {
+            try {
+                const decoded = jwt.verify(token, process.env.REFRESH_SECRET);
+                const user = await User.findById(decoded.id);
+
+                if (user) {
+                    user.refreshToken = null;
+                    await user.save();
+                }
+            } catch {
+                // Token invalid or expired → noop
+            }
+        }
+
+        res.clearCookie("refreshToken", {
+            httpOnly: true,
+            secure: true,
+            sameSite: "Strict",
+        });
+
+        return res.status(204).end();
+    },
+    refreshToken({ req, res }) {
+        const refreshToken = req.cookies.refreshToken;
+        if (!refreshToken) {
+            return res.status(401).json({ message: 'No refresh token found' });
+        }
+
+        jwt.verify(refreshToken, process.env.REFRESH_SECRET_KEY, (err, decoded) => {
+            if (err) {
+                return res.status(403).json({ message: 'Invalid refresh token' });
+            }
+
+            const newAccessToken = jwt.sign(
+                { id: decoded.id },
+                process.env.ACCESS_SECRET_KEY,
+                { expiresIn: process.env.ACCESS_KEY_EXPIRATION || '2h' }
+            );
+
+            res.json({ token: newAccessToken });
+        });
     },
     async migrateUsernamesToLowercase(req, res) {
         try {
@@ -138,24 +192,24 @@ const userControllers = {
             decoded = jwt.verify(token, process.env.SECRET_KEY);
             console.log(decoded);
         } catch (error) {
-            return res.status(400).json({ message: 'Invalid or expired token' });            
+            return res.status(400).json({ message: 'Invalid or expired token' });
         }
 
         const user = await User.findById(decoded.data.userId);
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });            
+            return res.status(404).json({ message: 'User not found' });
         }
 
         // Check if token is expired
         if (user.resetTokenExpires < Date.now()) {
-            return res.status(400).json({ message: 'Token expired' });            
+            return res.status(400).json({ message: 'Token expired' });
         }
 
         // Verify token matches the stored hashed token
         const tokenIsValid = bcrypt.compareSync(token, user.resetToken);
         if (!tokenIsValid) {
             return res.status(400).json({ message: 'Invalid token' });
-            
+
         }
 
         // Update password
@@ -196,7 +250,7 @@ const userControllers = {
             console.error(err);
             res.status(500).json({ error: 'Failed to update user consent' });
         }
-    }    
+    }
 };
 
 module.exports = userControllers;

@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const path = require('path');
 require('dotenv').config();
 const trackVisitor = require('./utils/trackVisitor');
+const cookieParser = require("cookie-parser");
 
 app = express();
 const PORT = process.env.PORT || 3001;
@@ -26,6 +27,7 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/dist')));
 
 }
+app.use(cookieParser());
 // enable routes
 // app.use(trackVisitor);
 app.use(require('./routes'));

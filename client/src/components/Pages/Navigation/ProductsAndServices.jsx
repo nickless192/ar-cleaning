@@ -72,72 +72,72 @@ const ProductsAndServices = () => {
     return label.toLowerCase().replace(/[\s/]+/g, "-");
   };
 
-  const servicesData = categories.map(cat => ({
-    title: t(`${cat.key}`),
-    imgSrc: imageMap[normalizeLabel(cat.labelKey)] || residentialCleaningBg,
-    imgAlt: t(`${cat.labelKey}_imgAlt`, "Service image"),
-    description: t(`${cat.descriptionKey}`, { returnObjects: true }),
-    quoteLink: `/index?service=${encodeURIComponent(t(cat.labelKey))}&scrollToQuote=true`,
-    quoteButtonText: t(
-      "products_and_services." +
-      cat.labelKey.toLowerCase().replace(/[\s/]+/g, "_") +
-      "_button",
-      { defaultValue: "Get a Quote For This Service" }
-    ),
-  }));
+  // const servicesData = categories.map(cat => ({
+  //   title: t(`${cat.key}`),
+  //   imgSrc: imageMap[normalizeLabel(cat.labelKey)] || residentialCleaningBg,
+  //   imgAlt: t(`${cat.labelKey}_imgAlt`, "Service image"),
+  //   description: t(`${cat.descriptionKey}`, { returnObjects: true }),
+  //   quoteLink: `/index?service=${encodeURIComponent(t(cat.labelKey))}&scrollToQuote=true`,
+  //   quoteButtonText: t(
+  //     "products_and_services." +
+  //     cat.labelKey.toLowerCase().replace(/[\s/]+/g, "_") +
+  //     "_button",
+  //     { defaultValue: "Get a Quote For This Service" }
+  //   ),
+  // }));
 
 
-  // const servicesData = [
-  //   {
-  //     title: t("residential_cleaning_title"),
-  //     imgSrc: residentialCleaningBg,
-  //     imgAlt: "Cleaning technician mopping the floor - Designed by Freepik",
-  //     description: t("residential_cleaning_description", { returnObjects: true }),
-  //     quoteLink: "/index?service=Residential+Cleaning",
-  //     quoteButtonText: t("residential_cleaning_button")
-  //   },
-  //   {
-  //     title: t("commercial_cleaning_title"),
-  //     imgSrc: commercialCleaningBg,
-  //     imgAlt: "Cleaners on office cleaning desks and floor - Designed by Freepik",
-  //     description: t("commercial_cleaning_description", { returnObjects: true }),
-  //     quoteLink: "/index?service=Commercial+Cleaning", // URL encode space
-  //     quoteButtonText: t("commercial_cleaning_button")
-  //   },
-  //   // add window cleaning
-  //   {
-  //     title: t("window_cleaning_title"),
-  //     imgSrc: windowCleaningBg, // Placeholder, replace with actual image
-  //     imgAlt: "Window cleaning - Designed by Freepik",
-  //     description: t("window_cleaning_description", { returnObjects: true }),
-  //     quoteLink: "/index?service=Window+Cleaning", // URL encode space
-  //     quoteButtonText: t("window_cleaning_button")
-  //   },
-  //   {
-  //     title: t("carpet_cleaning_title"),
-  //     imgSrc: carpetCleaningBg,
-  //     imgAlt: "Carpet cleaning, vacuum cleaner on carpet - Designed by Freepik",
-  //     description: t("carpet_cleaning_description", { returnObjects: true }),
-  //     quoteLink: "/index?service=Carpet+And+Upholstery", // URL encode space
-  //     quoteButtonText: t("carpet_cleaning_button")
-  //   },
-  //   // Add Power washing
-  //   {
-  //     title: t("power_washing_title"),
-  //     imgSrc: pressureCleaningBg, // Placeholder, replace with actual image
-  //     imgAlt: "Power washing - Designed by Freepik",
-  //     description: t("power_washing_description", { returnObjects: true }),
-  //     quoteLink: "/index?service=Power/Pressure+Washing", // URL encode space
-  //     quoteButtonText: t("power_washing_button")
-  //   }
-  // ];
+  const servicesData = [
+    {
+      title: t("products_and_services.residential_cleaning_title"),
+      imgSrc: residentialCleaningBg,
+      imgAlt: "Cleaning technician mopping the floor - Designed by Freepik",
+      description: t("products_and_services.residential_cleaning_description", { returnObjects: true }),
+      quoteLink: "/index?service=Residential+Cleaning",
+      quoteButtonText: t("products_and_services.residential_cleaning_button")
+    },
+    {
+      title: t("products_and_services.commercial_cleaning_title"),
+      imgSrc: commercialCleaningBg,
+      imgAlt: "Cleaners on office cleaning desks and floor - Designed by Freepik",
+      description: t("products_and_services.commercial_cleaning_description", { returnObjects: true }),
+      quoteLink: "/index?service=Commercial+Cleaning", // URL encode space
+      quoteButtonText: t("products_and_services.commercial_cleaning_button")
+    },
+    // add window cleaning
+    {
+      title: t("products_and_services.window_cleaning_title"),
+      imgSrc: windowCleaningBg, // Placeholder, replace with actual image
+      imgAlt: "Window cleaning - Designed by Freepik",
+      description: t("products_and_services.window_cleaning_description", { returnObjects: true }),
+      quoteLink: "/index?service=Window+Cleaning", // URL encode space
+      quoteButtonText: t("products_and_services.window_cleaning_button")
+    },
+    {
+      title: t("products_and_services.carpet_cleaning_title"),
+      imgSrc: carpetCleaningBg,
+      imgAlt: "Carpet cleaning, vacuum cleaner on carpet - Designed by Freepik",
+      description: t("products_and_services.carpet_cleaning_description", { returnObjects: true }),
+      quoteLink: "/index?service=Carpet+And+Upholstery", // URL encode space
+      quoteButtonText: t("products_and_services.carpet_and_upholstery_button")
+    },
+    // Add Power washing
+    {
+      title: t("products_and_services.power_washing_title"),
+      imgSrc: pressureCleaningBg, // Placeholder, replace with actual image
+      imgAlt: "Power washing - Designed by Freepik",
+      description: t("products_and_services.power_washing_description", { returnObjects: true }),
+      quoteLink: "/index?service=Power/Pressure+Washing", // URL encode space
+      quoteButtonText: t("products_and_services.power_pressure_washing_button")
+    }
+  ];
 
   useEffect(() => {
     // Fetch categories from API
-    fetch('/api/categories')
-      .then(res => res.json())
-      .then(data => setCategories(data.filter(cat => cat.type === "service" && cat.isVisible)))
-      .catch(err => console.error('Error loading categories:', err));
+    // fetch('/api/categories')
+    //   .then(res => res.json())
+    //   .then(data => setCategories(data.filter(cat => cat.type === "service" && cat.isVisible)))
+    //   .catch(err => console.error('Error loading categories:', err));
     // Add classes for potential page-specific styling overrides
     // console.log("loaded categories:", categories);
     document.body.classList.add("products-services-page");

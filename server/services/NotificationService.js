@@ -282,6 +282,7 @@ const sendAdminUpcomingBookingsDigestForPeriod = async (days = 1) => {
         adminFlag: true,
         email: { $exists: true, $ne: '' },
     }).lean();
+    console.log(`[NotificationService] Found ${admins.length} admins and ${bookings.length} bookings for upcoming digest. days=${days}`);
 
     if (!admins.length || !bookings.length) {
         console.log(

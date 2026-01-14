@@ -172,7 +172,7 @@ const App = () => {
                 element={<CleanARJoinsISSACanada />}
               />
               <Route path="/admin" element={<AdminManagementLayout />}>
-                <Route index element={<Navigate to="accounting" replace />} />
+                <Route index element={<Navigate to="booking" replace />} />
                 <Route path="accounting" element={<AccountingTabbedView />} />
                 <Route path="booking" element={<BookingTabbedView />} />
                 <Route path="customer" element={<ContactManagementTabbedView />} />

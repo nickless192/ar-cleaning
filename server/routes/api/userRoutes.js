@@ -1,5 +1,8 @@
 const router = require('express').Router();
-const { getUsers, createUser, getUserById, deleteUser, updateUser, login, migrateUsernamesToLowercase, resetPassword, getUserBookings, setUserConsent } = require('../../controllers/userControllers');
+const { getUsers, createUser, getUserById, deleteUser, updateUser, login, migrateUsernamesToLowercase, resetPassword, getUserBookings, setUserConsent,
+    logout,
+    refreshToken
+ } = require('../../controllers/userControllers');
 const {authMiddleware} = require('../../utils/auth');
 
 router.route('/')
@@ -23,6 +26,8 @@ router.route('/me').get(authMiddleware, getUserById);
 router.route('/:userId/bookings').get(getUserBookings);
 
 router.route('/login').post(login);
+router.route('/logout').post(logout);
+router.route('/refresh').post(refreshToken);
 
 
 // router.route('/:userId/friends/:friendId')

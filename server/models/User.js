@@ -71,6 +71,9 @@ const UserSchema = new Schema({
     resetTokenExpires: {
         type: Date
     },
+    refreshToken: {
+        type: String
+    },
     termsConsent: {
         type: Boolean,
         default: false

@@ -161,6 +161,23 @@ const QuoteRequest = () => {
             }));
         }
     }, [isLogged]);
+//     const prepopulateForm = useCallback(() => {
+//   if (!isLogged) return;
+
+//   const profile = Auth.getProfile();
+//   if (!profile) return;
+
+//   setFormData((prev) => ({
+//     ...prev,
+//     name: `${profile.firstName || ""} ${profile.lastName || ""}`.trim(),
+//     email: profile.email || "",
+//     phonenumber: profile.telephone || "",
+//     postalcode: profile.postalcode || "",
+//     companyName: profile.companyName || "",
+//     userId: profile._id || "",
+//   }));
+// }, [isLogged]);
+
 
     const calculateTotals = useCallback(() => {
         const subtotalCost = formData.services.reduce((total, service) => {

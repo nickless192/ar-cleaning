@@ -131,8 +131,10 @@ function IndexNavbar() {
 
     // Update flags + polling when logged in
     useEffect(() => {
-        setIsLogged(Auth.loggedIn());
-        if (Auth.loggedIn()) {
+        // setIsLogged(Auth.loggedIn());
+        // console.log(Auth.getProfile());
+        // console.log("is logged in?", Auth.loggedIn());
+        if (isLogged) {
             setTesterFlag(!!Auth.getProfile()?.data?.testerFlag);
 
             if (Auth.getProfile()?.data?.adminFlag) {
@@ -144,7 +146,7 @@ function IndexNavbar() {
             setTesterFlag(false);
             setUnackCount(0);
         }
-    }, [isLogged]);
+    }, []);
 
     // React to login/logout from other tabs or Auth.logout()
     useEffect(() => {
