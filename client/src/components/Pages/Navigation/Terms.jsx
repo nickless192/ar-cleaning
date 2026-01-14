@@ -242,9 +242,11 @@ CleanAR Solutions reserves the right to modify or discontinue the Referral Progr
               <li>
                 For multiple referrals, discounts are applied according to CleanAR Solutions’ Referral Rewards program:
                 <ul>
-                  <li>1–3 referrals: 10% off each booking</li>
-                  <li>4–7 referrals: 20% off each booking</li>
-                  <li>8+ referrals: 50% off one full-service cleaning</li>
+                  {/* <li>1–3 referrals: 10% off each booking</li>
+                  <li>4–7 referrals: 20% off each booking</li> */}
+                  <li>1–3 referrals: Enjoy 10% off your next cleaning</li>
+                  <li>4–7 referrals: Enjoy 20% off your next cleaning</li>
+                  <li>8+ referrals: Enjoy 50% off one full-service cleaning</li>
                 </ul>
               </li>
               <li>
