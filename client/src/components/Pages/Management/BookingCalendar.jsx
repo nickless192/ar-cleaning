@@ -18,6 +18,9 @@ import BookingForm from "../Booking/BookingForm";
 import GenerateInvoiceModal from "../Booking/GenerateInvoiceModal";
 import BookingActions from "../Booking/BookingActions";
 import { FaEyeSlash, FaTrash } from "react-icons/fa";
+import { useLocation, useNavigate } from "react-router-dom";
+
+const DRAFT_KEY = "booking.draft";
 
 const BookingCalendar = ({
   bookings,
@@ -28,7 +31,11 @@ const BookingCalendar = ({
   // cancelBooking,
   // hideBooking,
   customers,
+  setCustomers,
 }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -39,7 +46,7 @@ const BookingCalendar = ({
 
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingServices, setIsEditingServices] = useState(false);
-const [editableServices, setEditableServices] = useState([]);
+  const [editableServices, setEditableServices] = useState([]);
 
   const [tempDate, setTempDate] = useState("");
   // const [tempServiceType, setTempServiceType] = useState("");
@@ -56,39 +63,75 @@ const [editableServices, setEditableServices] = useState([]);
       );
     }
     if (selectedBooking) {
-    // If booking already has services[], hydrate from it
-    if (selectedBooking.services && selectedBooking.services.length > 0) {
-      setEditableServices(
-        selectedBooking.services.map((s) => ({
-          serviceType: s.serviceType || "",
-          description: s.description || "",
-          billingType: s.billingType || "quantity",
-          hours: s.hours || 0,
-          quantity: s.quantity || 1,
-          price: s.price || 0,
-          amount: s.amount || 0,
-        }))
-      );
+      // If booking already has services[], hydrate from it
+      if (selectedBooking.services && selectedBooking.services.length > 0) {
+        setEditableServices(
+          selectedBooking.services.map((s) => ({
+            serviceType: s.serviceType || "",
+            description: s.description || "",
+            billingType: s.billingType || "quantity",
+            hours: s.hours || 0,
+            quantity: s.quantity || 1,
+            price: s.price || 0,
+            amount: s.amount || 0,
+          }))
+        );
+      } else {
+        // Fallback: synthesize one line from legacy serviceType + income
+        setEditableServices([
+          {
+            serviceType: selectedBooking.serviceType || "",
+            description: selectedBooking.serviceType || "",
+            billingType: "quantity",
+            hours: 0,
+            quantity: 1,
+            price: selectedBooking.income || 0,
+            amount: selectedBooking.income || 0,
+          },
+        ]);
+      }
+      setIsEditingServices(false);
     } else {
-      // Fallback: synthesize one line from legacy serviceType + income
-      setEditableServices([
-        {
-          serviceType: selectedBooking.serviceType || "",
-          description: selectedBooking.serviceType || "",
-          billingType: "quantity",
-          hours: 0,
-          quantity: 1,
-          price: selectedBooking.income || 0,
-          amount: selectedBooking.income || 0,
-        },
-      ]);
+      setEditableServices([]);
+      setIsEditingServices(false);
     }
-    setIsEditingServices(false);
-  } else {
-    setEditableServices([]);
-    setIsEditingServices(false);
-  }
   }, [selectedBooking]);
+
+  useEffect(() => {
+    console.log("BookingForm location.state:", location.state);
+    const shouldReopen = location.state?.reopenBookingModal;
+    const prefillDate = location.state?.prefillDate;
+
+    if (shouldReopen) {
+      // ✅ restore draft
+      console.log("Restoring booking draft from sessionStorage...");
+      // const raw = sessionStorage.getItem(DRAFT_KEY);
+      // if (raw) {
+      //   try {
+      //     const draft = JSON.parse(raw);
+      //     if (draft?.formData) setFormData(draft.formData);
+      //     if (draft?.selectedCustomerId) setSelectedCustomerId(draft.selectedCustomerId);
+      //   } catch { }
+      // }
+
+      // // ✅ apply newly created customer (if present)
+      // const newCustomer = location.state?.newCustomer;
+      // if (newCustomer?._id) {
+      //   setSelectedCustomerId(newCustomer._id);
+      //   applySelectedCustomerToForm(newCustomer);
+      // }
+      // console.log("Reopening booking modal with new customer:", newCustomer);
+
+      // ✅ reopen booking modal
+      // setIsBookingModalOpen(true);
+      if (prefillDate) setPrefillDate(prefillDate);
+      setShowAddModal(true);
+
+
+      // ✅ clear state so it doesn't reopen forever
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.state, navigate, location.pathname]);
 
   // const handleSave = async () => {
   //   const updatedBooking = {
@@ -123,126 +166,126 @@ const [editableServices, setEditableServices] = useState([]);
   // };
 
   const handleServiceCellChange = (index, field, rawValue) => {
-  setEditableServices((prev) => {
-    const updated = [...prev];
-    const svc = { ...updated[index] };
+    setEditableServices((prev) => {
+      const updated = [...prev];
+      const svc = { ...updated[index] };
 
-    let value = rawValue;
-    if (field === "hours" || field === "quantity" || field === "price") {
-      value = Number(rawValue) || 0;
-    }
+      let value = rawValue;
+      if (field === "hours" || field === "quantity" || field === "price") {
+        value = Number(rawValue) || 0;
+      }
 
-    svc[field] = value;
+      svc[field] = value;
 
-    const billingType = field === "billingType"
-      ? (rawValue === "hours" ? "hours" : "quantity")
-      : (svc.billingType === "hours" ? "hours" : "quantity");
+      const billingType = field === "billingType"
+        ? (rawValue === "hours" ? "hours" : "quantity")
+        : (svc.billingType === "hours" ? "hours" : "quantity");
 
-    svc.billingType = billingType;
+      svc.billingType = billingType;
 
-    const hours = Number(svc.hours) || 0;
-    const quantity = Number(svc.quantity) || 0;
-    const price = Number(svc.price) || 0;
+      const hours = Number(svc.hours) || 0;
+      const quantity = Number(svc.quantity) || 0;
+      const price = Number(svc.price) || 0;
 
-    if (
-      field === "hours" ||
-      field === "quantity" ||
-      field === "price" ||
-      field === "billingType"
-    ) {
-      svc.amount =
+      if (
+        field === "hours" ||
+        field === "quantity" ||
+        field === "price" ||
+        field === "billingType"
+      ) {
+        svc.amount =
+          billingType === "hours" ? hours * price : quantity * price;
+      }
+
+      updated[index] = svc;
+      return updated;
+    });
+  };
+
+  const addServiceRowInModal = () => {
+    setEditableServices((prev) => [
+      ...prev,
+      {
+        serviceType: "",
+        description: "",
+        billingType: "quantity",
+        hours: 0,
+        quantity: 1,
+        price: 0,
+        amount: 0,
+      },
+    ]);
+  };
+
+  const removeServiceRowInModal = (index) => {
+    setEditableServices((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const saveServices = async () => {
+    if (!selectedBooking?._id) return;
+
+    // Normalize & recompute amounts on the client (backend should still re-check)
+    const normalized = editableServices.map((s) => {
+      const billingType = s.billingType === "hours" ? "hours" : "quantity";
+      const hours = Number(s.hours) || 0;
+      const quantity = Number(s.quantity) || 0;
+      const price = Number(s.price) || 0;
+      const amount =
         billingType === "hours" ? hours * price : quantity * price;
+
+      return {
+        serviceType: s.serviceType || "",
+        description: s.description || "",
+        billingType,
+        hours,
+        quantity,
+        price,
+        amount,
+      };
+    });
+
+    const incomeFromServices = normalized.reduce(
+      (sum, s) => sum + (s.amount || 0),
+      0
+    );
+
+    try {
+      setLoading(true);
+      const res = await fetch(
+        `/api/bookings/${selectedBooking._id}/update`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            services: normalized,
+            income: incomeFromServices,
+            serviceType:
+              normalized[0]?.serviceType ||
+              selectedBooking.serviceType ||
+              "Service(s)",
+            updatedBy: Auth.getProfile().data._id,
+          }),
+        }
+      );
+      if (!res.ok) throw new Error("Failed to update services");
+      const updated = await res.json();
+
+      // reflect changes locally and refresh list
+      setSelectedBooking(updated);
+      setEditableServices(updated.services || normalized);
+      setIsEditingServices(false);
+      fetchBookings();
+    } catch (err) {
+      console.error("Error updating services:", err);
+      alert("Error updating services.");
+    } finally {
+      setLoading(false);
     }
-
-    updated[index] = svc;
-    return updated;
-  });
-};
-
-const addServiceRowInModal = () => {
-  setEditableServices((prev) => [
-    ...prev,
-    {
-      serviceType: "",
-      description: "",
-      billingType: "quantity",
-      hours: 0,
-      quantity: 1,
-      price: 0,
-      amount: 0,
-    },
-  ]);
-};
-
-const removeServiceRowInModal = (index) => {
-  setEditableServices((prev) => prev.filter((_, i) => i !== index));
-};
-
-const saveServices = async () => {
-  if (!selectedBooking?._id) return;
-
-  // Normalize & recompute amounts on the client (backend should still re-check)
-  const normalized = editableServices.map((s) => {
-    const billingType = s.billingType === "hours" ? "hours" : "quantity";
-    const hours = Number(s.hours) || 0;
-    const quantity = Number(s.quantity) || 0;
-    const price = Number(s.price) || 0;
-    const amount =
-      billingType === "hours" ? hours * price : quantity * price;
-
-    return {
-      serviceType: s.serviceType || "",
-      description: s.description || "",
-      billingType,
-      hours,
-      quantity,
-      price,
-      amount,
-    };
-  });
-
-  const incomeFromServices = normalized.reduce(
+  };
+  const servicesTotal = editableServices.reduce(
     (sum, s) => sum + (s.amount || 0),
     0
   );
-
-  try {
-    setLoading(true);
-    const res = await fetch(
-      `/api/bookings/${selectedBooking._id}/update`,
-      {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          services: normalized,
-          income: incomeFromServices,
-          serviceType:
-            normalized[0]?.serviceType ||
-            selectedBooking.serviceType ||
-            "Service(s)",
-          updatedBy: Auth.getProfile().data._id,
-        }),
-      }
-    );
-    if (!res.ok) throw new Error("Failed to update services");
-    const updated = await res.json();
-
-    // reflect changes locally and refresh list
-    setSelectedBooking(updated);
-    setEditableServices(updated.services || normalized);
-    setIsEditingServices(false);
-    fetchBookings();
-  } catch (err) {
-    console.error("Error updating services:", err);
-    alert("Error updating services.");
-  } finally {
-    setLoading(false);
-  }
-};
-const servicesTotal = editableServices.reduce(
-  (sum, s) => sum + (s.amount || 0),
-  0
-);
 
 
   const handleCancelEdit = () => {
@@ -432,112 +475,112 @@ const servicesTotal = editableServices.reduce(
     return localDate.toISOString().slice(0, 16);
   };
 
-    // const fetchBookings = async () => {
-    //   try {
-    //     const res = await fetch('/api/bookings');
-    //     if (!res.ok) throw new Error('Failed to fetch bookings');
-    //     const data = await res.json();
-    //     // filter out data that is hidden
-    //     const visibleData = data.filter(b => !b.hidden);
-    //     setBookings(visibleData);
-    //   } catch (err) {
-    //     console.error('Failed to fetch bookings:', err);
-    //   }
+  // const fetchBookings = async () => {
+  //   try {
+  //     const res = await fetch('/api/bookings');
+  //     if (!res.ok) throw new Error('Failed to fetch bookings');
+  //     const data = await res.json();
+  //     // filter out data that is hidden
+  //     const visibleData = data.filter(b => !b.hidden);
+  //     setBookings(visibleData);
+  //   } catch (err) {
+  //     console.error('Failed to fetch bookings:', err);
+  //   }
+  // };
+
+  const handleCancel = async (bookingId, status) => {
+    if (status === 'completed' || status === 'cancelled') {
+      alert('You cannot cancel a completed or already cancelled booking.');
+      return;
+    }
+    if (!window.confirm('Are you sure you want to cancel this booking?')) return;
+    // return async () => {
+    try {
+      const res = await fetch(`/api/bookings/${bookingId}/cancel`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'cancelled', updatedBy: Auth.getProfile().data._id }) // Assuming you have user authentication
+      });
+      if (!res.ok) throw new Error('Failed to cancel booking');
+      fetchBookings();
+    } catch (err) {
+      alert('Error cancelling booking.');
+    }
     // };
-  
-    const handleCancel = async (bookingId, status) => {
-      if (status === 'completed' || status === 'cancelled') {
-        alert('You cannot cancel a completed or already cancelled booking.');
-        return;
-      }
-      if (!window.confirm('Are you sure you want to cancel this booking?')) return;
-      // return async () => {
-      try {
-        const res = await fetch(`/api/bookings/${bookingId}/cancel`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ status: 'cancelled', updatedBy: Auth.getProfile().data._id }) // Assuming you have user authentication
-        });
-        if (!res.ok) throw new Error('Failed to cancel booking');
-        fetchBookings();
-      } catch (err) {
-        alert('Error cancelling booking.');
-      }
-      // };
-    };
-  
-    const handlePend = async (bookingId, status) => {
-      if (status !== 'confirmed' && status !== 'cancelled') {
-        alert('You can only pend bookings that are confirmed or cancelled.');
-        return;
-      }
-      if (!window.confirm('Are you sure you want to pend this booking?')) return;
-      try {
-        const res = await fetch(`/api/bookings/${bookingId}/pending`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ status: 'pending', updatedBy: Auth.getProfile().data._id }) // Assuming you have user authentication
-        });
-        if (!res.ok) throw new Error('Failed to pend booking');
-        fetchBookings();
-      } catch (err) {
-        alert('Error pending booking.');
-      }
-    };
-  
-      const handleDelete = async (bookingId) => {
-      if (!window.confirm('Are you sure you want to delete this booking?')) return;
-  
-      try {
-        const res = await fetch(`/api/bookings/${bookingId}`, { method: 'DELETE' });
-        if (!res.ok) throw new Error('Failed to delete');
-        fetchBookings();
-      } catch (err) {
-        alert('Error deleting booking.');
-      }
-    };
-  
-    const handleComplete = async (bookingId, status) => {
-      if (status === 'completed') {
-        alert('This booking is already marked as completed.');
-        return;
-      }
-      if (status === 'cancelled') {
-        alert('You cannot mark a cancelled booking as completed.');
-        return;
-      }
-      if (!window.confirm('Are you sure you want to mark this booking as completed?')) return;
-      try {
-        const res = await fetch(`/api/bookings/${bookingId}/complete`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ status: 'completed', updatedBy: Auth.getProfile().data._id }) // Assuming you have user authentication
-        });
-        if (!res.ok) throw new Error('Failed to mark as completed');
-        fetchBookings();
-      } catch (err) {
-        alert('Error marking booking as completed.');
-      }
-    };
-  
-    const handleHide = async (bookingId, status) => {
-      if (status === 'pending' || status === 'confirmed') {
-        alert('You can only hide completed or cancelled bookings.');
-        return;
-      }
-      if (!window.confirm('Are you sure you want to hide this booking?')) return;
-      try {
-        const res = await fetch(`/api/bookings/${bookingId}/hide`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ hidden: true, updatedBy: Auth.getProfile().data._id }) // Assuming you have user authentication
-        });
-        if (!res.ok) throw new Error('Failed to hide booking');
-        fetchBookings();
-      } catch (err) {
-        alert('Error hiding booking.');
-      }
-    };
+  };
+
+  const handlePend = async (bookingId, status) => {
+    if (status !== 'confirmed' && status !== 'cancelled') {
+      alert('You can only pend bookings that are confirmed or cancelled.');
+      return;
+    }
+    if (!window.confirm('Are you sure you want to pend this booking?')) return;
+    try {
+      const res = await fetch(`/api/bookings/${bookingId}/pending`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'pending', updatedBy: Auth.getProfile().data._id }) // Assuming you have user authentication
+      });
+      if (!res.ok) throw new Error('Failed to pend booking');
+      fetchBookings();
+    } catch (err) {
+      alert('Error pending booking.');
+    }
+  };
+
+  const handleDelete = async (bookingId) => {
+    if (!window.confirm('Are you sure you want to delete this booking?')) return;
+
+    try {
+      const res = await fetch(`/api/bookings/${bookingId}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to delete');
+      fetchBookings();
+    } catch (err) {
+      alert('Error deleting booking.');
+    }
+  };
+
+  const handleComplete = async (bookingId, status) => {
+    if (status === 'completed') {
+      alert('This booking is already marked as completed.');
+      return;
+    }
+    if (status === 'cancelled') {
+      alert('You cannot mark a cancelled booking as completed.');
+      return;
+    }
+    if (!window.confirm('Are you sure you want to mark this booking as completed?')) return;
+    try {
+      const res = await fetch(`/api/bookings/${bookingId}/complete`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'completed', updatedBy: Auth.getProfile().data._id }) // Assuming you have user authentication
+      });
+      if (!res.ok) throw new Error('Failed to mark as completed');
+      fetchBookings();
+    } catch (err) {
+      alert('Error marking booking as completed.');
+    }
+  };
+
+  const handleHide = async (bookingId, status) => {
+    if (status === 'pending' || status === 'confirmed') {
+      alert('You can only hide completed or cancelled bookings.');
+      return;
+    }
+    if (!window.confirm('Are you sure you want to hide this booking?')) return;
+    try {
+      const res = await fetch(`/api/bookings/${bookingId}/hide`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ hidden: true, updatedBy: Auth.getProfile().data._id }) // Assuming you have user authentication
+      });
+      if (!res.ok) throw new Error('Failed to hide booking');
+      fetchBookings();
+    } catch (err) {
+      alert('Error hiding booking.');
+    }
+  };
 
   return (
     <div className="booking-calendar-container">
@@ -727,10 +770,10 @@ const servicesTotal = editableServices.reduce(
                     </td>
                   </tr> */}
                   <tr>
-  <th>Service</th>
-  <td>{selectedBooking.serviceType}</td>
-</tr>
-{/* <tr>
+                    <th>Service</th>
+                    <td>{selectedBooking.serviceType}</td>
+                  </tr>
+                  {/* <tr>
   <th>Services (Line Items)</th>
   <td>
     {selectedBooking.services && selectedBooking.services.length > 0 ? (
@@ -770,207 +813,207 @@ const servicesTotal = editableServices.reduce(
     )}
   </td>
 </tr> */}
-<tr>
-  <th>Services (Line Items)</th>
-  <td>
-    {isEditingServices ? (
-      <>
-        <Table bordered size="sm" className="mb-2" responsive>
-          <thead>
-            <tr>
-              <th>Type</th>
-              <th>Description</th>
-              <th>Billing</th>
-              <th>Hours</th>
-              <th>Qty</th>
-              <th>Price</th>
-              <th>Amount</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {editableServices.map((s, idx) => (
-              <tr key={idx}>
-                <td>
-                  <Form.Control
-                    value={s.serviceType}
-                    className="text-cleanar-color form-input"
-                    onChange={(e) =>
-                      handleServiceCellChange(
-                        idx,
-                        "serviceType",
-                        e.target.value
-                      )
-                    }
-                  />
-                </td>
-                <td>
-                  <Form.Control
-                    value={s.description}
-                    className="text-cleanar-color form-input"
-                    onChange={(e) =>
-                      handleServiceCellChange(
-                        idx,
-                        "description",
-                        e.target.value
-                      )
-                    }
-                  />
-                </td>
-                <td>
-                  <Form.Select
-                    value={s.billingType}
-                    className="text-cleanar-color form-input"
-                    onChange={(e) =>
-                      handleServiceCellChange(
-                        idx,
-                        "billingType",
-                        e.target.value
-                      )
-                    }
-                  >
-                    <option value="hours">Hours</option>
-                    <option value="quantity">Quantity</option>
-                  </Form.Select>
-                </td>
-                <td>
-                  <Form.Control
-                    type="number"
-                    value={s.hours}
-                    className="text-cleanar-color form-input"
-                    onChange={(e) =>
-                      handleServiceCellChange(
-                        idx,
-                        "hours",
-                        e.target.value
-                      )
-                    }
-                    disabled={s.billingType !== "hours"}
-                  />
-                </td>
-                <td>
-                  <Form.Control
-                    type="number"
-                    value={s.quantity}
-                    className="text-cleanar-color form-input"
-                    onChange={(e) =>
-                      handleServiceCellChange(
-                        idx,
-                        "quantity",
-                        e.target.value
-                      )
-                    }
-                    disabled={s.billingType !== "quantity"}
-                  />
-                </td>
-                <td>
-                  <Form.Control
-                    type="number"
-                    value={s.price}
-                    className="text-cleanar-color form-input"
-                    onChange={(e) =>
-                      handleServiceCellChange(
-                        idx,
-                        "price",
-                        e.target.value
-                      )
-                    }
-                  />
-                </td>
-                <td>{`$${(s.amount || 0).toFixed(2)}`}</td>
-                <td>
-                  {idx > 0 && (
-                    <Button
-                      variant="danger"
-                      size="sm"
-                      onClick={() => removeServiceRowInModal(idx)}
-                    >
-                      X
-                    </Button>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-        <div className="d-flex justify-content-between align-items-center">
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={addServiceRowInModal}
-          >
-            + Add Service
-          </Button>
-          <div className="d-flex gap-2">
-            <Button
-              variant="success"
-              size="sm"
-              onClick={saveServices}
-            >
-              Save Services
-            </Button>
-            <Button
-              variant="outline-secondary"
-              size="sm"
-              onClick={() => {
-                // reset editor from current booking
-                if (selectedBooking.services && selectedBooking.services.length > 0) {
-                  setEditableServices(selectedBooking.services);
-                }
-                setIsEditingServices(false);
-              }}
-            >
-              Cancel
-            </Button>
-          </div>
-        </div>
-      </>
-    ) : (
-      <>
-        {selectedBooking.services && selectedBooking.services.length > 0 ? (
-          <Table bordered size="sm" className="mb-2" responsive>
-            <thead>
-              <tr>
-                <th>Type</th>
-                <th>Description</th>
-                <th>Billing</th>
-                <th>Hours</th>
-                <th>Qty</th>
-                <th>Price</th>
-                <th>Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              {selectedBooking.services.map((s, idx) => (
-                <tr key={idx}>
-                  <td>{s.serviceType}</td>
-                  <td>{s.description}</td>
-                  <td>{s.billingType}</td>
-                  <td>{s.billingType === "hours" ? s.hours : "-"}</td>
-                  <td>{s.billingType === "quantity" ? s.quantity : "-"}</td>
-                  <td>{s.price != null ? `$${s.price}` : "-"}</td>
-                  <td>
-                    {s.amount != null ? `$${s.amount.toFixed(2)}` : "-"}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        ) : (
-          <span>No detailed services captured.</span>
-        )}
-        <Button
-          variant="outline-primary"
-          size="sm"
-          className="mt-2"
-          onClick={() => setIsEditingServices(true)}
-        >
-          Edit Services
-        </Button>
-      </>
-    )}
-  </td>
-</tr>
+                  <tr>
+                    <th>Services (Line Items)</th>
+                    <td>
+                      {isEditingServices ? (
+                        <>
+                          <Table bordered size="sm" className="mb-2" responsive>
+                            <thead>
+                              <tr>
+                                <th>Type</th>
+                                <th>Description</th>
+                                <th>Billing</th>
+                                <th>Hours</th>
+                                <th>Qty</th>
+                                <th>Price</th>
+                                <th>Amount</th>
+                                <th></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {editableServices.map((s, idx) => (
+                                <tr key={idx}>
+                                  <td>
+                                    <Form.Control
+                                      value={s.serviceType}
+                                      className="text-cleanar-color form-input"
+                                      onChange={(e) =>
+                                        handleServiceCellChange(
+                                          idx,
+                                          "serviceType",
+                                          e.target.value
+                                        )
+                                      }
+                                    />
+                                  </td>
+                                  <td>
+                                    <Form.Control
+                                      value={s.description}
+                                      className="text-cleanar-color form-input"
+                                      onChange={(e) =>
+                                        handleServiceCellChange(
+                                          idx,
+                                          "description",
+                                          e.target.value
+                                        )
+                                      }
+                                    />
+                                  </td>
+                                  <td>
+                                    <Form.Select
+                                      value={s.billingType}
+                                      className="text-cleanar-color form-input"
+                                      onChange={(e) =>
+                                        handleServiceCellChange(
+                                          idx,
+                                          "billingType",
+                                          e.target.value
+                                        )
+                                      }
+                                    >
+                                      <option value="hours">Hours</option>
+                                      <option value="quantity">Quantity</option>
+                                    </Form.Select>
+                                  </td>
+                                  <td>
+                                    <Form.Control
+                                      type="number"
+                                      value={s.hours}
+                                      className="text-cleanar-color form-input"
+                                      onChange={(e) =>
+                                        handleServiceCellChange(
+                                          idx,
+                                          "hours",
+                                          e.target.value
+                                        )
+                                      }
+                                      disabled={s.billingType !== "hours"}
+                                    />
+                                  </td>
+                                  <td>
+                                    <Form.Control
+                                      type="number"
+                                      value={s.quantity}
+                                      className="text-cleanar-color form-input"
+                                      onChange={(e) =>
+                                        handleServiceCellChange(
+                                          idx,
+                                          "quantity",
+                                          e.target.value
+                                        )
+                                      }
+                                      disabled={s.billingType !== "quantity"}
+                                    />
+                                  </td>
+                                  <td>
+                                    <Form.Control
+                                      type="number"
+                                      value={s.price}
+                                      className="text-cleanar-color form-input"
+                                      onChange={(e) =>
+                                        handleServiceCellChange(
+                                          idx,
+                                          "price",
+                                          e.target.value
+                                        )
+                                      }
+                                    />
+                                  </td>
+                                  <td>{`$${(s.amount || 0).toFixed(2)}`}</td>
+                                  <td>
+                                    {idx > 0 && (
+                                      <Button
+                                        variant="danger"
+                                        size="sm"
+                                        onClick={() => removeServiceRowInModal(idx)}
+                                      >
+                                        X
+                                      </Button>
+                                    )}
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </Table>
+                          <div className="d-flex justify-content-between align-items-center">
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              onClick={addServiceRowInModal}
+                            >
+                              + Add Service
+                            </Button>
+                            <div className="d-flex gap-2">
+                              <Button
+                                variant="success"
+                                size="sm"
+                                onClick={saveServices}
+                              >
+                                Save Services
+                              </Button>
+                              <Button
+                                variant="outline-secondary"
+                                size="sm"
+                                onClick={() => {
+                                  // reset editor from current booking
+                                  if (selectedBooking.services && selectedBooking.services.length > 0) {
+                                    setEditableServices(selectedBooking.services);
+                                  }
+                                  setIsEditingServices(false);
+                                }}
+                              >
+                                Cancel
+                              </Button>
+                            </div>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          {selectedBooking.services && selectedBooking.services.length > 0 ? (
+                            <Table bordered size="sm" className="mb-2" responsive>
+                              <thead>
+                                <tr>
+                                  <th>Type</th>
+                                  <th>Description</th>
+                                  <th>Billing</th>
+                                  <th>Hours</th>
+                                  <th>Qty</th>
+                                  <th>Price</th>
+                                  <th>Amount</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {selectedBooking.services.map((s, idx) => (
+                                  <tr key={idx}>
+                                    <td>{s.serviceType}</td>
+                                    <td>{s.description}</td>
+                                    <td>{s.billingType}</td>
+                                    <td>{s.billingType === "hours" ? s.hours : "-"}</td>
+                                    <td>{s.billingType === "quantity" ? s.quantity : "-"}</td>
+                                    <td>{s.price != null ? `$${s.price}` : "-"}</td>
+                                    <td>
+                                      {s.amount != null ? `$${s.amount.toFixed(2)}` : "-"}
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </Table>
+                          ) : (
+                            <span>No detailed services captured.</span>
+                          )}
+                          <Button
+                            variant="outline-primary"
+                            size="sm"
+                            className="mt-2"
+                            onClick={() => setIsEditingServices(true)}
+                          >
+                            Edit Services
+                          </Button>
+                        </>
+                      )}
+                    </td>
+                  </tr>
 
 
 
@@ -1023,78 +1066,78 @@ const servicesTotal = editableServices.reduce(
                     </td>
                   </tr> */}
                   <tr>
-  <th>Date/Time</th>
-  <td>
-    {isEditing ? (
-      <>
-        <Row className="align-items-center g-2 mb-2">
-          <Col xs={12} sm="auto">
-            <Form.Control
-              type="datetime-local"
-              value={tempDate}
-              className="text-cleanar-color form-input"
-              onChange={(e) => setTempDate(e.target.value)}
-              style={{ maxWidth: "250px" }}
-            />
-          </Col>
-          <Col xs={12} sm="auto">
-            <FormGroup check>
-              <Label check>
-                <Input
-                  type="checkbox"
-                  name="customerSuggestedBookingAcknowledged"
-                  checked={customerAcknowledged}
-                  onChange={(e) =>
-                    setCustomerAcknowledged(e.target.checked)
-                  }
-                />
-                <span className="form-check-sign"></span>{" "}
-                Acknowledge Changes to Date/Service
-              </Label>
-            </FormGroup>
-          </Col>
-        </Row>
-        <Row className="align-items-center g-2">
-          <Col xs={6} sm="auto">
-            <Button
-              variant="success"
-              size="sm"
-              onClick={async () => {
-                await updateBookingDate();
-                setIsEditing(false);
-              }}
-              className="rounded-pill"
-            >
-              Save
-            </Button>
-          </Col>
-          <Col xs={6} sm="auto">
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={handleCancelEdit}
-              className="rounded-pill"
-            >
-              Cancel
-            </Button>
-          </Col>
-        </Row>
-      </>
-    ) : (
-      <div className="d-flex align-items-center gap-2">
-        {new Date(selectedBooking.date).toLocaleString()}
-        <Button
-          variant="outline-primary"
-          size="sm"
-          onClick={() => setIsEditing(true)}
-          className="rounded-pill"
-        >
-          Edit
-        </Button>
-      </div>
-    )}
-  </td>
-</tr>
+                    <th>Date/Time</th>
+                    <td>
+                      {isEditing ? (
+                        <>
+                          <Row className="align-items-center g-2 mb-2">
+                            <Col xs={12} sm="auto">
+                              <Form.Control
+                                type="datetime-local"
+                                value={tempDate}
+                                className="text-cleanar-color form-input"
+                                onChange={(e) => setTempDate(e.target.value)}
+                                style={{ maxWidth: "250px" }}
+                              />
+                            </Col>
+                            <Col xs={12} sm="auto">
+                              <FormGroup check>
+                                <Label check>
+                                  <Input
+                                    type="checkbox"
+                                    name="customerSuggestedBookingAcknowledged"
+                                    checked={customerAcknowledged}
+                                    onChange={(e) =>
+                                      setCustomerAcknowledged(e.target.checked)
+                                    }
+                                  />
+                                  <span className="form-check-sign"></span>{" "}
+                                  Acknowledge Changes to Date/Service
+                                </Label>
+                              </FormGroup>
+                            </Col>
+                          </Row>
+                          <Row className="align-items-center g-2">
+                            <Col xs={6} sm="auto">
+                              <Button
+                                variant="success"
+                                size="sm"
+                                onClick={async () => {
+                                  await updateBookingDate();
+                                  setIsEditing(false);
+                                }}
+                                className="rounded-pill"
+                              >
+                                Save
+                              </Button>
+                            </Col>
+                            <Col xs={6} sm="auto">
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                onClick={handleCancelEdit}
+                                className="rounded-pill"
+                              >
+                                Cancel
+                              </Button>
+                            </Col>
+                          </Row>
+                        </>
+                      ) : (
+                        <div className="d-flex align-items-center gap-2">
+                          {new Date(selectedBooking.date).toLocaleString()}
+                          <Button
+                            variant="outline-primary"
+                            size="sm"
+                            onClick={() => setIsEditing(true)}
+                            className="rounded-pill"
+                          >
+                            Edit
+                          </Button>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
 
 
                   {/* <tr>
@@ -1115,12 +1158,12 @@ const servicesTotal = editableServices.reduce(
                       )}
                     </td>
                   </tr> */}
-                 <tr>
-  <th>Cost</th>
-  <td>{`$${(
-    isEditingServices ? servicesTotal : selectedBooking.income || 0
-  ).toFixed(2)} CAD`}</td>
-</tr>
+                  <tr>
+                    <th>Cost</th>
+                    <td>{`$${(
+                      isEditingServices ? servicesTotal : selectedBooking.income || 0
+                    ).toFixed(2)} CAD`}</td>
+                  </tr>
 
 
 
@@ -1178,8 +1221,8 @@ const servicesTotal = editableServices.reduce(
                     <td>
                       {selectedBooking.customerSuggestedBookingDate
                         ? new Date(
-                            selectedBooking.customerSuggestedBookingDate
-                          ).toLocaleDateString()
+                          selectedBooking.customerSuggestedBookingDate
+                        ).toLocaleDateString()
                         : "N/A"}{" "}
                       <br />
                     </td>
@@ -1216,15 +1259,15 @@ const servicesTotal = editableServices.reduce(
                           Confirmation Date:{" "}
                           {selectedBooking.confirmationDate
                             ? new Date(
-                                selectedBooking.confirmationDate
-                              ).toLocaleString()
+                              selectedBooking.confirmationDate
+                            ).toLocaleString()
                             : "N/A"}
                           <br />
                           Confirmation Email Sent Date:{" "}
                           {selectedBooking.scheduledConfirmationDate
                             ? new Date(
-                                selectedBooking.scheduledConfirmationDate
-                              ).toLocaleString()
+                              selectedBooking.scheduledConfirmationDate
+                            ).toLocaleString()
                             : "N/A"}
                           <br />
                           24-hour Reminder Scheduled?{" "}
@@ -1235,8 +1278,8 @@ const servicesTotal = editableServices.reduce(
                           24-hour Reminder Sent Date:{" "}
                           {selectedBooking.scheduledReminderDate
                             ? new Date(
-                                selectedBooking.scheduledReminderDate
-                              ).toLocaleString()
+                              selectedBooking.scheduledReminderDate
+                            ).toLocaleString()
                             : "N/A"}
                         </p>
                       </td>
@@ -1260,7 +1303,10 @@ const servicesTotal = editableServices.reduce(
       {/* Add Booking Modal */}
       <Modal
         show={showAddModal}
-        onHide={() => setShowAddModal(false)}
+        onHide={() => {
+          sessionStorage.removeItem(DRAFT_KEY);
+          setShowAddModal(false);
+        }}
         centered
         size="lg"
       >
@@ -1270,6 +1316,7 @@ const servicesTotal = editableServices.reduce(
         <Modal.Body>
           <BookingForm
             customers={customers}
+            setCustomers={setCustomers}
             prefillDate={prefillDate}
             setShowAddModal={setShowAddModal}
             fetchBookings={fetchBookings}

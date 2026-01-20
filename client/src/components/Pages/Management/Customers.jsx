@@ -1,5 +1,6 @@
 // Customers.jsx
 import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from "react-router-dom";
 import { Container, Button, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import CustomerList from '/src/components/Pages/Customer/CustomerList';
 import CustomerForm from '/src/components/Pages/Customer/CustomerForm';
@@ -16,6 +17,9 @@ const Customers = () => {
   const [editingCustomer, setEditingCustomer] = useState(null);
   const [managingCustomer, setManagingCustomer] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+
 
   const fetchCustomers = async () => {
     const data = await getCustomers();
@@ -36,10 +40,27 @@ const Customers = () => {
     setModalOpen(true);
   };
 
-  const handleSave = async (e,data) => {
+  const handleSave = async (e, data) => {
     e.preventDefault();
-    if (data._id) await updateCustomer(data._id, data);
-    else await createCustomer(data);
+    let created;
+    if (data._id) {
+      created = await updateCustomer(data._id, data);
+    }
+    else {
+      created = await createCustomer(data);
+    }
+    if (location.state?.returnToBooking) {
+//       console.log("returnToBooking:", location.state?.returnToBooking);
+// console.log("from:", location.state?.from);
+      navigate(location.state.from || "/admin/booking", {
+        state: { newCustomer: created,
+          reopenBookingModal: true,
+          prefillDate: location.state?.prefillDate || null
+         },
+         
+      });
+    }
+
     setModalOpen(false);
     fetchCustomers();
   };
@@ -56,6 +77,22 @@ const Customers = () => {
       }
     }
   };
+
+  useEffect(() => {
+  if (location.state?.openAddCustomerModal) {
+    setModalOpen(true);
+
+    // OPTIONAL: apply prefill to your form if you support it
+    // setEditingCustomer({ name: location.state?.prefill?.customerName || "" });
+
+    // ✅ clear the state so it doesn't reopen forever
+    navigate(location.pathname + location.search, {
+      replace: true,
+      state: { ...location.state, openAddCustomerModal: false },
+    });
+  }
+}, [location.state, navigate, location.pathname, location.search]);
+
 
   return (
     <Container className="mt-4">

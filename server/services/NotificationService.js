@@ -272,10 +272,10 @@ const sendAdminUpcomingBookingsDigestForPeriod = async (days = 1) => {
     to.setDate(to.getDate() + days);
 
     const bookings = await Booking.find({
-        startTime: { $gte: now, $lte: to },
+        date: { $gte: now, $lte: to },
         status: { $in: ['confirmed', 'pending'] },
     })
-        .sort({ startTime: 1 })
+        .sort({ date: 1 })
         .lean();
 
     const admins = await User.find({

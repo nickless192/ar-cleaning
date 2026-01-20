@@ -699,6 +699,7 @@ export default function BookingDashboard() {
           <BookingCalendar
             bookings={bookings}
             customers={customers}
+            setCustomers={setCustomers}
             fetchBookings={fetchBookings}
           />
         </Col>

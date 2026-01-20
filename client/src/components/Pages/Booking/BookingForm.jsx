@@ -1,317 +1,361 @@
-// src/components/BookingForm.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useMemo, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
-    Form, FormGroup, Label, Input, Button, Spinner, Alert,
-    Table
+  Form, FormGroup, Label, Input, Button, Spinner, Alert,
+  Table, Card, CardBody
 } from "reactstrap";
 import Auth from "/src/utils/auth";
+import CustomerForm from "/src/components/Pages/Customer/CustomerForm";
+import {
+  getCustomers,
+  createCustomer,
+  updateCustomer,
+  deleteCustomer
+} from '/src/components/API/customerApi';
+
+const NEW_CUSTOMER_VALUE = "__new__";
+const DRAFT_KEY = "booking.draft";
 
 const BookingForm = ({
-    customers, prefillDate, setShowAddModal, fetchBookings
+  customers, prefillDate, setShowAddModal, fetchBookings, setCustomers
 }) => {
 
-    const [formData, setFormData] = useState({
-        customerId: '',
-        customerName: '',
-        customerEmail: '',
-        serviceType: '',
-        date: prefillDate || '',
-        scheduleConfirmation: false,
-        confirmationDate: '',
-        reminderScheduled: false,
-        disableConfirmation: false,
-        // income: 0
-    });
-    const [services, setServices] = useState([
-        {
-            serviceType: "",
-            description: "",
-            billingType: "quantity", // "hours" | "quantity"
-            hours: 0,
-            quantity: 1,
-            price: 0,
-            amount: 0,
-        },
+  const [formData, setFormData] = useState({
+    customerId: '',
+    customerName: '',
+    customerEmail: '',
+    serviceType: '',
+    date: prefillDate || '',
+    scheduleConfirmation: false,
+    confirmationDate: '',
+    reminderScheduled: false,
+    disableConfirmation: false,
+  });
+
+  const emptyCustomerInitial = useMemo(() => ({
+    firstName: "",
+    lastName: "",
+    email: "",
+    telephone: "",
+    address: "",
+    city: "",
+    province: "",
+    postalcode: "",
+    companyName: "",
+    defaultService: "",
+    status: "",
+    type: "",
+  }), []);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const newCustomer = location.state?.newCustomer;
+
+    if (newCustomer?._id) {
+      setSelectedCustomerId(newCustomer._id);
+      applySelectedCustomerToForm(newCustomer);
+
+      // clear state so it doesn't re-trigger if user refreshes
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.state, navigate]);
+
+
+
+  const [isNewCustomerOpen, setIsNewCustomerOpen] = useState(false);
+  const [customerCreateLoading, setCustomerCreateLoading] = useState(false);
+
+  const [services, setServices] = useState([
+    {
+      serviceType: "",
+      description: "",
+      billingType: "quantity",
+      hours: 0,
+      quantity: 1,
+      price: 0,
+      amount: 0,
+    },
+  ]);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState(null);
+  const [selectedCustomerId, setSelectedCustomerId] = useState('');
+
+  const handleChange = e => {
+    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: value
+    }));
+  };
+
+  const handleServiceChange = (index, field, value) => {
+    const updated = [...services];
+    updated[index][field] = value;
+
+    if (field === "hours" || field === "quantity" || field === "price" || field === "billingType") {
+      const svc = updated[index];
+      if (svc.billingType === "hours") {
+        svc.amount = (svc.hours || 0) * (svc.price || 0);
+      } else {
+        svc.amount = (svc.quantity || 0) * (svc.price || 0);
+      }
+    }
+    setServices(updated);
+  };
+
+  const addServiceRow = () => {
+    setServices((prev) => [
+      ...prev,
+      { serviceType: "", description: "", billingType: "quantity", hours: 0, quantity: 1, price: 0, amount: 0 },
     ]);
-    const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState(null);
-    const [selectedCustomerId, setSelectedCustomerId] = useState('');
+  };
 
-    const handleChange = e => {
-        const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-        setFormData(prev => ({
-            ...prev,
-            [e.target.name]: value
-        }));
-    };
+  const removeServiceRow = (index) => {
+    setServices((prev) => prev.filter((_, i) => i !== index));
+  };
 
-    const handleServiceChange = (index, field, value) => {
-        const updated = [...services];
-        updated[index][field] = value;
+  const totalIncome = services.reduce((sum, s) => sum + (s.amount || 0), 0);
 
-        // Recalculate amount based on billing type
-        if (
-            field === "hours" ||
-            field === "quantity" ||
-            field === "price" ||
-            field === "billingType"
-        ) {
-            const svc = updated[index];
-            if (svc.billingType === "hours") {
-                svc.amount = (svc.hours || 0) * (svc.price || 0);
-            } else {
-                svc.amount = (svc.quantity || 0) * (svc.price || 0);
-            }
-        }
+  const handleSubmit = async e => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage(null);
 
-        setServices(updated);
-    };
+    if (!formData.customerName || !formData.customerEmail || !formData.date) {
+      setMessage({ type: 'danger', text: 'Please fill in all required fields.' });
+      setLoading(false);
+      return;
+    }
 
-    const addServiceRow = () => {
-        setServices((prev) => [
-            ...prev,
-            {
-                serviceType: "",
-                description: "",
-                billingType: "quantity",
-                hours: 0,
-                quantity: 1,
-                price: 0,
-                amount: 0,
-            },
-        ]);
-    };
+    const hasAtLeastOneService = services.some((s) => s.serviceType && (s.amount || 0) >= 0);
+    if (!hasAtLeastOneService) {
+      setMessage({ type: "danger", text: "Please add at least one service." });
+      setLoading(false);
+      return;
+    }
 
-    const removeServiceRow = (index) => {
-        setServices((prev) => prev.filter((_, i) => i !== index));
-    };
+    try {
+      const body = {
+        ...formData,
+        serviceType: services[0]?.serviceType || "Service(s)",
+        income: totalIncome,
+        services,
+        userId: Auth.getProfile().data._id,
+      };
+      const res = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      if (!res.ok) throw new Error('Failed to submit booking');
 
-    const totalIncome = services.reduce(
-        (sum, s) => sum + (s.amount || 0),
-        0
-    );
+      setMessage({ type: 'success', text: 'Booking submitted successfully!' });
+      sessionStorage.removeItem(DRAFT_KEY);
+      setShowAddModal(false);
+      fetchBookings();
+    } catch (err) {
+      setMessage({ type: 'danger', text: 'Error submitting booking.' });
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  const applySelectedCustomerToForm = (selectedCustomer) => {
+    if (!selectedCustomer) {
+      setFormData(prev => ({ ...prev, customerId: '', customerName: '', customerEmail: '', serviceType: '' }));
+      setSelectedCustomerId("");
+      return;
+    }
 
-    const handleSubmit = async e => {
-        e.preventDefault();
-        setLoading(true);
-        setMessage(null);
-        // console.log(formData);
-        if (!formData.customerName || !formData.customerEmail || !formData.serviceType || !formData.date) {
-            setMessage({ type: 'danger', text: 'Please fill in all required fields.' });
-            setLoading(false);
-            return;
-        }
-        const hasAtLeastOneService = services.some(
-            (s) => s.serviceType && (s.amount || 0) >= 0
-        );
+    setFormData((prev) => ({
+      ...prev,
+      customerId: selectedCustomer._id,
+      customerName: `${selectedCustomer.firstName} ${selectedCustomer.lastName}`,
+      customerEmail: selectedCustomer.email,
+      serviceType: selectedCustomer.defaultService,
+    }));
 
-        if (!hasAtLeastOneService) {
-            setMessage({
-                type: "danger",
-                text: "Please add at least one service.",
-            });
-            setLoading(false);
-            return;
-        }
-        // Validate date
-        // if (formData.income < 0) {
-        if (totalIncome < 0) {
-            setMessage({ type: 'danger', text: 'Income cannot be negative.' });
-            setLoading(false);
-            return;
-        }
-        try {
-            // const body = {
-            //     ...formData,
-            //     userId: Auth.getProfile().data._id // Assuming you have user authentication
-            // };
-            const body = {
-                ...formData,
-                // sync summary serviceType & income with first row / total
-                serviceType:
-                    services[0]?.serviceType || formData.serviceType || "Service(s)",
-                income: totalIncome,
-                services,
-                userId: Auth.getProfile().data._id,
-            };
-            const res = await fetch('/api/bookings', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(body)
-            });
-            if (!res.ok) throw new Error('Failed to submit booking');
+    setServices((prev) => {
+      const updated = [...prev];
+      updated[0] = {
+        ...updated[0],
+        serviceType: selectedCustomer.defaultService || "",
+        description: selectedCustomer.defaultService || "",
+      };
+      return updated;
+    });
+  };
 
-            setMessage({ type: 'success', text: 'Booking submitted successfully!' });
-            setFormData({
-                customerName: '',
-                customerEmail: '',
-                serviceType: '',
-                date: '',
-                scheduleConfirmation: false,
-                confirmationDate: '',
-                reminderScheduled: false,
-                disableConfirmation: false,
-                income: 0
-            });
-            setServices([
-        {
-          serviceType: "",
-          description: "",
-          billingType: "quantity",
-          hours: 0,
-          quantity: 1,
-          price: 0,
-          amount: 0,
-        },
-      ]);
-            setSelectedCustomerId('');
-            setShowAddModal(false); // Close modal after submission
-            fetchBookings();
+  const handleCustomerCreateSubmit = async (e, customerFormData) => {
+    e.preventDefault();
+    setCustomerCreateLoading(true);
+    await createCustomer(customerFormData);
+    setCustomerCreateLoading(false);
+    setMessage(null);
 
-        } catch (err) {
-            setMessage({ type: 'danger', text: 'Error submitting booking.' });
-        } finally {
-            setLoading(false);
-        }
-    };
+    // try {
+    //   const res = await fetch("/api/customers", {
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify(customerFormData),
+    //   });
 
-    return (
-        <>
-            {message && (
-                <Alert color={message.type}>
-                    {message.text}
-                </Alert>
-            )}
-            <Form onSubmit={handleSubmit}>
-                <FormGroup>
-                    <Label for="customerSelect">Select Saved Customer</Label>
-                    <Input
-                        type="select"
-                        id="customerSelect"
-                        value={selectedCustomerId}
-                        onChange={e => {
-                            const selectedId = e.target.value;
-                            setSelectedCustomerId(selectedId);
-                            const selectedCustomer = customers.find(c => c._id === selectedId);
-                            if (selectedCustomer) {
-                                setFormData(prev => ({
-                                    ...prev,
-                                    customerId: selectedCustomer._id,
-                                    customerName: selectedCustomer.firstName + ' ' + selectedCustomer.lastName,
-                                    customerEmail: selectedCustomer.email,
-                                    serviceType: selectedCustomer.defaultService
-                                }));
-                                 // Pre-fill first service row with defaultService
-                setServices((prev) => {
-                  const base =
-                    prev.length > 0 ? prev : [
-                      {
-                        serviceType: "",
-                        description: "",
-                        billingType: "quantity",
-                        hours: 0,
-                        quantity: 1,
-                        price: 0,
-                        amount: 0,
-                      },
-                    ];
+    //   if (!res.ok) throw new Error("Failed to create customer.");
+    //   const createdCustomer = await res.json();
 
-                  const updated = [...base];
-                  updated[0] = {
-                    ...updated[0],
-                    serviceType: selectedCustomer.defaultService || "",
-                    description: selectedCustomer.defaultService || "",
-                  };
-                  return updated;
-                });
-                            } else {
-                                // If cleared selection
-                                setFormData(prev => ({
-                                    ...prev,
-                                    customerId: '',
-                                    customerName: '',
-                                    customerEmail: '',
-                                    serviceType: ''
-                                }));
-                                setServices([
-                  {
-                    serviceType: "",
-                    description: "",
-                    billingType: "quantity",
-                    hours: 0,
-                    quantity: 1,
-                    price: 0,
-                    amount: 0,
+    //   if (typeof setCustomers === "function") {
+    //     setCustomers((prev) => [createdCustomer, ...prev]);
+    //   }
+
+    //   // Automatically select the newly created customer
+    //   setSelectedCustomerId(createdCustomer._id);
+    //   applySelectedCustomerToForm(createdCustomer);
+
+    //   setMessage({ type: "success", text: "Customer created and selected ✅" });
+    //   setIsNewCustomerOpen(false); // Hide the inline form
+    //   setCustomerCreateLoading(false);
+    // } catch (err) {
+    //   setMessage({ type: "danger", text: err.message || "Error creating customer." });
+    // } 
+    // finally {
+    // }
+  };
+
+  const handleSave = async (e, data) => {
+    e.preventDefault();
+    if (data._id) await updateCustomer(data._id, data);
+    else await createCustomer(data);
+    setModalOpen(false);
+    fetchCustomers();
+  };
+
+  return (
+    <>
+      {message && <Alert color={message.type}>{message.text}</Alert>}
+
+      <Form onSubmit={handleSubmit}>
+        <FormGroup>
+          <Label for="customerSelect">Select Saved Customer</Label>
+          {/* <Input
+            type="select"
+            id="customerSelect"
+            value={selectedCustomerId}
+            onChange={(e) => {
+              const selectedId = e.target.value;
+              if (selectedId === NEW_CUSTOMER_VALUE) {
+                setIsNewCustomerOpen(true);
+                return;
+              }
+              setIsNewCustomerOpen(false);
+              setSelectedCustomerId(selectedId);
+              const selectedCustomer = customers.find((c) => c._id === selectedId);
+              applySelectedCustomerToForm(selectedCustomer);
+            }}
+          > */}
+          <Input
+            type="select"
+            id="customerSelect"
+            value={selectedCustomerId}
+            onChange={(e) => {
+              const selectedId = e.target.value;
+
+              if (selectedId === NEW_CUSTOMER_VALUE) {
+                sessionStorage.setItem(DRAFT_KEY, JSON.stringify({
+                  formData,
+                  selectedCustomerId,
+                  // include anything else you need to restore (selected service, date, notes, etc.)
+                }));
+                navigate("/admin/customer?tab=customers", {
+                  state: {
+                    from: "/admin/booking",
+                    returnToBooking: true,
+                    openAddCustomerModal: true,
+                    prefill: {
+                      customerName: formData.customerName,
+                      customerEmail: formData.customerEmail,
+                    },
+                    reopenBookingModal: true,
+                    prefillDate: formData.date
                   },
-                ]);
-                            }
-                        }}
-                    >
-                        <option value="">-- Select a customer --</option>
-                        {customers.map(c => (
-                            <option key={c._id} value={c._id}>
-                                {c.firstName} {c.lastName} ({c.email})
-                            </option>
-                        ))}
-                    </Input>
-                </FormGroup>
+                });
+                return;
+              }
 
-                <FormGroup>
-                    <Label for="customerName">Customer Name</Label>
-                    <Input
-                        type="text"
-                        name="customerName"
-                        className="text-cleanar-color text-bold form-input"
-                        id="customerName"
-                        value={formData.customerName}
-                        onChange={handleChange}
-                        required
-                        readOnly={!!formData.customerId}
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <Label for="customerEmail">Customer Email</Label>
-                    <Input
-                        type="email"
-                        name="customerEmail"
-                        className="text-cleanar-color text-bold form-input"
-                        id="customerEmail"
-                        value={formData.customerEmail}
-                        onChange={handleChange}
-                        required
-                        readOnly={!!formData.customerId}
-                    />
-                </FormGroup>
-                {formData.customerId && (
-                    <FormGroup>
-                        <Label for="customerId">Customer ID</Label>
-                        <Input
-                            type="text"
-                            id="customerId"
-                            className="text-cleanar-color text-bold form-input"
-                            value={formData.customerId}
-                            readOnly
-                        />
-                    </FormGroup>
-                )}
+              setSelectedCustomerId(selectedId);
+              const selectedCustomer = customers.find((c) => c._id === selectedId);
+              applySelectedCustomerToForm(selectedCustomer);
+            }}
+          >
 
-                {/* <FormGroup>
-                    <Label for="serviceType">Service Type</Label>
-                    <Input
-                        type="text"
-                        name="serviceType"
-                        className="text-cleanar-color text-bold form-input"
-                        id="serviceType"
-                        value={formData.serviceType}
-                        onChange={handleChange}
-                        required
-                    />
-                </FormGroup> */}
-                 {/* Services section (array) */}
+            <option value="">-- Select a customer --</option>
+            <option value={NEW_CUSTOMER_VALUE}>+ Add new customer…</option>
+            {customers.map((c) => (
+              <option key={c._id} value={c._id}>
+                {c.firstName} {c.lastName} ({c.email})
+              </option>
+            ))}
+          </Input>
+        </FormGroup>
+
+        {/* INLINE CUSTOMER FORM */}
+        {/* {isNewCustomerOpen && (
+          <Card className="mb-4 border-primary bg-light">
+            <CardBody>
+              <h5>Create New Customer</h5>
+              <CustomerForm
+                initialData={emptyCustomerInitial}
+                onSubmit={handleCustomerCreateSubmit}
+                onCancel={() => setIsNewCustomerOpen(false)}
+              />
+              {customerCreateLoading && (
+                <div className="mt-2 text-center">
+                  <Spinner size="sm" /> Creating customer...
+                </div>
+              )}
+              <Button 
+                color="link" 
+                size="sm" 
+                className="mt-2" 
+                onClick={() => setIsNewCustomerOpen(false)}
+              >
+                Cancel and return to selection
+              </Button>
+            </CardBody>
+          </Card>
+        )} */}
+
+        <FormGroup>
+          <Label for="customerName">Customer Name</Label>
+          <Input
+            type="text"
+            name="customerName"
+            className="text-cleanar-color text-bold form-input"
+            id="customerName"
+            value={formData.customerName}
+            onChange={handleChange}
+            required
+            readOnly={!!formData.customerId}
+          />
+        </FormGroup>
+
+        <FormGroup>
+          <Label for="customerEmail">Customer Email</Label>
+          <Input
+            type="email"
+            name="customerEmail"
+            className="text-cleanar-color text-bold form-input"
+            id="customerEmail"
+            value={formData.customerEmail}
+            onChange={handleChange}
+            required
+            readOnly={!!formData.customerId}
+          />
+        </FormGroup>
+
         <FormGroup>
           <Label>Services</Label>
-          <Table bordered size="sm">
+          <Table bordered size="sm" responsive>
             <thead>
               <tr>
                 <th>Service Type</th>
@@ -330,27 +374,15 @@ const BookingForm = ({
                     <Input
                       value={s.serviceType}
                       className="text-cleanar-color text-bold form-input"
-                      onChange={(e) =>
-                        handleServiceChange(
-                          index,
-                          "serviceType",
-                          e.target.value
-                        )
-                      }
-                      required={index === 0} // at least first one required
+                      onChange={(e) => handleServiceChange(index, "serviceType", e.target.value)}
+                      required={index === 0}
                     />
                   </td>
                   <td>
                     <Input
                       value={s.description}
                       className="text-cleanar-color text-bold form-input"
-                      onChange={(e) =>
-                        handleServiceChange(
-                          index,
-                          "description",
-                          e.target.value
-                        )
-                      }
+                      onChange={(e) => handleServiceChange(index, "description", e.target.value)}
                     />
                   </td>
                   <td>
@@ -358,122 +390,70 @@ const BookingForm = ({
                       type="select"
                       value={s.billingType}
                       className="text-cleanar-color text-bold form-input"
-                      onChange={(e) =>
-                        handleServiceChange(
-                          index,
-                          "billingType",
-                          e.target.value
-                        )
-                      }
+                      onChange={(e) => handleServiceChange(index, "billingType", e.target.value)}
                     >
                       <option value="hours">Hours</option>
                       <option value="quantity">Quantity</option>
                     </Input>
                   </td>
                   <td>
-                    {s.billingType === "hours" ? (
-                      <Input
-                        type="number"
-                        value={s.hours}
-                        className="text-cleanar-color text-bold form-input"
-                        onChange={(e) =>
-                          handleServiceChange(
-                            index,
-                            "hours",
-                            Number(e.target.value)
-                          )
-                        }
-                      />
-                    ) : (
-                      <Input
-                        type="number"
-                        value={s.quantity}
-                        className="text-cleanar-color text-bold form-input"
-                        onChange={(e) =>
-                          handleServiceChange(
-                            index,
-                            "quantity",
-                            Number(e.target.value)
-                          )
-                        }
-                      />
-                    )}
+                    <Input
+                      type="number"
+                      value={s.billingType === "hours" ? s.hours : s.quantity}
+                      className="text-cleanar-color text-bold form-input"
+                      onChange={(e) => handleServiceChange(index, s.billingType === "hours" ? "hours" : "quantity", Number(e.target.value))}
+                    />
                   </td>
                   <td>
                     <Input
                       type="number"
                       value={s.price}
                       className="text-cleanar-color text-bold form-input"
-                      onChange={(e) =>
-                        handleServiceChange(
-                          index,
-                          "price",
-                          Number(e.target.value)
-                        )
-                      }
+                      onChange={(e) => handleServiceChange(index, "price", Number(e.target.value))}
                     />
                   </td>
                   <td>{s.amount.toFixed(2)}</td>
                   <td>
                     {index > 0 && (
-                      <Button
-                        color="danger"
-                        size="sm"
-                        onClick={() => removeServiceRow(index)}
-                      >
-                        X
-                      </Button>
+                      <Button color="danger" size="sm" onClick={() => removeServiceRow(index)}>X</Button>
                     )}
                   </td>
                 </tr>
               ))}
             </tbody>
           </Table>
-          <Button color="secondary" size="sm" onClick={addServiceRow}>
-            + Add Service
-          </Button>
+          <Button color="secondary" size="sm" onClick={addServiceRow}>+ Add Service</Button>
         </FormGroup>
 
+        <FormGroup>
+          <Label for="date">Service Date</Label>
+          <Input
+            type="datetime-local"
+            name="date"
+            id="date"
+            className="text-cleanar-color text-bold form-input"
+            value={formData.date}
+            onChange={handleChange}
+            required
+          />
+        </FormGroup>
 
-                <FormGroup>
-                    <Label for="date">Service Date</Label>
-                    <Input
-                        type="datetime-local"
-                        name="date"
-                        id="date"
-                        className="text-cleanar-color text-bold form-input"
-                        value={formData.date}
-                        onChange={handleChange}
-                        required
-                    />
-                </FormGroup>
-                {/* <FormGroup>
-                    <Label for="income">Approximate Income (CAD)</Label>
-                    <Input
-                        type="number"
-                        step="0.01"
-                        name="income"
-                        className="text-cleanar-color text-bold form-input"
-                        id="income"
-                        value={formData.income || ''}
-                        onChange={handleChange}
-                    />
-                </FormGroup> */}
-                <FormGroup>
-  <Label>Total (CAD)</Label>
-  <Input
-    type="number"
-    readOnly
-    className="text-cleanar-color text-bold form-input"
-    value={totalIncome.toFixed(2)}
-  />
-</FormGroup>
-                <Button type="submit" color="primary" disabled={loading}>
-                    {loading ? <Spinner size="sm" /> : 'Submit Booking'}
-                </Button>
-            </Form>
-        </>
-    );
+        <FormGroup>
+          <Label>Total (CAD)</Label>
+          <Input
+            type="number"
+            readOnly
+            className="text-cleanar-color text-bold form-input"
+            value={totalIncome.toFixed(2)}
+          />
+        </FormGroup>
+
+        <Button type="submit" color="primary" disabled={loading || isNewCustomerOpen}>
+          {loading ? <Spinner size="sm" /> : 'Submit Booking'}
+        </Button>
+      </Form>
+    </>
+  );
 };
 
 export default BookingForm;

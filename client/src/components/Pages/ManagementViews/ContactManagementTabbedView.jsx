@@ -1,4 +1,6 @@
 import React from 'react';
+import { useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { Tabs, Tab, Container } from 'react-bootstrap';
 
 // import AdminContactDashboard from '/src/components/Pages/Management/AdminContactDashboard';
@@ -16,12 +18,22 @@ import { useTranslation } from 'react-i18next';
 
 const ContactManagementTabbedView = () => {
     const { t } = useTranslation();
+    const [searchParams] = useSearchParams();
+    const [activeKey, setActiveKey] = useState("dashboard"); // your current default
+
+    useEffect(() => {
+        const tab = searchParams.get("tab");
+        if (tab) setActiveKey(tab);
+    }, [searchParams]);
 
     return (
         <Container fluid className="p-3 sm:p-4">
             <div className="rounded-2xl shadow-md bg-white p-2">
                 <Tabs
-                    defaultActiveKey="dashboard"
+                    // defaultActiveKey="dashboard"
+                 
+  activeKey={activeKey}
+  onSelect={(k) => k && setActiveKey(k)}
                     id="management-tabs"
                     className="flex flex-wrap gap-2 mb-3"
                     mountOnEnter
@@ -68,7 +80,7 @@ const ContactManagementTabbedView = () => {
                             <QuickQuoteDashboard />
                         </div>
                     </Tab> */}
-                     <Tab eventKey="customers" title={<span className="px-3 py-2 text-sm sm:text-base">{t('navbar.admin.manage_customers')}</span>}>
+                    <Tab eventKey="customers" title={<span className="px-3 py-2 text-sm sm:text-base">{t('navbar.admin.manage_customers')}</span>}>
                         <div className="p-2 sm:p-4"><Customers /></div>
                     </Tab>
 

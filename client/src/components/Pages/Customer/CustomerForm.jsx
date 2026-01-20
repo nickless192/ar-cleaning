@@ -32,7 +32,10 @@ const Customer = ({ initialData = {}, onSubmit, onCancel }) => {
   };
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    // setFormData({ ...formData, [e.target.name]: e.target.value });
+      const { name, value } = e.target;
+        // console.log('Field changed:', name, value); // Debug line
+  setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   // const handleSubmit = async (e) => {
@@ -89,6 +92,22 @@ const Customer = ({ initialData = {}, onSubmit, onCancel }) => {
   setFormData(initialData || {});
 }, [initialData]);
 
+useEffect(() => {
+  if (location.state?.prefill) {
+    const fullName = (location.state?.prefill?.customerName || "").trim();
+
+const parts = fullName.split(/\s+/).filter(Boolean);
+const firstName = parts.shift() || "";
+const lastName = parts.join(" "); // supports "De la Cruz", "Van Dyke", etc.
+    setEditingCustomer({
+      // name: location.state.prefill.customerName || "",
+      firstName,
+  lastName,
+      email: location.state.prefill.customerEmail || "",
+    });
+  }
+}, [location.state]);
+
 
   return (
     <Form onSubmit={(e) => onSubmit(e, formData)} id="customer-form" className="m-0 p-0">
@@ -97,7 +116,7 @@ const Customer = ({ initialData = {}, onSubmit, onCancel }) => {
           // Determine input type
           const inputType = name === 'email' ? 'email' : name === 'telephone' ? 'tel' : name === 'type' ? 'select' : 'text';          
           return (
-            <Col key={name} md={4} xs={12} className="mb-3">
+            <Col key={name} md={3} xs={6} className="mb-3">
               <FormGroup>
                 <Label className="text-bold mb-1" for={name}>
                   {label}{required && '*'}
