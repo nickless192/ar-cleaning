@@ -53,6 +53,38 @@ const BookingCalendar = ({
   // const [tempIncome, setTempIncome] = useState(0);
   const [customerAcknowledged, setCustomerAcknowledged] = useState(false);
 
+    // ---- Manual Admin Digest Trigger ----
+  const [digestDays, setDigestDays] = useState(7);
+  const [digestSending, setDigestSending] = useState(false);
+  const [digestMsg, setDigestMsg] = useState("");
+  const [digestErr, setDigestErr] = useState("");
+
+  const isAdmin = !!Auth.getProfile()?.data?.adminFlag;
+
+    const sendUpcomingDigest = async () => {
+    try {
+      setDigestSending(true);
+      setDigestMsg("");
+      setDigestErr("");
+
+      // const res = await fetch("/api/email/admin-upcoming-bookings-digest", {
+      const res = await fetch("/api/email/upcoming-bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ days: Number(digestDays) || 7 }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.message || "Failed to send digest");
+
+      setDigestMsg(data.message || "Digest sent!");
+    } catch (e) {
+      setDigestErr(e.message || "Something went wrong.");
+    } finally {
+      setDigestSending(false);
+    }
+  };
+
   useEffect(() => {
     if (selectedBooking?.date) {
       setTempDate(new Date(selectedBooking.date).toISOString().slice(0, 16));
@@ -97,41 +129,41 @@ const BookingCalendar = ({
     }
   }, [selectedBooking]);
 
-  useEffect(() => {
-    console.log("BookingForm location.state:", location.state);
-    const shouldReopen = location.state?.reopenBookingModal;
-    const prefillDate = location.state?.prefillDate;
+  // useEffect(() => {
+  //   console.log("BookingForm location.state:", location.state);
+  //   const shouldReopen = location.state?.reopenBookingModal;
+  //   const prefillDate = location.state?.prefillDate;
 
-    if (shouldReopen) {
-      // ✅ restore draft
-      console.log("Restoring booking draft from sessionStorage...");
-      // const raw = sessionStorage.getItem(DRAFT_KEY);
-      // if (raw) {
-      //   try {
-      //     const draft = JSON.parse(raw);
-      //     if (draft?.formData) setFormData(draft.formData);
-      //     if (draft?.selectedCustomerId) setSelectedCustomerId(draft.selectedCustomerId);
-      //   } catch { }
-      // }
+  //   if (shouldReopen) {
+  //     // ✅ restore draft
+  //     console.log("Restoring booking draft from sessionStorage...");
+  //     // const raw = sessionStorage.getItem(DRAFT_KEY);
+  //     // if (raw) {
+  //     //   try {
+  //     //     const draft = JSON.parse(raw);
+  //     //     if (draft?.formData) setFormData(draft.formData);
+  //     //     if (draft?.selectedCustomerId) setSelectedCustomerId(draft.selectedCustomerId);
+  //     //   } catch { }
+  //     // }
 
-      // // ✅ apply newly created customer (if present)
-      // const newCustomer = location.state?.newCustomer;
-      // if (newCustomer?._id) {
-      //   setSelectedCustomerId(newCustomer._id);
-      //   applySelectedCustomerToForm(newCustomer);
-      // }
-      // console.log("Reopening booking modal with new customer:", newCustomer);
+  //     // // ✅ apply newly created customer (if present)
+  //     // const newCustomer = location.state?.newCustomer;
+  //     // if (newCustomer?._id) {
+  //     //   setSelectedCustomerId(newCustomer._id);
+  //     //   applySelectedCustomerToForm(newCustomer);
+  //     // }
+  //     // console.log("Reopening booking modal with new customer:", newCustomer);
 
-      // ✅ reopen booking modal
-      // setIsBookingModalOpen(true);
-      if (prefillDate) setPrefillDate(prefillDate);
-      setShowAddModal(true);
+  //     // ✅ reopen booking modal
+  //     // setIsBookingModalOpen(true);
+  //     if (prefillDate) setPrefillDate(prefillDate);
+  //     setShowAddModal(true);
 
 
-      // ✅ clear state so it doesn't reopen forever
-      navigate(location.pathname, { replace: true, state: {} });
-    }
-  }, [location.state, navigate, location.pathname]);
+  //     // ✅ clear state so it doesn't reopen forever
+  //     navigate(location.pathname, { replace: true, state: {} });
+  //   }
+  // }, [location.state, navigate, location.pathname]);
 
   // const handleSave = async () => {
   //   const updatedBooking = {
@@ -585,7 +617,7 @@ const BookingCalendar = ({
   return (
     <div className="booking-calendar-container">
       {/* Header */}
-      <div className="calendar-header">
+      {/* <div className="calendar-header">
         <button
           onClick={prevMonth}
           className="nav-button"
@@ -603,7 +635,74 @@ const BookingCalendar = ({
         >
           →
         </button>
+      </div> */}
+            <div className="calendar-header">
+        <button
+          onClick={prevMonth}
+          className="nav-button"
+          aria-label="Previous month"
+        >
+          ←
+        </button>
+
+        <div className="d-flex align-items-center gap-3">
+          <h2 className="calendar-title mb-0">
+            {monthNames[currentMonth]} {currentYear}
+          </h2>
+
+          {isAdmin && (
+            <div className="d-flex align-items-center gap-2">
+              <Form.Control
+                type="number"
+                min={1}
+                className="form-input text-cleanar-color"
+                max={31}
+                value={digestDays}
+                onChange={(e) => setDigestDays(e.target.value)}
+                style={{ width: 90 }}
+                size="sm"
+                title="Days ahead"
+              />
+
+              <Button
+                variant="outline-primary"
+                size="sm"
+                onClick={sendUpcomingDigest}
+                disabled={digestSending}
+              >
+                {digestSending ? (
+                  <>
+                    <Spinner animation="border" size="sm" className="me-2" />
+                    Sending...
+                  </>
+                ) : (
+                  "Send Digest"
+                )}
+              </Button>
+            </div>
+          )}
+        </div>
+
+        <button
+          onClick={nextMonth}
+          className="nav-button"
+          aria-label="Next month"
+        >
+          →
+        </button>
       </div>
+
+      {isAdmin && (digestMsg || digestErr) && (
+        <div className="mt-2">
+          {digestMsg ? (
+            <div className="alert alert-success py-2 mb-2">{digestMsg}</div>
+          ) : null}
+          {digestErr ? (
+            <div className="alert alert-danger py-2 mb-0">{digestErr}</div>
+          ) : null}
+        </div>
+      )}
+
 
       {/* Weekday Header */}
       <div className="weekday-header">

@@ -271,10 +271,10 @@ const BookingForm = ({
                     from: "/admin/booking",
                     returnToBooking: true,
                     openAddCustomerModal: true,
-                    prefill: {
-                      customerName: formData.customerName,
-                      customerEmail: formData.customerEmail,
-                    },
+                    // prefill: {
+                    //   customerName: formData.customerName,
+                    //   customerEmail: formData.customerEmail,
+                    // },
                     reopenBookingModal: true,
                     prefillDate: formData.date
                   },

@@ -23,6 +23,28 @@ router.post('/request-password-reset', emailPasswordResetRequest);
 router.get('/weekly-report', generateManualReport);
 router.post('/upcoming-bookings', sendUpcomingBookingsEmail);
 
+// ✅ Manually trigger Admin Upcoming Bookings Digest
+router.post("/admin-upcoming-bookings-digest", async (req, res) => {
+  try {
+    const days = Number(req.body?.days || 7);
+
+    // optional: small validation
+    if (!Number.isFinite(days) || days < 1 || days > 31) {
+      return res.status(400).json({ message: "days must be between 1 and 31" });
+    }
+
+    await NotificationService.sendAdminUpcomingBookingsDigestForPeriod(days);
+
+    return res.status(200).json({
+      message: `Upcoming bookings digest sent successfully for next ${days} days.`,
+    });
+  } catch (err) {
+    console.error("[Manual] Failed to send upcoming bookings digest:", err);
+    return res.status(500).json({ message: "Failed to send digest." });
+  }
+});
+
+
 // for testing purposes, run every 10 seconds = "*/10 * * * * *"
 
 // Route for sending weekly report email
@@ -46,13 +68,13 @@ cron.schedule(
 "0 7 * * *",
     async () => {
         try {
-            // await sendUpcomingBookingsEmail(
-            //     { body: { days: 7 }, query: {} },
-            //     {
-            //         status: () => ({ json: () => null }),
-            //     }
-            // );
-            await NotificationService.sendAdminUpcomingBookingsDigestForPeriod(7);
+            await sendUpcomingBookingsEmail(
+                { body: { days: 7 }, query: {} },
+                {
+                    status: () => ({ json: () => null }),
+                }
+            );
+            // await NotificationService.sendAdminUpcomingBookingsDigestForPeriod(7);
         } catch (err) {
             console.error('[Cron] Failed to send upcoming bookings email:', err);
         }
