@@ -4,11 +4,11 @@ import { useTranslation } from 'react-i18next';
 import VisitorCounter from "/src/components/Pages/Management/VisitorCounter.jsx";
 
 // Import images (ensure paths are correct)
-import carpetCleaningBg from "/src/assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg";
-import residentialCleaningBg from "/src/assets/img/man-servant-cleaning-house.jpg";
-import commercialCleaningBg from "/src/assets/img/full-shot-people-cleaning-office.jpg";
-import pressureCleaningBg from "/src/assets/img/person-wearing-yellow-rubber-boots-with-high-pressure-water-nozzle-cleaning-dirt-tiles.jpg";
-import windowCleaningBg from "/src/assets/img/man-cleaning-window.jpg";
+import carpetCleaningBg from "/src/assets/img/carpet-cleaning.jpg";
+import residentialCleaningBg from "/src/assets/img/residential-cleaning.jpg";
+import commercialCleaningBg from "/src/assets/img/commercial-cleaning.jpg";
+import pressureCleaningBg from "/src/assets/img/pressure-cleaning.jpg";
+import windowCleaningBg from "/src/assets/img/window-cleaning.jpg";
 import pageBg from "/src/assets/img/bg1.png";
 
 const imageMap = {

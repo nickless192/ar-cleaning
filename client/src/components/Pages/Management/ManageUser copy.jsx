@@ -169,7 +169,6 @@ const ManageUser = () => {
             <div
                 className="section page-header-image"
                 style={{
-                    // backgroundImage: "url(" + require("assets/img/stock-photo-cropped-shot-woman-rubber-gloves-cleaning-office-table.jpg") + ")",
                     backgroundSize: "cover",
                     backgroundPosition: "top center",
                     minHeight: "700px"

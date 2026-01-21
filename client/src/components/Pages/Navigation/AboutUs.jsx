@@ -23,7 +23,7 @@ import {
   FaClock,
   FaCheckCircle,
 } from "react-icons/fa";
-import Logo from "/src/assets/img/IC CLEAN AR-15-cropped.png";
+import Logo from "/src/assets/img/cleanar-logo.png";
 import VisitorCounter from "/src/components/Pages/Management/VisitorCounter.jsx";
 
 

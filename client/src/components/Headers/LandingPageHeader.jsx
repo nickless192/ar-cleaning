@@ -2,7 +2,7 @@ import React from "react";
 
 // reactstrap components
 import { Button, Container } from "reactstrap";
-import Logo from "assets/img/IC CLEAN AR-15-cropped.png";
+import Logo from "assets/img/cleanar-logo.png";
 import { CardImg } from "reactstrap";
 
 // core components

@@ -1,5 +1,5 @@
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
-import Logo from "/src/assets/img/IC CLEAN AR-15-cropped.png";
+import Logo from "/src/assets/img/cleanar-logo.png";
 
 
 

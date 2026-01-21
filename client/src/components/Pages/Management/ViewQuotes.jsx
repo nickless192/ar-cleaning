@@ -182,7 +182,7 @@ const ViewQuote = () => {
       <div
         className="section section-signup light-bg-color"
         style={{
-          // backgroundImage: "url(" + require("assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg") + ")",
+          // backgroundImage: "url(" + require("assets/img/carpet-cleaning.jpg") + ")",
           backgroundSize: "cover",
           backgroundColor: "green",
           backgroundPosition: "top center",

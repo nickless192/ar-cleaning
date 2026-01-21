@@ -28,8 +28,8 @@ import NewIconAnimated from "/src/components/Pages/Navigation/NewIconAnimated";
 import StickyButtons from "/src/components/Pages/Landing/StickyButtons.jsx";
 import ISSAMembershipBadge from "/src/components/Pages/Certifications/ISSAMembershipBadge.jsx";
 
-// import backgroundImage from '/src/assets/img/stock-photo-high-angle-view-person-cleaning-white-carpet-professional-vacuum-cleaner.jpg';
-// import Logo from "assets/img/IC CLEAN AR-15-cropped.png";
+// import backgroundImage from '/src/assets/img/carpet-cleaning.jpg';
+// import Logo from "assets/img/cleanar-logo.png";
 import WelcomeModal from "/src/components/Pages/UserJourney/WelcomeModal.jsx";
 // import { FaInstagram, FaFacebook, FaTiktok } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';

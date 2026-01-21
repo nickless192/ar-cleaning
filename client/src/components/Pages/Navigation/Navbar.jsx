@@ -32,7 +32,7 @@ import {
 import LoginPage from "/src/components/Pages/UserJourney/LoginPage";
 
 import Auth from "/src/utils/auth";
-import logo from "/src/assets/img/IC CLEAN AR-15-cropped.png";
+import logo from "/src/assets/img/cleanar-logo.png";
 import LanguageSwitcher from "/src/components/Pages/Management/LanguageSwitcher";
 import NewIconAnimated from "/src/components/Pages/Navigation/NewIconAnimated";
 import "/src/assets/css/NavBar.css";

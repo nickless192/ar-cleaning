@@ -19,7 +19,7 @@ import {
 } from "react-icons/fa";
 import VisitorCounter from "/src/components/Pages/Management/VisitorCounter.jsx";
 import ISSAMembershipBadge from "/src/components/Pages/Certifications/ISSAMembershipBadge.jsx";
-import Logo from "/src/assets/img/IC CLEAN AR-15-cropped.png";
+import Logo from "/src/assets/img/cleanar-logo.png";
 // import { t } from "i18next";
 import { useTranslation, Trans } from "react-i18next";
 
