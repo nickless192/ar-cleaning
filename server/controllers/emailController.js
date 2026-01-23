@@ -778,140 +778,460 @@ const formatDate = (d) => {
     });
 };
 
-const buildEmailContent = (bookings, days) => {
-    if (!bookings.length) {
-        const subject = `No upcoming bookings in next ${days} day(s)`;
-        const text = `There are currently no bookings scheduled in the next ${days} day(s).`;
-        const html = `<p>There are currently <strong>no bookings</strong> scheduled in the next ${days} day(s).</p>`;
-        return { subject, text, html };
-    }
+// const buildEmailContent = (bookings, days) => {
+//     if (!bookings.length) {
+//         const subject = `No upcoming bookings in next ${days} day(s)`;
+//         const text = `There are currently no bookings scheduled in the next ${days} day(s).`;
+//         const html = `<p>There are currently <strong>no bookings</strong> scheduled in the next ${days} day(s).</p>`;
+//         return { subject, text, html };
+//     }
 
-    const subject = `Upcoming bookings (next ${days} day${days > 1 ? 's' : ''})`;
+//     const subject = `Upcoming bookings (next ${days} day${days > 1 ? 's' : ''})`;
 
-    const lines = bookings.map((b) => {
-        return [
-            `Date: ${formatDate(b.date)}`,
-            `Customer: ${b.customerName || 'N/A'}`,
-            `Status: ${b.status}`,
-            b.location ? `Location: ${b.location}` : '',
-            b.notes ? `Notes: ${b.notes}` : '',
-        ]
-            .filter(Boolean)
-            .join(' | ');
+//     const lines = bookings.map((b) => {
+//         return [
+//             `Date: ${formatDate(b.date)}`,
+//             `Customer: ${b.customerName || 'N/A'}`,
+//             `Status: ${b.status}`,
+//             b.location ? `Location: ${b.location}` : '',
+//             b.notes ? `Notes: ${b.notes}` : '',
+//         ]
+//             .filter(Boolean)
+//             .join(' | ');
+//     });
+
+//     const text = `Here are the upcoming bookings for the next ${days} day(s):\n\n${lines
+//         .map((l) => `• ${l}`)
+//         .join('\n')}`;
+
+//     const htmlListItems = bookings
+//         .map(
+//             (b) => `
+//             <li>
+//                 <strong>${formatDate(b.date)}</strong><br/>
+//                 Customer: ${b.customerName || 'N/A'}<br/>
+//                 Status: ${b.status}<br/>
+//                 ${b.location ? `Location: ${b.location}<br/>` : ''}
+//                 ${b.notes ? `Notes: ${b.notes}<br/>` : ''}
+//             </li>`
+//         )
+//         .join('');
+
+//     const html = `
+//         <p>Here are the upcoming bookings for the next <strong>${days}</strong> day(s):</p>
+//         <ul>
+//             ${htmlListItems}
+//         </ul>
+//     `;
+
+//     return { subject, text, html };
+// };
+
+function buildEmailContent({ upcomingBookings, days, recentBookings, now, since }) {
+  const fmt = (d) => {
+    const dt = new Date(d);
+    if (Number.isNaN(dt.getTime())) return "-";
+    return dt.toLocaleString("en-CA", {
+      year: "numeric",
+      month: "short",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
     });
+  };
 
-    const text = `Here are the upcoming bookings for the next ${days} day(s):\n\n${lines
-        .map((l) => `• ${l}`)
-        .join('\n')}`;
+  const safe = (v) => (v === undefined || v === null || v === "" ? "-" : String(v));
 
-    const htmlListItems = bookings
-        .map(
-            (b) => `
-            <li>
-                <strong>${formatDate(b.date)}</strong><br/>
-                Customer: ${b.customerName || 'N/A'}<br/>
-                Status: ${b.status}<br/>
-                ${b.location ? `Location: ${b.location}<br/>` : ''}
-                ${b.notes ? `Notes: ${b.notes}<br/>` : ''}
-            </li>`
-        )
-        .join('');
+  // Adjust these field names to match your schema
+  const getCustomerLabel = (b) => {
+    // common patterns: b.customerName, b.customer?.name, b.customer?.firstName/lastName
+    if (b.customerName) return b.customerName;
+    if (b.customer?.name) return b.customer.name;
+    const fn = b.customer?.firstName || "";
+    const ln = b.customer?.lastName || "";
+    const full = `${fn} ${ln}`.trim();
+    return full || "-";
+  };
 
-    const html = `
-        <p>Here are the upcoming bookings for the next <strong>${days}</strong> day(s):</p>
-        <ul>
-            ${htmlListItems}
-        </ul>
-    `;
+  const getServiceLabel = (b) => b.serviceType || b.service || "-";
 
-    return { subject, text, html };
-};
+  const getMoneyLabel = (b) => {
+    // common patterns: income, total, price, amount
+    const val =
+      b.total ??
+      b.amount ??
+      b.price ??
+      b.income ??
+      b.quoteTotal ??
+      null;
+
+    if (val === null || val === undefined || val === "") return "-";
+    const n = Number(val);
+    return Number.isFinite(n) ? `$${n.toFixed(2)}` : String(val);
+  };
+
+  // "Needs invoicing" / "needs payment" heuristics
+  const isInvoiced = (b) => {
+    // examples: invoiceSent true, invoiceStatus === 'sent'|'paid', invoiced true
+    if (b.invoiceSent === true) return true;
+    if (b.invoiced === true) return true;
+    if (typeof b.invoiceStatus === "string") {
+      const s = b.invoiceStatus.toLowerCase();
+      return ["sent", "paid", "partial", "overdue"].includes(s);
+    }
+    return false;
+  };
+
+  const isPaid = (b) => {
+    // examples: paid true, paymentStatus === 'paid', balanceDue === 0
+    if (b.paid === true) return true;
+    if (typeof b.paymentStatus === "string") {
+      return b.paymentStatus.toLowerCase() === "paid";
+    }
+    if (b.balanceDue !== undefined && b.balanceDue !== null) {
+      const n = Number(b.balanceDue);
+      if (Number.isFinite(n)) return n <= 0;
+    }
+    return false;
+  };
+
+  const needsInvoice = (b) => !isInvoiced(b);
+  const needsPaymentFollowup = (b) => isInvoiced(b) && !isPaid(b);
+
+  const upcomingRows = (upcomingBookings || [])
+    .map((b) => {
+      return `
+        <tr>
+          <td style="padding:8px;border-bottom:1px solid #eee;">${safe(fmt(b.date))}</td>
+          <td style="padding:8px;border-bottom:1px solid #eee;">${safe(getCustomerLabel(b))}</td>
+          <td style="padding:8px;border-bottom:1px solid #eee;">${safe(getServiceLabel(b))}</td>
+          <td style="padding:8px;border-bottom:1px solid #eee;">${safe(b.status)}</td>
+        </tr>
+      `;
+    })
+    .join("");
+
+  const recentRows = (recentBookings || [])
+    .map((b) => {
+      const invoiceTag = needsInvoice(b)
+        ? `<span style="display:inline-block;padding:2px 8px;border-radius:999px;background:#fff3cd;border:1px solid #ffeeba;font-size:12px;">Invoice</span>`
+        : `<span style="display:inline-block;padding:2px 8px;border-radius:999px;background:#d4edda;border:1px solid #c3e6cb;font-size:12px;">Invoiced</span>`;
+
+      const paymentTag = isPaid(b)
+        ? `<span style="display:inline-block;padding:2px 8px;border-radius:999px;background:#d4edda;border:1px solid #c3e6cb;font-size:12px;margin-left:6px;">Paid</span>`
+        : `<span style="display:inline-block;padding:2px 8px;border-radius:999px;background:#f8d7da;border:1px solid #f5c6cb;font-size:12px;margin-left:6px;">Payment</span>`;
+
+      return `
+        <tr>
+          <td style="padding:8px;border-bottom:1px solid #eee;">${safe(fmt(b.date))}</td>
+          <td style="padding:8px;border-bottom:1px solid #eee;">${safe(getCustomerLabel(b))}</td>
+          <td style="padding:8px;border-bottom:1px solid #eee;">${safe(getServiceLabel(b))}</td>
+          <td style="padding:8px;border-bottom:1px solid #eee;">${safe(b.status)}</td>
+          <td style="padding:8px;border-bottom:1px solid #eee;">${safe(getMoneyLabel(b))}</td>
+          <td style="padding:8px;border-bottom:1px solid #eee;">${invoiceTag}${paymentTag}</td>
+        </tr>
+      `;
+    })
+    .join("");
+
+  const toInvoice = (recentBookings || []).filter(needsInvoice);
+  const toFollowup = (recentBookings || []).filter(needsPaymentFollowup);
+
+  const actionList = `
+    <ul style="margin:8px 0 0 18px;color:#222;">
+      <li><b>Invoices to send:</b> ${toInvoice.length}</li>
+      <li><b>Payments to follow up:</b> ${toFollowup.length}</li>
+    </ul>
+  `;
+
+  const invoiceBullets = toInvoice
+    .slice(0, 10)
+    .map((b) => `<li>${safe(getCustomerLabel(b))} — ${safe(getServiceLabel(b))} — ${safe(fmt(b.date))} (${safe(getMoneyLabel(b))})</li>`)
+    .join("");
+
+  const paymentBullets = toFollowup
+    .slice(0, 10)
+    .map((b) => `<li>${safe(getCustomerLabel(b))} — ${safe(getServiceLabel(b))} — ${safe(fmt(b.date))} (${safe(getMoneyLabel(b))})</li>`)
+    .join("");
+
+  const invoiceBlock =
+    toInvoice.length > 0
+      ? `<div style="margin-top:10px;">
+           <div style="font-weight:700;margin-bottom:6px;">Invoice reminders</div>
+           <ol style="margin:0 0 0 18px;">${invoiceBullets}</ol>
+           ${toInvoice.length > 10 ? `<div style="margin-top:6px;color:#666;font-size:12px;">Showing first 10…</div>` : ""}
+         </div>`
+      : `<div style="margin-top:10px;color:#2f7a3e;">✅ No invoices pending (based on current fields).</div>`;
+
+  const paymentBlock =
+    toFollowup.length > 0
+      ? `<div style="margin-top:12px;">
+           <div style="font-weight:700;margin-bottom:6px;">Payment follow-ups</div>
+           <ol style="margin:0 0 0 18px;">${paymentBullets}</ol>
+           ${toFollowup.length > 10 ? `<div style="margin-top:6px;color:#666;font-size:12px;">Showing first 10…</div>` : ""}
+         </div>`
+      : `<div style="margin-top:12px;color:#2f7a3e;">✅ No payment follow-ups flagged (based on current fields).</div>`;
+
+  const subject = `CleanAR Admin Digest: Upcoming (${days} day${days === 1 ? "" : "s"}) + Last 24h Activity`;
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; color:#111; line-height:1.45;">
+      <h2 style="margin:0 0 6px 0;">CleanAR Admin Digest</h2>
+
+      <div style="font-size:13px;color:#444;margin:0 0 14px 0;">
+        Generated at: <b>${fmt(now)}</b><br/>
+        Upcoming window: <b>${days}</b> day(s)<br/>
+        Recent window: <b>${fmt(since)}</b> → <b>${fmt(now)}</b>
+      </div>
+
+      <hr style="border:none;border-top:1px solid #ddd;margin:14px 0;" />
+
+      <h3 style="margin:0 0 8px 0;">Upcoming bookings (next ${days} day${days === 1 ? "" : "s"})</h3>
+      <div style="margin:0 0 8px 0;color:#444;font-size:13px;">
+        Total upcoming: <b>${upcomingBookings.length}</b>
+      </div>
+
+      <table style="width:100%;border-collapse:collapse;border:1px solid #eee;border-radius:8px;overflow:hidden;">
+        <thead>
+          <tr style="background:#f7f7f7;">
+            <th style="text-align:left;padding:8px;border-bottom:1px solid #eee;">Date</th>
+            <th style="text-align:left;padding:8px;border-bottom:1px solid #eee;">Customer</th>
+            <th style="text-align:left;padding:8px;border-bottom:1px solid #eee;">Service</th>
+            <th style="text-align:left;padding:8px;border-bottom:1px solid #eee;">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${
+            upcomingBookings.length
+              ? upcomingRows
+              : `<tr><td colspan="4" style="padding:10px;color:#666;">No upcoming bookings in this window.</td></tr>`
+          }
+        </tbody>
+      </table>
+
+      <hr style="border:none;border-top:1px solid #ddd;margin:18px 0;" />
+
+      <h3 style="margin:0 0 8px 0;">Recent activity (last 24 hours)</h3>
+      <div style="margin:0 0 8px 0;color:#444;font-size:13px;">
+        Confirmed/completed: <b>${recentBookings.length}</b>
+      </div>
+
+      <table style="width:100%;border-collapse:collapse;border:1px solid #eee;border-radius:8px;overflow:hidden;">
+        <thead>
+          <tr style="background:#f7f7f7;">
+            <th style="text-align:left;padding:8px;border-bottom:1px solid #eee;">Date</th>
+            <th style="text-align:left;padding:8px;border-bottom:1px solid #eee;">Customer</th>
+            <th style="text-align:left;padding:8px;border-bottom:1px solid #eee;">Service</th>
+            <th style="text-align:left;padding:8px;border-bottom:1px solid #eee;">Status</th>
+            <th style="text-align:left;padding:8px;border-bottom:1px solid #eee;">Amount</th>
+            <th style="text-align:left;padding:8px;border-bottom:1px solid #eee;">Ops</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${
+            recentBookings.length
+              ? recentRows
+              : `<tr><td colspan="6" style="padding:10px;color:#666;">No confirmed/completed bookings in the last 24 hours.</td></tr>`
+          }
+        </tbody>
+      </table>
+
+      <div style="margin-top:14px;padding:12px;border:1px solid #eee;border-radius:10px;background:#fafafa;">
+        <div style="font-weight:700;">Invoice & payment follow-up</div>
+        ${actionList}
+        ${invoiceBlock}
+        ${paymentBlock}
+
+        <div style="margin-top:12px;color:#666;font-size:12px;">
+          Note: Follow-up flags are based on your Booking fields (invoice/payment status). Adjust the heuristics in <code>buildEmailContent</code> to match your schema.
+        </div>
+      </div>
+
+      <div style="margin-top:18px;color:#777;font-size:12px;">
+        This is an automated email from CleanAR Solutions.
+      </div>
+    </div>
+  `;
+
+  return { subject, html };
+}
+
+// const sendUpcomingBookingsEmail = async (req, res) => {
+//     try {
+//         console.log("sendUpcomingBookingsEmail called");
+//         const rawDays = Number(req.body.days || req.query.days || 1);
+//         const days = Number.isFinite(rawDays) && rawDays > 0 ? rawDays : 1;
+
+//         const now = new Date();
+//         const to = new Date();
+//         to.setDate(to.getDate() + days);
+
+//         const bookings = await Booking.find({
+//             date: { $gte: now, $lte: to },
+//             status: { $in: ['confirmed', 'pending'] },
+//         })
+//             .sort({ date: 1 })
+//             .lean();
+
+//         const admins = await User.find({
+//             adminFlag: true,
+//             email: { $exists: true, $ne: '' },
+//         })
+//             .select('email name')
+//             .lean();
+
+//         if (!admins.length) {
+//             return res.status(200).json({
+//                 message: 'No admin users with email found. Nothing sent.',
+//                 bookingsCount: bookings.length,
+//             });
+//         }
+
+//         const { subject, text, html } = buildEmailContent(bookings, days);
+
+//                 const message = {
+//             to: admins.map(admin => admin.email), // Update with admin email
+//             from: 'no-reply@cleanarsolutions.ca',
+//             subject: subject,
+//             html: html,
+//             // attachments: [
+//             //     {
+//             //         content: Buffer.from(csv).toString('base64'),
+//             //         filename: 'visitor-report.csv',
+//             //         type: 'text/csv',
+//             //         disposition: 'attachment',
+//             //     },
+//             // ],
+//         };
+
+//         try {
+//             await sgMail.send(message);
+//             // console.log('Email sent successfully');
+//             // res.status(200).json({ message: 'Email sent successfully' });
+//         } catch (error) {
+//             console.error('Error sending email:', error);
+//             if (error.response) {
+//                 console.error(error.response.body);
+//             }
+//             // res.status(500).json({ message: 'Error sending email' });
+//         }
+
+//         // const sendPromises = admins.map((admin) =>
+//         //     sendMail({
+//         //         to: admin.email,
+//         //         subject,
+//         //         text,
+//         //         html,
+//         //     })
+//         // );
+
+//         // await Promise.all(sendPromises);
+
+//         return res.status(200).json({
+//             message: 'Upcoming bookings email sent to all admins.',
+//             adminsNotified: admins.map((a) => a.email),
+//             bookingsCount: bookings.length,
+//             days,
+//         });
+//     } catch (err) {
+//         console.error('Error sending upcoming bookings email:', err);
+//         return res.status(500).json({
+//             message: 'Failed to send upcoming bookings email.',
+//             error: err.message,
+//         });
+//     }
+// };
 
 const sendUpcomingBookingsEmail = async (req, res) => {
-    try {
-        console.log("sendUpcomingBookingsEmail called");
-        const rawDays = Number(req.body.days || req.query.days || 1);
-        const days = Number.isFinite(rawDays) && rawDays > 0 ? rawDays : 1;
+  try {
+    console.log("sendUpcomingBookingsEmail called");
 
-        const now = new Date();
-        const to = new Date();
-        to.setDate(to.getDate() + days);
+    const rawDays = Number(req.body.days || req.query.days || 1);
+    const days = Number.isFinite(rawDays) && rawDays > 0 ? rawDays : 1;
 
-        const bookings = await Booking.find({
-            date: { $gte: now, $lte: to },
-            status: { $in: ['confirmed', 'pending'] },
-        })
-            .sort({ date: 1 })
-            .lean();
+    const now = new Date();
 
-        const admins = await User.find({
-            adminFlag: true,
-            email: { $exists: true, $ne: '' },
-        })
-            .select('email name')
-            .lean();
+    // Upcoming window
+    const to = new Date(now);
+    to.setDate(to.getDate() + days);
 
-        if (!admins.length) {
-            return res.status(200).json({
-                message: 'No admin users with email found. Nothing sent.',
-                bookingsCount: bookings.length,
-            });
-        }
+    // Last-24h window
+    const since = new Date(now);
+    since.setHours(since.getHours() - 24);
 
-        const { subject, text, html } = buildEmailContent(bookings, days);
+    // Upcoming bookings (existing)
+    const upcomingBookings = await Booking.find({
+      date: { $gte: now, $lte: to },
+      status: { $in: ["confirmed", "pending"] },
+    })
+      .sort({ date: 1 })
+      .lean();
 
-                const message = {
-            to: admins.map(admin => admin.email), // Update with admin email
-            from: 'no-reply@cleanarsolutions.ca',
-            subject: subject,
-            html: html,
-            // attachments: [
-            //     {
-            //         content: Buffer.from(csv).toString('base64'),
-            //         filename: 'visitor-report.csv',
-            //         type: 'text/csv',
-            //         disposition: 'attachment',
-            //     },
-            // ],
-        };
+    // Recent confirmed/completed (last 24h)
+    // NOTE: Use date or updatedAt depending on what you mean by "in last 24h".
+    // If you mean "status changed in last 24h", you likely need a statusHistory or updatedAt filter.
+    const recentBookings = await Booking.find({
+      date: { $gte: since, $lte: now },
+      status: { $in: ["confirmed", "completed"] },
+    })
+      .sort({ date: -1 })
+      .lean();
 
-        try {
-            await sgMail.send(message);
-            // console.log('Email sent successfully');
-            // res.status(200).json({ message: 'Email sent successfully' });
-        } catch (error) {
-            console.error('Error sending email:', error);
-            if (error.response) {
-                console.error(error.response.body);
-            }
-            // res.status(500).json({ message: 'Error sending email' });
-        }
+    const admins = await User.find({
+      adminFlag: true,
+      email: { $exists: true, $ne: "" },
+    })
+      .select("email name")
+      .lean();
 
-        // const sendPromises = admins.map((admin) =>
-        //     sendMail({
-        //         to: admin.email,
-        //         subject,
-        //         text,
-        //         html,
-        //     })
-        // );
-
-        // await Promise.all(sendPromises);
-
-        return res.status(200).json({
-            message: 'Upcoming bookings email sent to all admins.',
-            adminsNotified: admins.map((a) => a.email),
-            bookingsCount: bookings.length,
-            days,
-        });
-    } catch (err) {
-        console.error('Error sending upcoming bookings email:', err);
-        return res.status(500).json({
-            message: 'Failed to send upcoming bookings email.',
-            error: err.message,
-        });
+    if (!admins.length) {
+      return res.status(200).json({
+        message: "No admin users with email found. Nothing sent.",
+        upcomingCount: upcomingBookings.length,
+        recentCount: recentBookings.length,
+      });
     }
+
+    const { subject, html } = buildEmailContent({
+      upcomingBookings,
+      days,
+      recentBookings,
+      now,
+      since,
+    });
+
+    const message = {
+      to: admins.map((admin) => admin.email),
+      from: "no-reply@cleanarsolutions.ca",
+      subject,
+      html,
+    };
+
+    try {
+      await sgMail.send(message);
+    } catch (error) {
+      console.error("Error sending email:", error);
+      if (error.response) console.error(error.response.body);
+      // You can choose to return 500 here; keeping your current behavior.
+    }
+
+    return res.status(200).json({
+      message: "Upcoming + last-24h bookings email sent to all admins.",
+      adminsNotified: admins.map((a) => a.email),
+      upcomingCount: upcomingBookings.length,
+      recentCount: recentBookings.length,
+      days,
+      windowLast24h: { since, now },
+    });
+  } catch (err) {
+    console.error("Error sending upcoming bookings email:", err);
+    return res.status(500).json({
+      message: "Failed to send upcoming bookings email.",
+      error: err.message,
+    });
+  }
 };
+
 
 // Define your email controller
 const emailController = {

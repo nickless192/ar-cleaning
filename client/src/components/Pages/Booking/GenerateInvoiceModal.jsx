@@ -8,18 +8,19 @@ const GenerateInvoiceModal = ({ show, onHide, booking }) => {
 
     useEffect(() => {
         if (booking) {
+            // console.log("Prefilling invoice data from booking:", booking);
             setCustomerName(booking.customerName || "");
             setDescription(booking.serviceType || "");
             setServices([
                 {
-                    serviceType: booking.serviceType || "",
-                    description: booking.description || "",
-                    billingType: "quantity", // default
-                    hours: booking.hours || 0,
-                    quantity: booking.quantity || 1,
-                    price: booking.income || 0,
-                    amount: (booking.quantity || 1) * (booking.income || 0),
-                    bookingId: booking._id
+                    serviceType: booking.services[0].serviceType || "",
+                    description: booking.services[0].description || "",
+                    billingType: booking.services[0].billingType || "quantity", // default
+                    hours: booking.services[0].hours || 0,
+                    quantity: booking.services[0].quantity || 1,
+                    price: booking.services[0].price || 0,
+                    amount: (booking.services[0].quantity || 1) * (booking.services[0].price || 0),
+                    bookingId: booking.services[0]._id
                 },
             ]);
         }
@@ -86,7 +87,7 @@ const GenerateInvoiceModal = ({ show, onHide, booking }) => {
     };
 
     return (
-        <Modal show={show} onHide={onHide} size="lg">
+        <Modal show={show} onHide={onHide} size="xl">
             <Modal.Header closeButton>
                 <Modal.Title>Generate Invoice</Modal.Title>
             </Modal.Header>
@@ -109,8 +110,8 @@ const GenerateInvoiceModal = ({ show, onHide, booking }) => {
                     <Table bordered>
                         <thead>
                             <tr>
-                                <th>Service Type</th>
-                                <th>Description</th>
+                                <th>Service Type/Description</th>
+                                {/* <th>Description</th> */}
                                 <th>Billing</th>
                                 <th>{/* Hours/Quantity header updates dynamically */}Value</th>
                                 <th>Price</th>
@@ -124,13 +125,15 @@ const GenerateInvoiceModal = ({ show, onHide, booking }) => {
                                     <td>
                                         <Form.Control
                                             value={s.serviceType}
+                                            placeholder="Service"
                                             className="text-cleanar-color text-bold form-input"
                                             onChange={(e) => handleServiceChange(index, "serviceType", e.target.value)}
                                         />
-                                    </td>
-                                    <td>
+                                    {/* </td>
+                                    <td> */}
                                         <Form.Control
                                             value={s.description}
+                                            placeholder="Description"
                                             className="text-cleanar-color text-bold form-input"
                                             onChange={(e) => handleServiceChange(index, "description", e.target.value)}
                                         />
