@@ -60,6 +60,40 @@
     "pricing_q5": "Do you offer any discounts or promotions?",
     "pricing_a5": "Yes, we run seasonal promotions and first-time client discounts. Check our website or ask when booking for current offers."
   },
+    "blog": {
+    "title": "CleanAR Insights & Updates",
+    "subtitle": "Company news, professional standards, and practical cleaning insights — written for homeowners and businesses across Toronto.",
+
+    "ctaQuote": "Request a Quote",
+    "ctaServices": "View Services",
+
+    "latestHeader": "Browse Articles",
+    "searchPlaceholder": "Search posts (e.g., ISSA, CQCC, standards...)",
+
+    "sections": {
+      "professional": "Professional Standards",
+      "diversity": "Supplier Diversity",
+      "more": "More Articles"
+    },
+
+    "ctaTitle": "Need a cleaning plan you can count on?",
+    "ctaDesc": "Tell us what type of space you have, and we’ll send a clear quote — with flexible options for your schedule and budget.",
+    "ctaButton": "Get a Free Quote"
+  },
+    "cqcc": {
+    "sectionTitle": "CQCC Certification and Supplier Diversity",
+    "learnMore": "Learn more about CQCC",
+    "description1": "<strong>CleanAR Solutions</strong> is recognized as an LGBTQ+ Certified Supplier (LGBTBE) through Canada’s Queer Chamber of Commerce (CQCC).",
+    "description2": "This certification can support organizations that track supplier diversity metrics when subcontracting services, while our day-to-day focus remains the same: reliable, professional cleaning results.",
+    "confidentialNote": "<strong>Note:</strong> CQCC has advised that certificate files should remain confidential for now (branding updates in progress). We do not share certificate images publicly at this time. If you require confidential verification for procurement, contact us.",
+    "benefitsTitle": "Benefits of CQCC Certification",
+    "cardTitle": "What CQCC certification means for you",
+    "benefits": {
+      "procurement": "Supports inclusive procurement goals",
+      "reporting": "May count toward supplier diversity reporting",
+      "network": "Connected to the CQCC supplier network"
+    }
+  },
   "contact": {
     "heading": "Message Us Directly 👋",
     "intro": "Still have questions? Send us a message and we’ll get back to you shortly.",
@@ -437,6 +471,7 @@
   },
   "navbar": {
     "about_us": "About Us",
+    "blog": "Latest Insights",
     "products_services": "Products & Services",
     "log_in_signup": "Your Account",
     "log_out": "Log Out",

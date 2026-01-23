@@ -17,13 +17,6 @@ import Index from "/src/views/Index.jsx";
 import AboutUsPage from "/src/components/Pages/Navigation/AboutUs";
 // import LoginPage from "views/LoginPage";
 import ProfilePage from "/src/components/Pages/UserJourney/ProfilePage";
-// import SignUp from "views/SignUp";
-import ManageService from "/src/components/Pages/Management/ManageService";
-import ManageProduct from "/src/components/Pages/Management/ManageProduct";
-import ManageUser from "/src/components/Pages/Management/ManageUser";
-import GiftCard from "/src/components/Pages/Management/ManageGiftCard.jsx";
-import ManageCategories from "/src/components/Pages/Management/ManageCategories.jsx";
-// import RequestQuote from "../src/components/Pages/RequestQuote";
 import LoginSign from "/src/components/Pages/UserJourney/LoginSign";
 import SignUp from "/src/components/Pages/UserJourney/SignUp";
 import ViewQuotes from "./components/Pages/Management/ViewQuotes";
@@ -37,8 +30,10 @@ import LogDashboard from '/src/components/Pages/Management/LogDashboard';
 // import QuickQuoteDashboard from "/src/components/Pages/Management/QuickQuoteDashboard";
 import BookingList from '/src/components/Pages/Management/BookingList';
 import ResetPassword from "/src/components/Pages/UserJourney/ResetPassword";
+import BlogLandingPage from "/src/components/Pages/Blogs/BlogLandingPage.jsx";
 import CertificationsMembershipsPage from "/src/components/Pages/Certifications/CertificationsMembershipsPage";
 import CleanARJoinsISSACanada from "/src/components/Pages/Blogs/CleanARJoinsISSACanada";
+import CleanARJoinsCQCC from "/src/components/Pages/Blogs/CleanARJoinsCQCC.jsx";
 import NotificationAdminPage from "/src/components/Pages/UserJourney/NotificationAdminPage.jsx";
 
 import Terms from "/src/components/Pages/Navigation/Terms";
@@ -167,9 +162,14 @@ const App = () => {
               <Route path="/contact-management" element={<ProtectedRoute element={<ContactManagementTabbedView />} />} />
               <Route path="/accounting-management" element={<ProtectedRoute element={<AccountingTabbedView />} />} /> */}
               <Route path="/certifications-memberships" element={<CertificationsMembershipsPage />} />
+              <Route path="/blog" element={<BlogLandingPage />} />
               <Route
                 path="/blog/cleanar-solutions-joins-issa-canada"
                 element={<CleanARJoinsISSACanada />}
+              />
+              <Route
+                path="/blog/cleanar-joins-cqcc"
+                element={<CleanARJoinsCQCC />}
               />
               <Route path="/admin" element={<AdminManagementLayout />}>
                 <Route index element={<Navigate to="booking" replace />} />

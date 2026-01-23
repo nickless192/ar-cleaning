@@ -29,6 +29,8 @@ import {
     FaTimes
 } from "react-icons/fa";
 
+
+
 import LoginPage from "/src/components/Pages/UserJourney/LoginPage";
 
 import Auth from "/src/utils/auth";
@@ -88,6 +90,8 @@ function IndexNavbar() {
 
     // Scroll color (keep your behavior)
     useEffect(() => {
+//         console.log("MODE:", import.meta.env.MODE);
+// console.log("DEV:", import.meta.env.DEV);
         const scrollTopVal = 0;
         const updateNavbarColor = () => {
             if (
@@ -226,6 +230,15 @@ function IndexNavbar() {
                                     {t("navbar.products_services")}
                                 </NavLink>
                             </NavItem>
+
+{/* display the blog link only in development environment */}
+{import.meta.env.DEV && (
+                            <NavItem>
+                                <NavLink href="/blog">
+                                    {t("navbar.blog")}
+                                </NavLink>
+                            </NavItem>
+)}
 
                             {testerFlag && (
                                 <NavItem>

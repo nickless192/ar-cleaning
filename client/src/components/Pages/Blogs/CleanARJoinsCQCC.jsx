@@ -2,7 +2,9 @@
 import React, { useEffect } from "react";
 import { Container, Row, Col } from "reactstrap";
 import VisitorCounter from "/src/components/Pages/Management/VisitorCounter.jsx";
-import ISSAMembershipBadge from "/src/components/Pages/Certifications/ISSAMembershipBadge.jsx";
+// Optional: if you created this component earlier, you can use it here.
+// If you haven't created it yet, either remove it or replace with a simple Card.
+import CQCCCertificationBadge from "/src/components/Pages/Certifications/CQCCCertificationBadge.jsx";
 
 function CleanARJoinsCQCC() {
   useEffect(() => {
@@ -14,136 +16,134 @@ function CleanARJoinsCQCC() {
 
   return (
     <div className="section pb-0 mb-0 light-bg-color-opaque">
-      <VisitorCounter page="blog_cleanar_joins_issa_canada" />
+      <VisitorCounter page="blog_cleanar_joins_cqcc" />
 
       <Container className="py-5">
         <Row className="justify-content-center">
           <Col md="10" lg="8">
             <p className="text-uppercase text-muted small fw-semibold mb-2">
-              Company News · Professional Standards
+              Company News · Supplier Diversity
             </p>
+
             <h1 className="fw-bold mb-3">
-              CleanAR Solutions Joins ISSA Canada: Raising the Bar for
-              Professional Cleaning in Toronto
+              CleanAR Solutions is Now an LGBTQ+ Certified Supplier (LGBTBE)
+              Through CQCC
             </h1>
+
             <p className="text-secondary mb-4">
-              At CleanAR Solutions, our goal has always been simple: provide
-              reliable, high-quality cleaning services that our clients can
-              trust. Today, we’re excited to share an important milestone in
-              that journey – we are now an official{" "}
-              <strong>ISSA Canada Member</strong>, part of{" "}
+              At CleanAR Solutions, we believe professionalism means more than
+              doing great work — it also means operating with transparency,
+              accountability, and a long-term commitment to the communities we
+              serve. We’re proud to share an important milestone: CleanAR is now
+              officially recognized as an{" "}
+              <strong>LGBTQ+ Certified Supplier (LGBTBE)</strong> through{" "}
               <a
-                href="https://www.issa.com/"
+                href="https://queerchamber.ca/"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                ISSA, the worldwide cleaning industry association
+                Canada’s Queer Chamber of Commerce (CQCC)
               </a>
               .
             </p>
 
-            <ISSAMembershipBadge className="mb-4" layout="stacked" />
+            {/* Badge / Highlight */}
+            <CQCCCertificationBadge className="mb-4" layout="stacked" />
 
             <h2 className="fw-bold mt-4 mb-3">
-              Who is ISSA and what is ISSA Canada?
+              What is CQCC and what does “LGBTBE” mean?
             </h2>
+
             <p className="text-secondary">
-              <strong>ISSA</strong> is the leading global trade association for
-              the cleaning, hygiene, and facility management industry, with
-              more than 11,000 members worldwide. Its mission is to{" "}
-              <em>“change the way the world views cleaning”</em> by promoting
-              cleaning as an essential investment in human health, the
-              environment, and performance.
+              <strong>Canada’s Queer Chamber of Commerce (CQCC)</strong> is a
+              national organization that supports LGBTQ+ entrepreneurs and helps
+              connect certified businesses with procurement opportunities, events,
+              and corporate partners.
             </p>
+
             <p className="text-secondary">
-              <strong>ISSA Canada</strong> represents the Canadian market and
-              helps cleaning companies like ours stay aligned with industry
-              best practices, education, and standards. You can learn more
-              directly from{" "}
-              <a
-                href="https://issa-canada.com/en/issa-canada-en/about-issa-canada-en"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                ISSA Canada’s official website
-              </a>
-              .
+              <strong>LGBTBE</strong> stands for{" "}
+              <em>LGBTQ+ Business Enterprise</em>. It’s a supplier diversity
+              certification that helps organizations identify and engage
+              qualified LGBTQ+-owned businesses in their vendor networks.
             </p>
 
             <h2 className="fw-bold mt-4 mb-3">
-              What ISSA membership means for our clients
+              What this certification means for our clients
             </h2>
+
             <p className="text-secondary">
-              Membership is not just a logo on our website – it reflects how
-              we operate day-to-day. As an ISSA Canada member, CleanAR
-              Solutions is committed to:
+              This certification doesn’t change how we clean — it strengthens how
+              we show up as a partner for organizations that prioritize inclusive
+              procurement. If your team tracks vendor diversity, this may support
+              your internal procurement goals when CleanAR is engaged as a vendor
+              or subcontractor.
             </p>
+
             <ul className="text-secondary">
               <li>
-                Following <strong>recognized industry standards</strong> for
-                quality and consistency in cleaning.
+                Supports <strong>inclusive procurement</strong> initiatives for
+                organizations that track supplier diversity.
               </li>
               <li>
-                Prioritizing <strong>health and safety</strong> in homes,
-                condos, and offices across Toronto.
+                Can help with <strong>supplier diversity reporting</strong> when
+                cleaning services are subcontracted.
               </li>
               <li>
-                Staying up to date with{" "}
-                <strong>training, education, and best practices</strong>.
-              </li>
-              <li>
-                Supporting more <strong>environmentally responsible</strong>{" "}
-                cleaning methods where possible.
+                Adds another layer of <strong>vendor credibility</strong> alongside
+                our professional memberships and standards.
               </li>
             </ul>
 
             <h2 className="fw-bold mt-4 mb-3">
-              Connecting our work to industry standards
+              What it means if you’re a homeowner or a local business in Toronto
             </h2>
+
             <p className="text-secondary">
-              ISSA supports programs like the{" "}
-              <a
-                href="https://cims.issa.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Cleaning Industry Management Standard (CIMS)
-              </a>
-              , the global benchmark for management and quality in cleaning
-              operations. While CIMS certification is a separate process,
-              being part of the ISSA community keeps us aligned with the same
-              principles: documented processes, consistent results, and a
-              strong focus on hygiene and customer satisfaction.
+              For residential clients and small businesses, the biggest takeaway
+              is simple: you’re working with a company that invests in being
+              recognized, verified, and accountable — not only for quality, but
+              for how we operate.
+            </p>
+
+            <p className="text-secondary">
+              Whether you hire us for a one-time deep clean, ongoing maintenance,
+              or commercial janitorial services, our goal is consistent: reliable
+              results, respectful service, and clear communication.
             </p>
 
             <h2 className="fw-bold mt-4 mb-3">
-              What this means if you’re a homeowner or business in Toronto
+              A quick note about our certificate files
             </h2>
+
             <p className="text-secondary">
-              When you hire CleanAR Solutions, you’re choosing a local
-              Toronto cleaning company that is backed by an{" "}
-              <strong>international network</strong> and standards. That
-              matters when you’re trusting someone with your home, your
-              building, or your team’s workspace.
+              CQCC has advised that certificate files should remain{" "}
+              <strong>confidential</strong> for now (their branding updates are in
+              progress). For that reason, we’re not sharing certificate images
+              publicly at this time.
             </p>
-            <p className="text-secondary">
-              Whether we’re performing a one-time deep clean, ongoing
-              residential maintenance, or commercial janitorial work, you can
-              expect a higher level of professionalism and accountability.
+
+            <p className="text-secondary mb-4">
+              If you’re a corporate client and require confidential verification
+              for procurement purposes, contact us — we’ll coordinate the right
+              way to provide confirmation.
             </p>
 
             <h2 className="fw-bold mt-4 mb-3">
               Our commitment going forward
             </h2>
+
             <p className="text-secondary">
-              This is not the end goal – it’s a foundation. We’ll continue to
-              invest in training, equipment, and processes that align with
-              ISSA’s mission and the needs of our customers in Toronto.
+              This certification is one more step in building a company that
+              meets professional expectations and modern procurement needs. We’ll
+              continue investing in training, processes, and recognized programs
+              that help us deliver strong outcomes for our clients — and operate
+              with integrity as we grow.
             </p>
 
             <p className="text-secondary mb-4">
-              To see how our professional memberships fit into the bigger
-              picture, visit our{" "}
+              To see our credentials and how they connect to our service quality,
+              visit our{" "}
               <a href="/certifications-memberships">
                 Professional Certifications &amp; Memberships
               </a>{" "}
@@ -154,10 +154,9 @@ function CleanARJoinsCQCC() {
             <hr className="my-4" />
 
             <p className="text-secondary">
-              Ready to experience the difference that professional standards
-              make? Get in touch with us for a{" "}
-              <strong>custom quote for your home or business</strong> in
-              Toronto.
+              Ready to work with a certified, professional cleaning partner in
+              Toronto? Get in touch for a{" "}
+              <strong>custom quote for your home or business</strong>.
             </p>
           </Col>
         </Row>
