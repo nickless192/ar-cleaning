@@ -22,6 +22,7 @@ module.exports = {
 
   createCustomer: async (req, res) => {
     try {
+      // console.log("Creating customer with data:", req.body);
       const customer = await Customer.create(req.body);
       res.status(201).json(customer);
     } catch (err) {

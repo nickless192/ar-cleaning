@@ -49,6 +49,7 @@ const Customers = () => {
     else {
       created = await createCustomer(data);
     }
+    
     if (location.state?.returnToBooking) {
 //       console.log("returnToBooking:", location.state?.returnToBooking);
 // console.log("from:", location.state?.from);

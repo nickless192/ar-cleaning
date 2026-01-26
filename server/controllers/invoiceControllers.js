@@ -1,5 +1,5 @@
 const Invoice = require('../models/Invoice');
-const Booking = require('../models/Booking'); 
+const Booking = require('../models/Booking');
 const getNextSequence = require("../utils/getNextSequence");
 
 const { generateInvoicePdfBuffer } = require("../utils/invoicePdf");
@@ -129,12 +129,12 @@ module.exports = {
   },
 
   // GET /api/invoices/by-booking/:bookingId
-async getInvoiceByBooking(req, res) {
-  const { bookingId } = req.params;
-  const invoice = await Invoice.findOne({ bookingId }).lean();
-  if (!invoice) return res.status(404).json({ message: "No invoice found" });
-  res.status(200).json(invoice);
-},
+  async getInvoiceByBooking(req, res) {
+    const { bookingId } = req.params;
+    const invoice = await Invoice.findOne({ bookingId }).lean();
+    if (!invoice) return res.status(404).json({ message: "No invoice found" });
+    res.status(200).json(invoice);
+  },
 
 
   // Create invoice (front-end now passes fully built services array)
@@ -155,9 +155,9 @@ async getInvoiceByBooking(req, res) {
       if (existingInvoice) {
         return res.status(409).json({ error: 'Invoice already exists for this booking' });
       }
-        const INVOICE_START_AT = Number(process.env.INVOICE_START_AT || 1);
+      const INVOICE_START_AT = Number(process.env.INVOICE_START_AT || 1);
 
-    const nextInvoiceNumber = await getNextSequence("invoiceNumber", INVOICE_START_AT);
+      const nextInvoiceNumber = await getNextSequence("invoiceNumber", INVOICE_START_AT);
 
 
       const newInvoice = await Invoice.create({
@@ -178,26 +178,29 @@ async getInvoiceByBooking(req, res) {
       res.status(201).json(newInvoice);
     } catch (err) {
       console.error("createInvoice error:", err);
-        if (err?.code === 11000) {
-      return res.status(409).json({
-        message: "Invoice number already exists. Please try again.",
-      });
-    }
+      if (err?.code === 11000) {
+        return res.status(409).json({
+          message: "Invoice number already exists. Please try again.",
+        });
+      }
       res.status(500).json({ error: 'Failed to create invoice', details: err.message });
     }
   },
 
   // Update invoice
   async updateInvoice(req, res) {
-    try { 
+    try {
       //update this function to mark the invoice and booking as paid and update the payment method
       if (req.body.status !== 'paid') {
         return res.status(400).json({ error: 'Only status update to "paid" is allowed' });
       }
-      const updatedInvoice = await Invoice.findByIdAndUpdate(req.params.id, { status: 'paid', payment: { paymentMethod: req.body.paymentMethod, amount: req.body.amount,
-        paymentDate: Date.now()
+      const updatedInvoice = await Invoice.findByIdAndUpdate(req.params.id, {
+        status: 'paid', payment: {
+          paymentMethod: req.body.paymentMethod, amount: req.body.amount,
+          paymentDate: Date.now()
 
-      } }, { new: true });
+        }
+      }, { new: true });
       if (!updatedInvoice) return res.status(404).json({ error: 'Invoice not found' });
 
       // Also update the related booking status
