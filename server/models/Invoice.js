@@ -44,7 +44,7 @@ const PaymentSchema = new Schema({
     type: Number,
     required: true,
     min: 0
-  },  
+  },
   paymentDate: {
     type: Date,
     default: Date.now
@@ -60,13 +60,19 @@ const InvoiceSchema = new Schema({
     default: () => new Types.ObjectId
   },
   invoiceNumber: {
-    type: String,
+    type: Number,
     unique: true,
     required: true
   },
   customerName: {
     type: String,
     required: true
+  },
+  customerEmail: {
+    type: String,
+    required: true,
+    trim: true,
+    lowercase: true,
   },
   description: {
     type: String
@@ -88,7 +94,9 @@ const InvoiceSchema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now
-  }
+  },
+  sentAt: { type: Date, default: null },
+  sentTo: { type: String, default: "" },
 }, {
   toJSON: {
     getters: true

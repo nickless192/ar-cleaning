@@ -14,6 +14,7 @@ export const createCustomer = async (data) => {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data)
   });
+  if (!res.ok) throw new Error('Failed to create customer');
   return res.json();
 };
 
@@ -29,6 +30,7 @@ export const updateCustomer = async (id, data) => {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data)
   });
+  if (!res.ok) throw new Error('Failed to update customer');
   return res.json();
 };
 

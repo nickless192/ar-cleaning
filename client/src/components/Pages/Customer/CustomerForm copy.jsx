@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, memo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Form,
   Row,
@@ -11,6 +11,14 @@ import {
   FormGroup,
 } from "reactstrap";
 import { FaQuestionCircle } from "react-icons/fa";
+
+/**
+ * ✅ Drop-in Accordion version (Reactstrap-only)
+ * - Condenses the form into collapsible sections
+ * - Mobile friendly
+ * - Keeps your tooltips + normalizeCustomer + prefill safety
+ * - No extra deps (no react-bootstrap Accordion)
+ */
 
 const tooltipText = {
   firstName: "Customer’s given name.",
@@ -38,6 +46,7 @@ const splitFullName = (fullName = "") => {
 
 const normalizeCustomer = (data) => {
   const d = data && typeof data === "object" ? data : {};
+
   return {
     firstName: d.firstName || "",
     lastName: d.lastName || "",
@@ -57,68 +66,18 @@ const normalizeCustomer = (data) => {
   };
 };
 
-/**
- * ✅ IMPORTANT: Must be outside Customer to avoid remounting on every keystroke.
- */
-const AccordionSection = memo(function AccordionSection({
-  sectionKey,
-  title,
-  subtitle,
-  children,
-  badge,
-  openSection,
-  onToggle,
-}) {
-  const isOpen = openSection === sectionKey;
-
-  return (
-    <div className="border rounded-3 mb-3 overflow-hidden">
-      <button
-        type="button"
-        className={`w-100 text-start d-flex align-items-center justify-content-between gap-3 px-3 py-3 ${
-          isOpen ? "bg-light" : "bg-white"
-        }`}
-        style={{ border: "none" }}
-        onClick={() => onToggle(sectionKey)}
-        aria-expanded={isOpen}
-      >
-        <div className="d-flex align-items-start gap-2 flex-grow-1">
-          <div className="fw-semibold">{title}</div>
-          {badge ? <span className="badge bg-dark">{badge}</span> : null}
-        </div>
-
-        <div className="d-flex align-items-center gap-2">
-          {subtitle ? (
-            <span className="text-muted d-none d-sm-inline" style={{ fontSize: 13 }}>
-              {subtitle}
-            </span>
-          ) : null}
-          <span className="text-muted" aria-hidden>
-            {isOpen ? "▾" : "▸"}
-          </span>
-        </div>
-      </button>
-
-      {isOpen ? <div className="p-3">{children}</div> : null}
-    </div>
-  );
-});
-
 const Customer = ({ initialData = {}, onSubmit, onCancel }) => {
   const [formData, setFormData] = useState(() => normalizeCustomer(initialData));
   const [popoverOpen, setPopoverOpen] = useState({});
-  const [openSection, setOpenSection] = useState("customer");
+
+  // Accordion open state (single-open mode)
+  const [openSection, setOpenSection] = useState("customer"); // default open
 
   const isEditing = !!formData?._id;
 
-  /**
-   * ✅ Minimum + safe: only reset when switching records (or going edit -> new)
-   * This prevents accidental resets if parent re-renders with a new object ref.
-   */
-  const resetKey = initialData?._id || "__new__";
   useEffect(() => {
     setFormData(normalizeCustomer(initialData));
-  }, [resetKey]);
+  }, [initialData]);
 
   const togglePopover = (field) => {
     setPopoverOpen((prev) => ({ ...prev, [field]: !prev[field] }));
@@ -133,7 +92,7 @@ const Customer = ({ initialData = {}, onSubmit, onCancel }) => {
     setFormData(normalizeCustomer(initialData));
   };
 
-  // Safe prefill (won't crash) – run once on mount
+  // Safe prefill (won't crash)
   useEffect(() => {
     const prefill = initialData?.prefill;
     if (!prefill) return;
@@ -174,13 +133,11 @@ const Customer = ({ initialData = {}, onSubmit, onCancel }) => {
         {required ? <span className="text-danger ms-1">*</span> : null}
       </span>
 
-      {/* ✅ keep as button, but stop it from stealing focus via mouse down */}
       <button
         type="button"
         className="btn btn-link p-0 text-muted"
         style={{ lineHeight: 1 }}
         id={`${fieldName}Tooltip`}
-        onMouseDown={(e) => e.preventDefault()}
         onClick={() => togglePopover(fieldName)}
         aria-label={`Help: ${label}`}
       >
@@ -202,6 +159,42 @@ const Customer = ({ initialData = {}, onSubmit, onCancel }) => {
     setOpenSection((prev) => (prev === key ? "" : key));
   };
 
+  const AccordionSection = ({ k, title, subtitle, children, badge }) => {
+    const isOpen = openSection === k;
+
+    return (
+      <div className="border rounded-3 mb-3 overflow-hidden">
+        <button
+          type="button"
+          className={`w-100 text-start d-flex align-items-center justify-content-between gap-3 px-3 py-3 ${
+            isOpen ? "bg-light" : "bg-white"
+          }`}
+          style={{ border: "none" }}
+          onClick={() => toggleSection(k)}
+          aria-expanded={isOpen}
+        >
+          <div className="d-flex align-items-start gap-2 flex-grow-1">
+            <div className="fw-semibold">{title}</div>
+            {badge ? <span className="badge bg-dark">{badge}</span> : null}
+          </div>
+
+          <div className="d-flex align-items-center gap-2">
+            {subtitle ? (
+              <span className="text-muted d-none d-sm-inline" style={{ fontSize: 13 }}>
+                {subtitle}
+              </span>
+            ) : null}
+            <span className="text-muted" aria-hidden>
+              {isOpen ? "▾" : "▸"}
+            </span>
+          </div>
+        </button>
+
+        {isOpen ? <div className="p-3">{children}</div> : null}
+      </div>
+    );
+  };
+
   return (
     <Form onSubmit={(e) => onSubmit(e, formData)} id="customer-form" className="m-0 p-0">
       {/* Header actions */}
@@ -216,12 +209,24 @@ const Customer = ({ initialData = {}, onSubmit, onCancel }) => {
         </div>
 
         <div className="d-flex gap-2">
-          <Button type="button" color="secondary" outline className="rounded-pill" onClick={handleReset}>
+          <Button
+            type="button"
+            color="secondary"
+            outline
+            className="rounded-pill"
+            onClick={handleReset}
+          >
             Reset
           </Button>
 
           {onCancel ? (
-            <Button type="button" color="secondary" outline className="rounded-pill" onClick={onCancel}>
+            <Button
+              type="button"
+              color="secondary"
+              outline
+              className="rounded-pill"
+              onClick={onCancel}
+            >
               Close
             </Button>
           ) : null}
@@ -229,13 +234,12 @@ const Customer = ({ initialData = {}, onSubmit, onCancel }) => {
       </div>
 
       {/* Accordion sections */}
+
       <AccordionSection
-        sectionKey="customer"
+        k="customer"
         title="Customer"
         subtitle="Name & company"
         badge={isEditing ? `ID: ${String(formData._id).slice(-6)}` : null}
-        openSection={openSection}
-        onToggle={toggleSection}
       >
         <Row className="g-3">
           <Col xs={12} md={6} xl={4}>
@@ -249,7 +253,7 @@ const Customer = ({ initialData = {}, onSubmit, onCancel }) => {
                 value={formData.firstName}
                 onChange={handleChange}
                 required
-                placeholder="e.g., Jane"
+                placeholder="e.g., Rosemary"
                 className="text-cleanar-color form-input rounded-pill"
                 autoComplete="given-name"
               />
@@ -266,7 +270,7 @@ const Customer = ({ initialData = {}, onSubmit, onCancel }) => {
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
-                placeholder="e.g., Doe"
+                placeholder="e.g., Seper"
                 className="text-cleanar-color form-input rounded-pill"
                 autoComplete="family-name"
               />
@@ -292,13 +296,7 @@ const Customer = ({ initialData = {}, onSubmit, onCancel }) => {
         </Row>
       </AccordionSection>
 
-      <AccordionSection
-        sectionKey="contact"
-        title="Contact"
-        subtitle="Email & phone (used for invoices)"
-        openSection={openSection}
-        onToggle={toggleSection}
-      >
+      <AccordionSection k="contact" title="Contact" subtitle="Email & phone (used for invoices)">
         <Row className="g-3">
           <Col xs={12} md={6}>
             <FormGroup>
@@ -339,13 +337,7 @@ const Customer = ({ initialData = {}, onSubmit, onCancel }) => {
         </Row>
       </AccordionSection>
 
-      <AccordionSection
-        sectionKey="address"
-        title="Service Address"
-        subtitle="Where CleanAR provides service"
-        openSection={openSection}
-        onToggle={toggleSection}
-      >
+      <AccordionSection k="address" title="Service Address" subtitle="Where CleanAR provides service">
         <Row className="g-3">
           <Col xs={12}>
             <FormGroup>
@@ -417,13 +409,7 @@ const Customer = ({ initialData = {}, onSubmit, onCancel }) => {
         </Row>
       </AccordionSection>
 
-      <AccordionSection
-        sectionKey="defaults"
-        title="Defaults"
-        subtitle="Speed up bookings & invoices"
-        openSection={openSection}
-        onToggle={toggleSection}
-      >
+      <AccordionSection k="defaults" title="Defaults" subtitle="Speed up bookings & invoices">
         <Row className="g-3">
           <Col xs={12} md={6}>
             <FormGroup>
@@ -461,13 +447,7 @@ const Customer = ({ initialData = {}, onSubmit, onCancel }) => {
         </Row>
       </AccordionSection>
 
-      <AccordionSection
-        sectionKey="settings"
-        title="Customer Settings"
-        subtitle="Status & type"
-        openSection={openSection}
-        onToggle={toggleSection}
-      >
+      <AccordionSection k="settings" title="Customer Settings" subtitle="Status & type">
         <Row className="g-3">
           <Col xs={12} md={6} xl={4}>
             <FormGroup>
@@ -517,11 +497,20 @@ const Customer = ({ initialData = {}, onSubmit, onCancel }) => {
 
       {/* Actions */}
       <div className="d-flex flex-column flex-sm-row gap-2 pb-2">
-        <Button type="submit" className="secondary-bg-color rounded-pill flex-grow-1">
+        <Button
+          type="submit"
+          className="secondary-bg-color rounded-pill flex-grow-1"
+          data-track="clicked_submit_customer"
+        >
           {isEditing ? "Save Changes" : "Create Customer"}
         </Button>
 
-        <Button type="button" onClick={handleReset} className="btn-outline-danger rounded-pill flex-grow-1">
+        <Button
+          type="button"
+          onClick={handleReset}
+          className="btn-outline-danger rounded-pill flex-grow-1"
+          data-track="clicked_reset_customer"
+        >
           Reset
         </Button>
       </div>

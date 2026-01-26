@@ -18,7 +18,7 @@ import BookingForm from "../Booking/BookingForm";
 import GenerateInvoiceModal from "../Booking/GenerateInvoiceModal";
 import BookingActions from "../Booking/BookingActions";
 import { FaEyeSlash, FaTrash } from "react-icons/fa";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 
 const DRAFT_KEY = "booking.draft";
 
@@ -43,6 +43,10 @@ const BookingCalendar = ({
   const [showAddModal, setShowAddModal] = useState(false);
   const [prefillDate, setPrefillDate] = useState(null);
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
+  const [invoiceInfo, setInvoiceInfo] = useState(null);
+  const [invoiceLoading, setInvoiceLoading] = useState(false);
+  const [invoiceErr, setInvoiceErr] = useState("");
+
 
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingServices, setIsEditingServices] = useState(false);
@@ -53,7 +57,7 @@ const BookingCalendar = ({
   // const [tempIncome, setTempIncome] = useState(0);
   const [customerAcknowledged, setCustomerAcknowledged] = useState(false);
 
-    // ---- Manual Admin Digest Trigger ----
+  // ---- Manual Admin Digest Trigger ----
   const [digestDays, setDigestDays] = useState(7);
   const [digestSending, setDigestSending] = useState(false);
   const [digestMsg, setDigestMsg] = useState("");
@@ -61,7 +65,7 @@ const BookingCalendar = ({
 
   const isAdmin = !!Auth.getProfile()?.data?.adminFlag;
 
-    const sendUpcomingDigest = async () => {
+  const sendUpcomingDigest = async () => {
     try {
       setDigestSending(true);
       setDigestMsg("");
@@ -84,6 +88,50 @@ const BookingCalendar = ({
       setDigestSending(false);
     }
   };
+  useEffect(() => {
+  const incomingBookingId =
+    location.state?.highlightBookingId ||
+    location.state?.bookingId;
+
+  if (!incomingBookingId) return;
+
+  // Try find it from the bookings you already have
+  const found = bookings.find((b) => String(b._id) === String(incomingBookingId));
+
+  const openBooking = async () => {
+    try {
+      let bookingToOpen = found;
+
+      // If not in current list (e.g. different month / filtered),
+      // fetch directly by id so we can still open the modal.
+      if (!bookingToOpen) {
+        const res = await fetch(`/api/bookings/${incomingBookingId}`);
+        if (res.ok) bookingToOpen = await res.json();
+      }
+
+      if (!bookingToOpen) return;
+
+      // Jump calendar to that booking’s month so user sees context
+      if (bookingToOpen.date) {
+        setCurrentDate(new Date(bookingToOpen.date));
+      }
+
+      // Open the booking details modal
+      setSelectedBooking(bookingToOpen);
+
+      // Clear navigation state so refresh/back doesn’t keep reopening
+      navigate(location.pathname, { replace: true, state: {} });
+    } catch (e) {
+      console.error("Failed to reopen booking from invoice:", e);
+      // Still clear state to avoid loops
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  };
+
+  openBooking();
+  // Important: include bookings so when they load async, this can find the booking
+}, [location.state, bookings, navigate, location.pathname]);
+
 
   useEffect(() => {
     if (selectedBooking?.date) {
@@ -128,6 +176,48 @@ const BookingCalendar = ({
       setIsEditingServices(false);
     }
   }, [selectedBooking]);
+
+  useEffect(() => {
+    const loadInvoice = async () => {
+      setInvoiceInfo(null);
+      setInvoiceErr("");
+
+      if (!selectedBooking?._id) return;
+
+      // Quick heuristic: only fetch if booking looks invoiced,
+      // OR fetch always (safe) if you prefer.
+      const looksInvoiced =
+        selectedBooking.invoiced ||
+        !!selectedBooking.invoiceCreatedAt ||
+        !!selectedBooking.invoiceSentAt;
+
+      // If you want to always fetch (recommended for accuracy), remove this if:
+      // if (!looksInvoiced) return;
+
+      if (!looksInvoiced) return;
+
+      setInvoiceLoading(true);
+      try {
+        // ✅ Endpoint you should add (or already have):
+        // GET /api/invoices/by-booking/:bookingId
+        const res = await fetch(`/api/invoices/by-booking/${selectedBooking._id}`);
+        if (!res.ok) {
+          setInvoiceInfo(null);
+          return;
+        }
+        const data = await res.json();
+        setInvoiceInfo(data);
+      } catch (e) {
+        setInvoiceErr("Could not load invoice info.");
+        setInvoiceInfo(null);
+      } finally {
+        setInvoiceLoading(false);
+      }
+    };
+
+    loadInvoice();
+  }, [selectedBooking?._id]);
+
 
   // useEffect(() => {
   //   console.log("BookingForm location.state:", location.state);
@@ -636,7 +726,7 @@ const BookingCalendar = ({
           →
         </button>
       </div> */}
-            <div className="calendar-header">
+      <div className="calendar-header">
         <button
           onClick={prevMonth}
           className="nav-button"
@@ -1258,7 +1348,7 @@ const BookingCalendar = ({
                     </td>
                   </tr> */}
                   <tr>
-                    <th>Cost</th>
+                    <th>Income</th>
                     <td>{`$${(
                       isEditingServices ? servicesTotal : selectedBooking.income || 0
                     ).toFixed(2)} CAD`}</td>
@@ -1302,7 +1392,7 @@ const BookingCalendar = ({
                       {selectedBooking.reminderScheduled ? "Yes" : "No"}
                     </td>
                   </tr>
-                  <tr>
+                  {/* <tr>
                     <th>Status</th>
                     <td>
                       <Badge
@@ -1314,7 +1404,44 @@ const BookingCalendar = ({
                         {selectedBooking.status}
                       </Badge>
                     </td>
+                  </tr> */}
+                  <tr>
+                    <th>Invoice</th>
+                    <td>
+                      {invoiceLoading ? (
+                        <div className="d-flex align-items-center gap-2">
+                          <Spinner animation="border" size="sm" />
+                          <span className="text-muted">Checking invoice…</span>
+                        </div>
+                      ) : invoiceInfo ? (
+                        <div className="d-flex align-items-center gap-2 flex-wrap">
+                          <Badge bg="success">Invoiced ✅</Badge>
+
+                          {/* Use Link or a Button that navigates */}
+                          <Link to={`/invoices/${invoiceInfo._id}`}>
+                            Open invoice #{invoiceInfo.invoiceNumber}
+                          </Link>
+
+                          {/* Optional: show created date */}
+                          {invoiceInfo.createdAt ? (
+                            <span className="text-muted" style={{ fontSize: 12 }}>
+                              (created {new Date(invoiceInfo.createdAt).toLocaleString()})
+                            </span>
+                          ) : null}
+                        </div>
+                      ) : (
+                        <div className="d-flex align-items-center gap-2">
+                          <Badge bg="secondary">Not invoiced</Badge>
+                          {invoiceErr ? (
+                            <span className="text-danger">{invoiceErr}</span>
+                          ) : (
+                            <span className="text-muted">No invoice found for this booking.</span>
+                          )}
+                        </div>
+                      )}
+                    </td>
                   </tr>
+
                   <tr>
                     <th>New Date Requested</th>
                     <td>

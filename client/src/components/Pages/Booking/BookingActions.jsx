@@ -28,7 +28,7 @@ const BookingActions = ({
     loading
 }) => {
     if (!selectedBooking) return null;
-    const { _id, status } = selectedBooking;
+    const { _id, status, invoiced } = selectedBooking;
     const [showConfirmModal, setShowConfirmModal] = useState(false);
 
     const resetSelection = () => {
@@ -50,6 +50,16 @@ const BookingActions = ({
                 >
                     <FaClock className="me-1" /> {status}
                 </Button>
+                {/* invoiced */}
+                {invoiced && (
+                    <Button
+                        variant="info"
+                        size="sm"
+                        disabled
+                    >
+                        <FaFileInvoice className="me-1" /> Invoiced
+                    </Button>
+                )}
             </div>
 
             {/* Available Actions */}
