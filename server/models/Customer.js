@@ -1,6 +1,5 @@
 const { Schema, model, Types } = require('mongoose');
 const { isEmail } = require('../utils/validators');
-const dateFormat = require('../utils/dateFormat');
 
 const CustomerSchema = new Schema({
   user: {
@@ -60,6 +59,7 @@ const CustomerSchema = new Schema({
   defaultService: {
     type: String,    
   },
+     defaultServiceDescription: { type: String, trim: true },
   status: {
     type: String,
     // enum: ["active", "inactive", "archived"],

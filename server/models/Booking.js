@@ -60,13 +60,6 @@ const BookingSchema = new Schema({
     ],
     default: 'pending',
   },
-
-  // ✅ NEW: invoiced flag
-  invoiced: {
-    type: Boolean,
-    default: false,
-  },
-
   hidden: {
     type: Boolean,
     default: false,
@@ -142,6 +135,18 @@ const BookingSchema = new Schema({
   // --- Key timestamps for workflow automation ---
   confirmedAt: { type: Date },
   completedAt: { type: Date },
+
+  
+  // ✅ NEW: invoiced flag
+  invoiced: {
+    type: Boolean,
+    default: false,
+  },
+invoiceId: {
+  type: Types.ObjectId,
+  ref: "Invoice",
+  default: null,
+},
   // invoicedAt: { type: Date }, // still good: when invoice created/sent
   invoiceCreatedAt: { type: Date, default: null },   // when invoice record was generated
 invoiceSentAt: { type: Date, default: null },      // when invoice was emailed / delivered

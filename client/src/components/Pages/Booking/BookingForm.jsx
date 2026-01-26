@@ -32,20 +32,7 @@ const BookingForm = ({
     disableConfirmation: false,
   });
 
-  const emptyCustomerInitial = useMemo(() => ({
-    firstName: "",
-    lastName: "",
-    email: "",
-    telephone: "",
-    address: "",
-    city: "",
-    province: "",
-    postalcode: "",
-    companyName: "",
-    defaultService: "",
-    status: "",
-    type: "",
-  }), []);
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -181,7 +168,7 @@ const BookingForm = ({
       updated[0] = {
         ...updated[0],
         serviceType: selectedCustomer.defaultService || "",
-        description: selectedCustomer.defaultService || "",
+        description: selectedCustomer.defaultServiceDescription || "",
       };
       return updated;
     });

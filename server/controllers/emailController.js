@@ -972,7 +972,7 @@ function buildEmailContent({ upcomingBookings, days, recentBookings, now, since 
          </div>`
       : `<div style="margin-top:12px;color:#2f7a3e;">✅ No payment follow-ups flagged (based on current fields).</div>`;
 
-  const subject = `CleanAR Admin Digest: Upcoming (${days} day${days === 1 ? "" : "s"}) + Last 24h Activity`;
+  const subject = `CleanAR Admin Digest: Upcoming (${days} day${days === 1 ? "" : "s"}) + Last 7d Activity`;
 
   const html = `
     <div style="font-family: Arial, sans-serif; color:#111; line-height:1.45;">
@@ -1011,7 +1011,7 @@ function buildEmailContent({ upcomingBookings, days, recentBookings, now, since 
 
       <hr style="border:none;border-top:1px solid #ddd;margin:18px 0;" />
 
-      <h3 style="margin:0 0 8px 0;">Recent activity (last 24 hours)</h3>
+      <h3 style="margin:0 0 8px 0;">Recent activity (last 7 days)</h3>
       <div style="margin:0 0 8px 0;color:#444;font-size:13px;">
         Confirmed/completed: <b>${recentBookings.length}</b>
       </div>
@@ -1031,7 +1031,7 @@ function buildEmailContent({ upcomingBookings, days, recentBookings, now, since 
           ${
             recentBookings.length
               ? recentRows
-              : `<tr><td colspan="6" style="padding:10px;color:#666;">No confirmed/completed bookings in the last 24 hours.</td></tr>`
+              : `<tr><td colspan="6" style="padding:10px;color:#666;">No confirmed/completed bookings in the last 7 days.</td></tr>`
           }
         </tbody>
       </table>
@@ -1155,9 +1155,9 @@ const sendUpcomingBookingsEmail = async (req, res) => {
     const to = new Date(now);
     to.setDate(to.getDate() + days);
 
-    // Last-24h window
+    // Last-24h(7 day) window
     const since = new Date(now);
-    since.setHours(since.getHours() - 24);
+    since.setHours(since.getHours() - 24*7);
 
     // Upcoming bookings (existing)
     const upcomingBookings = await Booking.find({
