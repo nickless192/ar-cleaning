@@ -8,6 +8,16 @@ const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const Booking = require('../models/Booking');
 const VisitorLog = require('../models/VisitorLog');
+const { DateTime } = require('luxon');
+const APP_TZ = "America/Toronto";
+
+/** Build UTC window bounds from “Toronto wall time” boundaries */
+function torontoWindowToUTC({ startToronto, endToronto }) {
+  return {
+    startUTC: startToronto.setZone(APP_TZ).toUTC().toJSDate(),
+    endUTC: endToronto.setZone(APP_TZ).toUTC().toJSDate(),
+  };
+}
 
 
 const generateWeeklyReport = async () => {
@@ -828,17 +838,30 @@ const formatDate = (d) => {
 // };
 
 function buildEmailContent({ upcomingBookings, days, recentBookings, now, since }) {
+  // const fmt = (d) => {
+  //   const dt = new Date(d);
+  //   if (Number.isNaN(dt.getTime())) return "-";
+  //   return dt.toLocaleString("en-CA", {
+  //     year: "numeric",
+  //     month: "short",
+  //     day: "2-digit",
+  //     hour: "2-digit",
+  //     minute: "2-digit",
+  //   });
+  // };
   const fmt = (d) => {
-    const dt = new Date(d);
-    if (Number.isNaN(dt.getTime())) return "-";
-    return dt.toLocaleString("en-CA", {
-      year: "numeric",
-      month: "short",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
+  const dt = new Date(d);
+  if (Number.isNaN(dt.getTime())) return "-";
+  return dt.toLocaleString("en-CA", {
+    timeZone: "America/Toronto",
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+
 
   const safe = (v) => (v === undefined || v === null || v === "" ? "-" : String(v));
 
@@ -983,6 +1006,10 @@ function buildEmailContent({ upcomingBookings, days, recentBookings, now, since 
         Upcoming window: <b>${days}</b> day(s)<br/>
         Recent window: <b>${fmt(since)}</b> → <b>${fmt(now)}</b>
       </div>
+      <div style="font-size:12px;color:#666;margin:6px 0 0 0;">
+        Timezone: <b>America/Toronto (ET)</b>
+      </div>
+
 
       <hr style="border:none;border-top:1px solid #ddd;margin:14px 0;" />
 
@@ -1149,19 +1176,34 @@ const sendUpcomingBookingsEmail = async (req, res) => {
     const rawDays = Number(req.body.days || req.query.days || 1);
     const days = Number.isFinite(rawDays) && rawDays > 0 ? rawDays : 1;
 
-    const now = new Date();
+    // const now = new Date();
 
     // Upcoming window
-    const to = new Date(now);
-    to.setDate(to.getDate() + days);
+    // const to = new Date(now);
+    // to.setDate(to.getDate() + days);
 
     // Last-24h(7 day) window
-    const since = new Date(now);
-    since.setHours(since.getHours() - 24*7);
+    // const since = new Date(now);
+    // since.setHours(since.getHours() - 24*7);
+    const nowToronto = DateTime.now().setZone(APP_TZ);
+
+// start = now in Toronto
+const startToronto = nowToronto;
+
+// end = now + N days in Toronto
+const endToronto = nowToronto.plus({ days });
+
+// recent window (last 7 days) in Toronto
+const sinceToronto = nowToronto.minus({ days: 7 });
+const { startUTC, endUTC } = torontoWindowToUTC({ startToronto, endToronto });
+const { startUTC: sinceUTC, endUTC: nowUTC } = torontoWindowToUTC({
+  startToronto: sinceToronto,
+  endToronto: nowToronto,
+});
 
     // Upcoming bookings (existing)
     const upcomingBookings = await Booking.find({
-      date: { $gte: now, $lte: to },
+      date: { $gte: startUTC, $lte: endUTC },
       status: { $in: ["confirmed", "pending"] },
     })
       .sort({ date: 1 })
@@ -1171,7 +1213,7 @@ const sendUpcomingBookingsEmail = async (req, res) => {
     // NOTE: Use date or updatedAt depending on what you mean by "in last 24h".
     // If you mean "status changed in last 24h", you likely need a statusHistory or updatedAt filter.
     const recentBookings = await Booking.find({
-      date: { $gte: since, $lte: now },
+      date: { $gte: sinceUTC, $lte: nowUTC },
       status: { $in: ["confirmed", "completed"] },
     })
       .sort({ date: -1 })
@@ -1196,8 +1238,8 @@ const sendUpcomingBookingsEmail = async (req, res) => {
       upcomingBookings,
       days,
       recentBookings,
-      now,
-      since,
+      now: nowToronto,
+      since: sinceToronto,
     });
 
     const message = {
@@ -1221,7 +1263,7 @@ const sendUpcomingBookingsEmail = async (req, res) => {
       upcomingCount: upcomingBookings.length,
       recentCount: recentBookings.length,
       days,
-      windowLast24h: { since, now },
+      windowLast24h: { since: sinceToronto, now: nowToronto },
     });
   } catch (err) {
     console.error("Error sending upcoming bookings email:", err);

@@ -91,6 +91,10 @@ const InvoiceSchema = new Schema({
     enum: ['unpaid', 'paid'],
     default: 'unpaid'
   },
+  notes: {
+    type: String,
+    default: "",
+  },
   createdAt: {
     type: Date,
     default: Date.now

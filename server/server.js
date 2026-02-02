@@ -17,6 +17,7 @@ app.use(cors());
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(express.static('public'));
+app.use(express.json({ limit: "1mb" }));
 
 // Serve up static assets
 app.use('/images', express.static(path.join(__dirname, '../client/src/assets')));

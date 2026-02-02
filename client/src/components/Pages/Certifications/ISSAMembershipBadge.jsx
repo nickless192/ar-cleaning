@@ -15,7 +15,7 @@ export default function ISSAMembershipBadge({ layout = "horizontal", className =
     >
       {/* Logo */}
       <div className="issa-membership-badge__logo-wrapper">
-        <Link to="/certifications-memberships" className="issa-membership-badge__link">
+        <Link to="/blog" className="issa-membership-badge__link">
           <img
             src={issaLogo}
             alt="ISSA Canada Member"
@@ -32,7 +32,7 @@ export default function ISSAMembershipBadge({ layout = "horizontal", className =
           {/* Professional cleaning you can trust */}
         </p>
 
-        <Link to="/certifications-memberships" className="issa-membership-badge__headline-link">
+        <Link to="/blog" className="issa-membership-badge__headline-link">
           <p className="issa-membership-badge__headline">
             {/* {t('badge.headline')} */}
             <Trans

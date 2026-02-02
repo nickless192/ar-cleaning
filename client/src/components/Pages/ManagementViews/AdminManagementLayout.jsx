@@ -17,6 +17,7 @@ const AdminManagementLayout = () => {
     { to: '/admin/booking', label: t('navbar.admin.booking_management') },
     { to: '/admin/accounting', label: t('navbar.admin.accounting_management') },
     { to: '/admin/customer', label: t('navbar.admin.customer_management') },
+    { to: '/admin/translations', label: t('navbar.admin.translation_management') },
     // { to: '/admin/inventory', label: t('navbar.admin.inventory_management') },
   ];
 

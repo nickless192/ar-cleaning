@@ -4,12 +4,21 @@
   "intro": "Say goodbye to stress and hello to sparkle ✨",
   "details": "CleanAR Solutions brings 10+ years of trusted cleaning to homes and businesses across the GTA.",
   "services": "From deep cleans to regular maintenance, we tailor services to your needs: efficient, eco-friendly, and always reliable.",
-  "cta": "Get your personalized quote in under 60 seconds.",
+  "cta_text": "Personalized quote in under 60 seconds.",
+    "cta": {
+    "call": "Call Us Now",
+    "callNote": "Fastest response",
+    "text": "Prefer Text? Send Us a Message",
+    "textNote": "Quick SMS quote"
+  },
   "ctaNote": "It’s fast, free, and commitment-free!",
   "status_online": "✅ We are currently available",
   "status_offline": "⏰ We are currently offline",
   "response_now": "Expect a response from us shortly",
   "response_later": "We’ll aim to respond within 24 hours",
+  "contact_title": "Contact options",
+  "contact_subtitle": "Pick one — we reply fast.",
+  "reviews": "Ready to Leave a Review?",
   "contact_business_hours": "Business Hours 📅",
   "contact_email_support": "Email Support 24/7 📩",
   "email_description": "For detailed inquiries or written communication, send us an email",
@@ -17,12 +26,22 @@
   "contact_feedback": "Customer Feedback & Reviews 🌟",
   "feedback_description": "Your Experience Matters",
   "feedback_additional": "Help Us Improve, Share Your Thoughts With Us",
-  "contact_services": "Explore Services & Get a Quote 🧼",
+  "contact_services": "Explore Services & Get a Quote",
   "services_description": "Tailored Cleaning Solutions, Explore Our Services",
   "services_additional": "Custom Packages Available",
   "featuredServices": {
     "heading": "Our Featured Services",
     "learnMore": "Learn More"
+  },
+  "proof": {
+    "show": "Show certifications & memberships",
+    "hide": "Hide"
+  },
+  "popular": {
+    "deep": "Deep Clean",
+    "move": "Move In/Out",
+    "office": "Office Cleaning",
+    "carpet": "Carpet & Upholstery"
   },
   "faq": {
     "heading": "❓ Frequently Asked Questions",
@@ -60,39 +79,133 @@
     "pricing_q5": "Do you offer any discounts or promotions?",
     "pricing_a5": "Yes, we run seasonal promotions and first-time client discounts. Check our website or ask when booking for current offers."
   },
-    "blog": {
-    "title": "CleanAR Insights & Updates",
+  "blog": {
+    "title": "CleanAR Solutions Insights & Updates",
     "subtitle": "Company news, professional standards, and practical cleaning insights — written for homeowners and businesses across Toronto.",
-
+    "pill1": "Company Updates",
+    "pill2": "Standards & Training",
+    "pill3": "Supplier Diversity",
     "ctaQuote": "Request a Quote",
     "ctaServices": "View Services",
-
+    "metaCount": "Articles available",
+    "featured": "Featured",
+    "updated": "Updated regularly",
     "latestHeader": "Browse Articles",
     "searchPlaceholder": "Search posts (e.g., ISSA, CQCC, standards...)",
-
+    "filter": "Filter",
+    "sortNewest": "Newest",
+    "readMore": "Read",
+    "readTime": "2–4 min read",
+    "emptyTitle": "No matches found",
+    "emptyDesc": "We couldn’t find any posts that match your search. Try a different keyword or remove filters.",
+    "clearSearch": "Clear search",
+    "clearFilters": "Reset filters",
     "sections": {
       "professional": "Professional Standards",
       "diversity": "Supplier Diversity",
       "more": "More Articles"
     },
-
+    "sectionHint": "Explore the latest posts in this section.",
     "ctaTitle": "Need a cleaning plan you can count on?",
     "ctaDesc": "Tell us what type of space you have, and we’ll send a clear quote — with flexible options for your schedule and budget.",
-    "ctaButton": "Get a Free Quote"
+    "ctaButton": "Get a Free Quote",
+    "ctaSecondary": "See Services",
+    "filters": {
+      "all": "All"
+    },
+    "labels": {
+      "companyNews": "Company News"
+    },
+    "posts": {
+      "issa": {
+        "title": "CleanAR Solutions Joins ISSA Canada: Raising the Bar for Professional Cleaning in Toronto",
+        "excerpt": "We’re now an official ISSA Canada Member — a milestone that reinforces our commitment to recognized industry standards, training, and consistent results."
+      },
+      "cqcc": {
+        "title": "CleanAR Solutions is Now an LGBTQ+ Certified Supplier (LGBTBE) Through CQCC",
+        "excerpt": "CleanAR is now officially recognized as an LGBTQ+ Certified Supplier (LGBTBE) through CQCC — supporting inclusive procurement for organizations that track supplier diversity."
+      }
+    },
+    "count": {
+      "post": "post",
+      "posts": "posts",
+      "in": "in"
+    },
+    "sortToggle": "Toggle sort",
+    "sortAZ": "A–Z",
+    "logoAlt": "CleanAR Solutions Logo"
   },
-    "cqcc": {
+  "blogISSA": {
+    "meta": "Company News · Professional Standards",
+    "back": "← Back",
+    "title": "CleanAR Solutions Joins ISSA Canada: Raising the Bar for Professional Cleaning in Toronto",
+    "intro": "At CleanAR Solutions, our goal has always been simple: provide reliable, high-quality cleaning services that our clients can trust. Today, we’re excited to share an important milestone in that journey – we are now an official <strong>ISSA Canada Member</strong>, part of <issaLink>ISSA, the worldwide cleaning industry association</issaLink>.",
+    "whoTitle": "Who is ISSA and what is ISSA Canada?",
+    "whoP1": "<strong>ISSA</strong> is the leading global trade association for the cleaning, hygiene, and facility management industry, with more than 11,000 members worldwide. Its mission is to <em>“change the way the world views cleaning”</em> by promoting cleaning as an essential investment in human health, the environment, and performance.",
+    "whoP2": "<strong>ISSA Canada</strong> represents the Canadian market and helps cleaning companies like ours stay aligned with industry best practices, education, and standards. You can learn more directly from <issaCanadaLink>ISSA Canada’s official website</issaCanadaLink>.",
+    "meansTitle": "What ISSA membership means for our clients",
+    "meansP": "Membership is not just a logo on our website – it reflects how we operate day-to-day. As an ISSA Canada member, CleanAR Solutions is committed to:",
+    "meansList": {
+      "one": "Following <strong>recognized industry standards</strong> for quality and consistency in cleaning.",
+      "two": "Prioritizing <strong>health and safety</strong> in homes, condos, and offices across Toronto.",
+      "three": "Staying up to date with <strong>training, education, and best practices</strong>.",
+      "four": "Supporting more <strong>environmentally responsible</strong> cleaning methods where possible."
+    },
+    "standardsTitle": "Connecting our work to industry standards",
+    "standardsP": "ISSA supports programs like the <cimsLink>Cleaning Industry Management Standard (CIMS)</cimsLink>, the global benchmark for management and quality in cleaning operations. While CIMS certification is a separate process, being part of the ISSA community keeps us aligned with the same principles: documented processes, consistent results, and a strong focus on hygiene and customer satisfaction.",
+    "torontoTitle": "What this means if you’re a homeowner or business in Toronto",
+    "torontoP1": "When you hire CleanAR Solutions, you’re choosing a local Toronto cleaning company that is backed by an <strong>international network</strong> and standards. That matters when you’re trusting someone with your home, your building, or your team’s workspace.",
+    "torontoP2": "Whether we’re performing a one-time deep clean, ongoing residential maintenance, or commercial janitorial work, you can expect a higher level of professionalism and accountability.",
+    "commitmentTitle": "Our commitment going forward",
+    "commitmentP": "This is not the end goal – it’s a foundation. We’ll continue to invest in training, equipment, and processes that align with ISSA’s mission and the needs of our customers in Toronto.",
+    "moreP": "To see how our professional memberships fit into the bigger picture, visit our <certLink>Professional Certifications &amp; Memberships</certLink> page, or explore our <servicesLink>cleaning services</servicesLink>.",
+    "closing": "Ready to experience the difference that professional standards make? Get in touch with us for a <strong>custom quote for your home or business</strong> in Toronto."
+  },
+  "cqcc": {
     "sectionTitle": "CQCC Certification and Supplier Diversity",
+    "badgeTitle": "LGBTQ+ Certified Supplier (LGBTBE)",
+    "badgeSubtitle": "Certified through Canada’s Queer Chamber of Commerce (CQCC)",
     "learnMore": "Learn more about CQCC",
     "description1": "<strong>CleanAR Solutions</strong> is recognized as an LGBTQ+ Certified Supplier (LGBTBE) through Canada’s Queer Chamber of Commerce (CQCC).",
-    "description2": "This certification can support organizations that track supplier diversity metrics when subcontracting services, while our day-to-day focus remains the same: reliable, professional cleaning results.",
+    "description2": "This certification supports organizations that track supplier diversity metrics when subcontracting services, while our day-to-day focus remains the same: reliable, professional cleaning results.",
     "confidentialNote": "<strong>Note:</strong> CQCC has advised that certificate files should remain confidential for now (branding updates in progress). We do not share certificate images publicly at this time. If you require confidential verification for procurement, contact us.",
     "benefitsTitle": "Benefits of CQCC Certification",
     "cardTitle": "What CQCC certification means for you",
+     "badge": {
+      "eyebrow": "Supplier diversity • Certified",
+      "headline": "CleanAR Solutions is an <strong>LGBTQ+ Certified Supplier (LGBTBE)</strong>",
+      "body": "Certified through Canada’s Queer Chamber of Commerce (CQCC). We support supplier diversity programs while delivering reliable, professional cleaning services."
+    },
     "benefits": {
       "procurement": "Supports inclusive procurement goals",
       "reporting": "May count toward supplier diversity reporting",
       "network": "Connected to the CQCC supplier network"
     }
+  },
+  "blogCQCC": {
+    "meta": "Company News · Supplier Diversity · Toronto",
+    "back": "← Back",
+    "title": "CleanAR Solutions is Now an LGBTQ+ Certified Supplier (LGBTBE) Through CQCC",
+    "intro": "At CleanAR Solutions, professionalism means more than a spotless space — it means operating with transparency, accountability, and a long-term commitment to the communities we serve. We’re proud to share an important milestone: CleanAR is now officially recognized as an <strong>LGBTQ+ Certified Supplier (LGBTBE)</strong> through <cqccLink>Canada’s Queer Chamber of Commerce (CQCC)</cqccLink>.",
+    "whatIsTitle": "What is CQCC and what does “LGBTBE” mean?",
+    "whatIsP1": "<strong>Canada’s Queer Chamber of Commerce (CQCC)</strong> is a national organization that supports LGBTQ+ entrepreneurs and helps connect certified businesses with procurement opportunities, events, and corporate partners.",
+    "whatIsP2": "<strong>LGBTBE</strong> stands for <em>LGBTQ+ Business Enterprise</em>. It’s a supplier diversity certification that helps organizations identify and engage qualified LGBTQ+-owned businesses in their vendor networks.",
+    "orgMeaningTitle": "What this certification means for your organization",
+    "orgMeaningP": "This certification doesn’t change how we clean — it strengthens how we show up as a partner for organizations that prioritize inclusive procurement. If your team tracks supplier diversity, engaging CleanAR may support internal procurement goals when we’re onboarded as a vendor or subcontractor.",
+    "orgList": {
+      "one": "Supports <strong>inclusive procurement</strong> initiatives for organizations that track supplier diversity.",
+      "two": "Helps with <strong>supplier diversity reporting</strong> when cleaning services are subcontracted.",
+      "three": "Adds another layer of <strong>vendor credibility</strong> alongside our professional memberships and standards."
+    },
+    "localTitle": "What it means for homeowners and local businesses in Toronto",
+    "localP1": "For residential clients and small businesses, the takeaway is simple: you’re working with a company that invests in being verified, accountable, and consistent — not only for quality, but also for how we operate.",
+    "localP2": "Whether you hire us for a one-time deep clean, ongoing maintenance, or commercial janitorial services, our goal stays the same: reliable results, respectful service, and clear communication.",
+    "standardsTitle": "How this fits into our bigger standards story",
+    "standardsP1": "Supplier diversity is one part of building a modern, trustworthy service company. We’re also committed to professional standards, training, and structured processes that help ensure consistent results across every visit — whether it’s a condo, office, clinic, or multi-unit building.",
+    "standardsP2": "Want to see how our credentials connect to service quality? Visit our <certLink>Professional Certifications &amp; Memberships</certLink> page, or explore our <servicesLink>cleaning services</servicesLink>.",
+    "commitmentTitle": "Our commitment going forward",
+    "commitmentP": "This certification is one more step in building a company that meets professional expectations and modern procurement needs. We’ll continue investing in training, processes, and recognized programs that help us deliver strong outcomes for our clients — and operate with integrity as we grow.",
+    "closing": "Ready to work with a certified, professional cleaning partner in Toronto? Get in touch for a <strong>custom quote for your home or business</strong>."
   },
   "contact": {
     "heading": "Message Us Directly 👋",
@@ -357,7 +470,7 @@
   "products_and_services": {
     "products_services_title": "Products and Services",
     "our_services_title": "Our Services",
-    "our_services_description": "Explore our range of professional cleaning services designed to meet your needs. From residential to commercial, we have you covered. Our team is dedicated to providing top-notch cleaning solutions that ensure a spotless and healthy environment. Whether you need regular maintenance or a one-time deep clean, we customize our services to fit your requirements. Contact us today to learn more about how we can help you achieve a cleaner space. Check out our site regularly for updates on new services and special offers.  ",
+    "our_services_description": "Professional cleaning services for residential and commercial spaces. We offer reliable, high-quality cleaning tailored to your needs. Contact us today for a free quote.",
     "our_products_description": "Discover our range of cleaning products and solutions that ensure a spotless home and workplace.",
     "our_products_title": "Our Products",
     "coming_soon": "COMING SOON!",
@@ -373,6 +486,17 @@
       "We're not satisfied until you are - if anything doesn't meet your expectations, we'll return within 24 hours to make it right at no extra charge"
     ],
     "residential_cleaning_button": "Get Quote for Residential Cleaning",
+    "post_construction_cleaning_title": "Post-Construction",
+    "post_construction_cleaning_interior_cleanup": "Interior Cleanup",
+    "post_construction_cleaning_debris_removal": "Debris Removal",
+    "post_construction_cleaning_dust_removal": "Dust Removal",
+    "post_construction_cleaning_description": [
+      "Comprehensive interior cleaning to remove dust, dirt, and construction residues from all surfaces including walls, floors, windows, and fixtures",
+      "Safe and efficient removal of construction debris, packaging materials, and leftover supplies to prepare your space for occupancy",
+      "Specialized dust removal techniques using HEPA-filtered vacuums and microfiber cloths to ensure a thorough clean without spreading contaminants",
+      "Flexible scheduling options to accommodate your project timeline, including same-day service for urgent post-construction cleanups"
+    ],
+    "post_construction_cleaning_button": "Get Quote for Post-Construction Cleaning",
     "commercial_cleaning_title": "Commercial",
     "commercial_cleaning_office_cleaning": "Office Cleaning",
     "commercial_cleaning_industrial_cleaning": "Industrial Cleaning",
@@ -494,7 +618,8 @@
       "inventory_management": "Inventory Management",
       "customer_management": "Customer Experience",
       "accounting_management": "Accounting Management",
-      "admin_management": "Management"
+      "admin_management": "Management",
+      "translation_management": "Translator Admin"
     }
   },
   "daysOfTheWeek": {
@@ -740,13 +865,12 @@
   "banner": {
     "comingSoon": "Exciting new features coming to our website!"
   },
-    "certification": {
+  "certification": {
     "title": "Professional Certifications & Memberships",
     "intro": "Your home or business deserves cleaners who follow <strong>recognized industry standards</strong>, not guesswork. Our memberships and certifications show our commitment to professional, safe, and healthy cleaning practices in Toronto.",
     "ctaPrimary": "Get a Free Quote",
     "ctaSecondary": "Learn why ISSA membership matters →"
   },
-
   "issa": {
     "sectionTitle": "What is ISSA Canada and why does it matter?",
     "description1": "<strong>ISSA</strong> is the worldwide cleaning industry association, representing more than 11,000 members around the globe, including building service contractors, distributors, manufacturers, and residential cleaners.",
@@ -754,10 +878,9 @@
     "description2": "<strong>ISSA Canada</strong> is the Canadian division, supporting the local cleaning industry with education, standards, and advocacy. As members, we stay informed on best practices for <strong>health, safety, and quality</strong> in cleaning services across Canada.",
     "aboutCanada": "About ISSA Canada",
     "description3": "For our clients, this means you’re working with a company that takes cleaning seriously – not just as a task, but as an investment in a <strong>healthier and safer environment</strong> for your family, staff, and visitors.",
-        "prefix": "CleanAR Solutions is a proud member of",
+    "prefix": "CleanAR Solutions is a proud member of",
     "linkText": "ISSA Canada, a division of ISSA – the worldwide cleaning industry association",
     "suffix": ". This membership reflects our ongoing commitment to professional standards in the cleaning industry.",
-
     "cardTitle": "What ISSA membership means for you",
     "benefits": {
       "standards": "Alignment with international cleaning standards",
@@ -766,20 +889,17 @@
       "environment": "Better practices for environmentally-conscious cleaning"
     }
   },
-
   "roadmap": {
     "title": "Growing our professional standards",
     "description1": "Our ISSA Canada membership is an important step, and we’re not stopping there. CleanAR Solutions is continuously exploring additional training and certifications that align with our focus on <strong>quality, safety, and sustainability</strong>.",
     "description2": "As we add new certifications, this page will be kept up to date so you can always see how we’re investing in better service for your home or business."
   },
-
   "certification-cta": {
     "title": "Bring certified standards to your space",
     "description": "Whether it’s a condo, house, or office, we apply the same level of care and professionalism backed by our ISSA Canada membership.",
     "button": "Request Your Cleaning Quote",
     "link": "View our cleaning services"
   },
-
   "badge": {
     "eyebrow": "Professional cleaning you can trust",
     "headline": "CleanAR Solutions is a proud <strong>ISSA Canada Member</strong>",

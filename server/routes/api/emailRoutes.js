@@ -25,23 +25,23 @@ router.post('/upcoming-bookings', sendUpcomingBookingsEmail);
 
 // ✅ Manually trigger Admin Upcoming Bookings Digest
 router.post("/admin-upcoming-bookings-digest", async (req, res) => {
-  try {
-    const days = Number(req.body?.days || 7);
+    try {
+        const days = Number(req.body?.days || 7);
 
-    // optional: small validation
-    if (!Number.isFinite(days) || days < 1 || days > 31) {
-      return res.status(400).json({ message: "days must be between 1 and 31" });
+        // optional: small validation
+        if (!Number.isFinite(days) || days < 1 || days > 31) {
+            return res.status(400).json({ message: "days must be between 1 and 31" });
+        }
+
+        await NotificationService.sendAdminUpcomingBookingsDigestForPeriod(days);
+
+        return res.status(200).json({
+            message: `Upcoming bookings digest sent successfully for next ${days} days.`,
+        });
+    } catch (err) {
+        console.error("[Manual] Failed to send upcoming bookings digest:", err);
+        return res.status(500).json({ message: "Failed to send digest." });
     }
-
-    await NotificationService.sendAdminUpcomingBookingsDigestForPeriod(days);
-
-    return res.status(200).json({
-      message: `Upcoming bookings digest sent successfully for next ${days} days.`,
-    });
-  } catch (err) {
-    console.error("[Manual] Failed to send upcoming bookings digest:", err);
-    return res.status(500).json({ message: "Failed to send digest." });
-  }
 });
 
 
@@ -60,12 +60,15 @@ cron.schedule(
         } catch (err) {
             console.error('[Cron] Failed to send report:', err);
         }
+    },
+    {
+        timezone: 'America/Toronto',
     });
 
 
 cron.schedule(
     // isDev ? "*/10 * * * * *" : "0 7 * * *", // Dev: every 10 sec | Prod: every day at 7 am
-"0 7 * * *",
+    "0 7 * * *",
     async () => {
         try {
             await sendUpcomingBookingsEmail(
@@ -78,6 +81,9 @@ cron.schedule(
         } catch (err) {
             console.error('[Cron] Failed to send upcoming bookings email:', err);
         }
+    },
+    {
+        timezone: 'America/Toronto',
     });
 
 module.exports = router;

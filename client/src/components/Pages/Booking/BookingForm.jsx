@@ -12,9 +12,37 @@ import {
   updateCustomer,
   deleteCustomer
 } from '/src/components/API/customerApi';
+import { DateTime } from "luxon";
+
+const APP_TZ = "America/Toronto";
+const TZ_LABEL = "America/Toronto (ET)";
 
 const NEW_CUSTOMER_VALUE = "__new__";
 const DRAFT_KEY = "booking.draft";
+
+function toDateTimeLocalToronto(value) {
+  if (!value) return "";
+
+  // If already looks like datetime-local, keep it
+  if (typeof value === "string" && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(value)) {
+    // Trim seconds if present (datetime-local wants minutes usually)
+    return value.slice(0, 16);
+  }
+
+  // If it’s an ISO string from API (UTC or with offset)
+  if (typeof value === "string") {
+    const dt = DateTime.fromISO(value, { setZone: true });
+    if (dt.isValid) return dt.setZone(APP_TZ).toFormat("yyyy-LL-dd'T'HH:mm");
+  }
+
+  // If it’s a Date or date-like
+  const asDate = value instanceof Date ? value : new Date(value);
+  if (!Number.isNaN(asDate.getTime())) {
+    return DateTime.fromJSDate(asDate).setZone(APP_TZ).toFormat("yyyy-LL-dd'T'HH:mm");
+  }
+
+  return "";
+}
 
 const BookingForm = ({
   customers, prefillDate, setShowAddModal, fetchBookings, setCustomers
@@ -25,7 +53,8 @@ const BookingForm = ({
     customerName: '',
     customerEmail: '',
     serviceType: '',
-    date: prefillDate || '',
+    // date: prefillDate || '',
+    date: toDateTimeLocalToronto(prefillDate) || "",
     scheduleConfirmation: false,
     confirmationDate: '',
     reminderScheduled: false,
@@ -69,7 +98,13 @@ const BookingForm = ({
   const [selectedCustomerId, setSelectedCustomerId] = useState('');
 
   const handleChange = e => {
-    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+     const { name, type } = e.target;
+    // const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+      let value = type === "checkbox" ? e.target.checked : e.target.value;
+      // normalize datetime-local (strip seconds)
+  if (name === "date" && typeof value === "string" && value) {
+    value = value.slice(0, 16);
+  }
     setFormData(prev => ({
       ...prev,
       [e.target.name]: value

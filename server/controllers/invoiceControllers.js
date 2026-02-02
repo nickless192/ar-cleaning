@@ -1,5 +1,6 @@
 const Invoice = require('../models/Invoice');
 const Booking = require('../models/Booking');
+const path = require("path");
 const getNextSequence = require("../utils/getNextSequence");
 
 const { generateInvoicePdfBuffer } = require("../utils/invoicePdf");
@@ -24,7 +25,9 @@ async function getInvoicePdf(req, res) {
     const invoice = await Invoice.findById(id).lean();
     if (!invoice) return res.status(404).json({ message: "Invoice not found" });
 
-    const pdfBuffer = await generateInvoicePdfBuffer(invoice, { company: COMPANY });
+    const pdfBuffer = await generateInvoicePdfBuffer(invoice, { company: COMPANY,
+        logoPath: path.join(__dirname, "..", "assets", "img", "logo.png"),
+     });
     const filename = `Invoice-${invoice.invoiceNumber}.pdf`;
 
     res.setHeader("Content-Type", "application/pdf");
@@ -42,6 +45,7 @@ async function getInvoicePdf(req, res) {
 // POST /api/invoices/:id/send
 async function sendInvoice(req, res) {
   try {
+    
     const { id } = req.params;
 
     const invoice = await Invoice.findById(id);
@@ -50,9 +54,16 @@ async function sendInvoice(req, res) {
     if (!invoice.customerEmail) {
       return res.status(400).json({ message: "Invoice has no customerEmail" });
     }
+    console.log("✅ getInvoicePdf hit", {
+  id: req.params.id,
+  file: __filename,
+});
+
 
     // Generate PDF buffer
-    const pdfBuffer = await generateInvoicePdfBuffer(invoice.toObject(), { company: COMPANY });
+    const pdfBuffer = await generateInvoicePdfBuffer(invoice.toObject(), { company: COMPANY,
+        logoPath: path.join(__dirname, "..", "assets", "img", "logo.png"),
+     });
     const filename = `Invoice-${invoice.invoiceNumber}.pdf`;
 
     // Send email (your implementation should support attachments)
@@ -64,7 +75,7 @@ async function sendInvoice(req, res) {
           <p>Hello ${invoice.customerName || ""},</p>
                <p>
         Thanks again for choosing <b>CleanAR Solutions</b>!
-        Please find the invoice attached${invoice.description ? ` for your ${invoice.description} service` : ""} (total <b>${invoice.totalCost}</b>).
+        Please find the invoice attached${invoice.description ? ` for your ${invoice.description} service` : ""} (total <b>$${invoice.totalCost}</b>).
         You can e-transfer to <a href="mailto:info@cleanarsolutions.ca">info@cleanarsolutions.ca</a>.
       </p>
 

@@ -1,59 +1,47 @@
+// src/components/CQCCCertificationBadge.jsx
 import React from "react";
-import { Card, CardBody, CardHeader } from "reactstrap";
-import { FaHandshake, FaCheckCircle } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import cqccLogo from "/src/assets/img/cqcc-en.png";
+import NewIconAnimated from "/src/components/Pages/Navigation/NewIconAnimated";
 import { useTranslation, Trans } from "react-i18next";
 
-const CQCCCertificationBadge = ({ className = "", layout = "horizontal" }) => {
+export default function CQCCCertificationBadge({ layout = "horizontal", className = "" }) {
   const { t } = useTranslation();
 
   return (
-    <Card className={`shadow-sm border-0 ${className}`}>
-      <CardHeader className="bg-dark text-white fw-bold d-flex align-items-center">
-        <FaHandshake className="me-2" />
-        {t("cqcc.cardTitle")}
-      </CardHeader>
+    <section
+      className={`issa-membership-badge issa-membership-badge--${layout} ${className}`}
+      aria-label="CQCC LGBTBE certification badge"
+    >
+      {/* Logo */}
+      <div className="issa-membership-badge__logo-wrapper">
+        <Link to="/blog" className="issa-membership-badge__link">
+          <img
+            src={cqccLogo}
+            alt="LGBTQ+ Certified Supplier (LGBTBE) – Canada’s Queer Chamber of Commerce (CQCC)"
+            className="issa-membership-badge__logo"
+            loading="lazy"
+          />
+        </Link>
+      </div>
 
-      <CardBody className="bg-transparent">
-        <div className={layout === "horizontal" ? "row align-items-start" : ""}>
-          <div className={layout === "horizontal" ? "col-md-8" : ""}>
-            <p className="mb-2 text-secondary">
-              <Trans i18nKey="cqcc.description1" components={{ strong: <strong /> }} />
-            </p>
+      {/* Content */}
+      <div className="issa-membership-badge__content">
+        <p className="issa-membership-badge__eyebrow">
+          {t("cqcc.badge.eyebrow")}
+        </p>
 
-            <p className="mb-0 text-secondary">
-              <Trans i18nKey="cqcc.description2" components={{ strong: <strong /> }} />
-            </p>
+        <Link to="/blog" className="issa-membership-badge__headline-link">
+          <p className="issa-membership-badge__headline">
+            <Trans i18nKey="cqcc.badge.headline" components={{ strong: <strong /> }} />
+            <NewIconAnimated />
+          </p>
+        </Link>
 
-            <div className="mt-3">
-              <small className="text-muted">
-                {t("cqcc.confidentialNote")}
-              </small>
-            </div>
-          </div>
-
-          <div className={layout === "horizontal" ? "col-md-4 mt-3 mt-md-0" : "mt-3"}>
-            <div className="p-3 rounded border bg-light">
-              <div className="fw-bold mb-2">{t("cqcc.benefitsTitle")}</div>
-              <ul className="list-unstyled mb-0">
-                <li className="mb-2">
-                  <FaCheckCircle className="me-2 text-success" />
-                  {t("cqcc.benefits.procurement")}
-                </li>
-                <li className="mb-2">
-                  <FaCheckCircle className="me-2 text-success" />
-                  {t("cqcc.benefits.reporting")}
-                </li>
-                <li className="mb-0">
-                  <FaCheckCircle className="me-2 text-success" />
-                  {t("cqcc.benefits.network")}
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </CardBody>
-    </Card>
+        <p className="issa-membership-badge__body">
+          <Trans i18nKey="cqcc.badge.body" components={{ strong: <strong /> }} />
+        </p>
+      </div>
+    </section>
   );
-};
-
-export default CQCCCertificationBadge;
+}

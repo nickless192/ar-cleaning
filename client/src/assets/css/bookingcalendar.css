@@ -329,3 +329,21 @@
 .booking-details-table {
   font-size: 0.9rem;
 }
+
+/* Highlight today's date */
+.calendar-cell.today {
+  outline: 2px solid rgba(13, 110, 253, 0.9); /* bootstrap-ish blue */
+  outline-offset: -2px;
+  border-radius: 12px;
+}
+
+.calendar-cell.today .day-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: rgba(13, 110, 253, 0.12);
+  font-weight: 700;
+}

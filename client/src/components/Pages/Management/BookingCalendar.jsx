@@ -19,8 +19,20 @@ import GenerateInvoiceModal from "../Booking/GenerateInvoiceModal";
 import BookingActions from "../Booking/BookingActions";
 import { FaEyeSlash, FaTrash } from "react-icons/fa";
 import { useLocation, useNavigate, Link } from "react-router-dom";
+import { DateTime } from "luxon";
 
 const DRAFT_KEY = "booking.draft";
+
+const toDatetimeLocalToronto = (isoOrDate) =>
+  DateTime.fromISO(new Date(isoOrDate).toISOString(), { zone: "utc" })
+    .setZone("America/Toronto")
+    .toFormat("yyyy-LL-dd'T'HH:mm");
+
+const torontoToUtcISO = (dtLocalStr) =>
+  DateTime.fromFormat(dtLocalStr, "yyyy-LL-dd'T'HH:mm", { zone: "America/Toronto" })
+    .toUTC()
+    .toISO();
+
 
 const BookingCalendar = ({
   bookings,
@@ -89,53 +101,55 @@ const BookingCalendar = ({
     }
   };
   useEffect(() => {
-  const incomingBookingId =
-    location.state?.highlightBookingId ||
-    location.state?.bookingId;
+    const incomingBookingId =
+      location.state?.highlightBookingId ||
+      location.state?.bookingId;
 
-  if (!incomingBookingId) return;
+    if (!incomingBookingId) return;
 
-  // Try find it from the bookings you already have
-  const found = bookings.find((b) => String(b._id) === String(incomingBookingId));
+    // Try find it from the bookings you already have
+    const found = bookings.find((b) => String(b._id) === String(incomingBookingId));
 
-  const openBooking = async () => {
-    try {
-      let bookingToOpen = found;
+    const openBooking = async () => {
+      try {
+        let bookingToOpen = found;
 
-      // If not in current list (e.g. different month / filtered),
-      // fetch directly by id so we can still open the modal.
-      if (!bookingToOpen) {
-        const res = await fetch(`/api/bookings/${incomingBookingId}`);
-        if (res.ok) bookingToOpen = await res.json();
+        // If not in current list (e.g. different month / filtered),
+        // fetch directly by id so we can still open the modal.
+        if (!bookingToOpen) {
+          const res = await fetch(`/api/bookings/${incomingBookingId}`);
+          if (res.ok) bookingToOpen = await res.json();
+        }
+
+        if (!bookingToOpen) return;
+
+        // Jump calendar to that booking’s month so user sees context
+        if (bookingToOpen.date) {
+          setCurrentDate(new Date(bookingToOpen.date));
+        }
+
+        // Open the booking details modal
+        setSelectedBooking(bookingToOpen);
+
+        // Clear navigation state so refresh/back doesn’t keep reopening
+        navigate(location.pathname, { replace: true, state: {} });
+      } catch (e) {
+        console.error("Failed to reopen booking from invoice:", e);
+        // Still clear state to avoid loops
+        navigate(location.pathname, { replace: true, state: {} });
       }
+    };
 
-      if (!bookingToOpen) return;
-
-      // Jump calendar to that booking’s month so user sees context
-      if (bookingToOpen.date) {
-        setCurrentDate(new Date(bookingToOpen.date));
-      }
-
-      // Open the booking details modal
-      setSelectedBooking(bookingToOpen);
-
-      // Clear navigation state so refresh/back doesn’t keep reopening
-      navigate(location.pathname, { replace: true, state: {} });
-    } catch (e) {
-      console.error("Failed to reopen booking from invoice:", e);
-      // Still clear state to avoid loops
-      navigate(location.pathname, { replace: true, state: {} });
-    }
-  };
-
-  openBooking();
-  // Important: include bookings so when they load async, this can find the booking
-}, [location.state, bookings, navigate, location.pathname]);
+    openBooking();
+    // Important: include bookings so when they load async, this can find the booking
+  }, [location.state, bookings, navigate, location.pathname]);
 
 
   useEffect(() => {
     if (selectedBooking?.date) {
-      setTempDate(new Date(selectedBooking.date).toISOString().slice(0, 16));
+      // setTempDate(new Date(selectedBooking.date).toISOString().slice(0, 16));
+      // setTempDate(formatForDatetimeLocal(selectedBooking.date));
+      setTempDate(toDatetimeLocalToronto(selectedBooking.date));
       // setTempServiceType(selectedBooking.serviceType);
       // setTempIncome(selectedBooking.income);
       setCustomerAcknowledged(
@@ -412,7 +426,8 @@ const BookingCalendar = ({
 
   const handleCancelEdit = () => {
     if (selectedBooking?.date) {
-      setTempDate(new Date(selectedBooking.date).toISOString().slice(0, 16));
+      // setTempDate(new Date(selectedBooking.date).toISOString().slice(0, 16));
+      setTempDate(toDatetimeLocalToronto(selectedBooking.date));
     }
     // setTempServiceType(selectedBooking?.serviceType || "");
     // setTempIncome(selectedBooking?.income || 0);
@@ -470,9 +485,10 @@ const BookingCalendar = ({
   // Filter bookings for current month
   const currentMonthBookings = bookings.filter((booking) => {
     const bookingDate = new Date(booking.date);
+    const bookingToronto = DateTime.fromISO(booking.date, { zone: "utc" }).setZone("America/Toronto");
     return (
-      bookingDate.getMonth() === currentMonth &&
-      bookingDate.getFullYear() === currentYear
+      bookingToronto.month === currentMonth + 1 &&
+      bookingToronto.year === currentYear
     );
   });
 
@@ -567,7 +583,8 @@ const BookingCalendar = ({
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            date: tempDate,
+            // date: tempDate,
+            date: torontoToUtcISO(tempDate),
             updatedBy: Auth.getProfile().data._id,
             customerSuggestedBookingAcknowledged: customerAcknowledged,
           }),
@@ -704,6 +721,15 @@ const BookingCalendar = ({
     }
   };
 
+  const isSameDay = (a, b) =>
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate();
+
+  // const today = new Date();
+  const todayToronto = DateTime.now().setZone("America/Toronto").toJSDate();
+
+
   return (
     <div className="booking-calendar-container">
       {/* Header */}
@@ -810,13 +836,28 @@ const BookingCalendar = ({
           role="grid"
           aria-label="Booking calendar"
         >
-          {calendarDays.map((day, idx) => (
-            <div
-              key={idx}
-              className={`calendar-cell ${day.empty ? "empty" : ""}`}
-              role="gridcell"
-              data-day={day.empty ? "" : day.day}
-            >
+          {calendarDays.map((day, idx) => {
+            // <div
+            //   key={idx}
+            //   className={`calendar-cell ${day.empty ? "empty" : ""}`}
+            //   role="gridcell"
+            //   data-day={day.empty ? "" : day.day}
+            // >
+            const cellDate = !day.empty
+  ? new Date(currentYear, currentMonth, day.day)
+  : null;
+return (
+<div
+  key={idx}
+  className={[
+    "calendar-cell",
+    day.empty ? "empty" : "",
+    !day.empty && isSameDay(cellDate, todayToronto) ? "today" : "",
+  ].join(" ")}
+  role="gridcell"
+  data-day={day.empty ? "" : day.day}
+>
+
               {!day.empty ? (
                 <>
                   <div className="cell-header">
@@ -844,31 +885,62 @@ const BookingCalendar = ({
 
                   <div className="bookings-list">
                     {day.bookings && day.bookings.length > 0 ? (
-                      day.bookings.map((booking, i) => (
-                        <div
-                          key={i}
-                          className={`booking-card status-${booking.status}`}
-                          onClick={() => setSelectedBooking(booking)}
-                          role="button"
-                          tabIndex={0}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") setSelectedBooking(booking);
-                          }}
-                          aria-label={`${booking.serviceType} for ${booking.customerName}, status ${booking.status}`}
-                        >
-                          <div className="booking-line">
-                            <div className="booking-customer">
-                              {booking.customerName}
+                      // day.bookings.map((booking, i) => (
+                      //   <div
+                      //     key={i}
+                      //     className={`booking-card status-${booking.status}`}
+                      //     onClick={() => setSelectedBooking(booking)}
+                      //     role="button"
+                      //     tabIndex={0}
+                      //     onKeyDown={(e) => {
+                      //       if (e.key === "Enter") setSelectedBooking(booking);
+                      //     }}
+                      //     aria-label={`${booking.serviceType} for ${booking.customerName}, status ${booking.status}`}
+                      //   >
+                      //     <div className="booking-line">
+                      //       <div className="booking-customer">
+                      //         {booking.customerName}
+                      //       </div>
+                      //       <div className="booking-status">
+                      //         {booking.status}
+                      //       </div>
+                      //     </div>
+                      //     <div className="booking-sub">
+                      //       {booking.serviceType}
+                      //     </div>
+                      //   </div>
+                      // ))
+                      day.bookings.map((booking, i) => {
+                        const isInvoiced =
+                          booking.invoiced || booking.invoiceCreatedAt || booking.invoiceSentAt;
+
+                        const uiStatus = isInvoiced ? "invoiced" : booking.status;
+
+                        return (
+                          <div
+                            key={i}
+                            className={`booking-card status-${uiStatus}`}
+                            onClick={() => setSelectedBooking(booking)}
+                            role="button"
+                            tabIndex={0}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") setSelectedBooking(booking);
+                            }}
+                            aria-label={`${booking.serviceType} for ${booking.customerName}, status ${uiStatus}`}
+                          >
+                            <div className="booking-line">
+                              <div className="booking-customer">{booking.customerName}</div>
+                              <div className="booking-status">{uiStatus}</div>
                             </div>
-                            <div className="booking-status">
-                              {booking.status}
-                            </div>
+                            <div className="booking-sub">{booking.serviceType} @ {' '}
+                              {DateTime.fromISO(booking.date, { zone: "utc" })
+                                .setZone("America/Toronto")
+                                .toFormat("hh:mm a")}
+                                </div>
                           </div>
-                          <div className="booking-sub">
-                            {booking.serviceType}
-                          </div>
-                        </div>
-                      ))
+                        );
+                      })
+
                     ) : (
                       <div className="no-bookings">—</div>
                     )}
@@ -878,7 +950,7 @@ const BookingCalendar = ({
                 <div className="empty-cell" />
               )}
             </div>
-          ))}
+)})}
         </div>
       </div>
 

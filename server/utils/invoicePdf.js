@@ -1,20 +1,16 @@
-// utils/invoicePdf.js
 const PDFDocument = require("pdfkit");
+
+console.log("✅ LOADED invoicePdf.js from:", __filename);
 
 /**
  * Generate a professional PDF for an invoice and return it as a Buffer.
- * @param {object} invoice - Invoice document (lean/plain object ok)
- * @param {object} opts
- * @param {object} opts.company - Company info for branding/header
- * @returns {Promise<Buffer>}
  */
 function generateInvoicePdfBuffer(invoice, opts = {}) {
   const company = opts.company || {
-    name: "CleanAR Solutions",
-    line1: "Toronto, ON",
+    line1: "Toronto, ON, Canada",
     email: "info@cleanarsolutions.ca",
-    phone: "",
-    website: "",
+    phone: "437-440-5514",
+    website: "www.cleanarsolutions.ca",
   };
 
   return new Promise((resolve, reject) => {
@@ -24,7 +20,7 @@ function generateInvoicePdfBuffer(invoice, opts = {}) {
         margin: 50,
         info: {
           Title: `Invoice ${invoice.invoiceNumber}`,
-          Author: company.name,
+          Author: "CleanAR Solutions",
         },
       });
 
@@ -33,159 +29,257 @@ function generateInvoicePdfBuffer(invoice, opts = {}) {
       doc.on("end", () => resolve(Buffer.concat(chunks)));
       doc.on("error", reject);
 
-      // --- helpers ---
+      // ---------------------
+      // Page metrics
+      // ---------------------
+      const leftX = doc.page.margins.left;
+      const rightX = doc.page.width - doc.page.margins.right;
+      const contentWidth = rightX - leftX;
+
+      // ---------------------
+      // Helpers
+      // ---------------------
       const money = (n) => `$${(Number(n) || 0).toFixed(2)}`;
 
-      // Header
-      doc
-        .fontSize(20)
-        .text(company.name, { align: "left" })
-        .moveDown(0.2);
-
-      doc
-        .fontSize(10)
-        .fillColor("#444")
-        .text(company.line1)
-        .text(company.email)
-        .text(company.phone || "")
-        .text(company.website || "")
-        .fillColor("#000");
-
-      doc.moveDown(1);
-
-      // Invoice meta block
-      const topY = doc.y;
-      doc
-        .fontSize(14)
-        .text("INVOICE", 50, topY, { align: "right" })
-        .moveDown(0.2);
-
-      doc
-        .fontSize(10)
-        .fillColor("#333")
-        .text(`Invoice #: ${invoice.invoiceNumber}`, { align: "right" })
-        .text(`Date: ${new Date(invoice.createdAt || Date.now()).toLocaleDateString()}`, {
-          align: "right",
-        })
-        .text(`Status: ${(invoice.status || "unpaid").toUpperCase()}`, {
-          align: "right",
-        })
-        .fillColor("#000");
-
-      doc.moveDown(1);
-
-      // Bill to
-      doc.fontSize(12).text("Bill To:", { underline: true });
-      doc
-        .fontSize(10)
-        .text(invoice.customerName || "Customer")
-        .text(invoice.customerEmail || "");
-
-      if (invoice.description) {
-        doc.moveDown(0.5);
-        doc.fontSize(10).fillColor("#444").text(invoice.description);
-        doc.fillColor("#000");
-      }
-
-      doc.moveDown(1);
-
-      // Table layout
-      const tableTop = doc.y;
-      const colX = {
-        service: 50,
-        desc: 180,
-        billing: 360,
-        value: 420,
-        price: 470,
-        amount: 530,
+      const drawHLine = (y, color = "#e6e6e6") => {
+        doc.moveTo(leftX, y).lineTo(rightX, y).strokeColor(color).lineWidth(1).stroke();
       };
 
-      doc.fontSize(10).fillColor("#000");
-
-      // Table header background line
-      doc
-        .moveTo(50, tableTop)
-        .lineTo(562, tableTop)
-        .strokeColor("#111")
-        .lineWidth(1)
-        .stroke();
-
-      const headerY = tableTop + 8;
-
-      doc.fontSize(9).fillColor("#111");
-      doc.text("SERVICE", colX.service, headerY);
-      doc.text("DESCRIPTION", colX.desc, headerY);
-      doc.text("BILL", colX.billing, headerY);
-      doc.text("VALUE", colX.value, headerY, { width: 40, align: "right" });
-      doc.text("PRICE", colX.price, headerY, { width: 50, align: "right" });
-      doc.text("AMOUNT", colX.amount, headerY, { width: 60, align: "right" });
-
-      doc.moveDown(1.2);
-
-      const services = Array.isArray(invoice.services) ? invoice.services : [];
-      let runningY = doc.y;
-
-      const ensureSpace = () => {
-        // simple page break protection
-        if (doc.y > 720) {
+      const ensureSpace = (needed = 60) => {
+        const bottomLimit = doc.page.height - doc.page.margins.bottom - 90;
+        if (doc.y + needed > bottomLimit) {
           doc.addPage();
-          runningY = doc.y;
         }
       };
 
+      // =========================================================
+      // HEADER
+      // =========================================================
+      const headerTopY = 40;
+
+      // Logo
+      const logoMaxW = 175;
+      const logoMaxH = 95;
+      const hasLogo = Boolean(opts.logoPath || opts.logoBuffer);
+
+      let leftColumnY = headerTopY;
+
+      if (hasLogo) {
+        try {
+          const imgSrc = opts.logoBuffer || opts.logoPath;
+          doc.image(imgSrc, leftX, leftColumnY, {
+            fit: [logoMaxW, logoMaxH],
+            align: "left",
+            valign: "top",
+          });
+          leftColumnY += logoMaxH + 6;
+        } catch (e) {
+          console.warn("Invoice PDF: logo failed to render:", e.message);
+        }
+      }
+
+      // Company info under logo
+      const companyInfo = [
+        company.line1,
+        company.email,
+        company.phone,
+        company.website,
+      ].filter(Boolean).join("\n");
+
+      doc.font("Helvetica").fontSize(11).fillColor("#333");
+      doc.text(companyInfo, leftX, leftColumnY, {
+        width: logoMaxW + 10,
+      });
+      doc.fillColor("#000");
+
+      const companyInfoHeight = doc.heightOfString(companyInfo, {
+        width: logoMaxW + 10,
+      });
+
+      const leftBottomY = leftColumnY + companyInfoHeight;
+
+      // Invoice meta (RIGHT — fixed Y, no cursor pollution)
+      const metaW = 220;
+      const metaX = rightX - metaW;
+
+      const metaTitleY = headerTopY + 6;
+      const metaLine1Y = metaTitleY + 22;
+      const metaLine2Y = metaLine1Y + 16;
+      const metaLine3Y = metaLine2Y + 16;
+
+      doc.font("Helvetica-Bold").fontSize(18);
+      doc.text("INVOICE", metaX, metaTitleY, { width: metaW, align: "right" });
+
+      doc.font("Helvetica").fontSize(11).fillColor("#333");
+      doc.text(`Invoice #: ${invoice.invoiceNumber}`, metaX, metaLine1Y, {
+        width: metaW,
+        align: "right",
+      });
+
+      const rawDate = invoice.date || invoice.createdAt || Date.now();
+      doc.text(`Date: ${new Date(rawDate).toLocaleDateString()}`, metaX, metaLine2Y, {
+        width: metaW,
+        align: "right",
+      });
+
+      doc.text(`Status: ${(invoice.status || "unpaid").toUpperCase()}`, metaX, metaLine3Y, {
+        width: metaW,
+        align: "right",
+      });
+
+      doc.fillColor("#000");
+
+      const metaBottomY = metaLine3Y + 18;
+
+      // Header bottom
+      doc.y = Math.max(leftBottomY, metaBottomY) + 12;
+      drawHLine(doc.y);
+      doc.y += 14;
+
+      // =========================================================
+      // BILL TO
+      // =========================================================
+      let y = doc.y;
+
+      doc.font("Helvetica-Bold").fontSize(12);
+      doc.text("Bill To:", leftX, y, { underline: true });
+      y += 18;
+
+      doc.font("Helvetica").fontSize(11);
+      doc.text(invoice.customerName || "Customer", leftX, y);
+      y += 16;
+
+      doc.fontSize(10);
+      doc.text(invoice.customerEmail || "", leftX, y);
+      y += 14;
+
+      if (invoice.description) {
+        doc.fontSize(10).fillColor("#444");
+        doc.text(invoice.description, leftX, y, { width: contentWidth * 0.7 });
+        y += doc.heightOfString(invoice.description, { width: contentWidth * 0.7 }) + 6;
+        doc.fillColor("#000");
+      }
+
+      doc.y = y + 10;
+
+      // =========================================================
+      // TABLE
+      // =========================================================
+      const colW = {
+        service: Math.floor(contentWidth * 0.22),
+        desc: Math.floor(contentWidth * 0.33),
+        bill: Math.floor(contentWidth * 0.12),
+        value: Math.floor(contentWidth * 0.08),
+        price: Math.floor(contentWidth * 0.12),
+      };
+      colW.amount = contentWidth - Object.values(colW).reduce((a, b) => a + b, 0);
+
+      const colX = {
+        service: leftX,
+        desc: leftX + colW.service,
+        bill: leftX + colW.service + colW.desc,
+        value: leftX + colW.service + colW.desc + colW.bill,
+        price: leftX + colW.service + colW.desc + colW.bill + colW.value,
+        amount: leftX + colW.service + colW.desc + colW.bill + colW.value + colW.price,
+      };
+
+      drawHLine(doc.y, "#111");
+      const thY = doc.y + 8;
+
+      doc.fontSize(9).fillColor("#111");
+      doc.text("SERVICE", colX.service, thY);
+      doc.text("DESCRIPTION", colX.desc, thY);
+      doc.text("BILL", colX.bill, thY);
+      doc.text("VALUE", colX.value, thY, { align: "right", width: colW.value });
+      doc.text("PRICE", colX.price, thY, { align: "right", width: colW.price });
+      doc.text("AMOUNT", colX.amount, thY, { align: "right", width: colW.amount });
+
+      drawHLine(thY + 18);
+      doc.y = thY + 30;
+
+      const services = invoice.services || [];
       doc.fontSize(9).fillColor("#222");
 
       services.forEach((s) => {
-        ensureSpace();
+        const value = s.billingType === "hours" ? s.hours : s.quantity;
+        const rowHeight =
+          Math.max(
+            doc.heightOfString(s.serviceType || "", { width: colW.service }),
+            doc.heightOfString(s.description || "", { width: colW.desc }),
+            14
+          ) + 8;
 
-        const value = s.billingType === "hours" ? Number(s.hours || 0) : Number(s.quantity || 0);
+        ensureSpace(rowHeight + 40);
 
-        // row
-        doc.text(s.serviceType || "", colX.service, doc.y, { width: 120 });
-        doc.text(s.description || "", colX.desc, runningY, { width: 170 });
-        doc.text((s.billingType || "").toUpperCase(), colX.billing, runningY, { width: 55 });
-        doc.text(String(value), colX.value, runningY, { width: 40, align: "right" });
-        doc.text(money(s.price), colX.price, runningY, { width: 50, align: "right" });
-        doc.text(money(s.amount), colX.amount, runningY, { width: 60, align: "right" });
+        const y0 = doc.y;
 
-        // subtle row divider
-        const rowBottom = runningY + 18;
-        doc
-          .moveTo(50, rowBottom)
-          .lineTo(562, rowBottom)
-          .strokeColor("#e6e6e6")
-          .lineWidth(1)
-          .stroke();
+        doc.text(s.serviceType || "", colX.service, y0, { width: colW.service });
+        doc.text(s.description || "", colX.desc, y0, { width: colW.desc });
+        doc.text((s.billingType || "").toUpperCase(), colX.bill, y0);
+        doc.text(String(value), colX.value, y0, { align: "right", width: colW.value });
+        doc.text(money(s.price), colX.price, y0, { align: "right", width: colW.price });
+        doc.text(money(s.amount), colX.amount, y0, { align: "right", width: colW.amount });
 
-        doc.moveDown(1.2);
-        runningY = doc.y;
+        drawHLine(y0 + rowHeight - 2);
+        doc.y = y0 + rowHeight + 6;
       });
 
-      // Totals
-      doc.moveDown(0.6);
-      ensureSpace();
+      // =========================================================
+      // TOTALS
+      // =========================================================
+      ensureSpace(120);
 
-      const subtotal = services.reduce((sum, s) => sum + (Number(s.amount) || 0), 0);
-      const total = invoice.totalCost != null ? Number(invoice.totalCost) : subtotal;
+      const subtotal = services.reduce((s, i) => s + Number(i.amount || 0), 0);
+      const total = invoice.totalCost ?? subtotal;
 
-      const totalsX = 380;
-      doc.fontSize(10).fillColor("#111");
-      doc.text("Subtotal:", totalsX, doc.y, { width: 110, align: "right" });
-      doc.text(money(subtotal), totalsX + 120, doc.y - 12, { width: 70, align: "right" });
+      const totalsX = rightX - 240;
 
-      doc.moveDown(0.4);
-      doc.fontSize(12).text("Total:", totalsX, doc.y, { width: 110, align: "right" });
-      doc.fontSize(12).text(money(total), totalsX + 120, doc.y - 14, { width: 70, align: "right" });
+      doc.fontSize(10);
+      doc.text("Subtotal:", totalsX, doc.y + 6, { align: "right", width: 150 });
+      doc.text(money(subtotal), totalsX + 150, doc.y - 12, { align: "right", width: 90 });
 
-      // Footer
-      doc.moveDown(2);
-      doc.fontSize(9).fillColor("#444");
-      doc.text("Thank you for choosing CleanAR Solutions!", { align: "center" });
-      doc.fillColor("#000");
+      doc.font("Helvetica-Bold").fontSize(12);
+      doc.text("Total:", totalsX, doc.y + 10, { align: "right", width: 150 });
+      doc.text(money(total), totalsX + 150, doc.y - 14, { align: "right", width: 90 });
+
+      doc.font("Helvetica").fontSize(10);
+      doc.y += 24;
+
+      // =========================================================
+      // NOTES (optional)
+      // =========================================================
+      const notes = invoice.notes || invoice.note || invoice.internalNotes;
+
+      if (notes) {
+        ensureSpace(110);
+        drawHLine(doc.y);
+        doc.y += 10;
+
+        doc.font("Helvetica-Bold").fontSize(10);
+        doc.text("Notes", leftX, doc.y, { underline: true });
+        doc.y += 8;
+
+        doc.font("Helvetica").fontSize(9).fillColor("#444");
+        doc.text(notes, leftX, doc.y, { width: contentWidth, lineGap: 2 });
+        doc.fillColor("#000");
+
+        doc.y += 14;
+      }
+
+      // =========================================================
+      // FOOTER
+      // =========================================================
+      doc.font("Helvetica").fontSize(9).fillColor("#444");
+      doc.text(
+        "Thank you for choosing CleanAR Solutions!",
+        leftX,
+        doc.page.height - doc.page.margins.bottom - 40,
+        { width: contentWidth, align: "center" }
+      );
 
       doc.end();
-    } catch (e) {
-      reject(e);
+    } catch (err) {
+      reject(err);
     }
   });
 }

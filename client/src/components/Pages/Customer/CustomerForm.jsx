@@ -51,7 +51,7 @@ const normalizeCustomer = (data) => {
     defaultService: d.defaultService || "",
     defaultServiceDescription: d.defaultServiceDescription || "",
     status: d.status || "active",
-    type: d.type || "",
+    type: d.type || "one-time",
     _id: d._id,
     prefill: d.prefill,
   };
@@ -500,7 +500,7 @@ const Customer = ({ initialData = {}, onSubmit, onCancel }) => {
                 type="select"
                 id="type"
                 name="type"
-                value={formData.type || ""}
+                value={formData.type || "one-time"}
                 onChange={handleChange}
                 className="text-cleanar-color form-input rounded-pill"
               >

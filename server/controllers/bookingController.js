@@ -4,11 +4,50 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const Booking = require('../models/Booking');
 const Customer = require('../models/Customer');
 // const { sendConfirmationEmail } = require('../utils/emailService');
+const APP_TZ = "America/Toronto";
+
+/**
+ * Parse an ISO-like string as Toronto wall time (NOT device/server local),
+ * then convert to UTC JS Date for storage/querying.
+ *
+ * Works with:
+ * - "2026-02-01T10:30" (datetime-local)
+ * - "2026-02-01T10:30:00"
+ * - "2026-02-01T10:30:00-05:00" (still ok)
+ */
+function parseTorontoWallTimeToUTCDate(isoString) {
+  const dt = DateTime.fromISO(isoString, { zone: APP_TZ });
+  if (!dt.isValid) throw new Error(`Invalid date: ${isoString}`);
+  return dt.toUTC().toJSDate();
+}
+
+/** Format a stored JS Date (instant) for Toronto display */
+function formatToronto(date, opts) {
+  return DateTime.fromJSDate(date, { zone: "utc" })
+    .setZone(APP_TZ)
+    .toLocaleString(opts);
+}
+
+/** Get Toronto DateTime from stored JS Date (instant) */
+function asTorontoDT(date) {
+  return DateTime.fromJSDate(date, { zone: "utc" }).setZone(APP_TZ);
+}
+
+// /** Build UTC window bounds from “Toronto wall time” boundaries */
+// function torontoWindowToUTC({ startToronto, endToronto }) {
+//   return {
+//     startUTC: startToronto.setZone(APP_TZ).toUTC().toJSDate(),
+//     endUTC: endToronto.setZone(APP_TZ).toUTC().toJSDate(),
+//   };
+// }
 
 const sendReminderEmail = async (booking) => {
   const { customerEmail, customerName, date } = booking;
+  const tzLabel = "Toronto time (ET)";
 
-  const torontoDate = DateTime.fromJSDate(date, { zone: 'utc' }).setZone('America/Toronto');
+  // const torontoDate = DateTime.fromJSDate(date, { zone: 'utc' }).setZone('America/Toronto');
+  const torontoDate = asTorontoDT(date);
+
 
   const subjectDate = torontoDate.toLocaleString({
     weekday: 'long',
@@ -40,6 +79,9 @@ const sendReminderEmail = async (booking) => {
             <p>This is a friendly reminder that your cleaning appointment is scheduled for <strong>${formattedDateTime}</strong>.</p>
             <p>Details:</p>
             ${servicesHtml}
+            <p style="color:#666;font-size:12px;margin-top:4px;">
+            All times shown in <strong>${tzLabel}</strong>.
+            </p>
             <p>Please don't hesitate to reach out if you have any questions or need help preparing the area.</p>
             <p>Thank you for your cooperation, and we look forward to providing you with excellent service!</p>
             <p>See you soon! 😊</p>
@@ -237,7 +279,8 @@ const bookingControllers = {
     try {
       // --- Date handling in Toronto timezone ---
       const torontoLocal = DateTime.fromISO(date, { zone: 'America/Toronto' });
-      const parsedDate = torontoLocal.toJSDate();
+      // const parsedDate = torontoLocal.toJSDate();
+      const parsedDate = parseTorontoWallTimeToUTCDate(date);
 
       // --- Normalize services array (if provided) ---
       let normalizedServices = [];
@@ -444,8 +487,11 @@ const bookingControllers = {
         {
           status,
           scheduleConfirmation: scheduleConfirmation || false,
+          // scheduledConfirmationDate: confirmationDate
+          //   ? DateTime.fromISO(confirmationDate, { zone: 'America/Toronto' }).toJSDate()
+          //   : new Date(),
           scheduledConfirmationDate: confirmationDate
-            ? DateTime.fromISO(confirmationDate, { zone: 'America/Toronto' }).toJSDate()
+            ? parseTorontoWallTimeToUTCDate(confirmationDate)
             : new Date(),
           reminderScheduled: reminderScheduled || false,
           disableConfirmation: disableConfirmation || false,
@@ -504,7 +550,8 @@ const bookingControllers = {
     for (const booking of confirmations) {
       if (booking.scheduledConfirmationDate !== null) {
         try {
-          const torontoDate = DateTime.fromJSDate(booking.date, { zone: 'utc' }).setZone('America/Toronto');
+          // const torontoDate = DateTime.fromJSDate(booking.date, { zone: 'utc' }).setZone('America/Toronto');
+          const torontoDate = asTorontoDT(booking.date);
 
           const subjectDate = torontoDate.toLocaleString({
             weekday: 'long',
@@ -625,7 +672,8 @@ const bookingControllers = {
       const updatedBooking = await Booking.findByIdAndUpdate(bookingId,
         // { date: new Date(date), updatedBy, updatedAt: new Date() },
         {
-          date: new Date(date),
+          // date: new Date(date),
+          date: parseTorontoWallTimeToUTCDate(date),
           updatedBy,
           updatedAt: new Date(),
           status: 'pending',
@@ -674,8 +722,10 @@ const bookingControllers = {
       // --- 2) Date handling (if client sent a new date) ---
       if (date) {
         try {
-          const torontoLocal = DateTime.fromISO(date, { zone: 'America/Toronto' });
-          updateData.date = torontoLocal.toJSDate();
+          // const torontoLocal = DateTime.fromISO(date, { zone: 'America/Toronto' });
+          // updateData.date = torontoLocal.toJSDate();
+          updateData.date = parseTorontoWallTimeToUTCDate(date);
+
         } catch (e) {
           console.warn('Invalid date passed to updateBooking:', date);
         }

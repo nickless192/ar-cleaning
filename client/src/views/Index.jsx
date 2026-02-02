@@ -27,6 +27,7 @@ import FAQAccordion from "/src/components/Pages/Landing/FAQAccordion";
 import NewIconAnimated from "/src/components/Pages/Navigation/NewIconAnimated";
 import StickyButtons from "/src/components/Pages/Landing/StickyButtons.jsx";
 import ISSAMembershipBadge from "/src/components/Pages/Certifications/ISSAMembershipBadge.jsx";
+import CQCCCertificationBadge from "/src/components/Pages/Certifications/CQCCCertificationBadge";
 
 // import backgroundImage from '/src/assets/img/carpet-cleaning.jpg';
 // import Logo from "assets/img/cleanar-logo.png";
@@ -234,7 +235,7 @@ function Index() {
               className="btn btn-success btn-lg w-auto"
               onClick={goToQuote}
             >
-              {t('cta')}
+              {t('cta_text')}
             </button>
           </div>
 
@@ -320,6 +321,7 @@ function Index() {
 
             </Card>
             <ISSAMembershipBadge className="mb-2" layout="vertical" />
+            <CQCCCertificationBadge className="mb-2" layout="vertical" />
             <Link
               to="/blog/cleanar-solutions-joins-issa-canada"
               className="text-primary small"

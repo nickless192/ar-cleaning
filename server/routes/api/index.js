@@ -17,6 +17,7 @@ const contactFormRoutes = require('./contactFormRoutes');
 const invoiceRoutes = require('./invoiceRoutes');
 const notificationRoutes = require('./notificationRoutes');
 const adminUserRoutes = require('./adminUserRoutes');
+const i18nRoutes = require('./i18nRoutes');
 
 router.use('/users', userRoutes);
 router.use('/services', serviceRoutes);
@@ -36,5 +37,6 @@ router.use('/contactForm', contactFormRoutes);
 router.use('/invoices', invoiceRoutes);
 router.use('/notifications', notificationRoutes);
 router.use('/admin', adminUserRoutes);
+router.use('/i18n', i18nRoutes);
 
 module.exports = router;
