@@ -1,11 +1,31 @@
+// LogDashboard.jsx (DROP-IN)
+// Server-driven analytics (weekly-reporting) + server-driven log table (logs)
+// Uses MiniBars chart (no chart libs). Keeps your FilterBar + LogTable + Pagination components.
+//
+// Requirements on backend:
+// ✅ GET /api/visitors/weekly-reporting?end=YYYY-MM-DD&days=7&excludeBots=true&... (your getWeeklyReport)
+// ✅ GET /api/visitors/logs?start=YYYY-MM-DD&end=YYYY-MM-DD&excludeBots=true&limit=10&pageNum=1&... (paginated getVisits I gave you)
+//
+// Components expected to exist:
+// ./ExportCSV.jsx
+// ./ReportDownloadButton.jsx
+// ./CustomPagination.jsx
+// ./LogTable.jsx   (you provided)
+// ./FilterBar.jsx  (your FilterBar component)
+//
+// Notes:
+// - This file does NOT rely on client-side computeStats or client-side aggregation.
+// - Filter options are still computed from a small "options sample" set of logs.
+// - Trend uses report.dailyTrend from backend.
+
 import React, { useEffect, useMemo, useState } from "react";
 import { Row, Col, Card, Spinner, Badge, Button, ButtonGroup } from "react-bootstrap";
+
 import ExportCSV from "./ExportCSV.jsx";
 import ReportDownloadButton from "./ReportDownloadButton.jsx";
 import CustomPagination from "./CustomPagination.jsx";
 import LogTable from "./LogTable.jsx";
-import LogChartV2 from "./LogChart.jsx";
-import FilterBarV2 from "./FilterBar.jsx";
+import FilterBar from "./FilterBar.jsx";
 
 import {
   FaUsers,
@@ -20,8 +40,9 @@ import {
   FaSignOutAlt,
 } from "react-icons/fa";
 
-const logsPerPage = 10;
-
+/** -------------------------
+ * helpers
+ * ------------------------- */
 const clampNum = (n, fallback = 0) => {
   const x = Number(n);
   return Number.isFinite(x) ? x : fallback;
@@ -37,227 +58,46 @@ const formatDuration = (secondsRaw) => {
   return `${s}s`;
 };
 
-const safeLower = (v) => (v ? String(v).toLowerCase() : "");
-
-const hostnameFromReferrer = (ref) => {
-  if (!ref) return null;
-  try {
-    return new URL(ref).hostname.replace("www.", "");
-  } catch {
-    return null;
-  }
-};
-
-const getDayKey = (dateLike) => {
-  const d = new Date(dateLike);
-  if (Number.isNaN(d.getTime())) return "invalid";
-  return d.toISOString().slice(0, 10);
-};
-
-const uniq = (arr) => [...new Set(arr.filter(Boolean))];
-
-const topN = (mapObj, n = 5, keyName = "key") => {
-  return Object.entries(mapObj)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, n)
-    .map(([k, v]) => ({ [keyName]: k, count: v }));
-};
-
-const buildValueMap = (logs, getter) => {
-  const m = {};
-  logs.forEach((l) => {
-    const v = getter(l);
-    if (!v) return;
-    m[v] = (m[v] || 0) + 1;
-  });
-  return m;
-};
+const uniq = (arr) => [...new Set((arr || []).filter(Boolean))];
 
 const pct = (num, den) => (den ? (num / den) * 100 : 0);
 
-function computeStats(logs) {
-  const total = logs.length;
-  const botVisits = logs.filter((l) => !!l.isBot).length;
-  const humanVisits = total - botVisits;
+const safeArr = (x) => (Array.isArray(x) ? x : []);
 
-  const humans = logs.filter((l) => !l.isBot);
+// server returns objects like: { _id: "/index", count: 12 } etc
+const normalizeTopList = (items, keyName) =>
+  safeArr(items).map((it) => ({
+    [keyName]: it?.[keyName] ?? it?._id ?? "unknown",
+    count: Number(it?.count ?? 0),
+  }));
 
-  // visitorId unique (overall)
-  const uniqueVisitors = new Set(logs.map((l) => l.visitorId).filter(Boolean)).size;
-
-  const newVisitors = logs.filter((l) => !l.isReturningVisitor).length;
-  const returningVisitors = logs.filter((l) => !!l.isReturningVisitor).length;
-
-  // qualified (humans)
-  const qualifiedSessions = humans.filter((l) => !!l.qualified).length;
-  const qualifiedRate = pct(qualifiedSessions, humans.length);
-
-  const bounces = humans.filter((l) => !!l.isBounce).length;
-  const bounceRate = pct(bounces, humans.length);
-
-  // engagement metrics (humans)
-  const avgEngagementScore =
-    humans.length
-      ? humans.reduce((sum, l) => sum + clampNum(l.engagementScore, 0), 0) / humans.length
-      : 0;
-
-  const avgScrollDepth =
-    humans.length
-      ? humans.reduce((sum, l) => sum + clampNum(l.scrollDepth, 0), 0) / humans.length
-      : 0;
-
-  const avgSessionDuration =
-    humans.length
-      ? humans.reduce((sum, l) => sum + clampNum(l.sessionDuration, 0), 0) / humans.length
-      : 0;
-
-  const totalInteractions = humans.reduce((sum, l) => sum + (l.interactions?.length || 0), 0);
-  const avgInteractions = humans.length ? totalInteractions / humans.length : 0;
-
-  const avgPagesPerSession = humans.length
-    ? humans.reduce((sum, l) => sum + ((l.pathsVisited?.length || 0) || 1), 0) / humans.length
-    : 0;
-
-  // devices
-  const deviceCounts = { desktop: 0, mobile: 0, tablet: 0, unknown: 0 };
-  logs.forEach((l) => {
-    const d = safeLower(l.deviceType) || "unknown";
-    deviceCounts[d] = (deviceCounts[d] || 0) + 1;
+// Some of your weekly report lists are returned as:
+// topPages: [{_id:"/index",count:10}]  OR already {page:"/index",count:10} depending on pipeline.
+// We'll support both by mapping based on the labelField in ListWithBadges below.
+const coerceList = (items, labelField) =>
+  safeArr(items).map((it) => {
+    if (it && typeof it === "object") {
+      // if already contains labelField, keep it
+      if (it[labelField] != null) return it;
+      // else try _id
+      return { [labelField]: it._id ?? "unknown", count: it.count ?? 0 };
+    }
+    return { [labelField]: String(it), count: 1 };
   });
 
-  // geo
-  const countries = buildValueMap(logs, (l) => l.geo?.country);
-  const topCountries = topN(countries, 8, "country");
+const buildDaysFromRange = (startISO, endISO) => {
+  // inclusive day count
+  const s = new Date(`${startISO}T00:00:00`);
+  const e = new Date(`${endISO}T00:00:00`);
+  const diff = Math.round((e - s) / 86400000);
+  return Math.max(1, Math.min(31, diff + 1));
+};
 
-  // browsers, OS
-  const browsers = buildValueMap(logs, (l) => l.browser);
-  const topBrowsers = topN(browsers, 8, "browser");
+const titleCase = (s) => String(s || "").replace(/(^|\s)\S/g, (t) => t.toUpperCase());
 
-  const osMap = buildValueMap(logs, (l) => l.os);
-  const topOS = topN(osMap, 8, "os");
-
-  // pages & exit pages
-  const pages = buildValueMap(logs, (l) => l.page);
-  const topPages = topN(pages, 10, "page");
-
-  const exits = buildValueMap(humans, (l) => l.exitPage);
-  const topExitPages = topN(exits, 10, "exitPage");
-
-  // referrers
-  const refMap = buildValueMap(humans, (l) => hostnameFromReferrer(l.referrer));
-  const topReferrers = topN(refMap, 10, "referrer");
-
-  // trafficSource / segment
-  const trafficMap = buildValueMap(humans, (l) => l.trafficSource || "unknown");
-  const topTrafficSources = topN(trafficMap, 10, "source");
-
-  const segMap = buildValueMap(humans, (l) => l.segment);
-  const topSegments = topN(segMap, 10, "segment");
-
-  // UTM breakdown
-  const utmSourceMap = buildValueMap(humans, (l) => l.utm?.source);
-  const utmMediumMap = buildValueMap(humans, (l) => l.utm?.medium);
-  const utmCampaignMap = buildValueMap(humans, (l) => l.utm?.campaign);
-
-  const topUtmSources = topN(utmSourceMap, 10, "utmSource");
-  const topUtmMediums = topN(utmMediumMap, 10, "utmMedium");
-  const topUtmCampaigns = topN(utmCampaignMap, 10, "utmCampaign");
-
-  // qualified reasons (humans only, qualified only)
-  const reasonMap = {};
-  humans
-    .filter((l) => !!l.qualified)
-    .forEach((l) => {
-      (l.qualifiedReason || []).forEach((r) => {
-        const key = String(r || "").trim();
-        if (!key) return;
-        reasonMap[key] = (reasonMap[key] || 0) + 1;
-      });
-    });
-  const topQualifiedReasons = topN(reasonMap, 10, "reason");
-
-  return {
-    total,
-    uniqueVisitors,
-    botVisits,
-    humanVisits,
-
-    newVisitors,
-    returningVisitors,
-
-    qualifiedSessions,
-    qualifiedRate,
-
-    bounceRate,
-    avgEngagementScore,
-    avgScrollDepth,
-    avgSessionDuration,
-    totalInteractions,
-    avgInteractions,
-    avgPagesPerSession,
-
-    devices: deviceCounts,
-
-    topCountries,
-    topBrowsers,
-    topOS,
-
-    topPages,
-    topExitPages,
-    topReferrers,
-    topTrafficSources,
-    topSegments,
-
-    topUtmSources,
-    topUtmMediums,
-    topUtmCampaigns,
-
-    topQualifiedReasons,
-  };
-}
-
-function generateInsights(stats) {
-  const out = [];
-
-  if (!stats.total) {
-    out.push("No activity for the selected filters and date range.");
-    return out;
-  }
-
-  out.push(
-    `Traffic: ${stats.total} sessions (${stats.humanVisits} human, ${stats.botVisits} bot). Unique visitors: ${stats.uniqueVisitors}.`
-  );
-
-  out.push(
-    `Quality: ${stats.qualifiedSessions} qualified sessions (${stats.qualifiedRate.toFixed(1)}% of human).`
-  );
-
-  const bounceLabel =
-    stats.bounceRate > 70 ? "high" : stats.bounceRate < 40 ? "healthy" : "moderate";
-  out.push(`Bounce rate is ${bounceLabel} at ${stats.bounceRate.toFixed(1)}%.`);
-
-  out.push(
-    `Engagement: avg score ${stats.avgEngagementScore.toFixed(1)}, avg scroll ${stats.avgScrollDepth.toFixed(0)}%, avg session ${formatDuration(
-      stats.avgSessionDuration
-    )}.`
-  );
-
-  if (stats.topTrafficSources?.[0]) {
-    out.push(`Top traffic source: ${stats.topTrafficSources[0].source} (${stats.topTrafficSources[0].count}).`);
-  }
-  if (stats.topUtmCampaigns?.[0]) {
-    out.push(`Top UTM campaign: ${stats.topUtmCampaigns[0].utmCampaign} (${stats.topUtmCampaigns[0].count}).`);
-  }
-  if (stats.topCountries?.[0]) {
-    out.push(`Top location: ${stats.topCountries[0].country} (${stats.topCountries[0].count}).`);
-  }
-  if (stats.topQualifiedReasons?.[0]) {
-    out.push(`Most common qualification reason: "${stats.topQualifiedReasons[0].reason}" (${stats.topQualifiedReasons[0].count}).`);
-  }
-
-  return out;
-}
-
+/** -------------------------
+ * UI components
+ * ------------------------- */
 const MetricButtons = ({ metric, onChange }) => {
   const options = [
     { key: "visits", label: "Visits" },
@@ -285,42 +125,140 @@ const MetricButtons = ({ metric, onChange }) => {
   );
 };
 
-const ListWithBadges = ({ title, items, keyField, labelField }) => (
-  <Card className="h-100">
-    <Card.Body>
-      <Card.Title className="mb-3">{title}</Card.Title>
-      {items?.length ? (
-        <ul className="list-unstyled mb-0">
-          {items.map((it) => (
-            <li key={it[keyField]} className="d-flex justify-content-between align-items-center mb-2">
-              <span className="text-truncate" style={{ maxWidth: "75%" }}>
-                {it[labelField]}
-              </span>
-              <Badge bg="light" text="dark">
-                {it.count}
-              </Badge>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <div className="text-muted">No data</div>
-      )}
-    </Card.Body>
-  </Card>
-);
+const ListWithBadges = ({ title, items, keyField, labelField }) => {
+  const safe = useMemo(() => coerceList(items, labelField), [items, labelField]);
 
+  return (
+    <Card className="h-100">
+      <Card.Body>
+        <Card.Title className="mb-3">{title}</Card.Title>
+        {safe?.length ? (
+          <ul className="list-unstyled mb-0">
+            {safe.map((it, idx) => {
+              const key = it?.[keyField] ?? it?.[labelField] ?? idx;
+              const label = it?.[labelField] ?? "unknown";
+              const count = Number(it?.count ?? 0);
+
+              return (
+                <li key={key} className="d-flex justify-content-between align-items-center mb-2">
+                  <span className="text-truncate" style={{ maxWidth: "75%" }}>
+                    {String(label)}
+                  </span>
+                  <Badge bg="light" text="dark">
+                    {count}
+                  </Badge>
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
+          <div className="text-muted">No data</div>
+        )}
+      </Card.Body>
+    </Card>
+  );
+};
+
+// Simple inline bar chart (no libs)
+function MiniBars({ values }) {
+  const max = Math.max(...values, 1);
+  return (
+    <div style={{ display: "flex", gap: 6, alignItems: "flex-end", height: 120 }}>
+      {values.map((v, i) => (
+        <div
+          key={i}
+          title={String(v)}
+          style={{
+            width: 14,
+            height: `${(v / max) * 100}%`,
+            background: "rgba(13,110,253,0.75)",
+            borderRadius: 6,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+const TrendMiniBarChart = ({ dailyTrend, metric = "visits" }) => {
+  const data = useMemo(() => safeArr(dailyTrend), [dailyTrend]);
+
+  const { labels, values } = useMemo(() => {
+    const labels = data.map((d) => String(d.day || "").slice(5)); // MM-DD
+    const values = data.map((d) => {
+      switch (metric) {
+        case "humans":
+          return Number(d.humans ?? 0);
+        case "qualified":
+          return Number(d.qualified ?? 0);
+        case "bounceRate":
+          return Number(Number(d.bounceRate ?? 0).toFixed(1));
+        case "avgEngagement":
+          return Number(Number(d.avgEngagement ?? 0).toFixed(1));
+        case "avgScroll":
+          return Number(Number(d.avgScroll ?? 0).toFixed(0));
+        case "avgDuration":
+          return Number(Number(d.avgDuration ?? 0).toFixed(0));
+        case "visits":
+        default:
+          return Number(d.visits ?? 0);
+      }
+    });
+
+    return { labels, values };
+  }, [data, metric]);
+
+  if (!data.length) {
+    return <div className="text-muted">No data for the selected filters.</div>;
+  }
+
+  const metricLabel =
+    {
+      visits: "Visits",
+      humans: "Human Visits",
+      qualified: "Qualified Sessions",
+      bounceRate: "Bounce Rate %",
+      avgEngagement: "Avg Engagement Score",
+      avgScroll: "Avg Scroll Depth %",
+      avgDuration: "Avg Session Duration (sec)",
+    }[metric] || "Metric";
+
+  return (
+    <div>
+      <div className="text-muted small mb-2">{metricLabel}</div>
+      <MiniBars values={values} />
+      <div className="d-flex flex-wrap gap-2 mt-3">
+        {labels.map((l, i) => (
+          <span key={i} className="badge bg-light text-dark">
+            {l}: {values[i]}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+/** -------------------------
+ * Main
+ * ------------------------- */
 const LogDashboard = () => {
-  const [logs, setLogs] = useState([]);
-  const [filteredLogs, setFilteredLogs] = useState([]);
+  // report (weekly-reporting)
+  const [report, setReport] = useState(null);
+  const [isReportLoading, setIsReportLoading] = useState(true);
+
+  // table (paginated logs)
+  const [tableData, setTableData] = useState({ items: [], total: 0, totalPages: 1 });
+  const [isTableLoading, setIsTableLoading] = useState(false);
+
+  // We still keep a small options-sample of logs to populate filter dropdown values.
+  // We'll fetch only the most recent 200 logs for options.
+  const [logsForOptions, setLogsForOptions] = useState([]);
   const [pages, setPages] = useState([]);
 
+  // filters
   const [dateRange, setDateRange] = useState({ start: "", end: "" });
   const [selectedPage, setSelectedPage] = useState("");
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // new filters
   const [deviceFilter, setDeviceFilter] = useState("");
   const [browserFilter, setBrowserFilter] = useState("");
   const [osFilter, setOsFilter] = useState("");
@@ -340,101 +278,136 @@ const LogDashboard = () => {
   const [scrollMin, setScrollMin] = useState("");
   const [scrollMax, setScrollMax] = useState("");
 
-  // chart metric toggle
+  // trend metric toggle
   const [trendMetric, setTrendMetric] = useState("visits");
 
+  // pagination for table
+  const [tablePage, setTablePage] = useState(1);
+  const [tableLimit] = useState(10);
+
+  const [error, setError] = useState("");
+
+  const [sendingReport, setSendingReport] = useState(false);
+  const [reportStatus, setReportStatus] = useState(null);
+
+  const sendTestEventsReport = async () => {
+    setSendingReport(true);
+    setReportStatus(null);
+
+    try {
+      const res = await fetch("/api/admin-reports/send-daily-events", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        // optional override:
+        // body: JSON.stringify({ date: "2026-02-01" })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.ok) {
+        throw new Error(data?.error || "Failed to send report");
+      }
+
+      setReportStatus({
+        type: "success",
+        message: `Report sent successfully (${data.date})`,
+      });
+    } catch (err) {
+      console.error(err);
+      setReportStatus({
+        type: "error",
+        message: err.message || "Error sending report",
+      });
+    } finally {
+      setSendingReport(false);
+    }
+  };
+
+
+  const buildCommonParams = () => {
+    const params = new URLSearchParams();
+
+    // date range (YYYY-MM-DD)
+    if (dateRange.start) params.set("start", dateRange.start);
+    if (dateRange.end) params.set("end", dateRange.end);
+
+    params.set("excludeBots", String(excludeBots));
+    if (qualifiedOnly) params.set("qualifiedOnly", "true");
+
+    if (selectedPage) params.set("page", selectedPage);
+    if (countryFilter) params.set("country", countryFilter);
+    if (deviceFilter) params.set("deviceType", deviceFilter);
+    if (browserFilter) params.set("browser", browserFilter);
+    if (osFilter) params.set("os", osFilter);
+    if (segmentFilter) params.set("segment", segmentFilter);
+    if (trafficSourceFilter) params.set("trafficSource", trafficSourceFilter);
+
+    if (utmSourceFilter) params.set("utmSource", utmSourceFilter);
+    if (utmMediumFilter) params.set("utmMedium", utmMediumFilter);
+    if (utmCampaignFilter) params.set("utmCampaign", utmCampaignFilter);
+
+    // optional server-side visitor type (if you implemented in getVisits)
+    if (visitorTypeFilter) params.set("visitorType", visitorTypeFilter);
+
+    return params;
+  };
+
+  // init default date range (last 7 days)
   useEffect(() => {
-    const fetchLogs = async () => {
-      setIsLoading(true);
+    const now = new Date();
+    const end = now.toISOString().slice(0, 10);
+    const start = new Date(now.getTime() - 6 * 86400000).toISOString().slice(0, 10);
+    setDateRange({ start, end });
+  }, []);
+
+  // Fetch a small options sample for dropdowns (pages, countries, etc)
+  useEffect(() => {
+    let cancelled = false;
+
+    const fetchOptionsSample = async () => {
       try {
-        const res = await fetch("/api/visitors/logs");
-        if (!res.ok) throw new Error("Failed to fetch logs");
+        // use a broad window (last 31 days) for richer filter options
+        const now = new Date();
+        const end = now.toISOString().slice(0, 10);
+        const start = new Date(now.getTime() - 30 * 86400000).toISOString().slice(0, 10);
+
+        const params = new URLSearchParams();
+        params.set("start", start);
+        params.set("end", end);
+        params.set("excludeBots", "false"); // include bots for options
+        params.set("limit", "200");
+        params.set("pageNum", "1");
+        params.set("sort", "desc");
+
+        const res = await fetch(`/api/visitors/logs?${params.toString()}`);
+        if (!res.ok) throw new Error("Failed to fetch logs (options sample)");
         const data = await res.json();
 
-        setLogs(data);
-        setFilteredLogs(data);
+        if (cancelled) return;
 
-        setPages(uniq(data.map((l) => l.page)));
-
-        const now = new Date();
-        const lastWeek = new Date(now.getTime() - 6 * 24 * 60 * 60 * 1000);
-        setDateRange({
-          start: lastWeek.toISOString().slice(0, 10),
-          end: now.toISOString().slice(0, 10),
-        });
+        const items = safeArr(data.items);
+        setLogsForOptions(items);
+        setPages(uniq(items.map((l) => l.page)).sort((a, b) => String(a).localeCompare(String(b))));
       } catch (e) {
-        console.error(e);
-      } finally {
-        setIsLoading(false);
+        if (!cancelled) console.error(e);
       }
     };
 
-    fetchLogs();
+    fetchOptionsSample();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  // apply filters
+  // reset table page on any filter change
   useEffect(() => {
-    let filtered = [...logs];
-
-    // page
-    if (selectedPage) filtered = filtered.filter((l) => l.page === selectedPage);
-
-    // date range
-    if (dateRange.start && dateRange.end) {
-      const start = new Date(dateRange.start);
-      const end = new Date(dateRange.end);
-      start.setHours(0, 0, 0, 0);
-      end.setHours(23, 59, 59, 999);
-
-      filtered = filtered.filter((l) => {
-        const d = new Date(l.visitDate);
-        return d >= start && d <= end;
-      });
-    }
-
-    // exclude bots
-    if (excludeBots) filtered = filtered.filter((l) => !l.isBot);
-
-    // device/browser/os/country
-    if (deviceFilter) filtered = filtered.filter((l) => l.deviceType === deviceFilter);
-    if (browserFilter) filtered = filtered.filter((l) => l.browser === browserFilter);
-    if (osFilter) filtered = filtered.filter((l) => l.os === osFilter);
-    if (countryFilter) filtered = filtered.filter((l) => l.geo?.country === countryFilter);
-
-    // segment / trafficSource
-    if (segmentFilter) filtered = filtered.filter((l) => l.segment === segmentFilter);
-    if (trafficSourceFilter) filtered = filtered.filter((l) => (l.trafficSource || "unknown") === trafficSourceFilter);
-
-    // utm
-    if (utmSourceFilter) filtered = filtered.filter((l) => (l.utm?.source || "") === utmSourceFilter);
-    if (utmMediumFilter) filtered = filtered.filter((l) => (l.utm?.medium || "") === utmMediumFilter);
-    if (utmCampaignFilter) filtered = filtered.filter((l) => (l.utm?.campaign || "") === utmCampaignFilter);
-
-    // visitor type
-    if (visitorTypeFilter === "new") filtered = filtered.filter((l) => !l.isReturningVisitor);
-    if (visitorTypeFilter === "returning") filtered = filtered.filter((l) => !!l.isReturningVisitor);
-
-    // qualified
-    if (qualifiedOnly) filtered = filtered.filter((l) => !!l.qualified);
-
-    // engagement threshold
-    if (minEngagement !== "" && minEngagement != null) {
-      const minE = clampNum(minEngagement, 0);
-      filtered = filtered.filter((l) => clampNum(l.engagementScore, 0) >= minE);
-    }
-
-    // scroll depth range
-    const sMin = scrollMin === "" ? null : clampNum(scrollMin, 0);
-    const sMax = scrollMax === "" ? null : clampNum(scrollMax, 100);
-    if (sMin != null) filtered = filtered.filter((l) => clampNum(l.scrollDepth, 0) >= sMin);
-    if (sMax != null) filtered = filtered.filter((l) => clampNum(l.scrollDepth, 0) <= sMax);
-
-    setFilteredLogs(filtered);
-    setCurrentPage(1);
+    setTablePage(1);
   }, [
-    logs,
+    dateRange.start,
+    dateRange.end,
     selectedPage,
-    dateRange,
+    excludeBots,
+    qualifiedOnly,
     deviceFilter,
     browserFilter,
     osFilter,
@@ -445,19 +418,224 @@ const LogDashboard = () => {
     utmMediumFilter,
     utmCampaignFilter,
     visitorTypeFilter,
-    qualifiedOnly,
-    excludeBots,
     minEngagement,
     scrollMin,
     scrollMax,
   ]);
 
-  const stats = useMemo(() => computeStats(filteredLogs), [filteredLogs]);
-  const insights = useMemo(() => generateInsights(stats), [stats]);
+  // weekly report fetch (server)
+  useEffect(() => {
+    if (!dateRange.start || !dateRange.end) return;
 
-  // pagination
-  const totalPages = Math.ceil(filteredLogs.length / logsPerPage);
-  const paginatedLogs = filteredLogs.slice((currentPage - 1) * logsPerPage, currentPage * logsPerPage);
+    let cancelled = false;
+
+    const fetchReport = async () => {
+      setIsReportLoading(true);
+      setError("");
+
+      try {
+        const params = buildCommonParams();
+
+        // weekly-reporting expects end + days (your controller)
+        const days = buildDaysFromRange(dateRange.start, dateRange.end);
+        params.set("end", dateRange.end);
+        params.set("days", String(days));
+
+        // weekly-reporting doesn't use start; keep request clean
+        params.delete("start");
+
+        const res = await fetch(`/api/visitors/weekly-reporting?${params.toString()}`);
+        if (!res.ok) throw new Error("Failed to fetch weekly report");
+        const data = await res.json();
+
+        if (!cancelled) setReport(data);
+      } catch (e) {
+        if (!cancelled) setError(e.message || "Error loading report");
+      } finally {
+        if (!cancelled) setIsReportLoading(false);
+      }
+    };
+
+    fetchReport();
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    dateRange.start,
+    dateRange.end,
+    selectedPage,
+    excludeBots,
+    qualifiedOnly,
+    deviceFilter,
+    browserFilter,
+    osFilter,
+    countryFilter,
+    segmentFilter,
+    trafficSourceFilter,
+    utmSourceFilter,
+    utmMediumFilter,
+    utmCampaignFilter,
+    visitorTypeFilter,
+  ]);
+
+  // table logs fetch (server)
+  useEffect(() => {
+    if (!dateRange.start || !dateRange.end) return;
+
+    let cancelled = false;
+
+    const fetchTable = async () => {
+      setIsTableLoading(true);
+      setError("");
+
+      try {
+        const params = buildCommonParams();
+
+        // server-side pagination
+        params.set("limit", String(tableLimit));
+        params.set("pageNum", String(tablePage));
+        params.set("sort", "desc");
+
+        // include numeric filters if you want them server-side later.
+        // For now, keep them client-side on the returned page only (lightweight).
+        // If you want full accuracy, add these to backend match and remove client filtering.
+        const res = await fetch(`/api/visitors/logs?${params.toString()}`);
+        if (!res.ok) throw new Error("Failed to fetch logs");
+        const data = await res.json();
+
+        if (!cancelled) {
+          let items = safeArr(data.items);
+
+          // Apply optional thresholds locally (only affects current page of results)
+          // If you want these to affect totals + report, move them to backend and weekly-reporting.
+          if (minEngagement !== "" && minEngagement != null) {
+            const minE = clampNum(minEngagement, 0);
+            items = items.filter((l) => clampNum(l.engagementScore, 0) >= minE);
+          }
+          const sMin = scrollMin === "" ? null : clampNum(scrollMin, 0);
+          const sMax = scrollMax === "" ? null : clampNum(scrollMax, 100);
+          if (sMin != null) items = items.filter((l) => clampNum(l.scrollDepth, 0) >= sMin);
+          if (sMax != null) items = items.filter((l) => clampNum(l.scrollDepth, 0) <= sMax);
+
+          setTableData({
+            items,
+            total: Number(data.total ?? 0),
+            totalPages: Number(data.totalPages ?? 1),
+          });
+        }
+      } catch (e) {
+        if (!cancelled) setError(e.message || "Error loading logs");
+      } finally {
+        if (!cancelled) setIsTableLoading(false);
+      }
+    };
+
+    fetchTable();
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    dateRange.start,
+    dateRange.end,
+    selectedPage,
+    excludeBots,
+    qualifiedOnly,
+    deviceFilter,
+    browserFilter,
+    osFilter,
+    countryFilter,
+    segmentFilter,
+    trafficSourceFilter,
+    utmSourceFilter,
+    utmMediumFilter,
+    utmCampaignFilter,
+    visitorTypeFilter,
+    minEngagement,
+    scrollMin,
+    scrollMax,
+    tablePage,
+    tableLimit,
+  ]);
+
+  const h = report?.headline || null;
+
+  // Derived headline numbers (safe)
+  const headline = useMemo(() => {
+    const totalSessions = Number(h?.totalSessions ?? 0);
+    const humanSessions = Number(h?.humanSessions ?? 0);
+    const botSessions = Number(h?.botSessions ?? Math.max(0, totalSessions - humanSessions));
+    const uniqueVisitors = Number(h?.uniqueVisitors ?? 0);
+
+    const qualifiedSessions = Number(h?.qualifiedSessions ?? 0);
+    const qualifiedRate = Number(h?.qualifiedRate ?? pct(qualifiedSessions, humanSessions));
+
+    const bounceRate = Number(h?.bounceRate ?? 0);
+
+    const avgEngagementScore = Number(h?.avgEngagementScore ?? 0);
+    const avgScrollDepth = Number(h?.avgScrollDepth ?? 0);
+    const avgSessionDuration = Number(h?.avgSessionDuration ?? 0);
+    const avgPagesPerSession = Number(h?.avgPagesPerSession ?? 0);
+
+    const totalActions = Number(h?.totalActions ?? 0);
+    const avgActions = Number(h?.avgActions ?? 0);
+
+    return {
+      totalSessions,
+      humanSessions,
+      botSessions,
+      uniqueVisitors,
+      qualifiedSessions,
+      qualifiedRate,
+      bounceRate,
+      avgEngagementScore,
+      avgScrollDepth,
+      avgSessionDuration,
+      avgPagesPerSession,
+      totalActions,
+      avgActions,
+    };
+  }, [h]);
+
+  // Insights (server-ish): generate from headline + top items
+  const insights = useMemo(() => {
+    const out = [];
+
+    if (!headline.totalSessions) {
+      out.push("No activity for the selected filters and date range.");
+      return out;
+    }
+
+    out.push(
+      `Traffic: ${headline.totalSessions} sessions (${headline.humanSessions} human, ${headline.botSessions} bot). Unique visitors: ${headline.uniqueVisitors}.`
+    );
+
+    out.push(`Quality: ${headline.qualifiedSessions} qualified sessions (${headline.qualifiedRate.toFixed(1)}% of human).`);
+
+    const bounceLabel = headline.bounceRate > 70 ? "high" : headline.bounceRate < 40 ? "healthy" : "moderate";
+    out.push(`Bounce rate is ${bounceLabel} at ${headline.bounceRate.toFixed(1)}%.`);
+
+    out.push(
+      `Engagement: avg score ${headline.avgEngagementScore.toFixed(1)}, avg scroll ${headline.avgScrollDepth.toFixed(
+        0
+      )}%, avg session ${formatDuration(headline.avgSessionDuration)}.`
+    );
+
+    const topTraffic = safeArr(report?.topTrafficSources)?.[0];
+    if (topTraffic) out.push(`Top traffic source: ${topTraffic._id ?? topTraffic.source} (${topTraffic.count}).`);
+
+    const topCampaign = safeArr(report?.topUtmCampaigns)?.[0];
+    if (topCampaign) out.push(`Top UTM campaign: ${topCampaign._id ?? topCampaign.utmCampaign} (${topCampaign.count}).`);
+
+    const topCountry = safeArr(report?.topCountries)?.[0];
+    if (topCountry) out.push(`Top location: ${topCountry._id ?? topCountry.country} (${topCountry.count}).`);
+
+    const topReason = safeArr(report?.qualifiedReasons)?.[0];
+    if (topReason) out.push(`Most common qualification reason: "${topReason._id ?? topReason.reason}" (${topReason.count}).`);
+
+    return out;
+  }, [headline, report]);
+
+  const isLoading = isReportLoading && !report;
 
   if (isLoading) {
     return (
@@ -473,19 +651,28 @@ const LogDashboard = () => {
       <div className="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
         <div>
           <h2 className="mb-0">Visitor Analytics</h2>
-          <div className="text-muted small">
-            Filters update everything (KPIs, charts, tables). Bots can be excluded.
-          </div>
+          <div className="text-muted small">Server-driven KPIs, trend and logs. Bots can be excluded.</div>
+          {error ? <div className="text-danger small mt-1">{error}</div> : null}
         </div>
-        <div className="d-flex gap-2">
-          <ExportCSV logs={filteredLogs} />
+        <div className="d-flex gap-2 align-items-center flex-wrap">
+          <ExportCSV logs={tableData.items} />
           <ReportDownloadButton />
+
+          <Button
+            variant="outline-primary"
+            size="sm"
+            disabled={sendingReport}
+            onClick={sendTestEventsReport}
+          >
+            {sendingReport ? "Sending…" : "Send Events Report"}
+          </Button>
         </div>
+
       </div>
 
       {/* Filters */}
-      <FilterBarV2
-        logs={logs}
+      <FilterBar
+        logs={logsForOptions}
         pages={pages}
         selectedPage={selectedPage}
         setSelectedPage={setSelectedPage}
@@ -530,8 +717,9 @@ const LogDashboard = () => {
             <Card.Body className="text-center">
               <FaUsers size={22} className="mb-2 text-primary" />
               <div className="text-muted small">Total Sessions</div>
-              <h3 className="mb-0">{stats.total}</h3>
-              <div className="text-muted small">Unique Visitors: {stats.uniqueVisitors}</div>
+              <h3 className="mb-0">{headline.totalSessions}</h3>
+              <div className="text-muted small">Unique Visitors: {headline.uniqueVisitors}</div>
+              {isReportLoading ? <div className="text-muted small mt-2">Updating…</div> : null}
             </Card.Body>
           </Card>
         </Col>
@@ -541,11 +729,12 @@ const LogDashboard = () => {
             <Card.Body className="text-center">
               <FaRobot size={22} className="mb-2 text-secondary" />
               <div className="text-muted small">Bots vs Humans</div>
-              <h3 className="mb-0">{stats.humanVisits}</h3>
+              <h3 className="mb-0">{headline.humanSessions}</h3>
               <div className="text-muted small">Human sessions</div>
               <div className="small">
-                Bots: <b>{stats.botVisits}</b>
+                Bots: <b>{headline.botSessions}</b>
               </div>
+              {isReportLoading ? <div className="text-muted small mt-2">Updating…</div> : null}
             </Card.Body>
           </Card>
         </Col>
@@ -555,8 +744,9 @@ const LogDashboard = () => {
             <Card.Body className="text-center">
               <FaCheckCircle size={22} className="mb-2 text-success" />
               <div className="text-muted small">Qualified Sessions</div>
-              <h3 className="mb-0">{stats.qualifiedSessions}</h3>
-              <div className="text-muted small">Rate: {stats.qualifiedRate.toFixed(1)}%</div>
+              <h3 className="mb-0">{headline.qualifiedSessions}</h3>
+              <div className="text-muted small">Rate: {headline.qualifiedRate.toFixed(1)}%</div>
+              {isReportLoading ? <div className="text-muted small mt-2">Updating…</div> : null}
             </Card.Body>
           </Card>
         </Col>
@@ -566,8 +756,9 @@ const LogDashboard = () => {
             <Card.Body className="text-center">
               <FaStar size={22} className="mb-2 text-warning" />
               <div className="text-muted small">Avg Engagement Score</div>
-              <h3 className="mb-0">{stats.avgEngagementScore.toFixed(1)}</h3>
-              <div className="text-muted small">Avg interactions: {stats.avgInteractions.toFixed(1)}</div>
+              <h3 className="mb-0">{headline.avgEngagementScore.toFixed(1)}</h3>
+              <div className="text-muted small">Avg actions: {headline.avgActions.toFixed(1)}</div>
+              {isReportLoading ? <div className="text-muted small mt-2">Updating…</div> : null}
             </Card.Body>
           </Card>
         </Col>
@@ -581,18 +772,19 @@ const LogDashboard = () => {
               <Card.Title className="d-flex align-items-center gap-2">
                 <FaChartLine /> Engagement & Behavior
               </Card.Title>
+
               <div className="d-flex justify-content-between mt-3">
                 <div>
                   <div className="text-muted small">Bounce Rate</div>
-                  <h4>{stats.bounceRate.toFixed(1)}%</h4>
+                  <h4>{headline.bounceRate.toFixed(1)}%</h4>
                 </div>
                 <div>
                   <div className="text-muted small">Avg Duration</div>
-                  <h4>{formatDuration(stats.avgSessionDuration)}</h4>
+                  <h4>{formatDuration(headline.avgSessionDuration)}</h4>
                 </div>
                 <div>
                   <div className="text-muted small">Pages / Session</div>
-                  <h4>{stats.avgPagesPerSession.toFixed(1)}</h4>
+                  <h4>{headline.avgPagesPerSession.toFixed(1)}</h4>
                 </div>
               </div>
 
@@ -600,13 +792,13 @@ const LogDashboard = () => {
                 <div>
                   <div className="text-muted small">Avg Scroll</div>
                   <h5 className="d-flex align-items-center gap-2">
-                    <FaScroll /> {stats.avgScrollDepth.toFixed(0)}%
+                    <FaScroll /> {headline.avgScrollDepth.toFixed(0)}%
                   </h5>
                 </div>
                 <div>
-                  <div className="text-muted small">Interactions</div>
+                  <div className="text-muted small">Actions</div>
                   <h5 className="d-flex align-items-center gap-2">
-                    <FaMousePointer /> {stats.totalInteractions}
+                    <FaMousePointer /> {headline.totalActions}
                   </h5>
                 </div>
               </div>
@@ -615,11 +807,11 @@ const LogDashboard = () => {
         </Col>
 
         <Col lg={4} md={6}>
-          <ListWithBadges title="Top Pages" items={stats.topPages} keyField="page" labelField="page" />
+          <ListWithBadges title="Top Pages" items={report?.topPages} keyField="page" labelField="page" />
         </Col>
 
         <Col lg={4} md={12}>
-          <ListWithBadges title="Top Exit Pages" items={stats.topExitPages} keyField="exitPage" labelField="exitPage" />
+          <ListWithBadges title="Top Exit Pages" items={report?.topExitPages} keyField="exitPage" labelField="exitPage" />
         </Col>
       </Row>
 
@@ -634,54 +826,71 @@ const LogDashboard = () => {
 
               <div className="mt-3">
                 <div className="text-muted small mb-1">Top Countries</div>
-                {stats.topCountries?.slice(0, 5).map((c) => (
-                  <div key={c.country} className="d-flex justify-content-between">
-                    <span>{c.country}</span>
-                    <Badge bg="light" text="dark">{c.count}</Badge>
-                  </div>
-                ))}
+                {safeArr(report?.topCountries).slice(0, 5).map((c, idx) => {
+                  const country = c.country ?? c._id ?? "unknown";
+                  return (
+                    <div key={`${country}-${idx}`} className="d-flex justify-content-between">
+                      <span>{country}</span>
+                      <Badge bg="light" text="dark">
+                        {c.count ?? 0}
+                      </Badge>
+                    </div>
+                  );
+                })}
               </div>
 
               <hr />
 
+              {/* Device breakdown may not be in weekly report; show "n/a" gracefully */}
+              <div className="text-muted small mb-1">Devices</div>
               <div className="d-flex justify-content-between">
                 <div>
                   <div className="text-muted small">Desktop</div>
-                  <b>{stats.devices.desktop}</b>
+                  <b>{safeArr(report?.topDevices).find((x) => (x.deviceType ?? x._id) === "desktop")?.count ?? 0}</b>
                 </div>
                 <div>
                   <div className="text-muted small">Mobile</div>
-                  <b>{stats.devices.mobile}</b>
+                  <b>{safeArr(report?.topDevices).find((x) => (x.deviceType ?? x._id) === "mobile")?.count ?? 0}</b>
                 </div>
                 <div>
                   <div className="text-muted small">Tablet</div>
-                  <b>{stats.devices.tablet}</b>
+                  <b>{safeArr(report?.topDevices).find((x) => (x.deviceType ?? x._id) === "tablet")?.count ?? 0}</b>
                 </div>
               </div>
 
               <hr />
 
               <div className="text-muted small mb-1">Top Browsers</div>
-              {stats.topBrowsers?.slice(0, 4).map((b) => (
-                <div key={b.browser} className="d-flex justify-content-between">
-                  <span>{b.browser}</span>
-                  <Badge bg="light" text="dark">{b.count}</Badge>
-                </div>
-              ))}
+              {safeArr(report?.topBrowsers).slice(0, 4).map((b, idx) => {
+                const browser = b.browser ?? b._id ?? "unknown";
+                return (
+                  <div key={`${browser}-${idx}`} className="d-flex justify-content-between">
+                    <span>{browser}</span>
+                    <Badge bg="light" text="dark">
+                      {b.count ?? 0}
+                    </Badge>
+                  </div>
+                );
+              })}
 
               <div className="text-muted small mt-3 mb-1">Top OS</div>
-              {stats.topOS?.slice(0, 4).map((o) => (
-                <div key={o.os} className="d-flex justify-content-between">
-                  <span>{o.os}</span>
-                  <Badge bg="light" text="dark">{o.count}</Badge>
-                </div>
-              ))}
+              {safeArr(report?.topOS).slice(0, 4).map((o, idx) => {
+                const os = o.os ?? o._id ?? "unknown";
+                return (
+                  <div key={`${os}-${idx}`} className="d-flex justify-content-between">
+                    <span>{os}</span>
+                    <Badge bg="light" text="dark">
+                      {o.count ?? 0}
+                    </Badge>
+                  </div>
+                );
+              })}
             </Card.Body>
           </Card>
         </Col>
 
         <Col lg={4} md={6}>
-          <ListWithBadges title="Traffic Sources" items={stats.topTrafficSources} keyField="source" labelField="source" />
+          <ListWithBadges title="Traffic Sources" items={report?.topTrafficSources} keyField="source" labelField="source" />
         </Col>
 
         <Col lg={4} md={12}>
@@ -691,12 +900,19 @@ const LogDashboard = () => {
 
               <div className="mt-2">
                 <div className="text-muted small mb-1">Top Campaigns</div>
-                {stats.topUtmCampaigns?.slice(0, 6).map((x) => (
-                  <div key={x.utmCampaign} className="d-flex justify-content-between">
-                    <span className="text-truncate" style={{ maxWidth: "75%" }}>{x.utmCampaign}</span>
-                    <Badge bg="light" text="dark">{x.count}</Badge>
-                  </div>
-                ))}
+                {safeArr(report?.topUtmCampaigns).slice(0, 6).map((x, idx) => {
+                  const campaign = x.utmCampaign ?? x._id ?? "unknown";
+                  return (
+                    <div key={`${campaign}-${idx}`} className="d-flex justify-content-between">
+                      <span className="text-truncate" style={{ maxWidth: "75%" }}>
+                        {campaign}
+                      </span>
+                      <Badge bg="light" text="dark">
+                        {x.count ?? 0}
+                      </Badge>
+                    </div>
+                  );
+                })}
               </div>
 
               <hr />
@@ -704,21 +920,35 @@ const LogDashboard = () => {
               <Row>
                 <Col md={6}>
                   <div className="text-muted small mb-1">Top Sources</div>
-                  {stats.topUtmSources?.slice(0, 4).map((x) => (
-                    <div key={x.utmSource} className="d-flex justify-content-between">
-                      <span className="text-truncate" style={{ maxWidth: "70%" }}>{x.utmSource}</span>
-                      <Badge bg="light" text="dark">{x.count}</Badge>
-                    </div>
-                  ))}
+                  {safeArr(report?.topUtmSources).slice(0, 4).map((x, idx) => {
+                    const src = x.utmSource ?? x._id ?? "unknown";
+                    return (
+                      <div key={`${src}-${idx}`} className="d-flex justify-content-between">
+                        <span className="text-truncate" style={{ maxWidth: "70%" }}>
+                          {src}
+                        </span>
+                        <Badge bg="light" text="dark">
+                          {x.count ?? 0}
+                        </Badge>
+                      </div>
+                    );
+                  })}
                 </Col>
                 <Col md={6}>
                   <div className="text-muted small mb-1">Top Mediums</div>
-                  {stats.topUtmMediums?.slice(0, 4).map((x) => (
-                    <div key={x.utmMedium} className="d-flex justify-content-between">
-                      <span className="text-truncate" style={{ maxWidth: "70%" }}>{x.utmMedium}</span>
-                      <Badge bg="light" text="dark">{x.count}</Badge>
-                    </div>
-                  ))}
+                  {safeArr(report?.topUtmMediums).slice(0, 4).map((x, idx) => {
+                    const med = x.utmMedium ?? x._id ?? "unknown";
+                    return (
+                      <div key={`${med}-${idx}`} className="d-flex justify-content-between">
+                        <span className="text-truncate" style={{ maxWidth: "70%" }}>
+                          {med}
+                        </span>
+                        <Badge bg="light" text="dark">
+                          {x.count ?? 0}
+                        </Badge>
+                      </div>
+                    );
+                  })}
                 </Col>
               </Row>
             </Card.Body>
@@ -729,10 +959,10 @@ const LogDashboard = () => {
       {/* Referrers / Segments / Qualified reasons */}
       <Row className="g-3 mb-3">
         <Col lg={4} md={6}>
-          <ListWithBadges title="Top Referrers" items={stats.topReferrers} keyField="referrer" labelField="referrer" />
+          <ListWithBadges title="Top Referrers" items={report?.topReferrers} keyField="referrer" labelField="referrer" />
         </Col>
         <Col lg={4} md={6}>
-          <ListWithBadges title="Top Segments" items={stats.topSegments} keyField="segment" labelField="segment" />
+          <ListWithBadges title="Top Segments" items={report?.topSegments} keyField="segment" labelField="segment" />
         </Col>
         <Col lg={4} md={12}>
           <Card className="h-100">
@@ -740,14 +970,21 @@ const LogDashboard = () => {
               <Card.Title className="d-flex align-items-center gap-2">
                 <FaSignOutAlt /> Qualified Reasons
               </Card.Title>
-              {stats.topQualifiedReasons?.length ? (
+              {safeArr(report?.qualifiedReasons)?.length ? (
                 <ul className="list-unstyled mb-0 mt-2">
-                  {stats.topQualifiedReasons.map((r) => (
-                    <li key={r.reason} className="d-flex justify-content-between align-items-center mb-2">
-                      <span className="text-truncate" style={{ maxWidth: "75%" }}>{r.reason}</span>
-                      <Badge bg="light" text="dark">{r.count}</Badge>
-                    </li>
-                  ))}
+                  {safeArr(report?.qualifiedReasons).map((r, idx) => {
+                    const reason = r.reason ?? r._id ?? "unknown";
+                    return (
+                      <li key={`${reason}-${idx}`} className="d-flex justify-content-between align-items-center mb-2">
+                        <span className="text-truncate" style={{ maxWidth: "75%" }}>
+                          {reason}
+                        </span>
+                        <Badge bg="light" text="dark">
+                          {r.count ?? 0}
+                        </Badge>
+                      </li>
+                    );
+                  })}
                 </ul>
               ) : (
                 <div className="text-muted mt-2">No qualified reasons in this filter range.</div>
@@ -765,7 +1002,9 @@ const LogDashboard = () => {
               <Card.Title>Insights</Card.Title>
               {insights?.length ? (
                 <ul className="mb-0">
-                  {insights.map((t, idx) => <li key={idx}>{t}</li>)}
+                  {insights.map((t, idx) => (
+                    <li key={idx}>{t}</li>
+                  ))}
                 </ul>
               ) : (
                 <div className="text-muted">No insights available.</div>
@@ -787,29 +1026,40 @@ const LogDashboard = () => {
           <MetricButtons metric={trendMetric} onChange={setTrendMetric} />
         </Card.Body>
         <Card.Body>
-          <LogChartV2 logs={filteredLogs} metric={trendMetric} />
+          <TrendMiniBarChart dailyTrend={report?.dailyTrend || []} metric={trendMetric} />
         </Card.Body>
       </Card>
 
       {/* Table */}
       <Card className="mb-3">
         <Card.Body>
-          <Card.Title className="mb-3">Visitor Log Details</Card.Title>
-          <LogTable logs={paginatedLogs} />
-          <div className="d-flex justify-content-between align-items-center mt-3">
+          <div className="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
+            <Card.Title className="mb-0">Visitor Log Details</Card.Title>
+            {isTableLoading ? (
+              <div className="d-flex align-items-center gap-2 text-muted small">
+                <Spinner animation="border" size="sm" />
+                Loading table…
+              </div>
+            ) : null}
+          </div>
+
+          <LogTable logs={tableData.items} />
+
+          <div className="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
             <div className="text-muted">
-              Showing {paginatedLogs.length} of {filteredLogs.length} entries
+              Showing {tableData.items.length} of {tableData.total} entries
             </div>
+
             <CustomPagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
+              currentPage={tablePage}
+              totalPages={tableData.totalPages}
+              onPageChange={setTablePage}
             />
           </div>
         </Card.Body>
       </Card>
     </div>
   );
-}
+};
 
 export default LogDashboard;

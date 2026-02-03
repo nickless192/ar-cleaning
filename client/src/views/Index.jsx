@@ -83,48 +83,90 @@ function Index() {
   };
 
 
+  // const contactItems = [
+  //   {
+  //     icon: "now-ui-icons tech_mobile",
+  //     link: "business-hours",
+  //     text: t('contact_business_hours'),
+  //     description: availabilityStatus,
+  //     additionalInfo: responseTimeMessage,
+  //     color: "text-primary"
+  //   },
+  //   {
+  //     icon: "now-ui-icons ui-1_email-85",
+  //     link: "mailto:info@cleanARsolutions.ca?subject=Cleaning%20Service%20Request&body=Hi%20CleanAR%20Solutions%2C%0A%0AI'd%20like%20to%20request%20a%20information%20for...",
+  //     text: t('contact_email_support'),
+  //     description: t('email_description'),
+  //     additionalInfo: t('email_additional'),
+  //     color: "text-success"
+  //   },
+  //   // {
+  //   //   icon: "now-ui-icons tech_mobile",
+  //   //   link: "/index?promoCode=refresh15&scrollToQuote=true'",
+  //   //   text: t('welcome_modal.title'),
+  //   //   description: modalText,
+  //   //   additionalInfo: t('welcome_modal.description'),
+  //   //   color: "text-info"
+  //   // },
+  //   {
+  //     icon: "now-ui-icons business_bulb-63",
+  //     link: "https://g.page/r/Cek9dkmHVuBKEAE/review",
+  //     text: t('contact_feedback'),
+  //     description: t('feedback_description'),
+  //     additionalInfo: t('feedback_additional'),
+  //     color: "text-warning"
+  //   },
+  //   {
+  //     icon: "now-ui-icons business_badge",
+  //     link: "/products-and-services",
+  //     text: t('contact_services'),
+  //     description: t('services_description'),
+  //     additionalInfo: t('services_additional'),
+  //     color: "text-info"
+  //   }
+  // ];
+
   const contactItems = [
-    {
-      icon: "now-ui-icons tech_mobile",
-      link: "business-hours",
-      text: t('contact_business_hours'),
-      description: availabilityStatus,
-      additionalInfo: responseTimeMessage,
-      color: "text-primary"
-    },
-    {
-      icon: "now-ui-icons ui-1_email-85",
-      link: "mailto:info@cleanARsolutions.ca?subject=Cleaning%20Service%20Request&body=Hi%20CleanAR%20Solutions%2C%0A%0AI'd%20like%20to%20request%20a%20information%20for...",
-      text: t('contact_email_support'),
-      description: t('email_description'),
-      additionalInfo: t('email_additional'),
-      color: "text-success"
-    },
-    // {
-    //   icon: "now-ui-icons tech_mobile",
-    //   link: "/index?promoCode=refresh15&scrollToQuote=true'",
-    //   text: t('welcome_modal.title'),
-    //   description: modalText,
-    //   additionalInfo: t('welcome_modal.description'),
-    //   color: "text-info"
-    // },
-    {
-      icon: "now-ui-icons business_bulb-63",
-      link: "https://g.page/r/Cek9dkmHVuBKEAE/review",
-      text: t('contact_feedback'),
-      description: t('feedback_description'),
-      additionalInfo: t('feedback_additional'),
-      color: "text-warning"
-    },
-    {
-      icon: "now-ui-icons business_badge",
-      link: "/products-and-services",
-      text: t('contact_services'),
-      description: t('services_description'),
-      additionalInfo: t('services_additional'),
-      color: "text-info"
-    }
-  ];
+  {
+    icon: "now-ui-icons tech_mobile",
+    link: "business-hours",
+    text: t('contact_business_hours'),
+    description: availabilityStatus,
+    additionalInfo: responseTimeMessage,
+    color: "text-primary",
+    eventName: "contact_business_hours_open",
+  },
+  {
+    icon: "now-ui-icons ui-1_email-85",
+    link: "mailto:info@cleanARsolutions.ca?subject=Cleaning%20Service%20Request&body=Hi%20CleanAR%20Solutions%2C%0A%0AI'd%20like%20to%20request%20a%20information%20for...",
+    text: t('contact_email_support'),
+    description: t('email_description'),
+    additionalInfo: t('email_additional'),
+    color: "text-success",
+    eventName: "email_click",
+    eventLabel: "contact_card",
+  },
+  {
+    icon: "now-ui-icons business_bulb-63",
+    link: "https://g.page/r/Cek9dkmHVuBKEAE/review",
+    text: t('contact_feedback'),
+    description: t('feedback_description'),
+    additionalInfo: t('feedback_additional'),
+    color: "text-warning",
+    eventName: "review_click",
+    eventLabel: "google",
+  },
+  {
+    icon: "now-ui-icons business_badge",
+    link: "/products-and-services",
+    text: t('contact_services'),
+    description: t('services_description'),
+    additionalInfo: t('services_additional'),
+    color: "text-info",
+    eventName: "services_click",
+    eventLabel: "nav",
+  }
+];
 
   useEffect(() => {
     // const modalShown = localStorage.getItem('modalShown');
@@ -234,6 +276,8 @@ function Index() {
             <button
               className="btn btn-success btn-lg w-auto"
               onClick={goToQuote}
+               data-track="cta_quote_click"
+  data-track-label="hero"
             >
               {t('cta_text')}
             </button>
@@ -274,7 +318,9 @@ function Index() {
 
                                 href={singleLink}
                                 target="_blank"
-                                data-track="contact-link"
+                                // data-track="contact-link"
+                                data-track={item.eventName || "contact_click"}
+data-track-label={item.eventLabel || "contact_card"}
                                 rel="noreferrer noopener"
                                 className="text-bold martel-semibold underline"
                                 title={item.text?.[index] || item.description}
@@ -292,7 +338,9 @@ function Index() {
                         <a
                           href={item.link}
                           {...(item.link.startsWith("http") && { target: "_blank", rel: "noreferrer noopener" })}
-                          data-track="contact-link"
+                          // data-track="contact-link"
+                          data-track={item.eventName || "contact_click"}
+data-track-label={item.eventLabel || "contact_card"}
                           className="text-bold martel-semibold underline"
                           title={item.text}
                         >
@@ -302,7 +350,10 @@ function Index() {
                         <Link
                           to={item.link}
                           className="text-bold martel-semibold underline"
-                          data-track="contact-link"
+                          // data-track="contact-link"
+                          data-track={item.eventName || "contact_click"}
+data-track-label={item.eventLabel || "contact_card"}
+
                           title={item.description}
                         >
                           {' '}{item.description}
@@ -325,6 +376,8 @@ function Index() {
             <Link
               to="/blog/cleanar-solutions-joins-issa-canada"
               className="text-primary small"
+               data-track="blog_click"
+  data-track-label="certifications_cta"
             >{t('certification.ctaSecondary')}
               {/* Learn why ISSA membership matters → */}
             </Link>

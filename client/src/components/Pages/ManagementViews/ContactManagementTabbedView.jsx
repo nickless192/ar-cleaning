@@ -9,6 +9,7 @@ import CommunicationsHub from '/src/components/Pages/Dashboards/CommunicationsHu
 import Customers from '/src/components/Pages/Management/Customers';
 import ManageUser from '/src/components/Pages/Management/ManageUser';
 import LogDashboard from '/src/components/Pages/Management/LogDashboard';
+import EventsDashboard from '/src/components/Pages/Management/EventsDashboard';
 import ReportsDashboard from '/src/components/Pages/Dashboards/ReportsDashboard';
 import NotificationAdminPage from '/src/components/Pages/UserJourney/NotificationAdminPage';
 // import BookingDashboard from '/src/components/Pages/Management/BookingDashboard';
@@ -31,9 +32,9 @@ const ContactManagementTabbedView = () => {
             <div className="rounded-2xl shadow-md bg-white p-2">
                 <Tabs
                     // defaultActiveKey="dashboard"
-                 
-  activeKey={activeKey}
-  onSelect={(k) => k && setActiveKey(k)}
+
+                    activeKey={activeKey}
+                    onSelect={(k) => k && setActiveKey(k)}
                     id="management-tabs"
                     className="flex flex-wrap gap-2 mb-3"
                     mountOnEnter
@@ -45,6 +46,14 @@ const ContactManagementTabbedView = () => {
                     >
                         <div className="p-2 sm:p-4">
                             <LogDashboard />
+                        </div>
+                    </Tab>
+                    <Tab
+                        eventKey="events"
+                        title={<span className="px-3 py-2 text-sm sm:text-base">{t('navbar.admin.events_dashboard')}</span>}
+                    >
+                        <div className="p-2 sm:p-4">
+                            <EventsDashboard />
                         </div>
                     </Tab>
                     <Tab

@@ -1,32 +1,41 @@
-import { useEffect, useRef } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import { useEffect, useRef } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 /**
  * Storage keys
  */
-const LS_VISITOR_ID = 'visitorId';
-const LS_SELF_TRACKING_DISABLED = 'disableVisitorTracking'; // set to "true" to stop tracking (admin/dev)
-const SS_SESSION_ID = 'sessionId';
-const SS_SESSION_STARTED_AT = 'sessionStart';
-const SS_PATHS_VISITED = 'pathsVisited';
-const SS_SENT_PAGEVIEWS = 'sentPageViews'; // dedupe per session
+const LS_VISITOR_ID = "visitorId";
+const LS_SELF_TRACKING_DISABLED = "disableVisitorTracking"; // "true" => stop tracking
+const SS_SESSION_ID = "sessionId";
+const SS_SESSION_STARTED_AT = "sessionStart";
+const SS_PATHS_VISITED = "pathsVisited";
+const SS_SENT_PAGEVIEWS = "sentPageViews"; // dedupe per session
 
 /**
  * Config
  */
-const HEARTBEAT_SECONDS = 30; // optional - reduce to 0 to disable
+const HEARTBEAT_SECONDS = 30; // set 0 to disable
 const MAX_PATHS = 50;
 
+/**
+ * Utilities
+ */
 const safeJsonParse = (str, fallback) => {
-  if (!str) return fallback; // ✅ handles null, undefined, empty string
+  if (!str) return fallback;
   try {
     const parsed = JSON.parse(str);
-    return parsed ?? fallback; // ✅ handles JSON.parse("null") => null
+    return parsed ?? fallback;
   } catch {
     return fallback;
   }
 };
 
+const normalizePage = (p) => {
+  if (!p) return p;
+  const s = String(p).trim();
+  if (!s) return s;
+  return s.startsWith("/") ? s : `/${s}`;
+};
 
 const getOrCreateVisitorId = () => {
   let id = localStorage.getItem(LS_VISITOR_ID);
@@ -49,78 +58,83 @@ const getOrCreateSessionId = () => {
   return sessionId;
 };
 
-const getPathsVisited = () =>
-  safeJsonParse(sessionStorage.getItem(SS_PATHS_VISITED), []);
+const getPathsVisited = () => safeJsonParse(sessionStorage.getItem(SS_PATHS_VISITED), []);
 
 const addPathToVisited = (path) => {
+  const p = normalizePage(path);
+  if (!p) return;
+
   const paths = getPathsVisited();
-  if (!paths.includes(path)) {
-    const next = [...paths, path].slice(-MAX_PATHS);
-    sessionStorage.setItem(SS_PATHS_VISITED, JSON.stringify(next));
-  }
+  // Keep order, avoid duplicates
+  const next = paths.filter((x) => x !== p).concat(p).slice(-MAX_PATHS);
+  sessionStorage.setItem(SS_PATHS_VISITED, JSON.stringify(next));
 };
 
 const getUTMParams = () => {
   const params = new URLSearchParams(window.location.search);
   return {
-    source: params.get('utm_source'),
-    medium: params.get('utm_medium'),
-    campaign: params.get('utm_campaign'),
+    source: params.get("utm_source") || undefined,
+    medium: params.get("utm_medium") || undefined,
+    campaign: params.get("utm_campaign") || undefined,
   };
 };
 
 const getTrafficSource = (referrer) => {
-  if (!referrer) return 'direct';
+  if (!referrer) return "direct";
   try {
     const hostname = new URL(referrer).hostname.toLowerCase();
 
-    if (hostname.includes('google')) return 'organic';
-    if (
-      hostname.includes('facebook') ||
-      hostname.includes('instagram') ||
-      hostname.includes('tiktok')
-    )
-      return 'social';
+    if (hostname.includes("google")) return "organic";
+    if (hostname.includes("facebook") || hostname.includes("instagram") || hostname.includes("tiktok")) return "social";
 
-    if (hostname === window.location.hostname.toLowerCase()) return 'internal';
-    return 'referral';
+    if (hostname === window.location.hostname.toLowerCase()) return "internal";
+    return "referral";
   } catch {
-    return 'referral';
+    return "referral";
   }
 };
 
-// --- Self-tracking prevention strategies ---
-// 1) disable tracking flag in localStorage (easy admin toggle)
-// 2) don't track in localhost/dev
-// 3) optionally add a “known internal IP” rule on backend too (best place)
 const shouldTrack = () => {
-  const disabled = localStorage.getItem(LS_SELF_TRACKING_DISABLED) === 'true';
-  if (disabled) return false;
-
-  const host = window.location.hostname;
-  if (host === 'localhost' || host === '127.0.0.1') return false;
-
-  return true;
+  return localStorage.getItem(LS_SELF_TRACKING_DISABLED) !== "true";
 };
 
-// Beacon-first fetch helper for unload events
+
+// send helper: beacon-first optional
 const send = (url, payload, { useBeacon = false } = {}) => {
   const body = JSON.stringify(payload);
 
-  // try sendBeacon for unload/hidden events
   if (useBeacon && navigator.sendBeacon) {
-    const blob = new Blob([body], { type: 'application/json' });
-    navigator.sendBeacon(url, blob);
-    return;
+    try {
+      const blob = new Blob([body], { type: "application/json" });
+      navigator.sendBeacon(url, blob);
+      return;
+    } catch {
+      // fallback below
+    }
   }
 
-  // keepalive helps on page unload in modern browsers
   fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body,
-    keepalive: useBeacon, // best-effort
+    keepalive: useBeacon,
   }).catch(() => {});
+};
+
+// Optional helper for events
+const logEvent = (sessionId, { name, label, page, meta }, { useBeacon = false } = {}) => {
+  if (!sessionId || !name) return;
+  send(
+    "/api/visitors/log-event",
+    {
+      sessionId,
+      name,
+      label,
+      page: page ? normalizePage(page) : undefined,
+      meta: meta && typeof meta === "object" ? meta : undefined,
+    },
+    { useBeacon }
+  );
 };
 
 const VisitorCounter = ({ page }) => {
@@ -128,107 +142,100 @@ const VisitorCounter = ({ page }) => {
   const lastActiveAtRef = useRef(Date.now());
   const heartbeatTimerRef = useRef(null);
 
+  // StrictMode dedupe (React 18 mounts twice in dev)
+  const didInitRef = useRef(false);
+
   useEffect(() => {
     if (!shouldTrack()) return;
 
-    const effectivePage = page || window.location.pathname;
+    // Prevent double-run within same session+page (StrictMode / re-mount)
+    if (didInitRef.current) return;
+    didInitRef.current = true;
+
+    const effectivePage = normalizePage(page || window.location.pathname);
     const visitorId = getOrCreateVisitorId();
     const sessionId = getOrCreateSessionId();
 
-    // mark page path
+    // pathsVisited tracking (client-side list, backend also stores)
     addPathToVisited(effectivePage);
-    const pathsVisited = getPathsVisited();
 
-    // returning visitor detection: visitorId exists => returning after first ever pageview
-    const firstSeenKey = `firstSeenAt:${visitorId}`;
-    const firstSeenAt =
-      localStorage.getItem(firstSeenKey) || new Date().toISOString();
-    if (!localStorage.getItem(firstSeenKey)) {
-      localStorage.setItem(firstSeenKey, firstSeenAt);
-    }
-    const isReturningVisitor = localStorage.getItem(firstSeenKey) !== null;
-
-    // Deduplicate: avoid sending the same pageview twice per session
+    // Deduplicate: avoid sending same pageview twice per session
     const sentMap = safeJsonParse(sessionStorage.getItem(SS_SENT_PAGEVIEWS), {});
-    if (sentMap[effectivePage]) {
-      // Still update pathsVisited on backend if you want, but skip counting.
-      // If your backend supports "upsert by sessionId+page", you can still send as an update:
-      send('/api/visitors/logs', {
+    const sentKey = effectivePage || "__unknown__";
+    if (sentMap[sentKey]) {
+      // still update lastSeen / pathsVisited on backend
+      send("/api/visitors/logs", {
         visitorId,
         sessionId,
         page: effectivePage,
-        pathsVisited,
-        lastSeenAt: new Date().toISOString(),
-        // lightweight "update" payload
+        pathsVisited: getPathsVisited(),
+        userAgent: navigator.userAgent,
+        screenResolution: `${window.screen.width}x${window.screen.height}`,
+        language: navigator.language,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        utm: getUTMParams(),
+        referrer: document.referrer || null,
+        trafficSource: getTrafficSource(document.referrer || null),
+        pageTitle: document.title,
       });
       return;
     }
-    sentMap[effectivePage] = true;
+    sentMap[sentKey] = true;
     sessionStorage.setItem(SS_SENT_PAGEVIEWS, JSON.stringify(sentMap));
 
-    const screenResolution = `${window.screen.width}x${window.screen.height}`;
-    const language = navigator.language;
-    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-    const utm = getUTMParams();
-    const referrer = document.referrer || null;
-    const trafficSource = getTrafficSource(referrer);
-
-    // initial pageview (count once)
-    send('/api/visitors/logs', {
+    // Initial logVisit (backend decides returning visitor via VisitorIdentity)
+    send("/api/visitors/logs", {
       visitorId,
       sessionId,
       page: effectivePage,
       userAgent: navigator.userAgent,
-      pathsVisited,
-      screenResolution,
-      language,
-      timezone,
-      utm,
-      referrer,
-      trafficSource,
-      isReturningVisitor,
-      firstSeenAt,
-      lastSeenAt: new Date().toISOString(),
-      // optional fields to support better analytics:
+      pathsVisited: getPathsVisited(),
+      screenResolution: `${window.screen.width}x${window.screen.height}`,
+      language: navigator.language,
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      utm: getUTMParams(),
+      referrer: document.referrer || null,
+      trafficSource: getTrafficSource(document.referrer || null),
       pageTitle: document.title,
     });
 
-    // Track “active time” (optional): consider active if user interacts / scrolls.
+    // Optional: track page view as an event (nice for event analytics)
+    logEvent(sessionId, { name: "page_view", page: effectivePage });
+
     const markActive = () => {
       lastActiveAtRef.current = Date.now();
     };
 
     const onScroll = () => {
       markActive();
-      const docHeight =
-        document.documentElement.scrollHeight - window.innerHeight;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
       if (docHeight <= 0) return;
-
       const percent = Math.round((window.scrollY / docHeight) * 100);
       if (percent > maxScrollRef.current) maxScrollRef.current = percent;
     };
 
+    // Click tracking:
+    // - Any element with data-track => event name
+    // - Outbound links => outbound_click event
     const onClick = (e) => {
       markActive();
 
-      // Track custom CTA interactions
-      const trackEl = e.target.closest('[data-track]');
+      const trackEl = e.target.closest?.("[data-track]");
       if (trackEl) {
-        const action = trackEl.getAttribute('data-track');
-        send('/api/visitors/interaction', { sessionId, action });
+        const name = trackEl.getAttribute("data-track");
+        const label = trackEl.getAttribute("data-track-label") || undefined;
+        logEvent(sessionId, { name, label, page: effectivePage });
       }
 
-      // Track outbound clicks (growth insight)
-      const link = e.target.closest('a[href]');
+      const link = e.target.closest?.("a[href]");
       if (link) {
         try {
           const url = new URL(link.href, window.location.href);
           const isOutbound = url.hostname !== window.location.hostname;
           if (isOutbound) {
-            send('/api/visitors/interaction', {
-              sessionId,
-              action: 'outbound_click',
+            logEvent(sessionId, {
+              name: "outbound_click",
+              page: effectivePage,
               meta: { href: url.href, hostname: url.hostname },
             });
           }
@@ -238,82 +245,77 @@ const VisitorCounter = ({ page }) => {
       }
     };
 
-    // Heartbeat: lets you compute "still here" and improves lastSeenAt accuracy
+    // Heartbeat: backend computes duration from firstSeenAt, so just send lastSeen + scroll + paths
     const heartbeat = () => {
-      const now = Date.now();
-      const secondsSinceActive = Math.round((now - lastActiveAtRef.current) / 1000);
-
-      // if user hasn't been active in a while, you may skip to reduce noise
-      send('/api/visitors/session-heartbeat', {
+      send("/api/visitors/session-heartbeat", {
         sessionId,
-        page: effectivePage,
         lastSeenAt: new Date().toISOString(),
-        secondsSinceActive,
         scrollDepth: maxScrollRef.current,
         pathsVisited: getPathsVisited(),
+        page: effectivePage,
+        secondsSinceActive: Math.round((Date.now() - lastActiveAtRef.current) / 1000),
       });
     };
 
+    const flushExit = (useBeacon) => {
+      // Final heartbeat snapshot (optional but nice)
+      send(
+        "/api/visitors/session-heartbeat",
+        {
+          sessionId,
+          lastSeenAt: new Date().toISOString(),
+          scrollDepth: maxScrollRef.current,
+          pathsVisited: getPathsVisited(),
+          page: effectivePage,
+        },
+        { useBeacon }
+      );
+
+      // Finalize session (backend computes duration + bounce + score)
+      send(
+        "/api/visitors/session-exit",
+        {
+          sessionId,
+          page: effectivePage,
+          lastSeenAt: new Date().toISOString(),
+        },
+        { useBeacon }
+      );
+    };
+
     const onVisibilityChange = () => {
-      if (document.visibilityState === 'hidden') {
-        // flush scroll + duration
-        flush(true);
+      if (document.visibilityState === "hidden") {
+        flushExit(true);
       } else {
         markActive();
       }
     };
 
-    const flush = (useBeacon) => {
-      const startedAt = Number(sessionStorage.getItem(SS_SESSION_STARTED_AT)) || Date.now();
-      const durationSeconds = Math.max(0, Math.round((Date.now() - startedAt) / 1000));
+    // pagehide is more reliable than beforeunload
+    const onPageHide = () => flushExit(true);
 
-      // Scroll depth
-      send('/api/visitors/scroll-depth', {
-        sessionId,
-        scrollDepth: maxScrollRef.current,
-      }, { useBeacon });
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("click", onClick);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    window.addEventListener("pagehide", onPageHide);
 
-      // Duration
-      send('/api/visitors/session-duration', {
-        sessionId,
-        duration: durationSeconds,
-      }, { useBeacon });
-
-      // Optional: page exit
-      send('/api/visitors/session-exit', {
-        sessionId,
-        page: effectivePage,
-        lastSeenAt: new Date().toISOString(),
-      }, { useBeacon });
-    };
-
-    // register listeners once per mount
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('click', onClick);
-    document.addEventListener('visibilitychange', onVisibilityChange);
-    window.addEventListener('beforeunload', () => flush(true));
-
-    // start heartbeat
     if (HEARTBEAT_SECONDS > 0) {
-      heartbeatTimerRef.current = window.setInterval(
-        heartbeat,
-        HEARTBEAT_SECONDS * 1000
-      );
+      heartbeatTimerRef.current = window.setInterval(heartbeat, HEARTBEAT_SECONDS * 1000);
     }
 
     return () => {
-      // cleanup
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('click', onClick);
-      document.removeEventListener('visibilitychange', onVisibilityChange);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("click", onClick);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      window.removeEventListener("pagehide", onPageHide);
 
       if (heartbeatTimerRef.current) {
         clearInterval(heartbeatTimerRef.current);
         heartbeatTimerRef.current = null;
       }
 
-      // flush on unmount (SPA route change)
-      flush(false);
+      // SPA route change / component unmount: finalize without beacon
+      flushExit(false);
     };
   }, [page]);
 

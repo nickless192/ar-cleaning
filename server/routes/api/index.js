@@ -18,6 +18,10 @@ const invoiceRoutes = require('./invoiceRoutes');
 const notificationRoutes = require('./notificationRoutes');
 const adminUserRoutes = require('./adminUserRoutes');
 const i18nRoutes = require('./i18nRoutes');
+const adminReportsRoutes = require('./adminReportsRoutes');
+
+// Mount admin reports routes
+router.use('/admin-reports', adminReportsRoutes);
 
 router.use('/users', userRoutes);
 router.use('/services', serviceRoutes);

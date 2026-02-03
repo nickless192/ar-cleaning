@@ -15,5 +15,6 @@ const UserNotificationSettings = require('./UserNotificationSettings');
 const CompanyNotificationDefaults = require('./CompanyNotificationDefaults');
 const NotificationTemplate = require('./NotificationTemplate');
 const NotificationLog = require('./NotificationLog');
+const VisitorIdentity = require('./VisitorIdentity');
 
-module.exports = {User, Supplier, Service, Product, Invoice, Quote, VisitorLog, GiftCard, VisitorCount, QuickQuote, Booking, Role, Permission, UserNotificationSettings, CompanyNotificationDefaults, NotificationTemplate, NotificationLog};
+module.exports = {User, Supplier, Service, Product, Invoice, Quote, VisitorLog, GiftCard, VisitorCount, QuickQuote, Booking, Role, Permission, UserNotificationSettings, CompanyNotificationDefaults, NotificationTemplate, NotificationLog, VisitorIdentity};

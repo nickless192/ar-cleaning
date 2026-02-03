@@ -82,7 +82,7 @@ const VisitorLogSchema = new Schema({
     default: Date.now
   },
 
-    screenResolution: {
+  screenResolution: {
     type: String // e.g., "1920x1080"
   },
   language: {
@@ -98,10 +98,18 @@ const VisitorLogSchema = new Schema({
     type: [String],
     default: [],
     validate: {
-    validator: arr => arr.length <= 100,
-    message: 'Too many interaction events recorded'
-  }
+      validator: arr => arr.length <= 100,
+      message: 'Too many interaction events recorded'
+    }
   },
+  events: [{
+  name: { type: String, required: true },
+  label: { type: String },
+  page: { type: String },
+  ts: { type: Date, default: Date.now },
+  meta: { type: Object, default: {} }
+}],
+
   // sessionDuration: {
   //   type: Number, // seconds
   //   default: 0
@@ -139,13 +147,13 @@ const VisitorLogSchema = new Schema({
   //     message: 'Too many interaction events recorded'
   //   }
   // },
-  sessionDuration: { type: Number, default: 0 },      
+  sessionDuration: { type: Number, default: 0 },
   scrollDepth: { type: Number, default: 0 },           // percentage
   isBot: { type: Boolean, default: false },
   // Session summary fields
-exitPage: { type: String, default: null },
-qualified: { type: Boolean, default: false },
-qualifiedReason: { type: [String], default: [] }, // store which rules matched
+  exitPage: { type: String, default: null },
+  qualified: { type: Boolean, default: false },
+  qualifiedReason: { type: [String], default: [] }, // store which rules matched
 
 
 }, {
@@ -160,6 +168,8 @@ VisitorLogSchema.index({ visitDate: -1 });
 VisitorLogSchema.index({ visitorId: 1, visitDate: -1 });
 VisitorLogSchema.index({ 'geo.country': 1 });
 VisitorLogSchema.index({ page: 1 });
+VisitorLogSchema.index({ "events.name": 1, visitDate: -1 });
+
 
 
 const VisitorLog = model('VisitorLog', VisitorLogSchema);
