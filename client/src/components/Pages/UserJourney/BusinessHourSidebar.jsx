@@ -65,11 +65,17 @@ const BusinessHoursSidebar = () => {
 
   return (
     <>
-      <Button color="link" onClick={toggle} className="text-bold martel-semibold p-0 m-0" title="View Business Hours">
-        <p className="text-bold martel-semibold underline pl-0 m-0 text-link text-align-left">{availabilityStatus}</p>
+      <Button color="link" onClick={toggle} className="text-bold p-0 m-0" title="View Business Hours">
+        <span className='badge bg-light text-dark border'>
+
+          {t('index.contact_business_hours')}
+        {/* <p className="text-bold martel-semibold underline pl-0 m-0 text-link text-align-left">
+
+        </p> */}
+        </span>
       </Button>
       <Offcanvas direction="end" isOpen={showHours} toggle={toggle}>
-        <OffcanvasHeader toggle={toggle}>{t('contact_business_hours')}</OffcanvasHeader>
+        <OffcanvasHeader toggle={toggle}>{t('index.our_hours')}</OffcanvasHeader>
         <OffcanvasBody>
           <ListGroup flush>
             {Object.entries(businessHours).map(([day, hours]) => (

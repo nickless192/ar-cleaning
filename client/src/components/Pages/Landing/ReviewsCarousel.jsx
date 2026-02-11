@@ -12,7 +12,7 @@ function ReviewsCarousel() {
 
   const reviews = [
     {
-      text: "CleaAR Solutions has been outstanding each time I've used them. They leave every room absolutely spotless, paying attention to every corner and surface. The team is not only thorough but also incredibly kind and professional throughout the entire process. This is hands-down the best cleaning service I've ever used, and I highly recommend CleaAR Solutions to anyone seeking top-notch cleaning.",
+      text: "CleanAR Solutions has been outstanding each time I've used them. They leave every room absolutely spotless, paying attention to every corner and surface. The team is not only thorough but also incredibly kind and professional throughout the entire process. This is hands-down the best cleaning service I've ever used, and I highly recommend CleanAR Solutions to anyone seeking top-notch cleaning.",
       author: "James F.M.",
       stars: 5,
       source: "Google Reviews",

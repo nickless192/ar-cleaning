@@ -4,6 +4,7 @@
     "tagline": "Limpieza de confianza y servicio confiable",
     "intro": "Di adiós al estrés y hola al brillo ✨",
     "details": "CleanAR Solutions ofrece más de 10 años de limpieza confiable a hogares y negocios en el GTA.",
+    "detailsA": "¿Cansado de buscar un servicio de limpieza que ofrezca resultados consistentes y de alta calidad? Lo entendemos, y estamos aquí para cambiar eso.",
     "services": "Desde limpiezas profundas hasta mantenimiento regular, adaptamos los servicios a tus necesidades — eficientes, ecológicos y siempre confiables.",
     "cta_text": "Tu cotización personalizada expreso.",
       "cta": {
@@ -17,6 +18,8 @@
     "reviews": "¿Listo para dejar una reseña?",
   
     "proof": {
+      "title": "Prueba de nuestros estándares profesionales",
+      "subtitle": "No solo decimos que somos profesionales, lo demostramos con nuestras certificaciones y membresías.",
       "show": "Ver certificaciones y membresías",
       "hide": "Ocultar credenciales"
     },
@@ -24,7 +27,7 @@
     "popular": {
       "deep": "Limpieza profunda",
       "move": "Mudanza (entrada/salida)",
-      "office": "Limpieza de oficina",
+      "residential": "Limpieza residencial",
       "carpet": "Alfombras y tapicería"
     },
     "ctaNote": "¡Es rápido, gratuito y sin compromiso!",
@@ -32,7 +35,8 @@
     "status_offline": "⏰ Actualmente estamos fuera de horario",
     "response_now": "Espere Respuesta en Breve",
     "response_later": "Responderemos dentro de las próximas 24 horas",
-    "contact_business_hours": "Horario de atención 📅",
+    "contact_business_hours": "Consulta Nuestro Horario Comercial 📅",
+    "our_hours": "Horario de Atención al Cliente",
     "contact_email_support": "Soporte por correo electrónico 24/7 📩",
     "email_description": "Para consultas detalladas o comunicación escrita, envíanos un correo electrónico",
     "email_additional": "Respuesta garantizada en 24 horas",
@@ -41,11 +45,11 @@
     "feedback_additional": "Ayúdanos a mejorar, comparte tus comentarios",
     "contact_services": "Explorar servicios y obtener una cotización",
     "services_description": "Soluciones de limpieza personalizadas, explora nuestros servicios",
-    "services_additional": "Paquetes personalizados disponibles",
-    "featuredServices": {
-      "heading": "Nuestros Servicios Destacados",
-      "learnMore": "Más Información"
-    }
+    "services_additional": "Paquetes personalizados disponibles"
+  },
+  "featuredServices": {
+    "heading": "Nuestros Servicios Destacados",
+    "learnMore": "Más Información"
   },
   "blog": {
     "title": "Perspectivas y Actualizaciones de CleanAR Solutions",
@@ -819,7 +823,7 @@
     "title": "Certificaciones y Membresías Profesionales",
     "intro": "Tu hogar o negocio merece profesionales de limpieza que sigan <strong>estándares reconocidos de la industria</strong>, no suposiciones. Nuestras membresías y certificaciones reflejan nuestro compromiso con prácticas de limpieza profesionales, seguras y saludables en Toronto.",
     "ctaPrimary": "Solicita una Cotización Gratis",
-    "ctaSecondary": "Aprende por qué la membresía ISSA es importante →"
+    "ctaSecondary": "Aprende por qué nuestras certificaciones son importantes →"
   },
   "issa": {
     "sectionTitle": "¿Qué es ISSA Canada y por qué es importante?",

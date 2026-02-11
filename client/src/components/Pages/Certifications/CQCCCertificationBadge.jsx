@@ -34,13 +34,13 @@ export default function CQCCCertificationBadge({ layout = "horizontal", classNam
         <Link to="/blog" className="issa-membership-badge__headline-link">
           <p className="issa-membership-badge__headline">
             <Trans i18nKey="cqcc.badge.headline" components={{ strong: <strong /> }} />
-            <NewIconAnimated />
+            {/* <NewIconAnimated /> */}
           </p>
         </Link>
 
-        <p className="issa-membership-badge__body">
+        {/* <p className="issa-membership-badge__body">
           <Trans i18nKey="cqcc.badge.body" components={{ strong: <strong /> }} />
-        </p>
+        </p> */}
       </div>
     </section>
   );

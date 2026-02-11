@@ -4,9 +4,11 @@
     "tagline": "Trusted Clean, Trusted Service",
     "intro": "Say goodbye to stress and hello to sparkle ✨",
     "details": "CleanAR Solutions brings 10+ years of trusted cleaning to homes and businesses across the GTA.",
+    "detailsA": "Tired of looking for a cleaning service that delivers consistent, high-quality results? We get it, and we’re here to change that.",
     "services": "From deep cleans to regular maintenance, we tailor services to your needs: efficient, eco-friendly, and always reliable.",
     "cta_text": "Personalized quote in under 60 seconds.",
     "ctaNote": "It’s fast, free, and commitment-free!",
+    "mobileCtaHint": "More options are available after you get your quote.",
     "status_online": "✅ We are currently available",
     "status_offline": "⏰ We are currently offline",
     "response_now": "Expect a response from us shortly",
@@ -14,7 +16,8 @@
     "contact_title": "Contact options",
     "contact_subtitle": "Pick one — we reply fast.",
     "reviews": "Ready to Leave a Review?",
-    "contact_business_hours": "Business Hours 📅",
+    "contact_business_hours": "Check Our Business Hours 📅",
+    "our_hours": "Customer Service Hours",
     "contact_email_support": "Email Support 24/7 📩",
     "email_description": "For detailed inquiries or written communication, send us an email",
     "email_additional": "Guaranteed Response Within 24 Hours",
@@ -24,18 +27,16 @@
     "contact_services": "Explore Services & Get a Quote",
     "services_description": "Tailored Cleaning Solutions, Explore Our Services",
     "services_additional": "Custom Packages Available",
-    "featuredServices": {
-      "heading": "Our Featured Services",
-      "learnMore": "Learn More"
-    },
     "proof": {
+      "title": "Proof of Our Professional Standards",
+      "subtitle": "We don’t just say we’re professional, we prove it with our certifications and memberships.",
       "show": "Show certifications & memberships",
       "hide": "Hide"
     },
     "popular": {
       "deep": "Deep Clean",
       "move": "Move In/Out",
-      "office": "Office Cleaning",
+      "residential": "Residential Cleaning",
       "carpet": "Carpet & Upholstery"
     },
     "cta": {
@@ -44,6 +45,10 @@
       "text": "Prefer Text? Send Us a Message",
       "textNote": "Quick SMS quote"
     }
+  },
+  "featuredServices": {
+    "heading": "Our Featured Services",
+    "learnMore": "Learn More"
   },
   "faq": {
     "heading": "❓ Frequently Asked Questions",
@@ -871,7 +876,7 @@
     "title": "Professional Certifications & Memberships",
     "intro": "Your home or business deserves cleaners who follow <strong>recognized industry standards</strong>, not guesswork. Our memberships and certifications show our commitment to professional, safe, and healthy cleaning practices in Toronto.",
     "ctaPrimary": "Get a Free Quote",
-    "ctaSecondary": "Learn why ISSA membership matters →"
+    "ctaSecondary": "Learn why our certifications matter →"
   },
   "issa": {
     "sectionTitle": "What is ISSA Canada and why does it matter?",

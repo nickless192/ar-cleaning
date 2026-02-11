@@ -39,17 +39,14 @@ export default function ISSAMembershipBadge({ layout = "horizontal", className =
               i18nKey="badge.headline"
               components={{ strong: <strong /> }}
             />
-            <NewIconAnimated />
+            {/* <NewIconAnimated /> */}
             {/* CleanAR Solutions is a proud <strong>ISSA Canada Member</strong> */}
           </p>
         </Link>
 
-        <p className="issa-membership-badge__body">
+        {/* <p className="issa-membership-badge__body">
           {t('badge.body')}
-          {/* As members of ISSA Canada – the national division of the worldwide
-          cleaning industry association – we follow recognized best practices
-          for quality, safety, and professionalism in every service we provide. */}
-        </p>
+        </p> */}
       </div>
     </section>
   );

@@ -4,8 +4,10 @@
     "tagline": "Nettoyage de confiance, service de confiance",
     "intro": "Dites adieu au stress et bonjour à l’éclat ✨",
     "details": "CleanAR Solutions offre plus de 10 ans de nettoyage de confiance aux foyers et entreprises du GTA.",
+    "detailsA": "Vous en avez assez de chercher un service de nettoyage qui offre des résultats cohérents et de haute qualité? Nous comprenons, et nous sommes là pour changer cela.",
     "services": "Du nettoyage en profondeur à l’entretien régulier, nos services sont adaptés à vos besoins — efficaces, écologiques et toujours fiables.",
     "cta_text": "Votre devis personnalisé rapide.",
+    "mobileCtaHint": "Plus d'options sont disponibles après avoir obtenu votre devis.",
       "cta": {
       "call": "Appeler Nous Maintenant",
       "callNote": "Réponse la plus rapide",
@@ -17,6 +19,8 @@
     "contact_title": "Options de contact",
     "contact_subtitle": "Choisissez une option — nous répondons rapidement.",
     "proof": {
+      "title": "Preuve de nos normes professionnelles",
+      "subtitle": "Nous ne nous contentons pas de dire que nous sommes professionnels, nous le prouvons par nos certifications et adhésions.",
       "show": "Voir les certifications et adhésions",
       "hide": "Masquer"
     },
@@ -24,7 +28,7 @@
     "popular": {
       "deep": "Nettoyage en profondeur",
       "move": "Entrée / sortie",
-      "office": "Nettoyage de bureaux",
+      "residential": "Nettoyage résidentiel",
       "carpet": "Tapis et tapisserie"
     },
     "ctaNote": "C’est rapide, gratuit et sans engagement !",
@@ -32,7 +36,8 @@
     "status_offline": "⏰ Nous sommes actuellement hors ligne",
     "response_now": "Attendez-vous à une réponse de notre part sous peu",
     "response_later": "Nous viserons à répondre dans les 24 heures",
-    "contact_business_hours": "Heures d’ouverture 📅",
+    "contact_business_hours": "Consultez nos heures d'ouverture 📅",
+      "our_hours": "Heures de service à la clientèle",
     "contact_email_support": "Assistance par courriel 24/7 📩",
     "email_description": "Pour des questions détaillées ou des communications écrites, envoyez-nous un courriel",
     "email_additional": "Réponse garantie dans les 24 heures",
@@ -41,11 +46,11 @@
     "feedback_additional": "Aidez-nous à nous améliorer, partagez vos commentaires",
     "contact_services": "Explorer les services et obtenir un devis",
     "services_description": "Solutions de nettoyage personnalisées, explorez nos services",
-    "services_additional": "Forfaits personnalisés disponibles",
-    "featuredServices": {
-      "heading": "Nos Services Phare",
-      "learnMore": "En Savoir Plus"
-    }
+    "services_additional": "Forfaits personnalisés disponibles"
+  },
+  "featuredServices": {
+    "heading": "Nos Services Phare",
+    "learnMore": "En Savoir Plus"
   },
   "faq": {
     "heading": "❓ Questions Fréquemment Posées",
@@ -817,7 +822,7 @@
     "title": "Certifications et Adhésions Professionnelles",
     "intro": "Votre domicile ou votre entreprise mérite des professionnels du nettoyage qui respectent des <strong>normes reconnues de l’industrie</strong>, et non des approximations. Nos adhésions et certifications démontrent notre engagement envers des pratiques de nettoyage professionnelles, sécuritaires et saines à Toronto.",
     "ctaPrimary": "Obtenir une Soumission Gratuite",
-    "ctaSecondary": "Apprenez pourquoi l’adhésion ISSA est importante →"
+    "ctaSecondary": "Apprenez pourquoi nos certifications sont importantes →"
   },
   "issa": {
     "sectionTitle": "Qu’est-ce que ISSA Canada et pourquoi est-ce important ?",
