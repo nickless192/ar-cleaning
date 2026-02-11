@@ -130,7 +130,7 @@ function Index() {
   {
     icon: "now-ui-icons tech_mobile",
     link: "business-hours",
-    text: t('contact_business_hours'),
+    text: t('index.contact_business_hours'),
     description: availabilityStatus,
     additionalInfo: responseTimeMessage,
     color: "text-primary",
@@ -139,9 +139,9 @@ function Index() {
   {
     icon: "now-ui-icons ui-1_email-85",
     link: "mailto:info@cleanARsolutions.ca?subject=Cleaning%20Service%20Request&body=Hi%20CleanAR%20Solutions%2C%0A%0AI'd%20like%20to%20request%20a%20information%20for...",
-    text: t('contact_email_support'),
-    description: t('email_description'),
-    additionalInfo: t('email_additional'),
+    text: t('index.contact_email_support'),
+    description: t('index.email_description'),
+    additionalInfo: t('index.email_additional'),
     color: "text-success",
     eventName: "email_click",
     eventLabel: "contact_card",
@@ -149,9 +149,9 @@ function Index() {
   {
     icon: "now-ui-icons business_bulb-63",
     link: "https://g.page/r/Cek9dkmHVuBKEAE/review",
-    text: t('contact_feedback'),
-    description: t('feedback_description'),
-    additionalInfo: t('feedback_additional'),
+    text: t('index.contact_feedback'),
+    description: t('index.feedback_description'),
+    additionalInfo: t('index.feedback_additional'),
     color: "text-warning",
     eventName: "review_click",
     eventLabel: "google",
@@ -159,9 +159,9 @@ function Index() {
   {
     icon: "now-ui-icons business_badge",
     link: "/products-and-services",
-    text: t('contact_services'),
-    description: t('services_description'),
-    additionalInfo: t('services_additional'),
+    text: t('index.contact_services'),
+    description: t('index.services_description'),
+    additionalInfo: t('index.services_additional'),
     color: "text-info",
     eventName: "services_click",
     eventLabel: "nav",
@@ -180,12 +180,12 @@ function Index() {
       (currentDay === 6 && currentHour >= 8 && currentHour < 13); // Saturday morning
 
     if (isBusinessHours) {
-      setAvailabilityStatus(t('status_online'));
+      setAvailabilityStatus(t('index.status_online'));
       // setAvailabilityStatus('✅ We are currently available');
-      setResponseTimeMessage(t('response_now'));
+      setResponseTimeMessage(t('index.response_now'));
     } else {
-      setAvailabilityStatus(t('status_offline'));
-      setResponseTimeMessage(t('response_later'));
+      setAvailabilityStatus(t('index.status_offline'));
+      setResponseTimeMessage(t('index.response_later'));
     }
 
     if (isInitialLoad) {
@@ -246,7 +246,7 @@ function Index() {
             transition={{ delay: 0.2 }}
           >
             {/* Trusted Clean, Trusted Service */}
-            {t('tagline')}
+            {t('index.tagline')}
           </motion.h3>
           {/* </Col>
                   <Col xs="12" md="6" className="text-center px-4 mb-5"> */}
@@ -258,11 +258,11 @@ function Index() {
           >
             {/* Say goodbye to stress and hello to sparkle ✨<br /> */}
             <strong>
-              {t('intro')}
+              {t('index.intro')}
             </strong> <br />
-            {t('details')} {" "}
+            {t('index.details')} {" "}
             {/* <br /> */}
-            {t('services')} <br />
+            {t('index.services')} <br />
             {/* <b>CleanAR Solutions</b> brings 10+ years of trusted cleaning to homes and businesses across the GTA.<br /> */}
             {/* From deep cleans to regular maintenance, we tailor services to your needs—efficient, eco-friendly, and always reliable. */}
             {/* <br /><br /> */}
@@ -279,7 +279,7 @@ function Index() {
                data-track="cta_quote_click"
   data-track-label="hero"
             >
-              {t('cta_text')}
+              {t('index.cta_text')}
             </button>
           </div>
 

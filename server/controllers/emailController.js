@@ -1118,7 +1118,7 @@ function buildEmailContent({ upcomingBookings, days, recentBookings, now, since 
 
 //                 const message = {
 //             to: admins.map(admin => admin.email), // Update with admin email
-//             from: 'no-reply@cleanarsolutions.ca',
+//             from: 'info@cleanarsolutions.ca',
 //             subject: subject,
 //             html: html,
 //             // attachments: [
@@ -1244,7 +1244,7 @@ const { startUTC: sinceUTC, endUTC: nowUTC } = torontoWindowToUTC({
 
     const message = {
       to: admins.map((admin) => admin.email),
-      from: "no-reply@cleanarsolutions.ca",
+      from: "info@cleanarsolutions.ca",
       subject,
       html,
     };

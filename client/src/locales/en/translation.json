@@ -1,47 +1,49 @@
 {
-  "companyName": "CleanAR Solutions",
-  "tagline": "Trusted Clean, Trusted Service",
-  "intro": "Say goodbye to stress and hello to sparkle ✨",
-  "details": "CleanAR Solutions brings 10+ years of trusted cleaning to homes and businesses across the GTA.",
-  "services": "From deep cleans to regular maintenance, we tailor services to your needs: efficient, eco-friendly, and always reliable.",
-  "cta_text": "Personalized quote in under 60 seconds.",
+  "index": {    
+    "companyName": "CleanAR Solutions",
+    "tagline": "Trusted Clean, Trusted Service",
+    "intro": "Say goodbye to stress and hello to sparkle ✨",
+    "details": "CleanAR Solutions brings 10+ years of trusted cleaning to homes and businesses across the GTA.",
+    "services": "From deep cleans to regular maintenance, we tailor services to your needs: efficient, eco-friendly, and always reliable.",
+    "cta_text": "Personalized quote in under 60 seconds.",
+    "ctaNote": "It’s fast, free, and commitment-free!",
+    "status_online": "✅ We are currently available",
+    "status_offline": "⏰ We are currently offline",
+    "response_now": "Expect a response from us shortly",
+    "response_later": "We’ll aim to respond within 24 hours",
+    "contact_title": "Contact options",
+    "contact_subtitle": "Pick one — we reply fast.",
+    "reviews": "Ready to Leave a Review?",
+    "contact_business_hours": "Business Hours 📅",
+    "contact_email_support": "Email Support 24/7 📩",
+    "email_description": "For detailed inquiries or written communication, send us an email",
+    "email_additional": "Guaranteed Response Within 24 Hours",
+    "contact_feedback": "Customer Feedback & Reviews 🌟",
+    "feedback_description": "Your Experience Matters",
+    "feedback_additional": "Help Us Improve, Share Your Thoughts With Us",
+    "contact_services": "Explore Services & Get a Quote",
+    "services_description": "Tailored Cleaning Solutions, Explore Our Services",
+    "services_additional": "Custom Packages Available",
+    "featuredServices": {
+      "heading": "Our Featured Services",
+      "learnMore": "Learn More"
+    },
+    "proof": {
+      "show": "Show certifications & memberships",
+      "hide": "Hide"
+    },
+    "popular": {
+      "deep": "Deep Clean",
+      "move": "Move In/Out",
+      "office": "Office Cleaning",
+      "carpet": "Carpet & Upholstery"
+    },
     "cta": {
-    "call": "Call Us Now",
-    "callNote": "Fastest response",
-    "text": "Prefer Text? Send Us a Message",
-    "textNote": "Quick SMS quote"
-  },
-  "ctaNote": "It’s fast, free, and commitment-free!",
-  "status_online": "✅ We are currently available",
-  "status_offline": "⏰ We are currently offline",
-  "response_now": "Expect a response from us shortly",
-  "response_later": "We’ll aim to respond within 24 hours",
-  "contact_title": "Contact options",
-  "contact_subtitle": "Pick one — we reply fast.",
-  "reviews": "Ready to Leave a Review?",
-  "contact_business_hours": "Business Hours 📅",
-  "contact_email_support": "Email Support 24/7 📩",
-  "email_description": "For detailed inquiries or written communication, send us an email",
-  "email_additional": "Guaranteed Response Within 24 Hours",
-  "contact_feedback": "Customer Feedback & Reviews 🌟",
-  "feedback_description": "Your Experience Matters",
-  "feedback_additional": "Help Us Improve, Share Your Thoughts With Us",
-  "contact_services": "Explore Services & Get a Quote",
-  "services_description": "Tailored Cleaning Solutions, Explore Our Services",
-  "services_additional": "Custom Packages Available",
-  "featuredServices": {
-    "heading": "Our Featured Services",
-    "learnMore": "Learn More"
-  },
-  "proof": {
-    "show": "Show certifications & memberships",
-    "hide": "Hide"
-  },
-  "popular": {
-    "deep": "Deep Clean",
-    "move": "Move In/Out",
-    "office": "Office Cleaning",
-    "carpet": "Carpet & Upholstery"
+      "call": "Call Us Now",
+      "callNote": "Fastest response",
+      "text": "Prefer Text? Send Us a Message",
+      "textNote": "Quick SMS quote"
+    }
   },
   "faq": {
     "heading": "❓ Frequently Asked Questions",
@@ -171,7 +173,7 @@
     "confidentialNote": "<strong>Note:</strong> CQCC has advised that certificate files should remain confidential for now (branding updates in progress). We do not share certificate images publicly at this time. If you require confidential verification for procurement, contact us.",
     "benefitsTitle": "Benefits of CQCC Certification",
     "cardTitle": "What CQCC certification means for you",
-     "badge": {
+    "badge": {
       "eyebrow": "Supplier diversity • Certified",
       "headline": "CleanAR Solutions is an <strong>LGBTQ+ Certified Supplier (LGBTBE)</strong>",
       "body": "Certified through Canada’s Queer Chamber of Commerce (CQCC). We support supplier diversity programs while delivering reliable, professional cleaning services."

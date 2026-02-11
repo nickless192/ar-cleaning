@@ -386,10 +386,10 @@
     /* margin: 0 auto;
     padding: 20px; */
     /* background: var(--light-color); */
-    background-color: white;
+    /* background-color: white;
     background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
+    background-repeat: no-repeat; */
     /* border-radius: 10px; */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     text-align: left;

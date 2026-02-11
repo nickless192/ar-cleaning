@@ -66,7 +66,7 @@ const sendInvoiceEmail = async ({ to, subject, text, html, attachments = [] }) =
 
   const msg = {
     to,
-    from: process.env.MAIL_FROM || "no-reply@cleanarsolutions.ca",
+    from: process.env.MAIL_FROM || "info@cleanarsolutions.ca",
     subject,
     text,
     html,

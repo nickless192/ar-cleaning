@@ -1,49 +1,51 @@
 {
-  "companyName": "CleanAR Solutions",
-  "tagline": "Limpieza de confianza y servicio confiable",
-  "intro": "Di adiós al estrés y hola al brillo ✨",
-  "details": "CleanAR Solutions ofrece más de 10 años de limpieza confiable a hogares y negocios en el GTA.",
-  "services": "Desde limpiezas profundas hasta mantenimiento regular, adaptamos los servicios a tus necesidades — eficientes, ecológicos y siempre confiables.",
-  "cta_text": "Tu cotización personalizada expreso.",
-    "cta": {
-    "call": "Llama Ahora",
-    "callNote": "Respuesta más rápida",
-    "text": "¿Prefieres SMS? Envíanos un mensaje",
-    "textNote": "Cotización por SMS"
-  },
-    "contact_title": "Opciones de contacto",
-  "contact_subtitle": "Elige una — respondemos rápido.",
-  "reviews": "¿Listo para dejar una reseña?",
-
-  "proof": {
-    "show": "Ver certificaciones y membresías",
-    "hide": "Ocultar credenciales"
-  },
-
-  "popular": {
-    "deep": "Limpieza profunda",
-    "move": "Mudanza (entrada/salida)",
-    "office": "Limpieza de oficina",
-    "carpet": "Alfombras y tapicería"
-  },
-  "ctaNote": "¡Es rápido, gratuito y sin compromiso!",
-  "status_online": "✅ Actualmente estamos disponibles",
-  "status_offline": "⏰ Actualmente estamos fuera de horario",
-  "response_now": "Espere Respuesta en Breve",
-  "response_later": "Responderemos dentro de las próximas 24 horas",
-  "contact_business_hours": "Horario de atención 📅",
-  "contact_email_support": "Soporte por correo electrónico 24/7 📩",
-  "email_description": "Para consultas detalladas o comunicación escrita, envíanos un correo electrónico",
-  "email_additional": "Respuesta garantizada en 24 horas",
-  "contact_feedback": "Opinión del cliente y reseñas 🌟",
-  "feedback_description": "Tu experiencia es importante",
-  "feedback_additional": "Ayúdanos a mejorar, comparte tus comentarios",
-  "contact_services": "Explorar servicios y obtener una cotización",
-  "services_description": "Soluciones de limpieza personalizadas, explora nuestros servicios",
-  "services_additional": "Paquetes personalizados disponibles",
-  "featuredServices": {
-    "heading": "Nuestros Servicios Destacados",
-    "learnMore": "Más Información"
+  "index": {
+    "companyName": "CleanAR Solutions",
+    "tagline": "Limpieza de confianza y servicio confiable",
+    "intro": "Di adiós al estrés y hola al brillo ✨",
+    "details": "CleanAR Solutions ofrece más de 10 años de limpieza confiable a hogares y negocios en el GTA.",
+    "services": "Desde limpiezas profundas hasta mantenimiento regular, adaptamos los servicios a tus necesidades — eficientes, ecológicos y siempre confiables.",
+    "cta_text": "Tu cotización personalizada expreso.",
+      "cta": {
+      "call": "Llama Ahora",
+      "callNote": "Respuesta más rápida",
+      "text": "¿Prefieres SMS? Envíanos un mensaje",
+      "textNote": "Cotización por SMS"
+    },
+      "contact_title": "Opciones de contacto",
+    "contact_subtitle": "Elige una — respondemos rápido.",
+    "reviews": "¿Listo para dejar una reseña?",
+  
+    "proof": {
+      "show": "Ver certificaciones y membresías",
+      "hide": "Ocultar credenciales"
+    },
+  
+    "popular": {
+      "deep": "Limpieza profunda",
+      "move": "Mudanza (entrada/salida)",
+      "office": "Limpieza de oficina",
+      "carpet": "Alfombras y tapicería"
+    },
+    "ctaNote": "¡Es rápido, gratuito y sin compromiso!",
+    "status_online": "✅ Actualmente estamos disponibles",
+    "status_offline": "⏰ Actualmente estamos fuera de horario",
+    "response_now": "Espere Respuesta en Breve",
+    "response_later": "Responderemos dentro de las próximas 24 horas",
+    "contact_business_hours": "Horario de atención 📅",
+    "contact_email_support": "Soporte por correo electrónico 24/7 📩",
+    "email_description": "Para consultas detalladas o comunicación escrita, envíanos un correo electrónico",
+    "email_additional": "Respuesta garantizada en 24 horas",
+    "contact_feedback": "Opinión del cliente y reseñas 🌟",
+    "feedback_description": "Tu experiencia es importante",
+    "feedback_additional": "Ayúdanos a mejorar, comparte tus comentarios",
+    "contact_services": "Explorar servicios y obtener una cotización",
+    "services_description": "Soluciones de limpieza personalizadas, explora nuestros servicios",
+    "services_additional": "Paquetes personalizados disponibles",
+    "featuredServices": {
+      "heading": "Nuestros Servicios Destacados",
+      "learnMore": "Más Información"
+    }
   },
   "blog": {
     "title": "Perspectivas y Actualizaciones de CleanAR Solutions",

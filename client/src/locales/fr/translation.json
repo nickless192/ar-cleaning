@@ -1,49 +1,51 @@
 {
-  "companyName": "CleanAR Solutions",
-  "tagline": "Nettoyage de confiance, service de confiance",
-  "intro": "Dites adieu au stress et bonjour à l’éclat ✨",
-  "details": "CleanAR Solutions offre plus de 10 ans de nettoyage de confiance aux foyers et entreprises du GTA.",
-  "services": "Du nettoyage en profondeur à l’entretien régulier, nos services sont adaptés à vos besoins — efficaces, écologiques et toujours fiables.",
-  "cta_text": "Votre devis personnalisé rapide.",
-    "cta": {
-    "call": "Appeler Nous Maintenant",
-    "callNote": "Réponse la plus rapide",
-    "text": "Préférez le SMS? Envoyez-nous un message",
-    "textNote": "Devis par SMS"
-  },
-    "reviews": "Prêt à laisser un avis?",
-
-  "contact_title": "Options de contact",
-  "contact_subtitle": "Choisissez une option — nous répondons rapidement.",
-  "proof": {
-    "show": "Voir les certifications et adhésions",
-    "hide": "Masquer"
-  },
-
-  "popular": {
-    "deep": "Nettoyage en profondeur",
-    "move": "Entrée / sortie",
-    "office": "Nettoyage de bureaux",
-    "carpet": "Tapis et tapisserie"
-  },
-  "ctaNote": "C’est rapide, gratuit et sans engagement !",
-  "status_online": "✅ Nous sommes actuellement disponibles",
-  "status_offline": "⏰ Nous sommes actuellement hors ligne",
-  "response_now": "Attendez-vous à une réponse de notre part sous peu",
-  "response_later": "Nous viserons à répondre dans les 24 heures",
-  "contact_business_hours": "Heures d’ouverture 📅",
-  "contact_email_support": "Assistance par courriel 24/7 📩",
-  "email_description": "Pour des questions détaillées ou des communications écrites, envoyez-nous un courriel",
-  "email_additional": "Réponse garantie dans les 24 heures",
-  "contact_feedback": "Retour des clients et avis 🌟",
-  "feedback_description": "Votre expérience compte",
-  "feedback_additional": "Aidez-nous à nous améliorer, partagez vos commentaires",
-  "contact_services": "Explorer les services et obtenir un devis",
-  "services_description": "Solutions de nettoyage personnalisées, explorez nos services",
-  "services_additional": "Forfaits personnalisés disponibles",
-  "featuredServices": {
-    "heading": "Nos Services Phare",
-    "learnMore": "En Savoir Plus"
+  "index": {
+    "companyName": "CleanAR Solutions",
+    "tagline": "Nettoyage de confiance, service de confiance",
+    "intro": "Dites adieu au stress et bonjour à l’éclat ✨",
+    "details": "CleanAR Solutions offre plus de 10 ans de nettoyage de confiance aux foyers et entreprises du GTA.",
+    "services": "Du nettoyage en profondeur à l’entretien régulier, nos services sont adaptés à vos besoins — efficaces, écologiques et toujours fiables.",
+    "cta_text": "Votre devis personnalisé rapide.",
+      "cta": {
+      "call": "Appeler Nous Maintenant",
+      "callNote": "Réponse la plus rapide",
+      "text": "Préférez le SMS? Envoyez-nous un message",
+      "textNote": "Devis par SMS"
+    },
+      "reviews": "Prêt à laisser un avis?",
+  
+    "contact_title": "Options de contact",
+    "contact_subtitle": "Choisissez une option — nous répondons rapidement.",
+    "proof": {
+      "show": "Voir les certifications et adhésions",
+      "hide": "Masquer"
+    },
+  
+    "popular": {
+      "deep": "Nettoyage en profondeur",
+      "move": "Entrée / sortie",
+      "office": "Nettoyage de bureaux",
+      "carpet": "Tapis et tapisserie"
+    },
+    "ctaNote": "C’est rapide, gratuit et sans engagement !",
+    "status_online": "✅ Nous sommes actuellement disponibles",
+    "status_offline": "⏰ Nous sommes actuellement hors ligne",
+    "response_now": "Attendez-vous à une réponse de notre part sous peu",
+    "response_later": "Nous viserons à répondre dans les 24 heures",
+    "contact_business_hours": "Heures d’ouverture 📅",
+    "contact_email_support": "Assistance par courriel 24/7 📩",
+    "email_description": "Pour des questions détaillées ou des communications écrites, envoyez-nous un courriel",
+    "email_additional": "Réponse garantie dans les 24 heures",
+    "contact_feedback": "Retour des clients et avis 🌟",
+    "feedback_description": "Votre expérience compte",
+    "feedback_additional": "Aidez-nous à nous améliorer, partagez vos commentaires",
+    "contact_services": "Explorer les services et obtenir un devis",
+    "services_description": "Solutions de nettoyage personnalisées, explorez nos services",
+    "services_additional": "Forfaits personnalisés disponibles",
+    "featuredServices": {
+      "heading": "Nos Services Phare",
+      "learnMore": "En Savoir Plus"
+    }
   },
   "faq": {
     "heading": "❓ Questions Fréquemment Posées",

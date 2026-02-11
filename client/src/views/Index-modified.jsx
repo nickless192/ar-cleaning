@@ -45,40 +45,40 @@ function Index() {
   const quickLinks = useMemo(
     () => [
       {
-        title: t("cta_text") || "Get a Free Quote",
-        subtitle: t("ctaNote") || "Takes ~60 seconds",
+        title: t("index.cta_text") || "Get a Free Quote",
+        subtitle: t("index.ctaNote") || "Takes ~60 seconds",
         onClick: goToQuote,
         variant: "primary",
         Icon: FaFileInvoiceDollar,
         track: "hero-cta-quote",
       },
       {
-        title: t("contact_services") || "Services",
-        subtitle: t("services_description") || "See options & pricing",
+        title: t("index.contact_services") || "Services",
+        subtitle: t("index.services_description") || "See options & pricing",
         to: "/products-and-services",
         variant: "secondary",
         Icon: FaBroom,
         track: "hero-cta-services",
       },
       {
-        title: t("reviews") || "Reviews",
-        subtitle: t("feedback_additional") || "See what clients say",
+        title: t("index.reviews") || "Reviews",
+        subtitle: t("index.feedback_additional") || "See what clients say",
         href: "https://g.page/r/Cek9dkmHVuBKEAE/review",
         variant: "secondary",
         Icon: FaStar,
         track: "hero-cta-reviews",
       },
       {
-        title: t("cta.call") || "Call",
-        subtitle: t("cta.callNote") || "Fastest response",
+        title: t("index.cta.call") || "Call",
+        subtitle: t("index.cta.callNote") || "Fastest response",
         href: "tel:+14374405514",
         variant: "secondary",
         Icon: FaPhoneAlt,
         track: "hero-cta-call",
       },
       {
-        title: t("cta.text") || "Text",
-        subtitle: t("cta.textNote") || "Quick SMS quote",
+        title: t("index.cta.text") || "Text",
+        subtitle: t("index.cta.textNote") || "Quick SMS quote",
         href: "sms:+14374405514?&body=Hi%20CleanAR%20Solutions!%20I%E2%80%99d%20like%20a%20quote%20for...",
         variant: "secondary",
         Icon: FaSms,
@@ -88,61 +88,12 @@ function Index() {
     [t, i18n.language]
   );
 
-
-  // const quickLinks = useMemo(
-  //   () => [
-  //     {
-  //       title: t("cta_text") || "Get a Free Quote",
-  //       subtitle: t("ctaNote") || "Takes ~60 seconds",
-  //       onClick: goToQuote,
-  //       variant: "primary",
-  //       icon: "now-ui-icons ui-1_send",
-  //       track: "hero-cta-quote",
-  //     },
-  //     {
-  //       title: t("contact_services") || "Services",
-  //       subtitle: t("services_description") || "See options & pricing",
-  //       to: "/products-and-services",
-  //       variant: "secondary",
-  //       icon: "now-ui-icons business_badge",
-  //       track: "hero-cta-services",
-  //     },
-  //     {
-  //       title: t("reviews") || "Reviews",
-  //       subtitle: t("feedback_additional") || "See what clients say",
-  //       href: "https://g.page/r/Cek9dkmHVuBKEAE/review",
-  //       variant: "secondary",
-  //       icon: "now-ui-icons ui-2_chat-round",
-  //       track: "hero-cta-reviews",
-  //     },
-  //     {
-  //       title: t("cta.call") || "Call",
-  //       subtitle: t("cta.callNote") || "Speak with us now",
-  //       href: "tel:+14374405514",
-  //       variant: "secondary",
-  //       icon: "now-ui-icons tech_mobile",
-  //       track: "hero-cta-call",
-  //     },
-  //     {
-  //       title: t("cta.text") || "Text",
-  //       subtitle: t("cta.textNote") || "Quick SMS quote",
-  //       href: "sms:+14374405514?&body=Hi%20CleanAR%20Solutions!%20I%E2%80%99d%20like%20a%20quote%20for...",
-  //       variant: "secondary",
-  //       icon: "now-ui-icons ui-1_email-85",
-  //       track: "hero-cta-text",
-  //     }
-
-  //   ],
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  //   [t, i18n.language, availabilityStatus, responseTimeMessage]
-  // );
-
   const contactItems = useMemo(
     () => [
       {
         icon: "now-ui-icons tech_mobile",
         link: "business-hours",
-        text: t("contact_business_hours"),
+        text: t("index.contact_business_hours"),
         description: availabilityStatus,
         additionalInfo: responseTimeMessage,
         color: "text-primary",
@@ -151,25 +102,25 @@ function Index() {
         icon: "now-ui-icons ui-1_email-85",
         link:
           "mailto:info@cleanARsolutions.ca?subject=Cleaning%20Service%20Request&body=Hi%20CleanAR%20Solutions%2C%0A%0AI'd%20like%20to%20request%20information%20for...",
-        text: t("contact_email_support"),
-        description: t("email_description"),
-        additionalInfo: t("email_additional"),
+        text: t("index.contact_email_support"),
+        description: t("index.email_description"),
+        additionalInfo: t("index.email_additional"),
         color: "text-success",
       },
       {
         icon: "now-ui-icons business_bulb-63",
         link: "https://g.page/r/Cek9dkmHVuBKEAE/review",
-        text: t("contact_feedback"),
-        description: t("feedback_description"),
-        additionalInfo: t("feedback_additional"),
+        text: t("index.contact_feedback"),
+        description: t("index.feedback_description"),
+        additionalInfo: t("index.feedback_additional"),
         color: "text-warning",
       },
       {
         icon: "now-ui-icons business_badge",
         link: "/products-and-services",
-        text: t("contact_services"),
-        description: t("services_description"),
-        additionalInfo: t("services_additional"),
+        text: t("index.contact_services"),
+        description: t("index.services_description"),
+        additionalInfo: t("index.services_additional"),
         color: "text-info",
       },
     ],
@@ -179,10 +130,10 @@ function Index() {
   // Optional: simple “popular services” chips to push internal traffic
   const popularServices = useMemo(
     () => [
-      { label: t("popular.deep") || "Deep Clean", to: "/products-and-services" },
-      { label: t("popular.move") || "Move In/Out", to: "/products-and-services" },
-      { label: t("popular.office") || "Office Cleaning", to: "/products-and-services" },
-      { label: t("popular.carpet") || "Carpet/Upholstery", to: "/products-and-services" },
+      { label: t("index.popular.deep") || "Deep Clean", to: "/products-and-services" },
+      { label: t("index.popular.move") || "Move In/Out", to: "/products-and-services" },
+      { label: t("index.popular.office") || "Office Cleaning", to: "/products-and-services" },
+      { label: t("index.popular.carpet") || "Carpet/Upholstery", to: "/products-and-services" },
     ],
     [t]
   );
@@ -197,11 +148,11 @@ function Index() {
       (currentDay === 6 && currentHour >= 8 && currentHour < 13);
 
     if (isBusinessHours) {
-      setAvailabilityStatus(t("status_online"));
-      setResponseTimeMessage(t("response_now"));
+      setAvailabilityStatus(t("index.status_online"));
+      setResponseTimeMessage(t("index.response_now"));
     } else {
-      setAvailabilityStatus(t("status_offline"));
-      setResponseTimeMessage(t("response_later"));
+      setAvailabilityStatus(t("index.status_offline"));
+      setResponseTimeMessage(t("index.response_later"));
     }
 
     document.body.classList.add("index-page");
@@ -231,7 +182,7 @@ function Index() {
               transition={{ delay: 0.05 }}
               style={{ fontSize: "clamp(2.1rem, 4vw, 3.2rem)", lineHeight: 1.05 }}
             >
-              CleanAR Solutions
+              {t("index.companyName")}
             </motion.h1>
 
             <motion.h2
@@ -241,7 +192,7 @@ function Index() {
               transition={{ delay: 0.12 }}
               style={{ fontSize: "clamp(1.05rem, 1.7vw, 1.35rem)" }}
             >
-              {t("tagline")}
+              {t("index.tagline")}
             </motion.h2>
 
             {/* Status line near CTA to increase trust */}
@@ -252,10 +203,10 @@ function Index() {
               transition={{ delay: 0.16 }}
             >
               <span className="badge bg-light text-dark border">
-                {availabilityStatus || t("status_offline")}
+                {availabilityStatus || t("index.status_offline")}
               </span>
               <span className="badge bg-light text-dark border">
-                {responseTimeMessage || t("response_later")}
+                {responseTimeMessage || t("index.response_later")}
               </span>
               <span className="badge bg-light text-dark border">
                 Toronto & GTA
@@ -270,7 +221,7 @@ function Index() {
               transition={{ delay: 0.2 }}
               style={{ maxWidth: "50rem" }}
             >
-              <strong>{t("intro")}</strong>
+              <strong>{t("index.intro")}</strong>
             </motion.p>
 
             <motion.p
@@ -280,7 +231,7 @@ function Index() {
               transition={{ delay: 0.24 }}
               style={{ maxWidth: "50rem" }}
             >
-              {t("details")} {t("services")}
+              {t("index.details")} {t("index.services")}
             </motion.p>
 
             {/* Popular services chips (internal traffic boost) */}
@@ -314,9 +265,6 @@ function Index() {
                   const cardBody = (
                     <div className="cleanar-actioncard h-100">
                       <div className="d-flex align-items-start gap-2">
-                        {/* <div className={`cleanar-actioncard__icon ${q.variant === "primary" ? "text-success" : "text-secondary"}`}>
-                          <i className={`${q.icon} fs-4`} />
-                        </div> */}
                         <div
                           className={`cleanar-actioncard__icon ${q.variant === "primary" ? "text-success" : "text-secondary"
                             }`}
@@ -364,42 +312,6 @@ function Index() {
                 })}
               </div>
             </motion.div>
-
-            {/* Collapsible Proof (badges) */}
-            <motion.div
-              className="mt-4"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.36 }}
-            >
-              <button
-                type="button"
-                className="btn btn-link p-0 text-decoration-none"
-                onClick={() => setShowProof((v) => !v)}
-                aria-expanded={showProof}
-              >
-                <span className="fw-bold">
-                  {showProof ? (t("proof.hide") || "Hide trust proof") : (t("proof.show") || "Show certifications & memberships")}
-                </span>{" "}
-                <span className="text-muted small">{showProof ? "▲" : "▼"}</span>
-              </button>
-
-              {showProof && (
-                <div className="mt-3 d-grid gap-2">
-                  <div className="cleanar-proofbox">
-                    <ISSAMembershipBadge className="m-0" layout="horizontal" />
-                    <div className="mt-1">
-                      <Link to="/blog/cleanar-solutions-joins-issa-canada" className="small text-primary">
-                        {t("certification.ctaSecondary")}
-                      </Link>
-                    </div>
-                  </div>
-                  <div className="cleanar-proofbox">
-                    <CQCCCertificationBadge className="m-0" layout="horizontal" />
-                  </div>
-                </div>
-              )}
-            </motion.div>
           </Col>
 
           {/* Right: contact list as clickable cards */}
@@ -413,66 +325,57 @@ function Index() {
               <Card className="cleanar-contactpanel">
                 <div className="p-3 pb-2">
                   <div className="fw-bold" style={{ fontSize: "1.05rem" }}>
-                    {t("contact_title") || "Contact options"}
+                    {t("index.contact_title") || "Contact options"}
                   </div>
                   <div className="text-muted small">
-                    {t("contact_subtitle") || "Pick one — we reply fast."}
+                    {t("index.contact_subtitle") || "Pick one — we reply fast."}
                   </div>
                 </div>
 
-                <div className="px-2 pb-2">
-                  {contactItems.map((item, index) => (
-                    <motion.div
-                      key={index}
-                      whileHover={{ scale: 1.01 }}
-                      whileTap={{ scale: 0.99 }}
-                      className="mb-2"
-                    >
-                      <div className="cleanar-contactcard">
-                        <ListGroupItem className="d-flex align-items-start bg-transparent border-0 p-0">
-                          <div className={`me-3 ${item.color}`} style={{ width: "2rem", textAlign: "center" }}>
-                            <i className={`${item.icon} fs-4`} />
-                          </div>
+                {/* Collapsible Proof (badges) */}
+                <motion.div
+                  className="mt-4"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.36 }}
+                >
+                  <button
+                    type="button"
+                    className="btn btn-link p-0 text-decoration-none"
+                    onClick={() => setShowProof((v) => !v)}
+                    aria-expanded={showProof}
+                  >
+                    <span className="fw-bold">
+                      {showProof
+                        ? (t("index.proof.hide") || "Hide trust proof")
+                        : (t("index.proof.show") || "Show certifications & memberships")}
+                    </span>{" "}
+                    <span className="text-muted small">{showProof ? "▲" : "▼"}</span>
+                  </button>
 
-                          <div className="flex-grow-1">
-                            <div className="fw-bold mb-1">{item.text}</div>
-
-                            {item.link === "business-hours" ? (
-                              <BusinessHoursSidebar />
-                            ) : item.link.startsWith("http") || item.link.startsWith("mailto") ? (
-                              <a
-                                href={item.link}
-                                {...(item.link.startsWith("http") && {
-                                  target: "_blank",
-                                  rel: "noreferrer noopener",
-                                })}
-                                data-track="contact-link"
-                                className="text-bold martel-semibold underline"
-                                title={item.text}
-                              >
-                                {item.description}
-                              </a>
-                            ) : (
-                              <Link
-                                to={item.link}
-                                className="text-bold martel-semibold underline"
-                                data-track="contact-link"
-                                title={item.description}
-                              >
-                                {item.description}
-                              </Link>
-                            )}
-
-                            <div className="text-muted small mt-1">{item.additionalInfo}</div>
-                          </div>
-                        </ListGroupItem>
+                  {showProof && (
+                    <div className="mt-3 d-grid gap-2">
+                      <div className="cleanar-proofbox">
+                        <ISSAMembershipBadge className="m-0" layout="horizontal" />
+                        <div className="mt-1">
+                          <Link to="/blog/cleanar-solutions-joins-issa-canada" className="small text-primary">
+                            {t("index.certification.ctaSecondary")}
+                          </Link>
+                        </div>
                       </div>
-                    </motion.div>
-                  ))}
-                </div>
+                      <div className="cleanar-proofbox">
+                        <CQCCCertificationBadge className="m-0" layout="horizontal" />
+                      </div>
+                    </div>
+                  )}
+                </motion.div>
 
                 <div className="px-3 pb-3">
-                  <button className="btn btn-success btn-lg w-100 rounded-pill" onClick={goToQuote} data-track="contactpanel-quote">
+                  <button
+                    className="btn btn-success btn-lg w-100 rounded-pill"
+                    onClick={goToQuote}
+                    data-track="contactpanel-quote"
+                  >
                     {t("quick_quote.form.title")}
                   </button>
                 </div>
@@ -481,7 +384,9 @@ function Index() {
           </Col>
         </Row>
       </section>
+
       <ReviewsCarousel />
+
       {/* BODY */}
       <div className="container">
         <Row>

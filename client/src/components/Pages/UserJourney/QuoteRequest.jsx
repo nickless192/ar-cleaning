@@ -869,7 +869,9 @@ const QuoteRequest = () => {
 
     return (
         <>
-            <Container className="quick-quote-container px-4 rounded-2" id="quote-section" style={{ backgroundImage: `url(${pageBg})`, backgroundSize: "cover" }}>
+            <Container className="quick-quote-container px-4 rounded-2" id="quote-section" 
+            // style={{ backgroundImage: `url(${pageBg})`, backgroundSize: "cover" }}
+            >
                 <Helmet>
                     <title>CleanAR Solutions</title>
                     <meta name="description" content="Get a quick service estimate from CleanAR Solutions. Fill out our form to receive a personalized quote for your cleaning needs." />

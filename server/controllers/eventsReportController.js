@@ -296,7 +296,7 @@ async function sendDailyEventsReportEmail({ dateStr } = {}) {
 
   await sgMail.send({
     to: ADMIN_EMAILS,
-    from: process.env.SENDGRID_FROM || "no-reply@cleanarsolutions.ca",
+    from: process.env.SENDGRID_FROM || "info@cleanarsolutions.ca",
     subject,
     text,
     html,
