@@ -90,8 +90,8 @@ function IndexNavbar() {
 
     // Scroll color (keep your behavior)
     useEffect(() => {
-//         console.log("MODE:", import.meta.env.MODE);
-// console.log("DEV:", import.meta.env.DEV);
+        //         console.log("MODE:", import.meta.env.MODE);
+        // console.log("DEV:", import.meta.env.DEV);
         const scrollTopVal = 0;
         const updateNavbarColor = () => {
             if (
@@ -231,22 +231,14 @@ function IndexNavbar() {
                                 </NavLink>
                             </NavItem>
 
-{/* display the blog link only in development environment */}
-{import.meta.env.DEV && (
-                            <NavItem>
-                                <NavLink href="/blog">
-                                    {t("navbar.blog")}
-                                </NavLink>
-                            </NavItem>
-)}
-
-                            {testerFlag && (
+                            {/* display the blog link only in development environment */}
+                            {/* {import.meta.env.DEV && ( */}
                                 <NavItem>
-                                    <NavLink href="/quick-request-v2">
-                                        {t("New Quote Request - testing - en prueba")}
+                                    <NavLink href="/blog">
+                                        {t("navbar.blog")}
                                     </NavLink>
                                 </NavItem>
-                            )}
+                            {/* )} */}
                         </Nav>
 
 
