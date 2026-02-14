@@ -12,7 +12,10 @@
       "call": "Appeler Nous Maintenant",
       "callNote": "Réponse la plus rapide",
       "text": "Préférez le SMS? Envoyez-nous un message",
-      "textNote": "Devis par SMS"
+      "textNote": "Devis par SMS",
+      "call_short": "Appeler",
+      "text_short": "SMS",
+        "email_short": "Email"
     },
       "reviews": "Prêt à laisser un avis?",
   
@@ -233,7 +236,8 @@
       "submit": "Envoyer le Message",
       "companyName_placeholder": "Compagnie ABC",
       "postalcode_placeholder": "H0H 0H0",
-      "promoCode_placeholder": "PROMO123"
+      "promoCode_placeholder": "PROMO123",
+      "note": "Nous vous contacterons bientôt: des personnes réelles, pas des bots !"
     },
     "alerts": {
       "success": "Votre message a été envoyé !",
@@ -257,7 +261,9 @@
     "prev": "Précédent",
     "next": "Suivant",
     "visitGoogleProfile": "Vous pouvez lire ces avis et laisser le vôtre sur notre profil Google:",
-    "googleProfileLink": "CleanAR Solutions"
+    "googleProfileLink": "CleanAR Solutions",
+    "readMore": "Lire plus",
+    "readLess": "Lire moins"
   },
   "whyChooseUs": {
     "heading": "Pourquoi choisir CleanAR Solutions?",
@@ -643,7 +649,7 @@
   "quick_quote": {
     "form": {
       "title": "Votre devis gratuit",
-      "description": "Remplissez le formulaire ci-dessous pour recevoir un devis personnalisé pour vos besoins de nettoyage. Notre équipe examinera votre demande et vous répondra dans les plus brefs délais.",
+      "description": "Demandez votre devis personnalisé ci-dessous. Un courriel de confirmation est envoyé instantanément — nous vous contacterons bientôt.",
       "name": "Nom",
       "email": "Email",
       "phonenumber": "Numéro de téléphone",
@@ -660,7 +666,7 @@
       "additionalServices": "Veuillez sélectionner tous les services supplémentaires que vous souhaitez ajouter à votre devis.",
       "submit": "Soumettre le devis",
       "reset": "Réinitialiser le formulaire",
-      "confirmationMessage": "Un courriel de confirmation vous sera envoyé après la soumission. Notre équipe examinera votre demande et vous répondra dès que possible. Merci d'avoir choisi CleanAR Solutions !",
+      "confirmationMessage": " Vous recevrez un courriel de confirmation. Notre équipe vous répondra sous peu.",
       "invalidPromoCode": "Code promo invalide. Veuillez vérifier votre code et réessayer. Si vous n'avez pas de code promo, laissez le champ vide.",
       "requiredFields": "Veuillez remplir tous les champs obligatoires :",
       "submissionSuccess": "Votre demande de devis a été soumise avec succès ! Nous vous contacterons bientôt pour discuter de vos besoins.",

@@ -36,12 +36,12 @@ function StickyButtons() {
         </button>
 
         {/* Contact Button */}
-        <button
+        {/* <button
           onClick={scrollToContactForm}
           className="btn btn-primary rounded-pill flex-fill"
         >
           {t("contact.heading")}
-        </button>
+        </button> */}
       </div>
     </div>
   );

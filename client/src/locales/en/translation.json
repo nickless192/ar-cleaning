@@ -11,12 +11,12 @@
     "mobileCtaHint": "More options are available after you get your quote.",
     "status_online": "✅ We are currently available",
     "status_offline": "⏰ We are currently offline",
-    "response_now": "Expect a response from us shortly",
-    "response_later": "We’ll aim to respond within 24 hours",
-    "contact_title": "Contact options",
-    "contact_subtitle": "Pick one — we reply fast.",
+    "response_now": "Quick response",
+    "response_later": "Reply within 24 hours",
+    "contact_title": "Contact us directly",
+    "contact_subtitle": "Pick one, we reply fast.",
     "reviews": "Ready to Leave a Review?",
-    "contact_business_hours": "Check Our Business Hours 📅",
+    "contact_business_hours": "Check Out Our Business Hours 📅",
     "our_hours": "Customer Service Hours",
     "contact_email_support": "Email Support 24/7 📩",
     "email_description": "For detailed inquiries or written communication, send us an email",
@@ -43,7 +43,10 @@
       "call": "Call Us Now",
       "callNote": "Fastest response",
       "text": "Prefer Text? Send Us a Message",
-      "textNote": "Quick SMS quote"
+      "textNote": "Quick SMS quote",
+      "call_short": "Call",
+      "text_short": "Text",
+        "email_short": "Email"
     }
   },
   "featuredServices": {
@@ -231,7 +234,8 @@
       "submit": "Send Message",
       "companyName_placeholder": "ABC Company",
       "postalcode_placeholder": "H0H 0H0",
-      "promoCode_placeholder": "PROMO123"
+      "promoCode_placeholder": "PROMO123",
+      "note": "We’ll get back to you shortly: real people, no bots"
     },
     "alerts": {
       "success": "Your message has been sent!",
@@ -255,10 +259,13 @@
     "prev": "Previous",
     "next": "Next",
     "visitGoogleProfile": "You can read these and leave your own review on our Google profile:",
-    "googleProfileLink": "CleanAR Solutions"
+    "googleProfileLink": "CleanAR Solutions",
+  "readMore": "Read more",
+  "readLess": "Read less"
+
   },
   "whyChooseUs": {
-    "heading": "Why Choose CleanAR Solutions?",
+    "heading": "So Why CleanAR Choose Solutions?",
     "benefits": {
       "ecoFriendly": {
         "title": "Eco-Friendly Products",
@@ -602,7 +609,7 @@
   },
   "navbar": {
     "about_us": "About Us",
-    "blog": "Latest Insights",
+    "blog": "News",
     "products_services": "Products & Services",
     "log_in_signup": "Your Account",
     "log_out": "Log Out",
@@ -654,7 +661,7 @@
   "quick_quote": {
     "form": {
       "title": "Get Your Free Quote",
-      "description": "Fill out the form below to receive a personalized quote for your cleaning needs. Our team will review your request and get back to you as soon as possible.",
+      "description": "Request your personalized quote below. Confirmation email sent instantly — we’ll be in touch shortly.",
       "name": "Name",
       "email": "Email",
       "phonenumber": "Phone Number",
@@ -671,7 +678,7 @@
       "additionalServices": "Please select any additional services you would like to add to your quote.",
       "submit": "Submit Quote",
       "reset": "Reset Form",
-      "confirmationMessage": "A confirmation email will be sent to you upon submission. Our team will review your request and get back to you as soon as possible. Thank you for choosing CleanAR Solutions!",
+      "confirmationMessage": "You’ll receive a confirmation email. Our team will reply shortly.",
       "submissionSuccess": "Quote submitted successfully! We'll be in touch shortly to discuss your needs. In the meantime, feel free to browse our services.",
       "submissionError": "Error submitting quote, please ensure all fields are filled out correctly. If the problem persists, please contact us directly with a description of the issue.",
       "invalidPromoCode": "Invalid promo code. Please review your code and try again. If you do not have a promo code, please leave the field blank.",

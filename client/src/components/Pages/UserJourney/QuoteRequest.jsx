@@ -161,22 +161,22 @@ const QuoteRequest = () => {
             }));
         }
     }, [isLogged]);
-//     const prepopulateForm = useCallback(() => {
-//   if (!isLogged) return;
+    //     const prepopulateForm = useCallback(() => {
+    //   if (!isLogged) return;
 
-//   const profile = Auth.getProfile();
-//   if (!profile) return;
+    //   const profile = Auth.getProfile();
+    //   if (!profile) return;
 
-//   setFormData((prev) => ({
-//     ...prev,
-//     name: `${profile.firstName || ""} ${profile.lastName || ""}`.trim(),
-//     email: profile.email || "",
-//     phonenumber: profile.telephone || "",
-//     postalcode: profile.postalcode || "",
-//     companyName: profile.companyName || "",
-//     userId: profile._id || "",
-//   }));
-// }, [isLogged]);
+    //   setFormData((prev) => ({
+    //     ...prev,
+    //     name: `${profile.firstName || ""} ${profile.lastName || ""}`.trim(),
+    //     email: profile.email || "",
+    //     phonenumber: profile.telephone || "",
+    //     postalcode: profile.postalcode || "",
+    //     companyName: profile.companyName || "",
+    //     userId: profile._id || "",
+    //   }));
+    // }, [isLogged]);
 
 
     const calculateTotals = useCallback(() => {
@@ -869,7 +869,7 @@ const QuoteRequest = () => {
 
     return (
         <>
-            <Container className="quick-quote-container px-4 rounded-2" id="quote-section" 
+            <Container className="quick-quote-container px-4 rounded-2" id="quote-section"
             // style={{ backgroundImage: `url(${pageBg})`, backgroundSize: "cover" }}
             >
                 <Helmet>
@@ -1035,18 +1035,11 @@ const QuoteRequest = () => {
                         </Row>
                         {/* </Form> */}
                     </section>
-                    <Row>
-                        <Col>
-                            <p className='text-cleanar-color text-bold pt-2'>
-                                {t('quick_quote.form.confirmationMessage', 'A confirmation email will be sent to you upon submission. Our team will review your request and get back to you as soon as possible. Thank you for choosing CleanAR Solutions!')}
-                            </p>
-                        </Col>
-                    </Row>
                     <Row className='pb-3'>
                         <Col md className="">
-                            <Button type="submit" className='secondary-bg-color rounded-pill' data-track="clicked_submit_quote">{t('quick_quote.form.submit', 'Submit Quote')}</Button>
-                        </Col>
-                        <Col md className="">
+                            <Button type="submit" className='secondary-bg-color rounded-pill mx-2' data-track="clicked_submit_quote">{t('quick_quote.form.submit', 'Submit Quote')}</Button>
+                            {/* </Col>
+                        <Col md className=""> */}
                             <Button data-track="clicked_reset_quote" onClick={() => setFormData({
                                 name: '',
                                 companyName: '',
@@ -1056,7 +1049,7 @@ const QuoteRequest = () => {
                                 promoCode: '',
                                 services: [],
                                 products: []
-                            })} className='btn-danger rounded-pill'>{t('quick_quote.form.reset', 'Reset Form')}</Button>
+                            })} className='btn-danger rounded-pill mx-2'>{t('quick_quote.form.reset', 'Reset Form')}</Button>
                         </Col>
                     </Row>
                 </Form>

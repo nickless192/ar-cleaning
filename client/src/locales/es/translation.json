@@ -11,7 +11,10 @@
       "call": "Llama Ahora",
       "callNote": "Respuesta más rápida",
       "text": "¿Prefieres SMS? Envíanos un mensaje",
-      "textNote": "Cotización por SMS"
+      "textNote": "Cotización por SMS",
+      "call_short": "Llamar",
+      "text_short": "SMS",
+        "email_short": "Correo"
     },
       "contact_title": "Opciones de contacto",
     "contact_subtitle": "Elige una — respondemos rápido.",
@@ -232,7 +235,9 @@
       "submit": "Enviar Mensaje",
       "companyName_placeholder": "Compania ABC",
       "postalcode_placeholder": "H0H 0H0",
-      "promoCode_placeholder": "PROMO123"
+      "promoCode_placeholder": "PROMO123",
+      "note": "¡Nos pondremos en contacto contigo pronto: personas reales, no bots!" 
+
     },
     "alerts": {
       "success": "¡Su mensaje ha sido enviado!",
@@ -256,7 +261,9 @@
     "prev": "Anterior",
     "next": "Siguiente",
     "visitGoogleProfile": "Puedes leer estas y dejar tu propia reseña en nuestro perfil de Google:",
-    "googleProfileLink": "CleanAR Solutions"
+    "googleProfileLink": "CleanAR Solutions",
+     "readMore": "Leer más",
+  "readLess": "Leer menos"
   },
   "whyChooseUs": {
     "heading": "¿Por qué elegir CleanAR Solutions?",
@@ -644,7 +651,7 @@
   "quick_quote": {
     "form": {
       "title": "Obtenga su cotización",
-      "description": "Complete el formulario a continuación para recibir un presupuesto personalizado para sus necesidades de limpieza. Nuestro equipo revisará su solicitud y se pondrá en contacto con usted lo antes posible.",
+      "description": "Pida su cotización personalizada. Recibirá un correo de confirmación de inmediato — nos pondremos en contacto con usted pronto.",
       "name": "Nombre",
       "email": "Correo electrónico",
       "phonenumber": "Número de teléfono",
@@ -661,7 +668,7 @@
       "customOptions": "Tus opciones personalizadas",
       "submit": "Enviar cotización",
       "reset": "Restablecer formulario",
-      "confirmationMessage": "Se enviará un correo de confirmación después del envío. Nuestro equipo revisará su solicitud y se pondrá en contacto lo antes posible. ¡Gracias por elegir CleanAR Solutions!",
+      "confirmationMessage": "Recibimos tu solicitud de cotización y nos pondremos en contacto contigo pronto.",
       "submissionSuccess": "¡Cotización enviada con éxito! Nos pondremos en contacto con usted en breve para discutir sus necesidades. Mientras tanto, no dude en explorar nuestros servicios.",
       "submissionError": "Error al enviar la cotización, por favor asegúrese de que todos los campos estén completos y correctos. Si el problema persiste, contáctenos directamente con una descripción del problema.",
       "invalidPromoCode": "Código promocional inválido. Por favor revise su código y vuelva a intentarlo. Si no tiene un código promocional, deje el campo en blanco.",

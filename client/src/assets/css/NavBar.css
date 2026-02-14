@@ -82,7 +82,7 @@ main,
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 18px;
+  gap: 5px;
   min-width: 0;
 }
 

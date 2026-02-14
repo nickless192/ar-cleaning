@@ -20,7 +20,7 @@ function FeaturedServices() {
     {
       title: t("products_and_services.residential_cleaning_title"),
       img: residentialCleaningBg,
-      link: "/products-and-services#moveout",
+      link: "/products-and-services#residential",
     },
     {
       title: t("products_and_services.commercial_cleaning_title"),

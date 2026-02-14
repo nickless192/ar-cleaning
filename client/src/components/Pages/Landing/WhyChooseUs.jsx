@@ -48,7 +48,7 @@ function WhyChooseUs() {
   ];
 
   return (
-    <div className="py-5 px-4 mt-4 rounded-4">
+    <div className="py-2 px-1 mt-4 rounded-4">
       {/* Title as Toggle Button */}
       {/* <div className="text-center mb-4">
         <Button

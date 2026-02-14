@@ -1134,47 +1134,76 @@ getVisits: async (req, res) => {
   // -------------------------
   // sessionExit (updated: compute duration server-side, score from events)
   // -------------------------
-  sessionExit: async (req, res) => {
-    try {
-      const { sessionId, page, lastSeenAt } = req.body;
-      if (!sessionId) return res.status(400).json({ error: "Missing sessionId" });
+ sessionExit: async (req, res) => {
+  try {
+    const { sessionId, page, lastSeenAt } = req.body;
+    if (!sessionId) return res.status(400).json({ error: "Missing sessionId" });
 
-      const doc = await VisitorLog.findOne({ sessionId });
-      if (!doc) return res.status(404).json({ error: "Session not found" });
+    // Read current doc (needed because you compute derived fields)
+    const doc = await VisitorLog.findOne({ sessionId }).lean();
+    if (!doc) return res.status(404).json({ error: "Session not found" });
 
-      doc.lastSeenAt = lastSeenAt ? new Date(lastSeenAt) : new Date();
+    const computedLastSeenAt = lastSeenAt ? new Date(lastSeenAt) : new Date();
 
-      // compute duration here even if heartbeat didn’t run
-      doc.sessionDuration = Math.max(0, Math.round((doc.lastSeenAt - doc.firstSeenAt) / 1000));
+    // compute duration here even if heartbeat didn’t run
+    const sessionDuration = Math.max(
+      0,
+      Math.round((computedLastSeenAt - new Date(doc.firstSeenAt)) / 1000)
+    );
 
-      const paths = Array.isArray(doc.pathsVisited) ? doc.pathsVisited : [];
-      const exitPage = normalizePage(page) || paths[paths.length - 1] || doc.page;
+    const paths = Array.isArray(doc.pathsVisited) ? doc.pathsVisited : [];
+    const exitPage =
+      normalizePage(page) || paths[paths.length - 1] || doc.page;
 
-      doc.exitPage = exitPage;
+    // bounce logic: if only one page and no meaningful actions
+    const actions = getActionCount(doc);
+    const isBounce = paths.length <= 1 && actions === 0;
 
-      // bounce logic: if only one page and no meaningful actions
-      const actions = getActionCount(doc);
-      doc.isBounce = paths.length <= 1 && actions === 0;
+    // Build a “doc-like” object for your scoring functions
+    const scoredDoc = {
+      ...doc,
+      lastSeenAt: computedLastSeenAt,
+      sessionDuration,
+      exitPage,
+      isBounce,
+    };
 
-      doc.engagementScore = computeEngagementScore(doc);
-      const { qualified, reasons } = computeQualified(doc);
-      doc.qualified = qualified;
-      doc.qualifiedReason = reasons;
+    const engagementScore = computeEngagementScore(scoredDoc);
+    const { qualified, reasons } = computeQualified(scoredDoc);
 
-      await doc.save();
+    // ✅ Atomic write (no doc.save → no VersionError)
+    const updated = await VisitorLog.findOneAndUpdate(
+      { sessionId },
+      {
+        $set: {
+          lastSeenAt: computedLastSeenAt,
+          sessionDuration,
+          exitPage,
+          isBounce,
+          engagementScore,
+          qualified,
+          qualifiedReason: reasons,
+          updatedAt: new Date(),
+        },
+        // optional — only if you want explicit version bumps
+        // $inc: { __v: 1 },
+      },
+      { new: true } // return updated document
+    );
 
-      return res.status(200).json({
-        message: "Session exit recorded",
-        isBounce: doc.isBounce,
-        engagementScore: doc.engagementScore,
-        qualified: doc.qualified,
-        sessionDuration: doc.sessionDuration,
-      });
-    } catch (error) {
-      console.error("sessionExit error:", error);
-      return res.status(500).json({ error: "Failed to record session exit" });
-    }
-  },
+    return res.status(200).json({
+      message: "Session exit recorded",
+      isBounce: updated?.isBounce ?? isBounce,
+      engagementScore: updated?.engagementScore ?? engagementScore,
+      qualified: updated?.qualified ?? qualified,
+      sessionDuration: updated?.sessionDuration ?? sessionDuration,
+    });
+  } catch (error) {
+    console.error("sessionExit error:", error);
+    return res.status(500).json({ error: "Failed to record session exit" });
+  }
+},
+
 };
 
 module.exports = visitorController;
