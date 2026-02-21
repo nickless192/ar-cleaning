@@ -366,9 +366,9 @@
       "add_company": "Add company name"
     },
     "buttons": {
-      "save_profile": "Save Profile",
+      "save_profile": "Save",
       "cancel": "Cancel",
-      "edit_profile": "Edit Profile"
+      "edit_profile": "Edit"
     },
     "quotes": {
       "title": "My Quotes",
@@ -388,13 +388,14 @@
       "title": "My Bookings",
       "no_bookings": "No bookings found.",
       "service_date": "Service Date",
+      "requested_date": "Requested Date",
       "service_type": "Service Type",
       "status": "Status",
       "new_date_requested": "New Date Requested",
       "need_help": "Need help?",
       "acknowledged_badge": "Acknowledged",
       "not_acknowledged_badge": "Not Yet Acknowledged",
-      "request_change": "Request Service Change",
+      "request_change": "Request Changes",
       "not_available": "Not available"
     },
     "pagination": {
@@ -869,7 +870,8 @@
       "date": "New Date",
       "serviceType": "Service Required",
       "comment": "Comment",
-      "comment_placeholder": "Add details about the requested change..."
+      "comment_placeholder": "Add details about the requested change...",
+      "serviceType_placeholder": "Select a service type..."
     },
     "buttons": {
       "submit": "Submit Request",

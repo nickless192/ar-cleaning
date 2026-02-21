@@ -19,6 +19,7 @@ import {
     FaQuestionCircle
 } from 'react-icons/fa';
 import { generatePDF } from '/src/utils/generatePDF';
+import pageBg from "/src/assets/img/bg1.png";
 
 const QuoteRequest = () => {
 
@@ -37,6 +38,7 @@ const QuoteRequest = () => {
         grandTotal: 0,
         services: [],
         products: [],
+        userId: ''
         // serviceLevel: '', // New field for service level
     });
     const [popoverOpen, setPopoverOpen] = useState({
@@ -128,7 +130,11 @@ const QuoteRequest = () => {
         document.documentElement.classList.remove("nav-open");
         // if (location.state?.scrollToQuote) {
         if (scrollToQuote && !scrolledToQuote) {
-            document.getElementById("quote-section")?.scrollIntoView({ behavior: "smooth" });
+            // document.getElementById("quote-section")?.scrollIntoView({ behavior: "smooth" });
+            const nameInput = document.getElementById("floatingName"); // make sure your input has id="name-input"
+            if (nameInput) {
+                nameInput.focus({ preventScroll: false }); // scrolls if needed
+            }
             const promoCode = searchParams.get('promoCode');
             if (promoCode) {
                 setFormData(prevFormData => ({
@@ -149,12 +155,29 @@ const QuoteRequest = () => {
                 name: `${data.firstName} ${data.lastName}`,
                 email: data.email,
                 phonenumber: data.telephone,
-                postalcode: data.postalcode,
-                companyName: data.companyName,
-                userId: data._id
+                postalcode: data.postalcode || '',
+                companyName: data.companyName || '',
+                userId: data._id || ''
             }));
         }
     }, [isLogged]);
+    //     const prepopulateForm = useCallback(() => {
+    //   if (!isLogged) return;
+
+    //   const profile = Auth.getProfile();
+    //   if (!profile) return;
+
+    //   setFormData((prev) => ({
+    //     ...prev,
+    //     name: `${profile.firstName || ""} ${profile.lastName || ""}`.trim(),
+    //     email: profile.email || "",
+    //     phonenumber: profile.telephone || "",
+    //     postalcode: profile.postalcode || "",
+    //     companyName: profile.companyName || "",
+    //     userId: profile._id || "",
+    //   }));
+    // }, [isLogged]);
+
 
     const calculateTotals = useCallback(() => {
         const subtotalCost = formData.services.reduce((total, service) => {
@@ -368,6 +391,10 @@ const QuoteRequest = () => {
             promoCode: '',
             services: [],
             products: [],
+            userId: '',
+            subtotalCost: 0,
+            tax: 0,
+            grandTotal: 0
         });
         setSelectedService("");
         setOptions([]);
@@ -842,21 +869,23 @@ const QuoteRequest = () => {
 
     return (
         <>
-            <Container className="quick-quote-container px-4 rounded-2" id="quote-section">
+            <Container className="quick-quote-container px-4 rounded-2 white-bg-color" id="quote-section"
+            // style={{ backgroundImage: `url(${pageBg})`, backgroundSize: "cover" }}
+            >
                 <Helmet>
                     <title>CleanAR Solutions</title>
                     <meta name="description" content="Get a quick service estimate from CleanAR Solutions. Fill out our form to receive a personalized quote for your cleaning needs." />
                 </Helmet>
-                <VisitorCounter />
-                <h2 className="text-center primary-color text-bold pt-2">{t('quick_quote.form.title', 'Get a Free Quote')}</h2>
+                {/* <VisitorCounter /> */}
+                <h2 className="text-center text-cleanar-color text-bold pt-2">{t('quick_quote.form.title', 'Get a Free Quote')}</h2>
                 {/* <p className="text-center text-sm italic text-gray-500 mb-1">
                     *Translation coming soon in French and Spanish
                 </p> */}
-                <p className="text-center text-secondary-color">
+                <p className="text-cleanar-color text-bold">
                     {t('quick_quote.form.description', 'Fill out the form below to receive a personalized quote for your cleaning needs. Our team will review your request and get back to you as soon as possible.')}
                 </p>
                 <hr />
-                <Form onSubmit={handleSubmit} id="quote-form" className="m-0 p-0">
+                <Form onSubmit={handleSubmit} id="quote-form" className="m-0 p-0" >
                     <Form.Group className="mb-1">
                         <Row>
                             {[
@@ -1006,18 +1035,11 @@ const QuoteRequest = () => {
                         </Row>
                         {/* </Form> */}
                     </section>
-                    <Row>
-                        <Col>
-                            <p className='primary-color text-bold pt-2'>
-                                {t('quick_quote.form.confirmationMessage', 'A confirmation email will be sent to you upon submission. Our team will review your request and get back to you as soon as possible. Thank you for choosing CleanAR Solutions!')}
-                            </p>
-                        </Col>
-                    </Row>
                     <Row className='pb-3'>
                         <Col md className="">
-                            <Button type="submit" className='secondary-bg-color rounded-pill' data-track="clicked_submit_quote">{t('quick_quote.form.submit', 'Submit Quote')}</Button>
-                        </Col>
-                        <Col md className="">
+                            <Button type="submit" className='secondary-bg-color rounded-pill mx-2' data-track="clicked_submit_quote">{t('quick_quote.form.submit', 'Submit Quote')}</Button>
+                            {/* </Col>
+                        <Col md className=""> */}
                             <Button data-track="clicked_reset_quote" onClick={() => setFormData({
                                 name: '',
                                 companyName: '',
@@ -1027,7 +1049,7 @@ const QuoteRequest = () => {
                                 promoCode: '',
                                 services: [],
                                 products: []
-                            })} className='btn-danger rounded-pill'>{t('quick_quote.form.reset', 'Reset Form')}</Button>
+                            })} className='btn-danger rounded-pill mx-2'>{t('quick_quote.form.reset', 'Reset Form')}</Button>
                         </Col>
                     </Row>
                 </Form>

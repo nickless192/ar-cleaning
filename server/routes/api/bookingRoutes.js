@@ -6,11 +6,13 @@ const NotificationService = require('../../services/NotificationService');
 const { createBooking, getBookings, deleteBooking, completeBooking, hideBooking, sendScheduledReminder, sendScheduledConfirmationEmail, confirmBooking, cancelBooking, pendBookingById,
   updateBookingDate,
   submitNewDateRequest,
-  updateBooking
+  updateBooking,
+  submitNewBookingRequest
  } = require('../../controllers/bookingController');
 
 
 router.post('/', createBooking);
+router.post('/request', submitNewBookingRequest);
 router.get('/', getBookings);
 router.delete('/:id', deleteBooking);
 router.put('/:id/update-date', updateBookingDate);

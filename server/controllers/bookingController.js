@@ -870,7 +870,129 @@ const bookingControllers = {
       console.error('Error submitting new date request:', err);
       res.status(500).json({ error: 'Failed to submit new date request' });
     }
-  }
+  },
+  submitNewBookingRequest: async (req, res) => {
+    try {
+      // ✅ Assume auth middleware sets req.user for logged-in customers
+      // If your auth stores it differently, adjust accordingly.
+      // const user = req.user;
+
+      // if (!user?._id) {
+      //   return res.status(401).json({ error: "Unauthorized" });
+      // }
+      const userId = req.body.userId; // For testing, we can pass userId in body. In production, get from req.user
+
+      const {
+        customerSuggestedBookingDate,
+        customerSuggestedServiceType,
+        customerSuggestedBookingComment,
+      } = req.body;
+
+      if (!customerSuggestedBookingDate || !customerSuggestedServiceType) {
+        return res.status(400).json({ error: "Missing date or service type" });
+      }
+
+      // ✅ Convert Toronto wall time -> UTC JS Date (same approach as createBooking)
+      let suggestedDateUTC;
+      try {
+        suggestedDateUTC = parseTorontoWallTimeToUTCDate(customerSuggestedBookingDate);
+      } catch (e) {
+        return res.status(400).json({ error: "Invalid date format" });
+      }
+
+      // ✅ Find the linked Customer for this user
+      // IMPORTANT: adapt this query to YOUR actual link field.
+      // Common patterns:
+      //  - Customer.userId
+      //  - Customer.user
+      //  - Customer.authUserId
+      console.log("userId received:", userId);
+      console.log("typeof userId:", typeof userId);
+      const customer = await Customer.findOne({ user: userId });
+      if (!customer) {
+        // return res.status(404).json({ error: "Customer profile not found" });
+        userDoc = await User.findById(userId);
+        if (!userDoc) return res.status(404).json({ error: "User not found" });
+
+        customer = await Customer.create({
+          user: userDoc._id,
+          firstName: userDoc.firstName,
+          lastName: userDoc.lastName,
+          email: userDoc.email,
+          status: "active",
+        });
+      }
+
+      // ✅ Create a booking that represents a request:
+      // - keep "actual" booking date/serviceType empty until admin confirms
+      // - set suggested fields
+      // - keep status pending
+      // const newBooking = new Booking({
+      //   customerName: customer.name || user.firstName || "",
+      //   customerEmail: customer.email || user.email || "",
+
+      //   customerId: customer._id,
+
+      //   // actual booking fields (admin will set later)
+      //   date: null,
+      //   serviceType: "",
+
+      //   // suggested fields (customer request)
+      //   customerSuggestedBookingDate: suggestedDateUTC,
+      //   customerSuggestedServiceType: String(customerSuggestedServiceType || "").trim(),
+      //   customerSuggestedBookingComment: String(customerSuggestedBookingComment || "").trim(),
+      //   customerSuggestedBookingAcknowledged: false,
+
+      //   status: "pending",
+      //   hidden: false,
+
+      //   // who initiated it (customer user)
+      //   createdBy: user._id,
+      //   updatedBy: user._id,
+
+      //   // leave services/income/tax/discount defaults
+      //   reminderDate: null,
+      //   confirmationSent: false,
+      //   reminderSent: false,
+      //   updatedAt: new Date(),
+      //   createdAt: new Date(),
+      // });
+      const customerFullName = `${customer.firstName || ""} ${customer.lastName || ""}`.trim();
+      const newBooking = new Booking({
+        customerName: customerFullName,
+        customerEmail: customer.email || "",
+
+        customerId: customer._id,
+
+        date: null,
+        serviceType: "",
+
+        customerSuggestedBookingDate: suggestedDateUTC,
+        customerSuggestedServiceType: String(customerSuggestedServiceType || "").trim(),
+        customerSuggestedBookingComment: String(customerSuggestedBookingComment || "").trim(),
+        customerSuggestedBookingAcknowledged: false,
+
+        status: "pending",
+        hidden: false,
+
+        // use userId since you don't have req.user yet
+        createdBy: userId,
+        updatedBy: userId,
+      });
+
+      const savedBooking = await newBooking.save();
+
+      // ✅ link into customer.bookings like your admin createBooking does
+      await Customer.findByIdAndUpdate(customer._id, {
+        $push: { bookings: savedBooking._id },
+      });
+
+      return res.status(201).json(savedBooking);
+    } catch (err) {
+      console.error("Error submitting new booking request:", err);
+      return res.status(500).json({ error: "Failed to submit booking request" });
+    }
+  },
 };
 
 module.exports = bookingControllers;

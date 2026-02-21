@@ -1,1061 +1,1380 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-// import { HelmetProvider } from 'react-helmet-async';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import { useTranslation } from 'react-i18next';
-import {
-    Popover, PopoverBody
-} from 'reactstrap';
+import { useTranslation } from "react-i18next";
+import { motion, AnimatePresence } from "framer-motion";
 import {
     Container,
-    Button,
     Form,
     Row,
     Col,
-} from 'react-bootstrap';
+    Button,
+    ProgressBar,
+    Alert,
+    Badge,
+    Card,
+    Accordion
+} from "react-bootstrap";
+import { FaCheckCircle, FaChevronLeft, FaChevronRight, FaTag } from "react-icons/fa";
+
 import Auth from "/src/utils/auth";
-import VisitorCounter from "/src/components/Pages/Management/VisitorCounter";
-import {
-    FaQuestionCircle
-} from 'react-icons/fa';
-import { generatePDF } from '/src/utils/generatePDF';
-import pageBg from "/src/assets/img/bg1.png";
+import { generatePDF } from "/src/utils/generatePDF";
+
+// -----------------------------
+// Premium SaaS Quote Request (V2)
+// -----------------------------
+
+const DRAFT_KEY = "cleanar_quote_draft_v2";
 
 const QuoteRequest = () => {
-
     const location = useLocation();
     const navigate = useNavigate();
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
+
+    const isLogged = useMemo(() => Auth.loggedIn(), []);
+    const [step, setStep] = useState(1);
+
+    // Core data
     const [formData, setFormData] = useState({
-        name: '',
-        companyName: '',
-        email: '',
-        phonenumber: '',
-        postalcode: '',
-        promoCode: '',
+        name: "",
+        companyName: "",
+        email: "",
+        phonenumber: "",
+        postalcode: "",
+        promoCode: "",
+        services: [], // [{ category, type, customOptions }]
+        products: [],
+        userId: "",
         subtotalCost: 0,
         tax: 0,
         grandTotal: 0,
-        services: [],
-        products: [],
-        userId: ''
-        // serviceLevel: '', // New field for service level
-    });
-    const [popoverOpen, setPopoverOpen] = useState({
-        name: false,
-        email: false,
-        phonenumber: false,
-        description: false,
-        companyName: false,
-        postalcode: false,
-        services: false,
     });
 
-    const [, setValidPromoCode] = useState(false);
-    const [isLogged] = useState(Auth.loggedIn());
-    const [isInitialLoad, setIsInitialLoad] = useState(true);
-    const [scrolledToQuote, setScrolledToQuote] = useState(false);
-    const [selectedService, setSelectedService] = useState("");
-    const [options, setOptions] = useState([]);
+    // UX state
+    const [selectedCategory, setSelectedCategory] = useState("");
+    const [selectedType, setSelectedType] = useState("");
+    const [errors, setErrors] = useState({});
+    const [banner, setBanner] = useState({ variant: "", msg: "" });
 
-    // Define services and their options
-    const serviceOptions = {
-        'Residential Cleaning': [
-            "House Cleaning",
-            "Move-In/Out Cleaning",
-            "Condominium Cleaning",
-            "Residential Building Cleaning"
+    // Promo
+    const [promoStatus, setPromoStatus] = useState({ state: "idle", msg: "" }); // idle | valid | invalid
+
+    // Focus management
+    const firstFieldRef = useRef(null);
+
+    // Services catalog (same logic as your original, but renamed for clarity)
+    const serviceOptions = useMemo(
+        () => ({
+            Residential: ["House Cleaning", "Move-In/Out Cleaning", "Condominium Cleaning", "Residential Building Cleaning"],
+            Commercial: ["Office Cleaning", "Industrial Cleaning", "Retail Cleaning"],
+            "Carpet & Upholstery": ["Carpet Cleaning", "Upholstery Cleaning"],
+            "Window Cleaning": ["Interior Window Cleaning", "Window Track & Sill Cleaning", "Glass Door Cleaning"],
+            "Power/Pressure Washing": [
+                "Driveway Cleaning",
+                "Patio & Deck Cleaning",
+                "Sidewalk Cleaning",
+                "Exterior Siding Cleaning",
+                "Fence Cleaning",
+                "Garage Floor Cleaning",
+            ],
+        }),
+        []
+    );
+
+    const categoryCards = useMemo(
+        () => [
+            { key: "Residential", title: t("quick_quote.form.serviceOptions.Residential Cleaning", "Residential Cleaning"), desc: t("quick_quote.v2.residential_desc", "Homes, condos, move-in/out, building units") },
+            { key: "Commercial", title: t("quick_quote.form.serviceOptions.Commercial Cleaning", "Commercial Cleaning"), desc: t("quick_quote.v2.commercial_desc", "Offices, retail, industrial spaces") },
+            { key: "Carpet & Upholstery", title: t("quick_quote.form.serviceOptions.Carpet And Upholstery", "Carpet & Upholstery"), desc: t("quick_quote.v2.carpet_desc", "Carpets, sofas, chairs, stain treatment") },
+            { key: "Window Cleaning", title: t("quick_quote.form.serviceOptions.Window Cleaning", "Window Cleaning"), desc: t("quick_quote.v2.window_desc", "Interior windows, tracks & sills, doors") },
+            { key: "Power/Pressure Washing", title: t("quick_quote.form.serviceOptions.Power/Pressure Washing", "Power/Pressure Washing"), desc: t("quick_quote.v2.power_desc", "Exterior surfaces, driveways, decks") },
         ],
-        'Commercial Cleaning': [
-            "Office Cleaning",
-            "Industrial Cleaning",
-            "Retail Cleaning"
-        ],
-        'Carpet And Upholstery': [
-            "Carpet Cleaning",
-            "Upholstery Cleaning"
-        ],
-        'Window Cleaning': [
-            "Interior Window Cleaning",
-            "Window Track & Sill Cleaning",
-            "Glass Door Cleaning"
-        ],
-        'Power/Pressure Washing': [
-            "Driveway Cleaning",
-            "Patio & Deck Cleaning",
-            "Sidewalk Cleaning",
-            "Exterior Siding Cleaning",
-            "Fence Cleaning",
-            "Garage Floor Cleaning"
-        ]
-    };
+        [t]
+    );
 
-    const togglePopover = (field) => {
-        setPopoverOpen((prevState) => {
-            // Reset all fields to false
-            const newState = Object.keys(prevState).reduce((acc, key) => {
-                acc[key] = false;
-                return acc;
-            }, {});
-
-            // Toggle the selected field
-            return { ...newState, [field]: !prevState[field] };
-        });
-    };
-
-
+    // Prefill from Auth + load draft
     useEffect(() => {
+        // Load draft first
+        try {
+            const raw = localStorage.getItem(DRAFT_KEY);
+            if (raw) {
+                const draft = JSON.parse(raw);
+                setFormData((prev) => ({ ...prev, ...draft }));
+                setSelectedCategory(draft?.services?.[0]?.service || "");
+                setSelectedType(draft?.services?.[0]?.type || "");
+            }
+        } catch {
+            // ignore draft errors
+        }
+
+        // Query params behaviour (keeps your existing flow)
         const searchParams = new URLSearchParams(location.search);
-        const scrollToQuote = searchParams.get('scrollToQuote');
-        if (isInitialLoad) {
-            const promoCode = searchParams.get('promoCode');
-            // console.log('promoCode:', promoCode);
-            const serviceClicked = searchParams.get('service');
-            if (promoCode) {
-                setFormData(prevFormData => ({
-                    ...prevFormData,
-                    promoCode: promoCode
-                }));
-            }
-            if (serviceClicked) {
-                handleServiceChange(serviceClicked);
-            }
-            prepopulateForm();
-            setIsInitialLoad(false);
-        }
-        // console.log('serviceClicked:', serviceClicked);
+        const scrollToQuote = searchParams.get("scrollToQuote");
+        const promoCode = searchParams.get("promoCode");
+        const serviceClicked = searchParams.get("service");
 
-        calculateTotals();
-        document.body.classList.add("request-quote", "sidebar-collapse");
-        document.documentElement.classList.remove("nav-open");
-        // if (location.state?.scrollToQuote) {
-        if (scrollToQuote && !scrolledToQuote) {
-            // document.getElementById("quote-section")?.scrollIntoView({ behavior: "smooth" });
-            const nameInput = document.getElementById("floatingName"); // make sure your input has id="name-input"
-            if (nameInput) {
-                nameInput.focus({ preventScroll: false }); // scrolls if needed
-            }
-            const promoCode = searchParams.get('promoCode');
-            if (promoCode) {
-                setFormData(prevFormData => ({
-                    ...prevFormData,
-                    promoCode: promoCode
-                }));
-            }
-            setScrolledToQuote(true);
+        if (promoCode) {
+            setFormData((prev) => ({ ...prev, promoCode }));
         }
-        return document.body.classList.remove("request-quote", "sidebar-collapse");
-    }, [isLogged, formData.services, location.search, location.state]);
 
-    const prepopulateForm = useCallback(() => {
+        if (serviceClicked) {
+            // Try map old keys (original) to new categories when possible
+            // If serviceClicked equals category name, set it; otherwise ignore.
+            const normalized = String(serviceClicked || "").trim();
+            const categoryMatch = Object.keys(serviceOptions).find((k) => k.toLowerCase() === normalized.toLowerCase());
+            if (categoryMatch) setSelectedCategory(categoryMatch);
+        }
+
         if (isLogged) {
-            const data = Auth.getProfile().data;
-            setFormData(prev => ({
-                ...prev,
-                name: `${data.firstName} ${data.lastName}`,
-                email: data.email,
-                phonenumber: data.telephone,
-                postalcode: data.postalcode || '',
-                companyName: data.companyName || '',
-                userId: data._id || ''
-            }));
+            const data = Auth.getProfile()?.data;
+            if (data) {
+                setFormData((prev) => ({
+                    ...prev,
+                    name: `${data.firstName || ""} ${data.lastName || ""}`.trim(),
+                    email: data.email || "",
+                    phonenumber: data.telephone || "",
+                    postalcode: data.postalcode || "",
+                    companyName: data.companyName || "",
+                    userId: data._id || "",
+                }));
+            }
         }
-    }, [isLogged]);
-    //     const prepopulateForm = useCallback(() => {
-    //   if (!isLogged) return;
 
-    //   const profile = Auth.getProfile();
-    //   if (!profile) return;
+        if (scrollToQuote) {
+            setTimeout(() => firstFieldRef.current?.focus?.(), 150);
+        }
+    }, [isLogged, location.search, serviceOptions]);
 
-    //   setFormData((prev) => ({
-    //     ...prev,
-    //     name: `${profile.firstName || ""} ${profile.lastName || ""}`.trim(),
-    //     email: profile.email || "",
-    //     phonenumber: profile.telephone || "",
-    //     postalcode: profile.postalcode || "",
-    //     companyName: profile.companyName || "",
-    //     userId: profile._id || "",
-    //   }));
-    // }, [isLogged]);
+    // Autosave
+    useEffect(() => {
+        const draft = {
+            ...formData,
+            // avoid saving totals-only derived? okay to keep
+        };
+        try {
+            localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+        } catch {
+            // ignore
+        }
+    }, [formData]);
 
-
+    // Totals
     const calculateTotals = useCallback(() => {
-        const subtotalCost = formData.services.reduce((total, service) => {
-            return total + Object.values(service.customOptions || {}).reduce((sum, option) => {
-                return sum + (option.service ? option.serviceCost : 0);
-            }, 0);
+        const subtotalCost = (formData.services || []).reduce((total, service) => {
+            return (
+                total +
+                Object.values(service.customOptions || {}).reduce((sum, option) => {
+                    return sum + (option?.service ? option?.serviceCost || 0 : 0);
+                }, 0)
+            );
         }, 0);
 
         const tax = subtotalCost * 0.13;
         const grandTotal = subtotalCost + tax;
 
-        setFormData(prev => ({
-            ...prev,
-            subtotalCost,
-            tax,
-            grandTotal
-        }));
+        setFormData((prev) => ({ ...prev, subtotalCost, tax, grandTotal }));
     }, [formData.services]);
 
+    useEffect(() => {
+        calculateTotals();
+    }, [calculateTotals]);
 
-    const handleChange = (event) => {
-        const { name, value } = event.target;
-        // reset validation if promo code is changed
-        if (name === 'promoCode') {
-            setValidPromoCode(false);
-        }
-        setFormData(prevFormData => ({ ...prevFormData, [name]: value }));
+    // Helpers
+    const setField = (name, value) => {
+        setFormData((prev) => ({ ...prev, [name]: value }));
+        setErrors((prev) => ({ ...prev, [name]: "" }));
     };
 
+    const setServiceCustomOption = (key, value, label) => {
+        setFormData((prev) => {
+            const services = prev.services?.length ? [...prev.services] : [];
+            if (!services[0]) return prev;
 
-    const handleAddService = (e) => {
-        const serviceType = e.target.value;
-        // console.log('serviceType:', serviceType);
-        setFormData(prevFormData => {
-            const service = {
-                type: serviceType,
-                service: selectedService,
-                customOptions: {}
+            services[0] = {
+                ...services[0],
+                customOptions: {
+                    ...(services[0].customOptions || {}),
+                    [key]: {
+                        service: value,
+                        label: label || key,
+                    },
+                },
             };
-            return {
-                ...prevFormData,
-                services: [service]
-            };
+            return { ...prev, services };
         });
-        // console.log('services:', formData.services);
     };
 
-    // Handle service selection
-    const handleServiceChange = useCallback((service) => {
-        setSelectedService(service);
-        setOptions(serviceOptions[service] || []);
-        setFormData(prev => ({ ...prev, services: [] }));
-    }, []);
+    const clearBanner = () => setBanner({ variant: "", msg: "" });
 
-    const handleCustomOptionChange = useCallback((type, option, e, label) => {
-        let value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-        const ariaLabel = e.target.getAttribute('aria-label');
-        // console.log('value:', value);
-        setFormData(prev => ({
-            ...prev,
-            services: prev.services.map(s =>
-                s.type === type ? {
-                    ...s,
-                    customOptions: {
-                        ...s.customOptions,
-                        [option]: { service: value, label: ariaLabel }
-                    }
-                }
-                    : s
-            )
-        }));
-    }, []);
+    const validPromoCodes = useMemo(
+        () => new Set(["toronto15", "follow15", "now15", "start15", "fresh15", "secret15", "welcome15", "refresh15", "thankyou10"]),
+        []
+    );
 
-    const handlePromoCodeValidation = async (e) => {
-        e.preventDefault();
-        //const promoCode = e.target.value;
-        const promoCode = formData.promoCode.toLowerCase();
-        // if (promoCode === 'welcome10') {
-        if (promoCode === 'toronto15' || promoCode === 'follow15'
-            || promoCode === 'now15' || promoCode === 'start15' || promoCode === 'fresh15' || promoCode === 'secret15'
-            || promoCode === 'welcome15' || promoCode === 'refresh15' || promoCode === 'thankyou10'
-        ) {
-            setValidPromoCode(true);
-            // alert('Valid promo code! 15% discount will be applied to your quote');
+    const validatePromo = useCallback(() => {
+        const code = (formData.promoCode || "").trim().toLowerCase();
+        if (!code) {
+            setPromoStatus({ state: "idle", msg: "" });
             return true;
         }
-        else {
-            setValidPromoCode(false);
-            alert(t('quick_quote.form.invalidPromoCode'));
-            return false;
+        if (validPromoCodes.has(code)) {
+            setPromoStatus({ state: "valid", msg: t("quick_quote.v2.promo_valid", "Promo code applied.") });
+            return true;
+        }
+        setPromoStatus({ state: "invalid", msg: t("quick_quote.form.invalidPromoCode", "Invalid promo code.") });
+        return false;
+    }, [formData.promoCode, t, validPromoCodes]);
+
+    // Step validation
+    const validateStep = useCallback(() => {
+        clearBanner();
+        const e = {};
+
+        if (step === 1) {
+            if (!formData.name?.trim()) e.name = t("quick_quote.v2.required", "Required");
+            if (!formData.email?.trim()) e.email = t("quick_quote.v2.required", "Required");
+            if (!formData.phonenumber?.trim()) e.phonenumber = t("quick_quote.v2.required", "Required");
+            // if (!formData.postalcode?.trim()) e.postalcode = t("quick_quote.v2.required", "Required");
+            // promo optional, but if present validate inline
+            if (formData.promoCode?.trim() && !validatePromo()) e.promoCode = t("quick_quote.form.invalidPromoCode", "Invalid promo code.");
+        }
+
+        if (step === 2) {
+            if (!selectedCategory) {
+                e.selectedCategory = t("quick_quote.v2.pick_category", "Please select a service category.");
+            }
+        }
+
+        if (step === 3) {
+            if (!selectedType) e.selectedType = t("quick_quote.v2.pick_type", "Please select a service type.");
+        }
+
+        if (step === 4) {
+            if (!formData.postalcode?.trim()) e.postalcode = t("quick_quote.v2.required", "Required");
+            // Require at least a preferred date for most services (good conversion + scheduling)
+            const s0 = formData.services?.[0];
+            const date = s0?.customOptions?.startDate?.service;
+            if (!date) e.startDate = t("quick_quote.v2.pick_date", "Please choose a preferred date.");
+            const pc = formData.postalcode?.trim().toUpperCase();
+            const caPostalOk = /^[A-Z]\d[A-Z]\s?\d[A-Z]\d$/.test(pc);
+            if (!caPostalOk) e.postalcode = "Enter a valid postal code (e.g., M5V 2T6)";
+            if (s0?.type === "Upholstery Cleaning") {
+                const items = s0?.customOptions?.upholsterySelectedItems?.service;
+                if (!Array.isArray(items) || items.length === 0) {
+                    e.upholsterySelectedItems = "Select at least one upholstery item.";
+                }
+            }
+        }
+
+        setErrors(e);
+        return Object.keys(e).length === 0;
+    }, [formData, selectedCategory, selectedType, step, t, validatePromo]);
+
+    const goNext = () => {
+        const ok = validateStep();
+        if (!ok) {
+            setBanner({ variant: "danger", msg: t("quick_quote.v2.fix_errors", "Please fix the highlighted fields to continue.") });
+            return;
+        }
+        setStep((s) => Math.min(5, s + 1));
+        setTimeout(() => firstFieldRef.current?.focus?.(), 120);
+    };
+
+    const goBack = () => {
+        clearBanner();
+        setStep((s) => Math.max(1, s - 1));
+        setTimeout(() => firstFieldRef.current?.focus?.(), 120);
+    };
+
+    // Category selection
+    const chooseCategory = (categoryKey) => {
+        clearBanner();
+        setSelectedCategory(categoryKey);
+        setSelectedType("");
+
+        // reset services when category changes
+        setFormData((prev) => ({
+            ...prev,
+            services: [],
+        }));
+        setErrors((prev) => ({ ...prev, selectedCategory: "" }));
+    };
+
+    // Type selection creates the "service" object
+    const chooseType = (type) => {
+        clearBanner();
+        setSelectedType(type);
+
+        setFormData((prev) => ({
+            ...prev,
+            services: [
+                {
+                    service: selectedCategory,
+                    type,
+                    customOptions: prev.services?.[0]?.customOptions || {},
+                },
+            ],
+        }));
+        setErrors((prev) => ({ ...prev, selectedType: "" }));
+    };
+
+    // Reset
+    const resetAll = () => {
+        clearBanner();
+        setErrors({});
+        setPromoStatus({ state: "idle", msg: "" });
+        setSelectedCategory("");
+        setSelectedType("");
+        setStep(1);
+        setFormData({
+            name: "",
+            companyName: "",
+            email: "",
+            phonenumber: "",
+            postalcode: "",
+            promoCode: "",
+            services: [],
+            products: [],
+            userId: isLogged ? Auth.getProfile()?.data?._id || "" : "",
+            subtotalCost: 0,
+            tax: 0,
+            grandTotal: 0,
+        });
+        try {
+            localStorage.removeItem(DRAFT_KEY);
+        } catch {
+            // ignore
         }
     };
 
+    // Sanitization (keeps your backend stable)
+    const sanitizeServices = (services) =>
+        (services || []).map((service) => {
+            const customOptions = service.customOptions || {};
+            const sanitizedOptions = Object.keys(customOptions)
+                .filter((k) => customOptions[k]?.service !== false && customOptions[k]?.service !== "" && customOptions[k]?.service != null)
+                .reduce((acc, k) => {
+                    acc[k] = customOptions[k];
+                    return acc;
+                }, {});
+            return { ...service, customOptions: sanitizedOptions };
+        });
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        // console.log('Form data:', formData);
-        let promoCodeIsValid = false;
+    // Summary used for email payload (your old getTextSummary used DOM FormData; here we build a clean summary)
+    const buildTextSummary = () => {
+        const s0 = formData.services?.[0];
+        const options = s0?.customOptions || {};
+        const lines = [
+            `<strong>Name:</strong> ${escapeHtml(formData.name)}`,
+            `<strong>Email:</strong> ${escapeHtml(formData.email)}`,
+            `<strong>Phone:</strong> ${escapeHtml(formData.phonenumber)}`,
+            `<strong>Postal Code:</strong> ${escapeHtml(formData.postalcode)}`,
+        ];
 
-        if (formData.promoCode !== "") {
-            promoCodeIsValid = await handlePromoCodeValidation(e);
-            if (!promoCodeIsValid) {
-                return;
-            }
+        if (formData.companyName) lines.push(`<strong>Company:</strong> ${escapeHtml(formData.companyName)}`);
+        if (formData.promoCode) lines.push(`<strong>Promo Code:</strong> ${escapeHtml(formData.promoCode)}`);
+
+        if (s0?.category) lines.push(`<strong>Service Category:</strong> ${escapeHtml(s0.category)}`);
+        if (s0?.type) lines.push(`<strong>Service Type:</strong> ${escapeHtml(s0.type)}`);
+
+        Object.keys(options).forEach((k) => {
+            const label = options[k]?.label || k;
+            const val = options[k]?.service;
+            lines.push(`<strong>${escapeHtml(label)}:</strong> ${escapeHtml(String(val))}`);
+        });
+
+        return lines.join("<br>");
+    };
+
+    // Submit (keeps your endpoints)
+    const handleSubmit = async () => {
+        clearBanner();
+        // console.log("Submitting quote request with data:", formData);
+
+        // final validation (step 5)
+        // validate promo again if present
+        if (formData.promoCode?.trim() && !validatePromo()) {
+            setStep(1);
+            setBanner({ variant: "danger", msg: t("quick_quote.form.invalidPromoCode", "Invalid promo code.") });
+            return;
         }
 
-        if (promoCodeIsValid || formData.promoCode === '') {
-            if (!validateForm()) {
-                return;
-            }
+        // Must have service
+        if (!formData.services?.length && !formData.products?.length) {
+            setStep(2);
+            setBanner({ variant: "danger", msg: t("quick_quote.form.requiredFields", "Required fields missing:") + " Service" });
+            return;
+        }
 
-            // Purge customOptions that don't have a service
-            const sanitizedServices = formData.services.map(service => {
-                if (service.customOptions) {
-                    const sanitizedOptions = Object.keys(service.customOptions)
-                        // .filter(option => service.customOptions.service[option])
-                        .filter(option => service.customOptions[option].service)
-                        .reduce((acc, option) => {
-                            acc[option] = service.customOptions[option];
-                            return acc;
-                        }, {});
-                    return { ...service, customOptions: sanitizedOptions };
-                }
-                return service;
-            });
+        const sanitizedServices = sanitizeServices(formData.services);
+        const payloadData = { ...formData, services: sanitizedServices };
 
-            // console.log('Sanitized services:', sanitizedServices);
-            // Capture screenshot of the form
-            // const serviceSelectionForm = document.getElementById("service-selection");
-            const serviceSelectionForm = document.getElementById("quote-form");
-            // const canvas = await html2canvas(serviceSelectionForm);
-            // const imageBase64 = canvas.toDataURL("image/png").split(",")[1]; // PNG format
-            // Extract form values
-            const textSummary = getTextSummary(serviceSelectionForm);
+        const payload = {
+            textSummary: buildTextSummary(),
+            formData: payloadData,
+        };
 
-            const updatedFormData = {
-                ...formData,
-                // serviceSelectionForm,
-                services: sanitizedServices
-            };
-
-            // console.log(textSummary);
-
-            // const payload = { textSummary, imageBase64, formData: updatedFormData };
-            const payload = { textSummary, formData: updatedFormData };
-
-            // Send form data and image to the backend
+        try {
+            // Email summary
             fetch("/api/email/quick-quote", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload),
-            })
-                .then(response => response.json())
-                .then(data => console.log("Success:", data))
-                .catch(error => console.error("Error:", error));
+            }).catch(() => { /* non-blocking */ });
 
-            // console.log('Updated form data:', updatedFormData);
+            // Save quote
+            const response = await fetch("/api/quotes/quickquote", {
+                method: "POST",
+                headers: { "Content-Type": "application/json", Accept: "application/json" },
+                body: JSON.stringify(payloadData),
+            });
+
+            if (!response.ok) {
+                setBanner({ variant: "danger", msg: t("quick_quote.form.submissionError", "Something went wrong. Please try again.") });
+                return;
+            }
+
+            setBanner({ variant: "success", msg: t("quick_quote.form.submissionSuccess", "Quote submitted successfully!") });
+
+            // Generate PDF then reset and redirect
+            await generatePDF(payloadData, t);
 
             try {
-                const response = await fetch('/api/quotes/quickquote', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Accept: 'application/json'
-                    },
-                    body: JSON.stringify(updatedFormData)
-                });
-
-                if (response.ok) {
-                    alert(t(`quick_quote.form.submissionSuccess`));
-                    await generatePDF(updatedFormData, t);
-                    // disable for testing
-                    resetForm();
-                    // Generate and download the PDF
-                    // navigate('/index');
-                    navigate('/products-and-services');
-                }
-            } catch (error) {
-                // console.error('Error submitting quote:', error);
-                alert(t(`quick_quote.form.submissionError`));
+                localStorage.removeItem(DRAFT_KEY);
+            } catch {
+                // ignore
             }
 
-
-
-
+            // Soft reset (keeps success banner briefly)
+            setTimeout(() => {
+                resetAll();
+                navigate("/products-and-services");
+            }, 600);
+        } catch (err) {
+            setBanner({ variant: "danger", msg: t("quick_quote.form.submissionError", "Something went wrong. Please try again.") });
         }
     };
 
-    const validateForm = () => {
-        const requiredFields = ['name', 'email', 'phonenumber', 'postalcode'];
-        const missingFields = requiredFields.filter(field => !formData[field]);
+    const totalSteps = 5;
+    const progress = Math.round((step / totalSteps) * 100);
 
-        if (formData.services.length === 0 && formData.products.length === 0) {
-            missingFields.push('Services or Products');
-        }
+    const activeServiceTypes = selectedCategory ? serviceOptions[selectedCategory] || [] : [];
 
-        if (missingFields.length > 0) {
-            alert(t(`quick_quote.form.requiredFields`) + ` ${missingFields.join(', ')}`);
-            return false;
-        }
-        return true;
+    // Motion variants
+    const panel = {
+        initial: { opacity: 0, y: 14 },
+        animate: { opacity: 1, y: 0, transition: { duration: 0.22 } },
+        exit: { opacity: 0, y: -10, transition: { duration: 0.18 } },
     };
+    const formatPostal = (v) =>
+        v.toUpperCase().replace(/[^A-Z0-9]/g, "").replace(/^(.{3})(.*)$/, "$1 $2").trim();
 
-    const resetForm = () => {
-        setFormData({
-            name: '',
-            companyName: '',
-            email: '',
-            phonenumber: '',
-            postalcode: '',
-            promoCode: '',
-            services: [],
-            products: [],
-            userId: '',
-            subtotalCost: 0,
-            tax: 0,
-            grandTotal: 0
-        });
-        setSelectedService("");
-        setOptions([]);
-
-    };
-
-    const getTextSummary = (form) => {
-        const formData = new FormData(form);
-        let textSummary = "";
-        for (let [key, value] of formData.entries()) {
-            const element = form.querySelector(`[name="${key}"]`);
-            const placeholder = element?.getAttribute('aria-label') || key;
-
-            if (element?.type === 'checkbox') {
-                textSummary += `<strong>${placeholder}:</strong> ${element.checked ? 'Yes' : 'No'}<br>`;
-            } else {
-                textSummary += `<strong>${placeholder}:</strong> ${value}<br>`;
-            }
-        }
-        return textSummary;
-    };
-
-
-    const upholsteryList = [
-        "Sofa Cleaning",
-        "Chair Cleaning",
-        "Couch Cleaning",
-        "Sectional Cleaning",
-        "Ottoman Cleaning",
-        "Loveseat Cleaning",
-        "Dining Chair Cleaning",
-        "Recliner Cleaning"
-    ]
-
-
-    const renderCustomOptions = (type) => {
-        switch (type) {
-            case 'House Cleaning':
-            case 'Move-In/Out Cleaning': {
-                return (
-                    <>
-                        <Row className="g-1">
-                            {/* Frequency */}
-                            <Col xs={12} md={6}>
-                                <Form.Group controlId={`frequency-${type}`}>
-                                    <Form.Label className="fw-semibold">{t('quick_quote.customOptions.frequency')}</Form.Label>
-                                    <Form.Select
-                                        aria-label={t('quick_quote.customOptions.frequency')}
-                                        name="frequency"
-                                        size="sm"
-                                        className="text-cleanar-color text-bold form-input"
-                                        value={formData.services.find(s => s.type === type)?.customOptions?.frequency?.service || ''}
-                                        onChange={(e) => handleCustomOptionChange(type, 'frequency', e)}
-                                    >
-                                        <option value="">{t('quick_quote.customOptions.selectText')}</option>
-                                        <option value="One Time">{t('quick_quote.customOptions.oneTime')}</option>
-                                        <option value="Weekly">{t('quick_quote.customOptions.weekly')}</option>
-                                        <option value="Bi-Weekly">{t('quick_quote.customOptions.biWeekly')}</option>
-                                        <option value="Monthly">{t('quick_quote.customOptions.monthly')}</option>
-                                        <option value="Other">{t('quick_quote.customOptions.other')}</option>
-                                    </Form.Select>
-                                </Form.Group>
-                            </Col>
-
-                            {/* Unit Size */}
-                            <Col xs={12} md={6}>
-                                <Form.Group controlId={`unitSize-${type}`}>
-                                    <Form.Label className="fw-semibold">{t('quick_quote.customOptions.unitSize')}</Form.Label>
-                                    <Form.Select
-                                        aria-label={t('quick_quote.customOptions.unitSize')}
-                                        name="unitSize"
-                                        size="sm"
-                                        className="text-cleanar-color text-bold form-input"
-                                        value={formData.services.find(s => s.type === type)?.customOptions?.squareFootage?.service || ''}
-                                        onChange={(e) => handleCustomOptionChange(type, 'squareFootage', e)}
-                                    >
-                                        <option value="">{t('quick_quote.customOptions.selectText')}</option>
-                                        <option value="0-499 sqft">0–499 {t('quick_quote.customOptions.area')}</option>
-                                        <option value="500-999 sqft">500–999 {t('quick_quote.customOptions.area')}</option>
-                                        <option value="1000-1499 sqft">1000–1499 {t('quick_quote.customOptions.area')}</option>
-                                        <option value="1500-1999 sqft">1500–1999 {t('quick_quote.customOptions.area')}</option>
-                                        <option value="2000+ sqft">2000+ {t('quick_quote.customOptions.area')}</option>
-                                    </Form.Select>
-                                </Form.Group>
-                            </Col>
-
-                            {/* Bedrooms */}
-                            <Col xs={12} md={6}>
-                                <Form.Group controlId={`bedrooms-${type}`}>
-                                    <Form.Label className="fw-semibold">{t('quick_quote.customOptions.bedrooms')}</Form.Label>
-                                    <Form.Select
-                                        aria-label={t('quick_quote.customOptions.bedrooms')}
-                                        name="bedrooms"
-                                        size="sm"
-                                        className="text-cleanar-color text-bold form-input"
-                                        value={formData.services.find(s => s.type === type)?.customOptions?.bedrooms?.service || ''}
-                                        onChange={(e) => handleCustomOptionChange(type, 'bedrooms', e)}
-                                    >
-                                        <option value="">{t('quick_quote.customOptions.selectText')}</option>
-                                        {Array.from({ length: 6 }, (_, i) => (
-                                            <option key={i} value={i.toString()}>{i === 5 ? '5+' : i}</option>
-                                        ))}
-                                    </Form.Select>
-                                </Form.Group>
-                            </Col>
-
-                            {/* Bathrooms */}
-                            <Col xs={12} md={6}>
-                                <Form.Group controlId={`bathrooms-${type}`}>
-                                    <Form.Label className="fw-semibold">{t('quick_quote.customOptions.bathrooms')}</Form.Label>
-                                    <Form.Select
-                                        aria-label={t('quick_quote.customOptions.bathrooms')}
-                                        name="bathrooms"
-                                        size="sm"
-                                        className="text-cleanar-color text-bold form-input"
-                                        value={formData.services.find(s => s.type === type)?.customOptions?.bathrooms?.service || ''}
-                                        onChange={(e) => handleCustomOptionChange(type, 'bathrooms', e)}
-                                    >
-                                        <option value="">{t('quick_quote.customOptions.selectText')}</option>
-                                        {Array.from({ length: 6 }, (_, i) => (
-                                            <option key={i} value={i.toString()}>{i === 5 ? '5+' : i}</option>
-                                        ))}
-                                    </Form.Select>
-                                </Form.Group>
-                            </Col>
-
-                            {/* Start Date */}
-                            <Col xs={12} md={6}>
-                                <Form.Group controlId={`startDate-${type}`}>
-                                    <Form.Label className="fw-semibold">{t('quick_quote.customOptions.startDate')}</Form.Label>
-                                    <Form.Control
-                                        type="date"
-                                        name="startDate"
-                                        aria-label={t('quick_quote.customOptions.startDate')}
-                                        size="sm"
-                                        className="text-cleanar-color text-bold form-input"
-                                        value={formData.services.find(s => s.type === type)?.customOptions?.startDate?.service || ''}
-                                        onChange={(e) => handleCustomOptionChange(type, 'startDate', e)}
-                                        min={new Date().toISOString().split('T')[0]}
-                                    />
-                                </Form.Group>
-                            </Col>
-
-                            {/* Additional Options */}
-                            {type === 'House Cleaning' && (
-                                <Col xs={12} md={12}>
-                                    <Form.Group controlId={`additionalOptions-${type}`}>
-                                        <Form.Label className="fw-semibold">{t('quick_quote.customOptions.additionalOptions')}</Form.Label>
-                                        <Row className="">
-                                            {[
-                                                { label: t('quick_quote.customOptions.deepCleaning'), key: 'deepCleaning' },
-                                                { label: t('quick_quote.customOptions.windowCleaning'), key: 'windowCleaning' },
-                                                { label: t('quick_quote.customOptions.laundryService'), key: 'laundryService' }
-                                            ].map(({ label, key }) => (
-                                                <Col xs={12} sm={6} lg={4} key={key}>
-                                                    <Form.Check
-                                                        type="checkbox"
-                                                        id={`${key}-${type}`}
-                                                        label={label}
-                                                        name={key}
-                                                        aria-label={label}
-                                                        className=""
-                                                        checked={
-                                                            formData.services.find(s => s.type === type)?.customOptions?.[key]?.service || false
-                                                        }
-                                                        onChange={(e) => handleCustomOptionChange(type, key, e)}
-                                                    />
-                                                </Col>
-                                            ))}
-                                        </Row>
-                                    </Form.Group>
-                                </Col>
-
-                            )}
-                        </Row>
-
-                    </>
-
-                );
-            }
-            case 'Carpet Cleaning': {
-                return (
-                    <>
-                        <Row className="mb-3">
-                            <Col xs={12}>
-                                <Form.Group controlId={`carpetType-${type}`}>
-                                    <Form.Label className="text-bold">{t('quick_quote.customOptions.carpetMaterial')}</Form.Label>
-                                    <Form.Select
-                                        aria-label={t('quick_quote.customOptions.chooseMaterial')}
-                                        className="transparent form-border"
-                                        name="carpetType"
-                                        size="sm"
-                                        value={formData.services.find(s => s.type === type)?.customOptions?.carpetType?.service || ''}
-                                        onChange={(e) => handleCustomOptionChange(type, 'carpetType', e)}
-                                    >
-                                        <option value="">{t('quick_quote.customOptions.chooseMaterial')}</option>
-                                        <option value="Wool">{t('quick_quote.customOptions.wool')}</option>
-                                        <option value="Nylon">{t('quick_quote.customOptions.nylon')}</option>
-                                        <option value="Polyester">{t('quick_quote.customOptions.polyester')}</option>
-                                        <option value="Olefin">{t('quick_quote.customOptions.olefin')}</option>
-                                        <option value="Other">{t('quick_quote.customOptions.other')}</option>
-                                    </Form.Select>
-                                </Form.Group>
-                            </Col>
-                        </Row>
-
-                        <Row className="mb-3">
-                            <Col xs={12}>
-                                <Form.Group controlId={`carpetArea-${type}`}>
-                                    <Form.Label className="text-bold">{t('quick_quote.customOptions.carpetArea')}</Form.Label>
-                                    <Form.Control
-                                        type="number"
-                                        min={0}
-                                        inputMode="numeric"
-                                        pattern="[0-9]*"
-                                        size="sm"
-                                        aria-label={t('quick_quote.customOptions.enterCarpetArea')}
-                                        name="carpetArea"
-                                        placeholder="e.g. 500"
-                                        className="text-cleanar-color text-bold form-border"
-                                        value={formData.services.find(s => s.type === type)?.customOptions?.carpetArea?.service || ''}
-                                        onChange={(e) => handleCustomOptionChange(type, 'carpetArea', e)}
-                                    />
-                                </Form.Group>
-                            </Col>
-                        </Row>
-
-                        <Row className="mb-3">
-                            <Col xs={12} md={6}>
-                                <Form.Group controlId={`stains-${type}`}>
-                                    <Form.Label className="text-bold">{t('quick_quote.customOptions.carpetStains')}</Form.Label>
-                                    <Form.Select
-                                        aria-label={t('quick_quote.customOptions.selectStainSeverity')}
-                                        className="transparent form-border"
-                                        name="stains"
-                                        size="sm"
-                                        value={formData.services.find(s => s.type === type)?.customOptions?.stains?.service || ''}
-                                        onChange={(e) => handleCustomOptionChange(type, 'stains', e)}
-                                    >
-                                        <option value="">{t('quick_quote.customOptions.howSevereAreTheStains')}</option>
-                                        <option value="None">{t('quick_quote.customOptions.none')}</option>
-                                        <option value="Light">{t('quick_quote.customOptions.light')}</option>
-                                        <option value="Moderate">{t('quick_quote.customOptions.moderate')}</option>
-                                        <option value="Heavy">{t('quick_quote.customOptions.heavy')}</option>
-                                    </Form.Select>
-                                </Form.Group>
-                            </Col>
-
-                            <Col xs={12} md={6}>
-                                <Form.Group controlId={`startDate-${type}`}>
-                                    <Form.Label className="text-bold">{t('quick_quote.customOptions.preferredCleaningDate')}</Form.Label>
-                                    <Form.Control
-                                        type="date"
-                                        aria-label={t('quick_quote.customOptions.preferredCleaningDate')}
-                                        name="startDate"
-                                        size="sm"
-                                        placeholder="Select a date"
-                                        min={new Date().toISOString().split('T')[0]}
-                                        className="text-cleanar-color text-bold form-border"
-                                        value={formData.services.find(s => s.type === type)?.customOptions?.startDate?.service || ''}
-                                        onChange={(e) => handleCustomOptionChange(type, 'startDate', e)}
-                                    />
-                                </Form.Group>
-                            </Col>
-                        </Row>
-                    </>
-
-                );
-            }
-            case 'Power Washing': {
-                return (
-                    <>
-                        <Row className="mb-3">
-                            <Col>
-                                <Form.Group controlId={`surfaceType-${type}`}>
-                                    <Form.Label className="text-bold">{t('quick_quote.customOptions.surfaceType')}</Form.Label>
-                                    <Form.Select
-                                        aria-label="Type of Surface"
-                                        className="transparent form-border"
-                                        name="surfaceType"
-                                        placeholder="Type of Surface"
-                                        size='sm'
-                                        onChange={(e) => handleCustomOptionChange(type, 'surfaceType', e)}
-                                        value={formData.services.find(s => s.type === type)?.customOptions?.surfaceType?.service || ''}
-                                    >
-                                        <option value="">Select Surface Type...</option>
-                                        <option value="Concrete">Concrete</option>
-                                        <option value="Wood">Wood</option>
-                                        <option value="Vinyl">Vinyl</option>
-                                        <option value="Brick">Brick</option>
-                                        <option value="Other">Other</option>
-                                    </Form.Select>
-                                </Form.Group>
-                            </Col>
-                            <Col>
-                                <Form.Group controlId={`area-${type}`}>
-                                    <Form.Label className="text-bold">Area (sqft)</Form.Label>
-                                    <Form.Control
-                                        type="number"
-                                        aria-label="Area"
-                                        name="area"
-                                        placeholder="Enter area in square feet"
-                                        className="text-cleanar-color text-bold form-border"
-                                        onChange={(e) => handleCustomOptionChange(type, 'area', e)}
-                                        value={formData.services.find(s => s.type === type)?.customOptions?.area?.service || ''}
-                                    />
-                                </Form.Group>
-                            </Col>
-                            <Col>
-                                <Form.Group controlId={`stains-${type}`}>
-                                    <Form.Label className="text-bold">Stains or Spots</Form.Label>
-                                    <Form.Select
-                                        aria-label="Stains or Spots"
-                                        size='sm'
-                                        name="stains"
-                                        placeholder="Stains or Spots"
-                                        className="transparent form-border"
-                                        onChange={(e) => handleCustomOptionChange(type, 'stains', e)}
-                                        value={formData.services.find(s => s.type === type)?.customOptions?.stains?.service || ''}
-                                    >
-                                        <option value="">Select Stain Level...</option>
-                                        <option value="None">None</option>
-                                        <option value="Light">Light</option>
-                                        <option value="Moderate">Moderate</option>
-                                        <option value="Heavy">Heavy</option>
-                                    </Form.Select>
-                                </Form.Group>
-                            </Col>
-                            <Col md={12} xs={12}>
-                                <Form.Group controlId={`startDate-${type}`}>
-                                    <Form.Label className="text-bold">Desired Service Date</Form.Label>
-                                    <Form.Control
-                                        type="date"
-                                        aria-label="Desired Service Date"
-                                        name='startDate'
-                                        placeholder="Desired Service Date"
-                                        className="text-cleanar-color text-bold form-border"
-                                        min={new Date().toISOString().split('T')[0]} // Prevent dates before today
-                                        onChange={(e) => handleCustomOptionChange(type, 'startDate', e)}
-                                        value={formData.services.find(s => s.type === type)?.customOptions?.startDate?.service || ''}
-                                    />
-                                </Form.Group>
-                            </Col>
-                        </Row>
-                    </>
-                );
-            }
-            case 'Upholstery Cleaning': {
-                // include different types of upholstery to select from, and next to it, the area in sqft, the number of pieces, and the type of fabric
-                return (
-                    <>
-                        <Row className="mb-3">
-                            {upholsteryList.map((item, index) => (
-                                <Col key={index} md={6} xs={12} className="mb-3">
-                                    <Form.Group controlId={`upholstery-${type}-${index}`}>
-                                        <Form.Label className="text-bold">{item}</Form.Label>
-                                        <Form.Control
-                                            type="number"
-                                            aria-label="Upholstery Area"
-                                            name={`upholsteryArea-${index}`}
-                                            placeholder={t("quick_quote.customOptions.upholsteryArea")}
-                                            className="text-cleanar-color text-bold form-border"
-                                            onChange={(e) => handleCustomOptionChange(type, `upholsteryArea-${index}`, e)}
-                                            value={formData.services.find(s => s.type === type)?.customOptions?.[`upholsteryArea-${index}`]?.service || ''}
-                                        />
-                                        <Form.Control
-                                            type="number"
-                                            aria-label="Upholstery Pieces"
-                                            name={`upholsteryPieces-${index}`}
-                                            placeholder={t("quick_quote.customOptions.upholsteryPieces")}
-                                            className="text-cleanar-color text-bold form-border mt-2"
-                                            onChange={(e) => handleCustomOptionChange(type, `upholsteryPieces-${index}`, e)}
-                                            value={formData.services.find(s => s.type === type)?.customOptions?.[`upholsteryPieces-${index}`]?.service || ''}
-                                        />
-                                        <Form.Select
-                                            aria-label="Upholstery Fabric Type"
-                                            name={`upholsteryFabric-${index}`}
-                                            placeholder={t("quick_quote.customOptions.selectFabric")}
-                                            className="transparent form-border mt-2"
-                                            onChange={(e) => handleCustomOptionChange(type, `upholsteryFabric-${index}`, e)}
-                                            value={formData.services.find(s => s.type === type)?.customOptions?.[`upholsteryFabric-${index}`]?.service || ''}
-                                        >
-                                            <option value="">{t("quick_quote.customOptions.selectFabric")}</option>
-                                            <option value="Leather">{t("quick_quote.customOptions.leather")}</option>
-                                            <option value="Cotton">{t("quick_quote.customOptions.cotton")}</option>
-                                            <option value="Polyester">{t("quick_quote.customOptions.polyester")}</option>
-                                            <option value="Nylon">{t("quick_quote.customOptions.nylon")}</option>
-                                            <option value="Other">{t("quick_quote.customOptions.other")}</option>
-                                        </Form.Select>
-                                    </Form.Group>
-                                </Col>
-                            ))}
-                            <Col md={12} xs={12}>
-                                <Form.Group controlId={`startDate-${type}`}>
-                                    <Form.Label className="text-bold">{t("quick_quote.customOptions.desiredDate")}</Form.Label>
-                                    <Form.Control
-                                        type="date"
-                                        aria-label={t("quick_quote.customOptions.desiredDate")}
-                                        name='startDate'
-                                        placeholder={t("quick_quote.customOptions.desiredDate")}
-                                        className="text-cleanar-color text-bold form-border"
-                                        min={new Date().toISOString().split('T')[0]} // Prevent dates before today
-                                        onChange={(e) => handleCustomOptionChange(type, 'startDate', e)}
-                                        value={formData.services.find(s => s.type === type)?.customOptions?.startDate?.service || ''}
-                                    />
-                                </Form.Group>
-                            </Col>
-                        </Row>
-                    </>
-                );
-            }
-            default:
-                return (
-                    <>
-                        <Row className="mb-3">
-                            <Col>
-                                <Form.Group controlId={`description-${type}`} className="mb-3">
-                                    <Form.Label className="text-bold">{t("quick_quote.customOptions.description")}</Form.Label>
-                                    <Form.Control
-                                        as="textarea"
-                                        rows={3}
-                                        aria-label={t("quick_quote.customOptions.description")}
-                                        name="description"
-                                        placeholder={t("quick_quote.customOptions.descriptionDetail")}
-                                        value={formData.services.find(s => s.type === type)?.customOptions?.description?.service || ''}
-                                        onChange={(e) => handleCustomOptionChange(type, 'description', e)}
-                                        className="text-cleanar-color text-bold form-input"
-                                    />
-                                </Form.Group>
-                            </Col>
-                            <Col md={12} xs={12}>
-                                <Form.Group controlId={`startDate-${type}`}>
-                                    <Form.Label className="text-bold">{t("quick_quote.customOptions.desiredDate")}</Form.Label>
-                                    <Form.Control
-                                        type="date"
-                                        aria-label={t("quick_quote.customOptions.desiredDate")}
-                                        name='startDate'
-                                        size='sm'
-                                        placeholder={t("quick_quote.customOptions.desiredDate")}
-                                        className="text-cleanar-color text-bold form-border"
-                                        min={new Date().toISOString().split('T')[0]} // Prevent dates before today
-                                        onChange={(e) => handleCustomOptionChange(type, 'startDate', e)}
-                                        value={formData.services.find(s => s.type === type)?.customOptions?.startDate?.service || ''}
-                                    />
-                                </Form.Group>
-                            </Col>
-                        </Row>
-                    </>
-                );
-        }
-
-    };
-
-    const getTooltipText = (name) => {
-        switch (name) {
-            case 'name':
-                return t('quick_quote.tooltips.name', 'Enter your full name.');
-            case 'email':
-                return t('quick_quote.tooltips.email', 'Enter your email address.');
-            case 'phonenumber':
-                return t('quick_quote.tooltips.phonenumber', 'Enter your phone number.');
-            case 'companyName':
-                return t('quick_quote.tooltips.companyName', 'Enter your company name.');
-            case 'postalcode':
-                return t('quick_quote.tooltips.postalcode', 'Enter your postal code.');
-            case 'promoCode':
-                return t('quick_quote.tooltips.promoCode', 'Enter your promo code. Discount will be reflected on the quote if eligible. Promos cannot be combined.');
-            default:
-                return '';
-        }
-    };
 
     return (
         <>
-            <Container className="quick-quote-container px-4 rounded-2" id="quote-section"
-            // style={{ backgroundImage: `url(${pageBg})`, backgroundSize: "cover" }}
-            >
-                <Helmet>
-                    <title>CleanAR Solutions</title>
-                    <meta name="description" content="Get a quick service estimate from CleanAR Solutions. Fill out our form to receive a personalized quote for your cleaning needs." />
-                </Helmet>
-                {/* <VisitorCounter /> */}
-                <h2 className="text-center text-cleanar-color text-bold pt-2">{t('quick_quote.form.title', 'Get a Free Quote')}</h2>
-                {/* <p className="text-center text-sm italic text-gray-500 mb-1">
-                    *Translation coming soon in French and Spanish
-                </p> */}
-                <p className="text-cleanar-color text-bold">
-                    {t('quick_quote.form.description', 'Fill out the form below to receive a personalized quote for your cleaning needs. Our team will review your request and get back to you as soon as possible.')}
-                </p>
-                <hr />
-                <Form onSubmit={handleSubmit} id="quote-form" className="m-0 p-0" >
-                    <Form.Group className="mb-1">
-                        <Row>
-                            {[
-                                { label: t('quick_quote.form.name', 'Name'), name: 'name', placeholder: t('contact.form.name_placeholder', 'Full Name'), required: true },
-                                { label: t('quick_quote.form.email', 'Email'), name: 'email', placeholder: t('contact.form.email_placeholder', 'Email'), required: true },
-                                { label: t('quick_quote.form.phonenumber', 'Phone No'), name: 'phonenumber', placeholder: t('contact.form.phone_placeholder', 'Phone Number'), required: true },
-                                { label: t('quick_quote.form.companyName', 'Company'), name: 'companyName', placeholder: t('contact.form.companyName_placeholder', 'Company Name') },
-                                { label: t('quick_quote.form.postalcode', 'Postal Code'), name: 'postalcode', placeholder: t('contact.form.postalcode_placeholder', 'Postal Code'), required: true },
-                                { label: t('quick_quote.form.promoCode', 'Promo Code'), name: 'promoCode', placeholder: t('contact.form.promoCode_placeholder', 'Promo Code') }
-                            ].map(({ label, name, placeholder, required }) => (
-                                <Col key={name} md={3} xs={6} className="mb-2 ">
-                                    <Form.Label className="text-bold mb-1">
-                                        {label}{required && '*'}
-                                        <FaQuestionCircle
-                                            id={`${name}Tooltip`}
-                                            className="ms-1"
-                                            onClick={() => togglePopover(name)}
-                                        />
-                                        <Popover
-                                            placement="top"
-                                            isOpen={popoverOpen[name]}
-                                            target={`${name}Tooltip`}
-                                            toggle={() => togglePopover(name)}
-                                        >
-                                            <PopoverBody>{getTooltipText(name)}</PopoverBody>
-                                        </Popover>
-                                    </Form.Label>
-                                    <Form.Control
-                                        type="text"
-                                        id={`floating${label.replace(' ', '')}`}
-                                        placeholder={placeholder}
-                                        aria-label={label}
-                                        className="text-cleanar-color form-input rounded-pill"
-                                        name={name}
-                                        value={formData[name]}
-                                        onChange={handleChange}
-                                        required={required}
-                                    />
-                                </Col>
-                            ))}
-                        </Row>
-                    </Form.Group>
-                    <hr />
-                    <section className="section-border">
-                        {/* <Form id="service-selection"> */}
-                        <Row>
-                            <Col md={3} xs={12} className="mb-3 radio-group">
-                                <Form.Group className="mb-3">
-                                    <Form.Label className="text-bold mb-1">
-                                        {t('quick_quote.form.serviceRequired', 'Service Required*')}
-                                        <FaQuestionCircle
-                                            id="servicesTooltip"
-                                            className="ms-1"
-                                            onClick={() => togglePopover('services')}
-                                        />
-                                        <Popover
-                                            placement="top"
-                                            isOpen={popoverOpen.services}
-                                            target="servicesTooltip"
-                                            toggle={() => togglePopover('services')}
-                                        >
-                                            <PopoverBody>{t('quick_quote.form.serviceDescription', 'Please add service type and level to customize your order')}</PopoverBody>
-                                        </Popover>
-                                    </Form.Label>
-                                </Form.Group>
-                                {Object.keys(serviceOptions).map((service) => (
-                                    <label key={service} className="radio-label d-block mb-2">
-                                        <input
-                                            type="radio"
-                                            name="serviceType"
-                                            aria-label="Service Type"
-                                            placeholder='Service Type'
-                                            value={service}
-                                            checked={selectedService === service}
-                                            onChange={() => handleServiceChange(service)}
-                                            className="me-2"
-                                        />
-                                        {t(`quick_quote.form.serviceOptions.${service}`)}
-                                    </label>
-                                ))}
-                            </Col>
-                            <Col md={3} xs={12} className="mb-3">
-                                <Form.Group className="mb-3">
-                                    <Form.Label className="text-bold mb-1">
-                                        {t('quick_quote.form.serviceType', 'Service Type*')}
-                                        <FaQuestionCircle
-                                            id="serviceLevelTooltip"
-                                            className="ms-1"
-                                            onClick={() => togglePopover('serviceLevel')}
-                                        />
-                                        <Popover
-                                            placement="top"
-                                            isOpen={popoverOpen.serviceLevel}
-                                            target="serviceLevelTooltip"
-                                            toggle={() => togglePopover('serviceLevel')}
-                                        >
-                                            <PopoverBody>{t('quick_quote.form.serviceLevel', 'Please select a service level to customize your order')}</PopoverBody>
-                                        </Popover>
-                                    </Form.Label>
-                                </Form.Group>
-                                {selectedService ? (
-                                    <div className="radio-group options-selection">
-                                        {options.map((option) => (
-                                            <label key={option} className="radio-label d-block mb-2">
-                                                <input
-                                                    type="radio"
-                                                    name="serviceOption"
-                                                    aria-label="Service Option"
-                                                    placeholder='Service Option'
-                                                    value={option}
-                                                    onChange={handleAddService}
-                                                    className="me-2"
-                                                />
-                                                {t(`quick_quote.form.serviceOptions.${selectedService} Options.${option}`)}
-                                            </label>
-                                        ))}
+            <Helmet>
+                <title>CleanAR Solutions</title>
+                <meta
+                    name="description"
+                    content="Get a quick service estimate from CleanAR Solutions. Fill out our form to receive a personalized quote for your cleaning needs."
+                />
+            </Helmet>
+
+            <Container className="cleanar-quote-v2 my-4">
+                <Row className="justify-content-center">
+                    <Col lg={9} xl={8}>
+                        <Card className="quoteShell shadow-sm border-0">
+                            <Card.Body className="p-4 p-md-5">
+                                {/* Header */}
+                                <div className="d-flex align-items-start justify-content-between gap-3 mb-3 headerTop">
+                                    <div>
+                                        <div className="d-flex align-items-center gap-2 mb-2">
+                                            {/* <Badge bg="light" text="dark" className="pillBadge">
+                        {t("quick_quote.v2.free_quote", "Free Quote")}
+                      </Badge> */}
+                                            <Badge bg="light" text="dark" className="pillBadge">
+                                                {t("quick_quote.v2.fast_response", "Fast response")}
+                                            </Badge>
+                                        </div>
+                                        <h2 className="quoteTitle mb-1">
+                                            {t("quick_quote.form.title", "Get a Free Quote")}
+                                        </h2>
+                                        <p className="quoteSubtitle mb-0">
+                                            {t(
+                                                "quick_quote.form.description",
+                                                "Fill out the form below to receive a personalized quote for your cleaning needs. Our team will review your request and get back to you as soon as possible."
+                                            )}
+                                        </p>
                                     </div>
-                                ) : (
-                                    <p className="text-danger text-bold">{t('quick_quote.customOptions.pleaseAddService', 'Please Add Service First')}</p>
+
+                                    <div className="text-end headerRight">
+                                        <div className="stepText">
+                                            {t("quick_quote.v2.step", "Step")} <strong>{step}</strong> / {totalSteps}
+                                        </div>
+                                        <ProgressBar now={progress} className="quoteProgress mt-2" />
+                                    </div>
+                                </div>
+
+                                {banner.msg && (
+                                    <Alert variant={banner.variant} className="mb-4">
+                                        {banner.msg}
+                                    </Alert>
                                 )}
-                            </Col>
-                            <Col md={6} xs={12}>
-                                <Form.Group className="mb-3">
-                                    <Form.Label className="text-bold mb-1">
-                                        {t('quick_quote.form.customOptions', 'Your Custom Options')}
-                                        <FaQuestionCircle
-                                            id="additionalServicesTooltip"
-                                            className="ms-1"
-                                            onClick={() => togglePopover('additionalServices')}
-                                        />
-                                        <Popover
-                                            placement="top"
-                                            isOpen={popoverOpen.additionalServices}
-                                            target="additionalServicesTooltip"
-                                            toggle={() => togglePopover('additionalServices')}
+
+                                {/* Content */}
+                                <AnimatePresence mode="wait">
+                                    {step === 1 && (
+                                        <motion.div key="step1" {...panel}>
+                                            <SectionTitle
+                                                title={t("quick_quote.v2.about_you", "About you")}
+                                                subtitle={t("quick_quote.v2.about_you_sub", "Just the basics — we’ll use this to send your quote.")}
+                                            />
+
+                                            <Row className="g-3">
+                                                <Col md={6}>
+                                                    <Field
+                                                        inputRef={firstFieldRef}
+                                                        label={t("quick_quote.form.name", "Name")}
+                                                        required
+                                                        value={formData.name}
+                                                        onChange={(v) => setField("name", v)}
+                                                        placeholder={t("contact.form.name_placeholder", "Full Name")}
+                                                        error={errors.name}
+                                                        name="name"
+                                                        type="text"
+                                                    />
+                                                </Col>
+
+                                                <Col md={6}>
+                                                    <Field
+                                                        label={t("quick_quote.form.email", "Email")}
+                                                        required
+                                                        value={formData.email}
+                                                        onChange={(v) => setField("email", v)}
+                                                        placeholder={t("contact.form.email_placeholder", "Email")}
+                                                        error={errors.email}
+                                                        name="email"
+                                                        type="email"
+                                                    />
+                                                </Col>
+
+                                                <Col md={6}>
+                                                    <Field
+                                                        label={t("quick_quote.form.phonenumber", "Phone")}
+                                                        required
+                                                        value={formData.phonenumber}
+                                                        onChange={(v) => setField("phonenumber", v)}
+                                                        placeholder={t("contact.form.phone_placeholder", "Phone Number")}
+                                                        error={errors.phonenumber}
+                                                        name="phonenumber"
+                                                        type="tel"
+                                                    />
+                                                </Col>
+
+
+                                            </Row>
+
+                                            {/* Optional section */}
+                                            {/* <div className="mt-4">
+                                                <DetailsBlock title={t("quick_quote.v2.optional", "Optional details")}> */}
+                                            <Accordion className="optionalAccordion mt-4" defaultActiveKey={null}>
+                                                <Accordion.Item eventKey="0" className="optionalItem">
+                                                    <Accordion.Header>
+                                                        {t("quick_quote.v2.optional", "Optional details")}
+                                                    </Accordion.Header>
+
+                                                    <Accordion.Body>
+                                                        <Row className="g-3">
+                                                            <Col md={6}>
+                                                                <Field
+                                                                    label={t("quick_quote.form.companyName", "Company")}
+                                                                    value={formData.companyName}
+                                                                    onChange={(v) => setField("companyName", v)}
+                                                                    placeholder={t("contact.form.companyName_placeholder", "Company Name")}
+                                                                    error={errors.companyName}
+                                                                    name="companyName"
+                                                                    type="text"
+                                                                    helper={t("quick_quote.v2.company_helper", "If this is for a business or building, add the company name.")}
+                                                                />
+                                                            </Col>
+
+                                                            <Col md={6}>
+                                                                <Field
+                                                                    label={t("quick_quote.form.promoCode", "Promo Code")}
+                                                                    value={formData.promoCode}
+                                                                    onChange={(v) => {
+                                                                        setField("promoCode", v);
+                                                                        setPromoStatus({ state: "idle", msg: "" });
+                                                                    }}
+                                                                    placeholder={t("contact.form.promoCode_placeholder", "Promo Code")}
+                                                                    error={errors.promoCode}
+                                                                    name="promoCode"
+                                                                    type="text"
+                                                                    helper={t("quick_quote.tooltips.promoCode", "Enter your promo code. Promos cannot be combined.")}
+                                                                    rightSlot={
+                                                                        <Button
+                                                                            variant="outline-secondary"
+                                                                            size="sm"
+                                                                            className="btnApply"
+                                                                            onClick={() => {
+                                                                                const ok = validatePromo();
+                                                                                setErrors((prev) => ({ ...prev, promoCode: ok ? "" : t("quick_quote.form.invalidPromoCode", "Invalid promo code.") }));
+                                                                            }}
+                                                                        >
+                                                                            {t("quick_quote.v2.apply", "Apply")}
+                                                                        </Button>
+                                                                    }
+                                                                />
+
+                                                                {promoStatus.state === "valid" && (
+                                                                    <div className="promoOk mt-2">
+                                                                        <FaCheckCircle className="me-2" />
+                                                                        {promoStatus.msg}
+                                                                    </div>
+                                                                )}
+                                                                {promoStatus.state === "invalid" && (
+                                                                    <div className="promoBad mt-2">
+                                                                        {promoStatus.msg}
+                                                                    </div>
+                                                                )}
+                                                            </Col>
+                                                        </Row>
+                                                        {/* </DetailsBlock>
+                                            </div> */}
+                                                    </Accordion.Body>
+                                                </Accordion.Item>
+                                            </Accordion>
+                                        </motion.div>
+                                    )}
+
+                                    {step === 2 && (
+                                        <motion.div key="step2" {...panel}>
+                                            <SectionTitle
+                                                title={t("quick_quote.v2.choose_category", "Choose a service category")}
+                                                subtitle={t("quick_quote.v2.choose_category_sub", "Pick the category that best matches what you need.")}
+                                            />
+
+                                            {errors.selectedCategory && (
+                                                <div className="text-danger fw-semibold mb-3">{errors.selectedCategory}</div>
+                                            )}
+
+                                            <Row className="g-3">
+                                                {categoryCards.map((c) => (
+                                                    <Col md={6} key={c.key}>
+                                                        <SelectableCard
+                                                            title={c.title}
+                                                            desc={c.desc}
+                                                            active={selectedCategory === c.key}
+                                                            onClick={() => chooseCategory(c.key)}
+                                                        />
+                                                    </Col>
+                                                ))}
+                                            </Row>
+
+                                            {selectedCategory && (
+                                                <div className="mt-4 smallMuted">
+                                                    {t("quick_quote.v2.selected", "Selected:")}{" "}
+                                                    <strong>{selectedCategory}</strong>
+                                                </div>
+                                            )}
+                                        </motion.div>
+                                    )}
+
+                                    {step === 3 && (
+                                        <motion.div key="step3" {...panel}>
+                                            <SectionTitle
+                                                title={t("quick_quote.v2.choose_type", "Choose a service type")}
+                                                subtitle={t("quick_quote.v2.choose_type_sub", "This helps us estimate time, materials, and staffing.")}
+                                            />
+
+                                            {!selectedCategory ? (
+                                                <Alert variant="warning" className="mb-0">
+                                                    {t("quick_quote.v2.pick_category_first", "Please choose a category first.")}
+                                                </Alert>
+                                            ) : (
+                                                <>
+                                                    {errors.selectedType && (
+                                                        <div className="text-danger fw-semibold mb-3">{errors.selectedType}</div>
+                                                    )}
+
+                                                    <div className="pillWrap">
+                                                        {activeServiceTypes.map((opt) => (
+                                                            <Pill
+                                                                key={opt}
+                                                                active={selectedType === opt}
+                                                                onClick={() => chooseType(opt)}
+                                                                label={t(`quick_quote.form.serviceOptions.${selectedCategory} Options.${opt}`, opt)}
+                                                            />
+                                                        ))}
+                                                    </div>
+
+                                                    {selectedType && (
+                                                        <div className="mt-3 smallMuted">
+                                                            {t("quick_quote.v2.selected", "Selected:")}{" "}
+                                                            <strong>{selectedType}</strong>
+                                                        </div>
+                                                    )}
+                                                </>
+                                            )}
+                                        </motion.div>
+                                    )}
+
+                                    {step === 4 && (
+                                        <motion.div key="step4" {...panel}>
+                                            <SectionTitle
+                                                title={t("quick_quote.v2.customize", "Customize your request")}
+                                                subtitle={t("quick_quote.v2.customize_sub", "A few quick details so we can quote accurately.")}
+                                            />
+
+                                            {!formData.services?.[0]?.type ? (
+                                                <Alert variant="warning" className="mb-0">
+                                                    {t("quick_quote.v2.pick_type_first", "Please choose a service type first.")}
+                                                </Alert>
+                                            ) : (
+                                                <>
+                                                    {errors.startDate && (
+                                                        <div className="text-danger fw-semibold mb-3">{errors.startDate}</div>
+                                                    )}
+                                                  
+                                                    <CustomOptionsPremium
+                                                        t={t}
+                                                        serviceType={formData.services[0].type}
+                                                        customOptions={formData.services[0].customOptions || {}}
+                                                        onSet={setServiceCustomOption}
+                                                    />
+                                                      <Row className="g-3 mb-3">
+                                                        <Col md={6}>
+                                                            <Field
+                                                                label={t("quick_quote.form.postalcode", "Postal Code")}
+                                                                required
+                                                                value={formData.postalcode}
+                                                                // onChange={(v) => setField("postalcode", v)}
+                                                                onChange={(v) => setField("postalcode", formatPostal(v))}
+                                                                placeholder={t("contact.form.postalcode_placeholder", "Postal Code")}
+                                                                error={errors.postalcode}
+                                                                name="postalcode"
+                                                                type="text"
+                                                            />
+                                                        </Col>
+                                                    </Row>
+                                                </>
+                                            )}
+                                        </motion.div>
+                                    )}
+
+                                    {step === 5 && (
+                                        <motion.div key="step5" {...panel}>
+                                            <SectionTitle
+                                                title={t("quick_quote.v2.review", "Review & submit")}
+                                                subtitle={t("quick_quote.v2.review_sub", "Confirm your details — then we’ll generate your quote and follow up.")}
+                                            />
+
+                                            <ReviewPanel t={t} formData={formData} selectedCategory={selectedCategory} selectedType={selectedType} />
+
+                                            <div className="d-flex gap-2 mt-4">
+                                                <Button variant="outline-secondary" onClick={resetAll}>
+                                                    {t("quick_quote.form.reset", "Reset")}
+                                                </Button>
+                                                <Button
+                                                    variant="primary"
+                                                    className="ms-auto btnPrimary"
+                                                    onClick={handleSubmit}
+                                                    data-track="clicked_submit_quote_v2"
+                                                >
+                                                    {t("quick_quote.form.submit", "Submit Quote")}
+                                                </Button>
+                                            </div>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+
+                                {/* Footer nav */}
+                                <div className="wizardFooter mt-4 pt-3">
+                                    <div className="footerRow">
+                                        <Button
+                                            variant="outline-secondary"
+                                            onClick={goBack}
+                                            disabled={step === 1}
+                                            className="btnNav btnBackIcon"
+                                            aria-label={t("quick_quote.v2.back", "Back")}
+                                            title={t("quick_quote.v2.back", "Back")}
                                         >
-                                            <PopoverBody>{t('quick_quote.form.additionalServices', 'Please select any additional services you would like to add to your quote.')}</PopoverBody>
-                                        </Popover>
-                                    </Form.Label>
-                                </Form.Group>
-                                {formData.services.map((service, index) => (
-                                    <div key={index} className="mb-3">
-                                        {renderCustomOptions(service.type)}
+                                            <FaChevronLeft />
+                                            <span className="btnText ms-2">{t("quick_quote.v2.back", "Back")}</span>
+                                        </Button>
+
+                                        <Button variant="outline-secondary" onClick={resetAll} className="btnNav">
+                                            Clear
+                                        </Button>
+
+                                        {step < 5 ? (
+                                            <Button variant="primary" onClick={goNext} className="btnPrimary">
+                                                <span className="btnLabel">{t("quick_quote.v2.continue", "Continue")}</span>
+                                                <FaChevronRight className="btnIcon ms-2" />
+                                            </Button>
+                                        ) : null}
                                     </div>
-                                ))}
-                            </Col>
-                        </Row>
-                        {/* </Form> */}
-                    </section>
-                    <Row className='pb-3'>
-                        <Col md className="">
-                            <Button type="submit" className='secondary-bg-color rounded-pill mx-2' data-track="clicked_submit_quote">{t('quick_quote.form.submit', 'Submit Quote')}</Button>
-                            {/* </Col>
-                        <Col md className=""> */}
-                            <Button data-track="clicked_reset_quote" onClick={() => setFormData({
-                                name: '',
-                                companyName: '',
-                                email: '',
-                                postalcode: '',
-                                phonenumber: '',
-                                promoCode: '',
-                                services: [],
-                                products: []
-                            })} className='btn-danger rounded-pill mx-2'>{t('quick_quote.form.reset', 'Reset Form')}</Button>
-                        </Col>
-                    </Row>
-                </Form>
+                                </div>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                </Row>
             </Container>
         </>
     );
 };
 
 export default QuoteRequest;
+
+// -----------------------------
+// Subcomponents (same file)
+// -----------------------------
+
+function SectionTitle({ title, subtitle }) {
+    return (
+        <div className="mb-3">
+            <h4 className="sectionTitle mb-1">{title}</h4>
+            {subtitle ? <div className="sectionSubtitle">{subtitle}</div> : null}
+            <div className="sectionAccent" />
+        </div>
+    );
+}
+
+function DetailsBlock({ title, children }) {
+    return (
+        <div className="detailsBlock">
+            <div className="detailsTitle">{title}</div>
+            <div className="detailsBody">{children}</div>
+        </div>
+    );
+}
+
+function Field({
+    label,
+    required,
+    value,
+    onChange,
+    placeholder,
+    error,
+    name,
+    type,
+    helper,
+    rightSlot,
+    inputRef,
+}) {
+    return (
+        <Form.Group>
+            <div className="d-flex align-items-end justify-content-between gap-2">
+                <Form.Label className="fieldLabel">
+                    {label} {required ? <span className="req">*</span> : null}
+                </Form.Label>
+                {rightSlot ? <div className="fieldRight">{rightSlot}</div> : null}
+            </div>
+
+            <Form.Control
+                ref={inputRef}
+                name={name}
+                type={type || "text"}
+                value={value}
+                placeholder={placeholder}
+                onChange={(e) => onChange(e.target.value)}
+                isInvalid={!!error}
+                className="fieldControl form-input"
+                autoComplete="on"
+            />
+            {helper ? <Form.Text className="fieldHelper">{helper}</Form.Text> : null}
+            {error ? <div className="invalidText">{error}</div> : null}
+        </Form.Group>
+    );
+}
+
+function SelectableCard({ title, desc, active, onClick }) {
+    return (
+        <button
+            type="button"
+            className={`selectCard ${active ? "active" : ""}`}
+            onClick={onClick}
+        >
+            <div className="selectCardInner">
+                <div className="selectCardTitle">{title}</div>
+                <div className="selectCardDesc">{desc}</div>
+            </div>
+            {active ? <FaCheckCircle className="selectCardCheck" /> : null}
+        </button>
+    );
+}
+
+function Pill({ label, active, onClick }) {
+    return (
+        <button type="button" className={`pill ${active ? "active" : ""}`} onClick={onClick}>
+            {label}
+        </button>
+    );
+}
+
+function ReviewPanel({ t, formData }) {
+    const s0 = formData.services?.[0] || {};
+    const opts = s0.customOptions || {};
+
+    const rows = [
+        { label: t("quick_quote.form.name", "Name"), value: formData.name },
+        { label: t("quick_quote.form.email", "Email"), value: formData.email },
+        { label: t("quick_quote.form.phonenumber", "Phone"), value: formData.phonenumber },
+        { label: t("quick_quote.form.postalcode", "Postal Code"), value: formData.postalcode },
+        { label: t("quick_quote.form.companyName", "Company"), value: formData.companyName || "—" },
+        { label: t("quick_quote.form.promoCode", "Promo Code"), value: formData.promoCode || "—" },
+        { label: t("quick_quote.v2.category", "Category"), value: s0.category || "—" },
+        { label: t("quick_quote.v2.type", "Service Type"), value: s0.type || "—" },
+    ];
+
+    const optRows = Object.keys(opts).map((k) => ({
+        label: opts[k]?.label || k,
+        value: String(opts[k]?.service ?? ""),
+    }));
+
+    return (
+        <div className="reviewGrid">
+            <div className="reviewCard">
+                <div className="reviewCardTitle">{t("quick_quote.v2.contact_details", "Contact details")}</div>
+                <div className="reviewList">
+                    {rows.slice(0, 6).map((r) => (
+                        <div key={r.label} className="reviewRow">
+                            <div className="reviewLabel">{r.label}</div>
+                            <div className="reviewValue">{r.value}</div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            <div className="reviewCard">
+                <div className="reviewCardTitle">{t("quick_quote.v2.service_details", "Service details")}</div>
+                <div className="reviewList">
+                    {rows.slice(6).map((r) => (
+                        <div key={r.label} className="reviewRow">
+                            <div className="reviewLabel">{r.label}</div>
+                            <div className="reviewValue">{r.value}</div>
+                        </div>
+                    ))}
+                </div>
+
+                {optRows.length ? (
+                    <>
+                        <div className="reviewDivider" />
+                        <div className="reviewCardTitle">{t("quick_quote.v2.custom_options", "Custom options")}</div>
+                        <div className="reviewList">
+                            {optRows.map((r) => (
+                                <div key={r.label} className="reviewRow">
+                                    <div className="reviewLabel">{r.label}</div>
+                                    <div className="reviewValue">{r.value || "—"}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </>
+                ) : null}
+            </div>
+        </div>
+    );
+}
+
+// Premium custom options UI (keeps your original intent, simplified + cleaner)
+function CustomOptionsPremium({ t, serviceType, customOptions, onSet }) {
+    const today = useMemo(() => new Date().toISOString().split("T")[0], []);
+
+    // Helpers
+    const set = (key, val, label) => onSet(key, val, label);
+    const get = (key) => customOptions?.[key]?.service ?? "";
+
+    // Upholstery list from your original
+    const upholsteryList = useMemo(
+        () => [
+            "Sofa Cleaning",
+            "Chair Cleaning",
+            "Couch Cleaning",
+            "Sectional Cleaning",
+            "Ottoman Cleaning",
+            "Loveseat Cleaning",
+            "Dining Chair Cleaning",
+            "Recliner Cleaning",
+        ],
+        []
+    );
+
+    const SELECT_KEY = "upholsterySelectedItems";
+
+    const selectedItems = useMemo(() => {
+        const raw = get(SELECT_KEY);
+        return Array.isArray(raw) ? raw : [];
+    }, [customOptions]); // or [get] if stable
+
+    const toggleItem = (item) => {
+        const next = selectedItems.includes(item)
+            ? selectedItems.filter((x) => x !== item)
+            : [...selectedItems, item];
+
+        set(SELECT_KEY, next, "Upholstery items");
+    };
+
+    const clearItemDetails = (item) => {
+        const idx = upholsteryList.indexOf(item);
+        if (idx < 0) return;
+        // optional: clear details when unselected
+        set(`upholsteryArea-${idx}`, "", "Area (sqft)");
+        set(`upholsteryPieces-${idx}`, "", "Pieces");
+        set(`upholsteryFabric-${idx}`, "", "Fabric");
+    };
+
+    // Common blocks
+    const PreferredDate = (
+        <Form.Group className="mb-3">
+            <Form.Label className="fieldLabel">
+                {t("quick_quote.customOptions.desiredDate", "Preferred service date")} <span className="req">*</span>
+            </Form.Label>
+            <Form.Control
+                type="date"
+                min={today}
+                className="fieldControl"
+                value={get("startDate")}
+                onChange={(e) => set("startDate", e.target.value, t("quick_quote.customOptions.desiredDate", "Preferred service date"))}
+            />
+            <Form.Text className="fieldHelper">
+                {t("quick_quote.v2.date_helper", "Pick a date — we’ll confirm availability by email.")}
+            </Form.Text>
+        </Form.Group>
+    );
+
+    // Service-specific options (modern layout)
+    if (serviceType === "House Cleaning" || serviceType === "Move-In/Out Cleaning") {
+        return (
+            <div className="optionsCard">
+                <div className="optionsHeader">
+                    <div className="optionsTitle">{t("quick_quote.v2.details", "Details")}</div>
+                    <div className="optionsSub">{t("quick_quote.v2.details_sub", "These help us size the job correctly.")}</div>
+                </div>
+
+                <Row className="g-3">
+                    <Col md={6}>
+                        <Form.Group>
+                            <Form.Label className="fieldLabel">{t("quick_quote.customOptions.frequency", "Frequency")}</Form.Label>
+                            <Form.Select
+                                className="fieldControl"
+                                value={get("frequency")}
+                                onChange={(e) => set("frequency", e.target.value, t("quick_quote.customOptions.frequency", "Frequency"))}
+                            >
+                                <option value="">{t("quick_quote.customOptions.selectText", "Select")}</option>
+                                <option value="One Time">{t("quick_quote.customOptions.oneTime", "One Time")}</option>
+                                <option value="Weekly">{t("quick_quote.customOptions.weekly", "Weekly")}</option>
+                                <option value="Bi-Weekly">{t("quick_quote.customOptions.biWeekly", "Bi-Weekly")}</option>
+                                <option value="Monthly">{t("quick_quote.customOptions.monthly", "Monthly")}</option>
+                                <option value="Other">{t("quick_quote.customOptions.other", "Other")}</option>
+                            </Form.Select>
+                        </Form.Group>
+                    </Col>
+
+                    <Col md={6}>
+                        <Form.Group>
+                            <Form.Label className="fieldLabel">{t("quick_quote.customOptions.unitSize", "Unit Size")}</Form.Label>
+                            <Form.Select
+                                className="fieldControl"
+                                value={get("squareFootage")}
+                                onChange={(e) => set("squareFootage", e.target.value, t("quick_quote.customOptions.unitSize", "Unit Size"))}
+                            >
+                                <option value="">{t("quick_quote.customOptions.selectText", "Select")}</option>
+                                <option value="0-499 sqft">0–499 {t("quick_quote.customOptions.area", "sqft")}</option>
+                                <option value="500-999 sqft">500–999 {t("quick_quote.customOptions.area", "sqft")}</option>
+                                <option value="1000-1499 sqft">1000–1499 {t("quick_quote.customOptions.area", "sqft")}</option>
+                                <option value="1500-1999 sqft">1500–1999 {t("quick_quote.customOptions.area", "sqft")}</option>
+                                <option value="2000+ sqft">2000+ {t("quick_quote.customOptions.area", "sqft")}</option>
+                            </Form.Select>
+                        </Form.Group>
+                    </Col>
+
+                    <Col md={6}>
+                        <Form.Group>
+                            <Form.Label className="fieldLabel">{t("quick_quote.customOptions.bedrooms", "Bedrooms")}</Form.Label>
+                            <Form.Select
+                                className="fieldControl"
+                                value={get("bedrooms")}
+                                onChange={(e) => set("bedrooms", e.target.value, t("quick_quote.customOptions.bedrooms", "Bedrooms"))}
+                            >
+                                <option value="">{t("quick_quote.customOptions.selectText", "Select")}</option>
+                                {Array.from({ length: 6 }, (_, i) => (
+                                    <option key={i} value={String(i)}>{i === 5 ? "5+" : i}</option>
+                                ))}
+                            </Form.Select>
+                        </Form.Group>
+                    </Col>
+
+                    <Col md={6}>
+                        <Form.Group>
+                            <Form.Label className="fieldLabel">{t("quick_quote.customOptions.bathrooms", "Bathrooms")}</Form.Label>
+                            <Form.Select
+                                className="fieldControl"
+                                value={get("bathrooms")}
+                                onChange={(e) => set("bathrooms", e.target.value, t("quick_quote.customOptions.bathrooms", "Bathrooms"))}
+                            >
+                                <option value="">{t("quick_quote.customOptions.selectText", "Select")}</option>
+                                {Array.from({ length: 6 }, (_, i) => (
+                                    <option key={i} value={String(i)}>{i === 5 ? "5+" : i}</option>
+                                ))}
+                            </Form.Select>
+                        </Form.Group>
+                    </Col>
+                </Row>
+
+                <div className="mt-3">{PreferredDate}</div>
+
+                {serviceType === "House Cleaning" ? (
+                    <div className="mt-3">
+                        <div className="fieldLabel mb-2">{t("quick_quote.customOptions.additionalOptions", "Add-ons")}</div>
+                        <div className="addonGrid">
+                            {[
+                                { key: "deepCleaning", label: t("quick_quote.customOptions.deepCleaning", "Deep cleaning") },
+                                { key: "windowCleaning", label: t("quick_quote.customOptions.windowCleaning", "Window cleaning") },
+                                { key: "laundryService", label: t("quick_quote.customOptions.laundryService", "Laundry service") },
+                            ].map((x) => (
+                                <button
+                                    key={x.key}
+                                    type="button"
+                                    className={`pill addonPill ${get(x.key) ? "active" : ""}`}
+                                    onClick={() => set(x.key, !get(x.key), x.label)}
+                                >
+                                    {x.label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                ) : null}
+
+            </div>
+        );
+    }
+
+    if (serviceType === "Carpet Cleaning") {
+        return (
+            <div className="optionsCard">
+                <div className="optionsHeader">
+                    <div className="optionsTitle">{t("quick_quote.v2.carpet_details", "Carpet details")}</div>
+                    <div className="optionsSub">{t("quick_quote.v2.carpet_details_sub", "Material, area and stain level help us quote accurately.")}</div>
+                </div>
+
+                <Row className="g-3">
+                    <Col md={6}>
+                        <Form.Group>
+                            <Form.Label className="fieldLabel">{t("quick_quote.customOptions.carpetMaterial", "Carpet material")}</Form.Label>
+                            <Form.Select
+                                className="fieldControl"
+                                value={get("carpetType")}
+                                onChange={(e) => set("carpetType", e.target.value, t("quick_quote.customOptions.carpetMaterial", "Carpet material"))}
+                            >
+                                <option value="">{t("quick_quote.customOptions.chooseMaterial", "Choose material")}</option>
+                                <option value="Wool">{t("quick_quote.customOptions.wool", "Wool")}</option>
+                                <option value="Nylon">{t("quick_quote.customOptions.nylon", "Nylon")}</option>
+                                <option value="Polyester">{t("quick_quote.customOptions.polyester", "Polyester")}</option>
+                                <option value="Olefin">{t("quick_quote.customOptions.olefin", "Olefin")}</option>
+                                <option value="Other">{t("quick_quote.customOptions.other", "Other")}</option>
+                            </Form.Select>
+                        </Form.Group>
+                    </Col>
+
+                    <Col md={6}>
+                        <Form.Group>
+                            <Form.Label className="fieldLabel">{t("quick_quote.customOptions.carpetArea", "Approx. area (sqft)")}</Form.Label>
+                            <Form.Control
+                                className="fieldControl"
+                                type="number"
+                                min={0}
+                                inputMode="numeric"
+                                value={get("carpetArea")}
+                                placeholder="e.g. 500"
+                                onChange={(e) => set("carpetArea", e.target.value, t("quick_quote.customOptions.carpetArea", "Approx. area (sqft)"))}
+                            />
+                        </Form.Group>
+                    </Col>
+
+                    <Col md={6}>
+                        <Form.Group>
+                            <Form.Label className="fieldLabel">{t("quick_quote.customOptions.carpetStains", "Stain level")}</Form.Label>
+                            <Form.Select
+                                className="fieldControl"
+                                value={get("stains")}
+                                onChange={(e) => set("stains", e.target.value, t("quick_quote.customOptions.carpetStains", "Stain level"))}
+                            >
+                                <option value="">{t("quick_quote.customOptions.howSevereAreTheStains", "How severe are the stains?")}</option>
+                                <option value="None">{t("quick_quote.customOptions.none", "None")}</option>
+                                <option value="Light">{t("quick_quote.customOptions.light", "Light")}</option>
+                                <option value="Moderate">{t("quick_quote.customOptions.moderate", "Moderate")}</option>
+                                <option value="Heavy">{t("quick_quote.customOptions.heavy", "Heavy")}</option>
+                            </Form.Select>
+                        </Form.Group>
+                    </Col>
+
+                    <Col md={6}>
+                        {PreferredDate}
+                    </Col>
+                </Row>
+            </div>
+        );
+    }
+
+    if (serviceType === "Upholstery Cleaning") {
+        const SELECT_KEY = "upholsterySelectedItems";
+
+        const selectedItems = Array.isArray(get(SELECT_KEY)) ? get(SELECT_KEY) : [];
+
+        const toggleItem = (item) => {
+            const isOn = selectedItems.includes(item);
+            const next = isOn ? selectedItems.filter((x) => x !== item) : [...selectedItems, item];
+            set(SELECT_KEY, next, t("quick_quote.v2.upholstery_items", "Upholstery items"));
+
+            // optional: clear details when unselecting
+            if (isOn) {
+                const idx = upholsteryList.indexOf(item);
+                if (idx >= 0) {
+                    set(`upholsteryArea-${idx}`, "", t("quick_quote.customOptions.upholsteryArea", "Area (sqft)"));
+                    set(`upholsteryPieces-${idx}`, "", t("quick_quote.customOptions.upholsteryPieces", "Pieces"));
+                    set(`upholsteryFabric-${idx}`, "", t("quick_quote.customOptions.selectFabric", "Fabric"));
+                }
+            }
+        };
+
+        return (
+            <div className="optionsCard">
+                <div className="optionsHeader">
+                    <div className="optionsTitle">{t("quick_quote.v2.upholstery_details", "Upholstery details")}</div>
+                    <div className="optionsSub">{t("quick_quote.v2.upholstery_details_sub", "Select the items you want cleaned, then add details.")}</div>
+                </div>
+
+                {/* Stage 1: pick items */}
+                <div className="fieldLabel mb-2">
+                    {t("quick_quote.v2.select_items", "Select items")}
+                </div>
+
+                <div className="upSelectGrid">
+                    {upholsteryList.map((item) => {
+                        const active = selectedItems.includes(item);
+                        return (
+                            <button
+                                key={item}
+                                type="button"
+                                className={`pill upItemPill ${active ? "active" : ""}`}
+                                onClick={() => toggleItem(item)}
+                            >
+                                {item}
+                            </button>
+                        );
+                    })}
+                </div>
+
+                {/* Stage 2: details for selected items only */}
+                {selectedItems.length > 0 ? (
+                    <>
+                        <div className="mt-3 fieldLabel">
+                            {t("quick_quote.v2.item_details", "Item details")}
+                        </div>
+
+                        <Accordion className="upDetailsAcc mt-2">
+                            {selectedItems.map((item) => {
+                                const idx = upholsteryList.indexOf(item);
+                                const areaKey = `upholsteryArea-${idx}`;
+                                const piecesKey = `upholsteryPieces-${idx}`;
+                                const fabricKey = `upholsteryFabric-${idx}`;
+
+                                const summary = [
+                                    get(piecesKey) ? `${get(piecesKey)} pcs` : null,
+                                    get(areaKey) ? `${get(areaKey)} sqft` : null,
+                                    get(fabricKey) ? get(fabricKey) : null,
+                                ].filter(Boolean).join(" • ");
+
+                                return (
+                                    <Accordion.Item key={item} eventKey={item} className="upAccItem">
+                                        <Accordion.Header>
+                                            <div className="upAccHeader">
+                                                <div className="upAccTitle">{item}</div>
+                                                {summary ? <div className="upAccSummary">{summary}</div> : null}
+                                            </div>
+                                        </Accordion.Header>
+
+                                        <Accordion.Body>
+                                            <div className="upGrid">
+                                                <Form.Control
+                                                    className="fieldControl"
+                                                    type="number"
+                                                    min={0}
+                                                    placeholder={t("quick_quote.customOptions.upholsteryPieces", "Pieces")}
+                                                    value={get(piecesKey)}
+                                                    onChange={(e) => set(piecesKey, e.target.value, t("quick_quote.customOptions.upholsteryPieces", "Pieces"))}
+                                                />
+
+                                                <Form.Control
+                                                    className="fieldControl"
+                                                    type="number"
+                                                    min={0}
+                                                    placeholder={t("quick_quote.customOptions.upholsteryArea", "Area (sqft)")}
+                                                    value={get(areaKey)}
+                                                    onChange={(e) => set(areaKey, e.target.value, t("quick_quote.customOptions.upholsteryArea", "Area (sqft)"))}
+                                                />
+
+                                                <Form.Select
+                                                    className="fieldControl"
+                                                    value={get(fabricKey)}
+                                                    onChange={(e) => set(fabricKey, e.target.value, t("quick_quote.customOptions.selectFabric", "Fabric"))}
+                                                >
+                                                    <option value="">{t("quick_quote.customOptions.selectFabric", "Select fabric")}</option>
+                                                    <option value="Leather">{t("quick_quote.customOptions.leather", "Leather")}</option>
+                                                    <option value="Cotton">{t("quick_quote.customOptions.cotton", "Cotton")}</option>
+                                                    <option value="Polyester">{t("quick_quote.customOptions.polyester", "Polyester")}</option>
+                                                    <option value="Nylon">{t("quick_quote.customOptions.nylon", "Nylon")}</option>
+                                                    <option value="Other">{t("quick_quote.customOptions.other", "Other")}</option>
+                                                </Form.Select>
+                                            </div>
+                                        </Accordion.Body>
+                                    </Accordion.Item>
+                                );
+                            })}
+                        </Accordion>
+                    </>
+                ) : (
+                    <div className="smallMuted mt-2">
+                        {t("quick_quote.v2.pick_at_least_one", "Choose at least one item to continue.")}
+                    </div>
+                )}
+
+                <div className="mt-3">{PreferredDate}</div>
+            </div>
+        );
+    }
+
+    // Default: description + date
+    return (
+        <div className="optionsCard">
+            <div className="optionsHeader">
+                <div className="optionsTitle">{t("quick_quote.v2.extra_details", "Extra details")}</div>
+                <div className="optionsSub">{t("quick_quote.v2.extra_details_sub", "Add anything that helps us quote accurately.")}</div>
+            </div>
+
+            <Form.Group className="mb-3">
+                <Form.Label className="fieldLabel">{t("quick_quote.customOptions.description", "Description")}</Form.Label>
+                <Form.Control
+                    as="textarea"
+                    rows={4}
+                    className="fieldControl"
+                    placeholder={t("quick_quote.customOptions.descriptionDetail", "Tell us what you need, any priorities, special notes, etc.")}
+                    value={get("description")}
+                    onChange={(e) => set("description", e.target.value, t("quick_quote.customOptions.description", "Description"))}
+                />
+            </Form.Group>
+
+            {PreferredDate}
+        </div>
+    );
+}
+
+// Basic HTML escaping for the email summary
+function escapeHtml(str) {
+    return String(str || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}

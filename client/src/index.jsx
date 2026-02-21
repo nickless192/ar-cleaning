@@ -133,13 +133,13 @@ const App = () => {
           {/* <NavigationBar /> */}
         </div>
         <div
-          className="light-bg-color-opaque d-flex flex-column min-vh-100"
-          style={{
-            background: `linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), url(${backgroundImage})`,
-            backgroundRepeat: 'repeat',        // repeat the image like a mosaic
-            backgroundSize: '100px 100px',     // size of each tile
-            backgroundPosition: 'top left',    // starting position
-          }}
+          className="d-flex flex-column cleanar-surface"
+          // style={{
+          //   background: `linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), url(${backgroundImage})`,
+          //   backgroundRepeat: 'repeat',        // repeat the image like a mosaic
+          //   backgroundSize: '100px 100px',     // size of each tile
+          //   backgroundPosition: 'top left',    // starting position
+          // }}
         >
           <main className="flex-grow-1 main-content">
 

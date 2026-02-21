@@ -367,9 +367,9 @@
       "add_company": "Ajouter le nom de l'entreprise"
     },
     "buttons": {
-      "save_profile": "Sauvegarder le Profil",
+      "save_profile": "Sauvegarder",
       "cancel": "Annuler",
-      "edit_profile": "Modifier le Profil"
+      "edit_profile": "Modifier"
     },
     "quotes": {
       "title": "Mes Devis",
@@ -390,6 +390,7 @@
       "no_bookings": "Aucune réservation trouvée.",
       "service_date": "Date du Service",
       "service_type": "Type de Service",
+      "reqquested_date": "Date Demandée",
       "status": "Statut",
       "new_date_requested": "Nouvelle Date Demandée",
       "need_help": "Besoin d'aide?",
@@ -817,7 +818,8 @@
       "date": "Nouvelle date",
       "serviceType": "Service Requis",
       "comment": "Commentaire",
-      "comment_placeholder": "Ajoutez des détails sur le changement demandé..."
+      "comment_placeholder": "Ajoutez des détails sur le changement demandé...",
+      "serviceType_placeholder": "Sélectionnez le type de service requis"
     },
     "actions": {
       "cancel": "Annuler",

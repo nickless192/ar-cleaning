@@ -367,9 +367,9 @@
       "add_company": "Agregar nombre de empresa"
     },
     "buttons": {
-      "save_profile": "Guardar Perfil",
+      "save_profile": "Guardar",
       "cancel": "Cancelar",
-      "edit_profile": "Editar Perfil"
+      "edit_profile": "Editar"
     },
     "quotes": {
       "title": "Mis Cotizaciones",
@@ -390,6 +390,7 @@
       "no_bookings": "No se encontraron reservas.",
       "service_date": "Fecha del Servicio",
       "service_type": "Tipo de Servicio",
+      "requested_date": "Fecha Solicitada",
       "status": "Estado",
       "new_date_requested": "Nueva Fecha Solicitada",
       "need_help": "¿Necesita ayuda?",
@@ -819,7 +820,8 @@
       "date": "Nueva fecha",
       "serviceType": "Servicio Requerido",
       "comment": "Comentario",
-      "comment_placeholder": "Agregue detalles sobre el cambio solicitado..."
+      "comment_placeholder": "Agregue detalles sobre el cambio solicitado...",
+      "serviceType_placeholder": "Seleccione un servicio..."
     },
     "actions": {
       "cancel": "Cancelar",

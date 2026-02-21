@@ -65,7 +65,7 @@ const ContactUs = () => {
         className="shadow-lg mx-auto rounded-4 bg-transparent"
         style={{ maxWidth: 980 }}
       >
-        <div className="p-4 p-md-5">
+        <div className="p-3 p-md-5">
           {/* Header */}
           <div className="mb-4">
             <h3 className="mb-2">

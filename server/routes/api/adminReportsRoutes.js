@@ -31,7 +31,7 @@ cron.schedule(
     { timezone: "America/Toronto" }
 );
 
-console.log("[DailyEventsReportCron] scheduled at 07:30 America/Toronto");
+// console.log("[DailyEventsReportCron] scheduled at 07:30 America/Toronto");
 
 
 

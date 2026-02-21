@@ -1,6 +1,6 @@
 const PDFDocument = require("pdfkit");
 
-console.log("✅ LOADED invoicePdf.js from:", __filename);
+// console.log("✅ LOADED invoicePdf.js from:", __filename);
 
 /**
  * Generate a professional PDF for an invoice and return it as a Buffer.
