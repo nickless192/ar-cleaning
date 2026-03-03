@@ -1,6 +1,7 @@
 const cron = require('node-cron');
 const { emailQuote, emailQuoteNotification, emailNewUser, emailNewUserNotification, emailPasswordResetRequest, emailQuickQuote, emailQuickNotePDF, generateWeeklyReport, sendWeeklyReportEmail, generateManualReport,
-    sendUpcomingBookingsEmail
+    sendUpcomingBookingsEmail,
+    awsEmailTest
 } = require('../../controllers/emailController');
 const NotificationService = require('../../services/NotificationService');
 
@@ -43,6 +44,8 @@ router.post("/admin-upcoming-bookings-digest", async (req, res) => {
         return res.status(500).json({ message: "Failed to send digest." });
     }
 });
+
+router.post('/aws-email-test', awsEmailTest);
 
 
 // for testing purposes, run every 10 seconds = "*/10 * * * * *"

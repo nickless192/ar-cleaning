@@ -10,6 +10,7 @@ const Booking = require('../models/Booking');
 const VisitorLog = require('../models/VisitorLog');
 const { DateTime } = require('luxon');
 const APP_TZ = "America/Toronto";
+const { sendEmail } = require("../utils/aws-mailer");
 
 /** Build UTC window bounds from “Toronto wall time” boundaries */
 function torontoWindowToUTC({ startToronto, endToronto }) {
@@ -143,9 +144,9 @@ const generateWeeklyReport = async () => {
 
     const avgPagesPerSession = humans.length
       ? humans.reduce((sum, l) => {
-          const pages = (l.pathsVisited && l.pathsVisited.length) || 1;
-          return sum + pages;
-        }, 0) / humans.length
+        const pages = (l.pathsVisited && l.pathsVisited.length) || 1;
+        return sum + pages;
+      }, 0) / humans.length
       : 0;
 
     const multiPageSessions = humans.filter(
@@ -373,18 +374,17 @@ const generateWeeklyReport = async () => {
   const htmlSummary = `
     <h2>Weekly Visitor Report</h2>
     <p><strong>Period:</strong> ${formatDate(startOfThisWeek)} – ${formatDate(
-      endOfThisWeek
-    )}</p>
+    endOfThisWeek
+  )}</p>
     <p><strong>Compared to:</strong> ${formatDate(
-      startOfLastWeek
-    )} – ${formatDate(startOfThisWeek)}</p>
+    startOfLastWeek
+  )} – ${formatDate(startOfThisWeek)}</p>
 
-    ${
-      insights.length
-        ? `<h3>Automatic Insights</h3><ul>${insights
-            .map((i) => `<li>${i}</li>`)
-            .join('')}</ul>`
-        : ''
+    ${insights.length
+      ? `<h3>Automatic Insights</h3><ul>${insights
+        .map((i) => `<li>${i}</li>`)
+        .join('')}</ul>`
+      : ''
     }
 
     <h3>Key Metrics</h3>
@@ -403,45 +403,43 @@ const generateWeeklyReport = async () => {
           <td>${thisWeekStats.totalVisits}</td>
           <td>${lastWeekStats.totalVisits}</td>
           <td>${formatChange(
-            thisWeekStats.totalVisits,
-            lastWeekStats.totalVisits
-          )}</td>
+      thisWeekStats.totalVisits,
+      lastWeekStats.totalVisits
+    )}</td>
         </tr>
         <tr>
           <td>Human Visits</td>
           <td>${thisWeekStats.humanVisits}</td>
           <td>${lastWeekStats.humanVisits}</td>
           <td>${formatChange(
-            thisWeekStats.humanVisits,
-            lastWeekStats.humanVisits
-          )}</td>
+      thisWeekStats.humanVisits,
+      lastWeekStats.humanVisits
+    )}</td>
         </tr>
         <tr>
           <td>Bot Visits</td>
           <td>${thisWeekStats.botVisits}</td>
           <td>${lastWeekStats.botVisits}</td>
           <td>${formatChange(
-            thisWeekStats.botVisits,
-            lastWeekStats.botVisits
-          )}</td>
+      thisWeekStats.botVisits,
+      lastWeekStats.botVisits
+    )}</td>
         </tr>
         <tr>
           <td>Unique Visitors (IDs, Humans)</td>
           <td>${thisWeekStats.uniqueHumanVisitors}</td>
           <td>${lastWeekStats.uniqueHumanVisitors}</td>
           <td>${formatChange(
-            thisWeekStats.uniqueHumanVisitors,
-            lastWeekStats.uniqueHumanVisitors
-          )}</td>
+      thisWeekStats.uniqueHumanVisitors,
+      lastWeekStats.uniqueHumanVisitors
+    )}</td>
         </tr>
         <tr>
           <td>New vs Returning (Humans)</td>
-          <td>${thisWeekStats.newVisitors} new / ${
-    thisWeekStats.returningVisitors
-  } returning</td>
-          <td>${lastWeekStats.newVisitors} new / ${
-    lastWeekStats.returningVisitors
-  } returning</td>
+          <td>${thisWeekStats.newVisitors} new / ${thisWeekStats.returningVisitors
+    } returning</td>
+          <td>${lastWeekStats.newVisitors} new / ${lastWeekStats.returningVisitors
+    } returning</td>
           <td>—</td>
         </tr>
         <tr>
@@ -474,190 +472,175 @@ const generateWeeklyReport = async () => {
         </tr>
       </thead>
       <tbody>
-        ${
-          dailyBreakdown.length
-            ? dailyBreakdown
-                .map(
-                  ([day, count]) =>
-                    `<tr><td>${day}</td><td>${count}</td></tr>`
-                )
-                .join('')
-            : '<tr><td colspan="2">No data</td></tr>'
-        }
+        ${dailyBreakdown.length
+      ? dailyBreakdown
+        .map(
+          ([day, count]) =>
+            `<tr><td>${day}</td><td>${count}</td></tr>`
+        )
+        .join('')
+      : '<tr><td colspan="2">No data</td></tr>'
+    }
       </tbody>
     </table>
 
     <h3>Top Pages (Humans)</h3>
     <ul>
-      ${
-        topPages.length
-          ? topPages
-              .map(([page, count]) => `<li>${page}: ${count} visits</li>`)
-              .join('')
-          : '<li>No page data</li>'
-      }
+      ${topPages.length
+      ? topPages
+        .map(([page, count]) => `<li>${page}: ${count} visits</li>`)
+        .join('')
+      : '<li>No page data</li>'
+    }
     </ul>
 
     <h3>Top Path Flows (Humans)</h3>
     <ul>
-      ${
-        topPathSequences.length
-          ? topPathSequences
-              .map(
-                ([seq, count]) =>
-                  `<li>${seq}: ${count} sessions</li>`
-              )
-              .join('')
-          : '<li>No multi-page path data</li>'
-      }
+      ${topPathSequences.length
+      ? topPathSequences
+        .map(
+          ([seq, count]) =>
+            `<li>${seq}: ${count} sessions</li>`
+        )
+        .join('')
+      : '<li>No multi-page path data</li>'
+    }
     </ul>
 
     <h3>Audience & Location (Humans)</h3>
     <p><strong>Top Countries:</strong></p>
     <ul>
-      ${
-        topCountries.length
-          ? topCountries
-              .map(([country, count]) => `<li>${country}: ${count}</li>`)
-              .join('')
-          : '<li>No country data</li>'
-      }
+      ${topCountries.length
+      ? topCountries
+        .map(([country, count]) => `<li>${country}: ${count}</li>`)
+        .join('')
+      : '<li>No country data</li>'
+    }
     </ul>
 
     <p><strong>Segments:</strong></p>
     <ul>
-      ${
-        topSegments.length
-          ? topSegments
-              .map(([seg, count]) => `<li>${seg}: ${count}</li>`)
-              .join('')
-          : '<li>No segment data</li>'
-      }
+      ${topSegments.length
+      ? topSegments
+        .map(([seg, count]) => `<li>${seg}: ${count}</li>`)
+        .join('')
+      : '<li>No segment data</li>'
+    }
     </ul>
 
     <p><strong>Languages:</strong></p>
     <ul>
-      ${
-        languageBreakdown.length
-          ? languageBreakdown
-              .map(([lang, count]) => `<li>${lang}: ${count}</li>`)
-              .join('')
-          : '<li>No language data</li>'
-      }
+      ${languageBreakdown.length
+      ? languageBreakdown
+        .map(([lang, count]) => `<li>${lang}: ${count}</li>`)
+        .join('')
+      : '<li>No language data</li>'
+    }
     </ul>
 
     <h3>Devices & Tech (Humans)</h3>
     <p><strong>Devices:</strong></p>
     <ul>
-      ${
-        deviceBreakdown.length
-          ? deviceBreakdown
-              .map(([device, count]) => `<li>${device}: ${count}</li>`)
-              .join('')
-          : '<li>No device data</li>'
-      }
+      ${deviceBreakdown.length
+      ? deviceBreakdown
+        .map(([device, count]) => `<li>${device}: ${count}</li>`)
+        .join('')
+      : '<li>No device data</li>'
+    }
     </ul>
 
     <p><strong>Screen Resolutions:</strong></p>
     <ul>
-      ${
-        resolutionBreakdown.length
-          ? resolutionBreakdown
-              .map(([res, count]) => `<li>${res}: ${count}</li>`)
-              .join('')
-          : '<li>No resolution data</li>'
-      }
+      ${resolutionBreakdown.length
+      ? resolutionBreakdown
+        .map(([res, count]) => `<li>${res}: ${count}</li>`)
+        .join('')
+      : '<li>No resolution data</li>'
+    }
     </ul>
 
     <h3>Marketing & Attribution (Humans)</h3>
     <p><strong>Traffic Sources:</strong></p>
     <ul>
-      ${
-        topTrafficSources.length
-          ? topTrafficSources
-              .map(
-                ([source, count]) =>
-                  `<li>${source}: ${count} visits</li>`
-              )
-              .join('')
-          : '<li>No traffic source data</li>'
-      }
+      ${topTrafficSources.length
+      ? topTrafficSources
+        .map(
+          ([source, count]) =>
+            `<li>${source}: ${count} visits</li>`
+        )
+        .join('')
+      : '<li>No traffic source data</li>'
+    }
     </ul>
 
     <p><strong>Top Campaigns (UTM):</strong></p>
     <ul>
-      ${
-        topCampaigns.length
-          ? topCampaigns
-              .map(
-                ([campaign, count]) =>
-                  `<li>${campaign || 'Unspecified'}: ${count} visits</li>`
-              )
-              .join('')
-          : '<li>No campaign data</li>'
-      }
+      ${topCampaigns.length
+      ? topCampaigns
+        .map(
+          ([campaign, count]) =>
+            `<li>${campaign || 'Unspecified'}: ${count} visits</li>`
+        )
+        .join('')
+      : '<li>No campaign data</li>'
+    }
     </ul>
 
     <p><strong>Top Referrers:</strong></p>
     <ul>
-      ${
-        topReferrers.length
-          ? topReferrers
-              .map(
-                ([ref, count]) =>
-                  `<li>${ref || 'Direct'}: ${count} visits</li>`
-              )
-              .join('')
-          : '<li>No referrer data</li>'
-      }
+      ${topReferrers.length
+      ? topReferrers
+        .map(
+          ([ref, count]) =>
+            `<li>${ref || 'Direct'}: ${count} visits</li>`
+        )
+        .join('')
+      : '<li>No referrer data</li>'
+    }
     </ul>
 
     <h3>Engagement (Humans)</h3>
     <p><strong>Session Duration Buckets:</strong></p>
     <ul>
-      ${
-        Object.keys(thisWeekStats.durationBuckets).length
-          ? sortCounts(thisWeekStats.durationBuckets)
-              .map(([bucket, count]) => `<li>${bucket}: ${count}</li>`)
-              .join('')
-          : '<li>No duration data</li>'
-      }
+      ${Object.keys(thisWeekStats.durationBuckets).length
+      ? sortCounts(thisWeekStats.durationBuckets)
+        .map(([bucket, count]) => `<li>${bucket}: ${count}</li>`)
+        .join('')
+      : '<li>No duration data</li>'
+    }
     </ul>
 
     <p><strong>Scroll Depth Buckets:</strong></p>
     <ul>
-      ${
-        Object.keys(thisWeekStats.scrollDepthBuckets).length
-          ? sortCounts(thisWeekStats.scrollDepthBuckets)
-              .map(([bucket, count]) => `<li>${bucket}: ${count}</li>`)
-              .join('')
-          : '<li>No scroll depth data</li>'
-      }
+      ${Object.keys(thisWeekStats.scrollDepthBuckets).length
+      ? sortCounts(thisWeekStats.scrollDepthBuckets)
+        .map(([bucket, count]) => `<li>${bucket}: ${count}</li>`)
+        .join('')
+      : '<li>No scroll depth data</li>'
+    }
     </ul>
 
     <p><strong>Engagement Score Buckets:</strong></p>
     <ul>
-      ${
-        Object.keys(thisWeekStats.engagementBuckets).length
-          ? sortCounts(thisWeekStats.engagementBuckets)
-              .map(([bucket, count]) => `<li>${bucket}: ${count}</li>`)
-              .join('')
-          : '<li>No engagement score data</li>'
-      }
+      ${Object.keys(thisWeekStats.engagementBuckets).length
+      ? sortCounts(thisWeekStats.engagementBuckets)
+        .map(([bucket, count]) => `<li>${bucket}: ${count}</li>`)
+        .join('')
+      : '<li>No engagement score data</li>'
+    }
     </ul>
 
     <p><strong>Top Interactions:</strong></p>
     <ul>
-      ${
-        topInteractions.length
-          ? topInteractions
-              .map(
-                ([event, count]) =>
-                  `<li>${event}: ${count} events</li>`
-              )
-              .join('')
-          : '<li>No interaction events recorded</li>'
-      }
+      ${topInteractions.length
+      ? topInteractions
+        .map(
+          ([event, count]) =>
+            `<li>${event}: ${count} events</li>`
+        )
+        .join('')
+      : '<li>No interaction events recorded</li>'
+    }
     </ul>
 
     <p style="margin-top: 20px; font-size: 0.9em; color: #666;">
@@ -669,173 +652,16 @@ const generateWeeklyReport = async () => {
 };
 
 
-
-
-// const generateWeeklyReport = async () => {
-//     const oneWeekAgo = new Date();
-//     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-
-//     const logs = await VisitorLog.find({ visitDate: { $gte: oneWeekAgo } });
-
-//     // console.log('logs: ', logs);
-
-//     const totalVisits = logs.length;
-//     const pageCounts = {};
-//     const userAgents = {};
-//     const ipAddress = {};
-
-//     logs.forEach((log) => {
-//         pageCounts[log.page] = (pageCounts[log.page] || 0) + 1;
-//         userAgents[log.userAgent] = (userAgents[log.userAgent] || 0) + 1;
-//         ipAddress[log.ip] = (ipAddress[log.ip] || 0) + 1;
-//     });
-
-//     const parser = new Parser();
-//     const csv = parser.parse(logs.map(log => ({
-//         date: log.visitDate,
-//         page: log.page,
-//         // userAgent: log.userAgent,
-//         ipAddress: log.ip,
-//         browser: log.browser,
-//         os: log.os,
-//         sessionDuration: log.sessionDuration,
-//         referrer: log.referrer,
-//         country: log.geo.country,
-//         city: log.geo.city,
-//         isBot: log.isBot,
-//         scrollDepth: log.scrollDepth,
-//         trafficSource: log.trafficSource,
-//         deviceType: log.deviceType,
-//     })));
-
-//     //   <p><strong>User Agents:</strong></p>
-//     //   <ul>${Object.entries(userAgents).map(([ua, count]) => `<li>${ua}: ${count}</li>`).join('')}</ul>
-//     const htmlSummary = `
-//       <h2>Weekly Visitor Report</h2>
-//       <p><strong>Total Visits:</strong> ${totalVisits}</p>
-//       <p><strong>Page Views:</strong></p>
-//       <ul>${Object.entries(pageCounts).map(([page, count]) => `<li>${page}: ${count}</li>`).join('')}</ul>
-//         <p><strong>IP Addresses:</strong></p>
-//         <ul>${Object.entries(ipAddress).map(([ip, count]) => `<li>${ip}: ${count}</li>`).join('')}</ul>
-//         <p><strong>Country:</strong></p>
-//         <ul>${Object.entries(logs.reduce((acc, log) => {
-//             acc[log.geo.country] = (acc[log.geo.country] || 0) + 1;
-//             return acc;
-//         }, {})).map(([country, count]) => `<li>${country}: ${count}</li>`).join('')}</ul>
-//         <p><strong>City:</strong></p>
-//         <ul>${Object.entries(logs.reduce((acc, log) => {
-//             acc[log.geo.city] = (acc[log.geo.city] || 0) + 1;
-//             return acc;
-//         }, {})).map(([city, count]) => `<li>${city}: ${count}</li>`).join('')}</ul>
-//         <p><strong>Is Bot:</strong></p>
-//         <ul>${Object.entries(logs.reduce((acc, log) => {
-//             acc[log.isBot ? 'Yes' : 'No'] = (acc[log.isBot ? 'Yes' : 'No'] || 0) + 1;
-//             return acc;
-//         }, {})).map(([isBot, count]) => `<li>${isBot}: ${count}</li>`).join('')}</ul>
-//         <p><strong>Browser:</strong></p>
-//         <ul>${Object.entries(logs.reduce((acc, log) => {
-//             acc[log.browser] = (acc[log.browser] || 0) + 1;
-//             return acc;
-//         }, {})).map(([browser, count]) => `<li>${browser}: ${count}</li>`).join('')}</ul>
-//         <p><strong>Operating System:</strong></p>
-//         <ul>${Object.entries(logs.reduce((acc, log) => {
-//             acc[log.os] = (acc[log.os] || 0) + 1;
-//             return acc;
-//         }, {})).map(([os, count]) => `<li>${os}: ${count}</li>`).join('')}</ul>
-//         <p><strong>Session Duration:</strong></p>
-//         <ul>${Object.entries(logs.reduce((acc, log) => {
-//             acc[log.sessionDuration] = (acc[log.sessionDuration] || 0) + 1;
-//             return acc;
-//         }, {})).map(([duration, count]) => `<li>${duration}: ${count}</li>`).join('')}</ul>
-//         <p><strong>Referrers:</strong></p>
-//         <ul>${Object.entries(logs.reduce((acc, log) => {
-//             acc[log.referrer] = (acc[log.referrer] || 0) + 1;
-//             return acc;
-//         }, {})).map(([referrer, count]) => `<li>${referrer}: ${count}</li>`).join('')}</ul>
-//     <p><strong>Scroll Depth:</strong></p>
-//     <ul>${Object.entries(logs.reduce((acc, log) => {
-//         acc[log.scrollDepth] = (acc[log.scrollDepth] || 0) + 1;
-//         return acc;
-//     }, {})).map(([depth, count]) => `<li>${depth}: ${count}</li>`).join('')}</ul>
-//     <p><strong>Traffic Source</strong></p>
-//     <ul>${Object.entries(logs.reduce((acc, log) => {
-//         acc[log.trafficSource] = (acc[log.trafficSource] || 0) + 1;
-//         return acc;
-//     }, {})).map(([source, count]) => `<li>${source}: ${count}</li>`).join('')}</ul>
-//     <p><strong>Device Type:</strong></p>
-//     <ul>${Object.entries(logs.reduce((acc, log) => {
-//         acc[log.deviceType] = (acc[log.deviceType] || 0) + 1;
-//         return acc;
-//     }, {})).map(([device, count]) => `<li>${device}: ${count}</li>`).join('')}</ul>    
-
-//     `;
-
-//     // console.log('csv: ', csv);
-//     // console.log('htmlSummary: ', htmlSummary);
-//     // console.log('totalVisits: ', totalVisits);
-
-//     return { csv, htmlSummary, totalVisits };
-// };
-
 const formatDate = (d) => {
-    return new Date(d).toLocaleString('en-CA', {
-        timeZone: 'America/Toronto',
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-    });
+  return new Date(d).toLocaleString('en-CA', {
+    timeZone: 'America/Toronto',
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
 };
-
-// const buildEmailContent = (bookings, days) => {
-//     if (!bookings.length) {
-//         const subject = `No upcoming bookings in next ${days} day(s)`;
-//         const text = `There are currently no bookings scheduled in the next ${days} day(s).`;
-//         const html = `<p>There are currently <strong>no bookings</strong> scheduled in the next ${days} day(s).</p>`;
-//         return { subject, text, html };
-//     }
-
-//     const subject = `Upcoming bookings (next ${days} day${days > 1 ? 's' : ''})`;
-
-//     const lines = bookings.map((b) => {
-//         return [
-//             `Date: ${formatDate(b.date)}`,
-//             `Customer: ${b.customerName || 'N/A'}`,
-//             `Status: ${b.status}`,
-//             b.location ? `Location: ${b.location}` : '',
-//             b.notes ? `Notes: ${b.notes}` : '',
-//         ]
-//             .filter(Boolean)
-//             .join(' | ');
-//     });
-
-//     const text = `Here are the upcoming bookings for the next ${days} day(s):\n\n${lines
-//         .map((l) => `• ${l}`)
-//         .join('\n')}`;
-
-//     const htmlListItems = bookings
-//         .map(
-//             (b) => `
-//             <li>
-//                 <strong>${formatDate(b.date)}</strong><br/>
-//                 Customer: ${b.customerName || 'N/A'}<br/>
-//                 Status: ${b.status}<br/>
-//                 ${b.location ? `Location: ${b.location}<br/>` : ''}
-//                 ${b.notes ? `Notes: ${b.notes}<br/>` : ''}
-//             </li>`
-//         )
-//         .join('');
-
-//     const html = `
-//         <p>Here are the upcoming bookings for the next <strong>${days}</strong> day(s):</p>
-//         <ul>
-//             ${htmlListItems}
-//         </ul>
-//     `;
-
-//     return { subject, text, html };
-// };
 
 function buildEmailContent({ upcomingBookings, days, recentBookings, now, since }) {
   // const fmt = (d) => {
@@ -850,17 +676,17 @@ function buildEmailContent({ upcomingBookings, days, recentBookings, now, since 
   //   });
   // };
   const fmt = (d) => {
-  const dt = new Date(d);
-  if (Number.isNaN(dt.getTime())) return "-";
-  return dt.toLocaleString("en-CA", {
-    timeZone: "America/Toronto",
-    year: "numeric",
-    month: "short",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-};
+    const dt = new Date(d);
+    if (Number.isNaN(dt.getTime())) return "-";
+    return dt.toLocaleString("en-CA", {
+      timeZone: "America/Toronto",
+      year: "numeric",
+      month: "short",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
 
   const safe = (v) => (v === undefined || v === null || v === "" ? "-" : String(v));
@@ -1028,11 +854,10 @@ function buildEmailContent({ upcomingBookings, days, recentBookings, now, since 
           </tr>
         </thead>
         <tbody>
-          ${
-            upcomingBookings.length
-              ? upcomingRows
-              : `<tr><td colspan="4" style="padding:10px;color:#666;">No upcoming bookings in this window.</td></tr>`
-          }
+          ${upcomingBookings.length
+      ? upcomingRows
+      : `<tr><td colspan="4" style="padding:10px;color:#666;">No upcoming bookings in this window.</td></tr>`
+    }
         </tbody>
       </table>
 
@@ -1055,11 +880,10 @@ function buildEmailContent({ upcomingBookings, days, recentBookings, now, since 
           </tr>
         </thead>
         <tbody>
-          ${
-            recentBookings.length
-              ? recentRows
-              : `<tr><td colspan="6" style="padding:10px;color:#666;">No confirmed/completed bookings in the last 7 days.</td></tr>`
-          }
+          ${recentBookings.length
+      ? recentRows
+      : `<tr><td colspan="6" style="padding:10px;color:#666;">No confirmed/completed bookings in the last 7 days.</td></tr>`
+    }
         </tbody>
       </table>
 
@@ -1083,92 +907,6 @@ function buildEmailContent({ upcomingBookings, days, recentBookings, now, since 
   return { subject, html };
 }
 
-// const sendUpcomingBookingsEmail = async (req, res) => {
-//     try {
-//         console.log("sendUpcomingBookingsEmail called");
-//         const rawDays = Number(req.body.days || req.query.days || 1);
-//         const days = Number.isFinite(rawDays) && rawDays > 0 ? rawDays : 1;
-
-//         const now = new Date();
-//         const to = new Date();
-//         to.setDate(to.getDate() + days);
-
-//         const bookings = await Booking.find({
-//             date: { $gte: now, $lte: to },
-//             status: { $in: ['confirmed', 'pending'] },
-//         })
-//             .sort({ date: 1 })
-//             .lean();
-
-//         const admins = await User.find({
-//             adminFlag: true,
-//             email: { $exists: true, $ne: '' },
-//         })
-//             .select('email name')
-//             .lean();
-
-//         if (!admins.length) {
-//             return res.status(200).json({
-//                 message: 'No admin users with email found. Nothing sent.',
-//                 bookingsCount: bookings.length,
-//             });
-//         }
-
-//         const { subject, text, html } = buildEmailContent(bookings, days);
-
-//                 const message = {
-//             to: admins.map(admin => admin.email), // Update with admin email
-//             from: 'info@cleanarsolutions.ca',
-//             subject: subject,
-//             html: html,
-//             // attachments: [
-//             //     {
-//             //         content: Buffer.from(csv).toString('base64'),
-//             //         filename: 'visitor-report.csv',
-//             //         type: 'text/csv',
-//             //         disposition: 'attachment',
-//             //     },
-//             // ],
-//         };
-
-//         try {
-//             await sgMail.send(message);
-//             // console.log('Email sent successfully');
-//             // res.status(200).json({ message: 'Email sent successfully' });
-//         } catch (error) {
-//             console.error('Error sending email:', error);
-//             if (error.response) {
-//                 console.error(error.response.body);
-//             }
-//             // res.status(500).json({ message: 'Error sending email' });
-//         }
-
-//         // const sendPromises = admins.map((admin) =>
-//         //     sendMail({
-//         //         to: admin.email,
-//         //         subject,
-//         //         text,
-//         //         html,
-//         //     })
-//         // );
-
-//         // await Promise.all(sendPromises);
-
-//         return res.status(200).json({
-//             message: 'Upcoming bookings email sent to all admins.',
-//             adminsNotified: admins.map((a) => a.email),
-//             bookingsCount: bookings.length,
-//             days,
-//         });
-//     } catch (err) {
-//         console.error('Error sending upcoming bookings email:', err);
-//         return res.status(500).json({
-//             message: 'Failed to send upcoming bookings email.',
-//             error: err.message,
-//         });
-//     }
-// };
-
 const sendUpcomingBookingsEmail = async (req, res) => {
   try {
     console.log("sendUpcomingBookingsEmail called");
@@ -1187,19 +925,19 @@ const sendUpcomingBookingsEmail = async (req, res) => {
     // since.setHours(since.getHours() - 24*7);
     const nowToronto = DateTime.now().setZone(APP_TZ);
 
-// start = now in Toronto
-const startToronto = nowToronto;
+    // start = now in Toronto
+    const startToronto = nowToronto;
 
-// end = now + N days in Toronto
-const endToronto = nowToronto.plus({ days });
+    // end = now + N days in Toronto
+    const endToronto = nowToronto.plus({ days });
 
-// recent window (last 7 days) in Toronto
-const sinceToronto = nowToronto.minus({ days: 7 });
-const { startUTC, endUTC } = torontoWindowToUTC({ startToronto, endToronto });
-const { startUTC: sinceUTC, endUTC: nowUTC } = torontoWindowToUTC({
-  startToronto: sinceToronto,
-  endToronto: nowToronto,
-});
+    // recent window (last 7 days) in Toronto
+    const sinceToronto = nowToronto.minus({ days: 7 });
+    const { startUTC, endUTC } = torontoWindowToUTC({ startToronto, endToronto });
+    const { startUTC: sinceUTC, endUTC: nowUTC } = torontoWindowToUTC({
+      startToronto: sinceToronto,
+      endToronto: nowToronto,
+    });
 
     // Upcoming bookings (existing)
     const upcomingBookings = await Booking.find({
@@ -1249,22 +987,144 @@ const { startUTC: sinceUTC, endUTC: nowUTC } = torontoWindowToUTC({
       html,
     };
 
+    // try {
+    //   await sgMail.send(message);
+    // } catch (error) {
+    //   console.error("Error sending email:", error);
+    //   if (error.response) console.error(error.response.body);
+    //   // You can choose to return 500 here; keeping your current behavior.
+    // }
+    // aws-send function example:
+    console.log("[sendUpcomingBookingsEmail] Sending email via AWS SES...");
     try {
-      await sgMail.send(message);
-    } catch (error) {
-      console.error("Error sending email:", error);
-      if (error.response) console.error(error.response.body);
-      // You can choose to return 500 here; keeping your current behavior.
-    }
+      const emailResult = await sendEmailWithFallback({
+        to: admins.map(a => a.email),
+        subject,
+        html,
+      }, message);
 
-    return res.status(200).json({
-      message: "Upcoming + last-24h bookings email sent to all admins.",
-      adminsNotified: admins.map((a) => a.email),
-      upcomingCount: upcomingBookings.length,
-      recentCount: recentBookings.length,
-      days,
-      windowLast24h: { since: sinceToronto, now: nowToronto },
-    });
+      if (!emailResult.success) {
+        return res.status(500).json({
+          message: "Failed to send email via both providers.",
+          error: emailResult.error,
+          awsError: emailResult.awsError,
+        });
+      }
+
+      // SUCCESS PATH (only one response)
+      return res.status(200).json({
+        message: `Upcoming bookings email sent via ${emailResult.provider}.`,
+        provider: emailResult.provider,
+        adminsNotified: admins.map(a => a.email),
+        upcomingCount: upcomingBookings.length,
+        recentCount: recentBookings.length,
+        days,
+      });
+
+    } catch (err) {
+      console.error("Controller error:", err);
+      return res.status(500).json({
+        message: "Unexpected server error.",
+        error: err.message,
+      });
+    }
+    // const result = await sendEmail({
+    //   to: admins.map((admin) => admin.email),
+    //   subject,
+    //   // text: "If you received this, SES is configured correctly.",
+    //   html,
+    // });
+
+    // if (result.messageId) {
+    //   // console.log("Email sent successfully, SES message ID:", result.messageId);
+    //   return res.status(200).json({
+    //     message: "Upcoming + last-7day bookings email sent to all admins.",
+    //     adminsNotified: admins.map((a) => a.email),
+    //     upcomingCount: upcomingBookings.length,
+    //     recentCount: recentBookings.length,
+    //     days,
+    //     windowLast7d: { since: sinceToronto, now: nowToronto },
+    //     awsResult: result,
+    //   });
+    // } else {
+    //   console.warn("Email send attempted but no message ID returned:", result);
+    //   // attempt sendgrid fallback
+    //     try {
+    //       console.log("[sendUpcomingBookingsEmail] Attempting SendGrid fallback...");
+    //       await sgMail.send(message);
+    //       return res.status(200).json({
+    //         message: "Upcoming + last-7day bookings email sent to all admins (via SendGrid fallback).",
+    //         adminsNotified: admins.map((a) => a.email),
+    //         upcomingCount: upcomingBookings.length,
+    //         recentCount: recentBookings.length,
+    //         days,
+    //         windowLast7d: { since: sinceToronto, now: nowToronto },
+    //         awsResult: result,
+    //       });
+    //     } catch (error) {
+    //       console.error("Error sending email via SendGrid fallback:", error);
+    //       if (error.response) console.error(error.response.body);
+    //       return res.status(500).json({
+    //         message: "Failed to send email via both SES and SendGrid.",
+    //         error: error.message,
+    //         awsResult: result,
+    //       });
+    //     }
+
+    // }
+
+
+    // // res.json({ ok: true, ...result });
+
+    // return res.status(200).json({
+    //   message: "Upcoming + last-7day bookings email sent to all admins.",
+    //   adminsNotified: admins.map((a) => a.email),
+    //   upcomingCount: upcomingBookings.length,
+    //   recentCount: recentBookings.length,
+    //   days,
+    //   windowLast7d: { since: sinceToronto, now: nowToronto },
+    //   // awsResult: result,
+
+    // });
+    // let provider = "ses";
+    // let awsResult = null;
+
+    // try {
+    //   awsResult = await sendEmail({
+    //     to: admins.map(a => a.email),
+    //     subject,
+    //     html,
+    //   });
+
+    //   if (!awsResult?.messageId) {
+    //     throw new Error("SES did not return messageId");
+    //   }
+    // } catch (e) {
+    //   provider = "sendgrid";
+    //   try {
+    //     await sgMail.send(message);
+    //   } catch (sgErr) {
+    //     return res.status(500).json({
+    //       message: "Failed to send email via both SES and SendGrid.",
+    //       error: sgErr.message,
+    //       awsError: e.message,
+    //       awsResult,
+    //     });
+    //   }
+    // }
+    // const { provider, awsResult } = await sendEmailWithFallback(message);
+    // handle response based on provider used
+
+    // console.log(`Email sent successfully via ${provider}${awsResult?.messageId ? `, SES message ID: ${awsResult.messageId}` : ""}`);
+    // return res.status(200).json({
+    //   message: `Upcoming + last-7day bookings email sent to all admins (via ${provider}).`,
+    //   adminsNotified: admins.map((a) => a.email),
+    //   upcomingCount: upcomingBookings.length,
+    //   recentCount: recentBookings.length,
+    //   days,
+    //   windowLast7d: { since: sinceToronto, now: nowToronto },
+    //   awsResult,
+    // });
   } catch (err) {
     console.error("Error sending upcoming bookings email:", err);
     return res.status(500).json({
@@ -1274,15 +1134,82 @@ const { startUTC: sinceUTC, endUTC: nowUTC } = torontoWindowToUTC({
   }
 };
 
+// create a function to try aws first, then fallback to sendgrid if aws fails
+// const sendEmailWithFallback = async (emailData, sendgrindMessage) => {
+//   try {
+//     // try aws first
+//     const awsResult = await sendEmail(emailData);
+//     console.log('AWS Email Result: ', awsResult);
+//     return { success: true, provider: 'aws', result: awsResult };
+//   } catch (awsError) {
+//     console.error('AWS email error: ', awsError);
+//     // fallback to sendgrid
+//     try {
+//       await sgMail.send(sendgrindMessage);
+//       return { success: true, provider: 'sendgrid' };
+//     } catch (sgError) {
+//       console.error('SendGrid fallback email error: ', sgError);
+//       return { success: false, error: sgError.message, awsError: awsError.message };
+//     }
+//   }
+// }
+const isProd = () => {
+  const env = (process.env.NODE_ENV || "").toLowerCase();
+  return env === "production";
+};
+
+const sendEmailWithFallback = async (awsEmailData, sendgridMessage) => {
+  if (!sendgridMessage) {
+    throw new Error("sendEmailWithFallback: sendgridMessage is required");
+  }
+
+  // ✅ PROD: always SendGrid for consistency
+  if (isProd()) {
+    try {
+      const sgResult = await sgMail.send(sendgridMessage);
+      return { success: true, provider: "sendgrid", result: sgResult };
+    } catch (sgError) {
+      console.error("SendGrid send error (prod):", sgError);
+      return { success: false, provider: "sendgrid", error: sgError.message };
+    }
+  }
+
+  // ✅ DEV: try AWS first, then fallback to SendGrid
+  try {
+    const awsResult = await sendEmail(awsEmailData);
+    console.log("AWS Email Result:", awsResult);
+    return { success: true, provider: "aws", result: awsResult };
+  } catch (awsError) {
+    console.error("AWS email error (dev):", awsError);
+    try {
+      const sgResult = await sgMail.send(sendgridMessage);
+      return {
+        success: true,
+        provider: "sendgrid",
+        result: sgResult,
+        awsError: awsError.message,
+      };
+    } catch (sgError) {
+      console.error("SendGrid fallback email error (dev):", sgError);
+      return {
+        success: false,
+        provider: "sendgrid",
+        error: sgError.message,
+        awsError: awsError.message,
+      };
+    }
+  }
+};
+
 
 // Define your email controller
 const emailController = {
-    emailQuote: async (req, res) => {
-        try {
-            // console.log('Emailing quote: ', req.body);
-            const { email, quote } = req.body;
+  emailQuote: async (req, res) => {
+    try {
+      // console.log('Emailing quote: ', req.body);
+      const { email, quote } = req.body;
 
-            const emailText = `
+      const emailText = `
 Dear ${quote.name},
 
 Thank you for your quote request! We have received it with the following details:
@@ -1298,32 +1225,32 @@ Thank you for your quote request! We have received it with the following details
 
 **Services Requested**:
 ${quote.services.map(service => {
-                let customOptionsText = '';
-                if (service.customOptions && typeof service.customOptions === 'object') {
-                    customOptionsText = Object.keys(service.customOptions).map(key => {
-                        console.log('service.customOptions[key]: ', service.customOptions[key]);
-                        const option = service.customOptions[key];
-                        const label = option.label || key; // Use ariaLabel if available, otherwise fallback to key
-                        if (typeof option.service === 'boolean') {
-                            return `- ${label}`;
-                        } else {
-                            return `- ${label}: ${option.service}`;
-                        }
-                    }).join('\n');
-                } else {
-                    console.error('service.customOptions is not an object:', service.customOptions);
-                    customOptionsText = 'No custom options were selected.';
-                }
+        let customOptionsText = '';
+        if (service.customOptions && typeof service.customOptions === 'object') {
+          customOptionsText = Object.keys(service.customOptions).map(key => {
+            console.log('service.customOptions[key]: ', service.customOptions[key]);
+            const option = service.customOptions[key];
+            const label = option.label || key; // Use ariaLabel if available, otherwise fallback to key
+            if (typeof option.service === 'boolean') {
+              return `- ${label}`;
+            } else {
+              return `- ${label}: ${option.service}`;
+            }
+          }).join('\n');
+        } else {
+          console.error('service.customOptions is not an object:', service.customOptions);
+          customOptionsText = 'No custom options were selected.';
+        }
 
-                // Use customOptionsText as needed
-                // console.log(customOptionsText);
-                return `
+        // Use customOptionsText as needed
+        // console.log(customOptionsText);
+        return `
 - **${service.type}** (${service.serviceLevel})
 
 - **Custom Options**:
 ${customOptionsText}
 `            }
-            ).join('\n')}           
+      ).join('\n')}           
 
 
 Please note, this is a preliminary summary, and we will send a finalized quote in a separate email. We look forward to discussing your requirements further.
@@ -1334,49 +1261,86 @@ info@cleanARsolutions.ca
 (437) 440-5514
 
             `;
-            // - **Description**: ${service.description}
-            // - **Cost**: $${service.customOptions.find(option => option.optionName === 'serviceCost').optionValue}
+      // - **Description**: ${service.description}
+      // - **Cost**: $${service.customOptions.find(option => option.optionName === 'serviceCost').optionValue}
 
-            // ${quote.services.map(service => `- ${service.type} (${service.serviceLevel}) - Cost: $${service.customOptions.get('serviceCost')}`).join('\n')}
+      // ${quote.services.map(service => `- ${service.type} (${service.serviceLevel}) - Cost: $${service.customOptions.get('serviceCost')}`).join('\n')}
 
-            // **Products Included**:
-            // ${quote.products.map(product => `- ${product.name} - Cost: $${product.productCost}`).join('\n')}
-            // **Subtotal**: $${quote.subtotalCost}  
-            // **Tax**: $${quote.tax}  
-            // **Grand Total**: $${quote.grandTotal}
+      // **Products Included**:
+      // ${quote.products.map(product => `- ${product.name} - Cost: $${product.productCost}`).join('\n')}
+      // **Subtotal**: $${quote.subtotalCost}  
+      // **Tax**: $${quote.tax}  
+      // **Grand Total**: $${quote.grandTotal}
 
-            const msg = {
-                to: email, // Change to your recipient
-                from: 'info@cleanARsolutions.ca', // Change to your verified sender
-                bcc: 'info@cleanarsolutions.ca',
-                subject: 'Your Quote from CleanAR Solutions',
-                text: emailText, // plain text body
+      const msg = {
+        to: email, // Change to your recipient
+        from: 'info@cleanARsolutions.ca', // Change to your verified sender
+        bcc: 'info@cleanarsolutions.ca',
+        subject: 'Your Quote from CleanAR Solutions',
+        text: emailText, // plain text body
 
-            }
-            // console.log('Emailing quote message: ', msg);
+      }
+      // console.log('Emailing quote message: ', msg);
 
-            sgMail
-                .send(msg)
-                .then(() => {
-                    res.status(201).json({ message: 'Email sent' });
-                })
-                .catch((error) => {
-                    console.error(error);
-                    res.status(500).json({ message: 'Error emailing quote' });
-                })
-
-
-        } catch (error) {
-            console.error('Error emailing quote: ', error);
-            res.status(500).json({ message: 'Error emailing quote' });
-        }
-    },
-    emailQuoteNotification: async (req, res) => {
-
+      // sgMail
+      //   .send(msg)
+      //   .then(() => {
+      //     res.status(201).json({ message: 'Email sent' });
+      //   })
+      //   .catch((error) => {
+      //     console.error(error);
+      //     res.status(500).json({ message: 'Error emailing quote' });
+      //   })
+      // try {
+      //   // try aws first
+      //   const awsResult = await sendEmail({
+      //     to: email,
+      //     from: 'info@cleanARsolutions.ca',
+      //     subject: 'Your Quote from CleanAR Solutions',
+      //     text: emailText
+      //   });
+      //   console.log('AWS Email Result: ', awsResult);
+      //   return res.status(201).json({ message: 'Email sent via AWS' });
+      // } catch (awsError) {
+      //   console.error('AWS email error: ', awsError);
+      //   // fallback to sendgrid
+      //   try {
+      //     await sgMail.send(msg);
+      //     return res.status(201).json({ message: 'Email sent via SendGrid fallback' });
+      //   } catch (sgError) {
+      //     console.error('SendGrid fallback email error: ', sgError);
+      //     return res.status(500).json({ message: 'Error emailing quote via both AWS and SendGrid' });
+      //   }
+      // }
         try {
-            // console.log('Emailing quote: ', req.body);
-            const { email, quote } = req.body;
-            const emailText = `This is an automated notification email from CleanAR Solutions.
+        const emailResult = await sendEmailWithFallback({
+          to: email,
+          from: 'info@cleanARsolutions.ca',
+          subject: 'Your Quote from CleanAR Solutions',
+          text: emailText,
+        }, msg);
+
+        if (!emailResult.success) {
+          return res.status(500).json({ message: 'Failed to send email via both providers.', error: emailResult.error, awsError: emailResult.awsError });
+        }
+
+        return res.status(201).json({ message: `Email sent via ${emailResult.provider}.` });
+
+      } catch (err) {
+        console.error('Controller error:', err);
+        return res.status(500).json({ message: 'Unexpected server error.', error: err.message });
+      }
+    } catch (error) {
+      console.error('Error emailing quote: ', error);
+      return res.status(500).json({ message: 'Error emailing quote' });
+    }
+  },
+  emailQuoteNotification: async (req, res) => {
+
+    try {
+      // console.log('Emailing quote: ', req.body);
+      const { email, quote } = req.body;
+      const emailText = `This is an automated notification email from CleanAR Solutions.
 
 A new quote has been created:
 
@@ -1396,45 +1360,45 @@ Thank you for your quote request! We have received it with the following details
 
 **Services Requested**:
 ${quote.services.map(service => {
-                let customOptionsText = '';
+        let customOptionsText = '';
 
-                // if (service.customOptions && typeof service.customOptions === 'object') {
-                //     customOptionsText = Object.keys(service.customOptions).map(key => {
-                //         const option = service.customOptions[key];
-                //         if (typeof option.service === 'boolean') {
-                //             return `- ${key}`;
-                //         } else {
-                //             return `- ${key}: ${option.service}`;
-                //         }
-                //     }).join('\n');
-                if (service.customOptions && typeof service.customOptions === 'object') {
-                    customOptionsText = Object.keys(service.customOptions).map(key => {
-                        console.log('service.customOptions[key]: ', service.customOptions[key]);
-                        const option = service.customOptions[key];
-                        const label = option.label || key; // Use ariaLabel if available, otherwise fallback to key
-                        if (typeof option.service === 'boolean') {
-                            if (option.service) {
-                                return `- ${label}`;
-                            }
-                            // return `- ${label}`;
-                        } else {
-                            return `- ${label}: ${option.service}`;
-                        }
-                    }).join('\n');
-                } else {
-                    console.error('service.customOptions is not an object:', service.customOptions);
-                    customOptionsText = 'No custom options were selected.';
-                }
+        // if (service.customOptions && typeof service.customOptions === 'object') {
+        //     customOptionsText = Object.keys(service.customOptions).map(key => {
+        //         const option = service.customOptions[key];
+        //         if (typeof option.service === 'boolean') {
+        //             return `- ${key}`;
+        //         } else {
+        //             return `- ${key}: ${option.service}`;
+        //         }
+        //     }).join('\n');
+        if (service.customOptions && typeof service.customOptions === 'object') {
+          customOptionsText = Object.keys(service.customOptions).map(key => {
+            console.log('service.customOptions[key]: ', service.customOptions[key]);
+            const option = service.customOptions[key];
+            const label = option.label || key; // Use ariaLabel if available, otherwise fallback to key
+            if (typeof option.service === 'boolean') {
+              if (option.service) {
+                return `- ${label}`;
+              }
+              // return `- ${label}`;
+            } else {
+              return `- ${label}: ${option.service}`;
+            }
+          }).join('\n');
+        } else {
+          console.error('service.customOptions is not an object:', service.customOptions);
+          customOptionsText = 'No custom options were selected.';
+        }
 
-                // Use customOptionsText as needed
-                console.log(customOptionsText);
-                return `
+        // Use customOptionsText as needed
+        console.log(customOptionsText);
+        return `
 - **${service.type}** (${service.serviceLevel})
 
 - **Custom Options**:
 ${customOptionsText}
 `            }
-            ).join('\n')}           
+      ).join('\n')}           
 
 
 Please note, this is a preliminary summary, and we will send a finalized quote in a separate email. We look forward to discussing your requirements further.
@@ -1453,33 +1417,65 @@ Best regards,
 CleanAR Solutions
 info@cleanARsolutions.ca
 (437) 440-5514`;
-            const msg = {
-                to: ['omar.rguez26@gmail.com', 'filiberto_2305@outlook.com', 'info@cleanARsolutions.ca'], // Change to your recipient
-                from: 'info@cleanARsolutions.ca', // Change to your verified sender
-                subject: 'User Quote Notification: Your Quote from CleanAR Solutions',
-                text: emailText, // plain text body
+      const msg = {
+        to: ['omar.rguez26@gmail.com', 'filiberto_2305@outlook.com', 'info@cleanARsolutions.ca'], // Change to your recipient
+        from: 'info@cleanARsolutions.ca', // Change to your verified sender
+        subject: 'User Quote Notification: Your Quote from CleanAR Solutions',
+        text: emailText, // plain text body
 
-            }
+      }
 
-            sgMail
-                .send(msg)
-                .then(() => {
-                    res.status(201).json({ message: 'Notification Email sent' });
-                })
-                .catch((error) => {
-                    console.error(error);
-                    res.status(500).json({ message: 'Error emailing Notification quote' });
-                })
-        } catch (error) {
-            console.error('Error emailing quote: ', error);
-            res.status(500).json({ message: 'Error emailing quote' });
-        }
-    },
-    emailNewUser: async (req, res) => {
-        try {
-            // console.log('Emailing new user: ', req.body);
-            const { email, user } = req.body;
-            const emailText = `Dear ${user.firstName} ${user.lastName},
+      // sgMail
+      //   .send(msg)
+      //   .then(() => {
+      //     res.status(201).json({ message: 'Notification Email sent' });
+      //   })
+      //   .catch((error) => {
+      //     console.error(error);
+      //     res.status(500).json({ message: 'Error emailing Notification quote' });
+      //   })
+      // try {
+      //   // try aws first
+      //   const awsResult = await sendEmail({
+      //     to: ['omar.rguez26@gmail.com', 'filiberto_2305@outlook.com', 'info@cleanARsolutions.ca'],
+      //     from: 'info@cleanARsolutions.ca',
+      //     subject: 'User Quote Notification: Your Quote from CleanAR Solutions',
+      //     text: emailText,
+      //   });
+      //   return res.status(201).json({ message: 'Email sent via AWS' });
+      // } catch (awsError) {
+      //   console.error('AWS email error: ', awsError);
+      //   // fallback to sendgrid
+      //   try {
+      //     await sgMail.send(msg);
+      //     return res.status(201).json({ message: 'Email sent via SendGrid fallback' });
+      //   } catch (sgError) {
+      //     console.error('SendGrid fallback email error: ', sgError);
+      //     return res.status(500).json({ message: 'Error emailing quote notification via both AWS and SendGrid' });
+      //   }
+      // }
+      try {
+        const emailResult = await sendEmailWithFallback({
+          to: ['omar.rguez26@gmail.com', 'filiberto_2305@outlook.com', 'info@cleanARsolutions.ca'],
+          from: 'info@cleanARsolutions.ca',
+          subject: 'User Quote Notification: Your Quote from CleanAR Solutions',
+          text: emailText,
+        }, msg);
+        return res.status(201).json({ message: `Email sent via ${emailResult.provider}.` });
+      } catch (err) {
+        console.error('Controller error:', err);
+        return res.status(500).json({ message: 'Unexpected server error.', error: err.message });
+      }
+    } catch (error) {
+      console.error('Error emailing quote notification: ', error);
+      return res.status(500).json({ message: 'Error emailing quote notification' });
+    }
+  },
+  emailNewUser: async (req, res) => {
+    try {
+      // console.log('Emailing new user: ', req.body);
+      const { email, user } = req.body;
+      const emailText = `Dear ${user.firstName} ${user.lastName},
 
 Welcome to CleanAR Solutions! We are excited to have you join our community and look forward to providing you with exceptional cleaning services. 
 
@@ -1492,222 +1488,343 @@ Best regards,
 CleanAR Solutions
 info@cleanARsolutions.ca
 (437) 440-5514`;
-            const msg = {
-                to: email, // Change to your recipient
-                from: 'info@cleanARsolutions.ca', // Change to your verified sender
-                // bcc: 'info@cleanARsolutions.ca',
-                subject: 'Welcome to CleanAR Solutions',
-                text: emailText, // plain text body
+      const msg = {
+        to: email, // Change to your recipient
+        from: 'info@cleanARsolutions.ca', // Change to your verified sender
+        // bcc: 'info@cleanARsolutions.ca',
+        subject: 'Welcome to CleanAR Solutions',
+        text: emailText, // plain text body
 
-            }
-            sgMail
-                .send(msg)
-                .then(() => {
-                    res.status(201).json({ message: 'Email sent' });
-                })
-                .catch((error) => {
-                    console.error(error);
-                    res.status(500).json({ message: 'Error emailing new user' });
-                })
-        } catch (error) {
-            console.error('Error emailing new user: ', error);
-            res.status(500).json({ message: 'Error emailing new user' });
-        }
-    },
-    emailNewUserNotification: async (req, res) => {
-        try {
-            // console.log('Emailing new user: ', req.body);
-            // const { email, user } = req.body;
-            const emailText = `This is an automated notification email from CleanAR Solutions.
+      }
+      // sgMail
+      //   .send(msg)
+      //   .then(() => {
+      //     res.status(201).json({ message: 'Email sent' });
+      //   })
+      //   .catch((error) => {
+      //     console.error(error);
+      //     res.status(500).json({ message: 'Error emailing new user' });
+      //   })
+      try {
+        const emailResult = await sendEmailWithFallback({
+          to: email,
+          from: 'info@cleanARsolutions.ca',
+          subject: 'Welcome to CleanAR Solutions',
+          text: emailText,
+        }, msg);
+        return res.status(201).json({ message: `Email sent via ${emailResult.provider}.` });
+      } catch (err) {
+        console.error('Controller error:', err);
+        return res.status(500).json({ message: 'Unexpected server error.', error: err.message });
+      }
+    } catch (error) {
+      console.error('Error emailing new user: ', error);
+      res.status(500).json({ message: 'Error emailing new user' });
+    }
+  },
+  emailNewUserNotification: async (req, res) => {
+    try {
+      // console.log('Emailing new user: ', req.body);
+      // const { email, user } = req.body;
+      const emailText = `This is an automated notification email from CleanAR Solutions.
 
 An new user has joined our community!
 
 Best regards,
 
 CleanAR Solutions`;
-            const msg = {
-                to: ['omar.rguez26@gmail.com', 'filiberto_2305@outlook.com'], // Change to your recipient
-                from: 'info@cleanARsolutions.ca', // Change to your verified sender
-                subject: 'New User Notification: Welcome to CleanAR Solutions',
-                text: emailText, // plain text body
+      const msg = {
+        to: ['omar.rguez26@gmail.com', 'filiberto_2305@outlook.com'], // Change to your recipient
+        from: 'info@cleanARsolutions.ca', // Change to your verified sender
+        subject: 'New User Notification: Welcome to CleanAR Solutions',
+        text: emailText, // plain text body
 
-            }
-            sgMail
-                .send(msg)
-                .then(() => {
-                    res.status(201).json({ message: 'Notification Email sent' });
-                })
-                .catch((error) => {
-                    console.error(error);
-                    res.status(500).json({ message: 'Error emailing new user notification' });
-                })
-        } catch (error) {
-            console.error('Error emailing new user notification: ', error);
-            res.status(500).json({ message: 'Error emailing new user notification' });
-        }
-    },
-    emailPasswordResetRequest: async (req, res) => {
-        const { email } = req.body;
-        const user = await User.findOne({ email });
+      }
+      // sgMail
+      //   .send(msg)
+      //   .then(() => {
+      //     res.status(201).json({ message: 'Notification Email sent' });
+      //   })
+      //   .catch((error) => {
+      //     console.error(error);
+      //     res.status(500).json({ message: 'Error emailing new user notification' });
+      //   })
+      try {
+        const emailResult = await sendEmailWithFallback({
+          to: ['omar.rguez26@gmail.com', 'filiberto_2305@outlook.com'],
+          from: 'info@cleanARsolutions.ca',
+          subject: 'New User Notification: Welcome to CleanAR Solutions',
+          text: emailText,
+        }, msg);
+        return res.status(201).json({ message: `Notification Email sent via ${emailResult.provider}.` });
+      } catch (err) {
+        console.error('Controller error:', err);
+        return res.status(500).json({ message: 'Unexpected server error.', error: err.message });
+      }
+    } catch (error) {
+      console.error('Error emailing new user notification: ', error);
+      res.status(500).json({ message: 'Error emailing new user notification' });
+    }
+  },
+  emailPasswordResetRequest: async (req, res) => {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
 
-        if (!user) {
-            return res.status(404).send('User not found');
-        }
-        console.log('user: ', user);
-        const resetToken = signTokenForPasswordReset({ userId: user._id }, process.env.SECRET_KEY, { expiresIn: '1h' });
-        user.resetToken = bcrypt.hashSync(resetToken, 10); // Store hashed token in the DB
-        user.resetTokenExpires = Date.now() + 3600000; // 1 hour expiration
-        await user.save();
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+    console.log('user: ', user);
+    const resetToken = signTokenForPasswordReset({ userId: user._id }, process.env.SECRET_KEY, { expiresIn: '1h' });
+    user.resetToken = bcrypt.hashSync(resetToken, 10); // Store hashed token in the DB
+    user.resetTokenExpires = Date.now() + 3600000; // 1 hour expiration
+    await user.save();
 
-        // Send the reset email with SendGrid
-        const msg = {
-            to: user.email,
-            from: 'info@cleanARsolutions.ca', // Your verified sender
-            subject: 'Password Reset Request',
-            text: `
+    // Send the reset email with SendGrid
+    const msg = {
+      to: user.email,
+      from: 'info@cleanARsolutions.ca', // Your verified sender
+      subject: 'Password Reset Request',
+      text: `
         You are receiving this email because you (or someone else) has requested a password reset for your account.
         Please click on the following link, or paste this into your browser to complete the process:
         https://www.cleanARsolutions.ca/reset-password?token=${resetToken}
         If you did not request this, please ignore this email and your password will remain unchanged.
         `,
 
-            // http://localhost:3000/reset-password?token=${resetToken}
-        };
+      // http://localhost:3000/reset-password?token=${resetToken}
+    };
 
-        try {
-            await sgMail.send(msg);
-            res.status(200).json({ message: 'Password reset email sent! Please check your email for next steps.' });
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ message: 'Error sending email' });
+    // try {
+    //   await sgMail.send(msg);
+    //   res.status(200).json({ message: 'Password reset email sent! Please check your email for next steps.' });
+    // } catch (error) {
+    //   console.error(error);
+    //   res.status(500).json({ message: 'Error sending email' });
 
-        }
-    },
-    emailQuickQuote: async (req, res) => {
-        try {
-            // const { textSummary, imageBase64, formData } = req.body;
-            // if (!textSummary || !imageBase64 || !formData) {
-                const { textSummary, formData } = req.body;
-                if (!textSummary || !formData) {
-                return res.status(400).json({ message: "Form data and image are required." });
-            }
+    // }
+    try {
+      const emailResult = await sendEmailWithFallback({
+        to: user.email,
+        from: 'info@cleanARsolutions.ca',
+        subject: 'Password Reset Request',
+        text: `
+          You are receiving this email because you (or someone else) has requested a password reset for your account.
+          Please click on the following link, or paste this into your browser to complete the process:
+          https://www.cleanARsolutions.ca/reset-password?token=${resetToken}
+          If you did not request this, please ignore this email and your password will remain unchanged.
+          `,
+      }, msg);
+      return res.status(200).json({ message: `Password reset email sent via ${emailResult.provider}.` });
+    } catch (err) {
+      console.error('Controller error:', err);
+      return res.status(500).json({ message: 'Unexpected server error.', error: err.message });
+    }
+  },
+  emailQuickQuote: async (req, res) => {
+    try {
+      // const { textSummary, imageBase64, formData } = req.body;
+      // if (!textSummary || !imageBase64 || !formData) {
+      const { textSummary, formData } = req.body;
+      if (!textSummary || !formData) {
+        return res.status(400).json({ message: "Form data and image are required." });
+      }
 
-            // Decode the base64 image string to a buffer
-            // const imageBuffer = Buffer.from(imageBase64, 'base64');
-            const { name, email, phonenumber, postalcode } = formData;
+      // Decode the base64 image string to a buffer
+      // const imageBuffer = Buffer.from(imageBase64, 'base64');
+      const { name, email, phonenumber, postalcode } = formData;
 
-            // Use Sharp to convert PNG to JPEG
-            // const jpegBuffer = await sharp(imageBuffer)
-            //     .jpeg({ quality: 80 })  // Convert to JPEG and set quality
-            //     .toBuffer();  // Return a buffer
+      // Use Sharp to convert PNG to JPEG
+      // const jpegBuffer = await sharp(imageBuffer)
+      //     .jpeg({ quality: 80 })  // Convert to JPEG and set quality
+      //     .toBuffer();  // Return a buffer
 
-            // Convert JPEG buffer to Base64
-            // const jpegBase64 = jpegBuffer.toString('base64');
+      // Convert JPEG buffer to Base64
+      // const jpegBase64 = jpegBuffer.toString('base64');
 
-            // Construct email HTML with inline image
-            const emailHtml = `
+      // Construct email HTML with inline image
+      const emailHtml = `
             <h2>Customer Form Submission</h2>                    
             <p>${textSummary}</p>
             `;
-            // <p><strong>Form Screenshot:</strong></p>
-            // <img src="data:image/jpeg;base64,${jpegBase64}" alt="Quote Form" style="max-width:100%; border:1px solid #ccc; border-radius:8px;">
+      // <p><strong>Form Screenshot:</strong></p>
+      // <img src="data:image/jpeg;base64,${jpegBase64}" alt="Quote Form" style="max-width:100%; border:1px solid #ccc; border-radius:8px;">
 
-            // const msg = {
-            //     to: 'info@cleanARsolutions.ca', // Change to your recipient
-            //     from: 'info@cleanARsolutions.ca',
-            //     subject: 'Quick Quote Request',
-            //     html: formHtml,
-            // }
-            // Email content
-            const msg = {
-                to: 'info@cleanARsolutions.ca',
-                // to: 'cleanARsolutions@gmail.com',
-                from: 'info@cleanARsolutions.ca',
-                // bcc: 'info@clenarsolutions.ca',
-                subject: "CleanAR Solutions: A new quote has been submitted! Please review and follow up with the client.",
-                html: emailHtml
-            };
-            sgMail
-                .send(msg)
-                .then(() => {
-                    res.status(201).json({ message: 'Email sent' });
-                })
-                .catch((error) => {
-                    console.error(error);
-                    res.status(500).json({ message: 'Error emailing quote' });
-                }
-                )
-        } catch (error) {
-            console.error('Error emailing quote: ', error);
-            res.status(500).json({ message: 'Error emailing quote' });
-        }
-
-    },
-    emailQuickNotePDF: async (req, res) => {
-        const { from, to, cc, subject, html, attachments } = req.body;
-
-        const msg = {
-            to: to,
-            from: from,
-            subject: subject,
-            bcc: ['cleanARsolutions@gmail.com', 'info@cleanarsolutions.ca'],
-            html: html,
-            attachments: attachments.map(attachment => ({
-                content: attachment.content,
-                filename: attachment.filename,
-                type: 'application/pdf',
-                disposition: 'attachment',
-                contentId: 'quickQuotePDF'
-            }))
-        };
-
+      // const msg = {
+      //     to: 'info@cleanARsolutions.ca', // Change to your recipient
+      //     from: 'info@cleanARsolutions.ca',
+      //     subject: 'Quick Quote Request',
+      //     html: formHtml,
+      // }
+      // Email content
+      const msg = {
+        to: 'info@cleanARsolutions.ca',
+        // to: 'cleanARsolutions@gmail.com',
+        from: 'info@cleanARsolutions.ca',
+        // bcc: 'info@clenarsolutions.ca',
+        subject: "CleanAR Solutions: A new quote has been submitted! Please review and follow up with the client.",
+        html: emailHtml
+      };
+      // sgMail
+      //   .send(msg)
+      //   .then(() => {
+      //     res.status(201).json({ message: 'Email sent' });
+      //   })
+      //   .catch((error) => {
+      //     console.error(error);
+      //     res.status(500).json({ message: 'Error emailing quote' });
+      //   }
+      //   )
+      // console.log('Emailing quick quote with AWS');
+      // const result = await sendEmail({
+      //   to: ['info@cleanARsolutions.ca'],
+      //   subject: "CleanAR Solutions: A new quote has been submitted! Please review and follow up with the client.",
+      //   html: emailHtml
+      // });
+      // console.log('Email result:', result);
+      // if (result.messageId) {
+      //   console.log("Email sent successfully, SES message ID:", result.messageId);
+      //   res.status(201).json({ message: 'Email sent' });
+      // } else {
+      //   console.warn("Email send attempted but no message ID returned:", result);
+      //   res.status(500).json({ message: 'Email send attempted but no confirmation received from SES.', awsResult: result });
+      // }
         try {
-            await sgMail.send(msg);
-            console.log('Email sent successfully');
-            res.status(200).json({ message: 'Email sent successfully' });
-        } catch (error) {
-            console.error('Error sending email:', error);
-            if (error.response) {
-                console.error(error.response.body);
-            }
-            res.status(500).json({ message: 'Error sending email' });
+        const emailResult = await sendEmailWithFallback({
+          to: ['info@cleanARsolutions.ca'],
+          subject: "CleanAR Solutions: A new quote has been submitted! Please review and follow up with the client.",
+          html: emailHtml
+        }, msg);
+
+        if (!emailResult.success) {
+          return res.status(500).json({ message: 'Failed to send email via both providers.', error: emailResult.error, awsError: emailResult.awsError });
         }
-    },
-    generateWeeklyReport: async () => {
-        const oneWeekAgo = new Date();
-        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
-        const logs = await VisitorLog.find({ visitDate: { $gte: oneWeekAgo } });
+        return res.status(201).json({ message: `Email sent via ${emailResult.provider}.` });
 
-        // console.log('logs: ', logs);
+      } catch (err) {
+        console.error('Controller error:', err);
+        return res.status(500).json({ message: 'Unexpected server error.', error: err.message });
+      }
+    } catch (error) {
+      console.error('Error emailing quote: ', error);
+      res.status(500).json({ message: 'Error emailing quote' });
+    }
 
-        const totalVisits = logs.length;
-        const pageCounts = {};
-        const userAgents = {};
-        const ipAddress = {};
+  },
+  emailQuickNotePDF: async (req, res) => {
+    const { from, to, cc, subject, html, attachments } = req.body;
 
-        logs.forEach((log) => {
-            pageCounts[log.page] = (pageCounts[log.page] || 0) + 1;
-            userAgents[log.userAgent] = (userAgents[log.userAgent] || 0) + 1;
-            ipAddress[log.ip] = (ipAddress[log.ip] || 0) + 1;
-        });
+    const msg = {
+      to: to,
+      from: from,
+      subject: subject,
+      bcc: ['cleanARsolutions@gmail.com', 'info@cleanarsolutions.ca'],
+      html: html,
+      attachments: attachments.map(attachment => ({
+        content: attachment.content,
+        filename: attachment.filename,
+        type: 'application/pdf',
+        disposition: 'attachment',
+        contentId: 'quickQuotePDF'
+      }))
+    };
 
-        const parser = new Parser();
-        const csv = parser.parse(logs.map(log => ({
-        date: log.visitDate,
-        page: log.page,
-        // userAgent: log.userAgent,
-        ipAddress: log.ip,
-        browser: log.browser,
-        os: log.os,
-        sessionDuration: log.sessionDuration,
-        referrer: log.referrer,
-        country: log.geo.country,
-        city: log.geo.city,
-        isBot: log.isBot,
-        scrollDepth: log.scrollDepth,
-        trafficSource: log.trafficSource,
-        deviceType: log.deviceType,
+    // try {
+    //   await sgMail.send(msg);
+    //   console.log('Email sent successfully');
+    //   res.status(200).json({ message: 'Email sent successfully' });
+    // } catch (error) {
+    //   console.error('Error sending email:', error);
+    //   if (error.response) {
+    //     console.error(error.response.body);
+    //   }
+    //   res.status(500).json({ message: 'Error sending email' });
+    // }
+    // console.log('Emailing quick note with AWS');
+    // const result = await sendEmail({
+    //   to: [to],
+    //   from: from,
+    //   subject: subject,
+    //   bcc: ['info@cleanARsolutions.ca'],
+    //   html: html,
+    //   attachments: attachments.map(attachment => ({
+    //     content: attachment.content,
+    //     filename: attachment.filename,
+    //     type: 'application/pdf',
+    //     disposition: 'attachment',
+    //     contentId: 'quickQuotePDF'
+    //   }))
+    // });
+    // console.log('Email result:', result);
+    // if (result.messageId) {
+    //   console.log("Email sent successfully, SES message ID:", result.messageId);
+    //   res.status(200).json({ message: 'Email sent successfully' });
+    // } else {
+    //   console.warn("Email send attempted but no message ID returned:", result);
+    //   res.status(500).json({ message: 'Email send attempted but no confirmation received from SES.', awsResult: result });
+    // }
+      try {
+        const emailResult = await sendEmailWithFallback({
+          to: [to],
+          from: from,
+          subject: subject,
+          bcc: ['info@cleanARsolutions.ca'],
+          html: html,
+          attachments: attachments.map(attachment => ({
+            content: attachment.content,
+            filename: attachment.filename,
+            type: 'application/pdf',
+            disposition: 'attachment',
+            contentId: 'quickQuotePDF'
+          }))
+        }, msg);
+
+        if (!emailResult.success) {
+          return res.status(500).json({ message: 'Failed to send email via both providers.', error: emailResult.error, awsError: emailResult.awsError });
+        }
+
+        return res.status(200).json({ message: `Email sent successfully via ${emailResult.provider}.` });
+
+      } catch (err) {
+        console.error('Controller error:', err);
+        return res.status(500).json({ message: 'Unexpected server error.', error: err.message });
+      }
+  },
+  generateWeeklyReport: async () => {
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+    const logs = await VisitorLog.find({ visitDate: { $gte: oneWeekAgo } });
+
+    // console.log('logs: ', logs);
+
+    const totalVisits = logs.length;
+    const pageCounts = {};
+    const userAgents = {};
+    const ipAddress = {};
+
+    logs.forEach((log) => {
+      pageCounts[log.page] = (pageCounts[log.page] || 0) + 1;
+      userAgents[log.userAgent] = (userAgents[log.userAgent] || 0) + 1;
+      ipAddress[log.ip] = (ipAddress[log.ip] || 0) + 1;
+    });
+
+    const parser = new Parser();
+    const csv = parser.parse(logs.map(log => ({
+      date: log.visitDate,
+      page: log.page,
+      // userAgent: log.userAgent,
+      ipAddress: log.ip,
+      browser: log.browser,
+      os: log.os,
+      sessionDuration: log.sessionDuration,
+      referrer: log.referrer,
+      country: log.geo.country,
+      city: log.geo.city,
+      isBot: log.isBot,
+      scrollDepth: log.scrollDepth,
+      trafficSource: log.trafficSource,
+      deviceType: log.deviceType,
     })));
 
     //   <p><strong>User Agents:</strong></p>
@@ -1721,124 +1838,180 @@ CleanAR Solutions`;
         <ul>${Object.entries(ipAddress).map(([ip, count]) => `<li>${ip}: ${count}</li>`).join('')}</ul>
         <p><strong>Country:</strong></p>
         <ul>${Object.entries(logs.reduce((acc, log) => {
-            acc[log.geo.country] = (acc[log.geo.country] || 0) + 1;
-            return acc;
-        }, {})).map(([country, count]) => `<li>${country}: ${count}</li>`).join('')}</ul>
+      acc[log.geo.country] = (acc[log.geo.country] || 0) + 1;
+      return acc;
+    }, {})).map(([country, count]) => `<li>${country}: ${count}</li>`).join('')}</ul>
         <p><strong>City:</strong></p>
         <ul>${Object.entries(logs.reduce((acc, log) => {
-            acc[log.geo.city] = (acc[log.geo.city] || 0) + 1;
-            return acc;
-        }, {})).map(([city, count]) => `<li>${city}: ${count}</li>`).join('')}</ul>
+      acc[log.geo.city] = (acc[log.geo.city] || 0) + 1;
+      return acc;
+    }, {})).map(([city, count]) => `<li>${city}: ${count}</li>`).join('')}</ul>
         <p><strong>Is Bot:</strong></p>
         <ul>${Object.entries(logs.reduce((acc, log) => {
-            acc[log.isBot ? 'Yes' : 'No'] = (acc[log.isBot ? 'Yes' : 'No'] || 0) + 1;
-            return acc;
-        }, {})).map(([isBot, count]) => `<li>${isBot}: ${count}</li>`).join('')}</ul>
+      acc[log.isBot ? 'Yes' : 'No'] = (acc[log.isBot ? 'Yes' : 'No'] || 0) + 1;
+      return acc;
+    }, {})).map(([isBot, count]) => `<li>${isBot}: ${count}</li>`).join('')}</ul>
         <p><strong>Browser:</strong></p>
         <ul>${Object.entries(logs.reduce((acc, log) => {
-            acc[log.browser] = (acc[log.browser] || 0) + 1;
-            return acc;
-        }, {})).map(([browser, count]) => `<li>${browser}: ${count}</li>`).join('')}</ul>
+      acc[log.browser] = (acc[log.browser] || 0) + 1;
+      return acc;
+    }, {})).map(([browser, count]) => `<li>${browser}: ${count}</li>`).join('')}</ul>
         <p><strong>Operating System:</strong></p>
         <ul>${Object.entries(logs.reduce((acc, log) => {
-            acc[log.os] = (acc[log.os] || 0) + 1;
-            return acc;
-        }, {})).map(([os, count]) => `<li>${os}: ${count}</li>`).join('')}</ul>
+      acc[log.os] = (acc[log.os] || 0) + 1;
+      return acc;
+    }, {})).map(([os, count]) => `<li>${os}: ${count}</li>`).join('')}</ul>
         <p><strong>Session Duration:</strong></p>
         <ul>${Object.entries(logs.reduce((acc, log) => {
-            acc[log.sessionDuration] = (acc[log.sessionDuration] || 0) + 1;
-            return acc;
-        }, {})).map(([duration, count]) => `<li>${duration}: ${count}</li>`).join('')}</ul>
+      acc[log.sessionDuration] = (acc[log.sessionDuration] || 0) + 1;
+      return acc;
+    }, {})).map(([duration, count]) => `<li>${duration}: ${count}</li>`).join('')}</ul>
         <p><strong>Referrers:</strong></p>
         <ul>${Object.entries(logs.reduce((acc, log) => {
-            acc[log.referrer] = (acc[log.referrer] || 0) + 1;
-            return acc;
-        }, {})).map(([referrer, count]) => `<li>${referrer}: ${count}</li>`).join('')}</ul>
+      acc[log.referrer] = (acc[log.referrer] || 0) + 1;
+      return acc;
+    }, {})).map(([referrer, count]) => `<li>${referrer}: ${count}</li>`).join('')}</ul>
     <p><strong>Scroll Depth:</strong></p>
     <ul>${Object.entries(logs.reduce((acc, log) => {
-        acc[log.scrollDepth] = (acc[log.scrollDepth] || 0) + 1;
-        return acc;
+      acc[log.scrollDepth] = (acc[log.scrollDepth] || 0) + 1;
+      return acc;
     }, {})).map(([depth, count]) => `<li>${depth}: ${count}</li>`).join('')}</ul>
     <p><strong>Traffic Source</strong></p>
     <ul>${Object.entries(logs.reduce((acc, log) => {
-        acc[log.trafficSource] = (acc[log.trafficSource] || 0) + 1;
-        return acc;
+      acc[log.trafficSource] = (acc[log.trafficSource] || 0) + 1;
+      return acc;
     }, {})).map(([source, count]) => `<li>${source}: ${count}</li>`).join('')}</ul>
     <p><strong>Device Type:</strong></p>
     <ul>${Object.entries(logs.reduce((acc, log) => {
-        acc[log.deviceType] = (acc[log.deviceType] || 0) + 1;
-        return acc;
+      acc[log.deviceType] = (acc[log.deviceType] || 0) + 1;
+      return acc;
     }, {})).map(([device, count]) => `<li>${device}: ${count}</li>`).join('')}</ul>    
 
     `;
-        // const csv = parser.parse(logs.map(log => ({
-        //     date: log.visitDate,
-        //     page: log.page,
-        //     userAgent: log.userAgent,
-        //     ipAddress: log.ip,
-        // })));
+    // const csv = parser.parse(logs.map(log => ({
+    //     date: log.visitDate,
+    //     page: log.page,
+    //     userAgent: log.userAgent,
+    //     ipAddress: log.ip,
+    // })));
 
-        // const htmlSummary = `
-        //   <h2>Weekly Visitor Report</h2>
-        //   <p><strong>Total Visits:</strong> ${totalVisits}</p>
-        //   <p><strong>Page Views:</strong></p>
-        //   <ul>${Object.entries(pageCounts).map(([page, count]) => `<li>${page}: ${count}</li>`).join('')}</ul>
-        //   <p><strong>User Agents:</strong></p>
-        //   <ul>${Object.entries(userAgents).map(([ua, count]) => `<li>${ua}: ${count}</li>`).join('')}</ul>
-        //     <p><strong>IP Addresses:</strong></p>
-        //     <ul>${Object.entries(ipAddress).map(([ip, count]) => `<li>${ip}: ${count}</li>`).join('')}</ul>
-        // `;
+    // const htmlSummary = `
+    //   <h2>Weekly Visitor Report</h2>
+    //   <p><strong>Total Visits:</strong> ${totalVisits}</p>
+    //   <p><strong>Page Views:</strong></p>
+    //   <ul>${Object.entries(pageCounts).map(([page, count]) => `<li>${page}: ${count}</li>`).join('')}</ul>
+    //   <p><strong>User Agents:</strong></p>
+    //   <ul>${Object.entries(userAgents).map(([ua, count]) => `<li>${ua}: ${count}</li>`).join('')}</ul>
+    //     <p><strong>IP Addresses:</strong></p>
+    //     <ul>${Object.entries(ipAddress).map(([ip, count]) => `<li>${ip}: ${count}</li>`).join('')}</ul>
+    // `;
 
-        // console.log('csv: ', csv);
-        // console.log('htmlSummary: ', htmlSummary);
-        // console.log('totalVisits: ', totalVisits);
+    // console.log('csv: ', csv);
+    // console.log('htmlSummary: ', htmlSummary);
+    // console.log('totalVisits: ', totalVisits);
 
-        return { csv, htmlSummary, totalVisits };
-    },
-    sendWeeklyReportEmail: async () => {
-        const { csv, htmlSummary } = await generateWeeklyReport();
+    return { csv, htmlSummary, totalVisits };
+  },
+  sendWeeklyReportEmail: async () => {
+    const { csv, htmlSummary } = await generateWeeklyReport();
 
-        //   console.log('htmlSummary: ', htmlSummary);
+    //   console.log('htmlSummary: ', htmlSummary);
 
-        const message = {
-            to: 'info@cleanarsolutions.ca', // Update with admin email
-            from: 'info@cleanarsolutions.ca',
-            subject: 'Weekly Visitor Report',
-            html: htmlSummary,
-            attachments: [
-                {
-                    content: Buffer.from(csv).toString('base64'),
-                    filename: 'visitor-report.csv',
-                    type: 'text/csv',
-                    disposition: 'attachment',
-                },
-            ],
-        };
+    const message = {
+      to: 'info@cleanarsolutions.ca', // Update with admin email
+      from: 'info@cleanarsolutions.ca',
+      subject: 'Weekly Visitor Report',
+      html: htmlSummary,
+      attachments: [
+        {
+          content: Buffer.from(csv).toString('base64'),
+          filename: 'visitor-report.csv',
+          type: 'text/csv',
+          disposition: 'attachment',
+        },
+      ],
+    };
 
-        try {
-            await sgMail.send(message);
-            // console.log('Email sent successfully');
-            // res.status(200).json({ message: 'Email sent successfully' });
-        } catch (error) {
-            console.error('Error sending email:', error);
-            if (error.response) {
-                console.error(error.response.body);
-            }
-            // res.status(500).json({ message: 'Error sending email' });
+    // try {
+    //     await sgMail.send(message);
+    //     // console.log('Email sent successfully');
+    //     // res.status(200).json({ message: 'Email sent successfully' });
+    // } catch (error) {
+    //     console.error('Error sending email:', error);
+    //     if (error.response) {
+    //         console.error(error.response.body);
+    //     }
+    //     // res.status(500).json({ message: 'Error sending email' });
+    // }
+    // const result = await sendEmail({
+    //   to: ['info@cleanarsolutions.ca'],
+    //   subject: 'Weekly Visitor Report',
+    //   html: htmlSummary,
+    //   attachments: [
+    //     {
+    //       content: Buffer.from(csv).toString('base64'),
+    //       filename: 'visitor-report.csv',
+    //       type: 'text/csv',
+    //       disposition: 'attachment',
+    //     },
+    //   ],
+    // });
+    // if (result.messageId) {
+    //   res.status(200).json({ message: 'Weekly report email sent successfully', result });
+    // } else {
+    //   res.status(500).json({ message: 'Failed to send weekly report email', error: result.error });
+    // }
+      try {
+        const emailResult = await sendEmailWithFallback({
+          to: ['info@cleanarsolutions.ca'],
+          subject: 'Weekly Visitor Report',
+          html: htmlSummary,
+          attachments: [
+            {
+              content: Buffer.from(csv).toString('base64'),
+              filename: 'visitor-report.csv',
+              type: 'text/csv',
+              disposition: 'attachment',
+            },
+          ],
+        }, message);
+        if (!emailResult.success) {
+          return res.status(500).json({ message: 'Failed to send weekly report email via both providers.', error: emailResult.error, awsError: emailResult.awsError });
         }
-    },
-    generateManualReport: async (req, res) => {
-        try {
-            const { csv } = await generateWeeklyReport();
-            res.header('Content-Type', 'text/csv');
-            res.attachment('visitor-report.csv');
-            res.send(csv);
-        } catch (err) {
-            console.error('Manual report error:', err);
-            res.status(500).json({ error: 'Failed to generate report' });
-        }
-    },
-    sendUpcomingBookingsEmail,
+        return res.status(200).json({ message: `Weekly report email sent successfully via ${emailResult.provider}.` });
+      } catch (err) {
+        console.error('Error sending weekly report email:', err);
+        return res.status(500).json({ message: 'Unexpected error while sending weekly report email.', error: err.message });
+      }
+  },
+  generateManualReport: async (req, res) => {
+    try {
+      const { csv } = await generateWeeklyReport();
+      res.header('Content-Type', 'text/csv');
+      res.attachment('visitor-report.csv');
+      res.send(csv);
+    } catch (err) {
+      console.error('Manual report error:', err);
+      res.status(500).json({ error: 'Failed to generate report' });
+    }
+  },
+  sendUpcomingBookingsEmail,
+  awsEmailTest: async (req, res) => {
+    try {
+      console.log("awsEmailTest called with body: ", req.body);
+      const { to } = req.body;
+      const result = await sendEmail({
+        to: Array.isArray(to) ? to : [to],
+        subject: "SES test from CleanAR backend",
+        text: "If you received this, SES is configured correctly.",
+        html: "<p>If you received this, <b>SES</b> is configured correctly.</p>",
+      });
+
+      res.json({ ok: true, ...result });
+    } catch (e) {
+      res.status(500).json({ ok: false, error: e.message });
+    }
+  }
 
 };
 

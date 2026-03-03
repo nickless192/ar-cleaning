@@ -7,26 +7,24 @@
     "detailsA": "¿Cansado de buscar un servicio de limpieza que ofrezca resultados consistentes y de alta calidad? Lo entendemos, y estamos aquí para cambiar eso.",
     "services": "Desde limpiezas profundas hasta mantenimiento regular, adaptamos los servicios a tus necesidades — eficientes, ecológicos y siempre confiables.",
     "cta_text": "Tu cotización personalizada expreso.",
-      "cta": {
+    "cta": {
       "call": "Llama Ahora",
       "callNote": "Respuesta más rápida",
       "text": "¿Prefieres SMS? Envíanos un mensaje",
       "textNote": "Cotización por SMS",
       "call_short": "Llamar",
       "text_short": "SMS",
-        "email_short": "Correo"
+      "email_short": "Correo"
     },
-      "contact_title": "Opciones de contacto",
+    "contact_title": "Opciones de contacto",
     "contact_subtitle": "Elige una — respondemos rápido.",
     "reviews": "¿Listo para dejar una reseña?",
-  
     "proof": {
       "title": "Prueba de nuestros estándares profesionales",
       "subtitle": "No solo decimos que somos profesionales, lo demostramos con nuestras certificaciones y membresías.",
       "show": "Ver certificaciones y membresías",
       "hide": "Ocultar credenciales"
     },
-  
     "popular": {
       "deep": "Limpieza profunda",
       "move": "Mudanza (entrada/salida)",
@@ -146,7 +144,7 @@
     "confidentialNote": "<strong>Nota:</strong> CQCC ha indicado que los archivos del certificado deben mantenerse confidenciales por el momento (actualizaciones de marca en proceso). Actualmente no compartimos imágenes del certificado de forma pública. Si necesitas verificación confidencial para fines de adquisición, contáctanos.",
     "benefitsTitle": "Beneficios de la Certificación CQCC",
     "cardTitle": "Qué significa la certificación CQCC para ti",
-     "badge": {
+    "badge": {
       "eyebrow": "Diversidad de proveedores • Certificado",
       "headline": "CleanAR Solutions es un <strong>Proveedor LGBTQ+ Certificado (LGBTBE)</strong>",
       "body": "Certificado por la Cámara Queer de Comercio de Canadá (CQCC). Apoyamos programas de diversidad de proveedores mientras brindamos un servicio de limpieza profesional y confiable."
@@ -236,8 +234,7 @@
       "companyName_placeholder": "Compania ABC",
       "postalcode_placeholder": "H0H 0H0",
       "promoCode_placeholder": "PROMO123",
-      "note": "¡Nos pondremos en contacto contigo pronto: personas reales, no bots!" 
-
+      "note": "¡Nos pondremos en contacto contigo pronto: personas reales, no bots!"
     },
     "alerts": {
       "success": "¡Su mensaje ha sido enviado!",
@@ -262,8 +259,8 @@
     "next": "Siguiente",
     "visitGoogleProfile": "Puedes leer estas y dejar tu propia reseña en nuestro perfil de Google:",
     "googleProfileLink": "CleanAR Solutions",
-     "readMore": "Leer más",
-  "readLess": "Leer menos"
+    "readMore": "Leer más",
+    "readLess": "Leer menos"
   },
   "whyChooseUs": {
     "heading": "¿Por qué elegir CleanAR Solutions?",
@@ -306,45 +303,75 @@
     }
   },
   "signup": {
-    "title": "Registrarse",
-    "description": "Por favor complete el formulario a continuación para crear una cuenta.",
+    "title": "Crear cuenta",
+    "description": "Administra reservas, consulta recibos y cambia tus citas en cualquier momento.",
+    "section_personal": "Datos personales",
+    "section_account": "Configuración de la cuenta",
     "login_prompt": "¿Ya tienes una cuenta?",
     "login_link": "Inicia sesión aquí",
     "form_labels": {
       "first_name": "Nombre*",
       "last_name": "Apellido*",
-      "email": "Dirección de Correo Electrónico*",
+      "email": "Correo electrónico*",
       "telephone": "Teléfono*",
-      "username": "Nombre de Usuario*",
+      "username": "Usuario*",
       "password": "Contraseña*",
-      "how_heard": "¿Cómo se Enteró de Nosotros?",
-      "referral": "Referencia",
-      "please_specify": "Por Favor Especifique",
-      "agree": "Estoy de acuerdo con los"
+      "how_heard": "¿Cómo te enteraste de nosotros?",
+      "referral": "¿Quién te recomendó?",
+      "please_specify": "Por favor especifica",
+      "agree": "Acepto los"
+    },
+    "placeholders": {
+      "email": "nombre@correo.com",
+      "first_name": "Juan",
+      "last_name": "Pérez",
+      "telephone": "(647) 555-1234",
+      "username": "cliente-cleanar",
+      "password": "Al menos 8 caracteres",
+      "how_heard_support": "ej. Juan / conserje / etc."
     },
     "tooltips": {
-      "first_name": "Ingrese su nombre.",
-      "last_name": "Ingrese su apellido.",
-      "email": "Ingrese su dirección de correo electrónico.",
-      "telephone": "Ingrese su número de teléfono.",
-      "username": "Ingrese su nombre de usuario.",
-      "password": "Ingrese su contraseña.",
-      "how_heard": "¿Cómo se enteró de nosotros?",
-      "referral": "¿Quién lo refirió?",
-      "other_specify": "¿Cómo se enteró de nosotros?"
+      "email": "Lo usaremos para confirmar tu cuenta.",
+      "username": "Este será tu usuario para iniciar sesión."
     },
     "dropdown_options": {
-      "placeholder": "¿Cómo se Enteró de Nosotros?...",
       "google": "Google",
       "facebook": "Facebook",
       "instagram": "Instagram",
-      "referral": "Referencia",
+      "referral": "Recomendación",
       "other": "Otro"
     },
-    "button": "Comenzar",
+    "buttons": {
+      "continue": "Continuar",
+      "back": "Atrás",
+      "creating": "Creando cuenta…"
+    },
+    "button": "Crear mi cuenta",
+    "microcopy": {
+      "security": "Registro seguro • Sin spam",
+      "telephone": "Solo para actualizaciones de reservas.",
+      "password": "Usa 8+ caracteres para mayor seguridad.",
+      "already": "¿Ya tienes una cuenta?",
+      "login": "Iniciar sesión"
+    },
+    "benefits_title": "Con tu cuenta de CleanAR puedes:",
+    "benefit_1": "Ver y administrar próximas reservas",
+    "benefit_2": "Acceder a recibos y facturas en cualquier momento",
+    "benefit_3": "Recibir recordatorios y actualizaciones del servicio",
     "alerts": {
-      "username_taken": "Nombre de usuario ya está en uso, por favor intente con un nombre de usuario diferente",
-      "missing_fields": "Por favor complete todos los campos antes de enviar"
+      "missing_email": "El correo es obligatorio.",
+      "invalid_email": "Ingresa un correo válido.",
+      "missing_first_name": "El nombre es obligatorio.",
+      "missing_last_name": "El apellido es obligatorio.",
+      "missing_telephone": "El teléfono es obligatorio.",
+      "invalid_telephone": "Ingresa un teléfono válido.",
+      "missing_username": "El usuario es obligatorio.",
+      "missing_password": "La contraseña es obligatoria.",
+      "password_length": "La contraseña debe tener al menos 8 caracteres.",
+      "terms_required": "Debes aceptar para continuar.",
+      "how_heard_support_required": "Por favor agrega un poco más de detalle.",
+      "email_taken": "Ese correo ya existe. Intenta con otro.",
+      "generic_error": "Ocurrió un error. Intenta de nuevo."
     }
   },
   "profile": {

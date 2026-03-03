@@ -1,6 +1,7 @@
 const sgMail = require("@sendgrid/mail");
 const { DateTime } = require("luxon");
 const { VisitorLog } = require("../models");
+const { sendEmail } = require("../utils/aws-mailer");
 
 // Make sure your SendGrid key is set
 if (process.env.SENDGRID_API_KEY) {
@@ -294,15 +295,22 @@ async function sendDailyEventsReportEmail({ dateStr } = {}) {
   const html = renderHtml(report);
   const text = renderText(report);
 
-  await sgMail.send({
+  // await sgMail.send({
+  //   to: ADMIN_EMAILS,
+  //   from: process.env.SENDGRID_FROM || "info@cleanarsolutions.ca",
+  //   subject,
+  //   text,
+  //   html,
+  // });
+  console.log(`[DailyEventsReport] Sending report email with AWS to ${ADMIN_EMAILS.join(", ")}`);
+  const result = await sendEmail({
     to: ADMIN_EMAILS,
-    from: process.env.SENDGRID_FROM || "info@cleanarsolutions.ca",
     subject,
     text,
     html,
   });
 
-  return { ok: true, sentTo: ADMIN_EMAILS, date: report.date };
+  return { ok: true, sentTo: ADMIN_EMAILS, date: report.date, awsResult: result };
 }
 
 module.exports = {
