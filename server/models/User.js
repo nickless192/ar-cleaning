@@ -4,12 +4,12 @@ const dateFormat = require('../utils/dateFormat');
 const bcrypt = require('bcrypt');
 
 const UserSchema = new Schema({
-    username: {
-        type: String,
-        required: true,
-        trim: true,
-        unique: true
-    },
+    // username: {
+    //     type: String,
+    //     required: true,
+    //     trim: true,
+    //     unique: true
+    // },
     email: {
         type: String,
         required: true,
@@ -111,12 +111,12 @@ UserSchema.pre('save', async function (next) {
 });
 
 // Pre-save hook to store the username in lowercase
-UserSchema.pre('save', function (next) {
-    if (this.isModified('username')) {
-        this.username = this.username.toLowerCase();
-    }
-    next();
-});
+// UserSchema.pre('save', function (next) {
+//     if (this.isModified('username')) {
+//         this.username = this.username.toLowerCase();
+//     }
+//     next();
+// });
 
 // compare the incoming password with the hashed password
 UserSchema.methods.isCorrectPassword = async function (password) {

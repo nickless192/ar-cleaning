@@ -1,155 +1,50 @@
-import React from "react";
-import { useEffect, useState, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Auth from "/src/utils/auth";
 import { useTranslation } from "react-i18next";
-// reactstrap components
+import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
 import {
-  Container,
-  Popover,
-  PopoverBody
-} from "reactstrap";
+  FaCheckCircle,
+  FaEye,
+  FaEyeSlash,
+  FaLock,
+  FaUserPlus,
+  FaEnvelope,
+  FaPhoneAlt,
+  FaUser,
+} from "react-icons/fa";
 
-import {
-  Button,
-  Form,
-  Row,
-  Col
-} from "react-bootstrap";
-
-import { FaQuestionCircle } from "react-icons/fa";
-import pageBg from "/src/assets/img/bg1.png";
-
-// core components
-
+/**
+ * CleanAR Signup (leverages existing CleanAR CSS library)
+ * - Uses cleanar-app-bg / cleanar-card / portal-primary-btn / cleanarInput styles
+ * - Mobile-first, responsive, fast loading
+ */
 function SignUp({ focus }) {
+  const { t } = useTranslation();
+
+  const [step, setStep] = useState(1); // 1: personal, 2: account
+  const [showPassword, setShowPassword] = useState(false);
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
+    telephone: "",
+    // username: "",
+    password: "",
     howDidYouHearAboutUs: "",
     howDidYouHearAboutUsSupport: "",
-    telephone: "",
-    username: "",
-    password: "",
-    termsConsent: false
+    termsConsent: false,
   });
-  const { t } = useTranslation();
+
+  const [touched, setTouched] = useState({});
+  const [submitting, setSubmitting] = useState(false);
+  const [serverError, setServerError] = useState("");
 
   const emailRef = useRef(null);
 
   useEffect(() => {
-    if (focus && emailRef.current) {
-      emailRef.current.focus();
-    }
+    if (focus && emailRef.current) emailRef.current.focus();
   }, [focus]);
-
-  const [popoverOpen, setPopoverOpen] = useState({
-    firstName: false,
-    lastName: false,
-    email: false,
-    telephone: false,
-    username: false,
-    password: false,
-    howDidYouHearAboutUs: false,
-    howDidYouHearAboutUsSupport: false
-  });
-
-  const togglePopover = (field) => {
-    setPopoverOpen((prevState) => {
-      const newState = Object.keys(prevState).reduce((acc, key) => {
-        acc[key] = false;
-        return acc;
-      }, {});
-
-      return { ...newState, [field]: !prevState[field] };
-    });
-  };
-
-  const handleFormSubmit = async (event) => {
-    event.preventDefault();
-    const cleanedData = Object.fromEntries(
-      Object.entries(formData).map(([key, val]) => [
-        key,
-        typeof val === "string" ? val.trim() : val
-      ])
-    );
-    console.log(cleanedData);
-    if (
-      cleanedData.firstName &&
-      cleanedData.lastName &&
-      cleanedData.email &&
-      cleanedData.username &&
-      cleanedData.password &&
-      cleanedData.telephone &&
-      cleanedData.termsConsent
-    ) {
-      try {
-        const response = await fetch(`/api/users/`, {
-          method: "post",
-          body: JSON.stringify(formData),
-          headers: {
-            "Content-Type": "application/json"
-          }
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-
-          const emailResponse = await fetch(`/api/email/new-user`, {
-            method: "post",
-            body: JSON.stringify({
-              email: formData.email,
-              user: data.dbUserData
-            }),
-            headers: {
-              "Content-Type": "application/json"
-            }
-          });
-
-          if (!emailResponse.ok) {
-            alert(emailResponse.statusText);
-          }
-
-          const emailNotificationResponse = await fetch(
-            `/api/email/new-user-notification`,
-            {
-              method: "post",
-              body: JSON.stringify({
-                email: formData.email,
-                user: data.dbUserData
-              }),
-              headers: {
-                "Content-Type": "application/json"
-              }
-            }
-          );
-
-          if (!emailNotificationResponse.ok) {
-            alert(emailNotificationResponse.statusText);
-          }
-
-          Auth.login(data.token, data.dbUserData.adminFlag);
-        } else {
-          alert(t("signup.alerts.username_taken"));
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    } else {
-      alert(t("signup.alerts.missing_fields"));
-    }
-  };
-
-  // Define transition props for Popover to avoid warning
-  const transitionProps = {
-    timeout: 150
-  };
-
-  const handleChange = (event) => {
-    event.preventDefault();
-    const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
-  };
 
   useEffect(() => {
     document.body.classList.add("signup-page");
@@ -163,418 +58,530 @@ function SignUp({ focus }) {
     };
   }, []);
 
+  const trimmed = useMemo(() => {
+    return Object.fromEntries(
+      Object.entries(formData).map(([k, v]) => [k, typeof v === "string" ? v.trim() : v])
+    );
+  }, [formData]);
+
+  const isEmailValid = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v || "").trim());
+  const isPhoneLikelyValid = (v) => String(v || "").replace(/[^\d+]/g, "").length >= 10;
+  const isStrongEnoughPassword = (v) => String(v || "").length >= 8;
+
+  const validate = (data) => {
+    const errors = {};
+
+    if (!data.email) errors.email = t("signup.alerts.missing_email", "Email is required.");
+    else if (!isEmailValid(data.email))
+      errors.email = t("signup.alerts.invalid_email", "Enter a valid email address.");
+
+    if (!data.firstName)
+      errors.firstName = t("signup.alerts.missing_first_name", "First name is required.");
+    if (!data.lastName)
+      errors.lastName = t("signup.alerts.missing_last_name", "Last name is required.");
+
+    if (!data.telephone)
+      errors.telephone = t("signup.alerts.missing_telephone", "Phone number is required.");
+    else if (!isPhoneLikelyValid(data.telephone))
+      errors.telephone = t("signup.alerts.invalid_telephone", "Enter a valid phone number.");
+
+    // if (!data.username)
+    //   errors.username = t("signup.alerts.missing_username", "Username is required.");
+
+    if (!data.password)
+      errors.password = t("signup.alerts.missing_password", "Password is required.");
+    else if (!isStrongEnoughPassword(data.password))
+      errors.password = t(
+        "signup.alerts.password_length",
+        "Password must be at least 8 characters."
+      );
+
+    if (!data.termsConsent)
+      errors.termsConsent = t("signup.alerts.terms_required", "You must agree to continue.");
+
+    if (data.howDidYouHearAboutUs === "Referral" || data.howDidYouHearAboutUs === "Other") {
+      if (!data.howDidYouHearAboutUsSupport) {
+        errors.howDidYouHearAboutUsSupport = t(
+          "signup.alerts.how_heard_support_required",
+          "Please provide a bit more detail."
+        );
+      }
+    }
+
+    return errors;
+  };
+
+  const errors = useMemo(() => validate(trimmed), [trimmed]);
+
+  const step1Valid = useMemo(() => {
+    const keys = ["firstName", "lastName", "telephone"];
+    return keys.every((k) => !errors[k]);
+  }, [errors]);
+
+  const step2Valid = useMemo(() => {
+    const keys = ["email", "password", "termsConsent", "howDidYouHearAboutUsSupport"];
+    return keys.every((k) => !errors[k]);
+  }, [errors]);
+
+  const markTouched = (name) => setTouched((prev) => ({ ...prev, [name]: true }));
+  const showErr = (name) => touched[name] && !!errors[name];
+
+  const onChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setServerError("");
+    setFormData((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
+  };
+
+  const onNext = () => {
+    ["email", "firstName", "lastName", "telephone"].forEach((k) => markTouched(k));
+    if (step1Valid) setStep(2);
+  };
+
+  const onBack = () => setStep(1);
+
+  const SupportLabel = useMemo(() => {
+    if (trimmed.howDidYouHearAboutUs === "Referral")
+      return t("signup.form_labels.referral", "Who referred you?");
+    if (trimmed.howDidYouHearAboutUs === "Other")
+      return t("signup.form_labels.please_specify", "Please specify");
+    return "";
+  }, [trimmed.howDidYouHearAboutUs, t]);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    Object.keys(formData).forEach((k) => markTouched(k));
+
+    if (!step1Valid) {
+      setStep(1);
+      return;
+    }
+    if (!step2Valid) return;
+
+    setSubmitting(true);
+    setServerError("");
+
+    try {
+      const response = await fetch(`/api/users/`, {
+        method: "post",
+        body: JSON.stringify(trimmed),
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!response.ok) {
+        setServerError(t("signup.alerts.email_taken", "That email is taken. Try another."));
+        setSubmitting(false);
+        return;
+      }
+
+      const data = await response.json();
+
+      // keep your email calls; don't block login on failures
+      try {
+        await fetch(`/api/email/new-user`, {
+          method: "post",
+          body: JSON.stringify({ email: trimmed.email, user: data.dbUserData }),
+          headers: { "Content-Type": "application/json" },
+        });
+      } catch {}
+
+      try {
+        await fetch(`/api/email/new-user-notification`, {
+          method: "post",
+          body: JSON.stringify({ email: trimmed.email, user: data.dbUserData }),
+          headers: { "Content-Type": "application/json" },
+        });
+      } catch {}
+
+      Auth.login(data.token, data.dbUserData.adminFlag);
+    } catch (err) {
+      console.error(err);
+      setServerError(t("signup.alerts.generic_error", "Something went wrong. Please try again."));
+      setSubmitting(false);
+    }
+  };
+
   return (
-    <>
-      <div
-        className="content content-border bg-light"
-        style={{ backgroundImage: `url(${pageBg})`, backgroundSize: "cover" }}
-      >
-        <h1 className="title secondary-color text-center montserrat-bold">
-          {t("signup.title")}
-        </h1>
-        <Container className="container">
-          <p className="text-center text-cleanar-color text-bold">
-            {t("signup.description")}
-          </p>
+    <div className="cleanar-app-bg d-flex align-items-stretch">
+      <Container className="py-4 py-md-5">
+        <Row className="justify-content-center">
+          <Col xs={12} md={10} lg={7} xl={6}>
+            {/* Hero-ish header (lightweight) */}
+            <div className="text-center mb-3">
+              <div className="cleanar-badge cleanar-badge--button mx-auto mb-2 px-3 py-2 rounded-pill">
+                <FaLock />
+                <span className="alata-regular">
+                  {t("signup.microcopy.security", "Secure signup • No spam")}
+                </span>
+              </div>
 
-          <Form className="form" onSubmit={handleFormSubmit}>
-            {/* Email */}
-            <Row className="justify-content-center">
-              <Col md="10" xs="10" className="py-1">
-                <Form.Group controlId="signupEmail">
-                  <Form.Label className="text-cleanar-color">
-                    {t("signup.form_labels.email")}
-                  </Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder={t("signup.form_labels.email")}
-                    className="text-cleanar-color form-input rounded-pill"
-                    name="email"
-                    ref={emailRef}
-                    value={formData.email}
-                    onChange={handleChange}
+              <h1 className="portal-section-title mb-1 montserrat-bold">
+                {t("signup.title", "Create your account")}
+              </h1>
+              <div className="portal-section-sub alata-regular">
+                {t(
+                  "signup.description",
+                  "Manage bookings, view invoices, and update appointments anytime."
+                )}
+              </div>
+
+              {/* Step indicator styled like your progress UI */}
+              <div className="booking-progress mx-auto" style={{ maxWidth: 520 }}>
+                <div className="booking-progress-track">
+                  <div
+                    className="booking-progress-fill"
+                    style={{ width: step === 1 ? "50%" : "100%" }}
                   />
-                </Form.Group>
-              </Col>
-              <Col md="1" xs="1" className="py-1">
-                <FaQuestionCircle
-                  id="Popover3"
-                  onClick={() => togglePopover("email")}
-                />
-                <Popover
-                  placement="right"
-                  isOpen={popoverOpen.email}
-                  target="Popover3"
-                  toggle={() => togglePopover("email")}
-                  transition={transitionProps}
-                >
-                  <PopoverBody>{t("signup.tooltips.email")}</PopoverBody>
-                </Popover>
-              </Col>
-            </Row>
+                </div>
+                <div className="booking-progress-labels">
+                  <div className={`booking-progress-item ${step === 1 ? "active" : ""}`}>
+                    <span className="booking-progress-dot" />
+                    <span className="booking-progress-text">
+                      {t("signup.section_personal", "Personal")}
+                    </span>
+                  </div>
+                  <div className={`booking-progress-item ${step === 2 ? "active" : ""}`}>
+                    <span className="booking-progress-dot" />
+                    <span className="booking-progress-text">
+                      {t("signup.section_account", "Account")}
+                    </span>
+                  </div>
+                  {/* filler columns to keep your 5-col grid happy */}
+                  <div className="booking-progress-item" aria-hidden="true" />
+                  <div className="booking-progress-item" aria-hidden="true" />
+                  <div className="booking-progress-item" aria-hidden="true" />
+                </div>
+              </div>
+            </div>
 
-            {/* First name */}
-            <Row className="justify-content-center">
-              <Col md="10" xs="10" className="py-1">
-                <Form.Group controlId="signupFirstName">
-                  <Form.Label className="text-cleanar-color">
-                    {t("signup.form_labels.first_name")}
-                  </Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder={t("signup.form_labels.first_name")}
-                    className="form-input text-cleanar-color rounded-pill"
-                    name="firstName"
-                    value={formData.firstName}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-              </Col>
-              <Col md="1" xs="1" className="py-1">
-                <FaQuestionCircle
-                  id="Popover1"
-                  onClick={() => togglePopover("firstName")}
-                />
-                <Popover
-                  placement="right"
-                  isOpen={popoverOpen.firstName}
-                  target="Popover1"
-                  toggle={() => togglePopover("firstName")}
-                  transition={transitionProps}
-                >
-                  <PopoverBody>{t("signup.tooltips.first_name")}</PopoverBody>
-                </Popover>
-              </Col>
-            </Row>
+            {/* Main card */}
+            <div className="cleanar-card p-3 p-md-4">
 
-            {/* Last name */}
-            <Row className="justify-content-center">
-              <Col md="10" xs="10" className="py-1">
-                <Form.Group controlId="signupLastName">
-                  <Form.Label className="text-cleanar-color">
-                    {t("signup.form_labels.last_name")}
-                  </Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder={t("signup.form_labels.last_name")}
-                    className="text-cleanar-color form-input rounded-pill"
-                    name="lastName"
-                    value={formData.lastName}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-              </Col>
-              <Col md="1" xs="1" className="py-1">
-                <FaQuestionCircle
-                  id="Popover2"
-                  onClick={() => togglePopover("lastName")}
-                />
-                <Popover
-                  placement="right"
-                  isOpen={popoverOpen.lastName}
-                  target="Popover2"
-                  toggle={() => togglePopover("lastName")}
-                  transition={transitionProps}
-                >
-                  <PopoverBody>{t("signup.tooltips.last_name")}</PopoverBody>
-                </Popover>
-              </Col>
-            </Row>
-
-            {/* Telephone */}
-            <Row className="justify-content-center">
-              <Col md="10" xs="10" className="py-1">
-                <Form.Group controlId="signupTelephone">
-                  <Form.Label className="text-cleanar-color">
-                    {t("signup.form_labels.telephone")}
-                  </Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder={t("signup.form_labels.telephone")}
-                    className="text-cleanar-color form-input rounded-pill"
-                    name="telephone"
-                    value={formData.telephone}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-              </Col>
-              <Col md="1" xs="1" className="py-1">
-                <FaQuestionCircle
-                  id="Popover4"
-                  onClick={() => togglePopover("telephone")}
-                />
-                <Popover
-                  placement="right"
-                  isOpen={popoverOpen.telephone}
-                  target="Popover4"
-                  toggle={() => togglePopover("telephone")}
-                  transition={transitionProps}
-                >
-                  <PopoverBody>{t("signup.tooltips.telephone")}</PopoverBody>
-                </Popover>
-              </Col>
-            </Row>
-
-            {/* Username */}
-            <Row className="justify-content-center">
-              <Col md="10" xs="10" className="py-1">
-                <Form.Group controlId="signupUsername">
-                  <Form.Label className="text-cleanar-color">
-                    {t("signup.form_labels.username")}
-                  </Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder={t("signup.form_labels.username")}
-                    className="text-cleanar-color form-input rounded-pill"
-                    name="username"
-                    value={formData.username}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-              </Col>
-              <Col md="1" xs="1" className="py-1">
-                <FaQuestionCircle
-                  id="Popover5"
-                  onClick={() => togglePopover("username")}
-                />
-                <Popover
-                  placement="right"
-                  isOpen={popoverOpen.username}
-                  target="Popover5"
-                  toggle={() => togglePopover("username")}
-                  transition={transitionProps}
-                >
-                  <PopoverBody>{t("signup.tooltips.username")}</PopoverBody>
-                </Popover>
-              </Col>
-            </Row>
-
-            {/* Password */}
-            <Row className="justify-content-center">
-              <Col md="10" xs="10" className="py-1">
-                <Form.Group controlId="signupPassword">
-                  <Form.Label className="text-cleanar-color">
-                    {t("signup.form_labels.password")}
-                  </Form.Label>
-                  <Form.Control
-                    type="password"
-                    placeholder={t("signup.form_labels.password")}
-                    className="text-cleanar-color form-input rounded-pill"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-              </Col>
-              <Col md="1" xs="1" className="py-1">
-                <FaQuestionCircle
-                  id="Popover6"
-                  onClick={() => togglePopover("password")}
-                />
-                <Popover
-                  placement="right"
-                  isOpen={popoverOpen.password}
-                  target="Popover6"
-                  toggle={() => togglePopover("password")}
-                  transition={transitionProps}
-                >
-                  <PopoverBody>{t("signup.tooltips.password")}</PopoverBody>
-                </Popover>
-              </Col>
-            </Row>
-
-            {/* How did you hear about us */}
-            <Row className="justify-content-center">
-              <Col md="10" xs="10" className="py-1">
-                <Form.Group controlId="signupHowHeard">
-                  <Form.Label className="text-cleanar-color">
-                    {t("signup.form_labels.how_heard")}
-                  </Form.Label>
-                  <Form.Select
-                    type="select"
-                    placeholder={t("signup.form_labels.how_heard")}
-                    className="text-cleanar-color form-input rounded-pill"
-                    name="howDidYouHearAboutUs"
-                    value={formData.howDidYouHearAboutUs}
-                    onChange={handleChange}
-                  >
-                    <option value="">
-                      {t("signup.form_labels.how_heard")}
-                    </option>
-                    <option value="Google">
-                      {t("signup.dropdown_options.google")}
-                    </option>
-                    <option value="Facebook">
-                      {t("signup.dropdown_options.facebook")}
-                    </option>
-                    <option value="Instagram">
-                      {t("signup.dropdown_options.instagram")}
-                    </option>
-                    <option value="Referral">
-                      {t("signup.dropdown_options.referral")}
-                    </option>
-                    <option value="Other">
-                      {t("signup.dropdown_options.other")}
-                    </option>
-                  </Form.Select>
-                </Form.Group>
-              </Col>
-              <Col md="1" xs="1" className="py-1">
-                <FaQuestionCircle
-                  id="Popover7"
-                  onClick={() => togglePopover("howDidYouHearAboutUs")}
-                />
-                <Popover
-                  placement="right"
-                  isOpen={popoverOpen.howDidYouHearAboutUs}
-                  target="Popover7"
-                  toggle={() => togglePopover("howDidYouHearAboutUs")}
-                  transition={transitionProps}
-                >
-                  <PopoverBody>{t("signup.tooltips.how_heard")}</PopoverBody>
-                </Popover>
-              </Col>
-            </Row>
-
-            {/* Conditional fields for Referral / Other */}
-            <Row className="justify-content-center">
-              {formData.howDidYouHearAboutUs === "Referral" && (
-                <>
-                  <Col md="10" xs="10" className="py-1">
-                    <Form.Group controlId="signupReferral">
-                      <Form.Label className="text-cleanar-color">
-                        {t("signup.form_labels.referral")}
-                      </Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder={t("signup.form_labels.referral")}
-                        className="text-cleanar-color form-input rounded-pill"
-                        name="howDidYouHearAboutUs"
-                        value={formData.howDidYouHearAboutUsSupport}
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col md="1" xs="1" className="py-1">
-                    <FaQuestionCircle
-                      id="Popover8"
-                      onClick={() =>
-                        togglePopover("howDidYouHearAboutUsSupport")
-                      }
-                    />
-                    <Popover
-                      placement="right"
-                      isOpen={popoverOpen.howDidYouHearAboutUsSupport}
-                      target="Popover8"
-                      toggle={() =>
-                        togglePopover("howDidYouHearAboutUsSupport")
-                      }
-                      transition={transitionProps}
-                    >
-                      <PopoverBody>{t("signup.tooltips.referral")}</PopoverBody>
-                    </Popover>
-                  </Col>
-                </>
+              {serverError && (
+                <Alert variant="danger" className="mb-3">
+                  {serverError}
+                </Alert>
               )}
 
-              {formData.howDidYouHearAboutUs === "Other" && (
-                <>
-                  <Col md="10" xs="10" className="py-1">
-                    <Form.Group controlId="signupOtherSource">
-                      <Form.Label className="text-cleanar-color">
-                        {t("signup.form_labels.please_specify")}
+              <Form onSubmit={handleSubmit} noValidate>
+                {step === 1 && (
+                  <>
+                    <div className="account-section-title mb-3">
+                      <FaUserPlus className="me-2" />
+                      {t("signup.section_personal", "Personal details")}
+                    </div>
+
+                 
+
+                    <Row className="g-3">
+                      <Col xs={12} md={6}>
+                        <Form.Group className="mb-1" controlId="signupFirstName">
+                          <Form.Label className="cleanarLabel">
+                            {t("signup.form_labels.first_name", "First name")}
+                          </Form.Label>
+                          <div className="cleanarInputWithIcon">
+                            <span className="cleanarInputIcon">
+                              <FaUser />
+                            </span>
+                            <Form.Control
+                              type="text"
+                              name="firstName"
+                              value={formData.firstName}
+                              onChange={onChange}
+                              onBlur={() => markTouched("firstName")}
+                              className="cleanarInput"
+                              placeholder={t("signup.placeholders.first_name", "John")}
+                              autoComplete="given-name"
+                            />
+                          </div>
+                          {showErr("firstName") && (
+                            <div className="cleanarInvalid">{errors.firstName}</div>
+                          )}
+                        </Form.Group>
+                      </Col>
+
+                      <Col xs={12} md={6}>
+                        <Form.Group className="mb-1" controlId="signupLastName">
+                          <Form.Label className="cleanarLabel">
+                            {t("signup.form_labels.last_name", "Last name")}
+                          </Form.Label>
+                          <Form.Control
+                            type="text"
+                            name="lastName"
+                            value={formData.lastName}
+                            onChange={onChange}
+                            onBlur={() => markTouched("lastName")}
+                            className="cleanarInput"
+                            placeholder={t("signup.placeholders.last_name", "Doe")}
+                            autoComplete="family-name"
+                          />
+                          {showErr("lastName") && (
+                            <div className="cleanarInvalid">{errors.lastName}</div>
+                          )}
+                        </Form.Group>
+                      </Col>
+                    </Row>
+
+                    {/* Phone */}
+                    <Form.Group className="mt-3" controlId="signupTelephone">
+                      <Form.Label className="cleanarLabel">
+                        {t("signup.form_labels.telephone", "Phone")}
                       </Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder={t("signup.form_labels.please_specify")}
-                        className="text-cleanar-color form-input rounded-pill"
-                        name="howDidYouHearAboutUs"
-                        value={formData.howDidYouHearAboutUsSupport}
-                        onChange={handleChange}
-                      />
+                      <div className="cleanarInputWithIcon">
+                        <span className="cleanarInputIcon">
+                          <FaPhoneAlt />
+                        </span>
+                        <Form.Control
+                          type="tel"
+                          name="telephone"
+                          value={formData.telephone}
+                          onChange={onChange}
+                          onBlur={() => markTouched("telephone")}
+                          className="cleanarInput"
+                          placeholder={t("signup.placeholders.telephone", "(647) 555-1234")}
+                          autoComplete="tel"
+                          inputMode="tel"
+                        />
+                      </div>
+                      {showErr("telephone") && (
+                        <div className="cleanarInvalid">{errors.telephone}</div>
+                      )}
+                      {!showErr("telephone") && (
+                        <div className="cleanarHint">
+                          {t("signup.microcopy.telephone", "Used for booking updates only.")}
+                        </div>
+                      )}
                     </Form.Group>
-                  </Col>
-                  <Col md="1" xs="1" className="py-1">
-                    <FaQuestionCircle
-                      id="Popover9"
-                      onClick={() =>
-                        togglePopover("howDidYouHearAboutUsSupport")
-                      }
-                    />
-                    <Popover
-                      placement="right"
-                      isOpen={popoverOpen.howDidYouHearAboutUsSupport}
-                      target="Popover9"
-                      toggle={() =>
-                        togglePopover("howDidYouHearAboutUsSupport")
-                      }
-                      transition={transitionProps}
-                    >
-                      <PopoverBody>{t("signup.tooltips.how_heard")}</PopoverBody>
-                    </Popover>
-                  </Col>
-                </>
-              )}
-            </Row>
 
-            {/* Terms & conditions */}
-            <Row className="justify-content-center">
-              <Col md="10" xs="10" className="py-1">
-                <Form.Group controlId="termsCheckbox" className="mb-3">
-                  <Form.Check
-                    type="checkbox"
-                    name="termsConsent"
-                    value={formData.termsConsent}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        termsConsent: e.target.checked
-                      })
-                    }
-                    label={
-                      <>
-                        {t("signup.form_labels.agree")}{" "}
-                        <a
-                          href="/terms"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {t("footer.terms")}
-                        </a>{" "}
-                        &{" "}
-                        <a
-                          href="/privacy-policy"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {t("footer.privacy_policy")}
-                        </a>
-                        .
-                      </>
-                    }
-                    required
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
+                    {/* Actions */}
+                    <div className="d-grid gap-2 mt-4">
+                      <Button type="button" className="portal-primary-btn" size="lg" onClick={onNext}>
+                        {t("signup.buttons.continue", "Continue")}
+                      </Button>
+                    </div>
+                  </>
+                )}
 
-            {/* Submit button */}
-            <Row className="justify-content-center">
-              <Col md="10" xs="10" className="py-3">
-                <Button
-                  className="btn-round light-bg-color rounded-pill"
-                  type="submit"
-                  data-track="signup"
-                  size="lg"
-                >
-                  {t("signup.button")}
-                </Button>
-              </Col>
-            </Row>
-          </Form>
-        </Container>
-      </div>
-    </>
+                {step === 2 && (
+                  <>
+                    <div className="account-section-title mb-3">
+                      <FaLock className="me-2" />
+                      {t("signup.section_account", "Account setup")}
+                    </div>
+
+                       {/* Email */}
+                    <Form.Group className="mb-3" controlId="signupEmail">
+                      <Form.Label className="cleanarLabel">
+                        {t("signup.form_labels.email", "Email")}
+                      </Form.Label>
+                      <div className="cleanarInputWithIcon">
+                        <span className="cleanarInputIcon">
+                          <FaEnvelope />
+                        </span>
+                        <Form.Control
+                          ref={emailRef}
+                          type="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={onChange}
+                          onBlur={() => markTouched("email")}
+                          className="cleanarInput"
+                          isInvalid={false}
+                          placeholder={t("signup.placeholders.email", "name@email.com")}
+                          autoComplete="email"
+                          inputMode="email"
+                        />
+                      </div>
+                      {showErr("email") && <div className="cleanarInvalid">{errors.email}</div>}
+                      {!showErr("email") && (
+                        <div className="cleanarHint">
+                          {t("signup.tooltips.email", "We’ll use this to confirm your account.")}
+                        </div>
+                      )}
+                    </Form.Group>
+
+                    {/* Password */}
+                    <Form.Group className="mb-3" controlId="signupPassword">
+                      <Form.Label className="cleanarLabel">
+                        {t("signup.form_labels.password", "Password")}
+                      </Form.Label>
+
+                      <div className="d-flex gap-2 align-items-stretch">
+                        <Form.Control
+                          type={showPassword ? "text" : "password"}
+                          name="password"
+                          value={formData.password}
+                          onChange={onChange}
+                          onBlur={() => markTouched("password")}
+                          className="cleanarInput"
+                          placeholder={t("signup.placeholders.password", "At least 8 characters")}
+                          autoComplete="new-password"
+                        />
+                        <Button
+                          type="button"
+                          className="qa-ghost"
+                          onClick={() => setShowPassword((s) => !s)}
+                          aria-label={showPassword ? "Hide password" : "Show password"}
+                          style={{ width: 56 }}
+                        >
+                          {showPassword ? <FaEyeSlash /> : <FaEye />}
+                        </Button>
+                      </div>
+
+                      {showErr("password") ? (
+                        <div className="cleanarInvalid">{errors.password}</div>
+                      ) : (
+                        <div className="cleanarHint">
+                          {t("signup.microcopy.password", "Use 8+ characters for better security.")}
+                        </div>
+                      )}
+                    </Form.Group>
+
+                    {/* How heard */}
+                    <Form.Group className="mb-3" controlId="signupHowHeard">
+                      <Form.Label className="cleanarLabel">
+                        {t("signup.form_labels.how_heard", "How did you hear about us?")}
+                      </Form.Label>
+                      <Form.Select
+                        name="howDidYouHearAboutUs"
+                        value={formData.howDidYouHearAboutUs}
+                        onChange={onChange}
+                        className="cleanarInput"
+                      >
+                        <option value="">
+                          {t("signup.form_labels.how_heard", "How did you hear about us?")}
+                        </option>
+                        <option value="Google">{t("signup.dropdown_options.google", "Google")}</option>
+                        <option value="Facebook">
+                          {t("signup.dropdown_options.facebook", "Facebook")}
+                        </option>
+                        <option value="Instagram">
+                          {t("signup.dropdown_options.instagram", "Instagram")}
+                        </option>
+                        <option value="Referral">
+                          {t("signup.dropdown_options.referral", "Referral")}
+                        </option>
+                        <option value="Other">{t("signup.dropdown_options.other", "Other")}</option>
+                      </Form.Select>
+                    </Form.Group>
+
+                    {/* Support field */}
+                    {(trimmed.howDidYouHearAboutUs === "Referral" ||
+                      trimmed.howDidYouHearAboutUs === "Other") && (
+                      <Form.Group className="mb-3" controlId="signupHowHeardSupport">
+                        <Form.Label className="cleanarLabel">{SupportLabel}</Form.Label>
+                        <Form.Control
+                          type="text"
+                          name="howDidYouHearAboutUsSupport"
+                          value={formData.howDidYouHearAboutUsSupport}
+                          onChange={onChange}
+                          onBlur={() => markTouched("howDidYouHearAboutUsSupport")}
+                          className="cleanarInput"
+                          placeholder={t(
+                            "signup.placeholders.how_heard_support",
+                            "e.g., John / Building concierge / etc."
+                          )}
+                        />
+                        {showErr("howDidYouHearAboutUsSupport") && (
+                          <div className="cleanarInvalid">{errors.howDidYouHearAboutUsSupport}</div>
+                        )}
+                      </Form.Group>
+                    )}
+
+                    {/* Terms */}
+                    <Form.Group className="mb-3" controlId="termsCheckbox">
+                      <Form.Check
+                        type="checkbox"
+                        name="termsConsent"
+                        checked={!!formData.termsConsent}
+                        onChange={onChange}
+                        onBlur={() => markTouched("termsConsent")}
+                        label={
+                          <span className="alata-regular">
+                            {t("signup.form_labels.agree", "I agree to the")}{" "}
+                            <a href="/terms" target="_blank" rel="noopener noreferrer">
+                              {t("footer.terms", "Terms")}
+                            </a>{" "}
+                            &{" "}
+                            <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">
+                              {t("footer.privacy_policy", "Privacy Policy")}
+                            </a>
+                            .
+                          </span>
+                        }
+                      />
+                      {showErr("termsConsent") && (
+                        <div className="cleanarInvalid">{errors.termsConsent}</div>
+                      )}
+                    </Form.Group>
+
+                    {/* Actions */}
+                    <div className="d-grid gap-2 mt-4">
+                      <Button
+                        type="submit"
+                        className="portal-primary-btn"
+                        size="lg"
+                        disabled={submitting}
+                        data-track="signup"
+                      >
+                        {submitting
+                          ? t("signup.buttons.creating", "Creating account…")
+                          : t("signup.button", "Create my account")}
+                      </Button>
+
+                      <Button
+                        type="button"
+                        className="qa-ghost"
+                        onClick={onBack}
+                        disabled={submitting}
+                      >
+                        {t("signup.buttons.back", "Back")}
+                      </Button>
+
+                      <div className="text-center cleanarHint mt-1">
+                        <FaLock className="me-1" />
+                        {t("signup.microcopy.security", "Secure signup • No spam")}
+                      </div>
+                    </div>
+                  </>
+                )}
+              </Form>
+
+                {/* Benefits */}
+              <div className="cleanar-proofbox mt-3">
+                <div className="fw-semibold mb-2">
+                  {t("signup.benefits_title", "With your CleanAR account you can:")}
+                </div>
+                <div className="d-grid gap-2">
+                  <div className="d-flex gap-2 align-items-start">
+                    <FaCheckCircle className="mt-1" />
+                    <div className="alata-regular">
+                      {t("signup.benefit_1", "View and manage upcoming bookings")}
+                    </div>
+                  </div>
+                  <div className="d-flex gap-2 align-items-start">
+                    <FaCheckCircle className="mt-1" />
+                    <div className="alata-regular">
+                      {t("signup.benefit_2", "Access receipts and invoices anytime")}
+                    </div>
+                  </div>
+                  <div className="d-flex gap-2 align-items-start">
+                    <FaCheckCircle className="mt-1" />
+                    <div className="alata-regular">
+                      {t("signup.benefit_3", "Get reminders and service updates")}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="text-center mt-3 cleanarHint">
+                {t("signup.microcopy.already", "Already have an account?")}{" "}
+                <a href="/login">{t("signup.microcopy.login", "Log in")}</a>
+              </div>
+            </div>
+          </Col>
+        </Row>
+      </Container>
+    </div>
   );
 }
 

@@ -2798,3 +2798,21 @@ html {
         width: 135px;
     }
 }
+
+/* Optional polish */
+.signup-page a { text-decoration: none; }
+.signup-page a:hover { text-decoration: underline; }
+
+/* Make primary button feel more premium without heavy assets */
+.signup-page .btn.rounded-pill {
+  padding-top: 0.8rem;
+  padding-bottom: 0.8rem;
+}
+
+/* Improve input height for mobile tap targets */
+.signup-page .form-control,
+.signup-page .form-select {
+  padding-top: 0.85rem;
+  padding-bottom: 0.85rem;
+  border-radius: 0.9rem;
+}

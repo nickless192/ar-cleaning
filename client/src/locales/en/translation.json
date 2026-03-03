@@ -1,5 +1,5 @@
 {
-  "index": {    
+  "index": {
     "companyName": "CleanAR Solutions",
     "tagline": "Trusted Clean, Trusted Service",
     "intro": "Say goodbye to stress and hello to sparkle ✨",
@@ -46,7 +46,7 @@
       "textNote": "Quick SMS quote",
       "call_short": "Call",
       "text_short": "Text",
-        "email_short": "Email"
+      "email_short": "Email"
     }
   },
   "featuredServices": {
@@ -260,9 +260,8 @@
     "next": "Next",
     "visitGoogleProfile": "You can read these and leave your own review on our Google profile:",
     "googleProfileLink": "CleanAR Solutions",
-  "readMore": "Read more",
-  "readLess": "Read less"
-
+    "readMore": "Read more",
+    "readLess": "Read less"
   },
   "whyChooseUs": {
     "heading": "So Why CleanAR Choose Solutions?",
@@ -305,8 +304,10 @@
     }
   },
   "signup": {
-    "title": "Sign Up",
-    "description": "Please fill out the form below to create an account.",
+    "title": "Create an account",
+    "description": "Manage bookings, view invoices, and update appointments anytime.",
+    "section_personal": "Personal details",
+    "section_account": "Account setup",
     "login_prompt": "Already have an account?",
     "login_link": "Log in here",
     "form_labels": {
@@ -317,33 +318,61 @@
       "username": "Username*",
       "password": "Password*",
       "how_heard": "How Did You Hear About Us?",
-      "referral": "Referral",
-      "please_specify": "Please Specify",
+      "referral": "Who referred you?",
+      "please_specify": "Please specify",
       "agree": "I agree to the"
     },
+    "placeholders": {
+      "email": "name@email.com",
+      "first_name": "John",
+      "last_name": "Doe",
+      "telephone": "(647) 555-1234",
+      "username": "cleanar-client",
+      "password": "At least 8 characters",
+      "how_heard_support": "e.g., John / Building concierge / etc."
+    },
     "tooltips": {
-      "first_name": "Enter your first name.",
-      "last_name": "Enter your last name.",
-      "email": "Enter your email address.",
-      "telephone": "Enter your telephone number.",
-      "username": "Enter your username.",
-      "password": "Enter your password.",
-      "how_heard": "How did you hear about us?",
-      "referral": "Who referred you?",
-      "other_specify": "How did you hear about us?"
+      "email": "We’ll use this to confirm your account.",
+      "username": "This will be your login username."
     },
     "dropdown_options": {
-      "placeholder": "How Did You Hear About Us?...",
       "google": "Google",
       "facebook": "Facebook",
       "instagram": "Instagram",
       "referral": "Referral",
       "other": "Other"
     },
-    "button": "Get Started",
+    "buttons": {
+      "continue": "Continue",
+      "back": "Back",
+      "creating": "Creating account…"
+    },
+    "button": "Create my account",
+    "microcopy": {
+      "security": "Secure signup • No spam",
+      "telephone": "Used for booking updates only.",
+      "password": "Use 8+ characters for better security.",
+      "already": "Already have an account?",
+      "login": "Log in"
+    },
+    "benefits_title": "With your CleanAR account you can:",
+    "benefit_1": "View and manage upcoming bookings",
+    "benefit_2": "Access receipts and invoices anytime",
+    "benefit_3": "Get reminders and service updates",
     "alerts": {
-      "username_taken": "Username already taken, please try again with a different username",
-      "missing_fields": "Please fill out all fields before submitting"
+      "missing_email": "Email is required.",
+      "invalid_email": "Enter a valid email address.",
+      "missing_first_name": "First name is required.",
+      "missing_last_name": "Last name is required.",
+      "missing_telephone": "Phone number is required.",
+      "invalid_telephone": "Enter a valid phone number.",
+      "missing_username": "Username is required.",
+      "missing_password": "Password is required.",
+      "password_length": "Password must be at least 8 characters.",
+      "terms_required": "You must agree to continue.",
+      "how_heard_support_required": "Please provide a bit more detail.",
+      "email_taken": "That email is taken. Try another.",
+      "generic_error": "Something went wrong. Please try again."
     }
   },
   "profile": {
