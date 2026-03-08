@@ -66,6 +66,37 @@ function isValidIp(ip) {
   return ipv6Regex.test(trimmed);
 }
 
+// Extra hardening to ensure only plain IPv4/IPv6 literals are used in outbound URLs.
+// This prevents user-supplied values like "127.0.0.1:80" or "1.2.3.4@internal" from
+// influencing the actual request target.
+function isStrictIpLiteral(ip) {
+  const value = String(ip || "").trim();
+  if (!value) return false;
+
+  // Reject anything that obviously looks like a URL or contains disallowed URL syntax.
+  if (
+    value.includes("://") ||
+    value.includes("/") ||
+    value.includes("@") ||
+    value.includes("?") ||
+    value.includes("#")
+  ) {
+    return false;
+  }
+
+  // Basic IPv4 check: four octets 0-255
+  const ipv4Regex =
+    /^(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)){3}$/;
+  if (ipv4Regex.test(value)) {
+    return true;
+  }
+
+  // Basic IPv6 check: standard hextet forms, no ports or brackets
+  const ipv6Regex =
+    /^(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|(::[0-9a-fA-F]{1,4})+|([0-9a-fA-F]{1,4}:){1,7}:)$/;
+  return ipv6Regex.test(value);
+}
+
 async function getGeoInfo(ip) {
   try {
     if (!isValidIp(ip)) {
@@ -74,6 +105,11 @@ async function getGeoInfo(ip) {
     }
 
     const safeIp = String(ip).trim();
+    if (!isStrictIpLiteral(safeIp)) {
+      // Defensive: do not perform external request if the IP is not a plain literal.
+      return null;
+    }
+
     // use https
     const url = `https://api.ipapi.com/${safeIp}?access_key=${process.env.IPAPIKEY}`;
     const res = await fetch(url, { timeout: 3500 });
