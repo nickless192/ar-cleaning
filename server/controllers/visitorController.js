@@ -3,6 +3,7 @@ const crypto = require("crypto");
 const fetch = require("node-fetch");
 const UAParser = require("ua-parser-js");
 const { DateTime } = require("luxon");
+const isIp = require("is-ip");
 
 // -------------------------
 // helpers
@@ -84,17 +85,8 @@ function isStrictIpLiteral(ip) {
     return false;
   }
 
-  // Basic IPv4 check: four octets 0-255
-  const ipv4Regex =
-    /^(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)){3}$/;
-  if (ipv4Regex.test(value)) {
-    return true;
-  }
-
-  // Basic IPv6 check: standard hextet forms, no ports or brackets
-  const ipv6Regex =
-    /^(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|(::[0-9a-fA-F]{1,4})+|([0-9a-fA-F]{1,4}:){1,7}:)$/;
-  return ipv6Regex.test(value);
+  // Use a robust library to ensure this is a strict IPv4/IPv6 literal.
+  return isIp(value);
 }
 
 async function getGeoInfo(ip) {
