@@ -50,10 +50,32 @@ function normalizePage(p) {
   return `/${s}`;
 }
 
+function isValidIp(ip) {
+  if (!ip || typeof ip !== "string") return false;
+  const trimmed = ip.trim();
+  if (!trimmed) return false;
+
+  // Basic IPv4 validation
+  const ipv4Regex =
+    /^(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$/;
+  if (ipv4Regex.test(trimmed)) return true;
+
+  // Basic IPv6 validation (full/shortened forms, no zone index)
+  const ipv6Regex =
+    /^(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:))$/;
+  return ipv6Regex.test(trimmed);
+}
+
 async function getGeoInfo(ip) {
   try {
+    if (!isValidIp(ip)) {
+      // Skip GeoIP lookup for invalid or missing IPs
+      return null;
+    }
+
+    const safeIp = String(ip).trim();
     // use https
-    const url = `https://api.ipapi.com/${ip}?access_key=${process.env.IPAPIKEY}`;
+    const url = `https://api.ipapi.com/${safeIp}?access_key=${process.env.IPAPIKEY}`;
     const res = await fetch(url, { timeout: 3500 });
     if (!res.ok) throw new Error("GeoIP request failed");
     const data = await res.json();
