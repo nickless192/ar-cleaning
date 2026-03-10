@@ -22,7 +22,7 @@ import SignUp from "/src/components/Pages/UserJourney/SignUp";
 import ViewQuotes from "./components/Pages/Management/ViewQuotes";
 import ProductsAndServices from "/src/components/Pages/Navigation/ProductsAndServices";
 import ProtectedRoute from "/src/components/Pages/Management/ProtectedRoute";
-import ChatTool from "/src/components/Pages/UserJourney/ChatTool";
+// import ChatTool from "/src/components/Pages/UserJourney/ChatTool";
 import Navbar from "/src/components/Pages/Navigation/Navbar.jsx";
 import NavigationBar from "/src/components/Pages/Navigation/NavigationBar";
 import Career from "/src/components/Pages/Navigation/Career.jsx";
@@ -188,7 +188,7 @@ const App = () => {
               <Route path="/signup-page" element={<SignUp />} />
               <Route path='/login-signup' element={<LoginSign />} />
               {/* <Route path='/request-quote' element={<RequestQuote />} /> */}
-              <Route path='/chat-tool' element={<ChatTool />} />
+              {/* <Route path='/chat-tool' element={<ChatTool />} /> */}
               <Route path="/careers" element={<Career />} />
               <Route path="/about-us" element={<AboutUsPage />} />
               <Route path="/products-and-services" element={<ProductsAndServices />} />

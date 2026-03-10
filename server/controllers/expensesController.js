@@ -5,756 +5,747 @@ const Tesseract = require('tesseract.js');
 const { fromPath } = require('pdf2pic');
 const fs = require('fs-extra');
 const PDFParser = require('pdf2json');
+const mongoose = require('mongoose');
 
-// function parseBankStatement(text) {
-//     const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
-//     const transactions = [];
+// -------------------------
+// Constants
+// -------------------------
+const ALLOWED_RECEIPT_MIMES = new Set([
+  'image/jpeg',
+  'image/png',
+  'image/gif',
+  'image/webp',
+  'application/pdf',
+]);
 
-//     // Basic regex example (adjust based on actual statement format)
-//     const transactionRegex = /^(\d{2}\/\d{2})\s+(\d{2}\/\d{2})\s+(.+?)\s+(-?\d+\.?\d*)$/;
+const ALLOWED_STATEMENT_MIMES = new Set([
+  'application/pdf',
+  'image/jpeg',
+  'image/png',
+]);
 
-//     for (const line of lines) {
-//         const match = line.match(transactionRegex);
-//         if (match) {
-//             const [, transactionDate, postingDate, description, amount] = match;
-//             transactions.push({
-//                 transactionDate,
-//                 postingDate,
-//                 description,
-//                 amount: parseFloat(amount.replace(',', '')),
-//             });
-//         }
-//     }
+const MAX_OCR_PAGES = 10;
+const MAX_FILENAME_LENGTH = 255;
 
-//     return transactions;
-// }
-// function parseBankStatement(text) {
-//     const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
-//     const transactions = [];
-
-//     const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
-//     const monthRegex = /^(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)/i;
-
-//     const cleanLine = (line) => {
-//         return line
-//             .replace(/[“”"']/g, '')          // Remove weird OCR quotes
-//             .replace(/O/g, '0')              // OCR often confuses O with 0
-//             .replace(/l/g, '1')              // OCR often confuses l with 1
-//             .replace(/\s+/g, ' ')            // Normalize spacing
-//             .trim();
-//     };
-
-//     // Regex for two dates + description + amount
-//     // Example: MAY15 MAY 15 PAYMENT $1,800.00
-//     const txnRegex = new RegExp(
-//         `(${months.join('|')})\\s?(\\d{1,2})\\s+` + // Transaction date
-//         `(${months.join('|')})\\s?(\\d{1,2})\\s+` + // Posting date
-//         `(.+?)\\s+\\$?(-?\\d{1,3}(?:,\\d{3})*(?:\\.\\d{2})?)$`, 'i'
-//     );
-
-//     for (let rawLine of lines) {
-//         const line = cleanLine(rawLine);
-
-//         // Skip obvious non-transaction lines
-//         if (!monthRegex.test(line)) continue;
-
-//         const match = line.match(txnRegex);
-//         if (match) {
-//             const [, txnMonth, txnDay, postMonth, postDay, description, amountStr] = match;
-
-//             transactions.push({
-//                 transactionDate: `${txnMonth.toUpperCase()} ${txnDay.padStart(2, '0')}`,
-//                 postingDate: `${postMonth.toUpperCase()} ${postDay.padStart(2, '0')}`,
-//                 description: description.trim(),
-//                 amount: parseFloat(amountStr.replace(/,/g, ''))
-//             });
-//         }
-//     }
-
-//     return transactions;
-// }
-
+// -------------------------
+// Utility Helpers
+// -------------------------
 function toNumber(v, fallback = 0) {
-    const n = Number(v);
-    return Number.isFinite(n) ? n : fallback;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : fallback;
 }
+
 function safeBool(v, fallback = false) {
-    if (v === undefined || v === null) return fallback;
-    if (typeof v === 'boolean') return v;
-    return String(v).toLowerCase() === 'true';
-}
-function toNumber(v, fallback = 0) {
-    const n = Number(v);
-    return Number.isFinite(n) ? n : fallback;
-}
-function normalizePaymentMethod(v) {
-    if (!v) return 'unknown';
-    const s = String(v).toLowerCase().trim();
-    if (s === 'cash') return 'cash';
-    if (['credit card', 'credit_card', 'credit', 'visa', 'mastercard', 'amex'].includes(s)) return 'credit_card';
-    if (['debit card', 'debit_card', 'debit'].includes(s)) return 'debit_card';
-    if (['bank transfer', 'bank_transfer', 'transfer', 'ach', 'eft'].includes(s)) return 'bank_transfer';
-    if (['e-transfer', 'etransfer', 'e transfer', 'interac'].includes(s)) return 'e-transfer';
-    if (s === 'paypal') return 'paypal';
-    if (['cheque', 'check'].includes(s)) return 'cheque';
-    if (s === 'other') return 'other';
-    return 'unknown';
+  if (v === undefined || v === null) return fallback;
+  if (typeof v === 'boolean') return v;
+  return String(v).toLowerCase() === 'true';
 }
 
-// Minimal mapping to CRA lines (adjust over time)
+function isValidObjectId(id) {
+  return mongoose.Types.ObjectId.isValid(id);
+}
+
+/**
+ * Sanitize a filename for safe storage/display
+ * - Removes path traversal sequences
+ * - Limits length
+ * - Removes dangerous characters
+ */
+function sanitizeFilename(filename) {
+  if (!filename || typeof filename !== 'string') return 'unnamed';
+  
+  // Extract basename to remove any path components
+  let safe = path.basename(filename);
+  
+  // Remove null bytes and other dangerous characters
+  safe = safe.replace(/[\0<>:"/\\|?*\x00-\x1f]/g, '_');
+  
+  // Remove leading dots (hidden files)
+  safe = safe.replace(/^\.+/, '');
+  
+  // Limit length
+  if (safe.length > MAX_FILENAME_LENGTH) {
+    const ext = path.extname(safe);
+    const name = path.basename(safe, ext);
+    safe = name.slice(0, MAX_FILENAME_LENGTH - ext.length - 1) + ext;
+  }
+  
+  return safe || 'unnamed';
+}
+
+/**
+ * Validate that a file path is within the expected uploads directory
+ */
+function isPathWithinUploads(filePath, uploadsDir) {
+  if (!filePath || typeof filePath !== 'string') return false;
+  
+  const resolvedPath = path.resolve(filePath);
+  const resolvedUploads = path.resolve(uploadsDir);
+  
+  return resolvedPath.startsWith(resolvedUploads + path.sep);
+}
+
+/**
+ * Get the uploads directory path
+ */
+function getUploadsDir() {
+  return path.resolve(__dirname, '..', 'uploads');
+}
+
+/**
+ * Validate uploaded file
+ */
+function validateUploadedFile(file, allowedMimes) {
+  if (!file) return { valid: false, error: 'No file provided' };
+  
+  if (!file.path || typeof file.path !== 'string') {
+    return { valid: false, error: 'Invalid file path' };
+  }
+  
+  if (!isPathWithinUploads(file.path, getUploadsDir())) {
+    return { valid: false, error: 'File path outside uploads directory' };
+  }
+  
+  if (allowedMimes && !allowedMimes.has(file.mimetype)) {
+    return { valid: false, error: `Invalid file type: ${file.mimetype}` };
+  }
+  
+  return { valid: true };
+}
+
+/**
+ * Safely remove a file if it exists and is within uploads
+ */
+async function safeRemoveFile(filePath) {
+  try {
+    if (!filePath || !isPathWithinUploads(filePath, getUploadsDir())) {
+      return;
+    }
+    if (await fs.pathExists(filePath)) {
+      await fs.remove(filePath);
+    }
+  } catch (err) {
+    console.error('Failed to remove temp file:', err.message);
+  }
+}
+
+// -------------------------
+// Business Logic Helpers
+// -------------------------
+function normalizePaymentMethod(v) {
+  if (!v) return 'unknown';
+  const s = String(v).toLowerCase().trim();
+
+  if (s === 'cash') return 'cash';
+  if (['credit card', 'credit_card', 'credit', 'visa', 'mastercard', 'amex'].includes(s)) return 'credit_card';
+  if (['debit card', 'debit_card', 'debit'].includes(s)) return 'debit_card';
+  if (['bank transfer', 'bank_transfer', 'transfer', 'ach', 'eft'].includes(s)) return 'bank_transfer';
+  if (['e-transfer', 'etransfer', 'e transfer', 'interac'].includes(s)) return 'e-transfer';
+  if (s === 'paypal') return 'paypal';
+  if (['cheque', 'check'].includes(s)) return 'cheque';
+  if (s === 'other') return 'other';
+
+  return 'unknown';
+}
+
 function inferCraLine(category = '') {
-    const c = String(category).toLowerCase();
-    if (c.includes('meal') || c.includes('entertainment')) return 'meals_entertainment';
-    if (c.includes('advert') || c.includes('promo') || c.includes('wrapping')) return 'advertising';
-    if (c.includes('rent') || c.includes('lease')) return 'rent';
-    if (c.includes('repair') || c.includes('maintenance')) return 'repairs_maintenance';
-    if (c.includes('suppl')) return 'supplies';
-    if (c.includes('labor') || c.includes('wage') || c.includes('subcontract')) return 'salaries_wages_subcontracts';
-    if (c.includes('legal') || c.includes('professional')) return 'legal_accounting';
-    if (c.includes('insurance')) return 'insurance';
-    if (c.includes('interest') || c.includes('bank charge')) return 'interest_bank';
-    if (c.includes('cell') || c.includes('phone') || c.includes('internet') || c.includes('hosting')) return 'telephone_internet';
-    if (c.includes('travel') || c.includes('airfare') || c.includes('hotel')) return 'travel';
-    if (c.includes('car') || c.includes('parking') || c.includes('vehicle')) return 'motor_vehicle';
-    if (c.includes('utilit')) return 'utilities';
-    if (c.includes('office')) return 'office';
-    return 'other';
+  const c = String(category).toLowerCase();
+  if (c.includes('meal') || c.includes('entertainment')) return 'meals_entertainment';
+  if (c.includes('advert') || c.includes('promo') || c.includes('wrapping')) return 'advertising';
+  if (c.includes('rent') || c.includes('lease')) return 'rent';
+  if (c.includes('repair') || c.includes('maintenance')) return 'repairs_maintenance';
+  if (c.includes('suppl')) return 'supplies';
+  if (c.includes('labor') || c.includes('wage') || c.includes('subcontract')) return 'salaries_wages_subcontracts';
+  if (c.includes('legal') || c.includes('professional')) return 'legal_accounting';
+  if (c.includes('insurance')) return 'insurance';
+  if (c.includes('interest') || c.includes('bank charge')) return 'interest_bank';
+  if (c.includes('cell') || c.includes('phone') || c.includes('internet') || c.includes('hosting')) return 'telephone_internet';
+  if (c.includes('travel') || c.includes('airfare') || c.includes('hotel')) return 'travel';
+  if (c.includes('car') || c.includes('parking') || c.includes('vehicle')) return 'motor_vehicle';
+  if (c.includes('utilit')) return 'utilities';
+  if (c.includes('office')) return 'office';
+  return 'other';
 }
 
 function normalizeExpensePayload(body) {
-    const amount = toNumber(body.amount, 0);
+  const amount = toNumber(body.amount, 0);
 
-    const incurredAt =
-        body.incurredAt ? new Date(body.incurredAt)
-            : (body.date ? new Date(body.date) : new Date());
+  const incurredAt = body.incurredAt
+    ? new Date(body.incurredAt)
+    : (body.date ? new Date(body.date) : new Date());
 
-    const status = body.status ? String(body.status).toLowerCase() : 'paid';
+  const status = body.status ? String(body.status).toLowerCase() : 'paid';
 
-    const paidAt =
-        body.paidAt ? new Date(body.paidAt)
-            : (status === 'paid' ? incurredAt : null);
+  const paidAt = body.paidAt
+    ? new Date(body.paidAt)
+    : (status === 'paid' ? incurredAt : null);
 
-    const category = body.category ?? '';
-    const craLine = body.craLine || inferCraLine(category);
+  const category = body.category ?? '';
+  const craLine = body.craLine || inferCraLine(category);
 
-    return {
-        description: body.description ?? '',
-        category,
-        categoryCode: body.categoryCode ?? '',
-        craLine,
+  return {
+    description: String(body.description ?? '').slice(0, 1000),
+    category: String(category).slice(0, 200),
+    categoryCode: String(body.categoryCode ?? '').slice(0, 50),
+    craLine,
 
-        currency: body.currency ?? 'CAD',
+    currency: String(body.currency ?? 'CAD').slice(0, 10),
 
-        amountSubtotal: toNumber(body.amountSubtotal, 0),
-        taxAmount: toNumber(body.taxAmount, 0),
-        amountTotal: toNumber(body.amountTotal, 0) || amount,
-        amount, // legacy compatibility
+    amountSubtotal: toNumber(body.amountSubtotal, 0),
+    taxAmount: toNumber(body.taxAmount, 0),
+    amountTotal: toNumber(body.amountTotal, 0) || amount,
+    amount,
 
-        taxRate: toNumber(body.taxRate, 0),
-        taxIncluded: body.taxIncluded === true || String(body.taxIncluded).toLowerCase() === 'true',
+    taxRate: toNumber(body.taxRate, 0),
+    taxIncluded: safeBool(body.taxIncluded, false),
 
-        incurredAt,
-        paidAt,
-        date: body.date ? new Date(body.date) : incurredAt, // legacy
+    incurredAt,
+    paidAt,
+    date: body.date ? new Date(body.date) : incurredAt,
 
-        status: ['due', 'paid', 'issued', 'unpaid'].includes(status) ? status : 'paid',
-        paymentMethod: normalizePaymentMethod(body.paymentMethod),
+    status: ['due', 'paid', 'issued', 'unpaid'].includes(status) ? status : 'paid',
+    paymentMethod: normalizePaymentMethod(body.paymentMethod),
 
-        vendorName: body.vendorName ?? '',
-        vendorTaxId: body.vendorTaxId ?? '',
-        invoiceNumber: body.invoiceNumber ?? '',
+    accountLabel: String(body.accountLabel ?? '').slice(0, 100),
 
-        source: body.source ?? 'manual',
-        externalId: body.externalId ?? '',
-        externalRef: body.externalRef ?? '',
-        reconciled: body.reconciled === true || String(body.reconciled).toLowerCase() === 'true',
-        reconciledTo: body.reconciledTo ?? '',
+    vendorName: String(body.vendorName ?? '').slice(0, 200),
+    vendorAddress: String(body.vendorAddress ?? '').slice(0, 500),
+    vendorTaxId: String(body.vendorTaxId ?? '').slice(0, 50),
+    invoiceNumber: String(body.invoiceNumber ?? '').slice(0, 100),
 
-        bookingId: body.bookingId || null,
-        customerId: body.customerId || null,
+    receiptRequired: body.receiptRequired === undefined ? true : !!body.receiptRequired,
 
-        hidden: body.hidden === true || String(body.hidden).toLowerCase() === 'true',
-    };
-}
+    source: String(body.source ?? 'manual').slice(0, 50),
+    externalId: String(body.externalId ?? '').slice(0, 100),
+    externalRef: String(body.externalRef ?? '').slice(0, 200),
+    reconciled: safeBool(body.reconciled, false),
+    reconciledTo: String(body.reconciledTo ?? '').slice(0, 100),
 
+    bookingId: body.bookingId || null,
+    customerId: body.customerId || null,
 
-function normalizePaymentMethod(v) {
-    if (!v) return 'unknown';
-    const s = String(v).toLowerCase().trim();
-
-    if (['cash'].includes(s)) return 'cash';
-    if (['credit card', 'credit_card', 'credit', 'visa', 'mastercard', 'amex'].includes(s)) return 'credit_card';
-    if (['debit card', 'debit_card', 'debit'].includes(s)) return 'debit_card';
-    if (['bank transfer', 'bank_transfer', 'transfer', 'ach', 'eft'].includes(s)) return 'bank_transfer';
-    if (['e-transfer', 'etransfer', 'e transfer', 'interac'].includes(s)) return 'e-transfer';
-    if (['paypal'].includes(s)) return 'paypal';
-    if (['cheque', 'check'].includes(s)) return 'cheque';
-    if (['other'].includes(s)) return 'other';
-
-    return 'unknown';
-}
-
-// Backwards-compatible mapping:
-// UI sends `date` => treat as incurredAt (accrual date)
-function normalizeExpensePayload(body) {
-    const amount = toNumber(body.amount, 0);
-
-    const incurredAt = body.incurredAt
-        ? new Date(body.incurredAt)
-        : (body.date ? new Date(body.date) : new Date());
-
-    const status = body.status ? String(body.status).toLowerCase() : 'paid';
-
-    const paidAt =
-        body.paidAt ? new Date(body.paidAt)
-            : (status === 'paid' ? incurredAt : null);
-
-    return {
-        description: body.description ?? '',
-        category: body.category ?? '',
-        categoryCode: body.categoryCode ?? '',
-        currency: body.currency ?? 'CAD',
-
-        // If you’re not collecting tax yet, keep it simple:
-        amountSubtotal: toNumber(body.amountSubtotal, 0),
-        taxAmount: toNumber(body.taxAmount, 0),
-        amountTotal: toNumber(body.amountTotal, 0) || amount, // prefer amountTotal if provided
-        amount, // keep legacy field aligned (schema pre-validate also aligns)
-
-        taxRate: toNumber(body.taxRate, 0),
-        taxIncluded: String(body.taxIncluded).toLowerCase() === 'true' || body.taxIncluded === true,
-
-        incurredAt,
-        paidAt,
-
-        status: ['due', 'paid', 'issued', 'unpaid'].includes(status) ? status : 'paid',
-        paymentMethod: normalizePaymentMethod(body.paymentMethod),
-
-        accountLabel: body.accountLabel ?? '',
-
-        vendorName: body.vendorName ?? '',
-        vendorAddress: body.vendorAddress ?? '',
-        vendorTaxId: body.vendorTaxId ?? '',
-
-        receiptRequired: body.receiptRequired === undefined ? true : !!body.receiptRequired,
-
-        source: body.source ?? 'manual',
-        externalId: body.externalId ?? '',
-        externalRef: body.externalRef ?? '',
-        reconciled: body.reconciled === true || String(body.reconciled).toLowerCase() === 'true',
-        reconciledTo: body.reconciledTo ?? '',
-
-        bookingId: body.bookingId || null,
-        customerId: body.customerId || null,
-
-        businessUsePercent: body.businessUsePercent !== undefined ? toNumber(body.businessUsePercent, 100) : 100,
-        hidden: body.hidden === true || String(body.hidden).toLowerCase() === 'true',
-    };
+    businessUsePercent: body.businessUsePercent !== undefined 
+      ? Math.min(100, Math.max(0, toNumber(body.businessUsePercent, 100))) 
+      : 100,
+    hidden: safeBool(body.hidden, false),
+  };
 }
 
 function parseBankStatement(rawText) {
-    const lines = rawText.split('\n').map(l => l.trim()).filter(Boolean);
+  const lines = rawText.split('\n').map(l => l.trim()).filter(Boolean);
+  const transactions = [];
 
-    const transactions = [];
-    const monthMap = {
-        JAN: 0, FEB: 1, MAR: 2, APR: 3, MAY: 4, JUN: 5,
-        JUL: 6, AUG: 7, SEP: 8, OCT: 9, NOV: 10, DEC: 11
-    };
+  const monthMap = {
+    JAN: 0, FEB: 1, MAR: 2, APR: 3, MAY: 4, JUN: 5,
+    JUL: 6, AUG: 7, SEP: 8, OCT: 9, NOV: 10, DEC: 11
+  };
 
-    // Try to detect year from header (fallback to current year)
-    const headerYearMatch = rawText.match(/\b(20\d{2})\b/);
-    const statementYear = headerYearMatch ? parseInt(headerYearMatch[1], 10) : new Date().getFullYear();
+  const headerYearMatch = rawText.match(/\b(20\d{2})\b/);
+  const statementYear = headerYearMatch ? parseInt(headerYearMatch[1], 10) : new Date().getFullYear();
 
-    function normalizeToken(token) {
-        return token
-            .replace(/0T/i, '01') // JUN0T -> JUN01
-            .replace(/O/g, '0')   // letter O -> 0
-            .replace(/I/g, '1')   // letter I -> 1
-            .replace(/["']/g, '') // remove stray quotes
-            .trim();
+  function normalizeToken(token) {
+    return token
+      .replace(/0T/i, '01')
+      .replace(/O/g, '0')
+      .replace(/I/g, '1')
+      .replace(/["']/g, '')
+      .trim();
+  }
+
+  function parseDateToken(token) {
+    const match = token.toUpperCase().match(/(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\s*([0-9]{1,2})/);
+    if (!match) return null;
+    const month = monthMap[match[1]];
+    const day = parseInt(normalizeToken(match[2]), 10);
+    if (isNaN(day) || day < 1 || day > 31) return null;
+    return new Date(statementYear, month, day);
+  }
+
+  for (const line of lines) {
+    if (!/\$\s*\d/.test(line)) continue;
+
+    const amountMatch = line.match(/\$([\d,]+\.\d{2})/);
+    if (!amountMatch) continue;
+    const amount = parseFloat(amountMatch[1].replace(/,/g, ''));
+
+    if (!Number.isFinite(amount) || amount <= 0) continue;
+
+    const dateMatches = line.toUpperCase().match(
+      /(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)[^0-9]*[0-9]{1,2}/g
+    ) || [];
+
+    const transactionDate = dateMatches[0] ? parseDateToken(dateMatches[0]) : null;
+    const postingDate = dateMatches[1] ? parseDateToken(dateMatches[1]) : transactionDate;
+
+    let description = line
+      .replace(/\$[\d,]+\.\d{2}/, '')
+      .replace(/(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)[^0-9]*[0-9]{1,2}/gi, '')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .slice(0, 500);
+
+    const date = transactionDate || postingDate;
+    if (!date) {
+      console.warn('Skipping line without valid date:', line.slice(0, 100));
+      continue;
     }
 
-    function parseDateToken(token) {
-        const match = token.toUpperCase().match(/(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\s*([0-9]{1,2})/);
-        if (!match) return null;
-        const month = monthMap[match[1]];
-        const day = parseInt(normalizeToken(match[2]), 10);
-        if (isNaN(day)) return null;
-        return new Date(statementYear, month, day);
-    }
+    transactions.push({
+      transactionDate: transactionDate || null,
+      postingDate: postingDate || null,
+      description,
+      amount,
+      date
+    });
+  }
 
-    for (let line of lines) {
-        if (!/\$\s*\d/.test(line)) continue; // must contain a $
-
-        // Extract amount
-        const amountMatch = line.match(/\$([\d,]+\.\d{2})/);
-        if (!amountMatch) continue;
-        const amount = parseFloat(amountMatch[1].replace(/,/g, ''));
-
-        // Extract possible two dates
-        const dateMatches = line.toUpperCase().match(/(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)[^0-9]*[0-9]{1,2}/g) || [];
-        const transactionDate = dateMatches[0] ? parseDateToken(dateMatches[0]) : null;
-        const postingDate = dateMatches[1] ? parseDateToken(dateMatches[1]) : transactionDate;
-
-        // Description = line without dates and amount
-        let description = line
-            .replace(/\$[\d,]+\.\d{2}/, '')
-            .replace(/(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)[^0-9]*[0-9]{1,2}/gi, '')
-            .replace(/\s+/g, ' ')
-            .trim();
-
-        // Always pick a date (prefer transaction date, fallback to posting)
-        const date = transactionDate || postingDate;
-        if (!date) {
-            console.warn('Skipping line without valid date:', line);
-            continue;
-        }
-
-        transactions.push({
-            transactionDate: transactionDate || null,
-            postingDate: postingDate || null,
-            description,
-            amount,
-            date // For Mongoose schema required
-        });
-    }
-
-    return transactions;
+  return transactions;
 }
 
-
+// -------------------------
+// Controller
+// -------------------------
 const expensesControllers = {
-    // getExpenses: async (req, res) => {
-    //     // const expenses = await Expenses.find().sort({ date: -1 });
-    //     const expenses = await Expenses.find().sort({ incurredAt: -1, date: -1 });
-
-    //     res.json(expenses);
-    // },
   getExpenses: async (req, res) => {
-  try {
-    const method = req.query.method === 'cash' ? 'cash' : 'accrual';
-    const dateField = method === 'cash' ? 'paidAt' : 'incurredAt';
+    try {
+      const method = req.query.method === 'cash' ? 'cash' : 'accrual';
+      const dateField = method === 'cash' ? 'paidAt' : 'incurredAt';
 
-    const from = req.query.from ? new Date(req.query.from) : null;
-    const to = req.query.to ? new Date(req.query.to) : null;
+      const from = req.query.from ? new Date(req.query.from) : null;
+      const to = req.query.to ? new Date(req.query.to) : null;
+      const includeHidden = safeBool(req.query.includeHidden, false);
 
-    const includeHidden = safeBool(req.query.includeHidden, false);
+      const match = {
+        ...(includeHidden ? {} : { hidden: { $ne: true } }),
+      };
 
-    const match = {
-      ...(includeHidden ? {} : { hidden: { $ne: true } }),
-    };
+      if (from && to) {
+        match[dateField] = { $gte: from, $lte: to };
+        if (method === 'cash') match.paidAt = { $ne: null };
+      }
 
-    if (from && to) {
-      match[dateField] = { $gte: from, $lte: to };
-      // cash requires a paidAt
-      if (method === 'cash') match.paidAt = { $ne: null };
+      const expenses = await Expenses.find(match).sort({ [dateField]: -1 });
+      res.json(expenses);
+    } catch (err) {
+      console.error('getExpenses error', err);
+      res.status(500).json({ error: 'Failed to fetch expenses' });
     }
+  },
 
-    const expenses = await Expenses.find(match).sort({ [dateField]: -1 });
-    res.json(expenses);
-  } catch (err) {
-    console.error('getExpenses error', err);
-    res.status(500).json({ error: err.message || 'Failed to fetch expenses' });
-  }
-},
+  createExpense: async (req, res) => {
+    try {
+      const payload = normalizeExpensePayload(req.body);
 
+      let receiptUrl = '';
+      let receiptFilename = '';
+      let receiptMimeType = '';
+      let receiptSize = 0;
 
-    // createExpense: async (req, res) => {
-    //     const { amount, category, date, description } = req.body;
-    //     const receiptUrl = req.file ? `/uploads/${req.file.filename}` : null;
-
-    //     const expense = new Expenses({ amount, category, date, description, receiptUrl });
-    //     await expense.save();
-    //     res.json(expense);
-    // },
-    createExpense: async (req, res) => {
-        try {
-            const payload = normalizeExpensePayload(req.body);
-
-            let receiptUrl = '';
-            if (req.file) {
-                // IMPORTANT: your static route should serve /uploads/*
-                // and multer saves under /uploads/receipts or /uploads/bank-statements
-                const relFolder = req.file.fieldname === 'statement' ? 'bank-statements' : 'receipts';
-                receiptUrl = `/uploads/${relFolder}/${req.file.filename}`;
-            }
-
-            const expense = new Expenses({
-                ...payload,
-                receiptUrl,
-                receiptFilename: req.file?.originalname || '',
-                receiptMimeType: req.file?.mimetype || '',
-                receiptSize: req.file?.size || 0,
-            });
-
-            await expense.save();
-            res.json(expense);
-        } catch (err) {
-            console.error('createExpense error', err);
-            res.status(400).json({ error: err.message || 'Failed to create expense' });
+      if (req.file) {
+        const validation = validateUploadedFile(req.file, ALLOWED_RECEIPT_MIMES);
+        if (!validation.valid) {
+          await safeRemoveFile(req.file.path);
+          return res.status(400).json({ error: validation.error });
         }
-    },
 
+        const relFolder = req.file.fieldname === 'statement' ? 'bank-statements' : 'receipts';
+        receiptUrl = `/uploads/${relFolder}/${path.basename(req.file.filename)}`;
+        receiptFilename = sanitizeFilename(req.file.originalname);
+        receiptMimeType = req.file.mimetype;
+        receiptSize = req.file.size;
+      }
 
-    // updateExpense: async (req, res) => {
-    //     const { id } = req.params;
-    //     const { amount, category, date, description } = req.body;
-    //     const receiptUrl = req.file ? `/uploads/${req.file.filename}` : null;
-    //     const updatedExpense = await Expenses.findByIdAndUpdate(id, {
-    //         amount,
-    //         category,
-    //         date,
-    //         description,
-    //         receiptUrl
-    //     }, { new: true });
-    //     res.json(updatedExpense);
-    // },
-    updateExpense: async (req, res) => {
-        try {
-            const { id } = req.params;
-            const payload = normalizeExpensePayload(req.body);
+      const expense = new Expenses({
+        ...payload,
+        receiptUrl,
+        receiptFilename,
+        receiptMimeType,
+        receiptSize,
+      });
 
-            const update = { ...payload };
+      await expense.save();
+      res.json(expense);
+    } catch (err) {
+      console.error('createExpense error', err);
+      if (req.file) await safeRemoveFile(req.file.path);
+      res.status(400).json({ error: err.message || 'Failed to create expense' });
+    }
+  },
 
-            if (req.file) {
-                const relFolder = req.file.fieldname === 'statement' ? 'bank-statements' : 'receipts';
-                update.receiptUrl = `/uploads/${relFolder}/${req.file.filename}`;
-                update.receiptFilename = req.file.originalname || '';
-                update.receiptMimeType = req.file.mimetype || '';
-                update.receiptSize = req.file.size || 0;
-            }
+  updateExpense: async (req, res) => {
+    try {
+      const { id } = req.params;
 
-            const updatedExpense = await Expenses.findByIdAndUpdate(id, update, { new: true });
-            res.json(updatedExpense);
-        } catch (err) {
-            console.error('updateExpense error', err);
-            res.status(400).json({ error: err.message || 'Failed to update expense' });
+      if (!isValidObjectId(id)) {
+        if (req.file) await safeRemoveFile(req.file.path);
+        return res.status(400).json({ error: 'Invalid expense ID' });
+      }
+
+      const payload = normalizeExpensePayload(req.body);
+      const update = { ...payload };
+
+      if (req.file) {
+        const validation = validateUploadedFile(req.file, ALLOWED_RECEIPT_MIMES);
+        if (!validation.valid) {
+          await safeRemoveFile(req.file.path);
+          return res.status(400).json({ error: validation.error });
         }
-    },
 
+        const relFolder = req.file.fieldname === 'statement' ? 'bank-statements' : 'receipts';
+        update.receiptUrl = `/uploads/${relFolder}/${path.basename(req.file.filename)}`;
+        update.receiptFilename = sanitizeFilename(req.file.originalname);
+        update.receiptMimeType = req.file.mimetype;
+        update.receiptSize = req.file.size;
+      }
 
-    deleteExpense: async (req, res) => {
-        await Expenses.findByIdAndDelete(req.params.id);
-        res.json({ success: true });
-    },
-    // bulkInsert: async (req, res) => {
-    //     const { expenses } = req.body;
-    //     await Expenses.insertMany(expenses);
-    //     res.json({ success: true });
-    // },
+      const updatedExpense = await Expenses.findByIdAndUpdate(id, update, { new: true });
+
+      if (!updatedExpense) {
+        return res.status(404).json({ error: 'Expense not found' });
+      }
+
+      res.json(updatedExpense);
+    } catch (err) {
+      console.error('updateExpense error', err);
+      if (req.file) await safeRemoveFile(req.file.path);
+      res.status(400).json({ error: err.message || 'Failed to update expense' });
+    }
+  },
+
+  deleteExpense: async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      if (!isValidObjectId(id)) {
+        return res.status(400).json({ error: 'Invalid expense ID' });
+      }
+
+      const deleted = await Expenses.findByIdAndDelete(id);
+
+      if (!deleted) {
+        return res.status(404).json({ error: 'Expense not found' });
+      }
+
+      res.json({ success: true });
+    } catch (err) {
+      console.error('deleteExpense error', err);
+      res.status(500).json({ error: 'Failed to delete expense' });
+    }
+  },
+
   bulkInsert: async (req, res) => {
-  try {
-    const { expenses } = req.body;
-    const normalized = (expenses || []).map((e) => normalizeExpensePayload(e));
-    await Expenses.insertMany(normalized);
-    res.json({ success: true, inserted: normalized.length });
-  } catch (err) {
-    console.error('bulkInsert error', err);
-    res.status(400).json({ error: err.message || 'Failed to bulk insert' });
-  }
-},
+    try {
+      const { expenses } = req.body;
 
+      if (!Array.isArray(expenses) || expenses.length === 0) {
+        return res.status(400).json({ error: 'expenses must be a non-empty array' });
+      }
 
-    ocrReceipt: async (req, res) => {
-        const filePath = req.file.path;
-        const ext = path.extname(req.file.originalname).toLowerCase();
-        let imagePath = filePath;
+      if (expenses.length > 500) {
+        return res.status(400).json({ error: 'Maximum 500 expenses per bulk insert' });
+      }
 
-        try {
-            if (ext === '.pdf') {
-                // Convert PDF to image (only page 1 for now)
-                // Convert PDF page 1 to PNG
-                const uploadsDir = path.resolve(__dirname, '..', 'uploads');
-                const options = {
-                    density: 200,
-                    saveFilename: `ocr-temp-${Date.now()}`,
-                    savePath: uploadsDir,
-                    format: 'png',
-                    width: 800,
-                    height: 1000,
-                };
-
-                const convert = fromPath(filePath, options);
-                //   const page = await convert(1); // Returns a Promise<{ path: string, ... }>
-                const pageToConvertAsImage = 1;
-
-                const page = await convert(pageToConvertAsImage, { responseType: 'image' });
-
-                console.log('Page 1 is now converted as image:', page.path);
-                imagePath = page.path;
-            }
-
-            const result = await Tesseract.recognize(imagePath, 'eng', {
-                // logger: m => console.log(m), // optional progress logging
-            });
-
-            const text = result.data.text;
-            await fs.remove(filePath); // clean up temp
-            if (ext === '.pdf') await fs.remove(imagePath);
-
-            return res.json({ text });
-        } catch (err) {
-            console.error(err);
-            res.status(500).json({ error: 'OCR failed' });
-        }
-    },
-    bankStatementOCR: async (req, res) => {
-        const filePath = req.file.path;
-        const ext = path.extname(req.file.originalname).toLowerCase();
-        let imagePath = filePath;
-        let tempImages = [];
-
-        try {
-            let combinedText = '';
-            if (ext === '.pdf') {
-                // Convert PDF to image (only page 1 for now)
-                const uploadsDir = path.resolve(__dirname, '..', 'uploads');
-                const options = {
-                    density: 200,
-                    saveFilename: `bank-statement-temp-${Date.now()}`,
-                    savePath: uploadsDir,
-                    format: 'png',
-                    width: 1200, // Wider for statements
-                    height: 1600,
-                };
-
-                const convert = fromPath(filePath, options);
-                // pdf2pic doesn’t directly return total pages, 
-                // but Tesseract can process sequentially if you try pages in a loop
-                // We'll try first 10 pages as a safe default (can adjust)
-                const maxPages = 10;
-                for (let pageNum = 1; pageNum <= maxPages; pageNum++) {
-                    try {
-                        const page = await convert(pageNum, { responseType: 'image' });
-                        if (!page || !page.path) break;
-                        tempImages.push(page.path);
-
-                        const result = await Tesseract.recognize(page.path, 'eng');
-                        combinedText += '\n' + result.data.text;
-                    } catch (innerErr) {
-                        // break if page doesn't exist
-                        break;
-                    }
-                }
-                // const pageToConvertAsImage = 1;
-
-                // const page = await convert(pageToConvertAsImage, { responseType: 'image' });
-                // imagePath = page.path;
-
-                // const result = await Tesseract.recognize(imagePath, 'eng', {
-                //     // logger: m => console.log(m), // optional progress logging
-                // });
-            } else {
-                // If it's an image, just OCR it
-                const result = await Tesseract.recognize(filePath, 'eng');
-                combinedText = result.data.text;
-            }
-
-
-            // const rawText = result.data.text;
-
-            // Step 3: Cleanup temp files
-            await fs.remove(filePath);
-            // if (ext === '.pdf') await fs.remove(imagePath);
-            for (const imgPath of tempImages) {
-                await fs.remove(imgPath);
-            }
-
-            // Step 4: Basic parsing attempt
-            const transactions = parseBankStatement(combinedText);
-            console.log('--- Parsed Transactions ---');
-            console.log(JSON.stringify(transactions, null, 2));
-            console.log('---------------------------');
-
-            // const expensesToInsert = transactions
-            //     .map(tx => ({
-            //         description: tx.description,
-            //         category: 'Bank Import from file ' + req.file.originalname, // or detect dynamically
-            //         amount: tx.amount,
-            //         date: tx.date || tx.postingDate || new Date(), // fallback
-            //         status: 'paid',
-            //         paymentMethod: 'Cash',
-            //         bookedOn: new Date()
-            //     }))
-            //     .filter(exp => exp.date && !isNaN(new Date(exp.date))); // remove invalid
-           const expensesToInsert = transactions
-  .map(tx => {
-    const incurredAt = tx.date || tx.postingDate || new Date();
-    return {
-      description: tx.description,
-      category: `Bank Import: ${req.file.originalname}`,
-      craLine: 'interest_bank', // default; you can change later in UI
-      amount: tx.amount,
-      amountTotal: tx.amount,
-      incurredAt,
-      paidAt: incurredAt,              // bank statement = cash movement
-      status: 'paid',
-      paymentMethod: 'bank_transfer',  // safer default than 'cash'
-      source: 'bank_import',
-      externalRef: req.file.originalname,
-      bookedOn: new Date(),
-    };
-  })
-  .filter(exp => exp.incurredAt && !isNaN(new Date(exp.incurredAt)));
-
-
-
-            console.log('--- Expenses To Insert After Filtering ---');
-            console.log(JSON.stringify(expensesToInsert, null, 2));
-            console.log('-----------------------------------------');
-
-
-            // const expenses = transactions.map(txn => ({
-            //     date: txn.transactionDate, // Or convert to proper Date object
-            //     description: txn.description,
-            //     amount: txn.amount,
-            //     category: 'Bank Import from file ' + req.file.originalname, // or detect dynamically
-            //     source: 'Bank Statement OCR'
-            // }));
-
-            const insertedExpenses = await Expenses.insertMany(expensesToInsert);
-
-            return res.json({
-                message: `Inserted ${insertedExpenses.length} expenses from bank statement.`,
-                rawText: combinedText,
-                transactions,
-                insertedExpenses
-            });
-
-            // return res.json({ rawText, transactions });
-
-            // return res.json({ text });
-        } catch (err) {
-            console.error(err);
-            res.status(500).json({ error: 'OCR failed' });
-        }
-    },
-    parseBankStatementPDF: async (req, res) => {
-        try {
-            const filePath = req.file.path;
-            // const { filename } = req.body;
-            // const filePath = path.resolve("uploads", filename); // Adjust path if needed
-
-            if (!fs.existsSync(filePath)) {
-                return res.status(404).json({ error: "File not found" });
-            }
-
-            const pdfParser = new PDFParser();
-
-            pdfParser.on("pdfParser_dataError", errData => {
-                console.error("PDF Parser Error:", errData.parserError);
-                return res.status(500).json({ error: "Failed to parse PDF." });
-            });
-
-            pdfParser.on("pdfParser_dataReady", async pdfData => {
-                const rawText = pdfParser.getRawTextContent();
-                console.log("Raw PDF Text:", rawText);
-                if (!rawText) {
-                    return await expensesControllers.bankStatementOCR(req, res); // Fallback to OCR if no text found
-                }
-                const parsedStatements = parseBankStatement(rawText);
-                //  const expensesToInsert = parsedStatements.map(tx => ({
-                //     description: tx.description,
-                //     category: 'Bank Import from file ' + req.file.originalname, // or detect dynamically
-                //     amount: tx.amount,
-                //     date: tx.date || tx.postingDate || new Date(), // fallback
-                //     status: 'paid',
-                //     paymentMethod: 'Cash',
-                //     bookedOn: new Date()
-                // }))
-                // .filter(exp => exp.date && !isNaN(new Date(exp.date))); // remove invalid
-             const expensesToInsert = parsedStatements
-  .map(tx => {
-    const incurredAt = tx.date || tx.postingDate || new Date();
-    return {
-      description: tx.description,
-      category: `Bank Import: ${req.file.originalname}`,
-      craLine: 'interest_bank', // default; you can change later in UI
-      amount: tx.amount,
-      amountTotal: tx.amount,
-      incurredAt,
-      paidAt: incurredAt,              // bank statement = cash movement
-      status: 'paid',
-      paymentMethod: 'bank_transfer',  // safer default than 'cash'
-      source: 'bank_import',
-      externalRef: req.file.originalname,
-      bookedOn: new Date(),
-    };
-  })
-  .filter(exp => exp.incurredAt && !isNaN(new Date(exp.incurredAt)));
-
-
-
-                // return res.json({ statements: parsedStatements });
-                const insertedExpenses = await Expenses.insertMany(expensesToInsert);
-
-                return res.json({
-                    message: `Inserted ${insertedExpenses.length} expenses from bank statement.`,
-                    rawText,
-                    transactions: expensesToInsert,
-                    insertedExpenses
-                });
-            });
-            pdfParser.loadPDF(filePath);
-
-
-            // return res.json({ expenses });
-        } catch (err) {
-            console.error('Error parsing PDF:', err);
-            return res.status(500).json({ message: 'Failed to parse statement', error: err.message });
-        }
-    },
-    monthlySummary: async (req, res) => {
-  try {
-    const method = req.query.method === 'cash' ? 'cash' : 'accrual';
-    const dateField = method === 'cash' ? '$paidAt' : '$incurredAt';
-
-    const from = req.query.from ? new Date(req.query.from) : null;
-    const to = req.query.to ? new Date(req.query.to) : null;
-    const includeHidden = safeBool(req.query.includeHidden, false);
-
-    const match = {
-      ...(includeHidden ? {} : { hidden: { $ne: true } }),
-    };
-
-    if (from && to) {
-      match[method === 'cash' ? 'paidAt' : 'incurredAt'] = { $gte: from, $lte: to };
-      if (method === 'cash') match.paidAt = { $ne: null };
+      const normalized = expenses.map((e) => normalizeExpensePayload(e));
+      await Expenses.insertMany(normalized);
+      res.json({ success: true, inserted: normalized.length });
+    } catch (err) {
+      console.error('bulkInsert error', err);
+      res.status(400).json({ error: err.message || 'Failed to bulk insert' });
     }
+  },
 
-    const items = await Expenses.aggregate([
-      { $match: match },
-      {
-        $project: {
-          amountTotal: { $ifNull: ['$amountTotal', '$amount'] },
-          month: { $dateToString: { format: '%Y-%m', date: dateField } },
-        },
-      },
-      {
-        $group: {
-          _id: '$month',
-          total: { $sum: '$amountTotal' },
-          count: { $sum: 1 },
-        },
-      },
-      { $sort: { _id: 1 } },
-      {
-        $project: {
-          _id: 0,
-          month: '$_id',
-          total: 1,
-          count: 1,
-        },
-      },
-    ]);
+  ocrReceipt: async (req, res) => {
+    let tempImages = [];
 
-    res.json({ method, items });
-  } catch (err) {
-    console.error('monthlySummary error', err);
-    res.status(500).json({ error: err.message || 'Failed to compute monthly summary' });
-  }
-},
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: 'No file uploaded' });
+      }
 
-}
+      const validation = validateUploadedFile(req.file, ALLOWED_RECEIPT_MIMES);
+      if (!validation.valid) {
+        await safeRemoveFile(req.file.path);
+        return res.status(400).json({ error: validation.error });
+      }
+
+      const filePath = req.file.path;
+      const ext = path.extname(req.file.originalname).toLowerCase();
+      let imagePath = filePath;
+
+      if (ext === '.pdf') {
+        const uploadsDir = getUploadsDir();
+        const options = {
+          density: 200,
+          saveFilename: `ocr-temp-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+          savePath: uploadsDir,
+          format: 'png',
+          width: 800,
+          height: 1000,
+        };
+
+        const convert = fromPath(filePath, options);
+        const page = await convert(1, { responseType: 'image' });
+
+        if (!page || !page.path) {
+          throw new Error('Failed to convert PDF to image');
+        }
+
+        imagePath = page.path;
+        tempImages.push(imagePath);
+      }
+
+      const result = await Tesseract.recognize(imagePath, 'eng');
+      const text = result.data.text;
+
+      // Cleanup
+      await safeRemoveFile(filePath);
+      for (const img of tempImages) {
+        await safeRemoveFile(img);
+      }
+
+      return res.json({ text });
+    } catch (err) {
+      console.error('ocrReceipt error:', err);
+
+      // Cleanup on error
+      if (req.file) await safeRemoveFile(req.file.path);
+      for (const img of tempImages) {
+        await safeRemoveFile(img);
+      }
+
+      res.status(500).json({ error: 'OCR failed' });
+    }
+  },
+
+  bankStatementOCR: async (req, res) => {
+    let tempImages = [];
+
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: 'No file uploaded' });
+      }
+
+      const validation = validateUploadedFile(req.file, ALLOWED_STATEMENT_MIMES);
+      if (!validation.valid) {
+        await safeRemoveFile(req.file.path);
+        return res.status(400).json({ error: validation.error });
+      }
+
+      const filePath = req.file.path;
+      const ext = path.extname(req.file.originalname).toLowerCase();
+      let combinedText = '';
+
+      if (ext === '.pdf') {
+        const uploadsDir = getUploadsDir();
+        const options = {
+          density: 200,
+          saveFilename: `bank-statement-temp-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+          savePath: uploadsDir,
+          format: 'png',
+          width: 1200,
+          height: 1600,
+        };
+
+        const convert = fromPath(filePath, options);
+
+        for (let pageNum = 1; pageNum <= MAX_OCR_PAGES; pageNum++) {
+          try {
+            const page = await convert(pageNum, { responseType: 'image' });
+            if (!page || !page.path) break;
+
+            tempImages.push(page.path);
+
+            const result = await Tesseract.recognize(page.path, 'eng');
+            combinedText += '\n' + result.data.text;
+          } catch (innerErr) {
+            break;
+          }
+        }
+      } else {
+        const result = await Tesseract.recognize(filePath, 'eng');
+        combinedText = result.data.text;
+      }
+
+      // Cleanup temp files
+      await safeRemoveFile(filePath);
+      for (const imgPath of tempImages) {
+        await safeRemoveFile(imgPath);
+      }
+
+      const transactions = parseBankStatement(combinedText);
+      const safeFilename = sanitizeFilename(req.file.originalname);
+
+      const expensesToInsert = transactions
+        .map(tx => {
+          const incurredAt = tx.date || tx.postingDate || new Date();
+          return {
+            description: tx.description,
+            category: `Bank Import: ${safeFilename}`,
+            craLine: 'interest_bank',
+            amount: tx.amount,
+            amountTotal: tx.amount,
+            incurredAt,
+            paidAt: incurredAt,
+            status: 'paid',
+            paymentMethod: 'bank_transfer',
+            source: 'bank_import',
+            externalRef: safeFilename,
+            bookedOn: new Date(),
+          };
+        })
+        .filter(exp => exp.incurredAt && !isNaN(new Date(exp.incurredAt)));
+
+      const insertedExpenses = await Expenses.insertMany(expensesToInsert);
+
+      return res.json({
+        message: `Inserted ${insertedExpenses.length} expenses from bank statement.`,
+        rawText: combinedText,
+        transactions,
+        insertedExpenses
+      });
+    } catch (err) {
+      console.error('bankStatementOCR error:', err);
+
+      if (req.file) await safeRemoveFile(req.file.path);
+      for (const imgPath of tempImages) {
+        await safeRemoveFile(imgPath);
+      }
+
+      res.status(500).json({ error: 'OCR failed' });
+    }
+  },
+
+  parseBankStatementPDF: async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: 'No file uploaded' });
+      }
+
+      const validation = validateUploadedFile(req.file, new Set(['application/pdf']));
+      if (!validation.valid) {
+        await safeRemoveFile(req.file.path);
+        return res.status(400).json({ error: validation.error });
+      }
+
+      const filePath = req.file.path;
+
+      // ✅ FIXED: Validate file exists within uploads directory
+      if (!await fs.pathExists(filePath)) {
+        return res.status(404).json({ error: 'File not found' });
+      }
+
+      const pdfParser = new PDFParser();
+
+      // Wrap in a promise for cleaner async handling
+      const parseResult = await new Promise((resolve, reject) => {
+        pdfParser.on('pdfParser_dataError', errData => {
+          reject(new Error(errData.parserError || 'PDF parsing failed'));
+        });
+
+        pdfParser.on('pdfParser_dataReady', () => {
+          const rawText = pdfParser.getRawTextContent();
+          resolve(rawText);
+        });
+
+        pdfParser.loadPDF(filePath);
+      });
+
+      // If no text extracted, fallback to OCR
+      if (!parseResult || parseResult.trim().length === 0) {
+        return await expensesControllers.bankStatementOCR(req, res);
+      }
+
+      const parsedStatements = parseBankStatement(parseResult);
+      const safeFilename = sanitizeFilename(req.file.originalname);
+
+      const expensesToInsert = parsedStatements
+        .map(tx => {
+          const incurredAt = tx.date || tx.postingDate || new Date();
+          return {
+            description: tx.description,
+            category: `Bank Import: ${safeFilename}`,
+            craLine: 'interest_bank',
+            amount: tx.amount,
+            amountTotal: tx.amount,
+            incurredAt,
+            paidAt: incurredAt,
+            status: 'paid',
+            paymentMethod: 'bank_transfer',
+            source: 'bank_import',
+            externalRef: safeFilename,
+            bookedOn: new Date(),
+          };
+        })
+        .filter(exp => exp.incurredAt && !isNaN(new Date(exp.incurredAt)));
+
+      const insertedExpenses = await Expenses.insertMany(expensesToInsert);
+
+      // Cleanup
+      await safeRemoveFile(filePath);
+
+      return res.json({
+        message: `Inserted ${insertedExpenses.length} expenses from bank statement.`,
+        rawText: parseResult,
+        transactions: expensesToInsert,
+        insertedExpenses
+      });
+    } catch (err) {
+      console.error('parseBankStatementPDF error:', err);
+      if (req.file) await safeRemoveFile(req.file.path);
+      return res.status(500).json({ error: 'Failed to parse statement' });
+    }
+  },
+
+  monthlySummary: async (req, res) => {
+    try {
+      const method = req.query.method === 'cash' ? 'cash' : 'accrual';
+      const dateField = method === 'cash' ? '$paidAt' : '$incurredAt';
+
+      const from = req.query.from ? new Date(req.query.from) : null;
+      const to = req.query.to ? new Date(req.query.to) : null;
+      const includeHidden = safeBool(req.query.includeHidden, false);
+
+      const match = {
+        ...(includeHidden ? {} : { hidden: { $ne: true } }),
+      };
+
+      if (from && to) {
+        match[method === 'cash' ? 'paidAt' : 'incurredAt'] = { $gte: from, $lte: to };
+        if (method === 'cash') match.paidAt = { $ne: null };
+      }
+
+      const items = await Expenses.aggregate([
+        { $match: match },
+        {
+          $project: {
+            amountTotal: { $ifNull: ['$amountTotal', '$amount'] },
+            month: { $dateToString: { format: '%Y-%m', date: dateField } },
+          },
+        },
+        {
+          $group: {
+            _id: '$month',
+            total: { $sum: '$amountTotal' },
+            count: { $sum: 1 },
+          },
+        },
+        { $sort: { _id: 1 } },
+        {
+          $project: {
+            _id: 0,
+            month: '$_id',
+            total: 1,
+            count: 1,
+          },
+        },
+      ]);
+
+      res.json({ method, items });
+    } catch (err) {
+      console.error('monthlySummary error', err);
+      res.status(500).json({ error: 'Failed to compute monthly summary' });
+    }
+  },
+};
 
 module.exports = expensesControllers;
