@@ -3,7 +3,62 @@ const crypto = require("crypto");
 const fetch = require("node-fetch");
 const UAParser = require("ua-parser-js");
 const { DateTime } = require("luxon");
-const isIp = require("is-ip");
+// const isIp = require("is-ip");
+// Add to your requires at the top
+const ipaddr = require("ipaddr.js");
+
+// Add this new helper function
+function isPrivateOrReservedIp(ip) {
+  try {
+    const trimmed = String(ip || "").trim();
+    if (!trimmed) return true;
+
+    let parsed;
+    try {
+      parsed = ipaddr.parse(trimmed);
+    } catch {
+      return true; // Unparseable = unsafe
+    }
+
+    // Handle IPv4-mapped IPv6 (e.g., ::ffff:127.0.0.1)
+    if (parsed.kind() === "ipv6" && parsed.isIPv4MappedAddress()) {
+      parsed = parsed.toIPv4Address();
+    }
+
+    const range = parsed.range();
+
+    // Block all non-unicast ranges
+    const blockedRanges = new Set([
+      "unspecified",      // 0.0.0.0/8, ::/128
+      "broadcast",        // 255.255.255.255/32
+      "multicast",        // 224.0.0.0/4, ff00::/8
+      "linkLocal",        // 169.254.0.0/16, fe80::/10
+      "loopback",         // 127.0.0.0/8, ::1/128
+      "private",          // 10/8, 172.16/12, 192.168/16
+      "reserved",         // various reserved blocks
+      "uniqueLocal",      // fc00::/7 (IPv6 private)
+      "ipv4Mapped",       // ::ffff:0:0/96
+      "rfc6145",          // IPv6
+      "rfc6052",          // IPv6
+      "6to4",             // 2002::/16
+      "teredo",           // 2001::/32
+      "benchmarking",     // 198.18.0.0/15
+      "amt",              // 192.52.193.0/24
+      "as112",            // 192.175.48.0/24
+      "as112v6",          // 2001:4:112::/48
+      "deprecated",       // 6bone, etc.
+      "orchid",           // 2001:10::/28
+      "orchid2",          // 2001:20::/28
+      "discard",          // 100::/64
+      "carrierGradeNat",  // 100.64.0.0/10 (CGNAT)
+    ]);
+
+    return blockedRanges.has(range);
+  } catch (err) {
+    console.error("IP range check failed:", err.message);
+    return true; // Fail closed
+  }
+}
 
 // -------------------------
 // helpers
@@ -92,18 +147,23 @@ function isStrictIpLiteral(ip) {
 async function getGeoInfo(ip) {
   try {
     if (!isValidIp(ip)) {
-      // Skip GeoIP lookup for invalid or missing IPs
       return null;
     }
 
     const safeIp = String(ip).trim();
+
     if (!isStrictIpLiteral(safeIp)) {
-      // Defensive: do not perform external request if the IP is not a plain literal.
       return null;
     }
 
-    // use https
-    const url = `https://api.ipapi.com/${safeIp}?access_key=${process.env.IPAPIKEY}`;
+    // ✅ NEW: Block private/reserved IPs to prevent SSRF
+    if (isPrivateOrReservedIp(safeIp)) {
+      console.warn("[GeoIP] Blocked private/reserved IP:", safeIp);
+      return null;
+    }
+
+    // Use https
+    const url = `https://api.ipapi.com/${encodeURIComponent(safeIp)}?access_key=${process.env.IPAPIKEY}`;
     const res = await fetch(url, { timeout: 3500 });
     if (!res.ok) throw new Error("GeoIP request failed");
     const data = await res.json();
@@ -123,6 +183,40 @@ async function getGeoInfo(ip) {
     return null;
   }
 }
+// async function getGeoInfo(ip) {
+//   try {
+//     if (!isValidIp(ip)) {
+//       // Skip GeoIP lookup for invalid or missing IPs
+//       return null;
+//     }
+
+//     const safeIp = String(ip).trim();
+//     if (!isStrictIpLiteral(safeIp)) {
+//       // Defensive: do not perform external request if the IP is not a plain literal.
+//       return null;
+//     }
+
+//     // use https
+//     const url = `https://api.ipapi.com/${safeIp}?access_key=${process.env.IPAPIKEY}`;
+//     const res = await fetch(url, { timeout: 3500 });
+//     if (!res.ok) throw new Error("GeoIP request failed");
+//     const data = await res.json();
+
+//     return {
+//       country: data.country_name,
+//       region: data.region,
+//       city: data.city,
+//       timezone: data.timezone,
+//       postal: data.postal,
+//       org: data.org,
+//       latitude: data.latitude,
+//       longitude: data.longitude,
+//     };
+//   } catch (err) {
+//     console.error("GeoIP lookup error:", err.message);
+//     return null;
+//   }
+// }
 
 // -------------------------
 // scoring/qualification (events-first, interactions fallback)
