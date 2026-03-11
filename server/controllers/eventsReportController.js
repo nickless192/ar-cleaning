@@ -295,22 +295,24 @@ async function sendDailyEventsReportEmail({ dateStr } = {}) {
   const html = renderHtml(report);
   const text = renderText(report);
 
-  // await sgMail.send({
-  //   to: ADMIN_EMAILS,
-  //   from: process.env.SENDGRID_FROM || "info@cleanarsolutions.ca",
-  //   subject,
-  //   text,
-  //   html,
-  // });
-  console.log(`[DailyEventsReport] Sending report email with AWS to ${ADMIN_EMAILS.join(", ")}`);
-  const result = await sendEmail({
+  await sgMail.send({
     to: ADMIN_EMAILS,
+    from: process.env.SENDGRID_FROM || "info@cleanarsolutions.ca",
     subject,
     text,
     html,
   });
+  console.log(`[DailyEventsReport] Sending report email with AWS to ${ADMIN_EMAILS.join(", ")}`);
+  // const result = await sendEmail({
+  //   to: ADMIN_EMAILS,
+  //   subject,
+  //   text,
+  //   html,
+  // });
 
-  return { ok: true, sentTo: ADMIN_EMAILS, date: report.date, awsResult: result };
+  return { ok: true, sentTo: ADMIN_EMAILS, date: report.date, 
+    // awsResult: result
+   };
 }
 
 module.exports = {
