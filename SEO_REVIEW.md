@@ -1,61 +1,98 @@
-# SEO Improvement Review (April 9, 2026)
+# SEO Improvement Review (Updated April 9, 2026)
 
-This review is based on a static audit of the current codebase.
+This review reflects the current implementation state in the codebase after recent SEO quick-win updates.
 
-## High-impact opportunities
+## Current implementation snapshot
 
-1. **Move away from client-only rendering for key marketing pages.**
-   - The app is a React SPA bootstrapped from a single entry (`client/index.html`) and routes are rendered client-side in `client/src/index.jsx`.
-   - For non-branded queries, crawlers and social bots generally perform better when content is available in the initial HTML response.
-   - **Recommendation:** Add SSR or pre-rendering for `/index`, `/about-us`, `/products-and-services`, and blog pages.
+### ✅ Completed quick wins
 
-2. **Use route-specific metadata instead of one global homepage metadata block.**
-   - Global tags in `client/index.html` are homepage-specific and reused by default for all routes.
-   - `MetaTags.jsx` is also hardcoded to homepage values and currently only used on the Index view.
-   - **Recommendation:** Standardize route-level title/description/canonical/OG tags for each public URL (including blog posts).
+1. **Route-level metadata is now implemented.**
+   - `MetaTags.jsx` is route-aware and sets per-route title/description/canonical/OG/Twitter tags.
+   - Metadata is mounted at the app shell level in `client/src/index.jsx`, so all routes can update head tags.
 
-3. **Fix URL canonicalization and duplicate path patterns.**
-   - Routing supports both `/` and `/index` and redirects can create duplicate content states.
-   - Sitemap includes `/` and `/index`, which may split ranking signals if not normalized.
-   - **Recommendation:** Pick one canonical homepage URL (prefer `/`), 301-redirect the other, and align canonical tags + sitemap.
+2. **Homepage canonical is normalized to `/index` (business collateral alignment).**
+   - Both `/` and `/index` route metadata resolve to canonical `/index`.
+   - Sitemap homepage entry is now `https://www.cleanarsolutions.ca/index`.
 
-4. **Repair and expand sitemap coverage.**
-   - Current sitemap includes a path (`/quick-quote`) that does not appear in router definitions.
-   - Important indexable routes are missing (e.g., blog post URLs, privacy policy, localized URL strategy if applicable).
-   - **Recommendation:** Generate sitemap from actual routes/content and validate in Search Console.
+3. **Sitemap cleanup is done.**
+   - Invalid entry `/quick-quote` has been removed.
+   - Blog listing, blog detail routes, privacy page, and key public pages are included.
 
-5. **Strengthen structured data and keep it synchronized.**
-   - There is LocalBusiness JSON-LD in `client/index.html`, which is good.
-   - But business/service/review/blog schema appears limited to homepage-level data.
-   - **Recommendation:** Add `Service` and `FAQPage` schema where relevant, and `BlogPosting` for each article page.
+4. **Blog structured data is implemented.**
+   - `BlogPosting` JSON-LD is now generated for both current blog detail pages.
+   - Dates currently configured:
+     - ISSA article: published **2025-11-01**, modified **2026-02-01**
+     - CQCC article: published **2026-02-01**, modified **2026-02-01**
 
-## Medium-impact opportunities
+5. **Private route crawl controls are implemented.**
+   - `MetaTags.jsx` applies `noindex,nofollow` to admin/auth/sensitive flows via route patterns.
+   - `robots.txt` disallows known private paths (`/admin/`, `/login-signup`, `/profile-page`, `/invoices/`, etc.).
 
-6. **Add explicit robots handling for private/admin routes.**
-   - Public `robots.txt` currently allows all crawling globally.
-   - App contains admin/auth/invoice routes in router config.
-   - **Recommendation:** Add `noindex` for authenticated/sensitive pages and disallow known private paths when appropriate.
+6. **OG image reference is centralized.**
+   - `MetaTags.jsx` and `client/index.html` use the same absolute OG image URL:
+     - `https://www.cleanarsolutions.ca/apple-icon.jpg`
 
-7. **Improve international SEO strategy (if EN/ES/FR pages are intended for indexing).**
-   - i18n is configured, but there is no clear `hreflang` URL mapping strategy in the head tags/sitemap.
-   - **Recommendation:** Introduce language-specific URLs (or query strategy), add `hreflang`, and include alternates in sitemap.
+7. **Legacy template banner cleanup is done.**
+   - The Now UI Kit comment banner has been removed from `client/index.html`.
 
-8. **Optimize Open Graph image consistency and reliability.**
-   - OG image URLs differ between `index.html` and `MetaTags.jsx`, and one points to a build artifact-style path.
-   - **Recommendation:** Use stable, absolute OG/Twitter image URLs hosted in `public` and keep dimensions/social previews validated.
+---
 
-9. **Tighten heading/content semantics for crawl clarity.**
-   - Hero uses H1/H2 correctly, but broader page hierarchy and repeated component blocks should be reviewed for semantic consistency.
-   - **Recommendation:** Ensure one H1 per page, logical H2/H3 sections, and descriptive anchor text for key conversion links.
+## Open items (next priorities)
 
-10. **Automate technical SEO checks in CI.**
-    - No visible SEO validation pipeline in current repo.
-    - **Recommendation:** Add periodic checks (Lighthouse CI, broken-link checks, sitemap validation, metadata regression tests).
+### High impact
 
-## Quick wins (1–2 days)
+1. **Rendering strategy (SSR/prerender) still pending.**
+   - Site remains a client-rendered SPA.
+   - Recommended next step: prerender key marketing routes (`/index`, `/about-us`, `/products-and-services`, `/blog`, blog details).
 
-- Replace static canonical in `index.html` with per-route canonical handling.
-- Remove invalid sitemap entries and add missing blog routes.
-- Add `BlogPosting` schema to blog detail pages.
-- Add `noindex` meta on admin/auth flows.
-- Normalize OG image URLs to a single canonical asset.
+2. **International SEO strategy still undefined.**
+   - i18n exists, but there is no URL-level language strategy or `hreflang` mapping.
+   - Recommended next step: choose URL convention (e.g., `/en/...`, `/fr/...`, `/es/...`) and add `hreflang` + sitemap alternates.
+
+3. **Route normalization at server level still pending.**
+   - Canonical points to `/index`, but hard 301 normalization strategy should be explicitly enforced server-side.
+   - Recommended next step: enforce one homepage URL policy in hosting/server redirects.
+
+4. **CI SEO checks are not yet automated.**
+   - Recommended next step: add Lighthouse CI + sitemap validation + broken-link checks in CI.
+
+### Medium impact
+
+5. **Additional schema opportunities remain.**
+   - Consider adding `Service` schema for service pages and `FAQPage` schema where applicable.
+
+6. **Heading and semantic hierarchy audit remains.**
+   - Validate one H1 per page and orderly H2/H3 structure on all public pages.
+
+---
+
+## OG image guidance (current path uses `apple-icon.jpg`)
+
+Use one production-ready image with these standards:
+
+- **Dimensions:** 1200 × 630 px (recommended for Facebook/LinkedIn/X previews)
+- **Aspect ratio:** 1.91:1
+- **Format:** PNG or high-quality JPG
+- **File size target:** ideally under 300 KB (hard max ~1 MB)
+- **Content:**
+  - CleanAR brand/logo
+  - Short readable headline (5–8 words)
+  - High contrast for mobile previews
+  - No dense text blocks
+- **Safety margin:** keep logo/text away from outer 60 px edges
+- **URL stability:** keep filename stable at the final public path (currently `/apple-icon.jpg`) to avoid stale share metadata
+
+### Suggested baseline creative
+- Background: clean workspace or branded light gradient
+- Foreground: CleanAR logo + line like “Professional Cleaning in Toronto & GTA”
+- Optional badge: “ISSA Member” / “LGBTQ+ Certified Supplier” (if legible at thumbnail size)
+
+---
+
+## Quick wins status board
+
+- [x] Replace static canonical in `index.html` with per-route canonical handling
+- [x] Remove invalid sitemap entries and add missing blog routes
+- [x] Add `BlogPosting` schema to blog detail pages
+- [x] Add `noindex` meta on admin/auth flows
+- [x] Normalize OG image URLs to a single canonical asset
