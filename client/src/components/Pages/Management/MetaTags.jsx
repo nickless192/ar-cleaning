@@ -103,14 +103,20 @@ const defaultMeta = {
     "CleanAR Solutions offers professional cleaning services in Toronto and the GTA.",
 };
 
+const normalizePathname = (path) => {
+  if (!path || path === "/") return "/";
+  return path.replace(/\/+$/, "");
+};
+
 const MetaTags = () => {
   const { pathname } = useLocation();
+  const normalizedPathname = normalizePathname(pathname);
 
-  const routeMeta = ROUTE_META[pathname] ?? defaultMeta;
-  const canonicalPath = routeMeta.canonicalPath ?? pathname;
+  const routeMeta = ROUTE_META[normalizedPathname] ?? defaultMeta;
+  const canonicalPath = normalizePathname(routeMeta.canonicalPath ?? normalizedPathname);
   const canonicalUrl = `${BASE_URL}${canonicalPath}`;
-  const pageUrl = `${BASE_URL}${pathname}`;
-  const noindex = NOINDEX_PATTERNS.some((pattern) => pattern.test(pathname));
+  const pageUrl = `${BASE_URL}${normalizedPathname}`;
+  const noindex = NOINDEX_PATTERNS.some((pattern) => pattern.test(normalizedPathname));
 
   const blogPostingSchema = routeMeta.blogPosting
     ? {
