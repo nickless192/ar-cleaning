@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet";
 import { useLocation } from "react-router-dom";
 
 const BASE_URL = "https://www.cleanarsolutions.ca";
-const OG_IMAGE = `${BASE_URL}/apple-icon.jpg`;
+const OG_IMAGE = `${BASE_URL}/og-image.jpg`;
 
 const ROUTE_META = {
   "/index": {

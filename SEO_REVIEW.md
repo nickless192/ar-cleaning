@@ -30,7 +30,7 @@ This review reflects the current implementation state in the codebase after rece
 
 6. **OG image reference is centralized.**
    - `MetaTags.jsx` and `client/index.html` use the same absolute OG image URL:
-     - `https://www.cleanarsolutions.ca/apple-icon.jpg`
+     - `https://www.cleanarsolutions.ca/og-image.jpg`
 
 7. **Legacy template banner cleanup is done.**
    - The Now UI Kit comment banner has been removed from `client/index.html`.
@@ -66,7 +66,7 @@ This review reflects the current implementation state in the codebase after rece
 
 ---
 
-## OG image guidance (current path uses `apple-icon.jpg`)
+## OG image guidance (current path uses `og-image.jpg`)
 
 Use one production-ready image with these standards:
 
@@ -80,7 +80,7 @@ Use one production-ready image with these standards:
   - High contrast for mobile previews
   - No dense text blocks
 - **Safety margin:** keep logo/text away from outer 60 px edges
-- **URL stability:** keep filename stable at the final public path (currently `/apple-icon.jpg`) to avoid stale share metadata
+- **URL stability:** keep filename stable at the final public path (currently `/og-image.jpg`) to avoid stale share metadata
 
 ### Suggested baseline creative
 - Background: clean workspace or branded light gradient
