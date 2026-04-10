@@ -7,7 +7,7 @@ require('dotenv').config();
 const trackVisitor = require('./utils/trackVisitor');
 const cookieParser = require("cookie-parser");
 
-app = express();
+const app = express();
 const PORT = process.env.PORT || 3001;
 
 // compress all responses
@@ -15,9 +15,8 @@ app.use(compression());
 app.use(cors());
 // setting up middleware for url encoded, json and to serve static files
 app.use(express.urlencoded({extended: true}));
-app.use(express.json());
+app.use(express.json({ limit: '1mb' }));
 app.use(express.static('public'));
-app.use(express.json({ limit: "1mb" }));
 
 // Serve up static assets
 app.use('/images', express.static(path.join(__dirname, '../client/src/assets')));
@@ -26,17 +25,18 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/dist')));
-
+  // serve SPA routes in production without intercepting API requests
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api')) {
+      return next();
+    }
+    res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
+  });
 }
 app.use(cookieParser());
 // enable routes
 // app.use(trackVisitor);
 app.use(require('./routes'));
-
-// // DO NOT COMMENT OUT THIS CODE - this makes the index page get the /GET error
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
-});
 
 // app.get("/oauth2callback", async (req, res) => {
 //   const { code } = req.query;
@@ -62,7 +62,9 @@ app.get("/oauth2callback", async (req, res) => {
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/ar-cleaning-local') ;
 
 // logs MongoDB statements that are executed
-mongoose.set('debug',true);
+if (process.env.NODE_ENV !== 'production') {
+  mongoose.set('debug', true);
+}
 
 
 // listening to port
