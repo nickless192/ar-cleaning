@@ -62,7 +62,7 @@ const ContactUs = () => {
   return (
     <section className="py-5">
       <Card
-        className="shadow-lg mx-auto rounded-4 bg-transparent"
+        className="cleanar-card shadow-lg mx-auto rounded-4 bg-transparent"
         style={{ maxWidth: 980 }}
       >
         <div className="p-3 p-md-5">
@@ -84,14 +84,14 @@ const ContactUs = () => {
             <Row className="g-3">
               <Col xs={12} md={6}>
                 <Form.Group controlId="name">
-                  <Form.Label>{t("contact.form.name_label")}</Form.Label>
+                  <Form.Label className="cleanarLabel">{t("contact.form.name_label")}</Form.Label>
                   <Form.Control
                     type="text"
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
                     placeholder={t("contact.form.name_placeholder")}
-                    className="text-cleanar-color form-input"
+                    className="text-cleanar-color form-input cleanarInput"
                     required
                   />
                 </Form.Group>
@@ -99,14 +99,14 @@ const ContactUs = () => {
 
               <Col xs={12} md={6}>
                 <Form.Group controlId="email">
-                  <Form.Label>{t("contact.form.email_label")}</Form.Label>
+                  <Form.Label className="cleanarLabel">{t("contact.form.email_label")}</Form.Label>
                   <Form.Control
                     type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
                     placeholder={t("contact.form.email_placeholder")}
-                    className="text-cleanar-color form-input"
+                    className="text-cleanar-color form-input cleanarInput"
                     required
                   />
                 </Form.Group>
@@ -114,28 +114,28 @@ const ContactUs = () => {
 
               <Col xs={12} md={6}>
                 <Form.Group controlId="phone">
-                  <Form.Label>{t("contact.form.phone_label")}</Form.Label>
+                  <Form.Label className="cleanarLabel">{t("contact.form.phone_label")}</Form.Label>
                   <Form.Control
                     type="tel"
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
                     placeholder={t("contact.form.phone_placeholder")}
-                    className="text-cleanar-color form-input"
+                    className="text-cleanar-color form-input cleanarInput"
                   />
                 </Form.Group>
               </Col>
 
               <Col xs={12} md={6}>
                 <Form.Group controlId="subject">
-                  <Form.Label>{t("contact.form.subject_label")}</Form.Label>
+                  <Form.Label className="cleanarLabel">{t("contact.form.subject_label")}</Form.Label>
                   <Form.Control
                     type="text"
                     name="subject"
                     value={formData.subject}
                     onChange={handleChange}
                     placeholder={t("contact.form.subject_placeholder")}
-                    className="text-cleanar-color form-input"
+                    className="text-cleanar-color form-input cleanarInput"
                     required
                   />
                 </Form.Group>
@@ -143,7 +143,7 @@ const ContactUs = () => {
 
               <Col xs={12}>
                 <Form.Group controlId="message">
-                  <Form.Label>{t("contact.form.message_label")}</Form.Label>
+                  <Form.Label className="cleanarLabel">{t("contact.form.message_label")}</Form.Label>
                   <Form.Control
                     as="textarea"
                     name="message"
@@ -151,7 +151,7 @@ const ContactUs = () => {
                     onChange={handleChange}
                     rows={5}
                     placeholder={t("contact.form.message_placeholder")}
-                    className="text-cleanar-color form-input"
+                    className="text-cleanar-color form-input cleanarInput"
                     required
                   />
                 </Form.Group>
@@ -169,7 +169,7 @@ const ContactUs = () => {
                     variant="primary"
                     type="submit"
                     disabled={status.loading}
-                    className="px-4"
+                    className="px-4 cleanar-hero-cta__primary"
                     style={{ minWidth: 180 }}
                   >
                     {status.loading
