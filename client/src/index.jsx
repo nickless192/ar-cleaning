@@ -4,15 +4,12 @@ import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import './i18n'; // Import i18n configuration
 import { registerSW } from 'virtual:pwa-register';
 
-// styles for this kit
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import "/src/assets/css/our-palette.css";
 import "/src/assets/css/NavBar.css";
 import "/src/assets/css/bootstrap.min.css";
 // import "/src/assets/css/bootstrap.min.css.map";
-// import "assets/scss/now-ui-kit.scss?v=1.5.0";
 
-// pages for this kit
 import Index from "/src/views/Index.jsx";
 import AboutUsPage from "/src/components/Pages/Navigation/AboutUs";
 // import LoginPage from "views/LoginPage";
@@ -63,6 +60,7 @@ import CookieConsent from "/src/components/Pages/Landing/CookieConsent";
 import SiteBanner from "/src/components/Pages/Navigation/SiteBanner.jsx";
 // import AdminManagementPage from "/src/components/Pages/ManagementViews/AdminManagementPage.jsx";
 import InvoiceDetail from "/src/components/Pages/Booking/InvoiceDetail.jsx";
+import MetaTags from "/src/components/Pages/Management/MetaTags.jsx";
 
 registerSW({
   onNeedRefresh() {
@@ -127,6 +125,7 @@ const App = () => {
   return (
     <React.StrictMode>
       <BrowserRouter>
+        <MetaTags />
         <div className="fixed-top-container">
           {/* <SiteBanner /> */}
           <Navbar />

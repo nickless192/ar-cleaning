@@ -6,7 +6,6 @@ import { Link, useLocation } from "react-router-dom";
 import VisitorCounter from "/src/components/Pages/Management/VisitorCounter.jsx";
 import ContactUs from "../components/Pages/Landing/ContactUs";
 import { Card, Row, Col } from "reactstrap";
-import MetaTags from "/src/components/Pages/Management/MetaTags.jsx";
 import Hero from "../components/Pages/Landing/Hero.jsx";
 import QuoteRequest from "../components/Pages/UserJourney/QuoteRequest";
 import BusinessHoursSidebar from "/src/components/Pages/UserJourney/BusinessHourSidebar";
@@ -37,7 +36,6 @@ function Index() {
 
   return (
     <>
-      <MetaTags />
       <VisitorCounter />
 
       {/* HERO */}
