@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { Suspense, lazy, useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import './i18n'; // Import i18n configuration
@@ -11,56 +11,39 @@ import "/src/assets/css/bootstrap.min.css";
 // import "/src/assets/css/bootstrap.min.css.map";
 
 import Index from "/src/views/Index.jsx";
-import AboutUsPage from "/src/components/Pages/Navigation/AboutUs";
-// import LoginPage from "views/LoginPage";
-import ProfilePage from "/src/components/Pages/UserJourney/ProfilePage";
-import LoginSign from "/src/components/Pages/UserJourney/LoginSign";
-import SignUp from "/src/components/Pages/UserJourney/SignUp";
-import ViewQuotes from "./components/Pages/Management/ViewQuotes";
-import ProductsAndServices from "/src/components/Pages/Navigation/ProductsAndServices";
 import ProtectedRoute from "/src/components/Pages/Management/ProtectedRoute";
-// import ChatTool from "/src/components/Pages/UserJourney/ChatTool";
 import Navbar from "/src/components/Pages/Navigation/Navbar.jsx";
-import NavigationBar from "/src/components/Pages/Navigation/NavigationBar";
-import Career from "/src/components/Pages/Navigation/Career.jsx";
-import LogDashboard from '/src/components/Pages/Management/LogDashboard';
-// import QuickQuoteDashboard from "/src/components/Pages/Management/QuickQuoteDashboard";
-import BookingList from '/src/components/Pages/Management/BookingList';
-import ResetPassword from "/src/components/Pages/UserJourney/ResetPassword";
-import BlogLandingPage from "/src/components/Pages/Blogs/BlogLandingPage.jsx";
-// import CertificationsMembershipsPage from "/src/components/Pages/Certifications/CertificationsMembershipsPage";
-import CleanARJoinsISSACanada from "/src/components/Pages/Blogs/CleanARJoinsISSACanada";
-import CleanARJoinsCQCC from "/src/components/Pages/Blogs/CleanARJoinsCQCC.jsx";
-import NotificationAdminPage from "/src/components/Pages/UserJourney/NotificationAdminPage.jsx";
-import AdminTranslationsManager from "/src/components/Pages/Management/AdminTranslationsManager";
-
 import Terms from "/src/components/Pages/Navigation/Terms";
 import Disclaimer from "/src/components/Pages/Navigation/Disclaimer";
 import PrivacyPolicy from "/src/components/Pages/Navigation/PrivacyPolicy";
-
 import Footer from "/src/components/Pages/Navigation/Footer.jsx";
-import Customer from "/src/components/Pages/Management/Customers.jsx";
-// import FinanceDashboard from "/src/components/Pages/Management/FinanceDashboard";
-// import ExpenseDashboard from "/src/components/Pages/Management/ExpenseDashboard";
-import QuickRequest_v2 from "/src/components/Pages/UserJourney/QuoteRequest_v2"; // version in-dev for testing
-// import AdminContactDashboard from "/src/components/Pages/Management/AdminContactDashboard"; // version in-dev for testing
-import AdminManagementLayout from "/src/components/Pages/ManagementViews/AdminManagementLayout.jsx";
-import BookingTabbedView from "/src/components/Pages/ManagementViews/BookingTabbedView";
-
-import InventoryManagementTabbedView from "/src/components/Pages/ManagementViews/InventoryManagementTabbedView";
-import ContactManagementTabbedView from "/src/components/Pages/ManagementViews/ContactManagementTabbedView";
-import AccountingTabbedView from "/src/components/Pages/ManagementViews/AccountingTabbedView";
-import LandingFresh from "/src/components/Pages/qrCodes/LandingFresh";
-import LandingNow from "/src/components/Pages/qrCodes/LandingNow";
-import LandingSecret from "/src/components/Pages/qrCodes/LandingSecret";
-import LandingStart from "/src/components/Pages/qrCodes/LandingStart";
-import LandingToronto from "/src/components/Pages/qrCodes/LandingToronto";
-import backgroundImage from '/src/assets/img/natural-marble-pattern-background.jpg';
 import CookieConsent from "/src/components/Pages/Landing/CookieConsent";
-import SiteBanner from "/src/components/Pages/Navigation/SiteBanner.jsx";
-// import AdminManagementPage from "/src/components/Pages/ManagementViews/AdminManagementPage.jsx";
-import InvoiceDetail from "/src/components/Pages/Booking/InvoiceDetail.jsx";
 import MetaTags from "/src/components/Pages/Management/MetaTags.jsx";
+
+const AboutUsPage = lazy(() => import("/src/components/Pages/Navigation/AboutUs"));
+const ProfilePage = lazy(() => import("/src/components/Pages/UserJourney/ProfilePage"));
+const LoginSign = lazy(() => import("/src/components/Pages/UserJourney/LoginSign"));
+const SignUp = lazy(() => import("/src/components/Pages/UserJourney/SignUp"));
+const ProductsAndServices = lazy(() => import("/src/components/Pages/Navigation/ProductsAndServices"));
+const Career = lazy(() => import("/src/components/Pages/Navigation/Career.jsx"));
+const ResetPassword = lazy(() => import("/src/components/Pages/UserJourney/ResetPassword"));
+const BlogLandingPage = lazy(() => import("/src/components/Pages/Blogs/BlogLandingPage.jsx"));
+const CleanARJoinsISSACanada = lazy(() => import("/src/components/Pages/Blogs/CleanARJoinsISSACanada"));
+const CleanARJoinsCQCC = lazy(() => import("/src/components/Pages/Blogs/CleanARJoinsCQCC.jsx"));
+const NotificationAdminPage = lazy(() => import("/src/components/Pages/UserJourney/NotificationAdminPage.jsx"));
+const QuickRequest_v2 = lazy(() => import("/src/components/Pages/UserJourney/QuoteRequest_v2"));
+const AdminManagementLayout = lazy(() => import("/src/components/Pages/ManagementViews/AdminManagementLayout.jsx"));
+const BookingTabbedView = lazy(() => import("/src/components/Pages/ManagementViews/BookingTabbedView"));
+const InventoryManagementTabbedView = lazy(() => import("/src/components/Pages/ManagementViews/InventoryManagementTabbedView"));
+const ContactManagementTabbedView = lazy(() => import("/src/components/Pages/ManagementViews/ContactManagementTabbedView"));
+const AccountingTabbedView = lazy(() => import("/src/components/Pages/ManagementViews/AccountingTabbedView"));
+const AdminTranslationsManager = lazy(() => import("/src/components/Pages/Management/AdminTranslationsManager"));
+const LandingFresh = lazy(() => import("/src/components/Pages/qrCodes/LandingFresh"));
+const LandingNow = lazy(() => import("/src/components/Pages/qrCodes/LandingNow"));
+const LandingSecret = lazy(() => import("/src/components/Pages/qrCodes/LandingSecret"));
+const LandingStart = lazy(() => import("/src/components/Pages/qrCodes/LandingStart"));
+const LandingToronto = lazy(() => import("/src/components/Pages/qrCodes/LandingToronto"));
+const InvoiceDetail = lazy(() => import("/src/components/Pages/Booking/InvoiceDetail.jsx"));
 
 registerSW({
   onNeedRefresh() {
@@ -141,8 +124,8 @@ const App = () => {
           // }}
         >
           <main className="flex-grow-1 main-content">
-
-            <Routes>
+            <Suspense fallback={<div className="py-5 text-center">Loading page…</div>}>
+              <Routes>
               <Route path="/index" element={<Index />} />
               <Route path="/profile-page" element={<ProtectedRoute element={<ProfilePage />} />} />
               <Route path="/notification-management" element={<ProtectedRoute element={<NotificationAdminPage />} />} />
@@ -202,7 +185,8 @@ const App = () => {
               <Route path="/secret" element={<LandingSecret />} />
               <Route path="/" element={<Navigate to="/index" />} />
               <Route path="*" element={<Navigate to="/index" replace />} />
-            </Routes>
+              </Routes>
+            </Suspense>
           </main>
         </div>
         <CookieConsent />
