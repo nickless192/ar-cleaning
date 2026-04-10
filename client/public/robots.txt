@@ -1,4 +1,13 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Disallow: /admin
+Disallow: /admin/
+Disallow: /login-signup
+Disallow: /signup-page
+Disallow: /reset-password
+Disallow: /profile-page
+Disallow: /notification-management
+Disallow: /invoices/
+Disallow: /quick-request-v2
+
 Sitemap: https://www.cleanarsolutions.ca/sitemap.xml
