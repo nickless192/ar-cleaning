@@ -3,12 +3,20 @@ const compression = require('compression');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const path = require('path');
+const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 const trackVisitor = require('./utils/trackVisitor');
 const cookieParser = require("cookie-parser");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+const spaLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 // compress all responses
 app.use(compression());
@@ -26,7 +34,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/dist')));
   // serve SPA routes in production without intercepting API requests
-  app.get('*', (req, res, next) => {
+  app.get('*', spaLimiter, (req, res, next) => {
     if (req.path.startsWith('/api')) {
       return next();
     }
