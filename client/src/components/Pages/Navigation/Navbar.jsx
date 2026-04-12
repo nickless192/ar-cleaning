@@ -35,6 +35,8 @@ import LoginPage from "/src/components/Pages/UserJourney/LoginPage";
 
 import Auth from "/src/utils/auth";
 import logo from "/src/assets/img/cleanar-logo.png";
+import logoAvif from "/src/assets/img/optimized/cleanar-logo.avif";
+import logoWebp from "/src/assets/img/optimized/cleanar-logo.webp";
 import LanguageSwitcher from "/src/components/Pages/Management/LanguageSwitcher";
 import NewIconAnimated from "/src/components/Pages/Navigation/NewIconAnimated";
 import "/src/assets/css/NavBar.css";
@@ -205,17 +207,20 @@ function IndexNavbar() {
                     {/* LEFT: Brand */}
                     <NavbarBrand href="/index" className="brand" onClick={handleNavClick}>
                         {/* <img src={logo} alt="CleanAR Solutions" className="navbarlogo" /> */}
-                          <img
-                            src={logo}
-                            alt="CleanAR Solutions"
-                            className="navbarlogo"
-                            width="1300"
-                            height="1300"
-                            loading="eager"
-                            fetchPriority="high"
-                            decoding="async"
-                            sizes="40px"
-                        />
+                        <picture>
+                            <source srcSet={logoAvif} type="image/avif" />
+                            <source srcSet={logoWebp} type="image/webp" />
+                            <img
+                                src={logo}
+                                alt="CleanAR Solutions"
+                                className="navbarlogo"
+                                width="53"
+                                height="42"
+                                loading="eager"
+                                fetchPriority="high"
+                                decoding="async"
+                            />
+                        </picture>
                         <span className="brand-text montserrat-bold">CleanAR Solutions</span>
                     </NavbarBrand>
 

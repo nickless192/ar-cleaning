@@ -1,15 +1,12 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { motion } from "framer-motion";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import VisitorCounter from "/src/components/Pages/Management/VisitorCounter.jsx";
 import ContactUs from "../components/Pages/Landing/ContactUs";
 import { Card, Row, Col } from "reactstrap";
 import Hero from "../components/Pages/Landing/Hero.jsx";
 import QuoteRequest from "../components/Pages/UserJourney/QuoteRequest";
-import BusinessHoursSidebar from "/src/components/Pages/UserJourney/BusinessHourSidebar";
-import WhyChooseUs from "/src/components/Pages/Landing/WhyChooseUs";
 import FeaturedServices from "/src/components/Pages/Landing/FeaturedServices";
 import ReviewsCarousel from "/src/components/Pages/Landing/ReviewsCarousel";
 import FAQAccordion from "/src/components/Pages/Landing/FAQAccordion";
@@ -17,16 +14,9 @@ import StickyButtons from "/src/components/Pages/Landing/StickyButtons.jsx";
 import ISSAMembershipBadge from "/src/components/Pages/Certifications/ISSAMembershipBadge.jsx";
 import CQCCCertificationBadge from "/src/components/Pages/Certifications/CQCCCertificationBadge";
 import { useTranslation } from "react-i18next";
-import { FaFileInvoiceDollar, FaBroom, FaStar, FaPhoneAlt, FaSms } from "react-icons/fa";
 
 function Index() {
-  const [availabilityStatus, setAvailabilityStatus] = useState("");
-  const [responseTimeMessage, setResponseTimeMessage] = useState("");
-  const [showHours, setShowHours] = useState(false);
-  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
-
-  const location = useLocation();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const goToQuote = () => {
     const nameInput = document.getElementById("floatingName");
