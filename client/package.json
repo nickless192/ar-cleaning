@@ -45,6 +45,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "start": "vite",
+    "media:bootstrap": "bash ./scripts/bootstrap-media-tooling.sh",
+    "media:optimize": "bash ./scripts/optimize-images.sh",
     "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
@@ -85,6 +87,7 @@
     "@types/warning": "^3.0.3",
     "@vitejs/plugin-react": "^4.5.2",
     "ajv": "^8.17.1",
+    "playwright": "^1.59.1",
     "vite": "^6.4.2",
     "vite-plugin-pwa": "^1.0.3"
   }

@@ -204,7 +204,18 @@ function IndexNavbar() {
                 <Container fluid className="nav-shell">
                     {/* LEFT: Brand */}
                     <NavbarBrand href="/index" className="brand" onClick={handleNavClick}>
-                        <img src={logo} alt="CleanAR Solutions" className="navbarlogo" />
+                        {/* <img src={logo} alt="CleanAR Solutions" className="navbarlogo" /> */}
+                          <img
+                            src={logo}
+                            alt="CleanAR Solutions"
+                            className="navbarlogo"
+                            width="1300"
+                            height="1300"
+                            loading="eager"
+                            fetchPriority="high"
+                            decoding="async"
+                            sizes="40px"
+                        />
                         <span className="brand-text montserrat-bold">CleanAR Solutions</span>
                     </NavbarBrand>
 
