@@ -119,8 +119,7 @@ main,
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 3px;
-  min-height: 36px;
+  padding: 0 3px;
   border: 1px solid rgba(35, 112, 88, 0.28);
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.72);

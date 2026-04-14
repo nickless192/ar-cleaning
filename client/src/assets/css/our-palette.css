@@ -1288,7 +1288,10 @@
   width: 100%;
   display: flex;
   align-items: center;
-  font-weight: 800;
+  justify-content: flex-start;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: left;
   color: var(--text-cleanar-color) !important;
   background: var(--accordion-bg-color) !important;
   padding: 12px 14px;
@@ -1335,6 +1338,7 @@
 .cleanar-faq-accordion .faq-question-label {
   display: block;
   width: 100%;
+  text-align: left;
   border: 0 !important;
 }
 
