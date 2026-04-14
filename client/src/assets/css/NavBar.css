@@ -359,6 +359,14 @@ main,
   min-width: 280px;
   max-width: 360px;
   z-index: 1300;
+  margin-top: 0.4rem;
+}
+
+@media (min-width: 768px) {
+  .nav-account .dropdown-menu.login-dropdown {
+    left: 0 !important;
+    right: auto !important;
+  }
 }
 
 /* =========================================================
