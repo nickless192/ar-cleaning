@@ -863,7 +863,7 @@ button:disabled {
 
 /* Accordion Styles */
 .accordion-header {
-    background-color: var(--accordion-bg-color) !important;
+    background-color: transparent !important;
     border: none;
 }
 

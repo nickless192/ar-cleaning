@@ -116,8 +116,10 @@ main,
 }
 
 .cleanar-language-switcher {
+  display: inline-flex;
+  align-items: center;
   gap: 6px;
-  padding: 2px;
+  padding: 2px 3px;
   border: 1px solid rgba(35, 112, 88, 0.28);
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.72);
@@ -128,11 +130,15 @@ main,
 }
 
 .cleanar-language-switcher__btn.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
   min-width: 38px;
   border-radius: 999px !important;
   border: 1px solid transparent;
-  padding: 0.2rem 0.62rem;
-  line-height: 1.25;
+  padding: 0.1rem 0.58rem;
+  line-height: 1;
   font-weight: 700;
   letter-spacing: 0.01em;
   color: var(--text-cleanar-color);

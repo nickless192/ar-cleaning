@@ -1280,16 +1280,45 @@
   border-radius: 16px;
   overflow: hidden;
   background: #fff;
+  margin-bottom: 10px;
 }
 
-.cleanar-quote-v2 .optionalAccordion .accordion-button {
-  font-weight: 900;
-  background: rgba(0,0,0,.03);
-  box-shadow: none;
+.cleanar-quote-v2 .optionalAccordion .accordion-button,
+.cleanar-faq-accordion .accordion-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  font-weight: 800;
+  color: var(--text-cleanar-color) !important;
+  background: var(--accordion-bg-color) !important;
+  padding: 12px 14px;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  border: 0;
 }
 
-.cleanar-quote-v2 .optionalAccordion .accordion-body {
+.cleanar-quote-v2 .optionalAccordion .accordion-button:not(.collapsed),
+.cleanar-faq-accordion .accordion-button:not(.collapsed) {
+  background: var(--accordion-bg-color) !important;
+  box-shadow: none !important;
+}
+
+.cleanar-quote-v2 .optionalAccordion .accordion-button:focus,
+.cleanar-faq-accordion .accordion-button:focus {
+  box-shadow: none !important;
+}
+
+.cleanar-quote-v2 .optionalAccordion .accordion-body,
+.cleanar-faq-accordion .accordion-body {
   padding: 14px;
+}
+
+.cleanar-faq-accordion .accordion-item {
+  border: 1px solid rgba(0,0,0,.10);
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fff;
+  margin-bottom: 10px;
 }
 
 @media (max-width: 480px) {
@@ -2244,7 +2273,7 @@ button:disabled {
 
 /* Accordion Styles */
 .accordion-header {
-    background-color: var(--accordion-bg-color) !important;
+    background-color: transparent !important;
     border: none;
 }
 
