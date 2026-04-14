@@ -1321,6 +1321,23 @@
   margin-bottom: 10px;
 }
 
+.cleanar-faq-accordion .accordion-header,
+.cleanar-quote-v2 .optionalAccordion .accordion-header {
+  margin: 0;
+  background: transparent !important;
+}
+
+.cleanar-faq-accordion .accordion-button::after,
+.cleanar-quote-v2 .optionalAccordion .accordion-button::after {
+  margin-left: auto;
+}
+
+.cleanar-faq-accordion .faq-question-label {
+  display: block;
+  width: 100%;
+  border: 0 !important;
+}
+
 @media (max-width: 480px) {
   .cleanar-quote-v2 .quoteTitle {
     font-size: 1.7rem;
@@ -2278,9 +2295,9 @@ button:disabled {
 }
 
 .accordion-header span {
-    color: var(--brown-color);
-    font-size: 0.9rem;
-    font-weight: bold;
+    color: inherit;
+    font-size: inherit;
+    font-weight: inherit;
 }
 
 /* Section Styles */

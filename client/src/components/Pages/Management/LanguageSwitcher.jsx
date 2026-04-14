@@ -37,7 +37,7 @@ export default function LanguageSwitcher() {
   }, [])
 
   return (
-    <div className="pr-2">
+    <div className="pr-2 d-flex align-items-center">
     <ToggleButtonGroup
       type="radio"
       name="language"

@@ -868,9 +868,9 @@ button:disabled {
 }
 
 .accordion-header span {
-    color: var(--brown-color);
-    font-size: 0.9rem;
-    font-weight: bold;
+    color: inherit;
+    font-size: inherit;
+    font-weight: inherit;
 }
 
 /* Section Styles */

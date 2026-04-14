@@ -63,10 +63,10 @@ function FAQAccordion() {
           {/* If you want multiple open at once, set alwaysOpen */}
           <Accordion className="cleanar-faq-accordion">
             {cat.items.map((faq, idx) => (
-              <Accordion.Item eventKey={`${cat.key}-${idx}`} key={`${cat.key}-${idx}`}>
-                <Accordion.Header>
-                  <span className="fw-semibold">{faq.q}</span>
-                </Accordion.Header>
+                <Accordion.Item eventKey={`${cat.key}-${idx}`} key={`${cat.key}-${idx}`}>
+                  <Accordion.Header>
+                  <span className="fw-semibold faq-question-label">{faq.q}</span>
+                  </Accordion.Header>
                 <Accordion.Body className="text-muted">{faq.a}</Accordion.Body>
               </Accordion.Item>
             ))}
