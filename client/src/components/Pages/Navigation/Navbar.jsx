@@ -262,7 +262,7 @@ function IndexNavbar() {
                         {/* Account/Login (NOT far right anymore) */}
                         <div className="nav-account">
                             {isLogged ? (
-                                <UncontrolledDropdown inNavbar>
+                                <UncontrolledDropdown>
                                     <DropdownToggle nav caret className="account-toggle">
                                         <FaUser className="me-2" />
                                         <span className="d-none d-lg-inline">
@@ -295,7 +295,7 @@ function IndexNavbar() {
                                 </UncontrolledDropdown>
                             ) : (
                                 // keep your inline login dropdown if you want
-                                <UncontrolledDropdown inNavbar>
+                                <UncontrolledDropdown>
                                     <DropdownToggle nav caret className="account-toggle">
                                         <FaUser className="me-2" />
                                         <span className="d-none d-lg-inline">

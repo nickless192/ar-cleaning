@@ -357,16 +357,11 @@ main,
 .login-dropdown {
   width: min(360px, calc(100vw - 1.5rem));
   min-width: 280px;
-  max-width: 360px;
+  max-width: calc(100vw - 1rem);
   z-index: 1300;
   margin-top: 0.4rem;
-}
-
-@media (min-width: 768px) {
-  .nav-account .dropdown-menu.login-dropdown {
-    left: 0 !important;
-    right: auto !important;
-  }
+  right: 0 !important;
+  left: auto !important;
 }
 
 /* =========================================================
@@ -551,17 +546,6 @@ main,
     margin-bottom: 0.5rem;
   }
 
-  .navbar-collapse.show .nav-account .dropdown-menu.login-dropdown {
-    position: static !important;
-    right: auto !important;
-    left: auto !important;
-    transform: none !important;
-    width: 100% !important;
-    min-width: 0;
-    max-width: 100%;
-    margin: 0.5rem auto !important;
-    z-index: 1300 !important;
-  }
     /* Brand + toggler should align vertically */
   .nav-shell {
     align-items: center !important;
@@ -598,7 +582,7 @@ main,
 /* Extra small tweaks */
 @media (max-width: 480px) {
   .login-dropdown {
-    width: min(360px, calc(100vw - 1rem));
+    width: calc(100vw - 1rem);
     min-width: 0;
     max-width: calc(100vw - 1rem);
   }
