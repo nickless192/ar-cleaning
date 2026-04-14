@@ -91,6 +91,8 @@ main,
   display: flex;
   align-items: center;
   flex-shrink: 0;
+  position: relative;
+  z-index: 1201;
 }
 
 /* FAR RIGHT utilities (2 lines: socials row + language row) */
@@ -101,6 +103,8 @@ main,
   align-items: flex-end;  /* far right */
   gap: 6px;
   flex-shrink: 0;
+  position: relative;
+  z-index: 1200;
 }
 
 .utils-social,
@@ -351,7 +355,9 @@ main,
 
 /* Inline login dropdown */
 .login-dropdown {
-  width: 380px;
+  width: min(92vw, 360px);
+  min-width: 320px;
+  max-width: 360px;
 }
 
 /* =========================================================
@@ -527,13 +533,22 @@ main,
 
   /* Dropdowns on mobile */
   .navbar-collapse.show .dropdown-menu {
-    position: static !important;
     box-shadow: none;
     border-radius: 10px;
     background-color: rgba(255, 255, 255, 0.5);
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
-    width: 100%;
+  }
+
+  .navbar-collapse.show .nav-account .dropdown-menu.login-dropdown {
+    position: absolute !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    width: min(92vw, 360px) !important;
+    min-width: 280px;
+    max-width: 360px;
+    z-index: 1300 !important;
   }
     /* Brand + toggler should align vertically */
   .nav-shell {
@@ -572,6 +587,7 @@ main,
 @media (max-width: 480px) {
   .login-dropdown {
     width: 92vw;
-    max-width: 320px;
+    min-width: 280px;
+    max-width: 340px;
   }
 }
