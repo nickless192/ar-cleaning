@@ -690,7 +690,7 @@
   box-shadow: 0 18px 50px rgba(0,0,0,0.07);
 }
 
-.accordion-button {
+#portal-account .accordion-button {
   background: rgba(17, 24, 39, 0.04) !important;
   color: var(--text-cleanar-color) !important;
   font-weight: 650;
@@ -698,12 +698,12 @@
   box-shadow: none !important;
 }
 
-.accordion-button:not(.collapsed) {
+#portal-account .accordion-button:not(.collapsed) {
   background: rgba(17, 24, 39, 0.06) !important;
   box-shadow: none !important;
 }
 
-.accordion-button:focus {
+#portal-account .accordion-button:focus {
   box-shadow: none !important;
 }
 
