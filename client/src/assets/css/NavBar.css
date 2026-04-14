@@ -544,13 +544,14 @@ main,
   }
 
   .navbar-collapse.show .nav-account .dropdown-menu.login-dropdown {
-    position: absolute !important;
-    right: 0 !important;
+    position: static !important;
+    right: auto !important;
     left: auto !important;
     transform: none !important;
-    width: min(360px, calc(100vw - 1.5rem)) !important;
-    min-width: 280px;
-    max-width: calc(100vw - 1.5rem);
+    width: 100% !important;
+    min-width: 0;
+    max-width: 100%;
+    margin: 0.5rem auto !important;
     z-index: 1300 !important;
   }
     /* Brand + toggler should align vertically */
@@ -589,8 +590,8 @@ main,
 /* Extra small tweaks */
 @media (max-width: 480px) {
   .login-dropdown {
-    width: calc(100vw - 1rem);
-    min-width: 280px;
+    width: min(360px, calc(100vw - 1rem));
+    min-width: 0;
     max-width: calc(100vw - 1rem);
   }
 }
