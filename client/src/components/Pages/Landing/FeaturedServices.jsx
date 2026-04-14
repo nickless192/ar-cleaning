@@ -66,8 +66,16 @@ function FeaturedServices() {
             >
               <Card className="shadow-sm service-card h-100">
                 <picture>
-                  <source srcSet={s.avif} type="image/avif" />
-                  <source srcSet={s.webp} type="image/webp" />
+                  <source
+                    srcSet={`${s.avif} 360w, ${s.avif} 720w, ${s.avif} 1080w`}
+                    sizes="(max-width: 767px) 92vw, (max-width: 1200px) 30vw, 360px"
+                    type="image/avif"
+                  />
+                  <source
+                    srcSet={`${s.webp} 360w, ${s.webp} 720w, ${s.webp} 1080w`}
+                    sizes="(max-width: 767px) 92vw, (max-width: 1200px) 30vw, 360px"
+                    type="image/webp"
+                  />
                   <img
                     src={s.fallback}
                     alt={s.title}
@@ -76,6 +84,7 @@ function FeaturedServices() {
                     loading="lazy"
                     decoding="async"
                     className="card-img-top"
+                    srcSet={`${s.fallback} 360w, ${s.fallback} 720w, ${s.fallback} 1080w`}
                     sizes="(max-width: 767px) 92vw, (max-width: 1200px) 30vw, 360px"
                     style={{ width: "100%", height: "auto" }}
                   />

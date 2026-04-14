@@ -540,7 +540,7 @@
     font-size: 16px;
 }
 
-input[type="radio"] {
+.radio-label input[type="radio"] {
     accent-color: var(--primary-color);
     width: 18px;
     height: 18px;
@@ -863,14 +863,14 @@ button:disabled {
 
 /* Accordion Styles */
 .accordion-header {
-    background-color: var(--accordion-bg-color) !important;
+    background-color: transparent !important;
     border: none;
 }
 
 .accordion-header span {
-    color: var(--brown-color);
-    font-size: 0.9rem;
-    font-weight: bold;
+    color: inherit;
+    font-size: inherit;
+    font-weight: inherit;
 }
 
 /* Section Styles */

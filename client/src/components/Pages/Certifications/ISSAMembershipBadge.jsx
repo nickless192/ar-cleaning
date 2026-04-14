@@ -20,7 +20,10 @@ export default function ISSAMembershipBadge({ layout = "horizontal", className =
             src={issaLogo}
             alt="ISSA Canada Member"
             className="issa-membership-badge__logo"
+            width="102"
+            height="56"
             loading="lazy"
+            decoding="async"
           />
         </Link>
 

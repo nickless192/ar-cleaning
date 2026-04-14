@@ -372,7 +372,7 @@ function LoginPage({ focus }) {
                       autoComplete="current-password"
                     />
                     <span
-                      className="position-absolute top-50 end-0 translate-middle-y me-3"
+                      className="position-absolute"
                       style={{
                         cursor: "pointer",
                         display: "flex",
@@ -380,6 +380,9 @@ function LoginPage({ focus }) {
                         justifyContent: "center",
                         width: "1.75rem",
                         height: "1.75rem",
+                        top: "50%",
+                        right: "0.75rem",
+                        transform: "translateY(-50%)",
                       }}
                       onMouseDown={(e) => {
                         e.preventDefault();

@@ -20,7 +20,10 @@ export default function CQCCCertificationBadge({ layout = "horizontal", classNam
             src={cqccLogo}
             alt="LGBTQ+ Certified Supplier (LGBTBE) – Canada’s Queer Chamber of Commerce (CQCC)"
             className="issa-membership-badge__logo"
+            width="115"
+            height="67"
             loading="lazy"
+            decoding="async"
           />
         </Link>
       </div>

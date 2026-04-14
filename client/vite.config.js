@@ -5,11 +5,11 @@ import { VitePWA } from "vite-plugin-pwa";
 export default defineConfig({
   plugins: [react(),
     VitePWA({
-      registerType: "autoUpdate",
+      registerType: "prompt",
       manifest: false, // we are using our own manifest.json
       workbox: {
-        clientsClaim: true,
-        skipWaiting: true,
+        clientsClaim: false,
+        skipWaiting: false,
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024
       },
     }),

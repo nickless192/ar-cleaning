@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { Suspense, lazy, useEffect, useRef, useState } from "react";
 import { Card, Form, Button, Row, Col, Alert } from "react-bootstrap";
-import ReCAPTCHA from "react-google-recaptcha";
 import { useTranslation } from "react-i18next";
+
+const ReCAPTCHA = lazy(() => import("react-google-recaptcha"));
 
 const ContactUs = () => {
   const { t } = useTranslation();
+  const captchaContainerRef = useRef(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -16,6 +18,7 @@ const ContactUs = () => {
 
   const [captchaValue, setCaptchaValue] = useState(null);
   const [status, setStatus] = useState({ loading: false, error: "", success: "" });
+  const [shouldLoadCaptcha, setShouldLoadCaptcha] = useState(false);
 
   const handleCaptcha = (value) => setCaptchaValue(value);
 
@@ -58,6 +61,24 @@ const ContactUs = () => {
       });
     }
   };
+
+  useEffect(() => {
+    const el = captchaContainerRef.current;
+    if (!el || shouldLoadCaptcha) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setShouldLoadCaptcha(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "300px 0px" }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [shouldLoadCaptcha]);
 
   return (
     <section className="py-5">
@@ -160,10 +181,25 @@ const ContactUs = () => {
               {/* Captcha + Submit */}
               <Col xs={12}>
                 <div className="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mt-2">
-                  <ReCAPTCHA
-                    sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
-                    onChange={handleCaptcha}
-                  />
+                  <div ref={captchaContainerRef}>
+                    {shouldLoadCaptcha ? (
+                      <Suspense fallback={<div className="text-muted small">{t("contact.form.loadingCaptcha") || "Loading verification…"}</div>}>
+                        <ReCAPTCHA
+                          sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                          onChange={handleCaptcha}
+                        />
+                      </Suspense>
+                    ) : (
+                      <Button
+                        type="button"
+                        variant="outline-secondary"
+                        onClick={() => setShouldLoadCaptcha(true)}
+                        aria-label={t("contact.form.loadCaptcha") || "Load reCAPTCHA"}
+                      >
+                        {t("contact.form.loadCaptcha") || "Load verification"}
+                      </Button>
+                    )}
+                  </div>
 
                   <Button
                     variant="primary"

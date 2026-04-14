@@ -2,14 +2,11 @@ import { useTranslation } from 'react-i18next';
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 import { toast } from 'react-toastify';
-import Auth from "/src/utils/auth";
 import { useEffect, useState } from 'react';
 
 
 export default function LanguageSwitcher() {
   const { i18n, t } = useTranslation();
-  const [isLogged] = useState(Auth.loggedIn());
-
   const [languages, setLanguages] = useState([]);
 
 
@@ -40,14 +37,14 @@ export default function LanguageSwitcher() {
   }, [])
 
   return (
-    <div className="pr-2">
+    <div className="pr-2 d-flex align-items-center">
     <ToggleButtonGroup
       type="radio"
       name="language"
       value={i18n.language}
       onChange={handleChangeLanguage}
       aria-label="Language selector"
-      className="language-switcher d-flex justify-content-center gap-1"
+      className="language-switcher cleanar-language-switcher d-flex justify-content-center"
       size="sm"
     >
       {languages.map(({ code, label, short, enabled }) => (
@@ -55,8 +52,10 @@ export default function LanguageSwitcher() {
           key={code}
           id={`lang-${code}`}
           value={code}
-          variant={i18n.language === code ? 'primary' : 'outline-secondary'}
+          variant="light"
           aria-label={`Switch language to ${label}`}
+          aria-pressed={i18n.language === code}
+          className={`cleanar-language-switcher__btn ${i18n.language === code ? 'is-active' : ''}`}
           size="sm"
           // disabled={!enabled}
           style={!enabled ? { opacity: 0.5, pointerEvents: 'auto', cursor: 'not-allowed' } : {}}

@@ -91,6 +91,8 @@ main,
   display: flex;
   align-items: center;
   flex-shrink: 0;
+  position: relative;
+  z-index: 1201;
 }
 
 /* FAR RIGHT utilities (2 lines: socials row + language row) */
@@ -101,6 +103,8 @@ main,
   align-items: flex-end;  /* far right */
   gap: 6px;
   flex-shrink: 0;
+  position: relative;
+  z-index: 1200;
 }
 
 .utils-social,
@@ -113,6 +117,53 @@ main,
 .utils-social .nav-link,
 .utils-lang .nav-link {
   padding: 6px 6px;
+}
+
+.cleanar-language-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 3px;
+  border: 1px solid rgba(35, 112, 88, 0.28);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.cleanar-language-switcher .btn-check {
+  display: none;
+}
+
+.cleanar-language-switcher__btn.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+  min-width: 36px;
+  border-radius: 999px !important;
+  border: 1px solid transparent;
+  padding: 0 0.52rem;
+  line-height: 1;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--text-cleanar-color);
+  background: transparent;
+  box-shadow: none !important;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.cleanar-language-switcher__btn.btn:hover,
+.cleanar-language-switcher__btn.btn:focus-visible {
+  color: var(--primary-color);
+  border-color: rgba(35, 112, 88, 0.45);
+  background: rgba(35, 112, 88, 0.1);
+}
+
+.cleanar-language-switcher__btn.btn.is-active,
+.cleanar-language-switcher__btn.btn.is-active:hover {
+  color: #fff;
+  border-color: var(--primary-color);
+  background: var(--primary-color);
 }
 
 /* Optional: wrapper if you implement Account | Social | Language on mobile */
@@ -304,7 +355,13 @@ main,
 
 /* Inline login dropdown */
 .login-dropdown {
-  width: 380px;
+  width: min(360px, calc(100vw - 1.5rem));
+  min-width: 280px;
+  max-width: calc(100vw - 1rem);
+  z-index: 1300;
+  margin-top: 0.4rem;
+  right: 0 !important;
+  left: auto !important;
 }
 
 /* =========================================================
@@ -441,6 +498,7 @@ main,
     justify-content: center !important;
     align-items: center !important;
     width: 100%;
+    z-index: 1301;
   }
 
   .navbar-collapse.show .nav-account,
@@ -466,6 +524,7 @@ main,
     flex-direction: column; /* keep 2 lines inside right column */
     align-items: flex-end;
     gap: 6px;
+    z-index: 1200;
   }
 
   .utils-social,
@@ -480,14 +539,13 @@ main,
 
   /* Dropdowns on mobile */
   .navbar-collapse.show .dropdown-menu {
-    position: static !important;
     box-shadow: none;
     border-radius: 10px;
     background-color: rgba(255, 255, 255, 0.5);
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
-    width: 100%;
   }
+
     /* Brand + toggler should align vertically */
   .nav-shell {
     align-items: center !important;
@@ -524,7 +582,8 @@ main,
 /* Extra small tweaks */
 @media (max-width: 480px) {
   .login-dropdown {
-    width: 92vw;
-    max-width: 320px;
+    width: calc(100vw - 1rem);
+    min-width: 0;
+    max-width: calc(100vw - 1rem);
   }
 }
