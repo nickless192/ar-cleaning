@@ -161,7 +161,7 @@ const SERVICE_PAGES = {
   },
 };
 
-const TorontoServicePage = ({ serviceKey }) => {
+const TorontoServiceTemplate = ({ serviceKey }) => {
   const service = SERVICE_PAGES[serviceKey];
 
   if (!service) {
@@ -237,35 +237,13 @@ const TorontoServicePage = ({ serviceKey }) => {
 
       <section className="mt-5">
         <h2 className="primary-color text-bold mb-3">Toronto Service FAQs</h2>
-        <div className="accordion" id={`faq-${service.slug}`}>
-          {service.faqs.map((faq, index) => {
-            const headingId = `${service.slug}-heading-${index}`;
-            const collapseId = `${service.slug}-collapse-${index}`;
-            return (
-              <article className="accordion-item" key={faq.q}>
-                <h3 className="accordion-header" id={headingId}>
-                  <button
-                    className={`accordion-button ${index !== 0 ? "collapsed" : ""}`}
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target={`#${collapseId}`}
-                    aria-expanded={index === 0 ? "true" : "false"}
-                    aria-controls={collapseId}
-                  >
-                    {faq.q}
-                  </button>
-                </h3>
-                <div
-                  id={collapseId}
-                  className={`accordion-collapse collapse ${index === 0 ? "show" : ""}`}
-                  aria-labelledby={headingId}
-                  data-bs-parent={`#faq-${service.slug}`}
-                >
-                  <div className="accordion-body">{faq.a}</div>
-                </div>
-              </article>
-            );
-          })}
+        <div className="d-grid gap-3">
+          {service.faqs.map((faq) => (
+            <details key={faq.q} className="border rounded p-3 bg-white">
+              <summary className="fw-semibold">{faq.q}</summary>
+              <p className="mt-2 mb-0">{faq.a}</p>
+            </details>
+          ))}
         </div>
       </section>
 
@@ -283,4 +261,10 @@ const TorontoServicePage = ({ serviceKey }) => {
   );
 };
 
-export default TorontoServicePage;
+export const ResidentialCleaningTorontoPage = () => <TorontoServiceTemplate serviceKey="residential" />;
+export const CommercialCleaningTorontoPage = () => <TorontoServiceTemplate serviceKey="commercial" />;
+export const DeepCleaningTorontoPage = () => <TorontoServiceTemplate serviceKey="deep" />;
+export const MoveInMoveOutCleaningTorontoPage = () => <TorontoServiceTemplate serviceKey="moveInMoveOut" />;
+export const CarpetUpholsteryCleaningTorontoPage = () => <TorontoServiceTemplate serviceKey="carpetUpholstery" />;
+
+export default TorontoServiceTemplate;
