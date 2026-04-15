@@ -51,10 +51,10 @@ const DeepCleaningTorontoPage = lazy(() => import("/src/components/Pages/Navigat
 const MoveInMoveOutCleaningTorontoPage = lazy(() => import("/src/components/Pages/Navigation/TorontoServicePage.jsx").then((module) => ({ default: module.MoveInMoveOutCleaningTorontoPage })));
 const CarpetUpholsteryCleaningTorontoPage = lazy(() => import("/src/components/Pages/Navigation/TorontoServicePage.jsx").then((module) => ({ default: module.CarpetUpholsteryCleaningTorontoPage })));
 
-registerSW({
+const updateSW = registerSW({
   onNeedRefresh() {
-    if (confirm("New content available. Reload?")) {
-      window.location.reload();
+    if (window.confirm("New content available. Reload?")) {
+      updateSW(true);
     }
   },
   onOfflineReady() {
