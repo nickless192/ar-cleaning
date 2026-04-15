@@ -37,6 +37,31 @@ const ROUTE_META = {
     description:
       "Read the latest news, certifications, and cleaning insights from CleanAR Solutions.",
   },
+  "/services/residential-cleaning": {
+    title: "Residential Cleaning Services in Toronto | CleanAR Solutions",
+    description:
+      "Recurring and one-time residential cleaning services in Toronto and the GTA from the CleanAR Solutions team.",
+  },
+  "/services/commercial-cleaning": {
+    title: "Commercial Cleaning Services in Toronto | CleanAR Solutions",
+    description:
+      "Professional commercial cleaning for offices and facilities in Toronto and the GTA by CleanAR Solutions.",
+  },
+  "/services/window-cleaning": {
+    title: "Window Cleaning Services in Toronto | CleanAR Solutions",
+    description:
+      "Interior and exterior window cleaning services for homes and businesses across Toronto and the GTA.",
+  },
+  "/services/carpet-and-upholstery-cleaning": {
+    title: "Carpet & Upholstery Cleaning in Toronto | CleanAR Solutions",
+    description:
+      "Deep carpet and upholstery cleaning services to refresh homes and workplaces in Toronto and surrounding GTA areas.",
+  },
+  "/services/power-pressure-washing": {
+    title: "Power & Pressure Washing in Toronto | CleanAR Solutions",
+    description:
+      "Power and pressure washing services for exterior surfaces throughout Toronto and the GTA.",
+  },
   "/blog/cleanar-solutions-joins-issa-canada": {
     title: "CleanAR Solutions Joins ISSA Canada | CleanAR Blog",
     description:
