@@ -6,7 +6,7 @@ export const ROUTE_META = {
     title: "CleanAR Solutions - Professional Cleaning Services in Toronto & GTA",
     description:
       "Professional cleaning services in Toronto & GTA. Residential, commercial, carpet & upholstery cleaning. Get your free quote today!",
-    canonicalPath: "/index",
+    canonicalPath: "/",
     keywords:
       "cleaning services toronto, professional cleaning, residential cleaning, commercial cleaning, carpet cleaning, upholstery cleaning, CleanAR Solutions",
   },
@@ -14,7 +14,7 @@ export const ROUTE_META = {
     title: "CleanAR Solutions - Professional Cleaning Services in Toronto & GTA",
     description:
       "Professional cleaning services in Toronto & GTA. Residential, commercial, carpet & upholstery cleaning. Get your free quote today!",
-    canonicalPath: "/index",
+    canonicalPath: "/",
     keywords:
       "cleaning services toronto, professional cleaning, residential cleaning, commercial cleaning, carpet cleaning, upholstery cleaning, CleanAR Solutions",
   },

@@ -92,7 +92,11 @@ function FeaturedServices() {
 
                 <CardBody className="text-center">
                   <h5 className="montserrat-bold secondary-color">{s.title}</h5>
-                  <Link to={s.link} className="btn btn-outline-success mt-2">
+                  <Link
+                    to={s.link}
+                    className="btn btn-outline-success mt-2"
+                    aria-label={`${t("featuredServices.learnMore")}: ${s.title}`}
+                  >
                     {t("featuredServices.learnMore")}
                   </Link>
                 </CardBody>
