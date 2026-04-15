@@ -8,7 +8,7 @@ const LandingNow = () => {
   const { t } = useTranslation();
 
   const goToQuote = () => {
-    navigate('/index?promoCode=now15', { state: { scrollToQuote: true } });
+    navigate('/?promoCode=now15', { state: { scrollToQuote: true } });
   };
 
   return (

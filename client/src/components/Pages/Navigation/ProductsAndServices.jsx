@@ -99,7 +99,7 @@ const ProductsAndServices = () => {
       width: 5906,
       height: 3937,
       description: t("products_and_services.residential_cleaning_description", { returnObjects: true }),
-      quoteLink: "/index?service=Residential+Cleaning",
+      quoteLink: "/?service=Residential+Cleaning",
       quoteButtonText: t("products_and_services.residential_cleaning_button")
     },
     {
@@ -111,7 +111,7 @@ const ProductsAndServices = () => {
       width: 4536,
       height: 3024,
       description: t("products_and_services.commercial_cleaning_description", { returnObjects: true }),
-      quoteLink: "/index?service=Commercial+Cleaning",
+      quoteLink: "/?service=Commercial+Cleaning",
       quoteButtonText: t("products_and_services.commercial_cleaning_button")
     },
     {
@@ -123,7 +123,7 @@ const ProductsAndServices = () => {
       width: 1024,
       height: 683,
       description: t("products_and_services.window_cleaning_description", { returnObjects: true }),
-      quoteLink: "/index?service=Window+Cleaning",
+      quoteLink: "/?service=Window+Cleaning",
       quoteButtonText: t("products_and_services.window_cleaning_button")
     },
     {
@@ -135,7 +135,7 @@ const ProductsAndServices = () => {
       width: 1024,
       height: 683,
       description: t("products_and_services.carpet_cleaning_description", { returnObjects: true }),
-      quoteLink: "/index?service=Carpet+And+Upholstery",
+      quoteLink: "/?service=Carpet+And+Upholstery",
       quoteButtonText: t("products_and_services.carpet_and_upholstery_button")
     },
     {
@@ -147,7 +147,7 @@ const ProductsAndServices = () => {
       width: 1024,
       height: 683,
       description: t("products_and_services.power_washing_description", { returnObjects: true }),
-      quoteLink: "/index?service=Power/Pressure+Washing",
+      quoteLink: "/?service=Power/Pressure+Washing",
       quoteButtonText: t("products_and_services.power_pressure_washing_button")
     }
   ];

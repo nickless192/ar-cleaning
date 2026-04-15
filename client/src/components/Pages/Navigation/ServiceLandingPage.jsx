@@ -47,7 +47,7 @@ const ServiceLandingPage = () => {
       <h1 className="primary-color text-bold mb-3">{service.title}</h1>
       <p className="lead text-cleanar-color mb-4">{service.intro}</p>
       <div className="d-flex flex-wrap gap-2">
-        <Link className="btn btn-primary btn-round secondary-bg-color" to={`/index?service=${service.query}`}>
+        <Link className="btn btn-primary btn-round secondary-bg-color" to={`/?service=${service.query}`}>
           Request a Quote
         </Link>
         <Link className="btn btn-outline-secondary btn-round" to="/products-and-services">

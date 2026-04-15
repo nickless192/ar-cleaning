@@ -33,9 +33,9 @@ const WelcomeModal = () => {
 
   const handleQuoteClick = (e) => {
     // trackEvent('quote_clicked');
-    // navigate('/index?promoCode=welcome15', { state: { scrollToQuote: true } }); 
+    // navigate('/?promoCode=welcome15', { state: { scrollToQuote: true } }); 
     // localStorage.setItem('welcomeModalDismissed', 'true');
-    navigate('/index?promoCode=refresh15&scrollToQuote=true');    
+    navigate('/?promoCode=refresh15&scrollToQuote=true');    
     // refresh
     // window.location.reload();
     setShow(false);

@@ -205,7 +205,7 @@ function IndexNavbar() {
             <Navbar className={`mb-0 ${navbarColor}`} expand="md" role="navigation">
                 <Container fluid className="nav-shell">
                     {/* LEFT: Brand */}
-                    <NavbarBrand href="/index" className="brand" onClick={handleNavClick}>
+                    <NavbarBrand href="/" className="brand" onClick={handleNavClick}>
                         {/* <img src={logo} alt="CleanAR Solutions" className="navbarlogo" /> */}
                         <picture>
                             <source srcSet={logoAvif} type="image/avif" />
@@ -281,7 +281,7 @@ function IndexNavbar() {
                                         <DropdownItem href="/profile-page">{t("navbar.profile")}</DropdownItem>
                                         <DropdownItem divider />
                                         <DropdownItem
-                                            href="/index"
+                                            href="/"
                                             onClick={(e) => {
                                                 // e.preventDefault();
                                                 Auth.logout();
