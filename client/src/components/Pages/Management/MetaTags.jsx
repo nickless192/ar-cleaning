@@ -41,6 +41,12 @@ const MetaTags = () => {
       : normalizePathname(routeMeta.canonicalPath ?? normalizedPathname);
   const canonicalUrl = `${BASE_URL}${canonicalPath}`;
   const pageUrl = `${BASE_URL}${normalizedPathname}`;
+  const ogTitle = routeMeta.ogTitle ?? routeMeta.title;
+  const ogDescription = routeMeta.ogDescription ?? routeMeta.description;
+  const ogImage = routeMeta.ogImage ?? OG_IMAGE;
+  const twitterTitle = routeMeta.twitterTitle ?? ogTitle;
+  const twitterDescription = routeMeta.twitterDescription ?? ogDescription;
+  const twitterImage = routeMeta.twitterImage ?? ogImage;
   const noindex = NOINDEX_PATTERNS.some((pattern) => pattern.test(normalizedPathname));
 
   const blogPostingSchema = routeMeta.blogPosting
@@ -78,17 +84,17 @@ const MetaTags = () => {
 
       <meta property="og:type" content="website" />
       <meta property="og:url" content={pageUrl} />
-      <meta property="og:title" content={routeMeta.title} />
-      <meta property="og:description" content={routeMeta.description} />
-      <meta property="og:image" content={OG_IMAGE} />
+      <meta property="og:title" content={ogTitle} />
+      <meta property="og:description" content={ogDescription} />
+      <meta property="og:image" content={ogImage} />
       <meta property="og:image:alt" content="CleanAR Solutions Professional Cleaning Services" />
       <meta property="og:site_name" content="CleanAR Solutions" />
       <meta property="og:locale" content="en_CA" />
 
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content={routeMeta.title} />
-      <meta name="twitter:description" content={routeMeta.description} />
-      <meta name="twitter:image" content={OG_IMAGE} />
+      <meta name="twitter:title" content={twitterTitle} />
+      <meta name="twitter:description" content={twitterDescription} />
+      <meta name="twitter:image" content={twitterImage} />
 
       <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow"} />
       <meta name="googlebot" content={noindex ? "noindex, nofollow" : "index, follow"} />

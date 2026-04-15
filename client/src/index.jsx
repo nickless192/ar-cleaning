@@ -45,6 +45,11 @@ const LandingSecret = lazy(() => import("/src/components/Pages/qrCodes/LandingSe
 const LandingStart = lazy(() => import("/src/components/Pages/qrCodes/LandingStart"));
 const LandingToronto = lazy(() => import("/src/components/Pages/qrCodes/LandingToronto"));
 const InvoiceDetail = lazy(() => import("/src/components/Pages/Booking/InvoiceDetail.jsx"));
+const ResidentialCleaningTorontoPage = lazy(() => import("/src/components/Pages/Navigation/TorontoServicePage.jsx").then((module) => ({ default: module.ResidentialCleaningTorontoPage })));
+const CommercialCleaningTorontoPage = lazy(() => import("/src/components/Pages/Navigation/TorontoServicePage.jsx").then((module) => ({ default: module.CommercialCleaningTorontoPage })));
+const DeepCleaningTorontoPage = lazy(() => import("/src/components/Pages/Navigation/TorontoServicePage.jsx").then((module) => ({ default: module.DeepCleaningTorontoPage })));
+const MoveInMoveOutCleaningTorontoPage = lazy(() => import("/src/components/Pages/Navigation/TorontoServicePage.jsx").then((module) => ({ default: module.MoveInMoveOutCleaningTorontoPage })));
+const CarpetUpholsteryCleaningTorontoPage = lazy(() => import("/src/components/Pages/Navigation/TorontoServicePage.jsx").then((module) => ({ default: module.CarpetUpholsteryCleaningTorontoPage })));
 
 registerSW({
   onNeedRefresh() {
@@ -183,6 +188,11 @@ const App = () => {
               <Route path="/about-us" element={<AboutUsPage />} />
               <Route path="/products-and-services" element={<ProductsAndServices />} />
               <Route path="/services/:serviceSlug" element={<ServiceLandingPage />} />
+              <Route path="/residential-cleaning-toronto" element={<ResidentialCleaningTorontoPage />} />
+              <Route path="/commercial-cleaning-toronto" element={<CommercialCleaningTorontoPage />} />
+              <Route path="/deep-cleaning-toronto" element={<DeepCleaningTorontoPage />} />
+              <Route path="/move-in-move-out-cleaning-toronto" element={<MoveInMoveOutCleaningTorontoPage />} />
+              <Route path="/carpet-upholstery-cleaning-toronto" element={<CarpetUpholsteryCleaningTorontoPage />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/terms-conditions" element={<Terms />} />
               <Route path="/disclaimer" element={<Disclaimer />} />

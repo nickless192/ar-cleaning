@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Row, Col, Card, ListGroup, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import VisitorCounter from "/src/components/Pages/Management/VisitorCounter.jsx";
@@ -25,6 +26,14 @@ import windowJpg from "/src/assets/img/window-cleaning.jpg";
 
 import pageBg from "/src/assets/img/bg1.png";
 
+const TORONTO_SERVICE_ROUTE_BY_SLUG = {
+  "residential-cleaning": "/residential-cleaning-toronto",
+  "commercial-cleaning": "/commercial-cleaning-toronto",
+  "deep-cleaning": "/deep-cleaning-toronto",
+  "move-in-move-out-cleaning": "/move-in-move-out-cleaning-toronto",
+  "carpet-upholstery-cleaning": "/carpet-upholstery-cleaning-toronto",
+};
+
 const ServiceCard = ({
   title,
   avif,
@@ -35,8 +44,10 @@ const ServiceCard = ({
   height,
   description,
   quoteLink,
-  quoteButtonText
+  quoteButtonText,
+  serviceSlug
 }) => {
+    const servicePageLink = serviceSlug ? TORONTO_SERVICE_ROUTE_BY_SLUG[serviceSlug] : null;
   return (
     <Card className="h-90 shadow-sm bg-transparent">
       <picture>
@@ -74,13 +85,20 @@ const ServiceCard = ({
           )}
         </ListGroup>
 
-        <Button
-          href={quoteLink}
-          data-track={`clicked_add_to_quote_${title.replace(/\s+/g, "_").toLowerCase()}`}
-          className="btn-round mt-auto secondary-bg-color"
-        >
-          {quoteButtonText}
-        </Button>
+        <div className="d-flex flex-column gap-2 mt-auto">
+          {servicePageLink ? (
+            <Button as={Link} to={servicePageLink} variant="outline-secondary" className="btn-round">
+              Learn More
+            </Button>
+          ) : null}
+          <Button
+            href={quoteLink}
+            data-track={`clicked_add_to_quote_${title.replace(/\s+/g, "_").toLowerCase()}`}
+            className="btn-round secondary-bg-color"
+          >
+            {quoteButtonText}
+          </Button>
+        </div>
       </Card.Body>
     </Card>
   );
@@ -100,7 +118,8 @@ const ProductsAndServices = () => {
       height: 3937,
       description: t("products_and_services.residential_cleaning_description", { returnObjects: true }),
       quoteLink: "/?service=Residential+Cleaning",
-      quoteButtonText: t("products_and_services.residential_cleaning_button")
+      quoteButtonText: t("products_and_services.residential_cleaning_button"),
+      serviceSlug: "residential-cleaning"
     },
     {
       title: t("products_and_services.commercial_cleaning_title"),
@@ -112,7 +131,8 @@ const ProductsAndServices = () => {
       height: 3024,
       description: t("products_and_services.commercial_cleaning_description", { returnObjects: true }),
       quoteLink: "/?service=Commercial+Cleaning",
-      quoteButtonText: t("products_and_services.commercial_cleaning_button")
+      quoteButtonText: t("products_and_services.commercial_cleaning_button"),
+      serviceSlug: "commercial-cleaning"
     },
     {
       title: t("products_and_services.window_cleaning_title"),
@@ -124,7 +144,8 @@ const ProductsAndServices = () => {
       height: 683,
       description: t("products_and_services.window_cleaning_description", { returnObjects: true }),
       quoteLink: "/?service=Window+Cleaning",
-      quoteButtonText: t("products_and_services.window_cleaning_button")
+      quoteButtonText: t("products_and_services.window_cleaning_button"),
+      serviceSlug: "window-cleaning"
     },
     {
       title: t("products_and_services.carpet_cleaning_title"),
@@ -136,7 +157,8 @@ const ProductsAndServices = () => {
       height: 683,
       description: t("products_and_services.carpet_cleaning_description", { returnObjects: true }),
       quoteLink: "/?service=Carpet+And+Upholstery",
-      quoteButtonText: t("products_and_services.carpet_and_upholstery_button")
+      quoteButtonText: t("products_and_services.carpet_and_upholstery_button"),
+      serviceSlug: "carpet-upholstery-cleaning"
     },
     {
       title: t("products_and_services.power_washing_title"),
@@ -148,7 +170,8 @@ const ProductsAndServices = () => {
       height: 683,
       description: t("products_and_services.power_washing_description", { returnObjects: true }),
       quoteLink: "/?service=Power/Pressure+Washing",
-      quoteButtonText: t("products_and_services.power_pressure_washing_button")
+      quoteButtonText: t("products_and_services.power_pressure_washing_button"),
+      serviceSlug: "pressure-cleaning"
     }
   ];
 
@@ -201,6 +224,14 @@ const ProductsAndServices = () => {
               </Col>
             ))}
           </Row>
+
+          <div className="mt-4 text-cleanar-color">
+            <h3 className="h5 text-bold">Toronto Service Pages</h3>
+            <ul className="mb-0">
+              <li><Link to="/deep-cleaning-toronto">Deep Cleaning Toronto</Link></li>
+              <li><Link to="/move-in-move-out-cleaning-toronto">Move-In/Move-Out Cleaning Toronto</Link></li>
+            </ul>
+          </div>
         </div>
 
         <div className="product-selector">

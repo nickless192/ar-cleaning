@@ -58,6 +58,66 @@ export const ROUTE_META = {
     description:
       "Power and pressure washing services for exterior surfaces throughout Toronto and the GTA.",
   },
+  "/carpet-upholstery-cleaning-toronto": {
+    title: "Carpet & Upholstery Cleaning Toronto | CleanAR Solutions",
+    description:
+      "Professional carpet and upholstery cleaning in Toronto and the GTA for homes and businesses. Remove dirt, allergens, and stains with CleanAR Solutions.",
+    canonicalPath: "/carpet-upholstery-cleaning-toronto",
+    ogTitle: "Carpet & Upholstery Cleaning in Toronto | CleanAR Solutions",
+    ogDescription:
+      "Refresh carpets and furniture with targeted carpet and upholstery cleaning services across Toronto and the GTA.",
+    twitterTitle: "Toronto Carpet & Upholstery Cleaning | CleanAR",
+    twitterDescription:
+      "Book carpet and upholstery cleaning for Toronto and GTA homes and businesses.",
+  },
+  "/commercial-cleaning-toronto": {
+    title: "Commercial Cleaning Toronto | Office & Facility Cleaning",
+    description:
+      "Custom commercial cleaning services for Toronto and GTA offices, retail sites, and facilities. Flexible scheduling and consistent quality from CleanAR Solutions.",
+    canonicalPath: "/commercial-cleaning-toronto",
+    ogTitle: "Commercial Cleaning Services for Toronto Businesses",
+    ogDescription:
+      "Keep your Toronto workplace clean and professional with recurring commercial cleaning from CleanAR Solutions.",
+    twitterTitle: "Commercial Cleaning Toronto | CleanAR",
+    twitterDescription:
+      "Reliable office and facility cleaning services in Toronto and the GTA.",
+  },
+  "/deep-cleaning-toronto": {
+    title: "Deep Cleaning Toronto | Detailed Home & Business Cleaning",
+    description:
+      "Deep cleaning services in Toronto and the GTA for homes and businesses that need detailed, top-to-bottom cleaning beyond routine maintenance.",
+    canonicalPath: "/deep-cleaning-toronto",
+    ogTitle: "Deep Cleaning Services in Toronto & GTA",
+    ogDescription:
+      "Book a detailed deep clean for your Toronto home or workplace with CleanAR Solutions.",
+    twitterTitle: "Deep Cleaning Toronto | CleanAR",
+    twitterDescription:
+      "Top-to-bottom deep cleaning services across Toronto and the GTA.",
+  },
+  "/move-in-move-out-cleaning-toronto": {
+    title: "Move-In Move-Out Cleaning Toronto | CleanAR Solutions",
+    description:
+      "Move-in and move-out cleaning in Toronto and the GTA for tenants, homeowners, landlords, and property managers with dependable turnaround support.",
+    canonicalPath: "/move-in-move-out-cleaning-toronto",
+    ogTitle: "Move-In & Move-Out Cleaning in Toronto",
+    ogDescription:
+      "Professional move-in and move-out cleaning for Toronto condos, homes, and rentals.",
+    twitterTitle: "Move-In/Move-Out Cleaning Toronto | CleanAR",
+    twitterDescription:
+      "Get your Toronto property cleaned and ready for handover or move-in day.",
+  },
+  "/residential-cleaning-toronto": {
+    title: "Residential Cleaning Toronto | Home Cleaning in the GTA",
+    description:
+      "Residential cleaning services in Toronto and the GTA. Weekly, bi-weekly, and one-time home cleaning from CleanAR Solutions.",
+    canonicalPath: "/residential-cleaning-toronto",
+    ogTitle: "Residential Cleaning Services in Toronto & GTA",
+    ogDescription:
+      "Reliable home cleaning for Toronto and GTA households with flexible recurring plans.",
+    twitterTitle: "Residential Cleaning Toronto | CleanAR",
+    twitterDescription:
+      "Book trusted residential cleaning in Toronto and across the GTA.",
+  },
   "/blog/cleanar-solutions-joins-issa-canada": {
     title: "CleanAR Solutions Joins ISSA Canada | CleanAR Blog",
     description:
@@ -137,4 +197,9 @@ export const MARKETING_PRERENDER_ROUTES = [
     output: "services/power-pressure-washing/index.html",
     h1: "Power and Pressure Washing Services",
   },
+  { route: "/residential-cleaning-toronto", output: "residential-cleaning-toronto/index.html", h1: "Residential Cleaning Services in Toronto & the GTA" },
+  { route: "/commercial-cleaning-toronto", output: "commercial-cleaning-toronto/index.html", h1: "Commercial Cleaning Services for Toronto Businesses" },
+  { route: "/deep-cleaning-toronto", output: "deep-cleaning-toronto/index.html", h1: "Deep Cleaning Services in Toronto for Detailed Results" },
+  { route: "/move-in-move-out-cleaning-toronto", output: "move-in-move-out-cleaning-toronto/index.html", h1: "Move-In & Move-Out Cleaning in Toronto and the GTA" },
+  { route: "/carpet-upholstery-cleaning-toronto", output: "carpet-upholstery-cleaning-toronto/index.html", h1: "Carpet & Upholstery Cleaning Services in Toronto" },
 ];
