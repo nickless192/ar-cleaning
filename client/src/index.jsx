@@ -1,8 +1,8 @@
 import React, { Suspense, lazy, useEffect } from "react";
+import "/src/pwa";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes, Navigate, useLocation } from "react-router-dom";
 import './i18n'; // Import i18n configuration
-import { registerSW } from 'virtual:pwa-register';
 
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import "/src/assets/css/our-palette.css";
@@ -19,6 +19,7 @@ import PrivacyPolicy from "/src/components/Pages/Navigation/PrivacyPolicy";
 import Footer from "/src/components/Pages/Navigation/Footer.jsx";
 import CookieConsent from "/src/components/Pages/Landing/CookieConsent";
 import MetaTags from "/src/components/Pages/Management/MetaTags.jsx";
+import ReloadPrompt from "/src/components/ReloadPrompt.jsx";
 
 const AboutUsPage = lazy(() => import("/src/components/Pages/Navigation/AboutUs"));
 const ProfilePage = lazy(() => import("/src/components/Pages/UserJourney/ProfilePage"));
@@ -51,16 +52,6 @@ const DeepCleaningTorontoPage = lazy(() => import("/src/components/Pages/Navigat
 const MoveInMoveOutCleaningTorontoPage = lazy(() => import("/src/components/Pages/Navigation/TorontoServicePage.jsx").then((module) => ({ default: module.MoveInMoveOutCleaningTorontoPage })));
 const CarpetUpholsteryCleaningTorontoPage = lazy(() => import("/src/components/Pages/Navigation/TorontoServicePage.jsx").then((module) => ({ default: module.CarpetUpholsteryCleaningTorontoPage })));
 
-const updateSW = registerSW({
-  onNeedRefresh() {
-    if (confirm("New content available. Reload?")) {
-      window.location.reload();
-    }
-  },
-  onOfflineReady() {
-    console.log("App is ready to work offline");
-  },
-});
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -209,6 +200,7 @@ const App = () => {
           </main>
         </div>
         <CookieConsent />
+        <ReloadPrompt />
         <Footer />
       </BrowserRouter>
     </React.StrictMode>
