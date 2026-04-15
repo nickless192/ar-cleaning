@@ -26,6 +26,14 @@ import windowJpg from "/src/assets/img/window-cleaning.jpg";
 
 import pageBg from "/src/assets/img/bg1.png";
 
+const TORONTO_SERVICE_ROUTE_BY_SLUG = {
+  "residential-cleaning": "/residential-cleaning-toronto",
+  "commercial-cleaning": "/commercial-cleaning-toronto",
+  "deep-cleaning": "/deep-cleaning-toronto",
+  "move-in-move-out-cleaning": "/move-in-move-out-cleaning-toronto",
+  "carpet-upholstery-cleaning": "/carpet-upholstery-cleaning-toronto",
+};
+
 const ServiceCard = ({
   title,
   avif,
@@ -37,8 +45,9 @@ const ServiceCard = ({
   description,
   quoteLink,
   quoteButtonText,
-  servicePageLink
+  serviceSlug
 }) => {
+    const servicePageLink = serviceSlug ? TORONTO_SERVICE_ROUTE_BY_SLUG[serviceSlug] : null;
   return (
     <Card className="h-90 shadow-sm bg-transparent">
       <picture>
@@ -109,7 +118,8 @@ const ProductsAndServices = () => {
       height: 3937,
       description: t("products_and_services.residential_cleaning_description", { returnObjects: true }),
       quoteLink: "/?service=Residential+Cleaning",
-      quoteButtonText: t("products_and_services.residential_cleaning_button")
+      quoteButtonText: t("products_and_services.residential_cleaning_button"),
+      serviceSlug: "residential-cleaning"
     },
     {
       title: t("products_and_services.commercial_cleaning_title"),
@@ -121,7 +131,8 @@ const ProductsAndServices = () => {
       height: 3024,
       description: t("products_and_services.commercial_cleaning_description", { returnObjects: true }),
       quoteLink: "/?service=Commercial+Cleaning",
-      quoteButtonText: t("products_and_services.commercial_cleaning_button")
+      quoteButtonText: t("products_and_services.commercial_cleaning_button"),
+      serviceSlug: "commercial-cleaning"
     },
     {
       title: t("products_and_services.window_cleaning_title"),
@@ -133,7 +144,8 @@ const ProductsAndServices = () => {
       height: 683,
       description: t("products_and_services.window_cleaning_description", { returnObjects: true }),
       quoteLink: "/?service=Window+Cleaning",
-      quoteButtonText: t("products_and_services.window_cleaning_button")
+      quoteButtonText: t("products_and_services.window_cleaning_button"),
+      serviceSlug: "window-cleaning"
     },
     {
       title: t("products_and_services.carpet_cleaning_title"),
@@ -145,7 +157,8 @@ const ProductsAndServices = () => {
       height: 683,
       description: t("products_and_services.carpet_cleaning_description", { returnObjects: true }),
       quoteLink: "/?service=Carpet+And+Upholstery",
-      quoteButtonText: t("products_and_services.carpet_and_upholstery_button")
+      quoteButtonText: t("products_and_services.carpet_and_upholstery_button"),
+      serviceSlug: "carpet-upholstery-cleaning"
     },
     {
       title: t("products_and_services.power_washing_title"),
@@ -157,7 +170,8 @@ const ProductsAndServices = () => {
       height: 683,
       description: t("products_and_services.power_washing_description", { returnObjects: true }),
       quoteLink: "/?service=Power/Pressure+Washing",
-      quoteButtonText: t("products_and_services.power_pressure_washing_button")
+      quoteButtonText: t("products_and_services.power_pressure_washing_button"),
+      serviceSlug: "pressure-cleaning"
     }
   ];
 
