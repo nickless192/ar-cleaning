@@ -45,6 +45,7 @@ const LandingSecret = lazy(() => import("/src/components/Pages/qrCodes/LandingSe
 const LandingStart = lazy(() => import("/src/components/Pages/qrCodes/LandingStart"));
 const LandingToronto = lazy(() => import("/src/components/Pages/qrCodes/LandingToronto"));
 const InvoiceDetail = lazy(() => import("/src/components/Pages/Booking/InvoiceDetail.jsx"));
+const TorontoServicePage = lazy(() => import("/src/components/Pages/Navigation/TorontoServicePage.jsx"));
 
 registerSW({
   onNeedRefresh() {
@@ -176,6 +177,11 @@ const App = () => {
               <Route path="/about-us" element={<AboutUsPage />} />
               <Route path="/products-and-services" element={<ProductsAndServices />} />
               <Route path="/services/:serviceSlug" element={<ServiceLandingPage />} />
+              <Route path="/residential-cleaning-toronto" element={<TorontoServicePage serviceKey="residential" />} />
+              <Route path="/commercial-cleaning-toronto" element={<TorontoServicePage serviceKey="commercial" />} />
+              <Route path="/deep-cleaning-toronto" element={<TorontoServicePage serviceKey="deep" />} />
+              <Route path="/move-in-move-out-cleaning-toronto" element={<TorontoServicePage serviceKey="moveInMoveOut" />} />
+              <Route path="/carpet-upholstery-cleaning-toronto" element={<TorontoServicePage serviceKey="carpetUpholstery" />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/terms-conditions" element={<Terms />} />
               <Route path="/disclaimer" element={<Disclaimer />} />
