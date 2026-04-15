@@ -53,8 +53,8 @@ const CarpetUpholsteryCleaningTorontoPage = lazy(() => import("/src/components/P
 
 const updateSW = registerSW({
   onNeedRefresh() {
-    if (window.confirm("New content available. Reload?")) {
-      updateSW(true);
+    if (confirm("New content available. Reload?")) {
+      window.location.reload();
     }
   },
   onOfflineReady() {
