@@ -1,7 +1,5 @@
 import React from "react";
-import { Helmet } from "react-helmet";
 import { Link, Navigate } from "react-router-dom";
-import { BASE_URL } from "/src/seo/routeMeta.mjs";
 
 const SERVICE_PAGES = {
   residential: {
@@ -168,56 +166,8 @@ const TorontoServiceTemplate = ({ serviceKey }) => {
     return <Navigate to="/products-and-services" replace />;
   }
 
-  const pagePath = `/${service.slug}`;
-  const pageUrl = `${BASE_URL}${pagePath}`;
-
-  const serviceSchema = {
-    "@context": "https://schema.org",
-    "@type": "Service",
-    name: `${service.serviceName} in Toronto & GTA`,
-    serviceType: service.serviceName,
-    areaServed: ["Toronto", "Greater Toronto Area"],
-    provider: {
-      "@type": "LocalBusiness",
-      name: "CleanAR Solutions",
-      url: BASE_URL,
-    },
-    url: pageUrl,
-    description: service.body[0],
-  };
-
-  const breadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: "Home",
-        item: `${BASE_URL}/`,
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "Products and Services",
-        item: `${BASE_URL}/products-and-services`,
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: service.serviceName,
-        item: pageUrl,
-      },
-    ],
-  };
-
   return (
     <section className="container py-5 mt-5">
-      <Helmet>
-        <script type="application/ld+json">{JSON.stringify(serviceSchema)}</script>
-        <script type="application/ld+json">{JSON.stringify(breadcrumbSchema)}</script>
-      </Helmet>
-
       <h1 className="primary-color text-bold mb-3">{service.h1}</h1>
 
       {service.body.map((paragraph) => (

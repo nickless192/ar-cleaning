@@ -1,5 +1,26 @@
 export const BASE_URL = "https://www.cleanarsolutions.ca";
 export const OG_IMAGE = `${BASE_URL}/og-image.jpg`;
+export const ORGANIZATION_NAME = "CleanAR Solutions";
+export const ORGANIZATION_PHONE = "+1-437-440-5514";
+export const ORGANIZATION_ADDRESS = {
+  "@type": "PostalAddress",
+  streetAddress: "414 Jarvis St",
+  addressLocality: "Toronto",
+  addressRegion: "ON",
+  postalCode: "M4Y 3C2",
+  addressCountry: "CA",
+};
+export const AREA_SERVED = ["Toronto", "Greater Toronto Area"];
+
+export const MINIMAL_SITE_FALLBACK_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: ORGANIZATION_NAME,
+  url: BASE_URL,
+  telephone: ORGANIZATION_PHONE,
+  address: ORGANIZATION_ADDRESS,
+  areaServed: AREA_SERVED,
+};
 
 export const ROUTE_META = {
   "/index": {
@@ -203,3 +224,178 @@ export const MARKETING_PRERENDER_ROUTES = [
   { route: "/move-in-move-out-cleaning-toronto", output: "move-in-move-out-cleaning-toronto/index.html", h1: "Move-In & Move-Out Cleaning in Toronto and the GTA" },
   { route: "/carpet-upholstery-cleaning-toronto", output: "carpet-upholstery-cleaning-toronto/index.html", h1: "Carpet & Upholstery Cleaning Services in Toronto" },
 ];
+
+const SERVICE_SCHEMA_CONFIG = {
+  "/services/residential-cleaning": {
+    name: "Residential Cleaning Services in Toronto & GTA",
+    serviceType: "Residential Cleaning",
+  },
+  "/services/commercial-cleaning": {
+    name: "Commercial Cleaning Services in Toronto & GTA",
+    serviceType: "Commercial Cleaning",
+  },
+  "/services/window-cleaning": {
+    name: "Window Cleaning Services in Toronto & GTA",
+    serviceType: "Window Cleaning",
+  },
+  "/services/carpet-and-upholstery-cleaning": {
+    name: "Carpet and Upholstery Cleaning Services in Toronto & GTA",
+    serviceType: "Carpet and Upholstery Cleaning",
+  },
+  "/services/power-pressure-washing": {
+    name: "Power and Pressure Washing Services in Toronto & GTA",
+    serviceType: "Power and Pressure Washing",
+  },
+  "/residential-cleaning-toronto": {
+    name: "Residential Cleaning Services in Toronto & GTA",
+    serviceType: "Residential Cleaning",
+  },
+  "/commercial-cleaning-toronto": {
+    name: "Commercial Cleaning Services in Toronto & GTA",
+    serviceType: "Commercial Cleaning",
+  },
+  "/deep-cleaning-toronto": {
+    name: "Deep Cleaning Services in Toronto & GTA",
+    serviceType: "Deep Cleaning",
+  },
+  "/move-in-move-out-cleaning-toronto": {
+    name: "Move-In and Move-Out Cleaning Services in Toronto & GTA",
+    serviceType: "Move-In Move-Out Cleaning",
+  },
+  "/carpet-upholstery-cleaning-toronto": {
+    name: "Carpet and Upholstery Cleaning Services in Toronto & GTA",
+    serviceType: "Carpet and Upholstery Cleaning",
+  },
+};
+
+const BREADCRUMB_CONFIG = {
+  "/products-and-services": [
+    { name: "Home", path: "/" },
+    { name: "Products and Services", path: "/products-and-services" },
+  ],
+  "/services/residential-cleaning": [
+    { name: "Home", path: "/" },
+    { name: "Products and Services", path: "/products-and-services" },
+    { name: "Residential Cleaning", path: "/services/residential-cleaning" },
+  ],
+  "/services/commercial-cleaning": [
+    { name: "Home", path: "/" },
+    { name: "Products and Services", path: "/products-and-services" },
+    { name: "Commercial Cleaning", path: "/services/commercial-cleaning" },
+  ],
+  "/services/window-cleaning": [
+    { name: "Home", path: "/" },
+    { name: "Products and Services", path: "/products-and-services" },
+    { name: "Window Cleaning", path: "/services/window-cleaning" },
+  ],
+  "/services/carpet-and-upholstery-cleaning": [
+    { name: "Home", path: "/" },
+    { name: "Products and Services", path: "/products-and-services" },
+    { name: "Carpet and Upholstery Cleaning", path: "/services/carpet-and-upholstery-cleaning" },
+  ],
+  "/services/power-pressure-washing": [
+    { name: "Home", path: "/" },
+    { name: "Products and Services", path: "/products-and-services" },
+    { name: "Power and Pressure Washing", path: "/services/power-pressure-washing" },
+  ],
+  "/blog": [
+    { name: "Home", path: "/" },
+    { name: "Blog", path: "/blog" },
+  ],
+  "/blog/cleanar-solutions-joins-issa-canada": [
+    { name: "Home", path: "/" },
+    { name: "Blog", path: "/blog" },
+    { name: "CleanAR Solutions Joins ISSA Canada", path: "/blog/cleanar-solutions-joins-issa-canada" },
+  ],
+  "/blog/cleanar-joins-cqcc": [
+    { name: "Home", path: "/" },
+    { name: "Blog", path: "/blog" },
+    { name: "CleanAR Joins CQCC as an LGBTQ+ Certified Supplier", path: "/blog/cleanar-joins-cqcc" },
+  ],
+  "/residential-cleaning-toronto": [
+    { name: "Home", path: "/" },
+    { name: "Products and Services", path: "/products-and-services" },
+    { name: "Residential Cleaning Toronto", path: "/residential-cleaning-toronto" },
+  ],
+  "/commercial-cleaning-toronto": [
+    { name: "Home", path: "/" },
+    { name: "Products and Services", path: "/products-and-services" },
+    { name: "Commercial Cleaning Toronto", path: "/commercial-cleaning-toronto" },
+  ],
+  "/deep-cleaning-toronto": [
+    { name: "Home", path: "/" },
+    { name: "Products and Services", path: "/products-and-services" },
+    { name: "Deep Cleaning Toronto", path: "/deep-cleaning-toronto" },
+  ],
+  "/move-in-move-out-cleaning-toronto": [
+    { name: "Home", path: "/" },
+    { name: "Products and Services", path: "/products-and-services" },
+    { name: "Move-In Move-Out Cleaning Toronto", path: "/move-in-move-out-cleaning-toronto" },
+  ],
+  "/carpet-upholstery-cleaning-toronto": [
+    { name: "Home", path: "/" },
+    { name: "Products and Services", path: "/products-and-services" },
+    { name: "Carpet and Upholstery Cleaning Toronto", path: "/carpet-upholstery-cleaning-toronto" },
+  ],
+};
+
+const normalizePathname = (path) => {
+  if (!path || path === "/") return "/";
+  return path.replace(/\/+$/, "");
+};
+
+export const buildRouteStructuredData = (pathname, routeMeta) => {
+  const normalizedPathname = normalizePathname(pathname);
+  const pagePath = normalizedPathname === "/index" ? "/" : normalizedPathname;
+  const pageUrl = `${BASE_URL}${pagePath}`;
+  const schemas = [];
+
+  if (pagePath === "/") {
+    schemas.push({
+      "@context": "https://schema.org",
+      "@type": ["CleaningService", "LocalBusiness"],
+      name: ORGANIZATION_NAME,
+      url: BASE_URL,
+      telephone: ORGANIZATION_PHONE,
+      address: ORGANIZATION_ADDRESS,
+      areaServed: AREA_SERVED,
+    });
+  }
+
+  const serviceConfig = SERVICE_SCHEMA_CONFIG[pagePath];
+  if (serviceConfig) {
+    schemas.push({
+      "@context": "https://schema.org",
+      "@type": "Service",
+      name: serviceConfig.name,
+      serviceType: serviceConfig.serviceType,
+      areaServed: AREA_SERVED,
+      provider: {
+        "@type": "LocalBusiness",
+        name: ORGANIZATION_NAME,
+        telephone: ORGANIZATION_PHONE,
+        address: ORGANIZATION_ADDRESS,
+        areaServed: AREA_SERVED,
+        url: BASE_URL,
+      },
+      url: pageUrl,
+      description: routeMeta?.description,
+    });
+  }
+
+  const breadcrumbItems = BREADCRUMB_CONFIG[pagePath];
+  if (breadcrumbItems) {
+    schemas.push({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: breadcrumbItems.map((item, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: item.name,
+        item: `${BASE_URL}${item.path}`,
+      })),
+    });
+  }
+
+  return schemas;
+};
