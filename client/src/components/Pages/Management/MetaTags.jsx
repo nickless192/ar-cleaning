@@ -35,7 +35,10 @@ const MetaTags = () => {
   const normalizedPathname = normalizePathname(pathname);
 
   const routeMeta = ROUTE_META[normalizedPathname] ?? defaultMeta;
-  const canonicalPath = normalizePathname(routeMeta.canonicalPath ?? normalizedPathname);
+  const canonicalPath =
+    normalizedPathname === "/index"
+      ? "/"
+      : normalizePathname(routeMeta.canonicalPath ?? normalizedPathname);
   const canonicalUrl = `${BASE_URL}${canonicalPath}`;
   const pageUrl = `${BASE_URL}${normalizedPathname}`;
   const ogTitle = routeMeta.ogTitle ?? routeMeta.title;

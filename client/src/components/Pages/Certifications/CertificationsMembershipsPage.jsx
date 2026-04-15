@@ -24,7 +24,7 @@ function CertificationsMembershipsPage() {
   const navigate = useNavigate();
 
   const goToQuote = () => {
-    navigate("/index?scrollToQuote=true");
+    navigate("/?scrollToQuote=true");
   };
 
   useEffect(() => {
