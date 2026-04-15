@@ -71,6 +71,11 @@ function BlogLandingPage() {
         icon: <FaShieldAlt className="me-2" />,
         featured: true,
         tags: ["ISSA", "Standards", "Training"],
+        serviceLinks: [
+          { to: "/commercial-cleaning-toronto", label: "commercial cleaning in Toronto" },
+          { to: "/deep-cleaning-toronto", label: "deep cleaning in Toronto" },
+        ],
+        quoteQuery: "Commercial+Cleaning",
       },
       {
         id: "cqcc-lgbtbe",
@@ -83,6 +88,11 @@ function BlogLandingPage() {
         icon: <FaBullhorn className="me-2" />,
         featured: true,
         tags: ["CQCC", "LGBTBE", "Supplier Diversity"],
+        serviceLinks: [
+          { to: "/residential-cleaning-toronto", label: "residential cleaning in Toronto" },
+          { to: "/move-in-move-out-cleaning-toronto", label: "move-in and move-out cleaning in Toronto" },
+        ],
+        quoteQuery: "Residential+Cleaning",
       },
     ],
     []
@@ -294,6 +304,20 @@ function BlogLandingPage() {
 
             <span className="small text-muted d-none d-sm-inline">{t("blog.readTime")}</span>
           </div>
+
+          {Array.isArray(post.serviceLinks) && post.serviceLinks.length ? (
+            <div className="mt-3 small">
+              <span className="fw-semibold d-block mb-1">Related services:</span>
+              <ul className="mb-2 ps-3">
+                {post.serviceLinks.map((serviceLink) => (
+                  <li key={serviceLink.to}>
+                    <Link to={serviceLink.to}>{serviceLink.label}</Link>
+                  </li>
+                ))}
+              </ul>
+              <Link to={`/?service=${post.quoteQuery}`}>request a cleaning quote in Toronto</Link>
+            </div>
+          ) : null}
         </CardBody>
       </Card>
     );

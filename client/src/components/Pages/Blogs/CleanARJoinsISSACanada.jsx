@@ -1,7 +1,7 @@
 // src/components/Pages/Blog/CleanARJoinsISSACanada.jsx
 import React, { useEffect } from "react";
 import { Container, Row, Col } from "reactstrap";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation, Trans } from "react-i18next";
 
 import VisitorCounter from "/src/components/Pages/Management/VisitorCounter.jsx";
@@ -166,6 +166,25 @@ function CleanARJoinsISSACanada() {
                 components={{ strong: <strong /> }}
               />
             </p>
+
+            <section className="mt-4">
+              <h2 className="fw-bold mb-3">Related Toronto cleaning services</h2>
+              <ul>
+                <li>
+                  <Link to="/commercial-cleaning-toronto">commercial cleaning in Toronto</Link>
+                </li>
+                <li>
+                  <Link to="/deep-cleaning-toronto">deep cleaning in Toronto</Link>
+                </li>
+                <li>
+                  <Link to="/residential-cleaning-toronto">residential cleaning in Toronto</Link>
+                </li>
+              </ul>
+              <p className="mb-0">
+                Ready to plan your service?{" "}
+                <Link to="/?service=Commercial+Cleaning">request a cleaning quote in Toronto</Link>.
+              </p>
+            </section>
           </Col>
         </Row>
       </Container>
