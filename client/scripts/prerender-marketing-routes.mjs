@@ -161,7 +161,7 @@ const buildRouteHtml = (baseHtml, routeMeta) => {
     `<meta name="twitter:image" content="${OG_IMAGE}" />`
   );
 
-  const bodyNoscriptPattern = /(<body[^>]*>\s*)(<noscript>[\s\S]*?<\/noscript>)/i;
+  const bodyNoscriptPattern = /(<body[^>]*>[\s\S]*?)(<noscript>[\s\S]*?<\/noscript>)/i;
   const noscriptContent = `<noscript>\n    <h1>${routeMeta.h1}</h1>\n    <h2>${routeMeta.description}</h2>\n  </noscript>`;
   html = html.replace(bodyNoscriptPattern, `$1${noscriptContent}`);
 

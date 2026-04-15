@@ -21,6 +21,31 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://www.cleanarsolutions.ca/services/residential-cleaning</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.cleanarsolutions.ca/services/commercial-cleaning</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.cleanarsolutions.ca/services/window-cleaning</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.cleanarsolutions.ca/services/carpet-and-upholstery-cleaning</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.cleanarsolutions.ca/services/power-pressure-washing</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://www.cleanarsolutions.ca/blog/cleanar-solutions-joins-issa-canada</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>

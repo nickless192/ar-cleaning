@@ -26,6 +26,7 @@ const LoginSign = lazy(() => import("/src/components/Pages/UserJourney/LoginSign
 const SignUp = lazy(() => import("/src/components/Pages/UserJourney/SignUp"));
 const ProductsAndServices = lazy(() => import("/src/components/Pages/Navigation/ProductsAndServices"));
 const Career = lazy(() => import("/src/components/Pages/Navigation/Career.jsx"));
+const ServiceLandingPage = lazy(() => import("/src/components/Pages/Navigation/ServiceLandingPage.jsx"));
 const ResetPassword = lazy(() => import("/src/components/Pages/UserJourney/ResetPassword"));
 const BlogLandingPage = lazy(() => import("/src/components/Pages/Blogs/BlogLandingPage.jsx"));
 const CleanARJoinsISSACanada = lazy(() => import("/src/components/Pages/Blogs/CleanARJoinsISSACanada"));
@@ -174,6 +175,7 @@ const App = () => {
               <Route path="/careers" element={<Career />} />
               <Route path="/about-us" element={<AboutUsPage />} />
               <Route path="/products-and-services" element={<ProductsAndServices />} />
+              <Route path="/services/:serviceSlug" element={<ServiceLandingPage />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/terms-conditions" element={<Terms />} />
               <Route path="/disclaimer" element={<Disclaimer />} />
