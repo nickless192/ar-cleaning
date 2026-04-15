@@ -1,6 +1,6 @@
 import React, { Suspense, lazy, useEffect } from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate, useLocation } from "react-router-dom";
 import './i18n'; // Import i18n configuration
 import { registerSW } from 'virtual:pwa-register';
 
@@ -58,6 +58,12 @@ registerSW({
 });
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
+
+const IndexCompatibilityRedirect = () => {
+  const { search, hash } = useLocation();
+
+  return <Navigate to={{ pathname: "/", search, hash }} replace />;
+};
 
 const App = () => {
   // In your App.js
@@ -128,7 +134,7 @@ const App = () => {
             <Suspense fallback={<div className="py-5 text-center">Loading page…</div>}>
               <Routes>
               <Route path="/" element={<Index />} />
-              <Route path="/index" element={<Navigate to="/" replace />} />
+              <Route path="/index" element={<IndexCompatibilityRedirect />} />
               <Route path="/profile-page" element={<ProtectedRoute element={<ProfilePage />} />} />
               <Route path="/notification-management" element={<ProtectedRoute element={<NotificationAdminPage />} />} />
               {/* <Route path="/manage-categories" element={<ProtectedRoute element={<ManageCategories />} />} /> */}
