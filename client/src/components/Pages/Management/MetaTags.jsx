@@ -1,7 +1,7 @@
 import React from "react";
 import { Helmet } from "react-helmet";
 import { useLocation } from "react-router-dom";
-import { BASE_URL, OG_IMAGE, ROUTE_META } from "../../../seo/routeMeta.mjs";
+import { BASE_URL, OG_IMAGE, ROUTE_META, buildRouteStructuredData } from "../../../seo/routeMeta.mjs";
 
 const NOINDEX_PATTERNS = [
   /^\/admin(?:\/|$)/,
@@ -73,6 +73,10 @@ const MetaTags = () => {
         },
       }
     : null;
+  const routeStructuredData = buildRouteStructuredData(normalizedPathname, routeMeta);
+  const structuredDataSchemas = blogPostingSchema
+    ? [...routeStructuredData, blogPostingSchema]
+    : routeStructuredData;
 
   return (
     <Helmet>
@@ -99,9 +103,11 @@ const MetaTags = () => {
       <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow"} />
       <meta name="googlebot" content={noindex ? "noindex, nofollow" : "index, follow"} />
 
-      {blogPostingSchema ? (
-        <script type="application/ld+json">{JSON.stringify(blogPostingSchema)}</script>
-      ) : null}
+      {structuredDataSchemas.map((schema, index) => (
+        <script key={`route-structured-data-${index}`} type="application/ld+json">
+          {JSON.stringify(schema)}
+        </script>
+      ))}
     </Helmet>
   );
 };

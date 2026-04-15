@@ -5,6 +5,7 @@ import {
   OG_IMAGE,
   ROUTE_META,
   MARKETING_PRERENDER_ROUTES,
+  buildRouteStructuredData,
 } from "../src/seo/routeMeta.mjs";
 
 const DIST_DIR = path.resolve(process.cwd(), "dist");
@@ -89,6 +90,26 @@ const buildRouteHtml = (baseHtml, routeConfig, routeMeta) => {
   const noscriptContent = `<noscript>\n    <h1>${routeConfig.h1}</h1>\n    <h2>${routeMeta.description}</h2>\n  </noscript>`;
   html = html.replace(bodyNoscriptPattern, `$1${noscriptContent}`);
 
+  const routeSchemas = buildRouteStructuredData(routeConfig.route, routeMeta);
+  const routeSchemaScripts = routeSchemas
+    .map((schema, index) => {
+      const schemaType = Array.isArray(schema["@type"]) ? schema["@type"].join(",") : schema["@type"];
+      return `  <script type="application/ld+json" data-route-schema="true" data-schema-type="${schemaType}" data-schema-index="${index}">${JSON.stringify(
+        schema
+      )}</script>`;
+    })
+    .join("\n");
+  const routeSchemaPattern = /\s*<script[^>]*data-route-schema=["']true["'][^>]*>[\s\S]*?<\/script>/gi;
+  let previousHtml;
+  do {
+    previousHtml = html;
+    html = html.replace(routeSchemaPattern, "");
+  } while (html !== previousHtml);
+  html = html.replace(
+    /<\/head>/i,
+    `${routeSchemaScripts ? `${routeSchemaScripts}\n` : ""}</head>`
+  );
+
   return html;
 };
 
@@ -112,6 +133,34 @@ const validateRouteHtml = (html, routeConfig, routeMeta) => {
     throw new Error(
       `Prerender validation failed for route ${routeConfig.route}: missing ${missing.join(", ")}`
     );
+  }
+
+  const expectedSchemas = buildRouteStructuredData(routeConfig.route, routeMeta);
+  const schemaTypeCounts = {
+    cleaningServiceOrLocalBusiness: (
+      html.match(/data-schema-type=["'][^"']*(CleaningService|LocalBusiness)[^"']*["']/g) || []
+    ).length,
+    service: (html.match(/data-schema-type=["']Service["']/g) || []).length,
+    breadcrumbList: (html.match(/data-schema-type=["']BreadcrumbList["']/g) || []).length,
+  };
+  const expectedCounts = {
+    cleaningServiceOrLocalBusiness: expectedSchemas.some((schema) => {
+      const type = schema["@type"];
+      return Array.isArray(type)
+        ? type.includes("CleaningService") || type.includes("LocalBusiness")
+        : type === "CleaningService" || type === "LocalBusiness";
+    })
+      ? 1
+      : 0,
+    service: expectedSchemas.some((schema) => schema["@type"] === "Service") ? 1 : 0,
+    breadcrumbList: expectedSchemas.some((schema) => schema["@type"] === "BreadcrumbList") ? 1 : 0,
+  };
+
+  const mismatch = Object.entries(expectedCounts)
+    .filter(([key, expected]) => schemaTypeCounts[key] !== expected)
+    .map(([key, expected]) => `${key} expected ${expected} found ${schemaTypeCounts[key]}`);
+  if (mismatch.length > 0) {
+    throw new Error(`Schema validation failed for route ${routeConfig.route}: ${mismatch.join("; ")}`);
   }
 };
 
