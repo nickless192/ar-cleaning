@@ -99,7 +99,12 @@ const buildRouteHtml = (baseHtml, routeConfig, routeMeta) => {
       )}</script>`;
     })
     .join("\n");
-  html = html.replace(/\s*<script[^>]*data-route-schema=["']true["'][^>]*>[\s\S]*?<\/script>/gi, "");
+  const routeSchemaPattern = /\s*<script[^>]*data-route-schema=["']true["'][^>]*>[\s\S]*?<\/script>/gi;
+  let previousHtml;
+  do {
+    previousHtml = html;
+    html = html.replace(routeSchemaPattern, "");
+  } while (html !== previousHtml);
   html = html.replace(
     /<\/head>/i,
     `${routeSchemaScripts ? `${routeSchemaScripts}\n` : ""}</head>`
