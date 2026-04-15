@@ -10,7 +10,7 @@ const LandingStart = () => {
   const { t } = useTranslation();
 
   const goToQuote = () => {
-    navigate('/index?promoCode=start15', { state: { scrollToQuote: true } });
+    navigate('/?promoCode=start15', { state: { scrollToQuote: true } });
   };
 
   return (

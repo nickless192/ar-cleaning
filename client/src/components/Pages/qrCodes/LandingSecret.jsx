@@ -9,7 +9,7 @@ const LandingSecret = () => {
   const { t } = useTranslation();
 
   const goToQuote = () => {
-    navigate('/index?promoCode=secret15', { state: { scrollToQuote: true } });
+    navigate('/?promoCode=secret15', { state: { scrollToQuote: true } });
   };
 
   return (

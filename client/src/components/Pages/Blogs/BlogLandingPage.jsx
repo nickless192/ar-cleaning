@@ -35,7 +35,7 @@ function BlogLandingPage() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [sortBy, setSortBy] = useState("newest"); // newest | a-z
 
-  const goToQuote = () => navigate("/index?scrollToQuote=true");
+  const goToQuote = () => navigate("/?scrollToQuote=true");
 
   useEffect(() => {
     document.body.classList.add("index-page", "sidebar-collapse");

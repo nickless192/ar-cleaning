@@ -9,7 +9,7 @@ const LandingToronto = () => {
   const { t } = useTranslation();
 
   const goToQuote = () => {
-    navigate('/index?promoCode=toronto15', { state: { scrollToQuote: true } });
+    navigate('/?promoCode=toronto15', { state: { scrollToQuote: true } });
   };
 
   return (

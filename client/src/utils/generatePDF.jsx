@@ -182,7 +182,7 @@ const sendEmailWithPDF = async (formData, subject, pdfBase64, t) => {
             <p>${t("quick_quote.email.body.3")}</p>
             <p>CleanAR Solutions</p>
             <p>
-            <a href="https://www.cleanarsolutions.ca/index" target="_blank">www.cleanarsolutions.ca/index</a>
+            <a href="https://www.cleanarsolutions.ca/" target="_blank">www.cleanarsolutions.ca/</a>
             </p>
             <p>
             <a href="tel:+437-440-5514">+1 (437) 440-5514</a>

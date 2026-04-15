@@ -127,7 +127,8 @@ const App = () => {
           <main className="flex-grow-1 main-content">
             <Suspense fallback={<div className="py-5 text-center">Loading page…</div>}>
               <Routes>
-              <Route path="/index" element={<Index />} />
+              <Route path="/" element={<Index />} />
+              <Route path="/index" element={<Navigate to="/" replace />} />
               <Route path="/profile-page" element={<ProtectedRoute element={<ProfilePage />} />} />
               <Route path="/notification-management" element={<ProtectedRoute element={<NotificationAdminPage />} />} />
               {/* <Route path="/manage-categories" element={<ProtectedRoute element={<ManageCategories />} />} /> */}
@@ -185,8 +186,8 @@ const App = () => {
               <Route path="/toronto" element={<LandingToronto />} />
               <Route path="/fresh" element={<LandingFresh />} />
               <Route path="/secret" element={<LandingSecret />} />
-              <Route path="/" element={<Navigate to="/index" />} />
-              <Route path="*" element={<Navigate to="/index" replace />} />
+              
+              <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </Suspense>
           </main>

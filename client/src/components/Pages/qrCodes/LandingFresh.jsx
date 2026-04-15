@@ -8,7 +8,7 @@ const LandingFresh = () => {
   const { t } = useTranslation();
 
   const goToQuote = () => {
-    navigate('/index?promoCode=fresh15', { state: { scrollToQuote: true } });
+    navigate('/?promoCode=fresh15', { state: { scrollToQuote: true } });
   };
 
   return (
