@@ -259,13 +259,14 @@ function LoginPage({ focus }) {
     <>
       <VisitorCounter page={"login-page"} />
       <div
-        className=" bg-light "
+        className="cleanar-app-bg py-4 py-md-5"
       // style={{ backgroundImage: `url(${pageBg})`, backgroundSize: "cover" }}
       >
         {/* <h1 className="title primary-color text-center montserrat-bold">
           {t("login.title")}
         </h1> */}
         <Container className="container">
+          <div className="cleanar-card p-3 p-md-4 mx-auto" style={{ maxWidth: 720 }}>
           {/* <p className="text-cleanar-color text-bold text-center">
             {t("login.description")}
           </p> */}
@@ -279,7 +280,7 @@ function LoginPage({ focus }) {
             <Row className="justify-content-center">
               <Col className="py-1" md="12" xs="12">
                 <Form.Group controlId="loginEmail">
-                  <Form.Label className="text-cleanar-color">
+                  <Form.Label className="cleanarLabel text-cleanar-color">
                     {t("login.email_label")} {' '}
                     <FaQuestionCircle
                       onClick={() => togglePopover("email")}
@@ -299,7 +300,7 @@ function LoginPage({ focus }) {
 
                   <Form.Control
                     type="email"
-                    className="form-input rounded-pill text-cleanar-color"
+                    className="form-input cleanarInput text-cleanar-color"
                     placeholder=""
                     ref={emailRef}
                     name="email"
@@ -344,7 +345,7 @@ function LoginPage({ focus }) {
             <Row className="justify-content-center">
               <Col className="py-1" md="12" xs="12">
                 <Form.Group controlId="loginPassword">
-                  <Form.Label className="text-cleanar-color">
+                  <Form.Label className="cleanarLabel text-cleanar-color">
                     {t("login.password_label")} {' '}
                     <FaQuestionCircle
                       id="Tooltip2"
@@ -365,7 +366,7 @@ function LoginPage({ focus }) {
                       type={showPassword ? "text" : "password"}
                       placeholder=""
                       ref={passwordRef}
-                      className="form-input rounded-pill text-cleanar-color pe-5"
+                      className="form-input cleanarInput text-cleanar-color pe-5"
                       name="password"
                       value={formData.password}
                       onChange={handleChange}
@@ -437,7 +438,7 @@ function LoginPage({ focus }) {
             <Row className="justify-content-center mt-3">
               <Col className="py-1" md="12" xs="12">
                 <Button
-                  className="btn  primary-bg-color"
+                  className="btn primary-bg-color cleanar-hero-cta__primary"
                   type="submit"
                   data-track="login"
                   // size="lg"
@@ -491,6 +492,7 @@ function LoginPage({ focus }) {
 </Row> */}
 
           </Form>
+          </div>
         </Container>
       </div>
     </>
