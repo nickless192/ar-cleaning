@@ -68,6 +68,20 @@ function Index() {
 
       {/* BODY */}
       <div className="container">
+        <section className="my-4" aria-label="Toronto cleaning services links">
+          <h2 className="h4 text-bold primary-color mb-2">Popular cleaning services in Toronto</h2>
+          <p className="text-muted mb-2">
+            Explore our local landing pages for homes and businesses across Toronto and the GTA.
+          </p>
+          <ul className="mb-0">
+            <li><Link to="/residential-cleaning-toronto">residential cleaning in Toronto</Link></li>
+            <li><Link to="/commercial-cleaning-toronto">commercial cleaning in Toronto</Link></li>
+            <li><Link to="/deep-cleaning-toronto">deep cleaning in Toronto</Link></li>
+            <li><Link to="/move-in-move-out-cleaning-toronto">move-in and move-out cleaning in Toronto</Link></li>
+            <li><Link to="/carpet-upholstery-cleaning-toronto">carpet and upholstery cleaning in Toronto</Link></li>
+          </ul>
+        </section>
+
         <Row>
           <Col xs="12" md="12" className="p-0" id="quote-section">
             <QuoteRequest initialData={{}} />

@@ -14,9 +14,9 @@ const SERVICE_PAGES = {
     ctaLabel: "Get a Residential Cleaning Quote",
     quoteQuery: "Residential+Cleaning",
     related: [
-      { to: "/deep-cleaning-toronto", label: "Deep Cleaning Toronto" },
-      { to: "/move-in-move-out-cleaning-toronto", label: "Move-In/Move-Out Cleaning" },
-      { to: "/commercial-cleaning-toronto", label: "Commercial Cleaning Toronto" },
+      { to: "/deep-cleaning-toronto", label: "deep cleaning in Toronto" },
+      { to: "/move-in-move-out-cleaning-toronto", label: "move-in and move-out cleaning in Toronto" },
+      { to: "/commercial-cleaning-toronto", label: "commercial cleaning in Toronto" },
     ],
     faqs: [
       {
@@ -45,9 +45,9 @@ const SERVICE_PAGES = {
     ctaLabel: "Request a Commercial Cleaning Plan",
     quoteQuery: "Commercial+Cleaning",
     related: [
-      { to: "/residential-cleaning-toronto", label: "Residential Cleaning Toronto" },
-      { to: "/deep-cleaning-toronto", label: "Deep Cleaning Toronto" },
-      { to: "/carpet-upholstery-cleaning-toronto", label: "Carpet & Upholstery Cleaning" },
+      { to: "/residential-cleaning-toronto", label: "residential cleaning in Toronto" },
+      { to: "/deep-cleaning-toronto", label: "deep cleaning in Toronto" },
+      { to: "/carpet-upholstery-cleaning-toronto", label: "carpet and upholstery cleaning in Toronto" },
     ],
     faqs: [
       {
@@ -76,9 +76,9 @@ const SERVICE_PAGES = {
     ctaLabel: "Book Deep Cleaning in Toronto",
     quoteQuery: "Deep+Cleaning",
     related: [
-      { to: "/residential-cleaning-toronto", label: "Residential Cleaning Toronto" },
-      { to: "/move-in-move-out-cleaning-toronto", label: "Move-In/Move-Out Cleaning" },
-      { to: "/carpet-upholstery-cleaning-toronto", label: "Carpet & Upholstery Cleaning" },
+      { to: "/residential-cleaning-toronto", label: "residential cleaning in Toronto" },
+      { to: "/move-in-move-out-cleaning-toronto", label: "move-in and move-out cleaning in Toronto" },
+      { to: "/carpet-upholstery-cleaning-toronto", label: "carpet and upholstery cleaning in Toronto" },
     ],
     faqs: [
       {
@@ -107,9 +107,9 @@ const SERVICE_PAGES = {
     ctaLabel: "Schedule Move-In/Move-Out Cleaning",
     quoteQuery: "Move+In+Move+Out+Cleaning",
     related: [
-      { to: "/deep-cleaning-toronto", label: "Deep Cleaning Toronto" },
-      { to: "/residential-cleaning-toronto", label: "Residential Cleaning Toronto" },
-      { to: "/commercial-cleaning-toronto", label: "Commercial Cleaning Toronto" },
+      { to: "/deep-cleaning-toronto", label: "deep cleaning in Toronto" },
+      { to: "/residential-cleaning-toronto", label: "residential cleaning in Toronto" },
+      { to: "/commercial-cleaning-toronto", label: "commercial cleaning in Toronto" },
     ],
     faqs: [
       {
@@ -138,9 +138,9 @@ const SERVICE_PAGES = {
     ctaLabel: "Request Carpet & Upholstery Cleaning",
     quoteQuery: "Carpet+And+Upholstery",
     related: [
-      { to: "/deep-cleaning-toronto", label: "Deep Cleaning Toronto" },
-      { to: "/residential-cleaning-toronto", label: "Residential Cleaning Toronto" },
-      { to: "/commercial-cleaning-toronto", label: "Commercial Cleaning Toronto" },
+      { to: "/deep-cleaning-toronto", label: "deep cleaning in Toronto" },
+      { to: "/residential-cleaning-toronto", label: "residential cleaning in Toronto" },
+      { to: "/commercial-cleaning-toronto", label: "commercial cleaning in Toronto" },
     ],
     faqs: [
       {
@@ -206,6 +206,10 @@ const TorontoServiceTemplate = ({ serviceKey }) => {
             </li>
           ))}
         </ul>
+        <p className="mt-3 mb-0">
+          Need to compare options?{" "}
+          <Link to="/products-and-services">Return to the Toronto services hub</Link>.
+        </p>
       </section>
     </section>
   );

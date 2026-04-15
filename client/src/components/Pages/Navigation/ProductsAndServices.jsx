@@ -227,9 +227,15 @@ const ProductsAndServices = () => {
 
           <div className="mt-4 text-cleanar-color">
             <h3 className="h5 text-bold">Toronto Service Pages</h3>
+            <p className="mb-2">
+              Browse our dedicated location pages to compare cleaning options by property type and project scope.
+            </p>
             <ul className="mb-0">
-              <li><Link to="/deep-cleaning-toronto">Deep Cleaning Toronto</Link></li>
-              <li><Link to="/move-in-move-out-cleaning-toronto">Move-In/Move-Out Cleaning Toronto</Link></li>
+              <li><Link to="/residential-cleaning-toronto">residential cleaning in Toronto</Link></li>
+              <li><Link to="/commercial-cleaning-toronto">commercial cleaning in Toronto</Link></li>
+              <li><Link to="/deep-cleaning-toronto">deep cleaning in Toronto</Link></li>
+              <li><Link to="/move-in-move-out-cleaning-toronto">move-in and move-out cleaning in Toronto</Link></li>
+              <li><Link to="/carpet-upholstery-cleaning-toronto">carpet and upholstery cleaning in Toronto</Link></li>
             </ul>
           </div>
         </div>
