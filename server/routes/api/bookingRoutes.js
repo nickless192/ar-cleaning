@@ -24,7 +24,7 @@ router.put('/:id/hide', adminRouteLimiter, authMiddleware, requireAdminFlag, hid
 router.put('/:id/confirm', adminRouteLimiter, authMiddleware, requireAdminFlag, confirmBooking);
 router.put('/:id/cancel', adminRouteLimiter, authMiddleware, requireAdminFlag, cancelBooking);
 router.put('/:id/pending', adminRouteLimiter, authMiddleware, requireAdminFlag, pendBookingById);
-router.put('/:id/request-change', adminRouteLimiter, authMiddleware, requireAdminFlag, submitNewDateRequest);
+router.put('/:id/request-change', submitNewDateRequest);
 router.put('/:id/update', adminRouteLimiter, authMiddleware, requireAdminFlag, updateBooking);
 
 
