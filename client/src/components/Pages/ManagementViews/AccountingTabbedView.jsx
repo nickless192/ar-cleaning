@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Container, Card, Nav } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 
+import AccountingOverview from "/src/components/Pages/Dashboards/AccountingOverview";
 import ExpenseDashboard from "/src/components/Pages/Dashboards/ExpenseDashboard";
 import FinanceDashboard from "/src/components/Pages/Dashboards/FinanceDashboard";
 import InventoryManagementTabbedView from "/src/components/Pages/ManagementViews/InventoryManagementTabbedView"; // adjust path if needed
@@ -14,6 +15,11 @@ const AccountingTabbedView = () => {
 
   const tabs = useMemo(
     () => [
+      {
+        key: "overview",
+        title: "Overview",
+        component: <AccountingOverview />,
+      },
       {
         key: "finance",
         title: "Income & Finance Overview",
@@ -38,7 +44,7 @@ const AccountingTabbedView = () => {
     [t]
   );
 
-  const [activeTab, setActiveTab] = useState("finance");
+  const [activeTab, setActiveTab] = useState("overview");
 
   // restore last selected tab
   useEffect(() => {
