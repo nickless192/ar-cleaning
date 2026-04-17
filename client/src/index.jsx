@@ -1,7 +1,6 @@
 import React, { Suspense, lazy, useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes, Navigate, useLocation } from "react-router-dom";
-import { registerSW } from "virtual:pwa-register";
 import './i18n'; // Import i18n configuration
 
 // import 'bootstrap/dist/css/bootstrap.min.css';
@@ -51,16 +50,6 @@ const DeepCleaningTorontoPage = lazy(() => import("/src/components/Pages/Navigat
 const MoveInMoveOutCleaningTorontoPage = lazy(() => import("/src/components/Pages/Navigation/TorontoServicePage.jsx").then((module) => ({ default: module.MoveInMoveOutCleaningTorontoPage })));
 const CarpetUpholsteryCleaningTorontoPage = lazy(() => import("/src/components/Pages/Navigation/TorontoServicePage.jsx").then((module) => ({ default: module.CarpetUpholsteryCleaningTorontoPage })));
 
-const updateSW = registerSW({
-  onNeedRefresh() {
-    if (window.confirm("New content available. Reload?")) {
-      updateSW(true);
-    }
-  },
-  onOfflineReady() {
-    console.log("App is ready to work offline");
-  },
-});
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
