@@ -6,6 +6,7 @@ const { getUsers, createUser, getUserById, deleteUser, updateUser, login, migrat
 const {authMiddleware} = require('../../utils/auth');
 const requireAdminFlag = require('../../middleware/requireAdminFlag');
 const { authRouteLimiter, adminRouteLimiter } = require('../../middleware/rateLimiters');
+const validateCsrfToken = require('../../middleware/validateCsrfToken');
 
 router.route('/')
     .get(adminRouteLimiter, authMiddleware, requireAdminFlag, getUsers)
@@ -28,8 +29,8 @@ router.route('/me').get(authRouteLimiter, authMiddleware, getUserById);
 router.route('/:userId/bookings').get(getUserBookings);
 
 router.route('/login').post(login);
-router.route('/logout').post(logout);
-router.route('/refresh').post(refreshToken);
+router.route('/logout').post(authRouteLimiter, validateCsrfToken, logout);
+router.route('/refresh').post(authRouteLimiter, validateCsrfToken, refreshToken);
 
 
 // router.route('/:userId/friends/:friendId')

@@ -3,6 +3,7 @@ const Customer = require('../models/Customer');
 const { signToken } = require('../utils/auth');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 
 
 const userControllers = {
@@ -94,6 +95,7 @@ const userControllers = {
         }
         const token = signToken(dbUserData, process.env.ACCESS_SECRET_KEY, process.env.ACCESS_KEY_EXPIRATION || "2h");
         const refreshToken = jwt.sign({ id: dbUserData._id }, process.env.REFRESH_SECRET_KEY, { expiresIn: process.env.REFRESH_KEY_EXPIRATION || '30d' });
+        const csrfToken = crypto.randomBytes(32).toString('hex');
         dbUserData.refreshToken = refreshToken;
         await dbUserData.save();
 
@@ -114,6 +116,12 @@ const userControllers = {
         };
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
+            secure: true,
+            sameSite: "Strict",
+            maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+        });
+        res.cookie("csrfToken", csrfToken, {
+            httpOnly: false,
             secure: true,
             sameSite: "Strict",
             maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
@@ -142,6 +150,11 @@ const userControllers = {
 
         res.clearCookie("refreshToken", {
             httpOnly: true,
+            secure: true,
+            sameSite: "Strict",
+        });
+        res.clearCookie("csrfToken", {
+            httpOnly: false,
             secure: true,
             sameSite: "Strict",
         });
