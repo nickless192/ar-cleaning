@@ -29,6 +29,7 @@ import {
   computeUnpaidInvoiceTotals,
   getCurrentMonthMetrics,
 } from './accountingOverviewAdapters';
+import { authFetch } from "/src/utils/authFetch";
 
 const currency = (n) => `$${Number(n || 0).toFixed(2)}`;
 
@@ -92,7 +93,7 @@ export default function AccountingOverview() {
         fetch(`/api/finance/summary?${qsSummary}`),
         fetch(`/api/finance/monthly-profit?${qsTrend}`),
         fetch('/api/invoices'),
-        fetch('/api/bookings'),
+        await authFetch('/api/bookings'),
       ]);
 
       const [summaryJson, trendJson, invoicesJson, bookingsJson] = await Promise.all([
