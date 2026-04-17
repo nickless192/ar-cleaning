@@ -5,11 +5,12 @@ const { getUsers, createUser, getUserById, deleteUser, updateUser, login, migrat
  } = require('../../controllers/userControllers');
 const {authMiddleware} = require('../../utils/auth');
 const requireAdminFlag = require('../../middleware/requireAdminFlag');
+const { authRouteLimiter, adminRouteLimiter } = require('../../middleware/rateLimiters');
 
 router.route('/')
-    .get(authMiddleware, requireAdminFlag, getUsers)
+    .get(adminRouteLimiter, authMiddleware, requireAdminFlag, getUsers)
     .post(createUser)
-    .put(authMiddleware, updateUser);
+    .put(authRouteLimiter, authMiddleware, updateUser);
     
 router.route('/migrate-user').put(migrateUsernamesToLowercase);
 
@@ -22,7 +23,7 @@ router.route('/:userId')
 
 router.route('/reset-password').post(resetPassword);
 
-router.route('/me').get(authMiddleware, getUserById);
+router.route('/me').get(authRouteLimiter, authMiddleware, getUserById);
 
 router.route('/:userId/bookings').get(getUserBookings);
 
