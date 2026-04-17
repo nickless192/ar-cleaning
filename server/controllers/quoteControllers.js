@@ -1,4 +1,20 @@
 const { Quote, QuickQuote } = require('../models');
+const {
+    assertNoOperatorKeys,
+    pickAllowedFields,
+    validateObjectId,
+} = require('../utils/mongoSafety');
+
+const QUOTE_FIELDS = [
+    'name', 'description', 'email', 'companyName', 'phonenumber', 'address', 'city',
+    'province', 'postalcode', 'howDidYouHearAboutUs', 'howDidYouHearAboutUsSupport',
+    'promoCode', 'products', 'services', 'subtotalCost', 'grandTotal', 'tax', 'userId'
+];
+
+const QUICK_QUOTE_FIELDS = [
+    'name', 'email', 'companyName', 'phonenumber', 'postalcode', 'promoCode',
+    'products', 'services', 'userId', 'acknowledgedByUser', 'acknowledgedAt', 'acknowledgedBy'
+];
 
 const quoteController = {
     getQuotes: async (req, res) => {
@@ -12,9 +28,11 @@ const quoteController = {
     },
     createQuote: async (req, res) => {
         try {
+            assertNoOperatorKeys(req.body);
+            const createData = pickAllowedFields(req.body, QUOTE_FIELDS);
             const newQuote = new Quote({
-                ...req.body,
-                userId: req.body.userId || null // Ensure userId is null if not provided
+                ...createData,
+                userId: createData.userId || null // Ensure userId is null if not provided
             });
 
             const savedQuote = await newQuote.save();
@@ -33,6 +51,9 @@ const quoteController = {
     getQuoteById: async (req, res) => {
         try {
             console.log('Getting quote by id: ', req.params.quoteId);
+            if (!validateObjectId(req.params.quoteId)) {
+                return res.status(400).json({ message: 'Invalid quote ID' });
+            }
             const quote = await Quote.findOne({ quoteId: req.params.quoteId });
             // const quote = await Quote.findById(req.params.quoteId);
             if (!quote) {
@@ -46,6 +67,9 @@ const quoteController = {
     },
     getUserQuotes: async (req, res) => {
         try {
+            if (!validateObjectId(req.params.userId)) {
+                return res.status(400).json({ message: 'Invalid user ID' });
+            }
             const quotes = await QuickQuote.find({ userId: req.params.userId }).sort({ createdAt: -1 });
             res.json(quotes);
         } catch (error) {
@@ -55,7 +79,12 @@ const quoteController = {
     },
     updateQuote: async (req, res) => {
         try {
-            const quote = await Quote.findByIdAndUpdate(req.params.quoteId, req.body, { new: true });
+            if (!validateObjectId(req.params.quoteId)) {
+                return res.status(400).json({ message: 'Invalid quote ID' });
+            }
+            assertNoOperatorKeys(req.body);
+            const updateData = pickAllowedFields(req.body, QUOTE_FIELDS);
+            const quote = await Quote.findByIdAndUpdate(req.params.quoteId, updateData, { new: true, runValidators: true });
             res.json(quote);
         } catch (error) {
             console.error('Error updating quote: ', error);
@@ -64,6 +93,9 @@ const quoteController = {
     },
     deleteQuote: async (req, res) => {
         try {
+            if (!validateObjectId(req.params.quoteId)) {
+                return res.status(400).json({ message: 'Invalid quote ID' });
+            }
             const quote = await Quote.findByIdAndDelete(req.params.quoteId);
             res.json(quote);
         } catch (error) {
@@ -73,9 +105,11 @@ const quoteController = {
     },
     createQuoteRequest: async (req, res) => {
         try {
+            assertNoOperatorKeys(req.body);
+            const createData = pickAllowedFields(req.body, QUICK_QUOTE_FIELDS);
             const newQuickQuote = new QuickQuote({
-                ...req.body,
-                userId: req.body.userId || null // Ensure userId is null if not provided
+                ...createData,
+                userId: createData.userId || null // Ensure userId is null if not provided
             });
 
             const savedQuickQuote = await newQuickQuote.save();
@@ -113,6 +147,9 @@ const quoteController = {
     },
     deleteQuoteRequest: async (req, res) => {
         try {
+            if (!validateObjectId(req.params.quoteId)) {
+                return res.status(400).json({ message: 'Invalid quote ID' });
+            }
             const quickQuote = await QuickQuote.findByIdAndDelete(req.params.quoteId);
             if (!quickQuote) {
                 return res.status(404).json({ message: 'Quick quote not found' });
@@ -127,6 +164,12 @@ const quoteController = {
         try {
             const { id } = req.params;
             const userId = req.body.userId;
+            if (!validateObjectId(id)) {
+                return res.status(400).json({ message: 'Invalid quote ID' });
+            }
+            if (!validateObjectId(userId)) {
+                return res.status(400).json({ message: 'Invalid user ID' });
+            }
 
             const quote = await QuickQuote.findById(id);
             if (!quote) {

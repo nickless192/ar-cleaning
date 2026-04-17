@@ -170,7 +170,11 @@ const getFinanceSummary = async (req, res) => {
     const period = getPeriodFromQuery(req.query);
 
     const includeHidden = safeBool(req.query.includeHidden, false);
-    const customerField = req.query.customerField || 'customerId';
+    const allowedCustomerFields = new Set(['customerId', 'customerEmail', 'customerName']);
+    const requestedCustomerField = String(req.query.customerField || 'customerId');
+    const customerField = allowedCustomerFields.has(requestedCustomerField)
+      ? requestedCustomerField
+      : 'customerId';
 
     const forecastMonths = Math.max(1, toInt(req.query.forecastMonths, 3));
     const lookbackMonths = Math.max(1, toInt(req.query.forecastLookbackMonths, 6));

@@ -7,6 +7,7 @@
 const NotificationTemplate = require('../models/NotificationTemplate');
 const UserNotificationSettings = require('../models/UserNotificationSettings');
 const CompanyNotificationDefaults = require('../models/CompanyNotificationDefaults');
+const { assertNoOperatorKeys, validateObjectId } = require('../utils/mongoSafety');
 
 /* ============================
    TEMPLATES CONTROLLERS
@@ -25,6 +26,7 @@ const getTemplates = async (req, res) => {
 const createTemplate = async (req, res) => {
     try {
         const { key, name, type, subject, html, enabled } = req.body;
+        assertNoOperatorKeys(req.body);
 
         const existing = await NotificationTemplate.findOne({ key });
         if (existing) {
@@ -55,6 +57,10 @@ const updateTemplate = async (req, res) => {
     try {
         const { id } = req.params;
         const { name, type, subject, html, enabled } = req.body;
+        if (!validateObjectId(id)) {
+            return res.status(400).json({ message: 'Invalid template ID.' });
+        }
+        assertNoOperatorKeys(req.body);
 
         const template = await NotificationTemplate.findByIdAndUpdate(
             id,
@@ -115,7 +121,28 @@ const getMyNotificationSettings = async (req, res) => {
 const updateMyNotificationSettings = async (req, res) => {
     try {
         const userId = req.user._id;
-        const preferences = req.body.preferences || {};
+        const rawPreferences = req.body.preferences || {};
+        assertNoOperatorKeys(rawPreferences);
+        const preferences = {
+            bookingConfirmation: {
+                email: !!rawPreferences.bookingConfirmation?.email,
+            },
+            bookingReminder: {
+                email: !!rawPreferences.bookingReminder?.email,
+                frequency: ['immediate', 'daily', 'weekly'].includes(rawPreferences.bookingReminder?.frequency)
+                    ? rawPreferences.bookingReminder.frequency
+                    : 'immediate',
+            },
+            adminUpcomingBookings: {
+                email: !!rawPreferences.adminUpcomingBookings?.email,
+                frequency: ['daily', 'weekly'].includes(rawPreferences.adminUpcomingBookings?.frequency)
+                    ? rawPreferences.adminUpcomingBookings.frequency
+                    : 'daily',
+            },
+            marketing: {
+                email: !!rawPreferences.marketing?.email,
+            },
+        };
 
         const settings = await UserNotificationSettings.findOneAndUpdate(
             { user: userId },
@@ -164,11 +191,34 @@ const getCompanyNotificationDefaults = async (req, res) => {
 const updateCompanyNotificationDefaults = async (req, res) => {
     try {
         const body = req.body || {};
+        assertNoOperatorKeys(body);
+        const updateData = {
+            companyName: body.companyName,
+            bookingReminderCustomer: {
+                enabled: !!body.bookingReminderCustomer?.enabled,
+                frequency: ['immediate', 'daily', 'weekly'].includes(body.bookingReminderCustomer?.frequency)
+                    ? body.bookingReminderCustomer.frequency
+                    : 'immediate',
+                hoursBefore: Number.isFinite(Number(body.bookingReminderCustomer?.hoursBefore))
+                    ? Number(body.bookingReminderCustomer.hoursBefore)
+                    : 24,
+            },
+            upcomingBookingsAdmin: {
+                enabled: !!body.upcomingBookingsAdmin?.enabled,
+                frequency: ['daily', 'weekly'].includes(body.upcomingBookingsAdmin?.frequency)
+                    ? body.upcomingBookingsAdmin.frequency
+                    : 'daily',
+                timeOfDay: String(body.upcomingBookingsAdmin?.timeOfDay || '07:00'),
+            },
+            marketing: {
+                enabled: !!body.marketing?.enabled,
+            },
+        };
 
         // there should only be one document; use findOneAndUpdate with upsert
         const defaults = await CompanyNotificationDefaults.findOneAndUpdate(
             {},
-            body,
+            updateData,
             { upsert: true, new: true }
         );
 
@@ -189,6 +239,9 @@ const testSendTemplate = async (req, res) => {
     try {
         const { id } = req.params;
         const user = req.user; // assumes authMiddleware sets this
+        if (!validateObjectId(id)) {
+            return res.status(400).json({ message: 'Invalid template ID.' });
+        }
 
         if (!user || !user.email) {
             return res

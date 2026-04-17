@@ -3,8 +3,42 @@ const { DateTime } = require('luxon');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const Booking = require('../models/Booking');
 const Customer = require('../models/Customer');
+const User = require('../models/User');
+const {
+  assertNoOperatorKeys,
+  pickAllowedFields,
+  validateObjectId,
+} = require('../utils/mongoSafety');
 // const { sendConfirmationEmail } = require('../utils/emailService');
 const APP_TZ = "America/Toronto";
+
+const BOOKING_UPDATE_FIELDS = [
+  'customerName',
+  'customerEmail',
+  'serviceType',
+  'customerId',
+  'status',
+  'hidden',
+  'scheduleConfirmation',
+  'disableConfirmation',
+  'reminderScheduled',
+  'confirmationDate',
+  'reminderDate',
+  'scheduledConfirmationDate',
+  'scheduledReminderDate',
+  'confirmationSent',
+  'reminderSent',
+  'notes',
+  'createdBy',
+  'updatedBy',
+  'customerSuggestedBookingDate',
+  'customerSuggestedServiceType',
+  'customerSuggestedBookingComment',
+  'customerSuggestedBookingAcknowledged',
+  'tax',
+  'discount',
+  'paidAt',
+];
 
 /**
  * Parse an ISO-like string as Toronto wall time (NOT device/server local),
@@ -277,6 +311,7 @@ const bookingControllers = {
     }
 
     try {
+      assertNoOperatorKeys(req.body);
       // --- Date handling in Toronto timezone ---
       const torontoLocal = DateTime.fromISO(date, { zone: 'America/Toronto' });
       // const parsedDate = torontoLocal.toJSDate();
@@ -358,6 +393,9 @@ const bookingControllers = {
 
       // if a customerId is provided, push booking into the customer's bookings array
       if (customerId) {
+        if (!validateObjectId(customerId)) {
+          return res.status(400).json({ error: 'Invalid customer ID' });
+        }
         await Customer.findByIdAndUpdate(customerId, {
           $push: { bookings: savedBooking._id },
         });
@@ -392,6 +430,9 @@ const bookingControllers = {
   deleteBooking: async (req, res) => {
     try {
       const bookingId = req.params.id;
+      if (!validateObjectId(bookingId)) {
+        return res.status(400).json({ error: 'Invalid booking ID' });
+      }
       const deletedBooking = await Booking.findByIdAndDelete(bookingId);
       if (!deletedBooking) {
         return res.status(404).json({ error: 'Booking not found' });
@@ -405,6 +446,12 @@ const bookingControllers = {
   completeBooking: async (req, res) => {
     try {
       const bookingId = req.params.id;
+      if (!validateObjectId(bookingId)) {
+        return res.status(400).json({ error: 'Invalid booking ID' });
+      }
+      if (req.body.updatedBy && !validateObjectId(req.body.updatedBy)) {
+        return res.status(400).json({ error: 'Invalid updatedBy user ID' });
+      }
       // const { income } = req.body; // Expecting income to be passed in request body
       const { status } = req.body; // Expecting status to be passed in request body
       const updatedBooking = await Booking.findByIdAndUpdate(bookingId, { status: status }, { new: true });
@@ -424,6 +471,12 @@ const bookingControllers = {
   hideBooking: async (req, res) => {
     try {
       const bookingId = req.params.id;
+      if (!validateObjectId(bookingId)) {
+        return res.status(400).json({ error: 'Invalid booking ID' });
+      }
+      if (req.body.updatedBy && !validateObjectId(req.body.updatedBy)) {
+        return res.status(400).json({ error: 'Invalid updatedBy user ID' });
+      }
       const updatedBooking = await Booking.findByIdAndUpdate(bookingId, { hidden: true }, { new: true });
       if (!updatedBooking) {
         return res.status(404).json({ error: 'Booking not found' });
@@ -440,6 +493,12 @@ const bookingControllers = {
   cancelBooking: async (req, res) => {
     try {
       const bookingId = req.params.id;
+      if (!validateObjectId(bookingId)) {
+        return res.status(400).json({ error: 'Invalid booking ID' });
+      }
+      if (req.body.updatedBy && !validateObjectId(req.body.updatedBy)) {
+        return res.status(400).json({ error: 'Invalid updatedBy user ID' });
+      }
       const updatedBooking = await Booking.findByIdAndUpdate(bookingId, { status: 'cancelled' }, { new: true });
       if (!updatedBooking) {
         return res.status(404).json({ error: 'Booking not found' });
@@ -457,6 +516,12 @@ const bookingControllers = {
     // console.log('Confirm booking request:', req.body);
     try {
       const bookingId = req.params.id;
+      if (!validateObjectId(bookingId)) {
+        return res.status(400).json({ error: 'Invalid booking ID' });
+      }
+      if (req.body.updatedBy && !validateObjectId(req.body.updatedBy)) {
+        return res.status(400).json({ error: 'Invalid updatedBy user ID' });
+      }
       const {
         scheduleConfirmation,
         confirmationDate,
@@ -513,6 +578,12 @@ const bookingControllers = {
   pendBookingById: async (req, res) => {
     try {
       const bookingId = req.params.id;
+      if (!validateObjectId(bookingId)) {
+        return res.status(400).json({ error: 'Invalid booking ID' });
+      }
+      if (req.body.updatedBy && !validateObjectId(req.body.updatedBy)) {
+        return res.status(400).json({ error: 'Invalid updatedBy user ID' });
+      }
       const updatedBooking = await Booking.findByIdAndUpdate(bookingId, {
         status: 'pending',
         updatedAt: new Date(),
@@ -651,6 +722,12 @@ const bookingControllers = {
     const { notes, updatedBy } = req.body;
 
     try {
+      if (!validateObjectId(bookingId)) {
+        return res.status(400).json({ error: 'Invalid booking ID' });
+      }
+      if (updatedBy && !validateObjectId(updatedBy)) {
+        return res.status(400).json({ error: 'Invalid updatedBy user ID' });
+      }
       const updatedBooking = await Booking.findByIdAndUpdate(bookingId,
         { notes, updatedBy, updatedAt: new Date() },
         { new: true }
@@ -669,6 +746,12 @@ const bookingControllers = {
     const { date, updatedBy, customerSuggestedBookingAcknowledged } = req.body;
 
     try {
+      if (!validateObjectId(bookingId)) {
+        return res.status(400).json({ error: 'Invalid booking ID' });
+      }
+      if (updatedBy && !validateObjectId(updatedBy)) {
+        return res.status(400).json({ error: 'Invalid updatedBy user ID' });
+      }
       const updatedBooking = await Booking.findByIdAndUpdate(bookingId,
         // { date: new Date(date), updatedBy, updatedAt: new Date() },
         {
@@ -702,6 +785,10 @@ const bookingControllers = {
   updateBooking: async (req, res) => {
     try {
       const bookingId = req.params.id;
+      if (!validateObjectId(bookingId)) {
+        return res.status(400).json({ error: 'Invalid booking ID' });
+      }
+      assertNoOperatorKeys(req.body);
 
       // Pull out fields we want to normalize
       const {
@@ -715,9 +802,19 @@ const bookingControllers = {
 
       // --- 1) Build base update payload from the rest of the body ---
       const updateData = {
-        ...restBody,
+        ...pickAllowedFields(restBody, BOOKING_UPDATE_FIELDS),
         updatedAt: new Date(),
       };
+
+      if (updateData.customerId && !validateObjectId(String(updateData.customerId))) {
+        return res.status(400).json({ error: 'Invalid customer ID' });
+      }
+      if (updateData.updatedBy && !validateObjectId(String(updateData.updatedBy))) {
+        return res.status(400).json({ error: 'Invalid updatedBy user ID' });
+      }
+      if (updateData.createdBy && !validateObjectId(String(updateData.createdBy))) {
+        return res.status(400).json({ error: 'Invalid createdBy user ID' });
+      }
 
       // --- 2) Date handling (if client sent a new date) ---
       if (date) {
@@ -855,6 +952,9 @@ const bookingControllers = {
     // } 
 
     try {
+      if (!validateObjectId(bookingId)) {
+        return res.status(400).json({ error: 'Invalid booking ID' });
+      }
       // Here you would typically send the new date request to the relevant service
       // For demonstration, we'll just log it
       console.log(`New date request for booking ${bookingId}:`, newDate, comment, serviceType);
@@ -881,6 +981,9 @@ const bookingControllers = {
       //   return res.status(401).json({ error: "Unauthorized" });
       // }
       const userId = req.body.userId; // For testing, we can pass userId in body. In production, get from req.user
+      if (!validateObjectId(userId)) {
+        return res.status(400).json({ error: "Invalid user ID" });
+      }
 
       const {
         customerSuggestedBookingDate,
@@ -908,10 +1011,10 @@ const bookingControllers = {
       //  - Customer.authUserId
       console.log("userId received:", userId);
       console.log("typeof userId:", typeof userId);
-      const customer = await Customer.findOne({ user: userId });
+      let customer = await Customer.findOne({ user: userId });
       if (!customer) {
         // return res.status(404).json({ error: "Customer profile not found" });
-        userDoc = await User.findById(userId);
+        const userDoc = await User.findById(userId);
         if (!userDoc) return res.status(404).json({ error: "User not found" });
 
         customer = await Customer.create({

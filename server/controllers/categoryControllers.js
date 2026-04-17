@@ -1,4 +1,5 @@
 const Category = require('../models/Category');
+const { assertNoOperatorKeys, validateObjectId } = require('../utils/mongoSafety');
 
 module.exports = {
     // Fetch all categories
@@ -15,6 +16,7 @@ module.exports = {
     createCategory: async (req, res) => {
         const { key, labelKey, type, descriptionKey } = req.body;
         try {
+            assertNoOperatorKeys(req.body);
             const newCategory = new Category({ key, labelKey, type, descriptionKey });
             await newCategory.save();
             res.status(201).json(newCategory);
@@ -28,6 +30,10 @@ module.exports = {
         const { id } = req.params;
         const { key, labelKey, type, descriptionKey } = req.body;
         try {
+            if (!validateObjectId(id)) {
+                return res.status(400).json({ message: 'Invalid category ID' });
+            }
+            assertNoOperatorKeys(req.body);
             const updatedCategory = await Category.findByIdAndUpdate(id, { key, labelKey, type, descriptionKey }, { new: true });
             if (!updatedCategory) {
                 return res.status(404).json({ message: 'Category not found' });
@@ -42,6 +48,9 @@ module.exports = {
     deleteCategory: async (req, res) => {
         const { id } = req.params;
         try {
+            if (!validateObjectId(id)) {
+                return res.status(400).json({ message: 'Invalid category ID' });
+            }
             const deletedCategory = await Category.findByIdAndDelete(id);
             if (!deletedCategory) {
                 return res.status(404).json({ message: 'Category not found' });

@@ -1,4 +1,28 @@
 const Customer = require('../models/Customer');
+const {
+  assertNoOperatorKeys,
+  pickAllowedFields,
+  validateObjectId,
+} = require('../utils/mongoSafety');
+
+const CUSTOMER_FIELDS = [
+  'user',
+  'firstName',
+  'lastName',
+  'telephone',
+  'notes',
+  'email',
+  'address',
+  'city',
+  'province',
+  'postalcode',
+  'companyName',
+  'bookings',
+  'type',
+  'defaultService',
+  'defaultServiceDescription',
+  'status',
+];
 
 module.exports = {
   getAllCustomers: async (req, res) => {
@@ -12,6 +36,9 @@ module.exports = {
 
   getCustomerById: async (req, res) => {
     try {
+      if (!validateObjectId(req.params.id)) {
+        return res.status(400).json({ error: 'Invalid customer ID' });
+      }
       const customer = await Customer.findById(req.params.id).populate('user').populate('bookings');
       if (!customer) return res.status(404).json({ error: 'Customer not found' });
       res.status(200).json(customer);
@@ -22,8 +49,10 @@ module.exports = {
 
   createCustomer: async (req, res) => {
     try {
+      assertNoOperatorKeys(req.body);
+      const createData = pickAllowedFields(req.body, CUSTOMER_FIELDS);
       // console.log("Creating customer with data:", req.body);
-      const customer = await Customer.create(req.body);
+      const customer = await Customer.create(createData);
       res.status(201).json(customer);
     } catch (err) {
       res.status(400).json({ error: 'Failed to create customer', details: err.message });
@@ -32,8 +61,13 @@ module.exports = {
 
   updateCustomer: async (req, res) => {
     try {
+      if (!validateObjectId(req.params.id)) {
+        return res.status(400).json({ error: 'Invalid customer ID' });
+      }
+      assertNoOperatorKeys(req.body);
+      const updateData = pickAllowedFields(req.body, CUSTOMER_FIELDS);
       console.log("Updating customer with data:", req.body);
-      const updated = await Customer.findByIdAndUpdate(req.params.id, req.body, { new: true });
+      const updated = await Customer.findByIdAndUpdate(req.params.id, updateData, { new: true, runValidators: true });
       if (!updated) return res.status(404).json({ error: 'Customer not found' });
       res.status(200).json(updated);
     } catch (err) {
@@ -43,6 +77,9 @@ module.exports = {
 
   deleteCustomer: async (req, res) => {
     try {
+      if (!validateObjectId(req.params.id)) {
+        return res.status(400).json({ error: 'Invalid customer ID' });
+      }
       const deleted = await Customer.findByIdAndDelete(req.params.id);
       if (!deleted) return res.status(404).json({ error: 'Customer not found' });
       res.status(200).json({ message: 'Customer deleted' });
@@ -69,6 +106,9 @@ module.exports = {
   },
   getCustomerNotes: async (req, res) => {
     try {
+      if (!validateObjectId(req.params.id)) {
+        return res.status(400).json({ error: 'Invalid customer ID' });
+      }
       const customer = await Customer.findById(req.params.id);
       if (!customer) return res.status(404).json({ error: "Customer not found" });
 
@@ -80,6 +120,9 @@ module.exports = {
   },
   saveCustomerNotes: async (req, res) => {
     try {
+      if (!validateObjectId(req.params.id)) {
+        return res.status(400).json({ error: 'Invalid customer ID' });
+      }
       const customer = await Customer.findById(req.params.id);
       if (!customer) return res.status(404).json({ error: "Customer not found" });
 
@@ -94,6 +137,12 @@ module.exports = {
   },
   assignUserToCustomer: async (req, res) => {
     try {
+      if (!validateObjectId(req.params.id)) {
+        return res.status(400).json({ error: 'Invalid customer ID' });
+      }
+      if (!validateObjectId(req.body.userId)) {
+        return res.status(400).json({ error: 'Invalid user ID' });
+      }
       const customer = await Customer.findById(req.params.id);
       if (!customer) return res.status(404).json({ error: "Customer not found" });
 
@@ -108,6 +157,9 @@ module.exports = {
   },
   getCustomerBookings: async (req, res) => {
     try {
+      if (!validateObjectId(req.params.id)) {
+        return res.status(400).json({ error: 'Invalid customer ID' });
+      }
       const customer = await Customer.findById(req.params.id).populate('bookings');
       if (!customer) return res.status(404).json({ error: "Customer not found" });
 
@@ -120,6 +172,12 @@ module.exports = {
   removeCustomerBooking: async (req, res) => {
     try {
       const { id, bookingId } = req.params;
+      if (!validateObjectId(id)) {
+        return res.status(400).json({ error: 'Invalid customer ID' });
+      }
+      if (!validateObjectId(bookingId)) {
+        return res.status(400).json({ error: 'Invalid booking ID' });
+      }
       console.log("Removing booking:", bookingId, "from customer:", id);
       const customer = await Customer.findById(id);
       if (!customer) return res.status(404).json({ error: "Customer not found" });

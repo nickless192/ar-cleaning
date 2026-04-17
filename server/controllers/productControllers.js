@@ -1,4 +1,17 @@
 const { Product } = require('../models');
+const {
+    assertNoOperatorKeys,
+    pickAllowedFields,
+    validateObjectId,
+} = require('../utils/mongoSafety');
+
+const PRODUCT_FIELDS = [
+    'productId',
+    'name',
+    'description',
+    'productCost',
+    'quantityAtHand',
+];
 
 const productControllers = {
     getProducts(req, res) {
@@ -33,7 +46,13 @@ const productControllers = {
             .catch(err => res.status(500).json(err));
     },
     async createProduct({ body }, res) {
-        Product.create(body).
+        try {
+            assertNoOperatorKeys(body);
+        } catch (err) {
+            return res.status(400).json({ message: 'Invalid product payload' });
+        }
+        const createData = pickAllowedFields(body, PRODUCT_FIELDS);
+        Product.create(createData).
             then(dbProductData => {
                 console.log(dbProductData);
                 res.status(200).json(dbProductData);
@@ -44,7 +63,16 @@ const productControllers = {
             });
     },
     updateProduct({ params, body }, res) {
-        Product.findByIdAndUpdate({ _id: params.productId }, body, { new: true })
+        if (!validateObjectId(params.productId)) {
+            return res.status(400).json({ message: 'Invalid product ID' });
+        }
+        try {
+            assertNoOperatorKeys(body);
+        } catch (err) {
+            return res.status(400).json({ message: 'Invalid product payload' });
+        }
+        const updateData = pickAllowedFields(body, PRODUCT_FIELDS);
+        Product.findByIdAndUpdate(params.productId, updateData, { new: true, runValidators: true })
             .select('-__v')
             .then(dbProductData => {
                 if (!dbProductData) {
@@ -56,7 +84,10 @@ const productControllers = {
             .catch(err => res.status(500).json(err));
     },
     deleteProduct({ params }, res) {
-        Product.findByIdAndDelete({ _id: params.productId })
+        if (!validateObjectId(params.productId)) {
+            return res.status(400).json({ message: 'Invalid product ID' });
+        }
+        Product.findByIdAndDelete(params.productId)
             .then(dbProductData => {
                 if (!dbProductData) {
                     res.status(404).json({ message: 'No product found by this name' });

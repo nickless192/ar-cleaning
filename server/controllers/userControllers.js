@@ -4,6 +4,24 @@ const { signToken } = require('../utils/auth');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
+const {
+    assertNoOperatorKeys,
+    pickAllowedFields,
+    validateObjectId,
+} = require('../utils/mongoSafety');
+
+const USER_MUTABLE_FIELDS = [
+    'firstName',
+    'lastName',
+    'username',
+    'email',
+    'password',
+    'termsConsent',
+    'consentReceivedDate',
+    'adminFlag',
+    'testerFlag',
+    'roles',
+];
 
 
 const userControllers = {
@@ -30,14 +48,21 @@ const userControllers = {
     },
     // create new user
     async createUser({ body }, res) {
+        try {
+            assertNoOperatorKeys(body);
+        } catch (err) {
+            return res.status(400).json({ message: 'Invalid user payload' });
+        }
+
         // check if consent was given
         if (!body.termsConsent) {
             return res.status(400).json({ message: 'You must agree to the terms and conditions.' });
         }
         // Set the consentReceivedDate to now
-        body.consentReceivedDate = Date.now();
+        const createData = pickAllowedFields(body, USER_MUTABLE_FIELDS);
+        createData.consentReceivedDate = Date.now();
 
-        User.create(body).
+        User.create(createData).
             then(dbUserData => {
                 console.log(dbUserData);
                 const token = signToken(dbUserData);
@@ -51,7 +76,16 @@ const userControllers = {
     },
     // update user's information
     updateUser({ params, body }, res) {
-        User.findByIdAndUpdate({ _id: params.userId }, body, { new: true })
+        if (!validateObjectId(params.userId)) {
+            return res.status(400).json({ message: 'Invalid user ID' });
+        }
+        try {
+            assertNoOperatorKeys(body);
+        } catch (err) {
+            return res.status(400).json({ message: 'Invalid user payload' });
+        }
+        const updateData = pickAllowedFields(body, USER_MUTABLE_FIELDS);
+        User.findByIdAndUpdate(params.userId, updateData, { new: true, runValidators: true })
             .select('-__v')
             .then(dbUserData => {
                 if (!dbUserData) {
@@ -63,7 +97,10 @@ const userControllers = {
             .catch(err => res.status(500).json(err));
     },
     deleteUser({ params }, res) {
-        User.findByIdAndDelete({ _id: params.userId })
+        if (!validateObjectId(params.userId)) {
+            return res.status(400).json({ message: 'Invalid user ID' });
+        }
+        User.findByIdAndDelete(params.userId)
             .then(dbUserData => {
                 if (!dbUserData) {
                     res.status(404).json({ message: 'No user found by this username' });
@@ -237,6 +274,9 @@ const userControllers = {
     async getUserBookings({ params }, res) {
         // get userId and check if its linked to customer and get the customer bookings
         try {
+            if (!validateObjectId(params.userId)) {
+                return res.status(400).json({ message: 'Invalid user ID' });
+            }
             // const user = await User.findById(params.userId);
             // if (!user) return res.status(404).json({ message: 'User not found' });
 
@@ -251,6 +291,9 @@ const userControllers = {
     },
     async setUserConsent({ params, body }, res) {
         try {
+            if (!validateObjectId(params.userId)) {
+                return res.status(400).json({ message: 'Invalid user ID' });
+            }
             const user = await User.findById(params.userId);
             if (!user) return res.status(404).json({ message: 'No user found' });
 

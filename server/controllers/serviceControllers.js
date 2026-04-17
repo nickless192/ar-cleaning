@@ -1,4 +1,22 @@
 const { Service } = require('../models');
+const {
+    assertNoOperatorKeys,
+    pickAllowedFields,
+    validateObjectId,
+} = require('../utils/mongoSafety');
+
+const SERVICE_FIELDS = [
+    'categoryKey',
+    'serviceId',
+    'name',
+    'nameKey',
+    'descriptionKey',
+    'cost',
+    'isActive',
+    'options',
+    'order',
+    'isVisible',
+];
 
 const serviceControllers = {
     getServices(req, res) {
@@ -33,7 +51,14 @@ const serviceControllers = {
             .catch(err => res.status(500).json(err));
     },
     async createService({ body }, res) {
-        Service.create(body).
+        try {
+            assertNoOperatorKeys(body);
+        } catch (err) {
+            return res.status(400).json({ message: 'Invalid service payload' });
+        }
+
+        const createData = pickAllowedFields(body, SERVICE_FIELDS);
+        Service.create(createData).
             then(dbServiceData => {
                 console.log(dbServiceData);
                 res.status(200).json(dbServiceData);
@@ -44,7 +69,17 @@ const serviceControllers = {
             });
     },
     updateService({ params, body }, res) {
-        Service.findByIdAndUpdate({ _id: params.serviceId }, body, { new: true })
+        if (!validateObjectId(params.serviceId)) {
+            return res.status(400).json({ message: 'Invalid service ID' });
+        }
+        try {
+            assertNoOperatorKeys(body);
+        } catch (err) {
+            return res.status(400).json({ message: 'Invalid service payload' });
+        }
+
+        const updateData = pickAllowedFields(body, SERVICE_FIELDS);
+        Service.findByIdAndUpdate(params.serviceId, updateData, { new: true, runValidators: true })
             .select('-__v')
             .then(dbServiceData => {
                 if (!dbServiceData) {
@@ -56,7 +91,10 @@ const serviceControllers = {
             .catch(err => res.status(500).json(err));
     },
     deleteService({ params }, res) {
-        Service.findByIdAndDelete({ _id: params.serviceId })
+        if (!validateObjectId(params.serviceId)) {
+            return res.status(400).json({ message: 'Invalid service ID' });
+        }
+        Service.findByIdAndDelete(params.serviceId)
             .then(dbServiceData => {
                 if (!dbServiceData) {
                     res.status(404).json({ message: 'No service found by this name' });
@@ -67,6 +105,9 @@ const serviceControllers = {
             .catch(err => res.status(400).json(err));
     },
     duplicateService({params, body}, res) {
+        if (!validateObjectId(params.serviceId)) {
+            return res.status(400).json({ message: 'Invalid service ID' });
+        }
         Service.findById(params.serviceId)
         .then(originalService => {
             if (!originalService) {

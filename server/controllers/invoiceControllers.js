@@ -4,6 +4,10 @@ const path = require("path");
 const getNextSequence = require("../utils/getNextSequence");
 
 const { generateInvoicePdfBuffer } = require("../utils/invoicePdf");
+const {
+  assertNoOperatorKeys,
+  validateObjectId,
+} = require('../utils/mongoSafety');
 
 // ✅ Use YOUR existing email function here (you said this part is done)
 // Update this import to your real module path/name.
@@ -21,6 +25,9 @@ const COMPANY = {
 async function getInvoicePdf(req, res) {
   try {
     const { id } = req.params;
+    if (!validateObjectId(id)) {
+      return res.status(400).json({ message: "Invalid invoice ID" });
+    }
 
     const invoice = await Invoice.findById(id).lean();
     if (!invoice) return res.status(404).json({ message: "Invoice not found" });
@@ -47,6 +54,9 @@ async function sendInvoice(req, res) {
   try {
     
     const { id } = req.params;
+    if (!validateObjectId(id)) {
+      return res.status(400).json({ message: "Invalid invoice ID" });
+    }
 
     const invoice = await Invoice.findById(id);
     if (!invoice) return res.status(404).json({ message: "Invoice not found" });
@@ -131,6 +141,9 @@ module.exports = {
   // Get a single invoice by ID
   async getInvoiceById(req, res) {
     try {
+      if (!validateObjectId(req.params.id)) {
+        return res.status(400).json({ error: 'Invalid invoice ID' });
+      }
       const invoice = await Invoice.findById(req.params.id);
       if (!invoice) return res.status(404).json({ error: 'Invoice not found' });
       res.json(invoice);
@@ -142,6 +155,9 @@ module.exports = {
   // GET /api/invoices/by-booking/:bookingId
   async getInvoiceByBooking(req, res) {
     const { bookingId } = req.params;
+    if (!validateObjectId(bookingId)) {
+      return res.status(400).json({ message: "Invalid booking ID" });
+    }
     const invoice = await Invoice.findOne({ bookingId }).lean();
     if (!invoice) return res.status(404).json({ message: "No invoice found" });
     res.status(200).json(invoice);
@@ -151,7 +167,11 @@ module.exports = {
   // Create invoice (front-end now passes fully built services array)
   async createInvoice(req, res) {
     try {
+      assertNoOperatorKeys(req.body);
       const { customerName, customerEmail, description, services, bookingId } = req.body;
+      if (bookingId && !validateObjectId(bookingId)) {
+        return res.status(400).json({ error: 'Invalid booking ID' });
+      }
 
       if (!Array.isArray(services) || services.length === 0) {
         return res.status(400).json({ error: 'At least one service is required' });
@@ -201,6 +221,10 @@ module.exports = {
   // Update invoice
   async updateInvoice(req, res) {
     try {
+      if (!validateObjectId(req.params.id)) {
+        return res.status(400).json({ error: 'Invalid invoice ID' });
+      }
+      assertNoOperatorKeys(req.body);
       //update this function to mark the invoice and booking as paid and update the payment method
       if (req.body.status !== 'paid') {
         return res.status(400).json({ error: 'Only status update to "paid" is allowed' });
@@ -228,6 +252,9 @@ module.exports = {
   // Delete invoice
   async deleteInvoice(req, res) {
     try {
+      if (!validateObjectId(req.params.id)) {
+        return res.status(400).json({ error: 'Invalid invoice ID' });
+      }
       const deleted = await Invoice.findByIdAndDelete(req.params.id);
       if (!deleted) return res.status(404).json({ error: 'Invoice not found' });
       // change the booking status back to 'completed' if it was linked to this invoice
