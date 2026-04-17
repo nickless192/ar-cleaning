@@ -1,7 +1,7 @@
 // routes/adminUserRoutes.js
 const router = require('express').Router();
-// const authMiddleware = require('../middleware/authMiddleware');
-const requireRole = require('../../middleware/requireRole');
+const { authMiddleware } = require('../../utils/auth');
+const requireAdminFlag = require('../../middleware/requireAdminFlag');
 const {
     getUsers,
     getRoles,
@@ -11,8 +11,8 @@ const {
 } = require('../../controllers/adminUserController');
 
 // All routes in this file require authentication + admin role
-// router.use(authMiddleware);
-router.use(requireRole('admin')); // or 'super_admin' if you add that later
+router.use(authMiddleware);
+router.use(requireAdminFlag); // or 'super_admin' if you add that later
 
 // GET /api/admin/users
 router.get('/users', getUsers);

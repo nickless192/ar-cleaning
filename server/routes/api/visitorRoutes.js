@@ -1,4 +1,6 @@
 const router = require("express").Router();
+const { authMiddleware } = require('../../utils/auth');
+const requireAdminFlag = require('../../middleware/requireAdminFlag');
 
 const {
   logVisit,
@@ -23,26 +25,26 @@ const {
 // GET /api/visitors/logs  (recent logs)
 // POST /api/visitors/logs (create/update session log)
 router.route("/logs")
-  .get(getVisits)
+  .get(authMiddleware, requireAdminFlag, getVisits)
   .post(logVisit);
 
 // ---- Basic daily counts (legacy/simple) ----
 // GET /api/visitors/daily
-router.get("/daily", getDailyVisitors);
+router.get("/daily", authMiddleware, requireAdminFlag, getDailyVisitors);
 
 // ---- Migration ----
 // POST /api/visitors/migrate
-router.post("/migrate", migrateData);
+router.post("/migrate", authMiddleware, requireAdminFlag, migrateData);
 
 // ---- Reports (recommended) ----
 // GET /api/visitors/daily-report?date=YYYY-MM-DD&excludeBots=true
-router.get("/daily-report", getDailyReport);
+router.get("/daily-report", authMiddleware, requireAdminFlag, getDailyReport);
 
 // GET /api/visitors/weekly-report?end=YYYY-MM-DD&days=7&excludeBots=true
-router.get("/weekly-report", getWeeklyReport);
+router.get("/weekly-report", authMiddleware, requireAdminFlag, getWeeklyReport);
 
 // Keep your old path alive if your frontend already uses it:
-router.get("/weekly-reporting", getWeeklyReport);
+router.get("/weekly-reporting", authMiddleware, requireAdminFlag, getWeeklyReport);
 
 // ---- Legacy endpoints (still supported) ----
 router.post("/session-duration", updateSessionDuration);

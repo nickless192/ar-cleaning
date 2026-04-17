@@ -1,6 +1,11 @@
 const router = require("express").Router();
 const cron = require("node-cron");
 const { sendDailyEventsReportEmail } = require("../../controllers/eventsReportController");
+const { authMiddleware } = require("../../utils/auth");
+const requireAdminFlag = require("../../middleware/requireAdminFlag");
+
+router.use(authMiddleware);
+router.use(requireAdminFlag);
 
 // Manually trigger (admin)
 router.post("/send-daily-events", async (req, res) => {

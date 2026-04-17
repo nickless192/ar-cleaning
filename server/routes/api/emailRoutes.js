@@ -7,6 +7,8 @@ const NotificationService = require('../../services/NotificationService');
 
 const router = require('express').Router();
 const isDev = process.env.NODE_ENV !== "production";
+const { authMiddleware } = require('../../utils/auth');
+const requireAdminFlag = require('../../middleware/requireAdminFlag');
 
 // Route for sending an email
 router.post('/quote', emailQuote);
@@ -21,11 +23,11 @@ router.post('/new-user-notification', emailNewUserNotification);
 
 router.post('/request-password-reset', emailPasswordResetRequest);
 
-router.get('/weekly-report', generateManualReport);
-router.post('/upcoming-bookings', sendUpcomingBookingsEmail);
+router.get('/weekly-report', authMiddleware, requireAdminFlag, generateManualReport);
+router.post('/upcoming-bookings', authMiddleware, requireAdminFlag, sendUpcomingBookingsEmail);
 
 // ✅ Manually trigger Admin Upcoming Bookings Digest
-router.post("/admin-upcoming-bookings-digest", async (req, res) => {
+router.post("/admin-upcoming-bookings-digest", authMiddleware, requireAdminFlag, async (req, res) => {
     try {
         const days = Number(req.body?.days || 7);
 

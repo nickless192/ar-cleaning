@@ -14,6 +14,7 @@ import {
 } from "react-bootstrap";
 import "/src/assets/css/bookingcalendar.css";
 import Auth from "/src/utils/auth";
+import { authFetch } from "/src/utils/authFetch";
 import BookingForm from "../Booking/BookingForm";
 import GenerateInvoiceModal from "../Booking/GenerateInvoiceModal";
 import BookingActions from "../Booking/BookingActions";
@@ -83,8 +84,8 @@ const BookingCalendar = ({
       setDigestMsg("");
       setDigestErr("");
 
-      // const res = await fetch("/api/email/admin-upcoming-bookings-digest", {
-      const res = await fetch("/api/email/upcoming-bookings", {
+      // const res = await authFetch("/api/email/admin-upcoming-bookings-digest", {
+      const res = await authFetch("/api/email/upcoming-bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ days: Number(digestDays) || 7 }),
@@ -117,7 +118,7 @@ const BookingCalendar = ({
         // If not in current list (e.g. different month / filtered),
         // fetch directly by id so we can still open the modal.
         if (!bookingToOpen) {
-          const res = await fetch(`/api/bookings/${incomingBookingId}`);
+          const res = await authFetch(`/api/bookings/${incomingBookingId}`);
           if (res.ok) bookingToOpen = await res.json();
         }
 
@@ -214,7 +215,7 @@ const BookingCalendar = ({
       try {
         // ✅ Endpoint you should add (or already have):
         // GET /api/invoices/by-booking/:bookingId
-        const res = await fetch(`/api/invoices/by-booking/${selectedBooking._id}`);
+        const res = await authFetch(`/api/invoices/by-booking/${selectedBooking._id}`);
         if (!res.ok) {
           setInvoiceInfo(null);
           return;
@@ -279,7 +280,7 @@ const BookingCalendar = ({
   //   };
 
   //   try {
-  //     const res = await fetch(
+  //     const res = await authFetch(
   //       `/api/bookings/${selectedBooking._id}/update`,
   //       {
   //         method: "PUT",
@@ -387,7 +388,7 @@ const BookingCalendar = ({
 
     try {
       setLoading(true);
-      const res = await fetch(
+      const res = await authFetch(
         `/api/bookings/${selectedBooking._id}/update`,
         {
           method: "PUT",
@@ -539,7 +540,7 @@ const BookingCalendar = ({
     };
 
     try {
-      const res = await fetch(`/api/bookings/${bookingId}/confirm`, {
+      const res = await authFetch(`/api/bookings/${bookingId}/confirm`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -577,7 +578,7 @@ const BookingCalendar = ({
     try {
       setLoading(true);
 
-      const res = await fetch(
+      const res = await authFetch(
         `/api/bookings/${selectedBooking._id}/update-date`,
         {
           method: "PUT",
@@ -616,7 +617,7 @@ const BookingCalendar = ({
 
   // const fetchBookings = async () => {
   //   try {
-  //     const res = await fetch('/api/bookings');
+  //     const res = await authFetch('/api/bookings');
   //     if (!res.ok) throw new Error('Failed to fetch bookings');
   //     const data = await res.json();
   //     // filter out data that is hidden
@@ -635,7 +636,7 @@ const BookingCalendar = ({
     if (!window.confirm('Are you sure you want to cancel this booking?')) return;
     // return async () => {
     try {
-      const res = await fetch(`/api/bookings/${bookingId}/cancel`, {
+      const res = await authFetch(`/api/bookings/${bookingId}/cancel`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'cancelled', updatedBy: Auth.getProfile().data._id }) // Assuming you have user authentication
@@ -655,7 +656,7 @@ const BookingCalendar = ({
     }
     if (!window.confirm('Are you sure you want to pend this booking?')) return;
     try {
-      const res = await fetch(`/api/bookings/${bookingId}/pending`, {
+      const res = await authFetch(`/api/bookings/${bookingId}/pending`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'pending', updatedBy: Auth.getProfile().data._id }) // Assuming you have user authentication
@@ -671,7 +672,7 @@ const BookingCalendar = ({
     if (!window.confirm('Are you sure you want to delete this booking?')) return;
 
     try {
-      const res = await fetch(`/api/bookings/${bookingId}`, { method: 'DELETE' });
+      const res = await authFetch(`/api/bookings/${bookingId}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Failed to delete');
       fetchBookings();
     } catch (err) {
@@ -690,7 +691,7 @@ const BookingCalendar = ({
     }
     if (!window.confirm('Are you sure you want to mark this booking as completed?')) return;
     try {
-      const res = await fetch(`/api/bookings/${bookingId}/complete`, {
+      const res = await authFetch(`/api/bookings/${bookingId}/complete`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'completed', updatedBy: Auth.getProfile().data._id }) // Assuming you have user authentication
@@ -709,7 +710,7 @@ const BookingCalendar = ({
     }
     if (!window.confirm('Are you sure you want to hide this booking?')) return;
     try {
-      const res = await fetch(`/api/bookings/${bookingId}/hide`, {
+      const res = await authFetch(`/api/bookings/${bookingId}/hide`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ hidden: true, updatedBy: Auth.getProfile().data._id }) // Assuming you have user authentication

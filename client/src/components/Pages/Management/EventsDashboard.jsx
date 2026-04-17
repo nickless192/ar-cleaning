@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Row, Col, Card, Spinner, Badge, Button, Form, Collapse, Table } from "react-bootstrap";
 import { FaBolt, FaCalendarDay, FaMousePointer, FaPaperPlane } from "react-icons/fa";
+import { authFetch } from "/src/utils/authFetch";
 
 /**
  * EventsDashboard.jsx
@@ -298,7 +299,7 @@ const EventsDashboard = () => {
     setReportStatus(null);
 
     try {
-      const res = await fetch("/api/admin-reports/send-daily-events", {
+      const res = await authFetch("/api/admin-reports/send-daily-events", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
       });
@@ -340,7 +341,7 @@ const EventsDashboard = () => {
         // IMPORTANT: include bots in raw fetch; we filter at event-level
         params.set("excludeBots", "false");
 
-        const res = await fetch(`/api/visitors/logs?${params.toString()}`);
+        const res = await authFetch(`/api/visitors/logs?${params.toString()}`);
         if (!res.ok) throw new Error("Failed to fetch logs");
 
         const data = await res.json();

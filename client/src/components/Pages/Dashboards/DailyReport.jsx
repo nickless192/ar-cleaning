@@ -1,3 +1,4 @@
+import { authFetch } from "/src/utils/authFetch";
 // src/components/Pages/Management/DailyReport.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import { Card, Row, Col, Spinner, Badge, Form } from "react-bootstrap";
@@ -49,7 +50,7 @@ export default function DailyReport() {
           date,
           excludeBots: String(excludeBots),
         });
-        const res = await fetch(`/api/visitors/daily-report?${qs.toString()}`, {
+        const res = await authFetch(`/api/visitors/daily-report?${qs.toString()}`, {
           cache: "no-store",
         });
         if (!res.ok) throw new Error("Failed to fetch daily report");

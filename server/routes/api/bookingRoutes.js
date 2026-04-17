@@ -3,6 +3,8 @@ const isDev = process.env.NODE_ENV !== "production";
 const cron = require('node-cron');
 const Booking = require('../../models/Booking');
 const NotificationService = require('../../services/NotificationService');
+const { authMiddleware } = require('../../utils/auth');
+const requireAdminFlag = require('../../middleware/requireAdminFlag');
 const { createBooking, getBookings, deleteBooking, completeBooking, hideBooking, sendScheduledReminder, sendScheduledConfirmationEmail, confirmBooking, cancelBooking, pendBookingById,
   updateBookingDate,
   submitNewDateRequest,
@@ -13,16 +15,16 @@ const { createBooking, getBookings, deleteBooking, completeBooking, hideBooking,
 
 router.post('/', createBooking);
 router.post('/request', submitNewBookingRequest);
-router.get('/', getBookings);
-router.delete('/:id', deleteBooking);
-router.put('/:id/update-date', updateBookingDate);
-router.put('/:id/complete', completeBooking);
-router.put('/:id/hide', hideBooking);
-router.put('/:id/confirm', confirmBooking);
-router.put('/:id/cancel', cancelBooking);
-router.put('/:id/pending', pendBookingById);
-router.put('/:id/request-change', submitNewDateRequest);
-router.put('/:id/update', updateBooking);
+router.get('/', authMiddleware, requireAdminFlag, getBookings);
+router.delete('/:id', authMiddleware, requireAdminFlag, deleteBooking);
+router.put('/:id/update-date', authMiddleware, requireAdminFlag, updateBookingDate);
+router.put('/:id/complete', authMiddleware, requireAdminFlag, completeBooking);
+router.put('/:id/hide', authMiddleware, requireAdminFlag, hideBooking);
+router.put('/:id/confirm', authMiddleware, requireAdminFlag, confirmBooking);
+router.put('/:id/cancel', authMiddleware, requireAdminFlag, cancelBooking);
+router.put('/:id/pending', authMiddleware, requireAdminFlag, pendBookingById);
+router.put('/:id/request-change', authMiddleware, requireAdminFlag, submitNewDateRequest);
+router.put('/:id/update', authMiddleware, requireAdminFlag, updateBooking);
 
 
 // Reminder Scheduler

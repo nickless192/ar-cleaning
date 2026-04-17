@@ -1,3 +1,4 @@
+import { authFetch } from "/src/utils/authFetch";
 // src/components/Pages/Management/WeeklyReport.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import { Card, Row, Col, Spinner, Badge, Form } from "react-bootstrap";
@@ -47,7 +48,7 @@ export default function WeeklyReport() {
           end,
           excludeBots: String(excludeBots),
         });
-        const res = await fetch(`/api/visitors/weekly-reporting?${qs.toString()}`, {
+        const res = await authFetch(`/api/visitors/weekly-reporting?${qs.toString()}`, {
           cache: "no-store",
         });
         if (!res.ok) throw new Error("Failed to fetch weekly report");

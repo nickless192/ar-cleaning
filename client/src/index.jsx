@@ -130,7 +130,7 @@ const App = () => {
               <Route path="/" element={<Index />} />
               <Route path="/index" element={<IndexCompatibilityRedirect />} />
               <Route path="/profile-page" element={<ProtectedRoute element={<ProfilePage />} />} />
-              <Route path="/notification-management" element={<ProtectedRoute element={<NotificationAdminPage />} />} />
+              <Route path="/notification-management" element={<ProtectedRoute requireAdmin element={<NotificationAdminPage />} />} />
               {/* <Route path="/manage-categories" element={<ProtectedRoute element={<ManageCategories />} />} /> */}
               {/* <Route path="/manage-service" element={<ProtectedRoute element={<ManageService />} />} /> */}
               {/* <Route path="/manage-product" element={<ProtectedRoute element={<ManageProduct />} />} /> */}
@@ -156,7 +156,7 @@ const App = () => {
                 path="/blog/cleanar-joins-cqcc"
                 element={<CleanARJoinsCQCC />}
               />
-              <Route path="/admin" element={<AdminManagementLayout />}>
+              <Route path="/admin" element={<ProtectedRoute requireAdmin element={<AdminManagementLayout />} />}>
                 <Route index element={<Navigate to="booking" replace />} />
                 <Route path="accounting" element={<AccountingTabbedView />} />
                 <Route path="booking" element={<BookingTabbedView />} />

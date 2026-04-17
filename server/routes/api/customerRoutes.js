@@ -1,5 +1,10 @@
 const router = require('express').Router();
 const { getAllCustomers, getCustomerById, createCustomer, deleteCustomer, updateCustomer, getCustomerStats, saveCustomerNotes, getCustomerNotes, assignUserToCustomer, getCustomerBookings, removeCustomerBooking   } = require('../../controllers/customerController');
+const { authMiddleware } = require('../../utils/auth');
+const requireAdminFlag = require('../../middleware/requireAdminFlag');
+
+router.use(authMiddleware);
+router.use(requireAdminFlag);
 
 // POST /customers
 router.post('/', createCustomer); // Add a new customer

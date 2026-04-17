@@ -4,9 +4,10 @@ const { getUsers, createUser, getUserById, deleteUser, updateUser, login, migrat
     refreshToken
  } = require('../../controllers/userControllers');
 const {authMiddleware} = require('../../utils/auth');
+const requireAdminFlag = require('../../middleware/requireAdminFlag');
 
 router.route('/')
-    .get(getUsers)
+    .get(authMiddleware, requireAdminFlag, getUsers)
     .post(createUser)
     .put(authMiddleware, updateUser);
     
