@@ -120,7 +120,7 @@ const ManageUser = () => {
             try {
                 // Users
                 // const userData = await apiFetch('/api/admin/users'); // not using as i currently have the path routes blocked at the front-end
-                const userData = await apiFetch('/api/users');
+                const userData = await apiFetch('/api/admin/users');
                 setUsers(userData);
 
                 // Roles (optional, if you have this endpoint)
@@ -232,7 +232,7 @@ const ManageUser = () => {
             };
 
             // const updated = await apiFetch(`/api/admin/users/${editedUser._id}`, {
-             const updated = await apiFetch(`/api/users/${editedUser._id}`, {
+             const updated = await apiFetch(`/api/admin/users/${editedUser._id}`, {
                 method: 'PUT',
                 body: JSON.stringify(body),
             });
@@ -264,7 +264,7 @@ const ManageUser = () => {
         setSuccess('');
         try {
             // await apiFetch(`/api/admin/users/${userId}`, {
-            await apiFetch(`/api/users/${userId}`, {
+            await apiFetch(`/api/admin/users/${userId}`, {
                 method: 'DELETE',
             });
             setUsers((prev) => prev.filter((u) => u._id !== userId));
@@ -311,7 +311,7 @@ const ManageUser = () => {
 
         try {
             // const newUser = await apiFetch('/api/admin/users', {
-            const newUser = await apiFetch('/api/users', {
+            const newUser = await apiFetch('/api/admin/users', {
                 method: 'POST',
                 body: JSON.stringify({
                     firstName,

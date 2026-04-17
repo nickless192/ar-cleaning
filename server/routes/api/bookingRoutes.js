@@ -3,6 +3,9 @@ const isDev = process.env.NODE_ENV !== "production";
 const cron = require('node-cron');
 const Booking = require('../../models/Booking');
 const NotificationService = require('../../services/NotificationService');
+const { authMiddleware } = require('../../utils/auth');
+const requireAdminFlag = require('../../middleware/requireAdminFlag');
+const { adminRouteLimiter } = require('../../middleware/rateLimiters');
 const { createBooking, getBookings, deleteBooking, completeBooking, hideBooking, sendScheduledReminder, sendScheduledConfirmationEmail, confirmBooking, cancelBooking, pendBookingById,
   updateBookingDate,
   submitNewDateRequest,
@@ -13,16 +16,16 @@ const { createBooking, getBookings, deleteBooking, completeBooking, hideBooking,
 
 router.post('/', createBooking);
 router.post('/request', submitNewBookingRequest);
-router.get('/', getBookings);
-router.delete('/:id', deleteBooking);
-router.put('/:id/update-date', updateBookingDate);
-router.put('/:id/complete', completeBooking);
-router.put('/:id/hide', hideBooking);
-router.put('/:id/confirm', confirmBooking);
-router.put('/:id/cancel', cancelBooking);
-router.put('/:id/pending', pendBookingById);
-router.put('/:id/request-change', submitNewDateRequest);
-router.put('/:id/update', updateBooking);
+router.get('/', adminRouteLimiter, authMiddleware, requireAdminFlag, getBookings);
+router.delete('/:id', adminRouteLimiter, authMiddleware, requireAdminFlag, deleteBooking);
+router.put('/:id/update-date', adminRouteLimiter, authMiddleware, requireAdminFlag, updateBookingDate);
+router.put('/:id/complete', adminRouteLimiter, authMiddleware, requireAdminFlag, completeBooking);
+router.put('/:id/hide', adminRouteLimiter, authMiddleware, requireAdminFlag, hideBooking);
+router.put('/:id/confirm', adminRouteLimiter, authMiddleware, requireAdminFlag, confirmBooking);
+router.put('/:id/cancel', adminRouteLimiter, authMiddleware, requireAdminFlag, cancelBooking);
+router.put('/:id/pending', adminRouteLimiter, authMiddleware, requireAdminFlag, pendBookingById);
+router.put('/:id/request-change', adminRouteLimiter, authMiddleware, requireAdminFlag, submitNewDateRequest);
+router.put('/:id/update', adminRouteLimiter, authMiddleware, requireAdminFlag, updateBooking);
 
 
 // Reminder Scheduler

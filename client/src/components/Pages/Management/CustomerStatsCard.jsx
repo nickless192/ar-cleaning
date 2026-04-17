@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Card, Row, Col, Spinner } from "react-bootstrap";
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { authFetch } from "/src/utils/authFetch";
 
 const COLORS = ["#00C49F", "#FFBB28", "#FF8042"];
 
@@ -10,7 +11,7 @@ const CustomerStatsCard = () => {
 
   const fetchStats = async () => {
     try {
-      const res = await fetch("/api/customers/stats");
+      const res = await authFetch("/api/customers/stats");
       const data = await res.json();
       setStats(data.map(item => ({
         name: item._id,

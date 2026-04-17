@@ -2,6 +2,13 @@ import { jwtDecode } from 'jwt-decode';
 
 class AuthService {
   isLoggingOut = false;
+  getCookie(name) {
+    if (typeof document === 'undefined') return '';
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift() || '';
+    return '';
+  }
   getProfile() {
     // return jwtDecode(this.getToken());
     const token = this.getToken();
@@ -92,9 +99,11 @@ class AuthService {
   async logout() {
         this.isLoggingOut = true;
     // Clear user token and profile data from localStorage
+    const csrfToken = this.getCookie('csrfToken');
 
     await fetch("/api/users/logout", {
       method: "POST",
+      headers: csrfToken ? { 'x-csrf-token': csrfToken } : {},
       credentials: "include",
     });
       this.isLoggingOut = false;
@@ -107,8 +116,10 @@ class AuthService {
   }
   async refreshToken() {
     try {
+      const csrfToken = this.getCookie('csrfToken');
       const res = await fetch("/api/users/refresh", {
         method: "POST",
+        headers: csrfToken ? { 'x-csrf-token': csrfToken } : {},
         credentials: "include",
       });
 

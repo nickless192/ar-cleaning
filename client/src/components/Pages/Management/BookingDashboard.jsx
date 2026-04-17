@@ -19,6 +19,7 @@ import {
   CartesianGrid,
 } from 'recharts';
 import BookingCalendar from '/src/components/Pages/Management/BookingCalendar';
+import { authFetch } from '/src/utils/authFetch';
 
 function normalizeStatus(status) {
   return (status || '').toLowerCase();
@@ -38,7 +39,7 @@ export default function BookingDashboard() {
 
   const fetchBookings = async () => {
     try {
-      const res = await fetch('/api/bookings');
+      const res = await authFetch('/api/bookings');
       if (!res.ok) throw new Error('Failed to fetch bookings');
       const data = await res.json();
       // filter out data that is hidden
@@ -73,7 +74,7 @@ export default function BookingDashboard() {
   useEffect(() => {
   const fetchCustomers = async () => {
     try {
-      const res = await fetch('/api/customers');
+      const res = await authFetch('/api/customers');
       if (!res.ok) throw new Error('Failed to fetch customers');
       const data = await res.json();
       setCustomers(data);

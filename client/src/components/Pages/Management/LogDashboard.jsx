@@ -1,3 +1,4 @@
+import { authFetch } from "/src/utils/authFetch";
 // LogDashboard.jsx (DROP-IN)
 // Server-driven analytics (weekly-reporting) + server-driven log table (logs)
 // Uses MiniBars chart (no chart libs). Keeps your FilterBar + LogTable + Pagination components.
@@ -295,7 +296,7 @@ const LogDashboard = () => {
     setReportStatus(null);
 
     try {
-      const res = await fetch("/api/admin-reports/send-daily-events", {
+      const res = await authFetch("/api/admin-reports/send-daily-events", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         // optional override:
@@ -379,7 +380,7 @@ const LogDashboard = () => {
         params.set("pageNum", "1");
         params.set("sort", "desc");
 
-        const res = await fetch(`/api/visitors/logs?${params.toString()}`);
+        const res = await authFetch(`/api/visitors/logs?${params.toString()}`);
         if (!res.ok) throw new Error("Failed to fetch logs (options sample)");
         const data = await res.json();
 
@@ -444,7 +445,7 @@ const LogDashboard = () => {
         // weekly-reporting doesn't use start; keep request clean
         params.delete("start");
 
-        const res = await fetch(`/api/visitors/weekly-reporting?${params.toString()}`);
+        const res = await authFetch(`/api/visitors/weekly-reporting?${params.toString()}`);
         if (!res.ok) throw new Error("Failed to fetch weekly report");
         const data = await res.json();
 
@@ -499,7 +500,7 @@ const LogDashboard = () => {
         // include numeric filters if you want them server-side later.
         // For now, keep them client-side on the returned page only (lightweight).
         // If you want full accuracy, add these to backend match and remove client filtering.
-        const res = await fetch(`/api/visitors/logs?${params.toString()}`);
+        const res = await authFetch(`/api/visitors/logs?${params.toString()}`);
         if (!res.ok) throw new Error("Failed to fetch logs");
         const data = await res.json();
 

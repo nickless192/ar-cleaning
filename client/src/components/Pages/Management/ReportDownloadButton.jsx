@@ -1,10 +1,11 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
+import { authFetch } from '/src/utils/authFetch';
 
 const ReportDownloadButton = () => {
   const handleDownload = async () => {
     try {
-      const res = await fetch('/api/email/weekly-report', {
+      const res = await authFetch('/api/email/weekly-report', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
