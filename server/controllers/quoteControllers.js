@@ -54,7 +54,8 @@ const quoteController = {
             if (!validateObjectId(req.params.quoteId)) {
                 return res.status(400).json({ message: 'Invalid quote ID' });
             }
-            const quote = await Quote.findOne({ quoteId: req.params.quoteId });
+            const quoteId = String(req.params.quoteId);
+            const quote = await Quote.findOne({ quoteId });
             // const quote = await Quote.findById(req.params.quoteId);
             if (!quote) {
                 return res.status(404).json({ message: 'Quote not found' });
@@ -70,7 +71,8 @@ const quoteController = {
             if (!validateObjectId(req.params.userId)) {
                 return res.status(400).json({ message: 'Invalid user ID' });
             }
-            const quotes = await QuickQuote.find({ userId: req.params.userId }).sort({ createdAt: -1 });
+            const userId = String(req.params.userId);
+            const quotes = await QuickQuote.find({ userId }).sort({ createdAt: -1 });
             res.json(quotes);
         } catch (error) {
             console.error('Error getting user quotes: ', error);
@@ -82,9 +84,10 @@ const quoteController = {
             if (!validateObjectId(req.params.quoteId)) {
                 return res.status(400).json({ message: 'Invalid quote ID' });
             }
+            const quoteId = String(req.params.quoteId);
             assertNoOperatorKeys(req.body);
             const updateData = pickAllowedFields(req.body, QUOTE_FIELDS);
-            const quote = await Quote.findByIdAndUpdate(req.params.quoteId, updateData, { new: true, runValidators: true });
+            const quote = await Quote.findByIdAndUpdate(quoteId, updateData, { new: true, runValidators: true });
             res.json(quote);
         } catch (error) {
             console.error('Error updating quote: ', error);
@@ -96,7 +99,8 @@ const quoteController = {
             if (!validateObjectId(req.params.quoteId)) {
                 return res.status(400).json({ message: 'Invalid quote ID' });
             }
-            const quote = await Quote.findByIdAndDelete(req.params.quoteId);
+            const quoteId = String(req.params.quoteId);
+            const quote = await Quote.findByIdAndDelete(quoteId);
             res.json(quote);
         } catch (error) {
             console.error('Error deleting quote: ', error);
@@ -150,7 +154,8 @@ const quoteController = {
             if (!validateObjectId(req.params.quoteId)) {
                 return res.status(400).json({ message: 'Invalid quote ID' });
             }
-            const quickQuote = await QuickQuote.findByIdAndDelete(req.params.quoteId);
+            const quoteId = String(req.params.quoteId);
+            const quickQuote = await QuickQuote.findByIdAndDelete(quoteId);
             if (!quickQuote) {
                 return res.status(404).json({ message: 'Quick quote not found' });
             }

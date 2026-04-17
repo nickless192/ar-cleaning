@@ -43,7 +43,7 @@ const contactFormController = {
     // const filter = status ? { status } : {};
     const query = { deleted: { $ne: true } };
     if (req.query.status) {
-      query.status = req.query.status;
+      query.status = String(req.query.status);
     }
 
 
@@ -72,7 +72,7 @@ const contactFormController = {
       const updated = await ContactForm.findByIdAndUpdate(
         id,
         { status },
-        { new: true }
+        { new: true, runValidators: true }
       );
 
       if (!updated) return res.status(404).json({ message: "Contact form not found" });
@@ -91,7 +91,7 @@ const contactFormController = {
       const updated = await ContactForm.findByIdAndUpdate(
         req.params.id,
         { deleted: true },
-        { new: true }
+        { new: true, runValidators: true }
       );
       if (!updated) return res.status(404).json({ message: "Not found" });
       res.json({ message: "Archived successfully", data: updated });

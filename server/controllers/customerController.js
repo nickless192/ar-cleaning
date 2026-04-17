@@ -39,7 +39,8 @@ module.exports = {
       if (!validateObjectId(req.params.id)) {
         return res.status(400).json({ error: 'Invalid customer ID' });
       }
-      const customer = await Customer.findById(req.params.id).populate('user').populate('bookings');
+      const customerId = String(req.params.id);
+      const customer = await Customer.findById(customerId).populate('user').populate('bookings');
       if (!customer) return res.status(404).json({ error: 'Customer not found' });
       res.status(200).json(customer);
     } catch (err) {
@@ -64,10 +65,11 @@ module.exports = {
       if (!validateObjectId(req.params.id)) {
         return res.status(400).json({ error: 'Invalid customer ID' });
       }
+      const customerId = String(req.params.id);
       assertNoOperatorKeys(req.body);
       const updateData = pickAllowedFields(req.body, CUSTOMER_FIELDS);
       console.log("Updating customer with data:", req.body);
-      const updated = await Customer.findByIdAndUpdate(req.params.id, updateData, { new: true, runValidators: true });
+      const updated = await Customer.findByIdAndUpdate(customerId, updateData, { new: true, runValidators: true });
       if (!updated) return res.status(404).json({ error: 'Customer not found' });
       res.status(200).json(updated);
     } catch (err) {
@@ -80,7 +82,8 @@ module.exports = {
       if (!validateObjectId(req.params.id)) {
         return res.status(400).json({ error: 'Invalid customer ID' });
       }
-      const deleted = await Customer.findByIdAndDelete(req.params.id);
+      const customerId = String(req.params.id);
+      const deleted = await Customer.findByIdAndDelete(customerId);
       if (!deleted) return res.status(404).json({ error: 'Customer not found' });
       res.status(200).json({ message: 'Customer deleted' });
     } catch (err) {
@@ -109,7 +112,8 @@ module.exports = {
       if (!validateObjectId(req.params.id)) {
         return res.status(400).json({ error: 'Invalid customer ID' });
       }
-      const customer = await Customer.findById(req.params.id);
+      const customerId = String(req.params.id);
+      const customer = await Customer.findById(customerId);
       if (!customer) return res.status(404).json({ error: "Customer not found" });
 
       res.json({ notes: customer.notes || "" });
@@ -123,7 +127,8 @@ module.exports = {
       if (!validateObjectId(req.params.id)) {
         return res.status(400).json({ error: 'Invalid customer ID' });
       }
-      const customer = await Customer.findById(req.params.id);
+      const customerId = String(req.params.id);
+      const customer = await Customer.findById(customerId);
       if (!customer) return res.status(404).json({ error: "Customer not found" });
 
       customer.notes = req.body.notes;
@@ -143,7 +148,8 @@ module.exports = {
       if (!validateObjectId(req.body.userId)) {
         return res.status(400).json({ error: 'Invalid user ID' });
       }
-      const customer = await Customer.findById(req.params.id);
+      const customerId = String(req.params.id);
+      const customer = await Customer.findById(customerId);
       if (!customer) return res.status(404).json({ error: "Customer not found" });
 
       customer.user = req.body.userId;
@@ -160,7 +166,8 @@ module.exports = {
       if (!validateObjectId(req.params.id)) {
         return res.status(400).json({ error: 'Invalid customer ID' });
       }
-      const customer = await Customer.findById(req.params.id).populate('bookings');
+      const customerId = String(req.params.id);
+      const customer = await Customer.findById(customerId).populate('bookings');
       if (!customer) return res.status(404).json({ error: "Customer not found" });
 
       res.json({ bookings: customer.bookings });

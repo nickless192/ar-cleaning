@@ -6,39 +6,46 @@ const Customer = require('../models/Customer');
 const User = require('../models/User');
 const {
   assertNoOperatorKeys,
-  pickAllowedFields,
   validateObjectId,
 } = require('../utils/mongoSafety');
 // const { sendConfirmationEmail } = require('../utils/emailService');
 const APP_TZ = "America/Toronto";
 
-const BOOKING_UPDATE_FIELDS = [
-  'customerName',
-  'customerEmail',
-  'serviceType',
-  'customerId',
-  'status',
-  'hidden',
-  'scheduleConfirmation',
-  'disableConfirmation',
-  'reminderScheduled',
-  'confirmationDate',
-  'reminderDate',
-  'scheduledConfirmationDate',
-  'scheduledReminderDate',
-  'confirmationSent',
-  'reminderSent',
-  'notes',
-  'createdBy',
-  'updatedBy',
-  'customerSuggestedBookingDate',
-  'customerSuggestedServiceType',
-  'customerSuggestedBookingComment',
-  'customerSuggestedBookingAcknowledged',
-  'tax',
-  'discount',
-  'paidAt',
-];
+function hasOwn(obj, key) {
+  return Object.prototype.hasOwnProperty.call(obj, key);
+}
+
+function normalizeBookingUpdateInput(body = {}) {
+  const update = {};
+
+  if (hasOwn(body, 'customerName')) update.customerName = String(body.customerName || '');
+  if (hasOwn(body, 'customerEmail')) update.customerEmail = String(body.customerEmail || '');
+  if (hasOwn(body, 'serviceType')) update.serviceType = String(body.serviceType || '');
+  if (hasOwn(body, 'status')) update.status = String(body.status || '');
+  if (hasOwn(body, 'notes')) update.notes = String(body.notes || '');
+  if (hasOwn(body, 'hidden')) update.hidden = !!body.hidden;
+  if (hasOwn(body, 'scheduleConfirmation')) update.scheduleConfirmation = !!body.scheduleConfirmation;
+  if (hasOwn(body, 'disableConfirmation')) update.disableConfirmation = !!body.disableConfirmation;
+  if (hasOwn(body, 'reminderScheduled')) update.reminderScheduled = !!body.reminderScheduled;
+  if (hasOwn(body, 'confirmationSent')) update.confirmationSent = !!body.confirmationSent;
+  if (hasOwn(body, 'reminderSent')) update.reminderSent = !!body.reminderSent;
+  if (hasOwn(body, 'tax')) update.tax = Number(body.tax) || 0;
+  if (hasOwn(body, 'discount')) update.discount = Number(body.discount) || 0;
+  if (hasOwn(body, 'income')) update.income = Number(body.income) || 0;
+
+  if (hasOwn(body, 'customerId')) update.customerId = String(body.customerId || '');
+  if (hasOwn(body, 'createdBy')) update.createdBy = String(body.createdBy || '');
+  if (hasOwn(body, 'updatedBy')) update.updatedBy = String(body.updatedBy || '');
+
+  if (hasOwn(body, 'date')) update.date = body.date;
+  if (hasOwn(body, 'paidAt')) update.paidAt = body.paidAt ? new Date(body.paidAt) : null;
+  if (hasOwn(body, 'customerSuggestedBookingDate')) update.customerSuggestedBookingDate = body.customerSuggestedBookingDate;
+  if (hasOwn(body, 'customerSuggestedServiceType')) update.customerSuggestedServiceType = String(body.customerSuggestedServiceType || '');
+  if (hasOwn(body, 'customerSuggestedBookingComment')) update.customerSuggestedBookingComment = String(body.customerSuggestedBookingComment || '');
+  if (hasOwn(body, 'customerSuggestedBookingAcknowledged')) update.customerSuggestedBookingAcknowledged = !!body.customerSuggestedBookingAcknowledged;
+
+  return update;
+}
 
 /**
  * Parse an ISO-like string as Toronto wall time (NOT device/server local),
@@ -398,7 +405,7 @@ const bookingControllers = {
         }
         await Customer.findByIdAndUpdate(customerId, {
           $push: { bookings: savedBooking._id },
-        });
+        }, { runValidators: true });
         //  // TODO: make sure this does not overlap with the current sendConfirmationEmail function
         // await NotificationService.sendBookingConfirmationCustomer(savedBooking._id);
       }
@@ -453,14 +460,15 @@ const bookingControllers = {
         return res.status(400).json({ error: 'Invalid updatedBy user ID' });
       }
       // const { income } = req.body; // Expecting income to be passed in request body
-      const { status } = req.body; // Expecting status to be passed in request body
-      const updatedBooking = await Booking.findByIdAndUpdate(bookingId, { status: status }, { new: true });
+      const status = String(req.body.status || ''); // Expecting status to be passed in request body
+      const updatedBy = req.body.updatedBy ? String(req.body.updatedBy) : undefined;
+      const updatedBooking = await Booking.findByIdAndUpdate(bookingId, { status }, { new: true, runValidators: true });
       if (!updatedBooking) {
         return res.status(404).json({ error: 'Booking not found' });
       }
       //save
       updatedBooking.updatedAt = new Date(); // Update the updatedAt field
-      updatedBooking.updatedBy = req.body.updatedBy; // Assuming userId is passed in the
+      updatedBooking.updatedBy = updatedBy; // Assuming userId is passed in the
       await updatedBooking.save();
       res.json(updatedBooking);
     } catch (err) {
@@ -477,12 +485,13 @@ const bookingControllers = {
       if (req.body.updatedBy && !validateObjectId(req.body.updatedBy)) {
         return res.status(400).json({ error: 'Invalid updatedBy user ID' });
       }
-      const updatedBooking = await Booking.findByIdAndUpdate(bookingId, { hidden: true }, { new: true });
+      const updatedBy = req.body.updatedBy ? String(req.body.updatedBy) : undefined;
+      const updatedBooking = await Booking.findByIdAndUpdate(bookingId, { hidden: true }, { new: true, runValidators: true });
       if (!updatedBooking) {
         return res.status(404).json({ error: 'Booking not found' });
       }
       updatedBooking.updatedAt = new Date(); // Update the updatedAt field
-      updatedBooking.updatedBy = req.body.updatedBy; // Assuming userId is passed in the request body
+      updatedBooking.updatedBy = updatedBy; // Assuming userId is passed in the request body
       await updatedBooking.save(); // Save the updated booking
       res.json(updatedBooking);
     } catch (err) {
@@ -499,12 +508,13 @@ const bookingControllers = {
       if (req.body.updatedBy && !validateObjectId(req.body.updatedBy)) {
         return res.status(400).json({ error: 'Invalid updatedBy user ID' });
       }
-      const updatedBooking = await Booking.findByIdAndUpdate(bookingId, { status: 'cancelled' }, { new: true });
+      const updatedBy = req.body.updatedBy ? String(req.body.updatedBy) : undefined;
+      const updatedBooking = await Booking.findByIdAndUpdate(bookingId, { status: 'cancelled' }, { new: true, runValidators: true });
       if (!updatedBooking) {
         return res.status(404).json({ error: 'Booking not found' });
       }
       updatedBooking.updatedAt = new Date(); // Update the updatedAt field
-      updatedBooking.updatedBy = req.body.updatedBy; // Assuming userId is passed in the request body
+      updatedBooking.updatedBy = updatedBy; // Assuming userId is passed in the request body
       await updatedBooking.save(); // Save the updated booking
       res.json(updatedBooking);
     } catch (err) {
@@ -523,13 +533,19 @@ const bookingControllers = {
         return res.status(400).json({ error: 'Invalid updatedBy user ID' });
       }
       const {
-        scheduleConfirmation,
-        confirmationDate,
-        reminderScheduled,
-        disableConfirmation,
+        scheduleConfirmation: rawScheduleConfirmation,
+        confirmationDate: rawConfirmationDate,
+        reminderScheduled: rawReminderScheduled,
+        disableConfirmation: rawDisableConfirmation,
         // customerSuggestedBookingAcknowledged,
-        status
+        status: rawStatus
       } = req.body; // Use payload if available, otherwise fall back to req.body
+      const status = String(rawStatus || '');
+      const scheduleConfirmation = !!rawScheduleConfirmation;
+      const reminderScheduled = !!rawReminderScheduled;
+      const disableConfirmation = !!rawDisableConfirmation;
+      const confirmationDate = rawConfirmationDate ? String(rawConfirmationDate) : null;
+      const updatedBy = req.body.updatedBy ? String(req.body.updatedBy) : undefined;
       // console.log('Confirm booking body:', req.body);
       // const updatedBooking = await Booking.findByIdAndUpdate(bookingId, {
       //     status,
@@ -538,7 +554,7 @@ const bookingControllers = {
       //     reminderScheduled: reminderScheduled || false,
       //     disableConfirmation: disableConfirmation || false
 
-      // }, { new: true });
+      // }, { new: true, runValidators: true });
       // if (!updatedBooking) {
       //     return res.status(404).json({ error: 'Booking not found' });
       // }
@@ -561,9 +577,9 @@ const bookingControllers = {
           reminderScheduled: reminderScheduled || false,
           disableConfirmation: disableConfirmation || false,
           updatedAt: new Date(),
-          updatedBy: req.body.updatedBy
+          updatedBy
         },
-        { new: true }
+        { new: true, runValidators: true }
       );
       // if (customerSuggestedBookingAcknowledged) {
       //     updatedBooking.customerSuggestedBookingAcknowledged = true;
@@ -584,21 +600,22 @@ const bookingControllers = {
       if (req.body.updatedBy && !validateObjectId(req.body.updatedBy)) {
         return res.status(400).json({ error: 'Invalid updatedBy user ID' });
       }
+      const updatedBy = req.body.updatedBy ? String(req.body.updatedBy) : undefined;
       const updatedBooking = await Booking.findByIdAndUpdate(bookingId, {
         status: 'pending',
         updatedAt: new Date(),
-        updatedBy: req.body.updatedBy,
+        updatedBy,
         scheduledConfirmationDate: null,
         reminderScheduled: false,
         confirmationSent: false,
         reminderSent: false,
         disableConfirmation: false
-      }, { new: true });
+      }, { new: true, runValidators: true });
       if (!updatedBooking) {
         return res.status(404).json({ error: 'Booking not found' });
       }
       updatedBooking.updatedAt = new Date(); // Update the updatedAt field
-      updatedBooking.updatedBy = req.body.updatedBy; // Assuming userId is passed in the request body
+      updatedBooking.updatedBy = updatedBy; // Assuming userId is passed in the request body
       await updatedBooking.save(); // Save the updated booking
       res.json(updatedBooking);
     } catch (err) {
@@ -719,7 +736,8 @@ const bookingControllers = {
   },
   updateBookingWithNotes: async (req, res) => {
     const bookingId = req.params.id;
-    const { notes, updatedBy } = req.body;
+    const notes = String(req.body.notes || '');
+    const updatedBy = req.body.updatedBy ? String(req.body.updatedBy) : undefined;
 
     try {
       if (!validateObjectId(bookingId)) {
@@ -730,7 +748,7 @@ const bookingControllers = {
       }
       const updatedBooking = await Booking.findByIdAndUpdate(bookingId,
         { notes, updatedBy, updatedAt: new Date() },
-        { new: true }
+        { new: true, runValidators: true }
       );
       if (!updatedBooking) {
         return res.status(404).json({ error: 'Booking not found' });
@@ -743,7 +761,9 @@ const bookingControllers = {
   },
   updateBookingDate: async (req, res) => {
     const bookingId = req.params.id;
-    const { date, updatedBy, customerSuggestedBookingAcknowledged } = req.body;
+    const date = req.body.date ? String(req.body.date) : '';
+    const updatedBy = req.body.updatedBy ? String(req.body.updatedBy) : undefined;
+    const customerSuggestedBookingAcknowledged = !!req.body.customerSuggestedBookingAcknowledged;
 
     try {
       if (!validateObjectId(bookingId)) {
@@ -766,7 +786,7 @@ const bookingControllers = {
           reminderSent: false,
           disableConfirmation: false
         },
-        { new: true }
+        { new: true, runValidators: true }
       );
       if (!updatedBooking) {
         return res.status(404).json({ error: 'Booking not found' });
@@ -790,21 +810,15 @@ const bookingControllers = {
       }
       assertNoOperatorKeys(req.body);
 
-      // Pull out fields we want to normalize
-      const {
-        services,
-        date,
-        income,
-        serviceType,
-        customerSuggestedBookingAcknowledged,
-        ...restBody
-      } = req.body;
+      const services = Array.isArray(req.body.services) ? req.body.services : undefined;
+      const date = req.body.date;
+      const income = req.body.income;
+      const serviceType = req.body.serviceType;
+      const customerSuggestedBookingAcknowledged = !!req.body.customerSuggestedBookingAcknowledged;
 
-      // --- 1) Build base update payload from the rest of the body ---
-      const updateData = {
-        ...pickAllowedFields(restBody, BOOKING_UPDATE_FIELDS),
-        updatedAt: new Date(),
-      };
+      // --- 1) Build base update payload from an explicit allowlist ---
+      const updateData = normalizeBookingUpdateInput(req.body);
+      updateData.updatedAt = new Date();
 
       if (updateData.customerId && !validateObjectId(String(updateData.customerId))) {
         return res.status(400).json({ error: 'Invalid customer ID' });
@@ -892,7 +906,7 @@ const bookingControllers = {
       const updated = await Booking.findByIdAndUpdate(
         bookingId,
         updateData,
-        { new: true }
+        { new: true, runValidators: true }
       );
 
       if (!updated) {
@@ -925,7 +939,7 @@ const bookingControllers = {
   //         const updated = await Booking.findByIdAndUpdate(bookingId, {
   //             ...req.body,
   //             updatedAt: new Date()
-  //         }, { new: true });
+  //         }, { new: true, runValidators: true });
   //         if (!updated) return res.status(404).json({ error: 'Booking not found' });
   //         if (customerSuggestedBookingAcknowledged) {
   //             updated.customerSuggestedBookingAcknowledged = true;
@@ -945,7 +959,9 @@ const bookingControllers = {
   // },
   submitNewDateRequest: async (req, res) => {
     const bookingId = req.params.id;
-    const { newDate, comment, serviceType } = req.body;
+    const newDate = req.body.newDate ? String(req.body.newDate) : '';
+    const comment = req.body.comment ? String(req.body.comment) : '';
+    const serviceType = req.body.serviceType ? String(req.body.serviceType) : '';
     // the update to either newDate or serviceType is done if theyre not missing
     // if (!newDate || !serviceType) {
     //     return res.status(400).json({ error: 'New date and service type are required' });
@@ -963,7 +979,7 @@ const bookingControllers = {
         customerSuggestedBookingComment: comment,
         customerSuggestedServiceType: serviceType,
         customerSuggestedBookingAcknowledged: false
-      });
+      }, { runValidators: true });
 
       res.status(200).json({ message: 'New date request submitted successfully' });
     } catch (err) {
@@ -980,16 +996,19 @@ const bookingControllers = {
       // if (!user?._id) {
       //   return res.status(401).json({ error: "Unauthorized" });
       // }
-      const userId = req.body.userId; // For testing, we can pass userId in body. In production, get from req.user
+      const userId = String(req.body.userId || ''); // For testing, we can pass userId in body. In production, get from req.user
       if (!validateObjectId(userId)) {
         return res.status(400).json({ error: "Invalid user ID" });
       }
 
       const {
-        customerSuggestedBookingDate,
-        customerSuggestedServiceType,
-        customerSuggestedBookingComment,
+        customerSuggestedBookingDate: rawSuggestedDate,
+        customerSuggestedServiceType: rawSuggestedServiceType,
+        customerSuggestedBookingComment: rawSuggestedComment,
       } = req.body;
+      const customerSuggestedBookingDate = rawSuggestedDate ? String(rawSuggestedDate) : '';
+      const customerSuggestedServiceType = rawSuggestedServiceType ? String(rawSuggestedServiceType) : '';
+      const customerSuggestedBookingComment = rawSuggestedComment ? String(rawSuggestedComment) : '';
 
       if (!customerSuggestedBookingDate || !customerSuggestedServiceType) {
         return res.status(400).json({ error: "Missing date or service type" });
@@ -1088,7 +1107,7 @@ const bookingControllers = {
       // ✅ link into customer.bookings like your admin createBooking does
       await Customer.findByIdAndUpdate(customer._id, {
         $push: { bookings: savedBooking._id },
-      });
+      }, { runValidators: true });
 
       return res.status(201).json(savedBooking);
     } catch (err) {

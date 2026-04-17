@@ -113,12 +113,12 @@ async function sendInvoice(req, res) {
     await invoice.save();
 
     // Update booking workflow flags/timestamps for consistency
-    if (invoice.bookingId) {
-      await Booking.findByIdAndUpdate(invoice.bookingId, {
-        invoiceSentAt: now,
-        "workflow.invoiceSent": true,
-      });
-    }
+      if (invoice.bookingId) {
+        await Booking.findByIdAndUpdate(invoice.bookingId, {
+          invoiceSentAt: now,
+          "workflow.invoiceSent": true,
+        }, { runValidators: true });
+      }
 
     return res.status(200).json({ message: "Invoice email sent ✅" });
   } catch (e) {
@@ -144,7 +144,8 @@ module.exports = {
       if (!validateObjectId(req.params.id)) {
         return res.status(400).json({ error: 'Invalid invoice ID' });
       }
-      const invoice = await Invoice.findById(req.params.id);
+      const invoiceId = String(req.params.id);
+      const invoice = await Invoice.findById(invoiceId);
       if (!invoice) return res.status(404).json({ error: 'Invoice not found' });
       res.json(invoice);
     } catch (err) {
@@ -203,7 +204,7 @@ module.exports = {
       });
       // // set booking status to 'invoiced' if bookingId is provided
       if (bookingId) {
-        await Booking.findByIdAndUpdate(bookingId, { invoiced: true, invoiceCreatedAt: new Date() });
+        await Booking.findByIdAndUpdate(bookingId, { invoiced: true, invoiceCreatedAt: new Date() }, { runValidators: true });
       }
 
       res.status(201).json(newInvoice);
@@ -229,18 +230,21 @@ module.exports = {
       if (req.body.status !== 'paid') {
         return res.status(400).json({ error: 'Only status update to "paid" is allowed' });
       }
-      const updatedInvoice = await Invoice.findByIdAndUpdate(req.params.id, {
+      const invoiceId = String(req.params.id);
+      const paymentMethod = String(req.body.paymentMethod || '');
+      const amount = Number(req.body.amount) || 0;
+      const updatedInvoice = await Invoice.findByIdAndUpdate(invoiceId, {
         status: 'paid', payment: {
-          paymentMethod: req.body.paymentMethod, amount: req.body.amount,
+          paymentMethod, amount,
           paymentDate: Date.now()
 
         }
-      }, { new: true });
+      }, { new: true, runValidators: true });
       if (!updatedInvoice) return res.status(404).json({ error: 'Invoice not found' });
 
       // Also update the related booking status
       if (updatedInvoice.bookingId) {
-        await Booking.findByIdAndUpdate(updatedInvoice.bookingId, { status: 'paid' });
+        await Booking.findByIdAndUpdate(updatedInvoice.bookingId, { status: 'paid' }, { runValidators: true });
       }
 
       res.json(updatedInvoice);
@@ -255,11 +259,12 @@ module.exports = {
       if (!validateObjectId(req.params.id)) {
         return res.status(400).json({ error: 'Invalid invoice ID' });
       }
-      const deleted = await Invoice.findByIdAndDelete(req.params.id);
+      const invoiceId = String(req.params.id);
+      const deleted = await Invoice.findByIdAndDelete(invoiceId);
       if (!deleted) return res.status(404).json({ error: 'Invoice not found' });
       // change the booking status back to 'completed' if it was linked to this invoice
       if (deleted.bookingId) {
-        await Booking.findByIdAndUpdate(deleted.bookingId, { status: 'completed' });
+        await Booking.findByIdAndUpdate(deleted.bookingId, { status: 'completed' }, { runValidators: true });
       }
       res.json({ message: 'Invoice deleted successfully' });
     } catch (err) {

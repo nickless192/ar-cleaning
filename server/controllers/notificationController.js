@@ -65,7 +65,7 @@ const updateTemplate = async (req, res) => {
         const template = await NotificationTemplate.findByIdAndUpdate(
             id,
             { name, type, subject, html, enabled },
-            { new: true }
+            { new: true, runValidators: true }
         );
 
         if (!template) {
@@ -147,7 +147,7 @@ const updateMyNotificationSettings = async (req, res) => {
         const settings = await UserNotificationSettings.findOneAndUpdate(
             { user: userId },
             { preferences },
-            { upsert: true, new: true }
+            { upsert: true, new: true, runValidators: true }
         );
 
         return res.status(200).json(settings);
@@ -219,7 +219,7 @@ const updateCompanyNotificationDefaults = async (req, res) => {
         const defaults = await CompanyNotificationDefaults.findOneAndUpdate(
             {},
             updateData,
-            { upsert: true, new: true }
+            { upsert: true, new: true, runValidators: true }
         );
 
         return res.status(200).json(defaults);

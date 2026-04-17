@@ -4,6 +4,29 @@ function isPlainObject(value) {
   return Object.prototype.toString.call(value) === '[object Object]';
 }
 
+function cloneSanitizedValue(value) {
+  if (Array.isArray(value)) {
+    return value.map(cloneSanitizedValue);
+  }
+
+  if (value instanceof Date) {
+    return new Date(value.getTime());
+  }
+
+  if (isPlainObject(value)) {
+    const output = {};
+    for (const [key, nestedValue] of Object.entries(value)) {
+      if (key.startsWith('$') || key.includes('.')) {
+        throw new Error('Invalid payload keys');
+      }
+      output[key] = cloneSanitizedValue(nestedValue);
+    }
+    return output;
+  }
+
+  return value;
+}
+
 function hasOperatorKeys(value) {
   if (Array.isArray(value)) {
     return value.some(hasOperatorKeys);
@@ -33,7 +56,7 @@ function pickAllowedFields(source, allowedFields) {
 
   for (const field of allowedFields) {
     if (Object.prototype.hasOwnProperty.call(source, field)) {
-      output[field] = source[field];
+      output[field] = cloneSanitizedValue(source[field]);
     }
   }
 

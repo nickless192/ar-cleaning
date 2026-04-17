@@ -17,7 +17,12 @@ module.exports = {
         const { key, labelKey, type, descriptionKey } = req.body;
         try {
             assertNoOperatorKeys(req.body);
-            const newCategory = new Category({ key, labelKey, type, descriptionKey });
+            const newCategory = new Category({
+                key: String(key || ''),
+                labelKey: String(labelKey || ''),
+                type: String(type || ''),
+                descriptionKey: String(descriptionKey || ''),
+            });
             await newCategory.save();
             res.status(201).json(newCategory);
         } catch (error) {
@@ -34,7 +39,12 @@ module.exports = {
                 return res.status(400).json({ message: 'Invalid category ID' });
             }
             assertNoOperatorKeys(req.body);
-            const updatedCategory = await Category.findByIdAndUpdate(id, { key, labelKey, type, descriptionKey }, { new: true });
+            const updatedCategory = await Category.findByIdAndUpdate(id, {
+                key: String(key || ''),
+                labelKey: String(labelKey || ''),
+                type: String(type || ''),
+                descriptionKey: String(descriptionKey || ''),
+            }, { new: true, runValidators: true });
             if (!updatedCategory) {
                 return res.status(404).json({ message: 'Category not found' });
             }
