@@ -1,5 +1,8 @@
 const router = require('express').Router();
 const { getProducts, createProduct, getProductByName, getProductById, updateProduct, deleteProduct } = require('../../controllers/productControllers');
+const { adminRouteLimiter } = require('../../middleware/rateLimiters');
+
+router.use(adminRouteLimiter);
 
 router.route('/')
     .get(getProducts)

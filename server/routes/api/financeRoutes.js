@@ -3,6 +3,9 @@ const router = require('express').Router();
 const { getFinanceSummary, getMonthlySeries, getFinanceOverview, 
     getMonthlyProfitSeries
  } = require('../../controllers/financeControllers.js');
+const { adminRouteLimiter } = require('../../middleware/rateLimiters');
+
+router.use(adminRouteLimiter);
 
 router.get('/summary', getFinanceSummary);       // cards/totals for a range
 router.get('/monthly-series', getMonthlySeries); // chart (monthly buckets)

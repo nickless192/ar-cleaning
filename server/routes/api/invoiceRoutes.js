@@ -7,22 +7,22 @@ const { getInvoices, getInvoiceById, createInvoice, updateInvoice, deleteInvoice
  const { adminRouteLimiter, authRouteLimiter } = require('../../middleware/rateLimiters');
 
 // POST /invoices
-router.post('/', createInvoice); // Create a new invoice
+router.post('/', adminRouteLimiter, createInvoice); // Create a new invoice
 
 // GET /invoices
-router.get('/', getInvoices);
+router.get('/', adminRouteLimiter, getInvoices);
 
 // GET /invoices/:id
-router.get('/:id', getInvoiceById);
+router.get('/:id', adminRouteLimiter, getInvoiceById);
 
 // PUT /invoices/:id
-router.put('/:id', updateInvoice);
+router.put('/:id', adminRouteLimiter, updateInvoice);
 
 // DELETE /invoices/:id
-router.delete('/:id', deleteInvoice);
+router.delete('/:id', adminRouteLimiter, deleteInvoice);
 module.exports = router;
 
 ///by-booking/:bookingId
-router.get('/by-booking/:bookingId', getInvoiceByBooking);
+router.get('/by-booking/:bookingId', adminRouteLimiter, getInvoiceByBooking);
 router.get("/:id/pdf", authRouteLimiter, getInvoicePdf);
 router.post("/:id/send", authRouteLimiter,sendInvoice);

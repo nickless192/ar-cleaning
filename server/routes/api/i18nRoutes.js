@@ -12,8 +12,10 @@ const {
 } = require("../../utils/i18nStore");
 
 const { scanSourceForKeys } = require("../../utils/i18nScan");
+const { adminRouteLimiter } = require('../../middleware/rateLimiters');
 
 const router = express.Router();
+router.use(adminRouteLimiter);
 
 // TODO: protect with your admin auth middleware
 // router.use(requireAdminAuth);

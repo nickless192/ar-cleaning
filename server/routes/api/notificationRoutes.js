@@ -10,6 +10,9 @@ const {
     getCompanyNotificationDefaults,
     updateCompanyNotificationDefaults,
 } = require('../../controllers/notificationController');
+const { adminRouteLimiter } = require('../../middleware/rateLimiters');
+
+router.use(adminRouteLimiter);
 
 // TODO: replace with your real auth middlewares
 // const authMiddleware = require('../middleware/authMiddleware');
