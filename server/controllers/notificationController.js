@@ -26,8 +26,14 @@ const getTemplates = async (req, res) => {
 const createTemplate = async (req, res) => {
     try {
         const { key, name, type, subject, html, enabled } = req.body;
+        const safeKey = typeof key === 'string' ? key.trim() : '';
 
-        const existing = await NotificationTemplate.findOne({ key });
+        if (!safeKey) {
+            return res.status(400).json({ message: 'Template key is required.' });
+        }
+
+        const safeTemplateFilter = { key: safeKey };
+        const existing = await NotificationTemplate.findOne(safeTemplateFilter);
         if (existing) {
             return res
                 .status(400)
@@ -35,7 +41,7 @@ const createTemplate = async (req, res) => {
         }
 
         const template = await NotificationTemplate.create({
-            key,
+            key: safeKey,
             name,
             type,
             subject,
@@ -60,9 +66,17 @@ const updateTemplate = async (req, res) => {
             return res.status(400).json({ message: 'Invalid template id.' });
         }
 
-        const template = await NotificationTemplate.findByIdAndUpdate(
-            id,
-            { name, type, subject, html, enabled },
+        const safeTemplateFilter = { _id: id };
+        const safeTemplateUpdate = {};
+        if (name !== undefined) safeTemplateUpdate.name = name;
+        if (type !== undefined) safeTemplateUpdate.type = type;
+        if (subject !== undefined) safeTemplateUpdate.subject = subject;
+        if (html !== undefined) safeTemplateUpdate.html = html;
+        if (enabled !== undefined) safeTemplateUpdate.enabled = enabled;
+
+        const template = await NotificationTemplate.findOneAndUpdate(
+            safeTemplateFilter,
+            { $set: safeTemplateUpdate },
             { new: true }
         );
 

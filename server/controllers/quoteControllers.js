@@ -34,7 +34,12 @@ const quoteController = {
     getQuoteById: async (req, res) => {
         try {
             console.log('Getting quote by id: ', req.params.quoteId);
-            const quote = await Quote.findOne({ quoteId: req.params.quoteId });
+            const safeQuoteId = String(req.params.quoteId || '').trim();
+            if (!safeQuoteId) {
+                return res.status(400).json({ message: 'Invalid quote id' });
+            }
+            const safeQuoteFilter = { quoteId: safeQuoteId };
+            const quote = await Quote.findOne(safeQuoteFilter);
             // const quote = await Quote.findById(req.params.quoteId);
             if (!quote) {
                 return res.status(404).json({ message: 'Quote not found' });
@@ -56,25 +61,55 @@ const quoteController = {
     },
     updateQuote: async (req, res) => {
         try {
-            const updatePayload = req.body;
-
-            if (!updatePayload || typeof updatePayload !== 'object' || Array.isArray(updatePayload)) {
+            if (!req.body || typeof req.body !== 'object' || Array.isArray(req.body)) {
                 return res.status(400).json({ message: 'Invalid update payload' });
             }
 
-            if (!isValidObjectId(req.params.quoteId)) {
+            const validatedQuoteId = isValidObjectId(req.params.quoteId) ? req.params.quoteId : null;
+            if (!validatedQuoteId) {
                 return res.status(400).json({ message: 'Invalid quote id' });
             }
 
-            const sanitizedUpdate = sanitizeMongoUpdate(updatePayload);
+            const safeQuoteUpdateFields = {};
+            const allowedFields = [
+                'name',
+                'description',
+                'email',
+                'companyName',
+                'phonenumber',
+                'address',
+                'city',
+                'province',
+                'postalcode',
+                'howDidYouHearAboutUs',
+                'howDidYouHearAboutUsSupport',
+                'promoCode',
+                'products',
+                'services',
+                'userId',
+                'subtotalCost',
+                'grandTotal',
+                'tax',
+            ];
+
+            for (const field of allowedFields) {
+                if (Object.prototype.hasOwnProperty.call(req.body, field)) {
+                    safeQuoteUpdateFields[field] = req.body[field];
+                }
+            }
+
+            const sanitizedUpdate = sanitizeMongoUpdate(safeQuoteUpdateFields);
 
             if (Object.keys(sanitizedUpdate).length === 0) {
                 return res.status(400).json({ message: 'No valid fields to update' });
             }
 
-            const quote = await Quote.findByIdAndUpdate(
-                req.params.quoteId,
-                { $set: sanitizedUpdate },
+            const safeQuoteFilter = { _id: validatedQuoteId };
+            const safeQuoteUpdate = { $set: sanitizedUpdate };
+
+            const quote = await Quote.findOneAndUpdate(
+                safeQuoteFilter,
+                safeQuoteUpdate,
                 { new: true }
             );
             res.json(quote);
