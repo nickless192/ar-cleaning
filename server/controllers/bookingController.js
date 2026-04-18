@@ -3,6 +3,7 @@ const { DateTime } = require('luxon');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const Booking = require('../models/Booking');
 const Customer = require('../models/Customer');
+const { isValidObjectId } = require('../utils/mongoSafety');
 // const { sendConfirmationEmail } = require('../utils/emailService');
 const APP_TZ = "America/Toronto";
 
@@ -392,6 +393,9 @@ const bookingControllers = {
   deleteBooking: async (req, res) => {
     try {
       const bookingId = req.params.id;
+      if (!isValidObjectId(bookingId)) {
+        return res.status(400).json({ error: 'Invalid booking id' });
+      }
       const deletedBooking = await Booking.findByIdAndDelete(bookingId);
       if (!deletedBooking) {
         return res.status(404).json({ error: 'Booking not found' });
@@ -405,6 +409,9 @@ const bookingControllers = {
   completeBooking: async (req, res) => {
     try {
       const bookingId = req.params.id;
+      if (!isValidObjectId(bookingId)) {
+        return res.status(400).json({ error: 'Invalid booking id' });
+      }
       // const { income } = req.body; // Expecting income to be passed in request body
       const { status } = req.body; // Expecting status to be passed in request body
       const updatedBooking = await Booking.findByIdAndUpdate(bookingId, { status: status }, { new: true });
@@ -424,6 +431,9 @@ const bookingControllers = {
   hideBooking: async (req, res) => {
     try {
       const bookingId = req.params.id;
+      if (!isValidObjectId(bookingId)) {
+        return res.status(400).json({ error: 'Invalid booking id' });
+      }
       const updatedBooking = await Booking.findByIdAndUpdate(bookingId, { hidden: true }, { new: true });
       if (!updatedBooking) {
         return res.status(404).json({ error: 'Booking not found' });
@@ -440,6 +450,9 @@ const bookingControllers = {
   cancelBooking: async (req, res) => {
     try {
       const bookingId = req.params.id;
+      if (!isValidObjectId(bookingId)) {
+        return res.status(400).json({ error: 'Invalid booking id' });
+      }
       const updatedBooking = await Booking.findByIdAndUpdate(bookingId, { status: 'cancelled' }, { new: true });
       if (!updatedBooking) {
         return res.status(404).json({ error: 'Booking not found' });
@@ -457,6 +470,9 @@ const bookingControllers = {
     // console.log('Confirm booking request:', req.body);
     try {
       const bookingId = req.params.id;
+      if (!isValidObjectId(bookingId)) {
+        return res.status(400).json({ error: 'Invalid booking id' });
+      }
       const {
         scheduleConfirmation,
         confirmationDate,
@@ -513,6 +529,9 @@ const bookingControllers = {
   pendBookingById: async (req, res) => {
     try {
       const bookingId = req.params.id;
+      if (!isValidObjectId(bookingId)) {
+        return res.status(400).json({ error: 'Invalid booking id' });
+      }
       const updatedBooking = await Booking.findByIdAndUpdate(bookingId, {
         status: 'pending',
         updatedAt: new Date(),
@@ -651,6 +670,9 @@ const bookingControllers = {
     const { notes, updatedBy } = req.body;
 
     try {
+      if (!isValidObjectId(bookingId)) {
+        return res.status(400).json({ error: 'Invalid booking id' });
+      }
       const updatedBooking = await Booking.findByIdAndUpdate(bookingId,
         { notes, updatedBy, updatedAt: new Date() },
         { new: true }
@@ -669,6 +691,9 @@ const bookingControllers = {
     const { date, updatedBy, customerSuggestedBookingAcknowledged } = req.body;
 
     try {
+      if (!isValidObjectId(bookingId)) {
+        return res.status(400).json({ error: 'Invalid booking id' });
+      }
       const updatedBooking = await Booking.findByIdAndUpdate(bookingId,
         // { date: new Date(date), updatedBy, updatedAt: new Date() },
         {
@@ -702,6 +727,9 @@ const bookingControllers = {
   updateBooking: async (req, res) => {
     try {
       const bookingId = req.params.id;
+      if (!isValidObjectId(bookingId)) {
+        return res.status(400).json({ error: 'Invalid booking id' });
+      }
 
       // Pull out fields we want to normalize
       const {
@@ -710,14 +738,51 @@ const bookingControllers = {
         income,
         serviceType,
         customerSuggestedBookingAcknowledged,
-        ...restBody
       } = req.body;
 
-      // --- 1) Build base update payload from the rest of the body ---
+      // --- 1) Build base update payload explicitly from allowed fields ---
       const updateData = {
-        ...restBody,
         updatedAt: new Date(),
       };
+
+      const baseAllowedFields = [
+        'customerEmail',
+        'customerName',
+        'status',
+        'hidden',
+        'scheduleConfirmation',
+        'disableConfirmation',
+        'reminderScheduled',
+        'confirmationDate',
+        'reminderDate',
+        'scheduledConfirmationDate',
+        'scheduledReminderDate',
+        'confirmationSent',
+        'reminderSent',
+        'notes',
+        'createdBy',
+        'updatedBy',
+        'customerSuggestedBookingDate',
+        'customerSuggestedServiceType',
+        'customerSuggestedBookingComment',
+        'customerId',
+        'tax',
+        'discount',
+        'paidAt',
+        'confirmedAt',
+        'completedAt',
+        'invoiced',
+        'invoiceId',
+        'invoiceCreatedAt',
+        'invoiceSentAt',
+        'workflow',
+      ];
+
+      for (const field of baseAllowedFields) {
+        if (Object.prototype.hasOwnProperty.call(req.body, field)) {
+          updateData[field] = req.body[field];
+        }
+      }
 
       // --- 2) Date handling (if client sent a new date) ---
       if (date) {
@@ -794,7 +859,7 @@ const bookingControllers = {
       // --- 4) Perform main update ---
       const updated = await Booking.findByIdAndUpdate(
         bookingId,
-        updateData,
+        { $set: updateData },
         { new: true }
       );
 
@@ -855,6 +920,9 @@ const bookingControllers = {
     // } 
 
     try {
+      if (!isValidObjectId(bookingId)) {
+        return res.status(400).json({ error: 'Invalid booking id' });
+      }
       // Here you would typically send the new date request to the relevant service
       // For demonstration, we'll just log it
       console.log(`New date request for booking ${bookingId}:`, newDate, comment, serviceType);

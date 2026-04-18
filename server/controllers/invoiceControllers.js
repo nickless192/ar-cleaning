@@ -2,6 +2,7 @@ const Invoice = require('../models/Invoice');
 const Booking = require('../models/Booking');
 const path = require("path");
 const getNextSequence = require("../utils/getNextSequence");
+const { isValidObjectId } = require('../utils/mongoSafety');
 
 const { generateInvoicePdfBuffer } = require("../utils/invoicePdf");
 
@@ -21,6 +22,9 @@ const COMPANY = {
 async function getInvoicePdf(req, res) {
   try {
     const { id } = req.params;
+    if (!isValidObjectId(id)) {
+      return res.status(400).json({ message: "Invalid invoice id" });
+    }
 
     const invoice = await Invoice.findById(id).lean();
     if (!invoice) return res.status(404).json({ message: "Invoice not found" });
@@ -47,6 +51,9 @@ async function sendInvoice(req, res) {
   try {
     
     const { id } = req.params;
+    if (!isValidObjectId(id)) {
+      return res.status(400).json({ message: "Invalid invoice id" });
+    }
 
     const invoice = await Invoice.findById(id);
     if (!invoice) return res.status(404).json({ message: "Invoice not found" });
@@ -131,6 +138,10 @@ module.exports = {
   // Get a single invoice by ID
   async getInvoiceById(req, res) {
     try {
+      if (!isValidObjectId(req.params.id)) {
+        return res.status(400).json({ error: 'Invalid invoice id' });
+      }
+
       const invoice = await Invoice.findById(req.params.id);
       if (!invoice) return res.status(404).json({ error: 'Invoice not found' });
       res.json(invoice);
@@ -201,6 +212,10 @@ module.exports = {
   // Update invoice
   async updateInvoice(req, res) {
     try {
+      if (!isValidObjectId(req.params.id)) {
+        return res.status(400).json({ error: 'Invalid invoice id' });
+      }
+
       //update this function to mark the invoice and booking as paid and update the payment method
       if (req.body.status !== 'paid') {
         return res.status(400).json({ error: 'Only status update to "paid" is allowed' });
@@ -228,6 +243,10 @@ module.exports = {
   // Delete invoice
   async deleteInvoice(req, res) {
     try {
+      if (!isValidObjectId(req.params.id)) {
+        return res.status(400).json({ error: 'Invalid invoice id' });
+      }
+
       const deleted = await Invoice.findByIdAndDelete(req.params.id);
       if (!deleted) return res.status(404).json({ error: 'Invoice not found' });
       // change the booking status back to 'completed' if it was linked to this invoice

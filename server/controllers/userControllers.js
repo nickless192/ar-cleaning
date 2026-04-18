@@ -4,6 +4,7 @@ const { signToken } = require('../utils/auth');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
+const { isValidObjectId } = require('../utils/mongoSafety');
 
 
 const userControllers = {
@@ -50,20 +51,58 @@ const userControllers = {
             });
     },
     // update user's information
-    updateUser({ params, body }, res) {
-        User.findByIdAndUpdate({ _id: params.userId }, body, { new: true })
-            .select('-__v')
-            .then(dbUserData => {
-                if (!dbUserData) {
-                    res.status(404).json({ message: 'No user found by this username' });
-                    return;
+    async updateUser({ params, body }, res) {
+        try {
+            if (!isValidObjectId(params.userId)) {
+                return res.status(400).json({ message: 'Invalid user id' });
+            }
+
+            const dbUserData = await User.findById(params.userId).select('-__v');
+            if (!dbUserData) {
+                return res.status(404).json({ message: 'No user found by this username' });
+            }
+
+            const allowedUpdate = {
+                email: body?.email,
+                howDidYouHearAboutUs: body?.howDidYouHearAboutUs,
+                firstName: body?.firstName,
+                lastName: body?.lastName,
+                adminFlag: body?.adminFlag,
+                testerFlag: body?.testerFlag,
+                telephone: body?.telephone,
+                address: body?.address,
+                city: body?.city,
+                province: body?.province,
+                postalcode: body?.postalcode,
+                companyName: body?.companyName,
+                termsConsent: body?.termsConsent,
+                consentReceivedDate: body?.consentReceivedDate,
+                roles: body?.roles,
+            };
+
+            if (body?.password !== undefined) {
+                allowedUpdate.password = body.password;
+            }
+
+            for (const [key, value] of Object.entries(allowedUpdate)) {
+                if (value !== undefined) {
+                    dbUserData[key] = value;
                 }
-                res.json(dbUserData);
-            })
-            .catch(err => res.status(500).json(err));
+            }
+
+            await dbUserData.save();
+            return res.json(dbUserData);
+        } catch (err) {
+            console.error('Error updating user:', err);
+            return res.status(500).json({ message: 'Internal server error' });
+        }
     },
     deleteUser({ params }, res) {
-        User.findByIdAndDelete({ _id: params.userId })
+        if (!isValidObjectId(params.userId)) {
+            return res.status(400).json({ message: 'Invalid user id' });
+        }
+
+        User.findByIdAndDelete(params.userId)
             .then(dbUserData => {
                 if (!dbUserData) {
                     res.status(404).json({ message: 'No user found by this username' });
@@ -237,6 +276,10 @@ const userControllers = {
     async getUserBookings({ params }, res) {
         // get userId and check if its linked to customer and get the customer bookings
         try {
+            if (!isValidObjectId(params.userId)) {
+                return res.status(400).json({ message: 'Invalid user id' });
+            }
+
             // const user = await User.findById(params.userId);
             // if (!user) return res.status(404).json({ message: 'User not found' });
 
@@ -251,6 +294,10 @@ const userControllers = {
     },
     async setUserConsent({ params, body }, res) {
         try {
+            if (!isValidObjectId(params.userId)) {
+                return res.status(400).json({ message: 'Invalid user id' });
+            }
+
             const user = await User.findById(params.userId);
             if (!user) return res.status(404).json({ message: 'No user found' });
 

@@ -1,4 +1,5 @@
 const { Service } = require('../models');
+const { isValidObjectId } = require('../utils/mongoSafety');
 
 const serviceControllers = {
     getServices(req, res) {
@@ -43,20 +44,48 @@ const serviceControllers = {
                 res.status(400).json(err);
             });
     },
-    updateService({ params, body }, res) {
-        Service.findByIdAndUpdate({ _id: params.serviceId }, body, { new: true })
-            .select('-__v')
-            .then(dbServiceData => {
-                if (!dbServiceData) {
-                    res.status(404).json({ message: 'No service found by this name' });
-                    return;
+    async updateService({ params, body }, res) {
+        try {
+            if (!isValidObjectId(params.serviceId)) {
+                return res.status(400).json({ message: 'Invalid service id' });
+            }
+
+            const dbServiceData = await Service.findById(params.serviceId).select('-__v');
+            if (!dbServiceData) {
+                return res.status(404).json({ message: 'No service found by this name' });
+            }
+
+            const allowedUpdate = {
+                categoryKey: body?.categoryKey,
+                name: body?.name,
+                nameKey: body?.nameKey,
+                descriptionKey: body?.descriptionKey,
+                cost: body?.cost,
+                isActive: body?.isActive,
+                options: body?.options,
+                order: body?.order,
+                isVisible: body?.isVisible,
+            };
+
+            for (const [key, value] of Object.entries(allowedUpdate)) {
+                if (value !== undefined) {
+                    dbServiceData[key] = value;
                 }
-                res.json(dbServiceData);
-            })
-            .catch(err => res.status(500).json(err));
+            }
+
+            await dbServiceData.save();
+            return res.json(dbServiceData);
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({ message: 'Internal server error' });
+        }
     },
     deleteService({ params }, res) {
-        Service.findByIdAndDelete({ _id: params.serviceId })
+        if (!isValidObjectId(params.serviceId)) {
+            return res.status(400).json({ message: 'Invalid service id' });
+        }
+
+        Service.findByIdAndDelete(params.serviceId)
             .then(dbServiceData => {
                 if (!dbServiceData) {
                     res.status(404).json({ message: 'No service found by this name' });
@@ -67,6 +96,10 @@ const serviceControllers = {
             .catch(err => res.status(400).json(err));
     },
     duplicateService({params, body}, res) {
+        if (!isValidObjectId(params.serviceId)) {
+            return res.status(400).json({ message: 'Invalid service id' });
+        }
+
         Service.findById(params.serviceId)
         .then(originalService => {
             if (!originalService) {

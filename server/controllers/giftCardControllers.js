@@ -1,4 +1,5 @@
 const {GiftCard} = require('../models/giftCardModel');
+const { isValidObjectId, sanitizeMongoUpdate } = require('../utils/mongoSafety');
 
 const giftCardControllers = {
 
@@ -10,6 +11,10 @@ const giftCardControllers = {
             .catch(err => res.status(400).json(err));
     },
     getGiftCardById({ params }, res) {
+        if (!isValidObjectId(params.id)) {
+            return res.status(400).json({ message: 'Invalid gift card id' });
+        }
+
         GiftCard.findOne({ _id: params.id })
             .select('-__v')
             .then(dbGiftCardData => {
@@ -33,8 +38,13 @@ const giftCardControllers = {
             });
     },
     updateGiftCard({ params, body }, res) {
-        GiftCard.findByIdAndUpdate({ _id: params.id },
-            body,
+        if (!isValidObjectId(params.id)) {
+            return res.status(400).json({ message: 'Invalid gift card id' });
+        }
+
+        const safeUpdate = sanitizeMongoUpdate(body);
+        GiftCard.findByIdAndUpdate(params.id,
+            { $set: safeUpdate },
             { new: true })
             .select('-__v')
             .then(dbGiftCardData => {

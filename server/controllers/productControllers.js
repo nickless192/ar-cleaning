@@ -1,4 +1,5 @@
 const { Product } = require('../models');
+const { isValidObjectId } = require('../utils/mongoSafety');
 
 const productControllers = {
     getProducts(req, res) {
@@ -43,20 +44,43 @@ const productControllers = {
                 res.status(400).json(err);
             });
     },
-    updateProduct({ params, body }, res) {
-        Product.findByIdAndUpdate({ _id: params.productId }, body, { new: true })
-            .select('-__v')
-            .then(dbProductData => {
-                if (!dbProductData) {
-                    res.status(404).json({ message: 'No product found by this name' });
-                    return;
+    async updateProduct({ params, body }, res) {
+        try {
+            if (!isValidObjectId(params.productId)) {
+                return res.status(400).json({ message: 'Invalid product id' });
+            }
+
+            const dbProductData = await Product.findById(params.productId).select('-__v');
+            if (!dbProductData) {
+                return res.status(404).json({ message: 'No product found by this name' });
+            }
+
+            const allowedUpdate = {
+                name: body?.name,
+                description: body?.description,
+                productCost: body?.productCost,
+                quantityAtHand: body?.quantityAtHand,
+            };
+
+            for (const [key, value] of Object.entries(allowedUpdate)) {
+                if (value !== undefined) {
+                    dbProductData[key] = value;
                 }
-                res.json(dbProductData);
-            })
-            .catch(err => res.status(500).json(err));
+            }
+
+            await dbProductData.save();
+            return res.json(dbProductData);
+        } catch (err) {
+            console.error('Error updating product:', err);
+            return res.status(500).json({ message: 'Internal server error' });
+        }
     },
     deleteProduct({ params }, res) {
-        Product.findByIdAndDelete({ _id: params.productId })
+        if (!isValidObjectId(params.productId)) {
+            return res.status(400).json({ message: 'Invalid product id' });
+        }
+
+        Product.findByIdAndDelete(params.productId)
             .then(dbProductData => {
                 if (!dbProductData) {
                     res.status(404).json({ message: 'No product found by this name' });

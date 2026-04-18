@@ -7,6 +7,7 @@
 const NotificationTemplate = require('../models/NotificationTemplate');
 const UserNotificationSettings = require('../models/UserNotificationSettings');
 const CompanyNotificationDefaults = require('../models/CompanyNotificationDefaults');
+const { isValidObjectId } = require('../utils/mongoSafety');
 
 /* ============================
    TEMPLATES CONTROLLERS
@@ -55,6 +56,9 @@ const updateTemplate = async (req, res) => {
     try {
         const { id } = req.params;
         const { name, type, subject, html, enabled } = req.body;
+        if (!isValidObjectId(id)) {
+            return res.status(400).json({ message: 'Invalid template id.' });
+        }
 
         const template = await NotificationTemplate.findByIdAndUpdate(
             id,
@@ -164,13 +168,38 @@ const getCompanyNotificationDefaults = async (req, res) => {
 const updateCompanyNotificationDefaults = async (req, res) => {
     try {
         const body = req.body || {};
+        let defaults = await CompanyNotificationDefaults.findOne();
+        if (!defaults) {
+            defaults = new CompanyNotificationDefaults({});
+        }
 
-        // there should only be one document; use findOneAndUpdate with upsert
-        const defaults = await CompanyNotificationDefaults.findOneAndUpdate(
-            {},
-            body,
-            { upsert: true, new: true }
-        );
+        if (body.companyName !== undefined) {
+            defaults.companyName = body.companyName;
+        }
+
+        if (body.bookingReminderCustomer !== undefined) {
+            defaults.bookingReminderCustomer = {
+                enabled: body.bookingReminderCustomer?.enabled,
+                frequency: body.bookingReminderCustomer?.frequency,
+                hoursBefore: body.bookingReminderCustomer?.hoursBefore,
+            };
+        }
+
+        if (body.upcomingBookingsAdmin !== undefined) {
+            defaults.upcomingBookingsAdmin = {
+                enabled: body.upcomingBookingsAdmin?.enabled,
+                frequency: body.upcomingBookingsAdmin?.frequency,
+                timeOfDay: body.upcomingBookingsAdmin?.timeOfDay,
+            };
+        }
+
+        if (body.marketing !== undefined) {
+            defaults.marketing = {
+                enabled: body.marketing?.enabled,
+            };
+        }
+
+        await defaults.save();
 
         return res.status(200).json(defaults);
     } catch (err) {
@@ -189,6 +218,9 @@ const testSendTemplate = async (req, res) => {
     try {
         const { id } = req.params;
         const user = req.user; // assumes authMiddleware sets this
+        if (!isValidObjectId(id)) {
+            return res.status(400).json({ message: 'Invalid template id.' });
+        }
 
         if (!user || !user.email) {
             return res
