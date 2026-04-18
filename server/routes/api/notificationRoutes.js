@@ -18,6 +18,13 @@ router.use(adminRouteLimiter);
 
 router.use(authMiddleware);
 
+const requireAuthenticatedUser = (req, res, next) => {
+    if (!req.user || !req.user._id) {
+        return res.status(401).json({ message: 'Not authenticated' });
+    }
+    return next();
+};
+
 /* ============================
    TEMPLATES (ADMIN ONLY)
 ============================ */
@@ -57,12 +64,14 @@ router.post(
 // GET /api/notifications/settings/me
 router.get(
     '/settings/me',
+    requireAuthenticatedUser,
     getMyNotificationSettings
 );
 
 // PUT /api/notifications/settings/me
 router.put(
     '/settings/me',
+    requireAuthenticatedUser,
     updateMyNotificationSettings
 );
 
