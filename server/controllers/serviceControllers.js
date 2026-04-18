@@ -1,5 +1,5 @@
 const { Service } = require('../models');
-const { isValidObjectId, sanitizeMongoUpdate } = require('../utils/mongoSafety');
+const { isValidObjectId } = require('../utils/mongoSafety');
 
 const serviceControllers = {
     getServices(req, res) {
@@ -44,22 +44,40 @@ const serviceControllers = {
                 res.status(400).json(err);
             });
     },
-    updateService({ params, body }, res) {
-        if (!isValidObjectId(params.serviceId)) {
-            return res.status(400).json({ message: 'Invalid service id' });
-        }
+    async updateService({ params, body }, res) {
+        try {
+            if (!isValidObjectId(params.serviceId)) {
+                return res.status(400).json({ message: 'Invalid service id' });
+            }
 
-        const safeUpdate = sanitizeMongoUpdate(body);
-        Service.findByIdAndUpdate(params.serviceId, { $set: safeUpdate }, { new: true })
-            .select('-__v')
-            .then(dbServiceData => {
-                if (!dbServiceData) {
-                    res.status(404).json({ message: 'No service found by this name' });
-                    return;
+            const dbServiceData = await Service.findById(params.serviceId).select('-__v');
+            if (!dbServiceData) {
+                return res.status(404).json({ message: 'No service found by this name' });
+            }
+
+            const allowedUpdate = {
+                categoryKey: body?.categoryKey,
+                name: body?.name,
+                nameKey: body?.nameKey,
+                descriptionKey: body?.descriptionKey,
+                cost: body?.cost,
+                isActive: body?.isActive,
+                options: body?.options,
+                order: body?.order,
+                isVisible: body?.isVisible,
+            };
+
+            for (const [key, value] of Object.entries(allowedUpdate)) {
+                if (value !== undefined) {
+                    dbServiceData[key] = value;
                 }
-                res.json(dbServiceData);
-            })
-            .catch(err => res.status(500).json(err));
+            }
+
+            await dbServiceData.save();
+            return res.json(dbServiceData);
+        } catch (err) {
+            return res.status(500).json(err);
+        }
     },
     deleteService({ params }, res) {
         if (!isValidObjectId(params.serviceId)) {

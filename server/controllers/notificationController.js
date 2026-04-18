@@ -7,7 +7,7 @@
 const NotificationTemplate = require('../models/NotificationTemplate');
 const UserNotificationSettings = require('../models/UserNotificationSettings');
 const CompanyNotificationDefaults = require('../models/CompanyNotificationDefaults');
-const { isValidObjectId, sanitizeMongoUpdate } = require('../utils/mongoSafety');
+const { isValidObjectId } = require('../utils/mongoSafety');
 
 /* ============================
    TEMPLATES CONTROLLERS
@@ -168,14 +168,38 @@ const getCompanyNotificationDefaults = async (req, res) => {
 const updateCompanyNotificationDefaults = async (req, res) => {
     try {
         const body = req.body || {};
-        const safeUpdate = sanitizeMongoUpdate(body);
+        let defaults = await CompanyNotificationDefaults.findOne();
+        if (!defaults) {
+            defaults = new CompanyNotificationDefaults({});
+        }
 
-        // there should only be one document; use findOneAndUpdate with upsert
-        const defaults = await CompanyNotificationDefaults.findOneAndUpdate(
-            {},
-            { $set: safeUpdate },
-            { upsert: true, new: true }
-        );
+        if (body.companyName !== undefined) {
+            defaults.companyName = body.companyName;
+        }
+
+        if (body.bookingReminderCustomer !== undefined) {
+            defaults.bookingReminderCustomer = {
+                enabled: body.bookingReminderCustomer?.enabled,
+                frequency: body.bookingReminderCustomer?.frequency,
+                hoursBefore: body.bookingReminderCustomer?.hoursBefore,
+            };
+        }
+
+        if (body.upcomingBookingsAdmin !== undefined) {
+            defaults.upcomingBookingsAdmin = {
+                enabled: body.upcomingBookingsAdmin?.enabled,
+                frequency: body.upcomingBookingsAdmin?.frequency,
+                timeOfDay: body.upcomingBookingsAdmin?.timeOfDay,
+            };
+        }
+
+        if (body.marketing !== undefined) {
+            defaults.marketing = {
+                enabled: body.marketing?.enabled,
+            };
+        }
+
+        await defaults.save();
 
         return res.status(200).json(defaults);
     } catch (err) {

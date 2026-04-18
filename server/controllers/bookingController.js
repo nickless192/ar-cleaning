@@ -3,7 +3,7 @@ const { DateTime } = require('luxon');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const Booking = require('../models/Booking');
 const Customer = require('../models/Customer');
-const { isValidObjectId, sanitizeMongoUpdate } = require('../utils/mongoSafety');
+const { isValidObjectId } = require('../utils/mongoSafety');
 // const { sendConfirmationEmail } = require('../utils/emailService');
 const APP_TZ = "America/Toronto";
 
@@ -738,14 +738,51 @@ const bookingControllers = {
         income,
         serviceType,
         customerSuggestedBookingAcknowledged,
-        ...restBody
       } = req.body;
 
-      // --- 1) Build base update payload from the rest of the body ---
+      // --- 1) Build base update payload explicitly from allowed fields ---
       const updateData = {
-        ...restBody,
         updatedAt: new Date(),
       };
+
+      const baseAllowedFields = [
+        'customerEmail',
+        'customerName',
+        'status',
+        'hidden',
+        'scheduleConfirmation',
+        'disableConfirmation',
+        'reminderScheduled',
+        'confirmationDate',
+        'reminderDate',
+        'scheduledConfirmationDate',
+        'scheduledReminderDate',
+        'confirmationSent',
+        'reminderSent',
+        'notes',
+        'createdBy',
+        'updatedBy',
+        'customerSuggestedBookingDate',
+        'customerSuggestedServiceType',
+        'customerSuggestedBookingComment',
+        'customerId',
+        'tax',
+        'discount',
+        'paidAt',
+        'confirmedAt',
+        'completedAt',
+        'invoiced',
+        'invoiceId',
+        'invoiceCreatedAt',
+        'invoiceSentAt',
+        'workflow',
+      ];
+
+      for (const field of baseAllowedFields) {
+        if (Object.prototype.hasOwnProperty.call(req.body, field)) {
+          updateData[field] = req.body[field];
+        }
+      }
 
       // --- 2) Date handling (if client sent a new date) ---
       if (date) {
@@ -820,10 +857,9 @@ const bookingControllers = {
       }
 
       // --- 4) Perform main update ---
-      const safeUpdateData = sanitizeMongoUpdate(updateData);
       const updated = await Booking.findByIdAndUpdate(
         bookingId,
-        { $set: safeUpdateData },
+        { $set: updateData },
         { new: true }
       );
 
