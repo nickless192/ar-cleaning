@@ -20,7 +20,7 @@ router.route('/:userId')
     .put(updateUser)
     .delete(deleteUser);
 
-    router.route('/:userId/consent').patch(setUserConsent);
+    router.route('/:userId/consent').patch(authRouteLimiter, setUserConsent);
 
 router.route('/reset-password').post(authRouteLimiter, resetPassword);
 
