@@ -4,6 +4,7 @@ import {
   Spinner, Table, Progress, Badge
 } from 'reactstrap';
 import moment from 'moment';
+import { authFetch } from '/src/utils/authFetch';
 
 const currency = (n) => `$${Number(n || 0).toFixed(2)}`;
 
@@ -126,7 +127,7 @@ const ExpenseDashboard = () => {
         // includeHidden: 'false', // add later if you want a toggle
       }).toString();
 
-      const res = await fetch(`/api/expenses?${qs}`);
+      const res = await authFetch(`/api/expenses?${qs}`);
       if (!res.ok) throw new Error('Failed to fetch expenses');
       const json = await res.json();
       setExpenses(Array.isArray(json) ? json : []);
@@ -190,7 +191,7 @@ const ExpenseDashboard = () => {
       const formDataToSend = new FormData();
       formDataToSend.append('receipt', file);
 
-      const res = await fetch('/api/expenses/ocr-receipt', {
+      const res = await authFetch('/api/expenses/ocr-receipt', {
         method: 'POST',
         body: formDataToSend
       });
@@ -236,7 +237,7 @@ const ExpenseDashboard = () => {
     body.append('description', formData.description || '');
     if (formData.receipt) body.append('receipt', formData.receipt);
 
-    const res = await fetch('/api/expenses', { method: 'POST', body });
+    const res = await authFetch('/api/expenses', { method: 'POST', body });
     if (!res.ok) throw new Error('Failed to add expense');
 
     await fetchExpenses();
@@ -263,7 +264,7 @@ const ExpenseDashboard = () => {
     if (!window.confirm('Are you sure you want to delete this expense?')) return;
 
     try {
-      const res = await fetch(`/api/expenses/${id}`, { method: 'DELETE' });
+      const res = await authFetch(`/api/expenses/${id}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Failed to delete expense');
       fetchExpenses();
     } catch (err) {
@@ -305,7 +306,7 @@ const handleSave = async (id) => {
     }
     delete updated.date;
 
-    const res = await fetch(`/api/expenses/${id}`, {
+    const res = await authFetch(`/api/expenses/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updated),

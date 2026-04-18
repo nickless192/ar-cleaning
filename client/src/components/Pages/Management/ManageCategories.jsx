@@ -16,6 +16,7 @@ import {
   ButtonGroup,
   Table
 } from 'reactstrap';
+import { authFetch } from '/src/utils/authFetch';
 
 import { FaEdit, FaTrash } from 'react-icons/fa';
 
@@ -35,7 +36,7 @@ export default function ManageCategories() {
     }, []);
 
     const fetchCategories = async () => {
-        const res = await fetch('/api/categories');
+        const res = await authFetch('/api/categories');
         const data = await res.json();
         setCategories(data);
     };
@@ -54,7 +55,7 @@ export default function ManageCategories() {
         const method = editingId ? 'PUT' : 'POST';
         const url = editingId ? `/api/categories/${editingId}` : '/api/categories';
 
-        await fetch(url, {
+        await authFetch(url, {
             method,
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(form)
@@ -74,7 +75,7 @@ export default function ManageCategories() {
     };
 
     const handleDelete = async (id) => {
-        await fetch(`/api/categories/${id}`, { method: 'DELETE' });
+        await authFetch(`/api/categories/${id}`, { method: 'DELETE' });
         fetchCategories();
     };
 
