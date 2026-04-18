@@ -8,10 +8,14 @@ const ALLOWED_LANGS = new Set(["en", "es", "fr"]);
 const LOCALES_ROOT = path.resolve(__dirname, "../../client/src/locales");
 
 function assertSafePathKey(seg) {
-  // prevent prototype pollution
-  if (seg === "__proto__" || seg === "prototype" || seg === "constructor") {
+  if (isUnsafeKey(seg)) {
     throw new Error("Unsafe key segment");
   }
+}
+
+function isUnsafeKey(seg) {
+  // prevent prototype pollution
+  return seg === "__proto__" || seg === "prototype" || seg === "constructor";
 }
 
 function splitPath(dotPath) {
@@ -61,6 +65,9 @@ function setByDotPath(obj, dotPath, value) {
   }
   const finalKey = parts[parts.length - 1];
   assertSafePathKey(finalKey);
+  if (isUnsafeKey(finalKey)) {
+    throw new Error("Unsafe key segment");
+  }
   if (cur == null || typeof cur !== "object" || Array.isArray(cur)) {
     throw new Error("Invalid destination object");
   }
@@ -85,7 +92,12 @@ function removeByDotPath(obj, dotPath) {
   }
   const finalKey = parts[parts.length - 1];
   assertSafePathKey(finalKey);
-  delete cur[finalKey];
+  if (isUnsafeKey(finalKey)) {
+    throw new Error("Unsafe key segment");
+  }
+  if (Object.prototype.hasOwnProperty.call(cur, finalKey)) {
+    delete cur[finalKey];
+  }
 }
 
 function flattenKeys(obj, prefix = "") {
