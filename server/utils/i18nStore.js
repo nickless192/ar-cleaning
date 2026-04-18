@@ -64,6 +64,11 @@ function setByDotPath(obj, dotPath, value) {
   if (cur == null || typeof cur !== "object" || Array.isArray(cur)) {
     throw new Error("Invalid destination object");
   }
+  const finalHasOwn = Object.prototype.hasOwnProperty.call(cur, finalKey);
+  const finalExists = finalKey in cur;
+  if (!finalHasOwn && finalExists) {
+    throw new Error("Refusing to assign inherited property");
+  }
   cur[finalKey] = value;
 }
 
