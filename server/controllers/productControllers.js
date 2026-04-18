@@ -71,7 +71,8 @@ const productControllers = {
             await dbProductData.save();
             return res.json(dbProductData);
         } catch (err) {
-            return res.status(500).json(err);
+            console.error('Error updating product:', err);
+            return res.status(500).json({ message: 'Internal server error' });
         }
     },
     deleteProduct({ params }, res) {
