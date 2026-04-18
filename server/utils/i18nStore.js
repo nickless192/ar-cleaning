@@ -46,7 +46,10 @@ function setByDotPath(obj, dotPath, value) {
   for (let i = 0; i < parts.length - 1; i++) {
     const k = parts[i];
     assertSafePathKey(k);
-    if (cur[k] == null || typeof cur[k] !== "object") cur[k] = Object.create(null);
+    const hasOwn = Object.prototype.hasOwnProperty.call(cur, k);
+    if (!hasOwn || cur[k] == null || typeof cur[k] !== "object") {
+      cur[k] = Object.create(null);
+    }
     cur = cur[k];
   }
   const finalKey = parts[parts.length - 1];
