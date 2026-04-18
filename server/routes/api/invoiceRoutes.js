@@ -24,5 +24,5 @@ module.exports = router;
 
 ///by-booking/:bookingId
 router.get('/by-booking/:bookingId', getInvoiceByBooking);
-router.get("/:id/pdf", getInvoicePdf);
+router.get("/:id/pdf", authRouteLimiter, getInvoicePdf);
 router.post("/:id/send", authRouteLimiter,sendInvoice);
