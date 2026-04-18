@@ -1281,10 +1281,12 @@ getVisits: async (req, res) => {
  sessionExit: async (req, res) => {
   try {
     const { sessionId, page, lastSeenAt } = req.body;
-    if (!sessionId) return res.status(400).json({ error: "Missing sessionId" });
+    if (typeof sessionId !== "string" || !sessionId.trim()) {
+      return res.status(400).json({ error: "Missing or invalid sessionId" });
+    }
 
     // Read current doc (needed because you compute derived fields)
-    const doc = await VisitorLog.findOne({ sessionId }).lean();
+    const doc = await VisitorLog.findOne({ sessionId: { $eq: sessionId } }).lean();
     if (!doc) return res.status(404).json({ error: "Session not found" });
 
     const computedLastSeenAt = lastSeenAt ? new Date(lastSeenAt) : new Date();
@@ -1317,7 +1319,7 @@ getVisits: async (req, res) => {
 
     // ✅ Atomic write (no doc.save → no VersionError)
     const updated = await VisitorLog.findOneAndUpdate(
-      { sessionId },
+      { sessionId: { $eq: sessionId } },
       {
         $set: {
           lastSeenAt: computedLastSeenAt,
