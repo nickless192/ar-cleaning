@@ -1,5 +1,7 @@
 // routes/notificationRoutes.js
 const router = require('express').Router();
+const { authMiddleware } = require('../../utils/auth');
+const requireAdminFlag = require('../../middleware/requireAdminFlag');
 const {
     getTemplates,
     createTemplate,
@@ -14,9 +16,7 @@ const { adminRouteLimiter } = require('../../middleware/rateLimiters');
 
 router.use(adminRouteLimiter);
 
-// TODO: replace with your real auth middlewares
-// const authMiddleware = require('../middleware/authMiddleware');
-// const adminMiddleware = require('../middleware/adminMiddleware');
+router.use(authMiddleware);
 
 /* ============================
    TEMPLATES (ADMIN ONLY)
@@ -25,32 +25,28 @@ router.use(adminRouteLimiter);
 // GET /api/notifications/templates
 router.get(
     '/templates',
-    // authMiddleware,
-    // adminMiddleware,
+    requireAdminFlag,
     getTemplates
 );
 
 // POST /api/notifications/templates
 router.post(
     '/templates',
-    // authMiddleware,
-    // adminMiddleware,
+    requireAdminFlag,
     createTemplate
 );
 
 // PUT /api/notifications/templates/:id
 router.put(
     '/templates/:id',
-    // authMiddleware,
-    // adminMiddleware,
+    requireAdminFlag,
     updateTemplate
 );
 
 // POST /api/notifications/templates/:id/test-send
 router.post(
     '/templates/:id/test-send',
-    // authMiddleware,
-    // adminMiddleware,
+    requireAdminFlag,
     testSendTemplate
 );
 
@@ -61,14 +57,12 @@ router.post(
 // GET /api/notifications/settings/me
 router.get(
     '/settings/me',
-    // authMiddleware,
     getMyNotificationSettings
 );
 
 // PUT /api/notifications/settings/me
 router.put(
     '/settings/me',
-    // authMiddleware,
     updateMyNotificationSettings
 );
 
@@ -79,16 +73,14 @@ router.put(
 // GET /api/notifications/company-defaults
 router.get(
     '/company-defaults',
-    // authMiddleware,
-    // adminMiddleware,
+    requireAdminFlag,
     getCompanyNotificationDefaults
 );
 
 // PUT /api/notifications/company-defaults
 router.put(
     '/company-defaults',
-    // authMiddleware,
-    // adminMiddleware,
+    requireAdminFlag,
     updateCompanyNotificationDefaults
 );
 

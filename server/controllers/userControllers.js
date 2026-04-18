@@ -51,10 +51,22 @@ const userControllers = {
             });
     },
     // update user's information
-    async updateUser({ params, body }, res) {
+    async updateUser({ params, body, user }, res) {
         try {
+            const isAdminActor = Boolean(user?.adminFlag);
+
             if (!isValidObjectId(params.userId)) {
                 return res.status(400).json({ message: 'Invalid user id' });
+            }
+
+            if (!isAdminActor) {
+                if (
+                    body?.adminFlag !== undefined ||
+                    body?.roles !== undefined ||
+                    body?.password !== undefined
+                ) {
+                    return res.status(403).json({ message: 'Not authorized to modify restricted fields' });
+                }
             }
 
             const dbUserData = await User.findById(params.userId).select('-__v');
@@ -243,11 +255,9 @@ const userControllers = {
     },
     async resetPassword({ body }, res) {
         const { token, password } = body;
-        console.log(token);
         let decoded;
         try {
             decoded = jwt.verify(token, process.env.SECRET_KEY);
-            console.log(decoded);
         } catch (error) {
             return res.status(400).json({ message: 'Invalid or expired token' });
         }
