@@ -106,6 +106,15 @@ function normalizePage(p) {
   return `/${s}`;
 }
 
+
+function coerceSafeSessionId(sessionId) {
+  if (typeof sessionId !== "string") return null;
+  const trimmed = sessionId.trim();
+  if (!trimmed) return null;
+  if (!/^[A-Za-z0-9_-]{1,128}$/.test(trimmed)) return null;
+  return trimmed;
+}
+
 function getValidatedSessionId(sessionId) {
   if (typeof sessionId !== "string") return null;
   const trimmed = sessionId.trim();
@@ -446,7 +455,7 @@ const visitorController = {
 
       if (!page) return res.status(400).json({ error: "Missing page" });
 
-      const validatedSessionId = getValidatedSessionId(sessionId);
+      const validatedSessionId = coerceSafeSessionId(getValidatedSessionId(sessionId));
       const effectiveSessionId = validatedSessionId || crypto.randomUUID();
       const visitorId = clientVisitorId || generateFallbackVisitorId(req);
 
@@ -543,7 +552,9 @@ const visitorController = {
         update.$push = { pathsVisited: { $each: safePaths, $slice: -50 } };
       }
 
-      const safeSessionFilter = { sessionId: effectiveSessionId };
+      const safeSessionId = coerceSafeSessionId(effectiveSessionId);
+      if (!safeSessionId) return res.status(400).json({ error: "Missing sessionId" });
+      const safeSessionFilter = { sessionId: safeSessionId };
       await VisitorLog.findOneAndUpdate(safeSessionFilter, update, {
         new: true,
         upsert: true,
@@ -563,7 +574,7 @@ const visitorController = {
   logEvent: async (req, res) => {
     try {
       const { sessionId, name, label, page, meta } = req.body;
-      const validatedSessionId = getValidatedSessionId(sessionId);
+      const validatedSessionId = coerceSafeSessionId(getValidatedSessionId(sessionId));
       if (!validatedSessionId || !name) {
         return res.status(400).json({ error: "Missing sessionId or event name" });
       }
@@ -577,7 +588,9 @@ const visitorController = {
         meta: meta && typeof meta === "object" ? meta : {},
       };
 
-      const safeSessionFilter = { sessionId: validatedSessionId };
+      const safeSessionId = coerceSafeSessionId(validatedSessionId);
+      if (!safeSessionId) return res.status(400).json({ error: "Missing or invalid sessionId" });
+      const safeSessionFilter = { sessionId: safeSessionId };
       const result = await VisitorLog.findOneAndUpdate(
         safeSessionFilter,
         {
@@ -1183,13 +1196,15 @@ getVisits: async (req, res) => {
   logInteraction: async (req, res) => {
     try {
       const { sessionId, action } = req.body;
-      const validatedSessionId = getValidatedSessionId(sessionId);
+      const validatedSessionId = coerceSafeSessionId(getValidatedSessionId(sessionId));
 
       if (!validatedSessionId || !action) {
         return res.status(400).json({ error: "Missing sessionId or action" });
       }
 
-      const safeSessionFilter = { sessionId: validatedSessionId };
+      const safeSessionId = coerceSafeSessionId(validatedSessionId);
+      if (!safeSessionId) return res.status(400).json({ error: "Missing or invalid sessionId" });
+      const safeSessionFilter = { sessionId: safeSessionId };
       const result = await VisitorLog.findOneAndUpdate(
         safeSessionFilter,
         {
@@ -1214,12 +1229,14 @@ getVisits: async (req, res) => {
   updateSessionDuration: async (req, res) => {
     try {
       const { sessionId, duration } = req.body;
-      const validatedSessionId = getValidatedSessionId(sessionId);
+      const validatedSessionId = coerceSafeSessionId(getValidatedSessionId(sessionId));
       if (!validatedSessionId || typeof duration !== "number") {
         return res.status(400).json({ error: "Missing or invalid sessionId or duration" });
       }
 
-      const safeSessionFilter = { sessionId: validatedSessionId };
+      const safeSessionId = coerceSafeSessionId(validatedSessionId);
+      if (!safeSessionId) return res.status(400).json({ error: "Missing or invalid sessionId" });
+      const safeSessionFilter = { sessionId: safeSessionId };
       const result = await VisitorLog.findOneAndUpdate(
         safeSessionFilter,
         { $set: { sessionDuration: duration, lastSeenAt: new Date() } },
@@ -1237,13 +1254,15 @@ getVisits: async (req, res) => {
   updateScrollDepth: async (req, res) => {
     try {
       const { sessionId, scrollDepth } = req.body;
-      const validatedSessionId = getValidatedSessionId(sessionId);
+      const validatedSessionId = coerceSafeSessionId(getValidatedSessionId(sessionId));
 
       if (!validatedSessionId || typeof scrollDepth !== "number") {
         return res.status(400).json({ error: "Missing or invalid sessionId or scrollDepth" });
       }
 
-      const safeSessionFilter = { sessionId: validatedSessionId };
+      const safeSessionId = coerceSafeSessionId(validatedSessionId);
+      if (!safeSessionId) return res.status(400).json({ error: "Missing or invalid sessionId" });
+      const safeSessionFilter = { sessionId: safeSessionId };
       const result = await VisitorLog.findOneAndUpdate(
         safeSessionFilter,
         { $max: { scrollDepth }, $set: { lastSeenAt: new Date() } },
@@ -1265,12 +1284,14 @@ getVisits: async (req, res) => {
   sessionHeartbeat: async (req, res) => {
     try {
       const { sessionId, lastSeenAt, scrollDepth, pathsVisited } = req.body;
-      const validatedSessionId = getValidatedSessionId(sessionId);
+      const validatedSessionId = coerceSafeSessionId(getValidatedSessionId(sessionId));
 
       if (!validatedSessionId) return res.status(400).json({ error: "Missing sessionId" });
 
       const now = lastSeenAt ? new Date(lastSeenAt) : new Date();
-      const safeSessionFilter = { sessionId: validatedSessionId };
+      const safeSessionId = coerceSafeSessionId(validatedSessionId);
+      if (!safeSessionId) return res.status(400).json({ error: "Missing or invalid sessionId" });
+      const safeSessionFilter = { sessionId: safeSessionId };
 
       const doc = await VisitorLog.findOne(safeSessionFilter).select("firstSeenAt");
       if (!doc) return res.status(404).json({ error: "Session not found" });
@@ -1301,12 +1322,14 @@ getVisits: async (req, res) => {
  sessionExit: async (req, res) => {
   try {
     const { sessionId, page, lastSeenAt } = req.body;
-    const validatedSessionId = getValidatedSessionId(sessionId);
+    const validatedSessionId = coerceSafeSessionId(getValidatedSessionId(sessionId));
     if (!validatedSessionId) {
       return res.status(400).json({ error: "Missing or invalid sessionId" });
     }
 
-    const safeSessionFilter = { sessionId: validatedSessionId };
+    const safeSessionId = coerceSafeSessionId(validatedSessionId);
+      if (!safeSessionId) return res.status(400).json({ error: "Missing or invalid sessionId" });
+      const safeSessionFilter = { sessionId: safeSessionId };
     // Read current doc (needed because you compute derived fields)
     const doc = await VisitorLog.findOne(safeSessionFilter).lean();
     if (!doc) return res.status(404).json({ error: "Session not found" });

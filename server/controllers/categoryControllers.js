@@ -33,7 +33,9 @@ module.exports = {
                 return res.status(400).json({ message: 'Invalid category id' });
             }
 
-            const updatedCategory = await Category.findByIdAndUpdate(id, { key, labelKey, type, descriptionKey }, { new: true });
+            const safeCategoryFilter = { _id: id };
+            const safeCategoryUpdate = { key, labelKey, type, descriptionKey };
+            const updatedCategory = await Category.findOneAndUpdate(safeCategoryFilter, { $set: safeCategoryUpdate }, { new: true });
             if (!updatedCategory) {
                 return res.status(404).json({ message: 'Category not found' });
             }

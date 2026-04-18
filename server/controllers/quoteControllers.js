@@ -34,7 +34,12 @@ const quoteController = {
     getQuoteById: async (req, res) => {
         try {
             console.log('Getting quote by id: ', req.params.quoteId);
-            const quote = await Quote.findOne({ quoteId: req.params.quoteId });
+            const safeQuoteId = String(req.params.quoteId || '').trim();
+            if (!safeQuoteId) {
+                return res.status(400).json({ message: 'Invalid quote id' });
+            }
+            const safeQuoteFilter = { quoteId: safeQuoteId };
+            const quote = await Quote.findOne(safeQuoteFilter);
             // const quote = await Quote.findById(req.params.quoteId);
             if (!quote) {
                 return res.status(404).json({ message: 'Quote not found' });
@@ -72,9 +77,13 @@ const quoteController = {
                 return res.status(400).json({ message: 'No valid fields to update' });
             }
 
-            const quote = await Quote.findByIdAndUpdate(
-                req.params.quoteId,
-                { $set: sanitizedUpdate },
+            const safeQuoteId = req.params.quoteId;
+            const safeQuoteFilter = { _id: safeQuoteId };
+            const safeQuoteUpdate = { $set: sanitizedUpdate };
+
+            const quote = await Quote.findOneAndUpdate(
+                safeQuoteFilter,
+                safeQuoteUpdate,
                 { new: true }
             );
             res.json(quote);

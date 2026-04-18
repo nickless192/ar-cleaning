@@ -42,8 +42,10 @@ const contactFormController = {
 
     // const filter = status ? { status } : {};
     const query = { deleted: { $ne: true } };
-    if (req.query.status) {
-      query.status = req.query.status;
+    const allowedStatuses = new Set(['new', 'in-progress', 'resolved']);
+    const rawStatus = typeof req.query.status === 'string' ? req.query.status : '';
+    if (allowedStatuses.has(rawStatus)) {
+      query.status = rawStatus;
     }
 
 
@@ -70,9 +72,11 @@ const contactFormController = {
         return res.status(400).json({ message: "Invalid contact form id" });
       }
 
-      const updated = await ContactForm.findByIdAndUpdate(
-        id,
-        { status },
+      const safeFilter = { _id: id };
+      const safeUpdate = { status };
+      const updated = await ContactForm.findOneAndUpdate(
+        safeFilter,
+        { $set: safeUpdate },
         { new: true }
       );
 
@@ -90,9 +94,11 @@ const contactFormController = {
         return res.status(400).json({ message: "Invalid contact form id" });
       }
 
-      const updated = await ContactForm.findByIdAndUpdate(
-        req.params.id,
-        { deleted: true },
+      const safeFilter = { _id: req.params.id };
+      const safeUpdate = { deleted: true };
+      const updated = await ContactForm.findOneAndUpdate(
+        safeFilter,
+        { $set: safeUpdate },
         { new: true }
       );
       if (!updated) return res.status(404).json({ message: "Not found" });

@@ -7,6 +7,7 @@ const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 const trackVisitor = require('./utils/trackVisitor');
 const cookieParser = require("cookie-parser");
+const validateCsrfToken = require('./middleware/validateCsrfToken');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -42,6 +43,24 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 app.use(cookieParser());
+
+
+// CSRF protection for cookie-authenticated state-changing requests.
+// Keep bearer-token API clients unaffected: only enforce when auth cookies are present.
+app.use((req, res, next) => {
+  if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) {
+    return next();
+  }
+
+  const hasRefreshCookie = Boolean(req.cookies?.refreshToken);
+  const hasCsrfCookie = Boolean(req.cookies?.csrfToken);
+
+  if (!hasRefreshCookie && !hasCsrfCookie) {
+    return next();
+  }
+
+  return validateCsrfToken(req, res, next);
+});
 // enable routes
 // app.use(trackVisitor);
 app.use(require('./routes'));

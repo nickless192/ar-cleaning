@@ -3,6 +3,7 @@ const { DateTime } = require('luxon');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const Booking = require('../models/Booking');
 const Customer = require('../models/Customer');
+const User = require('../models/User');
 const { isValidObjectId } = require('../utils/mongoSafety');
 // const { sendConfirmationEmail } = require('../utils/emailService');
 const APP_TZ = "America/Toronto";
@@ -359,9 +360,12 @@ const bookingControllers = {
 
       // if a customerId is provided, push booking into the customer's bookings array
       if (customerId) {
-        await Customer.findByIdAndUpdate(customerId, {
-          $push: { bookings: savedBooking._id },
-        });
+        if (!isValidObjectId(customerId)) {
+          return res.status(400).json({ error: 'Invalid customer id' });
+        }
+        const safeCustomerFilter = { _id: customerId };
+        const safeCustomerUpdate = { $push: { bookings: savedBooking._id } };
+        await Customer.findOneAndUpdate(safeCustomerFilter, safeCustomerUpdate);
         //  // TODO: make sure this does not overlap with the current sendConfirmationEmail function
         // await NotificationService.sendBookingConfirmationCustomer(savedBooking._id);
       }
@@ -414,7 +418,9 @@ const bookingControllers = {
       }
       // const { income } = req.body; // Expecting income to be passed in request body
       const { status } = req.body; // Expecting status to be passed in request body
-      const updatedBooking = await Booking.findByIdAndUpdate(bookingId, { status: status }, { new: true });
+      const safeBookingFilter = { _id: bookingId };
+      const safeBookingUpdate = { status: String(status || '') };
+      const updatedBooking = await Booking.findOneAndUpdate(safeBookingFilter, { $set: safeBookingUpdate }, { new: true });
       if (!updatedBooking) {
         return res.status(404).json({ error: 'Booking not found' });
       }
@@ -434,7 +440,9 @@ const bookingControllers = {
       if (!isValidObjectId(bookingId)) {
         return res.status(400).json({ error: 'Invalid booking id' });
       }
-      const updatedBooking = await Booking.findByIdAndUpdate(bookingId, { hidden: true }, { new: true });
+      const safeBookingFilter = { _id: bookingId };
+      const safeBookingUpdate = { hidden: true };
+      const updatedBooking = await Booking.findOneAndUpdate(safeBookingFilter, { $set: safeBookingUpdate }, { new: true });
       if (!updatedBooking) {
         return res.status(404).json({ error: 'Booking not found' });
       }
@@ -453,7 +461,9 @@ const bookingControllers = {
       if (!isValidObjectId(bookingId)) {
         return res.status(400).json({ error: 'Invalid booking id' });
       }
-      const updatedBooking = await Booking.findByIdAndUpdate(bookingId, { status: 'cancelled' }, { new: true });
+      const safeBookingFilter = { _id: bookingId };
+      const safeBookingUpdate = { status: 'cancelled' };
+      const updatedBooking = await Booking.findOneAndUpdate(safeBookingFilter, { $set: safeBookingUpdate }, { new: true });
       if (!updatedBooking) {
         return res.status(404).json({ error: 'Booking not found' });
       }
@@ -498,8 +508,9 @@ const bookingControllers = {
       // await updatedBooking.save(); // Save the updated booking
       // res.json(updatedBooking);
 
-      const updatedBooking = await Booking.findByIdAndUpdate(
-        bookingId,
+      const safeBookingFilter = { _id: bookingId };
+      const updatedBooking = await Booking.findOneAndUpdate(
+        safeBookingFilter,
         {
           status,
           scheduleConfirmation: scheduleConfirmation || false,
@@ -532,7 +543,8 @@ const bookingControllers = {
       if (!isValidObjectId(bookingId)) {
         return res.status(400).json({ error: 'Invalid booking id' });
       }
-      const updatedBooking = await Booking.findByIdAndUpdate(bookingId, {
+      const safeBookingFilter = { _id: bookingId };
+      const updatedBooking = await Booking.findOneAndUpdate(safeBookingFilter, {
         status: 'pending',
         updatedAt: new Date(),
         updatedBy: req.body.updatedBy,
@@ -673,7 +685,8 @@ const bookingControllers = {
       if (!isValidObjectId(bookingId)) {
         return res.status(400).json({ error: 'Invalid booking id' });
       }
-      const updatedBooking = await Booking.findByIdAndUpdate(bookingId,
+      const safeBookingFilter = { _id: bookingId };
+      const updatedBooking = await Booking.findOneAndUpdate(safeBookingFilter,
         { notes, updatedBy, updatedAt: new Date() },
         { new: true }
       );
@@ -694,7 +707,8 @@ const bookingControllers = {
       if (!isValidObjectId(bookingId)) {
         return res.status(400).json({ error: 'Invalid booking id' });
       }
-      const updatedBooking = await Booking.findByIdAndUpdate(bookingId,
+      const safeBookingFilter = { _id: bookingId };
+      const updatedBooking = await Booking.findOneAndUpdate(safeBookingFilter,
         // { date: new Date(date), updatedBy, updatedAt: new Date() },
         {
           // date: new Date(date),
@@ -857,8 +871,9 @@ const bookingControllers = {
       }
 
       // --- 4) Perform main update ---
-      const updated = await Booking.findByIdAndUpdate(
-        bookingId,
+      const safeBookingFilter = { _id: bookingId };
+      const updated = await Booking.findOneAndUpdate(
+        safeBookingFilter,
         { $set: updateData },
         { new: true }
       );
@@ -925,13 +940,15 @@ const bookingControllers = {
       }
       // Here you would typically send the new date request to the relevant service
       // For demonstration, we'll just log it
-      console.log(`New date request for booking ${bookingId}:`, newDate, comment, serviceType);
-      await Booking.findByIdAndUpdate(bookingId, {
+      console.log('New date request for booking:', bookingId, newDate, comment, serviceType);
+      const safeBookingFilter = { _id: bookingId };
+      const safeBookingUpdate = {
         customerSuggestedBookingDate: newDate,
         customerSuggestedBookingComment: comment,
         customerSuggestedServiceType: serviceType,
         customerSuggestedBookingAcknowledged: false
-      });
+      };
+      await Booking.findOneAndUpdate(safeBookingFilter, { $set: safeBookingUpdate });
 
       res.status(200).json({ message: 'New date request submitted successfully' });
     } catch (err) {
@@ -949,6 +966,9 @@ const bookingControllers = {
       //   return res.status(401).json({ error: "Unauthorized" });
       // }
       const userId = req.body.userId; // For testing, we can pass userId in body. In production, get from req.user
+      if (!isValidObjectId(userId)) {
+        return res.status(400).json({ error: 'Invalid user id' });
+      }
 
       const {
         customerSuggestedBookingDate,
@@ -976,10 +996,12 @@ const bookingControllers = {
       //  - Customer.authUserId
       console.log("userId received:", userId);
       console.log("typeof userId:", typeof userId);
-      const customer = await Customer.findOne({ user: userId });
+      const safeCustomerFilter = { user: userId };
+      let customer = await Customer.findOne(safeCustomerFilter);
       if (!customer) {
         // return res.status(404).json({ error: "Customer profile not found" });
-        userDoc = await User.findById(userId);
+        const safeUserFilter = { _id: userId };
+        const userDoc = await User.findOne(safeUserFilter);
         if (!userDoc) return res.status(404).json({ error: "User not found" });
 
         customer = await Customer.create({
@@ -1051,9 +1073,9 @@ const bookingControllers = {
       const savedBooking = await newBooking.save();
 
       // ✅ link into customer.bookings like your admin createBooking does
-      await Customer.findByIdAndUpdate(customer._id, {
-        $push: { bookings: savedBooking._id },
-      });
+      const safeCustomerByIdFilter = { _id: customer._id };
+      const safeCustomerPushUpdate = { $push: { bookings: savedBooking._id } };
+      await Customer.findOneAndUpdate(safeCustomerByIdFilter, safeCustomerPushUpdate);
 
       return res.status(201).json(savedBooking);
     } catch (err) {

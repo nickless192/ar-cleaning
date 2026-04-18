@@ -154,7 +154,7 @@ function validateUploadedFile(file, allowedMimes) {
  */
 async function safeRemoveFile(filePath) {
   try {
-    const trustedPath = resolveTrustedUploadPath(filePath) || filePath;
+    const trustedPath = resolveTrustedUploadPath(filePath);
     if (!trustedPath || !isPathWithinUploads(trustedPath, getUploadsDir())) {
       return;
     }

@@ -153,7 +153,11 @@ module.exports = {
   // GET /api/invoices/by-booking/:bookingId
   async getInvoiceByBooking(req, res) {
     const { bookingId } = req.params;
-    const invoice = await Invoice.findOne({ bookingId }).lean();
+    if (!isValidObjectId(bookingId)) {
+      return res.status(400).json({ message: "Invalid booking id" });
+    }
+    const safeBookingFilter = { bookingId };
+    const invoice = await Invoice.findOne(safeBookingFilter).lean();
     if (!invoice) return res.status(404).json({ message: "No invoice found" });
     res.status(200).json(invoice);
   },
@@ -173,7 +177,14 @@ module.exports = {
       // console.log("invoice Number:", invoiceNumber);
 
       // search for existing invoice with same bookingId
-      const existingInvoice = await Invoice.findOne({ bookingId });
+      if (bookingId && !isValidObjectId(bookingId)) {
+        return res.status(400).json({ error: 'Invalid booking id' });
+      }
+
+      const safeInvoiceBookingFilter = bookingId ? { bookingId } : null;
+      const existingInvoice = safeInvoiceBookingFilter
+        ? await Invoice.findOne(safeInvoiceBookingFilter)
+        : null;
       if (existingInvoice) {
         return res.status(409).json({ error: 'Invoice already exists for this booking' });
       }
@@ -194,7 +205,9 @@ module.exports = {
       });
       // // set booking status to 'invoiced' if bookingId is provided
       if (bookingId) {
-        await Booking.findByIdAndUpdate(bookingId, { invoiced: true, invoiceCreatedAt: new Date() });
+        const safeBookingFilter = { _id: bookingId };
+        const safeBookingUpdate = { invoiced: true, invoiceCreatedAt: new Date() };
+        await Booking.findOneAndUpdate(safeBookingFilter, { $set: safeBookingUpdate });
       }
 
       res.status(201).json(newInvoice);
