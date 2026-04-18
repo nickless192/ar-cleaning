@@ -115,6 +115,14 @@ function coerceSafeSessionId(sessionId) {
   return trimmed;
 }
 
+function coerceSafeVisitorId(visitorId) {
+  if (typeof visitorId !== "string") return null;
+  const trimmed = visitorId.trim();
+  if (!trimmed) return null;
+  if (!/^[A-Za-z0-9_-]{1,128}$/.test(trimmed)) return null;
+  return trimmed;
+}
+
 function getValidatedSessionId(sessionId) {
   if (typeof sessionId !== "string") return null;
   const trimmed = sessionId.trim();
@@ -458,6 +466,9 @@ const visitorController = {
       const validatedSessionId = coerceSafeSessionId(getValidatedSessionId(sessionId));
       const effectiveSessionId = validatedSessionId || crypto.randomUUID();
       const visitorId = clientVisitorId || generateFallbackVisitorId(req);
+      const safeSessionId = coerceSafeSessionId(effectiveSessionId);
+      const safeVisitorId = coerceSafeVisitorId(visitorId) || generateFallbackVisitorId(req);
+      if (!safeSessionId) return res.status(400).json({ error: "Missing sessionId" });
 
       const ip = getClientIp(req);
       const hashedIp = hashIp(ip);
@@ -490,26 +501,28 @@ const visitorController = {
       }
 
       // Returning visitor (fast + correct): VisitorIdentity
+      const safeVisitorFilter = { visitorId: safeVisitorId };
+      const safeReturningVisitorFilter = { visitorId: safeVisitorId, sessionId: { $ne: safeSessionId } };
       let isReturningVisitor = false;
       try {
         if (VisitorIdentity) {
           const prev = await VisitorIdentity.findOneAndUpdate(
-            { visitorId },
+            safeVisitorFilter,
             {
-              $set: { lastSeenAt: now, lastSessionId: effectiveSessionId },
-              $setOnInsert: { firstSeenAt: now, firstSessionId: effectiveSessionId },
+              $set: { lastSeenAt: now, lastSessionId: safeSessionId },
+              $setOnInsert: { firstSeenAt: now, firstSessionId: safeSessionId },
             },
             { new: false, upsert: true }
           );
           isReturningVisitor = !!prev;
         } else {
           // fallback (less ideal): check visitorId exists with different sessionId
-          const prev = await VisitorLog.exists({ visitorId, sessionId: { $ne: effectiveSessionId } });
+          const prev = await VisitorLog.exists(safeReturningVisitorFilter);
           isReturningVisitor = !!prev;
         }
       } catch (e) {
         console.error("[VisitorIdentity] failed:", e.message);
-        const prev = await VisitorLog.exists({ visitorId, sessionId: { $ne: effectiveSessionId } });
+        const prev = await VisitorLog.exists(safeReturningVisitorFilter);
         isReturningVisitor = !!prev;
       }
 
@@ -520,8 +533,8 @@ const visitorController = {
 
       const update = {
         $setOnInsert: {
-          visitorId,
-          sessionId: effectiveSessionId,
+          visitorId: safeVisitorId,
+          sessionId: safeSessionId,
           visitDate: now,
           firstSeenAt: now,
           page: pageNorm, // landing page
@@ -552,15 +565,13 @@ const visitorController = {
         update.$push = { pathsVisited: { $each: safePaths, $slice: -50 } };
       }
 
-      const safeSessionId = coerceSafeSessionId(effectiveSessionId);
-      if (!safeSessionId) return res.status(400).json({ error: "Missing sessionId" });
       const safeSessionFilter = { sessionId: safeSessionId };
       await VisitorLog.findOneAndUpdate(safeSessionFilter, update, {
         new: true,
         upsert: true,
       });
 
-      res.status(200).json({ message: "Visit logged/updated", sessionId: effectiveSessionId, visitorId });
+      res.status(200).json({ message: "Visit logged/updated", sessionId: safeSessionId, visitorId: safeVisitorId });
     } catch (err) {
       console.error("logVisit error:", err);
       res.status(500).send({ error: "Failed to log visit" });

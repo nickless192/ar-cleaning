@@ -1568,7 +1568,12 @@ CleanAR Solutions`;
   },
   emailPasswordResetRequest: async (req, res) => {
     const { email } = req.body;
-    const user = await User.findOne({ email });
+    const safeEmail = typeof email === 'string' ? email.trim().toLowerCase() : '';
+    if (!safeEmail) {
+      return res.status(400).send('Valid email is required');
+    }
+    const safeUserFilter = { email: safeEmail };
+    const user = await User.findOne(safeUserFilter);
 
     if (!user) {
       return res.status(404).send('User not found');

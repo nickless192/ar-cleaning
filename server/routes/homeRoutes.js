@@ -1,7 +1,8 @@
 const router = require('express').Router();
 const path = require('path');
+const { authRouteLimiter } = require('../middleware/rateLimiters');
 
-router.get('*', (req, res) => {
+router.get('*', authRouteLimiter, (req, res) => {
     res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
   });
 

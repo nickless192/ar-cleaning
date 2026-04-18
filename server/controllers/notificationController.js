@@ -133,11 +133,67 @@ const getMyNotificationSettings = async (req, res) => {
 const updateMyNotificationSettings = async (req, res) => {
     try {
         const userId = req.user._id;
-        const preferences = req.body.preferences || {};
+        if (!isValidObjectId(String(userId))) {
+            return res.status(400).json({ message: 'Invalid user id.' });
+        }
+        const rawPreferences =
+            req.body && typeof req.body.preferences === 'object' && req.body.preferences !== null
+                ? req.body.preferences
+                : {};
+        const safePreferences = {};
+        if (
+            rawPreferences.bookingConfirmation &&
+            typeof rawPreferences.bookingConfirmation === 'object'
+        ) {
+            safePreferences.bookingConfirmation = {};
+            if (typeof rawPreferences.bookingConfirmation.email === 'boolean') {
+                safePreferences.bookingConfirmation.email =
+                    rawPreferences.bookingConfirmation.email;
+            }
+        }
+        if (rawPreferences.bookingReminder && typeof rawPreferences.bookingReminder === 'object') {
+            safePreferences.bookingReminder = {};
+            if (typeof rawPreferences.bookingReminder.email === 'boolean') {
+                safePreferences.bookingReminder.email = rawPreferences.bookingReminder.email;
+            }
+            if (
+                rawPreferences.bookingReminder.frequency === 'immediate' ||
+                rawPreferences.bookingReminder.frequency === 'daily' ||
+                rawPreferences.bookingReminder.frequency === 'weekly'
+            ) {
+                safePreferences.bookingReminder.frequency =
+                    rawPreferences.bookingReminder.frequency;
+            }
+        }
+        if (
+            rawPreferences.adminUpcomingBookings &&
+            typeof rawPreferences.adminUpcomingBookings === 'object'
+        ) {
+            safePreferences.adminUpcomingBookings = {};
+            if (typeof rawPreferences.adminUpcomingBookings.email === 'boolean') {
+                safePreferences.adminUpcomingBookings.email =
+                    rawPreferences.adminUpcomingBookings.email;
+            }
+            if (
+                rawPreferences.adminUpcomingBookings.frequency === 'daily' ||
+                rawPreferences.adminUpcomingBookings.frequency === 'weekly'
+            ) {
+                safePreferences.adminUpcomingBookings.frequency =
+                    rawPreferences.adminUpcomingBookings.frequency;
+            }
+        }
+        if (rawPreferences.marketing && typeof rawPreferences.marketing === 'object') {
+            safePreferences.marketing = {};
+            if (typeof rawPreferences.marketing.email === 'boolean') {
+                safePreferences.marketing.email = rawPreferences.marketing.email;
+            }
+        }
 
+        const safeSettingsFilter = { user: userId };
+        const safeSettingsUpdate = { $set: { preferences: safePreferences } };
         const settings = await UserNotificationSettings.findOneAndUpdate(
-            { user: userId },
-            { preferences },
+            safeSettingsFilter,
+            safeSettingsUpdate,
             { upsert: true, new: true }
         );
 

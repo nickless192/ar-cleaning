@@ -509,22 +509,23 @@ const bookingControllers = {
       // res.json(updatedBooking);
 
       const safeBookingFilter = { _id: bookingId };
+      const safeUpdatedBy = isValidObjectId(req.body.updatedBy) ? req.body.updatedBy : null;
+      const safeBookingUpdate = {
+        status,
+        scheduleConfirmation: scheduleConfirmation || false,
+        scheduledConfirmationDate: confirmationDate
+          ? parseTorontoWallTimeToUTCDate(confirmationDate)
+          : new Date(),
+        reminderScheduled: reminderScheduled || false,
+        disableConfirmation: disableConfirmation || false,
+        updatedAt: new Date()
+      };
+      if (safeUpdatedBy) {
+        safeBookingUpdate.updatedBy = safeUpdatedBy;
+      }
       const updatedBooking = await Booking.findOneAndUpdate(
         safeBookingFilter,
-        {
-          status,
-          scheduleConfirmation: scheduleConfirmation || false,
-          // scheduledConfirmationDate: confirmationDate
-          //   ? DateTime.fromISO(confirmationDate, { zone: 'America/Toronto' }).toJSDate()
-          //   : new Date(),
-          scheduledConfirmationDate: confirmationDate
-            ? parseTorontoWallTimeToUTCDate(confirmationDate)
-            : new Date(),
-          reminderScheduled: reminderScheduled || false,
-          disableConfirmation: disableConfirmation || false,
-          updatedAt: new Date(),
-          updatedBy: req.body.updatedBy
-        },
+        { $set: safeBookingUpdate },
         { new: true }
       );
       // if (customerSuggestedBookingAcknowledged) {
@@ -692,8 +693,15 @@ const bookingControllers = {
         return res.status(400).json({ error: 'Invalid booking id' });
       }
       const safeBookingFilter = { _id: bookingId };
+      const safeBookingUpdate = {
+        notes,
+        updatedAt: new Date()
+      };
+      if (isValidObjectId(updatedBy)) {
+        safeBookingUpdate.updatedBy = updatedBy;
+      }
       const updatedBooking = await Booking.findOneAndUpdate(safeBookingFilter,
-        { notes, updatedBy, updatedAt: new Date() },
+        { $set: safeBookingUpdate },
         { new: true }
       );
       if (!updatedBooking) {
@@ -714,20 +722,21 @@ const bookingControllers = {
         return res.status(400).json({ error: 'Invalid booking id' });
       }
       const safeBookingFilter = { _id: bookingId };
+      const safeBookingUpdate = {
+        date: parseTorontoWallTimeToUTCDate(date),
+        updatedAt: new Date(),
+        status: 'pending',
+        scheduledConfirmationDate: null,
+        reminderScheduled: false,
+        confirmationSent: false,
+        reminderSent: false,
+        disableConfirmation: false
+      };
+      if (isValidObjectId(updatedBy)) {
+        safeBookingUpdate.updatedBy = updatedBy;
+      }
       const updatedBooking = await Booking.findOneAndUpdate(safeBookingFilter,
-        // { date: new Date(date), updatedBy, updatedAt: new Date() },
-        {
-          // date: new Date(date),
-          date: parseTorontoWallTimeToUTCDate(date),
-          updatedBy,
-          updatedAt: new Date(),
-          status: 'pending',
-          scheduledConfirmationDate: null,
-          reminderScheduled: false,
-          confirmationSent: false,
-          reminderSent: false,
-          disableConfirmation: false
-        },
+        { $set: safeBookingUpdate },
         { new: true }
       );
       if (!updatedBooking) {
