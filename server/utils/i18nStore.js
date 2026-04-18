@@ -48,14 +48,20 @@ function setByDotPath(obj, dotPath, value) {
     assertSafePathKey(k);
     const hasOwn = Object.prototype.hasOwnProperty.call(cur, k);
     const next = hasOwn ? cur[k] : undefined;
-    if (!hasOwn || next == null || typeof next !== "object") {
+    const canDescend =
+      hasOwn &&
+      next != null &&
+      typeof next === "object" &&
+      !Array.isArray(next);
+
+    if (!canDescend) {
       cur[k] = Object.create(null);
     }
     cur = cur[k];
   }
   const finalKey = parts[parts.length - 1];
   assertSafePathKey(finalKey);
-  if (cur == null || typeof cur !== "object") {
+  if (cur == null || typeof cur !== "object" || Array.isArray(cur)) {
     throw new Error("Invalid destination object");
   }
   cur[finalKey] = value;
