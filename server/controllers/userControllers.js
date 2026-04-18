@@ -114,7 +114,12 @@ const userControllers = {
     },
     async login({ body }, res) {
         // const dbUserData = await User.findOne({ email: body.email });
-        const dbUserData = await User.findOne({ email: body.email })
+        const safeEmail = typeof body?.email === 'string' ? body.email.trim().toLowerCase() : '';
+        if (!safeEmail) {
+            return res.status(400).json({ message: 'Email is required.' });
+        }
+        const safeUserFilter = { email: safeEmail };
+        const dbUserData = await User.findOne(safeUserFilter)
             .select('-resetToken -resetTokenExpires') // keep sensitive tokens out
             .populate({
                 path: 'roles',
