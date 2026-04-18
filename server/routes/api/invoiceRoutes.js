@@ -4,6 +4,7 @@ const { getInvoices, getInvoiceById, createInvoice, updateInvoice, deleteInvoice
     getInvoicePdf,
     sendInvoice
  } = require('../../controllers/invoiceControllers');
+ const { adminRouteLimiter, authRouteLimiter } = require('../../middleware/rateLimiters');
 
 // POST /invoices
 router.post('/', createInvoice); // Create a new invoice
@@ -24,4 +25,4 @@ module.exports = router;
 ///by-booking/:bookingId
 router.get('/by-booking/:bookingId', getInvoiceByBooking);
 router.get("/:id/pdf", getInvoicePdf);
-router.post("/:id/send", sendInvoice);
+router.post("/:id/send", authRouteLimiter,sendInvoice);
