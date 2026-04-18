@@ -93,7 +93,8 @@ const userControllers = {
             await dbUserData.save();
             return res.json(dbUserData);
         } catch (err) {
-            return res.status(500).json(err);
+            console.error('Error updating user:', err);
+            return res.status(500).json({ message: 'Internal server error' });
         }
     },
     deleteUser({ params }, res) {
