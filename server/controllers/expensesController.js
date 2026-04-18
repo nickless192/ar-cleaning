@@ -5,7 +5,7 @@ const Tesseract = require('tesseract.js');
 const { fromPath } = require('pdf2pic');
 const fs = require('fs-extra');
 const PDFParser = require('pdf2json');
-const { isValidObjectId, sanitizeMongoUpdate } = require('../utils/mongoSafety');
+const { isValidObjectId } = require('../utils/mongoSafety');
 
 // -------------------------
 // Constants
@@ -378,7 +378,73 @@ const expensesControllers = {
       }
 
       const payload = normalizeExpensePayload(req.body);
-      const update = { ...payload };
+      const {
+        description,
+        category,
+        categoryCode,
+        craLine,
+        currency,
+        amountSubtotal,
+        taxAmount,
+        amountTotal,
+        amount,
+        taxRate,
+        taxIncluded,
+        incurredAt,
+        paidAt,
+        date,
+        status,
+        paymentMethod,
+        accountLabel,
+        vendorName,
+        vendorAddress,
+        vendorTaxId,
+        invoiceNumber,
+        receiptRequired,
+        source,
+        externalId,
+        externalRef,
+        reconciled,
+        reconciledTo,
+        bookingId,
+        customerId,
+        businessUsePercent,
+        hidden,
+      } = payload;
+
+      const safeUpdate = {
+        description,
+        category,
+        categoryCode,
+        craLine,
+        currency,
+        amountSubtotal,
+        taxAmount,
+        amountTotal,
+        amount,
+        taxRate,
+        taxIncluded,
+        incurredAt,
+        paidAt,
+        date,
+        status,
+        paymentMethod,
+        accountLabel,
+        vendorName,
+        vendorAddress,
+        vendorTaxId,
+        invoiceNumber,
+        receiptRequired,
+        source,
+        externalId,
+        externalRef,
+        reconciled,
+        reconciledTo,
+        bookingId,
+        customerId,
+        businessUsePercent,
+        hidden,
+      };
 
       if (req.file) {
         const validation = validateUploadedFile(req.file, ALLOWED_RECEIPT_MIMES);
@@ -388,13 +454,12 @@ const expensesControllers = {
         }
 
         const relFolder = req.file.fieldname === 'statement' ? 'bank-statements' : 'receipts';
-        update.receiptUrl = `/uploads/${relFolder}/${path.basename(req.file.filename)}`;
-        update.receiptFilename = sanitizeFilename(req.file.originalname);
-        update.receiptMimeType = req.file.mimetype;
-        update.receiptSize = req.file.size;
+        safeUpdate.receiptUrl = `/uploads/${relFolder}/${path.basename(req.file.filename)}`;
+        safeUpdate.receiptFilename = sanitizeFilename(req.file.originalname);
+        safeUpdate.receiptMimeType = req.file.mimetype;
+        safeUpdate.receiptSize = req.file.size;
       }
 
-      const safeUpdate = sanitizeMongoUpdate(update);
       const updatedExpense = await Expenses.findByIdAndUpdate(id, { $set: safeUpdate }, { new: true });
 
       if (!updatedExpense) {
