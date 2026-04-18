@@ -10,10 +10,10 @@ const validateCsrfToken = require('../../middleware/validateCsrfToken');
 
 router.route('/')
     .get(adminRouteLimiter, authMiddleware, requireAdminFlag, getUsers)
-    .post(createUser)
+    .post(authRouteLimiter, createUser)
     .put(authRouteLimiter, authMiddleware, updateUser);
     
-router.route('/migrate-user').put(migrateUsernamesToLowercase);
+router.route('/migrate-user').put(adminRouteLimiter, migrateUsernamesToLowercase);
 
 router.route('/:userId')
     .get(adminRouteLimiter, getUserById)

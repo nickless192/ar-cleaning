@@ -11,6 +11,9 @@ const {
 } = require('../../controllers/expensesController');
 
 const upload = require('../../middleware/upload'); // Multer middleware for receipts
+const { adminRouteLimiter } = require('../../middleware/rateLimiters');
+
+router.use(adminRouteLimiter);
 
 // List (optionally later: ?from&to&method=cash|accrual)
 router.get('/', getExpenses);

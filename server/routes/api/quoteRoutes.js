@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const { authRouteLimiter, adminRouteLimiter } = require('../../middleware/rateLimiters');
 const { 
     getQuotes, 
     createQuote, 
@@ -13,6 +14,8 @@ const {
     getUnacknowledgedQuotes
  } = require('../../controllers/quoteControllers');
 
+router.use(authRouteLimiter);
+
 
 router.route('/')
     .get(getQuotes)
@@ -26,18 +29,18 @@ router.route('/quickquote')
     .get(getPaginatedQuickQuotes)
 
 router.route('/quickquote/:quoteId')
-    .delete(deleteQuoteRequest);
+    .delete(adminRouteLimiter, deleteQuoteRequest);
 
 router.route('/:quoteId')
     .get(getQuoteById)
-    .put(updateQuote)
-    .delete(deleteQuote);
+    .put(adminRouteLimiter, updateQuote)
+    .delete(adminRouteLimiter, deleteQuote);
 
     
 router.route('/quickquote/:id/acknowledge')
-      .patch(acknowledgeQuickQuote);
+      .patch(adminRouteLimiter, acknowledgeQuickQuote);
 
-      router.get('/quickquote/unacknowledged', getUnacknowledgedQuotes);
+      router.get('/quickquote/unacknowledged', adminRouteLimiter, getUnacknowledgedQuotes);
 
 
 

@@ -12,15 +12,15 @@ const requireAdminFlag = require('../../middleware/requireAdminFlag');
 const { adminRouteLimiter, authRouteLimiter } = require('../../middleware/rateLimiters');
 
 // Route for sending an email
-router.post('/quote', emailQuote);
-router.post('/quick-quote', emailQuickQuote);
-router.post('/quote-notification', emailQuoteNotification);
-router.post('/send-quick-quote-pdf', emailQuickNotePDF);
+router.post('/quote', authRouteLimiter, emailQuote);
+router.post('/quick-quote', authRouteLimiter, emailQuickQuote);
+router.post('/quote-notification', authRouteLimiter, emailQuoteNotification);
+router.post('/send-quick-quote-pdf', authRouteLimiter, emailQuickNotePDF);
 
 
 // Route for sending an email
-router.post('/new-user', emailNewUser);
-router.post('/new-user-notification', emailNewUserNotification);
+router.post('/new-user', authRouteLimiter, emailNewUser);
+router.post('/new-user-notification', authRouteLimiter, emailNewUserNotification);
 
 router.post('/request-password-reset', authRouteLimiter, emailPasswordResetRequest);
 
@@ -48,7 +48,7 @@ router.post("/admin-upcoming-bookings-digest", adminRouteLimiter, authMiddleware
     }
 });
 
-router.post('/aws-email-test', awsEmailTest);
+router.post('/aws-email-test', adminRouteLimiter, authMiddleware, requireAdminFlag, awsEmailTest);
 
 
 // for testing purposes, run every 10 seconds = "*/10 * * * * *"

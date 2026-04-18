@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const { authMiddleware } = require('../../utils/auth');
 const requireAdminFlag = require('../../middleware/requireAdminFlag');
-const { adminRouteLimiter } = require('../../middleware/rateLimiters');
+const { adminRouteLimiter, authRouteLimiter } = require('../../middleware/rateLimiters');
 
 const {
   logVisit,
@@ -27,7 +27,7 @@ const {
 // POST /api/visitors/logs (create/update session log)
 router.route("/logs")
   .get(adminRouteLimiter, authMiddleware, requireAdminFlag, getVisits)
-  .post(logVisit);
+  .post(authRouteLimiter, logVisit);
 
 // ---- Basic daily counts (legacy/simple) ----
 // GET /api/visitors/daily
@@ -48,19 +48,19 @@ router.get("/weekly-report", adminRouteLimiter, authMiddleware, requireAdminFlag
 router.get("/weekly-reporting", adminRouteLimiter, authMiddleware, requireAdminFlag, getWeeklyReport);
 
 // ---- Legacy endpoints (still supported) ----
-router.post("/session-duration", updateSessionDuration);
-router.post("/scroll-depth", updateScrollDepth);
-router.post("/interaction", logInteraction);
+router.post("/session-duration", authRouteLimiter, updateSessionDuration);
+router.post("/scroll-depth", authRouteLimiter, updateScrollDepth);
+router.post("/interaction", authRouteLimiter, logInteraction);
 
 // ---- Events (NEW) ----
 // Recommended canonical:
-router.post("/event", logEvent);
+router.post("/event", authRouteLimiter, logEvent);
 
 // Backward-compatible with your existing frontend:
-router.post("/log-event", logEvent);
+router.post("/log-event", authRouteLimiter, logEvent);
 
 // ---- Session lifecycle ----
-router.post("/session-heartbeat", sessionHeartbeat);
-router.post("/session-exit", sessionExit);
+router.post("/session-heartbeat", authRouteLimiter, sessionHeartbeat);
+router.post("/session-exit", authRouteLimiter, sessionExit);
 
 module.exports = router;
