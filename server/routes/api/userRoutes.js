@@ -22,7 +22,7 @@ router.route('/:userId')
 
     router.route('/:userId/consent').patch(setUserConsent);
 
-router.route('/reset-password').post(resetPassword);
+router.route('/reset-password').post(authRouteLimiter, resetPassword);
 
 router.route('/me').get(authRouteLimiter, authMiddleware, getUserById);
 
