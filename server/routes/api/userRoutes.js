@@ -28,7 +28,7 @@ router.route('/me').get(authRouteLimiter, authMiddleware, getUserById);
 
 router.route('/:userId/bookings').get(getUserBookings);
 
-router.route('/login').post(login);
+router.route('/login').post(authRouteLimiter, login);
 router.route('/logout').post(authRouteLimiter, validateCsrfToken, logout);
 router.route('/refresh').post(authRouteLimiter, validateCsrfToken, refreshToken);
 
