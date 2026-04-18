@@ -540,25 +540,31 @@ const bookingControllers = {
   pendBookingById: async (req, res) => {
     try {
       const bookingId = req.params.id;
+      const updatedBy = req.body.updatedBy;
       if (!isValidObjectId(bookingId)) {
         return res.status(400).json({ error: 'Invalid booking id' });
       }
+      const safeUpdatedBy = isValidObjectId(updatedBy) ? updatedBy : null;
       const safeBookingFilter = { _id: bookingId };
-      const updatedBooking = await Booking.findOneAndUpdate(safeBookingFilter, {
+      const safeBookingUpdate = {
         status: 'pending',
         updatedAt: new Date(),
-        updatedBy: req.body.updatedBy,
         scheduledConfirmationDate: null,
         reminderScheduled: false,
         confirmationSent: false,
         reminderSent: false,
         disableConfirmation: false
-      }, { new: true });
+      };
+      if (safeUpdatedBy) {
+        safeBookingUpdate.updatedBy = safeUpdatedBy;
+      }
+
+      const updatedBooking = await Booking.findOneAndUpdate(safeBookingFilter, { $set: safeBookingUpdate }, { new: true });
       if (!updatedBooking) {
         return res.status(404).json({ error: 'Booking not found' });
       }
       updatedBooking.updatedAt = new Date(); // Update the updatedAt field
-      updatedBooking.updatedBy = req.body.updatedBy; // Assuming userId is passed in the request body
+      updatedBooking.updatedBy = safeUpdatedBy; // Assuming userId is passed in the request body
       await updatedBooking.save(); // Save the updated booking
       res.json(updatedBooking);
     } catch (err) {
