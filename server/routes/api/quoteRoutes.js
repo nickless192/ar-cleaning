@@ -1,5 +1,7 @@
 const router = require('express').Router();
 const { authRouteLimiter, adminRouteLimiter } = require('../../middleware/rateLimiters');
+const { authMiddleware } = require('../../utils/auth');
+const requireAdminFlag = require('../../middleware/requireAdminFlag');
 const { 
     getQuotes, 
     createQuote, 
@@ -16,9 +18,10 @@ const {
 
 router.use(authRouteLimiter);
 
+const adminGuards = [adminRouteLimiter, authMiddleware, requireAdminFlag];
 
 router.route('/')
-    .get(getQuotes)
+    .get(...adminGuards, getQuotes)
     .post(createQuote);
 
 router.route('/user/:userId')
@@ -26,21 +29,21 @@ router.route('/user/:userId')
 
 router.route('/quickquote')
     .post(createQuoteRequest)
-    .get(getPaginatedQuickQuotes)
+    .get(...adminGuards, getPaginatedQuickQuotes)
 
 router.route('/quickquote/:quoteId')
-    .delete(adminRouteLimiter, deleteQuoteRequest);
+    .delete(...adminGuards, deleteQuoteRequest);
 
 router.route('/:quoteId')
-    .get(getQuoteById)
-    .put(adminRouteLimiter, updateQuote)
-    .delete(adminRouteLimiter, deleteQuote);
+    .get(...adminGuards, getQuoteById)
+    .put(...adminGuards, updateQuote)
+    .delete(...adminGuards, deleteQuote);
 
     
 router.route('/quickquote/:id/acknowledge')
-      .patch(adminRouteLimiter, acknowledgeQuickQuote);
+      .patch(...adminGuards, acknowledgeQuickQuote);
 
-      router.get('/quickquote/unacknowledged', adminRouteLimiter, getUnacknowledgedQuotes);
+      router.get('/quickquote/unacknowledged', ...adminGuards, getUnacknowledgedQuotes);
 
 
 

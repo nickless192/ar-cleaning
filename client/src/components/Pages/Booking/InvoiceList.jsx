@@ -14,6 +14,7 @@ import {
   Table,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { authFetch } from "/src/utils/authFetch";
 
 const money = (n) => `$${(Number(n) || 0).toFixed(2)}`;
 
@@ -57,7 +58,7 @@ const InvoiceList = () => {
     async function fetchInvoices() {
       try {
         setLoading(true);
-        const res = await fetch("/api/invoices");
+        const res = await authFetch("/api/invoices");
         const data = await res.json();
         setInvoices(Array.isArray(data) ? data : []);
       } catch (e) {
@@ -129,7 +130,7 @@ const InvoiceList = () => {
       setErr("");
       setBusyId(id);
 
-      const res = await fetch(`/api/invoices/${id}`, { method: "DELETE" });
+      const res = await authFetch(`/api/invoices/${id}`, { method: "DELETE" });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         throw new Error(data.message || "Failed to delete invoice");
@@ -159,7 +160,7 @@ const InvoiceList = () => {
       setErr("");
       setBusyId(id);
 
-      const res = await fetch(`/api/invoices/${id}`, {
+      const res = await authFetch(`/api/invoices/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

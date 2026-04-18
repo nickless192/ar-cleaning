@@ -34,6 +34,7 @@ import {
 import LoginPage from "/src/components/Pages/UserJourney/LoginPage";
 
 import Auth from "/src/utils/auth";
+import { authFetch } from "/src/utils/authFetch";
 import logo from "/src/assets/img/cleanar-logo.png";
 import logoAvif from "/src/assets/img/optimized/cleanar-logo.avif";
 import logoWebp from "/src/assets/img/optimized/cleanar-logo.webp";
@@ -81,8 +82,11 @@ function IndexNavbar() {
     };
 
     const fetchUnacknowledged = async () => {
+        if (!Auth.loggedIn() || !Auth.getProfile()?.data?.adminFlag) {
+            return;
+        }
         try {
-            const response = await fetch(`/api/quotes/quickquote/unacknowledged`);
+            const response = await authFetch(`/api/quotes/quickquote/unacknowledged`);
             const data = await response.json();
             setUnackCount(data.quotes?.length || 0);
         } catch (err) {

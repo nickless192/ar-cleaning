@@ -90,10 +90,10 @@ export default function AccountingOverview() {
       const qsTrend = new URLSearchParams({ from, to, incomeMethod: basis }).toString();
 
       const [summaryRes, trendRes, invoicesRes, bookingsRes] = await Promise.all([
-        fetch(`/api/finance/summary?${qsSummary}`),
-        fetch(`/api/finance/monthly-profit?${qsTrend}`),
-        fetch('/api/invoices'),
-        await authFetch('/api/bookings'),
+        authFetch(`/api/finance/summary?${qsSummary}`),
+        authFetch(`/api/finance/monthly-profit?${qsTrend}`),
+        authFetch('/api/invoices'),
+        authFetch('/api/bookings'),
       ]);
 
       const [summaryJson, trendJson, invoicesJson, bookingsJson] = await Promise.all([
