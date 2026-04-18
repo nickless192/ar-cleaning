@@ -14,7 +14,7 @@ const { createBooking, getBookings, deleteBooking, completeBooking, hideBooking,
  } = require('../../controllers/bookingController');
 
 
-router.post('/', createBooking);
+router.post('/', authMiddleware, createBooking);
 router.post('/request', authRouteLimiter, submitNewBookingRequest);
 router.get('/', adminRouteLimiter, authMiddleware, requireAdminFlag, getBookings);
 router.delete('/:id', adminRouteLimiter, authMiddleware, requireAdminFlag, deleteBooking);
