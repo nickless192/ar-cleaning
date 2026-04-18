@@ -12,8 +12,12 @@ const {
 
 const upload = require('../../middleware/upload'); // Multer middleware for receipts
 const { adminRouteLimiter } = require('../../middleware/rateLimiters');
+const { authMiddleware } = require('../../utils/auth');
+const requireAdminFlag = require('../../middleware/requireAdminFlag');
 
 router.use(adminRouteLimiter);
+router.use(authMiddleware);
+router.use(requireAdminFlag);
 
 // List (optionally later: ?from&to&method=cash|accrual)
 router.get('/', getExpenses);
