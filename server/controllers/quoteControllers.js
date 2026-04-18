@@ -55,7 +55,28 @@ const quoteController = {
     },
     updateQuote: async (req, res) => {
         try {
-            const quote = await Quote.findByIdAndUpdate(req.params.quoteId, req.body, { new: true });
+            const updatePayload = req.body;
+
+            if (!updatePayload || typeof updatePayload !== 'object' || Array.isArray(updatePayload)) {
+                return res.status(400).json({ message: 'Invalid update payload' });
+            }
+
+            const sanitizedUpdate = {};
+            for (const [key, value] of Object.entries(updatePayload)) {
+                if (!key.startsWith('$') && !key.includes('.')) {
+                    sanitizedUpdate[key] = value;
+                }
+            }
+
+            if (Object.keys(sanitizedUpdate).length === 0) {
+                return res.status(400).json({ message: 'No valid fields to update' });
+            }
+
+            const quote = await Quote.findByIdAndUpdate(
+                req.params.quoteId,
+                { $set: sanitizedUpdate },
+                { new: true }
+            );
             res.json(quote);
         } catch (error) {
             console.error('Error updating quote: ', error);
