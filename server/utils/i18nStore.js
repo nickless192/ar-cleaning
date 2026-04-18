@@ -47,13 +47,17 @@ function setByDotPath(obj, dotPath, value) {
     const k = parts[i];
     assertSafePathKey(k);
     const hasOwn = Object.prototype.hasOwnProperty.call(cur, k);
-    if (!hasOwn || cur[k] == null || typeof cur[k] !== "object") {
+    const next = hasOwn ? cur[k] : undefined;
+    if (!hasOwn || next == null || typeof next !== "object") {
       cur[k] = Object.create(null);
     }
     cur = cur[k];
   }
   const finalKey = parts[parts.length - 1];
   assertSafePathKey(finalKey);
+  if (cur == null || typeof cur !== "object") {
+    throw new Error("Invalid destination object");
+  }
   cur[finalKey] = value;
 }
 
@@ -63,10 +67,14 @@ function removeByDotPath(obj, dotPath) {
 
   for (let i = 0; i < parts.length - 1; i++) {
     const k = parts[i];
-    if (cur[k] == null || typeof cur[k] !== "object") return; // nothing to remove
+    assertSafePathKey(k);
+    const hasOwn = Object.prototype.hasOwnProperty.call(cur, k);
+    if (!hasOwn || cur[k] == null || typeof cur[k] !== "object") return; // nothing to remove
     cur = cur[k];
   }
-  delete cur[parts[parts.length - 1]];
+  const finalKey = parts[parts.length - 1];
+  assertSafePathKey(finalKey);
+  delete cur[finalKey];
 }
 
 function flattenKeys(obj, prefix = "") {
