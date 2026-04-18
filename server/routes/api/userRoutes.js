@@ -26,7 +26,7 @@ router.route('/reset-password').post(resetPassword);
 
 router.route('/me').get(authRouteLimiter, authMiddleware, getUserById);
 
-router.route('/:userId/bookings').get(getUserBookings);
+router.route('/:userId/bookings').get(authRouteLimiter, getUserBookings);
 
 router.route('/login').post(authRouteLimiter, login);
 router.route('/logout').post(authRouteLimiter, validateCsrfToken, logout);
