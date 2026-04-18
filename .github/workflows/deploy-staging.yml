@@ -5,6 +5,9 @@ on:
     branches:
       - staging  # Change this to the name of your staging branch
 
+permissions:
+  contents: read
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
