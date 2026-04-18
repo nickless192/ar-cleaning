@@ -15,7 +15,7 @@ const { createBooking, getBookings, deleteBooking, completeBooking, hideBooking,
 
 
 router.post('/', createBooking);
-router.post('/request', submitNewBookingRequest);
+router.post('/request', adminRouteLimiter, submitNewBookingRequest);
 router.get('/', adminRouteLimiter, authMiddleware, requireAdminFlag, getBookings);
 router.delete('/:id', adminRouteLimiter, authMiddleware, requireAdminFlag, deleteBooking);
 router.put('/:id/update-date', adminRouteLimiter, authMiddleware, requireAdminFlag, updateBookingDate);
