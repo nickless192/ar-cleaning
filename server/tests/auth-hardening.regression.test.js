@@ -77,3 +77,9 @@ test('ManageCategories protected endpoints go through authFetch', () => {
     ['/api/categories']
   );
 });
+
+test('public login and visitor tracking routes are excluded from global CSRF gate', () => {
+  const serverSource = fs.readFileSync(path.join(__dirname, '..', 'server.js'), 'utf8');
+  assert.match(serverSource, /\/api\/users\/login/);
+  assert.match(serverSource, /req\.path\.startsWith\('\/api\/visitors\/'\)/);
+});

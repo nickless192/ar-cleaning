@@ -51,6 +51,11 @@ app.use((req, res, next) => {
     return next();
   }
 
+  const csrfPublicPaths = new Set(['/api/users/login', '/api/users/login/']);
+  if (csrfPublicPaths.has(req.path) || req.path.startsWith('/api/visitors/')) {
+    return next();
+  }
+
   const hasRefreshCookie = Boolean(req.cookies?.refreshToken);
   const hasCsrfCookie = Boolean(req.cookies?.csrfToken);
 
