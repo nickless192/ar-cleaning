@@ -4,6 +4,7 @@ const { signToken } = require('../utils/auth');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
+const { isValidObjectId, sanitizeMongoUpdate } = require('../utils/mongoSafety');
 
 
 const userControllers = {
@@ -51,7 +52,12 @@ const userControllers = {
     },
     // update user's information
     updateUser({ params, body }, res) {
-        User.findByIdAndUpdate({ _id: params.userId }, body, { new: true })
+        if (!isValidObjectId(params.userId)) {
+            return res.status(400).json({ message: 'Invalid user id' });
+        }
+
+        const safeUpdate = sanitizeMongoUpdate(body);
+        User.findByIdAndUpdate(params.userId, { $set: safeUpdate }, { new: true })
             .select('-__v')
             .then(dbUserData => {
                 if (!dbUserData) {
@@ -63,7 +69,11 @@ const userControllers = {
             .catch(err => res.status(500).json(err));
     },
     deleteUser({ params }, res) {
-        User.findByIdAndDelete({ _id: params.userId })
+        if (!isValidObjectId(params.userId)) {
+            return res.status(400).json({ message: 'Invalid user id' });
+        }
+
+        User.findByIdAndDelete(params.userId)
             .then(dbUserData => {
                 if (!dbUserData) {
                     res.status(404).json({ message: 'No user found by this username' });
@@ -237,6 +247,10 @@ const userControllers = {
     async getUserBookings({ params }, res) {
         // get userId and check if its linked to customer and get the customer bookings
         try {
+            if (!isValidObjectId(params.userId)) {
+                return res.status(400).json({ message: 'Invalid user id' });
+            }
+
             // const user = await User.findById(params.userId);
             // if (!user) return res.status(404).json({ message: 'User not found' });
 
@@ -251,6 +265,10 @@ const userControllers = {
     },
     async setUserConsent({ params, body }, res) {
         try {
+            if (!isValidObjectId(params.userId)) {
+                return res.status(400).json({ message: 'Invalid user id' });
+            }
+
             const user = await User.findById(params.userId);
             if (!user) return res.status(404).json({ message: 'No user found' });
 

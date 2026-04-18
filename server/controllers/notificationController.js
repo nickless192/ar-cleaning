@@ -7,6 +7,7 @@
 const NotificationTemplate = require('../models/NotificationTemplate');
 const UserNotificationSettings = require('../models/UserNotificationSettings');
 const CompanyNotificationDefaults = require('../models/CompanyNotificationDefaults');
+const { isValidObjectId, sanitizeMongoUpdate } = require('../utils/mongoSafety');
 
 /* ============================
    TEMPLATES CONTROLLERS
@@ -55,6 +56,9 @@ const updateTemplate = async (req, res) => {
     try {
         const { id } = req.params;
         const { name, type, subject, html, enabled } = req.body;
+        if (!isValidObjectId(id)) {
+            return res.status(400).json({ message: 'Invalid template id.' });
+        }
 
         const template = await NotificationTemplate.findByIdAndUpdate(
             id,
@@ -164,11 +168,12 @@ const getCompanyNotificationDefaults = async (req, res) => {
 const updateCompanyNotificationDefaults = async (req, res) => {
     try {
         const body = req.body || {};
+        const safeUpdate = sanitizeMongoUpdate(body);
 
         // there should only be one document; use findOneAndUpdate with upsert
         const defaults = await CompanyNotificationDefaults.findOneAndUpdate(
             {},
-            body,
+            { $set: safeUpdate },
             { upsert: true, new: true }
         );
 
@@ -189,6 +194,9 @@ const testSendTemplate = async (req, res) => {
     try {
         const { id } = req.params;
         const user = req.user; // assumes authMiddleware sets this
+        if (!isValidObjectId(id)) {
+            return res.status(400).json({ message: 'Invalid template id.' });
+        }
 
         if (!user || !user.email) {
             return res

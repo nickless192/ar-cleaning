@@ -1,4 +1,5 @@
 const { Product } = require('../models');
+const { isValidObjectId, sanitizeMongoUpdate } = require('../utils/mongoSafety');
 
 const productControllers = {
     getProducts(req, res) {
@@ -44,7 +45,12 @@ const productControllers = {
             });
     },
     updateProduct({ params, body }, res) {
-        Product.findByIdAndUpdate({ _id: params.productId }, body, { new: true })
+        if (!isValidObjectId(params.productId)) {
+            return res.status(400).json({ message: 'Invalid product id' });
+        }
+
+        const safeUpdate = sanitizeMongoUpdate(body);
+        Product.findByIdAndUpdate(params.productId, { $set: safeUpdate }, { new: true })
             .select('-__v')
             .then(dbProductData => {
                 if (!dbProductData) {
@@ -56,7 +62,11 @@ const productControllers = {
             .catch(err => res.status(500).json(err));
     },
     deleteProduct({ params }, res) {
-        Product.findByIdAndDelete({ _id: params.productId })
+        if (!isValidObjectId(params.productId)) {
+            return res.status(400).json({ message: 'Invalid product id' });
+        }
+
+        Product.findByIdAndDelete(params.productId)
             .then(dbProductData => {
                 if (!dbProductData) {
                     res.status(404).json({ message: 'No product found by this name' });

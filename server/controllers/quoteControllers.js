@@ -1,4 +1,5 @@
 const { Quote, QuickQuote } = require('../models');
+const { isValidObjectId, sanitizeMongoUpdate } = require('../utils/mongoSafety');
 
 const quoteController = {
     getQuotes: async (req, res) => {
@@ -61,12 +62,11 @@ const quoteController = {
                 return res.status(400).json({ message: 'Invalid update payload' });
             }
 
-            const sanitizedUpdate = {};
-            for (const [key, value] of Object.entries(updatePayload)) {
-                if (!key.startsWith('$') && !key.includes('.')) {
-                    sanitizedUpdate[key] = value;
-                }
+            if (!isValidObjectId(req.params.quoteId)) {
+                return res.status(400).json({ message: 'Invalid quote id' });
             }
+
+            const sanitizedUpdate = sanitizeMongoUpdate(updatePayload);
 
             if (Object.keys(sanitizedUpdate).length === 0) {
                 return res.status(400).json({ message: 'No valid fields to update' });
@@ -85,6 +85,9 @@ const quoteController = {
     },
     deleteQuote: async (req, res) => {
         try {
+            if (!isValidObjectId(req.params.quoteId)) {
+                return res.status(400).json({ message: 'Invalid quote id' });
+            }
             const quote = await Quote.findByIdAndDelete(req.params.quoteId);
             res.json(quote);
         } catch (error) {
@@ -134,6 +137,9 @@ const quoteController = {
     },
     deleteQuoteRequest: async (req, res) => {
         try {
+            if (!isValidObjectId(req.params.quoteId)) {
+                return res.status(400).json({ message: 'Invalid quote id' });
+            }
             const quickQuote = await QuickQuote.findByIdAndDelete(req.params.quoteId);
             if (!quickQuote) {
                 return res.status(404).json({ message: 'Quick quote not found' });
@@ -148,6 +154,9 @@ const quoteController = {
         try {
             const { id } = req.params;
             const userId = req.body.userId;
+            if (!isValidObjectId(id)) {
+                return res.status(400).json({ message: 'Invalid quote id' });
+            }
 
             const quote = await QuickQuote.findById(id);
             if (!quote) {

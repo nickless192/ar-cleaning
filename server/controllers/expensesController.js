@@ -5,7 +5,7 @@ const Tesseract = require('tesseract.js');
 const { fromPath } = require('pdf2pic');
 const fs = require('fs-extra');
 const PDFParser = require('pdf2json');
-const mongoose = require('mongoose');
+const { isValidObjectId, sanitizeMongoUpdate } = require('../utils/mongoSafety');
 
 // -------------------------
 // Constants
@@ -39,10 +39,6 @@ function safeBool(v, fallback = false) {
   if (v === undefined || v === null) return fallback;
   if (typeof v === 'boolean') return v;
   return String(v).toLowerCase() === 'true';
-}
-
-function isValidObjectId(id) {
-  return mongoose.Types.ObjectId.isValid(id);
 }
 
 /**
@@ -398,7 +394,8 @@ const expensesControllers = {
         update.receiptSize = req.file.size;
       }
 
-      const updatedExpense = await Expenses.findByIdAndUpdate(id, update, { new: true });
+      const safeUpdate = sanitizeMongoUpdate(update);
+      const updatedExpense = await Expenses.findByIdAndUpdate(id, { $set: safeUpdate }, { new: true });
 
       if (!updatedExpense) {
         return res.status(404).json({ error: 'Expense not found' });

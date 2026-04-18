@@ -1,5 +1,6 @@
 const ContactForm = require("../models/ContactForm");
 const fetch = require("node-fetch");
+const { isValidObjectId } = require('../utils/mongoSafety');
 
 const contactFormController = {
   createNewFrom: async (req, res) => {
@@ -65,6 +66,10 @@ const contactFormController = {
     }
 
     try {
+      if (!isValidObjectId(id)) {
+        return res.status(400).json({ message: "Invalid contact form id" });
+      }
+
       const updated = await ContactForm.findByIdAndUpdate(
         id,
         { status },
@@ -81,6 +86,10 @@ const contactFormController = {
   },
   archiveForm: async (req, res) => {
     try {
+      if (!isValidObjectId(req.params.id)) {
+        return res.status(400).json({ message: "Invalid contact form id" });
+      }
+
       const updated = await ContactForm.findByIdAndUpdate(
         req.params.id,
         { deleted: true },

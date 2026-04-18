@@ -1,6 +1,7 @@
 // controllers/adminUserController.js
 const User = require('../models/User');
 const Role = require('../models/Role');
+const { isValidObjectId } = require('../utils/mongoSafety');
 
 const normalizeRoleName = (name) =>
     (name || '').toLowerCase().trim();
@@ -177,6 +178,9 @@ const createUser = async (req, res) => {
 const updateUser = async (req, res) => {
     try {
         const { id } = req.params;
+        if (!isValidObjectId(id)) {
+            return res.status(400).json({ message: 'Invalid user id.' });
+        }
         const {
             firstName,
             lastName,
@@ -247,6 +251,9 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
     try {
         const { id } = req.params;
+        if (!isValidObjectId(id)) {
+            return res.status(400).json({ message: 'Invalid user id.' });
+        }
 
         // Prevent deleting yourself
         if (req.user && req.user._id && req.user._id.toString() === id.toString()) {

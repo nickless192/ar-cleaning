@@ -1,4 +1,5 @@
 const { Service } = require('../models');
+const { isValidObjectId, sanitizeMongoUpdate } = require('../utils/mongoSafety');
 
 const serviceControllers = {
     getServices(req, res) {
@@ -44,7 +45,12 @@ const serviceControllers = {
             });
     },
     updateService({ params, body }, res) {
-        Service.findByIdAndUpdate({ _id: params.serviceId }, body, { new: true })
+        if (!isValidObjectId(params.serviceId)) {
+            return res.status(400).json({ message: 'Invalid service id' });
+        }
+
+        const safeUpdate = sanitizeMongoUpdate(body);
+        Service.findByIdAndUpdate(params.serviceId, { $set: safeUpdate }, { new: true })
             .select('-__v')
             .then(dbServiceData => {
                 if (!dbServiceData) {
@@ -56,7 +62,11 @@ const serviceControllers = {
             .catch(err => res.status(500).json(err));
     },
     deleteService({ params }, res) {
-        Service.findByIdAndDelete({ _id: params.serviceId })
+        if (!isValidObjectId(params.serviceId)) {
+            return res.status(400).json({ message: 'Invalid service id' });
+        }
+
+        Service.findByIdAndDelete(params.serviceId)
             .then(dbServiceData => {
                 if (!dbServiceData) {
                     res.status(404).json({ message: 'No service found by this name' });
@@ -67,6 +77,10 @@ const serviceControllers = {
             .catch(err => res.status(400).json(err));
     },
     duplicateService({params, body}, res) {
+        if (!isValidObjectId(params.serviceId)) {
+            return res.status(400).json({ message: 'Invalid service id' });
+        }
+
         Service.findById(params.serviceId)
         .then(originalService => {
             if (!originalService) {
