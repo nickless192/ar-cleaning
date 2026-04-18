@@ -16,9 +16,9 @@ router.route('/')
 router.route('/migrate-user').put(migrateUsernamesToLowercase);
 
 router.route('/:userId')
-    .get(getUserById)
-    .put(updateUser)
-    .delete(deleteUser);
+    .get(adminRouteLimiter, getUserById)
+    .put(adminRouteLimiter, updateUser)
+    .delete(adminRouteLimiter, deleteUser);
 
     router.route('/:userId/consent').patch(authRouteLimiter, setUserConsent);
 
