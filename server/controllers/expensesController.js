@@ -88,6 +88,46 @@ function getUploadsDir() {
   return path.resolve(__dirname, '..', 'uploads');
 }
 
+function resolveTrustedUploadPath(untrustedFilePath, preferredSubdir = '') {
+  if (!untrustedFilePath || typeof untrustedFilePath !== 'string') return null;
+
+  const uploadsDir = getUploadsDir();
+  const safeFilename = sanitizeFilename(path.basename(untrustedFilePath));
+  const candidatePath = preferredSubdir
+    ? path.join(uploadsDir, preferredSubdir, safeFilename)
+    : path.join(uploadsDir, safeFilename);
+  const resolvedPath = path.resolve(candidatePath);
+  const resolvedUploadsDir = path.resolve(uploadsDir);
+
+  if (
+    resolvedPath !== resolvedUploadsDir &&
+    !resolvedPath.startsWith(resolvedUploadsDir + path.sep)
+  ) {
+    return null;
+  }
+
+  return resolvedPath;
+}
+
+async function getTrustedUploadPathFromFile(file) {
+  if (!file || typeof file !== 'object') return null;
+
+  const safeSourcePath = typeof file.path === 'string' ? file.path : '';
+  const preferredSubdir = file.fieldname === 'statement' ? 'bank-statements' : 'receipts';
+
+  const preferredPath = resolveTrustedUploadPath(safeSourcePath, preferredSubdir);
+  if (preferredPath && await fs.pathExists(preferredPath)) {
+    return preferredPath;
+  }
+
+  const uploadsRootPath = resolveTrustedUploadPath(safeSourcePath);
+  if (uploadsRootPath && await fs.pathExists(uploadsRootPath)) {
+    return uploadsRootPath;
+  }
+
+  return null;
+}
+
 /**
  * Validate uploaded file
  */
@@ -114,11 +154,12 @@ function validateUploadedFile(file, allowedMimes) {
  */
 async function safeRemoveFile(filePath) {
   try {
-    if (!filePath || !isPathWithinUploads(filePath, getUploadsDir())) {
+    const trustedPath = resolveTrustedUploadPath(filePath) || filePath;
+    if (!trustedPath || !isPathWithinUploads(trustedPath, getUploadsDir())) {
       return;
     }
-    if (await fs.pathExists(filePath)) {
-      await fs.remove(filePath);
+    if (await fs.pathExists(trustedPath)) {
+      await fs.remove(trustedPath);
     }
   } catch (err) {
     console.error('Failed to remove temp file:', err.message);
@@ -530,7 +571,11 @@ const expensesControllers = {
         return res.status(400).json({ error: validation.error });
       }
 
-      const filePath = req.file.path;
+      const filePath = await getTrustedUploadPathFromFile(req.file);
+      if (!filePath) {
+        await safeRemoveFile(req.file.path);
+        return res.status(400).json({ error: 'Uploaded file path is invalid' });
+      }
       const ext = path.extname(req.file.originalname).toLowerCase();
       let imagePath = filePath;
 
@@ -593,7 +638,11 @@ const expensesControllers = {
         return res.status(400).json({ error: validation.error });
       }
 
-      const filePath = req.file.path;
+      const filePath = await getTrustedUploadPathFromFile(req.file);
+      if (!filePath) {
+        await safeRemoveFile(req.file.path);
+        return res.status(400).json({ error: 'Uploaded file path is invalid' });
+      }
       const ext = path.extname(req.file.originalname).toLowerCase();
       let combinedText = '';
 
@@ -689,9 +738,12 @@ const expensesControllers = {
         return res.status(400).json({ error: validation.error });
       }
 
-      const filePath = req.file.path;
+      const filePath = await getTrustedUploadPathFromFile(req.file);
+      if (!filePath) {
+        await safeRemoveFile(req.file.path);
+        return res.status(400).json({ error: 'Uploaded file path is invalid' });
+      }
 
-      // ✅ FIXED: Validate file exists within uploads directory
       if (!await fs.pathExists(filePath)) {
         return res.status(404).json({ error: 'File not found' });
       }
