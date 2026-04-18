@@ -29,7 +29,6 @@ app.use(express.static('public'));
 
 // Serve up static assets
 app.use('/images', express.static(path.join(__dirname, '../client/src/assets')));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
 if (process.env.NODE_ENV === 'production') {
@@ -75,11 +74,13 @@ app.get("/oauth2callback", async (req, res) => {
   const code = req.query.code;
   try {
     const { tokens } = await oAuth2Client.getToken(code);
-    console.log("Tokens:", tokens);
+    if (tokens) {
+      console.log("OAuth tokens received");
+    }
     // Save tokens.refresh_token somewhere safe
     res.send("✅ Auth successful, you can close this tab!");
   } catch (err) {
-    console.error("Error exchanging code:", err);
+    console.error("OAuth callback error", err);
     res.status(500).send("Error exchanging code");
   }
 });

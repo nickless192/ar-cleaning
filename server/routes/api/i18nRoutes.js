@@ -13,12 +13,13 @@ const {
 
 const { scanSourceForKeys } = require("../../utils/i18nScan");
 const { adminRouteLimiter } = require('../../middleware/rateLimiters');
+const { authMiddleware } = require('../../utils/auth');
+const requireAdminFlag = require('../../middleware/requireAdminFlag');
 
 const router = express.Router();
 router.use(adminRouteLimiter);
-
-// TODO: protect with your admin auth middleware
-// router.use(requireAdminAuth);
+router.use(authMiddleware);
+router.use(requireAdminFlag);
 
 router.get("/:lang", (req, res) => {
   try {
