@@ -9,7 +9,7 @@ const router = require('express').Router();
 const isDev = process.env.NODE_ENV !== "production";
 const { authMiddleware } = require('../../utils/auth');
 const requireAdminFlag = require('../../middleware/requireAdminFlag');
-const { adminRouteLimiter } = require('../../middleware/rateLimiters');
+const { adminRouteLimiter, authRouteLimiter } = require('../../middleware/rateLimiters');
 
 // Route for sending an email
 router.post('/quote', emailQuote);
@@ -22,7 +22,7 @@ router.post('/send-quick-quote-pdf', emailQuickNotePDF);
 router.post('/new-user', emailNewUser);
 router.post('/new-user-notification', emailNewUserNotification);
 
-router.post('/request-password-reset', emailPasswordResetRequest);
+router.post('/request-password-reset', authRouteLimiter, emailPasswordResetRequest);
 
 router.get('/weekly-report', adminRouteLimiter, authMiddleware, requireAdminFlag, generateManualReport);
 router.post('/upcoming-bookings', adminRouteLimiter, authMiddleware, requireAdminFlag, sendUpcomingBookingsEmail);
