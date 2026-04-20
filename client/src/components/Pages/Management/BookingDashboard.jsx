@@ -306,7 +306,8 @@ export default function BookingDashboard() {
       merged.status = normalizeStatus(merged.status);
     }
 
-    await fetch(`/api/bookings/${bookingId}`, {
+    // await fetch(`/api/bookings/${bookingId}`, {
+    await authFetch(`/api/bookings/${bookingId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(merged),
