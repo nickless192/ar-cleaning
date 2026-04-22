@@ -29,6 +29,7 @@ import {
   computeUnpaidInvoiceTotals,
   getCurrentMonthMetrics,
 } from './accountingOverviewAdapters';
+import Auth from "/src/utils/auth";
 import { authFetch } from "/src/utils/authFetch";
 
 const currency = (n) => `$${Number(n || 0).toFixed(2)}`;
@@ -68,8 +69,37 @@ export default function AccountingOverview() {
   const [trendItems, setTrendItems] = useState([]);
   const [invoices, setInvoices] = useState([]);
   const [bookings, setBookings] = useState([]);
+  const [debugState, setDebugState] = useState({
+    mounted: false,
+    isMobileViewport: false,
+    hasToken: false,
+    isAdmin: false,
+    loaderStarted: false,
+    failed: false,
+    statuses: {
+      summary: null,
+      trend: null,
+      invoices: null,
+      bookings: null,
+    },
+  });
 
   const fetchOverview = async ({ silent = false } = {}) => {
+    const hasToken = Boolean(Auth.getToken());
+    const isAdmin = Boolean(Auth.getProfile()?.data?.adminFlag);
+    setDebugState((prev) => ({
+      ...prev,
+      hasToken,
+      isAdmin,
+      loaderStarted: true,
+      failed: false,
+    }));
+    console.info('[AccountingOverview] loader start', {
+      silent,
+      basis,
+      hasToken,
+      isAdmin,
+    });
     if (silent) {
       setRefreshing(true);
     } else {
@@ -91,6 +121,23 @@ export default function AccountingOverview() {
         authFetch('/api/invoices'),
         authFetch('/api/bookings'),
       ]);
+      const statuses = {
+        summary: summaryRes.status,
+        trend: trendRes.status,
+        invoices: invoicesRes.status,
+        bookings: bookingsRes.status,
+      };
+      setDebugState((prev) => ({
+        ...prev,
+        statuses,
+        failed: !summaryRes.ok || !trendRes.ok || !invoicesRes.ok || !bookingsRes.ok,
+      }));
+      console.info('[AccountingOverview] loader response statuses', {
+        summary: summaryRes.status,
+        trend: trendRes.status,
+        invoices: invoicesRes.status,
+        bookings: bookingsRes.status,
+      });
 
       const [summaryJson, trendJson, invoicesJson, bookingsJson] = await Promise.all([
         summaryRes.json(),
@@ -109,12 +156,36 @@ export default function AccountingOverview() {
       setInvoices(Array.isArray(invoicesJson) ? invoicesJson : []);
       setBookings(Array.isArray(bookingsJson) ? bookingsJson : []);
     } catch (err) {
+      setDebugState((prev) => ({ ...prev, failed: true }));
+      console.error('[AccountingOverview] loader failure', err);
       setError(err.message || 'Failed to load accounting overview');
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
   };
+
+  useEffect(() => {
+    const isMobileViewport =
+      typeof window !== 'undefined' &&
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(max-width: 767.98px)').matches;
+    const hasToken = Boolean(Auth.getToken());
+    const isAdmin = Boolean(Auth.getProfile()?.data?.adminFlag);
+    setDebugState((prev) => ({
+      ...prev,
+      mounted: true,
+      isMobileViewport,
+      hasToken,
+      isAdmin,
+    }));
+    console.info('[AccountingOverview] mounted', {
+      basis,
+      isMobileViewport,
+      hasToken,
+      isAdmin,
+    });
+  }, []); // mount trace only
 
   useEffect(() => {
     fetchOverview();
@@ -157,6 +228,24 @@ export default function AccountingOverview() {
 
   return (
     <Container fluid className="py-3 px-1">
+      <Card className="mb-3 border-warning">
+        <Card.Body className="py-2 px-3">
+          <small className="d-block">
+            <strong>Accounting Debug</strong> · mounted: {String(debugState.mounted)} · mobile:{' '}
+            {String(debugState.isMobileViewport)} · token: {String(debugState.hasToken)} · admin:{' '}
+            {String(debugState.isAdmin)}
+          </small>
+          <small className="d-block">
+            loader started: {String(debugState.loaderStarted)} · failed: {String(debugState.failed)}
+          </small>
+          <small className="d-block">
+            statuses → summary: {debugState.statuses.summary ?? 'n/a'}, trend:{' '}
+            {debugState.statuses.trend ?? 'n/a'}, invoices: {debugState.statuses.invoices ?? 'n/a'},
+            bookings: {debugState.statuses.bookings ?? 'n/a'}
+          </small>
+        </Card.Body>
+      </Card>
+
       <div className="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
         <div>
           <h3 className="mb-1">Accounting Overview</h3>

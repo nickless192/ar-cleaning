@@ -19,6 +19,7 @@ import {
   CartesianGrid,
 } from 'recharts';
 import BookingCalendar from '/src/components/Pages/Management/BookingCalendar';
+import Auth from '/src/utils/auth';
 import { authFetch } from '/src/utils/authFetch';
 
 function normalizeStatus(status) {
@@ -35,11 +36,39 @@ export default function BookingDashboard() {
   const [highlightBookingId, setHighlightBookingId] = useState(null);
   const [showActionCenter, setShowActionCenter] = useState(false);
   const [alertPage, setAlertPage] = useState(1);
+  const [debugState, setDebugState] = useState({
+    mounted: false,
+    isMobileViewport: false,
+    hasToken: false,
+    isAdmin: false,
+    bookingsLoader: { started: false, status: null, failed: false },
+    customersLoader: { started: false, status: null, failed: false },
+  });
   const alertsPerPage = 5;
 
   const fetchBookings = async () => {
     try {
+      const hasToken = Boolean(Auth.getToken());
+      const isAdmin = Boolean(Auth.getProfile()?.data?.adminFlag);
+      setDebugState((prev) => ({
+        ...prev,
+        hasToken,
+        isAdmin,
+        bookingsLoader: { started: true, status: null, failed: false },
+      }));
+      console.info('[BookingDashboard] bookings loader start', {
+        hasToken,
+        isAdmin,
+      });
       const res = await authFetch('/api/bookings');
+      setDebugState((prev) => ({
+        ...prev,
+        bookingsLoader: { started: true, status: res.status, failed: !res.ok },
+      }));
+      console.info('[BookingDashboard] bookings loader response', {
+        status: res.status,
+        ok: res.ok,
+      });
       if (!res.ok) throw new Error('Failed to fetch bookings');
       const data = await res.json();
       // filter out data that is hidden
@@ -72,9 +101,48 @@ export default function BookingDashboard() {
   //   computeAlerts(bookings);
   // }, []);
   useEffect(() => {
+  const isMobileViewport =
+    typeof window !== 'undefined' &&
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(max-width: 767.98px)').matches;
+  const hasToken = Boolean(Auth.getToken());
+  const isAdmin = Boolean(Auth.getProfile()?.data?.adminFlag);
+  setDebugState((prev) => ({
+    ...prev,
+    mounted: true,
+    isMobileViewport,
+    hasToken,
+    isAdmin,
+  }));
+  console.info('[BookingDashboard] mounted', {
+    isMobileViewport,
+    hasToken,
+    isAdmin,
+  });
+
   const fetchCustomers = async () => {
     try {
+      const customerHasToken = Boolean(Auth.getToken());
+      const customerIsAdmin = Boolean(Auth.getProfile()?.data?.adminFlag);
+      setDebugState((prev) => ({
+        ...prev,
+        hasToken: customerHasToken,
+        isAdmin: customerIsAdmin,
+        customersLoader: { started: true, status: null, failed: false },
+      }));
+      console.info('[BookingDashboard] customers loader start', {
+        hasToken: customerHasToken,
+        isAdmin: customerIsAdmin,
+      });
       const res = await authFetch('/api/customers');
+      setDebugState((prev) => ({
+        ...prev,
+        customersLoader: { started: true, status: res.status, failed: !res.ok },
+      }));
+      console.info('[BookingDashboard] customers loader response', {
+        status: res.status,
+        ok: res.ok,
+      });
       if (!res.ok) throw new Error('Failed to fetch customers');
       const data = await res.json();
       setCustomers(data);
@@ -478,6 +546,25 @@ export default function BookingDashboard() {
 
   return (
     <Container fluid className="py-4">
+      <Card className="mb-3 border-warning">
+        <Card.Body className="py-2 px-3">
+          <small className="d-block">
+            <strong>Booking Debug</strong> · mounted: {String(debugState.mounted)} · mobile:{' '}
+            {String(debugState.isMobileViewport)} · token: {String(debugState.hasToken)} · admin:{' '}
+            {String(debugState.isAdmin)}
+          </small>
+          <small className="d-block">
+            customers loader: started {String(debugState.customersLoader.started)} · status:{' '}
+            {debugState.customersLoader.status ?? 'n/a'} · failed:{' '}
+            {String(debugState.customersLoader.failed)}
+          </small>
+          <small className="d-block">
+            bookings loader: started {String(debugState.bookingsLoader.started)} · status:{' '}
+            {debugState.bookingsLoader.status ?? 'n/a'} · failed: {String(debugState.bookingsLoader.failed)}
+          </small>
+        </Card.Body>
+      </Card>
+
       {/* KPI Cards */}
       <Row className="mb-4">
         <Col md={4}>
