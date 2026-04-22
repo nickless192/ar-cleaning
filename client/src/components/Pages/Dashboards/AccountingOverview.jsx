@@ -58,7 +58,7 @@ function SectionHeader({ title, subtitle, right }) {
 }
 
 export default function AccountingOverview() {
-  const [basis, setBasis] = useState(() => localStorage.getItem('finance.accountingView') || 'accrual');
+  const [basis, setBasis] = useState('accrual');
 
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -68,10 +68,6 @@ export default function AccountingOverview() {
   const [trendItems, setTrendItems] = useState([]);
   const [invoices, setInvoices] = useState([]);
   const [bookings, setBookings] = useState([]);
-
-  useEffect(() => {
-    localStorage.setItem('finance.accountingView', basis);
-  }, [basis]);
 
   const fetchOverview = async ({ silent = false } = {}) => {
     if (silent) {

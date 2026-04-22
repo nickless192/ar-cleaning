@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Container, Card, Nav } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 
@@ -6,8 +6,6 @@ import ManageService from "/src/components/Pages/Management/ManageService";
 import ManageProduct from "/src/components/Pages/Management/ManageProduct";
 import ManageGiftCard from "/src/components/Pages/Management/ManageGiftCard.jsx";
 import ManageCategories from "/src/components/Pages/Management/ManageCategories.jsx";
-
-const LS_KEY = "inventoryHubActiveTab";
 
 const InventoryManagementTabbedView = () => {
   const { t } = useTranslation();
@@ -23,15 +21,6 @@ const InventoryManagementTabbedView = () => {
   );
 
   const [activeTab, setActiveTab] = useState("services");
-
-  useEffect(() => {
-    const saved = localStorage.getItem(LS_KEY);
-    if (saved && tabs.some((x) => x.key === saved)) setActiveTab(saved);
-  }, [tabs]);
-
-  useEffect(() => {
-    localStorage.setItem(LS_KEY, activeTab);
-  }, [activeTab]);
 
   const active = tabs.find((x) => x.key === activeTab) || tabs[0];
 

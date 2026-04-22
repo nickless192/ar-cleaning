@@ -1,7 +1,7 @@
 // src/pages/admin/AdminManagementLayout.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Nav, Offcanvas, Button } from 'react-bootstrap';
-import { Outlet, NavLink } from 'react-router-dom';
+import { Outlet, NavLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { FaBars } from 'react-icons/fa';
 import '/src/assets/css/AdminManagementLayout.css';
@@ -9,9 +9,22 @@ import '/src/assets/css/AdminManagementLayout.css';
 const AdminManagementLayout = () => {
   const { t } = useTranslation();
   const [show, setShow] = useState(false);
+  const location = useLocation();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  useEffect(() => {
+    const isMobileViewport =
+      typeof window !== 'undefined' &&
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(max-width: 767.98px)').matches;
+
+    console.info('[AdminManagementLayout] route mounted', {
+      pathname: location.pathname,
+      isMobileViewport,
+    });
+  }, [location.pathname]);
 
   const navLinks = [
     { to: '/admin/booking', label: t('navbar.admin.booking_management') },

@@ -17,6 +17,10 @@ const BookingTabbedView = () => {
   // ✅ If we navigated here with state.activeTab, switch to it.
   useEffect(() => {
     const next = location.state?.activeTab;
+    console.info('[BookingTabbedView] active route state', {
+      pathname: location.pathname,
+      requestedTab: next || null,
+    });
     if (next) {
       setActiveKey(next);
 

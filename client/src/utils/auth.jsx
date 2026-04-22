@@ -1,5 +1,32 @@
 import { jwtDecode } from 'jwt-decode';
 
+const readStorage = (storage, key) => {
+  try {
+    return storage.getItem(key);
+  } catch (err) {
+    console.warn(`[auth] Unable to read ${key} from storage`, err);
+    return null;
+  }
+};
+
+const writeStorage = (storage, key, value) => {
+  try {
+    storage.setItem(key, value);
+    return true;
+  } catch (err) {
+    console.warn(`[auth] Unable to write ${key} to storage`, err);
+    return false;
+  }
+};
+
+const removeStorage = (storage, key) => {
+  try {
+    storage.removeItem(key);
+  } catch (err) {
+    console.warn(`[auth] Unable to remove ${key} from storage`, err);
+  }
+};
+
 class AuthService {
   getProfile() {
     // return jwtDecode(this.getToken());
@@ -55,10 +82,9 @@ class AuthService {
     // // Retrieves the user token from localStorage
     // return localStorage.getItem('id_token');
      // Prefer sessionStorage (current session), fallback to localStorage (remembered)
-    return (
-      sessionStorage.getItem('id_token') ||
-      localStorage.getItem('id_token')
-    );
+    const sessionToken = readStorage(sessionStorage, 'id_token');
+    if (sessionToken) return sessionToken;
+    return readStorage(localStorage, 'id_token');
   }
 
   async login(id_token, adminFlag, options = {}) {
@@ -67,11 +93,11 @@ class AuthService {
     // localStorage.setItem('id_token', id_token);    
     // Save token depending on rememberMe
     if (rememberMe) {
-      localStorage.setItem('id_token', id_token);
-      sessionStorage.removeItem('id_token');
+      writeStorage(localStorage, 'id_token', id_token);
+      removeStorage(sessionStorage, 'id_token');
     } else {
-      sessionStorage.setItem('id_token', id_token);
-      localStorage.removeItem('id_token');
+      writeStorage(sessionStorage, 'id_token', id_token);
+      removeStorage(localStorage, 'id_token');
     }
 
     if (adminFlag) {
@@ -83,8 +109,8 @@ class AuthService {
   }
   logout() {
     // Clear user token and profile data from localStorage
-    localStorage.removeItem('id_token');
-    sessionStorage.removeItem('id_token');
+    removeStorage(localStorage, 'id_token');
+    removeStorage(sessionStorage, 'id_token');
     // localStorage.removeItem('adminFlag');
     // sessionStorage.removeItem('adminFlag');
     // this will reload the page and reset the state of the application

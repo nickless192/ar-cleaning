@@ -44,6 +44,10 @@ const AccountingTabbedView = () => {
 
   const [activeTab, setActiveTab] = useState("overview");
 
+  useEffect(() => {
+    console.info('[AccountingTabbedView] active tab changed', { activeTab });
+  }, [activeTab]);
+
 
   const active = tabs.find((x) => x.key === activeTab) || tabs[0];
 
