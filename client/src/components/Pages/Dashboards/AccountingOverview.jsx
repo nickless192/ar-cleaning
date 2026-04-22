@@ -29,6 +29,7 @@ import {
   computeUnpaidInvoiceTotals,
   getCurrentMonthMetrics,
 } from './accountingOverviewAdapters';
+import Auth from "/src/utils/auth";
 import { authFetch } from "/src/utils/authFetch";
 
 const currency = (n) => `$${Number(n || 0).toFixed(2)}`;
@@ -70,6 +71,12 @@ export default function AccountingOverview() {
   const [bookings, setBookings] = useState([]);
 
   const fetchOverview = async ({ silent = false } = {}) => {
+    console.info('[AccountingOverview] loader start', {
+      silent,
+      basis,
+      hasToken: Boolean(Auth.getToken()),
+      isAdmin: Boolean(Auth.getProfile()?.data?.adminFlag),
+    });
     if (silent) {
       setRefreshing(true);
     } else {
@@ -91,6 +98,12 @@ export default function AccountingOverview() {
         authFetch('/api/invoices'),
         authFetch('/api/bookings'),
       ]);
+      console.info('[AccountingOverview] loader response statuses', {
+        summary: summaryRes.status,
+        trend: trendRes.status,
+        invoices: invoicesRes.status,
+        bookings: bookingsRes.status,
+      });
 
       const [summaryJson, trendJson, invoicesJson, bookingsJson] = await Promise.all([
         summaryRes.json(),
@@ -109,12 +122,25 @@ export default function AccountingOverview() {
       setInvoices(Array.isArray(invoicesJson) ? invoicesJson : []);
       setBookings(Array.isArray(bookingsJson) ? bookingsJson : []);
     } catch (err) {
+      console.error('[AccountingOverview] loader failure', err);
       setError(err.message || 'Failed to load accounting overview');
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
   };
+
+  useEffect(() => {
+    console.info('[AccountingOverview] mounted', {
+      basis,
+      isMobileViewport:
+        typeof window !== 'undefined' &&
+        typeof window.matchMedia === 'function' &&
+        window.matchMedia('(max-width: 767.98px)').matches,
+      hasToken: Boolean(Auth.getToken()),
+      isAdmin: Boolean(Auth.getProfile()?.data?.adminFlag),
+    });
+  }, []); // mount trace only
 
   useEffect(() => {
     fetchOverview();

@@ -19,6 +19,7 @@ import {
   CartesianGrid,
 } from 'recharts';
 import BookingCalendar from '/src/components/Pages/Management/BookingCalendar';
+import Auth from '/src/utils/auth';
 import { authFetch } from '/src/utils/authFetch';
 
 function normalizeStatus(status) {
@@ -39,7 +40,15 @@ export default function BookingDashboard() {
 
   const fetchBookings = async () => {
     try {
+      console.info('[BookingDashboard] bookings loader start', {
+        hasToken: Boolean(Auth.getToken()),
+        isAdmin: Boolean(Auth.getProfile()?.data?.adminFlag),
+      });
       const res = await authFetch('/api/bookings');
+      console.info('[BookingDashboard] bookings loader response', {
+        status: res.status,
+        ok: res.ok,
+      });
       if (!res.ok) throw new Error('Failed to fetch bookings');
       const data = await res.json();
       // filter out data that is hidden
@@ -72,9 +81,26 @@ export default function BookingDashboard() {
   //   computeAlerts(bookings);
   // }, []);
   useEffect(() => {
+  console.info('[BookingDashboard] mounted', {
+    isMobileViewport:
+      typeof window !== 'undefined' &&
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(max-width: 767.98px)').matches,
+    hasToken: Boolean(Auth.getToken()),
+    isAdmin: Boolean(Auth.getProfile()?.data?.adminFlag),
+  });
+
   const fetchCustomers = async () => {
     try {
+      console.info('[BookingDashboard] customers loader start', {
+        hasToken: Boolean(Auth.getToken()),
+        isAdmin: Boolean(Auth.getProfile()?.data?.adminFlag),
+      });
       const res = await authFetch('/api/customers');
+      console.info('[BookingDashboard] customers loader response', {
+        status: res.status,
+        ok: res.ok,
+      });
       if (!res.ok) throw new Error('Failed to fetch customers');
       const data = await res.json();
       setCustomers(data);
