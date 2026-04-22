@@ -32,6 +32,24 @@ import {
 import { authFetch } from "/src/utils/authFetch";
 
 const currency = (n) => `$${Number(n || 0).toFixed(2)}`;
+const ACCOUNTING_VIEW_STORAGE_KEY = 'finance.accountingView';
+
+const getStoredAccountingView = () => {
+  try {
+    return localStorage.getItem(ACCOUNTING_VIEW_STORAGE_KEY) || 'accrual';
+  } catch (err) {
+    console.warn('[AccountingOverview] Unable to read accounting view preference', err);
+    return 'accrual';
+  }
+};
+
+const persistAccountingView = (basis) => {
+  try {
+    localStorage.setItem(ACCOUNTING_VIEW_STORAGE_KEY, basis);
+  } catch (err) {
+    console.warn('[AccountingOverview] Unable to persist accounting view preference', err);
+  }
+};
 
 function StatCard({ title, value, subtitle }) {
   return (
@@ -58,7 +76,7 @@ function SectionHeader({ title, subtitle, right }) {
 }
 
 export default function AccountingOverview() {
-  const [basis, setBasis] = useState(() => localStorage.getItem('finance.accountingView') || 'accrual');
+  const [basis, setBasis] = useState(getStoredAccountingView);
 
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -70,7 +88,7 @@ export default function AccountingOverview() {
   const [bookings, setBookings] = useState([]);
 
   useEffect(() => {
-    localStorage.setItem('finance.accountingView', basis);
+    persistAccountingView(basis);
   }, [basis]);
 
   const fetchOverview = async ({ silent = false } = {}) => {
