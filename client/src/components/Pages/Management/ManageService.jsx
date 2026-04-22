@@ -17,6 +17,7 @@ import { Button, Form, Row, Col, Card, Table, ButtonGroup } from 'react-bootstra
 import { FaEdit, FaTrash, FaCopy } from 'react-icons/fa';
 
 import { v4 as uuidv4 } from 'uuid';
+import { authFetch } from '/src/utils/authFetch';
 import { t } from 'i18next';
 
 const ManageService = () => {
@@ -78,7 +79,7 @@ const ManageService = () => {
         const confirmed = window.confirm(`Are you sure you want to duplicate "${service.name}"?`);
         if (!confirmed) return;
         try {
-            const response = await fetch(`/api/services/duplicate/${service._id}`, {
+            const response = await authFetch(`/api/services/duplicate/${service._id}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -125,7 +126,7 @@ const ManageService = () => {
         // api call to delete service
         const confirmed = window.confirm("Are you sure you want to delete this service?");
         if (!confirmed) return;
-        fetch(`/api/services/${serviceId}`, {
+        authFetch(`/api/services/${serviceId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
@@ -172,7 +173,7 @@ const ManageService = () => {
             const body = JSON.stringify(formData);
             const method = editingServiceId ? 'PUT' : 'POST';
             const url = editingServiceId ? `/api/services/${editingServiceId}` : '/api/services';
-            fetch(url, {
+            authFetch(url, {
                 method: method,
                 headers: {
                     'Content-Type': 'application/json'
@@ -308,7 +309,7 @@ const ManageService = () => {
     };
 
     const fetchServices = async () => {
-        fetch('/api/services', {
+        authFetch('/api/services', {
             method: 'get',
             headers: {
                 'Content-Type': 'application/json',
@@ -321,7 +322,7 @@ const ManageService = () => {
     };
 
     const fetchCategories = async () => {
-        fetch('/api/categories', {
+        authFetch('/api/categories', {
             method: 'get',
             headers: {
                 'Content-Type': 'application/json',
