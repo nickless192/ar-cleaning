@@ -8,8 +8,6 @@ import FinanceDashboard from "/src/components/Pages/Dashboards/FinanceDashboard"
 import InventoryManagementTabbedView from "/src/components/Pages/ManagementViews/InventoryManagementTabbedView"; // adjust path if needed
 import MonthlyProfitCompare from "/src/components/Pages/Dashboards/MonthlyProfitCompare";
 
-const LS_KEY = "accountingHubActiveTab";
-
 const AccountingTabbedView = () => {
   const { t } = useTranslation();
 
@@ -46,16 +44,6 @@ const AccountingTabbedView = () => {
 
   const [activeTab, setActiveTab] = useState("overview");
 
-  // restore last selected tab
-  useEffect(() => {
-    const saved = localStorage.getItem(LS_KEY);
-    if (saved && tabs.some((x) => x.key === saved)) setActiveTab(saved);
-  }, [tabs]);
-
-  // persist tab selection
-  useEffect(() => {
-    localStorage.setItem(LS_KEY, activeTab);
-  }, [activeTab]);
 
   const active = tabs.find((x) => x.key === activeTab) || tabs[0];
 

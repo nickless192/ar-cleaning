@@ -5,6 +5,7 @@
 //  * @returns {JSX.Element} ManageProduct component
 //  */
 import React, { useState, useEffect } from 'react';
+import { authFetch } from '/src/utils/authFetch';
 import {
     Button,
     Container,
@@ -48,7 +49,7 @@ const ManageProduct = () => {
             quantityAtHand
         });
 
-        fetch(`/api/products/${editingProductId}`, {
+        authFetch(`/api/products/${editingProductId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -77,7 +78,7 @@ const ManageProduct = () => {
     };
 
     const handleDeleteClick = () => {
-        fetch(`/api/products/${editingProductId}`, {
+        authFetch(`/api/products/${editingProductId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
@@ -120,7 +121,7 @@ const ManageProduct = () => {
                 productCost: formData.productCost,
                 quantityAtHand: formData.quantityAtHand
             };
-            fetch('/api/products', {
+            authFetch('/api/products', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -149,7 +150,7 @@ const ManageProduct = () => {
     };
 
     useEffect(() => {
-        fetch('/api/products', {
+        authFetch('/api/products', {
             method: 'get',
             headers: {
                 'Content-Type': 'application/json',

@@ -21,9 +21,33 @@ export const withAuthHeaders = (headers = {}, method = "GET") => {
   };
 };
 
-export const authFetch = (url, options = {}) => {
-  return fetch(url, {
+const DEBUG_ENDPOINT_PATTERNS = [
+  '/api/bookings',
+  '/api/finance/',
+  '/api/invoices',
+  '/api/customers',
+];
+
+const shouldDebugAuthFetch = (url) =>
+  typeof url === 'string' && DEBUG_ENDPOINT_PATTERNS.some((pattern) => url.includes(pattern));
+
+export const authFetch = async (url, options = {}) => {
+  const headers = withAuthHeaders(options.headers, options.method);
+  const res = await fetch(url, {
     ...options,
-    headers: withAuthHeaders(options.headers, options.method),
+    headers,
   });
+
+  if (shouldDebugAuthFetch(url)) {
+    const hasAuthHeader = Boolean(headers.Authorization);
+    console.info('[authFetch]', {
+      url,
+      method: (options.method || 'GET').toUpperCase(),
+      hasAuthHeader,
+      status: res.status,
+      ok: res.ok,
+    });
+  }
+
+  return res;
 };

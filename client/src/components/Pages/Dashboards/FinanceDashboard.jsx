@@ -5,6 +5,7 @@ import {
 } from 'reactstrap';
 import moment from 'moment';
 import RechartMonthly from './RechartMonthly';
+import { authFetch } from '/src/utils/authFetch';
 
 const FY_START_MONTH = 6; // June
 const currency = (n) => `$${Number(n || 0).toFixed(2)}`;
@@ -106,7 +107,7 @@ const FinanceDashboard = () => {
     setErrMsg('');
     try {
       const qs = buildQuery();
-      const res = await fetch(`/api/finance/summary?${qs}`);
+      const res = await authFetch(`/api/finance/summary?${qs}`);
       const json = await res.json();
       if (!res.ok) throw new Error(json?.error || 'Failed to fetch finance summary');
       setSummary(json);
