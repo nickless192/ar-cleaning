@@ -474,7 +474,7 @@ const QuoteRequest = () => {
                         type="select"
                         name={opt.key}
                         aria-label={t(opt.labelKey)}
-                        className="text-cleanar-color form-input"
+                        className="text-cleanar-color form-input cleanarInput"
                         value={customOptions[opt.key]?.service || ''}
                         onChange={handleCustomOptionChange}
                     >
@@ -497,7 +497,7 @@ const QuoteRequest = () => {
                                     type="radio"
                                     name={opt.key}
                                     aria-label={t(opt.labelKey)}
-                                    className="text-cleanar-color form-input"
+                                    className="text-cleanar-color form-input cleanarInput"
                                     value={c.value}
                                     checked={customOptions[opt.key]?.service === c.value}
                                     onChange={handleCustomOptionChange}
@@ -519,7 +519,7 @@ const QuoteRequest = () => {
                             name={opt.key}
                             aria-label={t(opt.labelKey)}
                             // size="sm"
-                            className="text-cleanar-color form-input"
+                            className="text-cleanar-color form-input cleanarInput"
                             value={customOptions[opt.key]?.service || ''}
                             onChange={handleCustomOptionChange}
                             min={new Date().toISOString().split('T')[0]}
@@ -553,7 +553,7 @@ const QuoteRequest = () => {
                 name={opt.key}
                 aria-label={t(opt.labelKey)}
                 value={customOptions[opt.key]?.service || ''}
-                className="text-cleanar-color form-input"
+                className="text-cleanar-color form-input cleanarInput"
                 onChange={handleCustomOptionChange}
                 placeholder={opt.unitKey || ''}
             />
@@ -621,7 +621,7 @@ const QuoteRequest = () => {
                                 { label: t('quick_quote.form.promoCode'), name: 'promoCode', placeholder: 'Promo123' }
                             ].map(({ label, name, placeholder, required }) => (
                                 <Col key={name} md={3} xs={6} className="mb-2 ">
-                                    <Form.Label className="text-bold mb-1">
+                                    <Form.Label className="cleanarLabel mb-1">
                                         {label}{required && '*'}
                                         <FaQuestionCircle
                                             id={`${name}Tooltip`}
@@ -642,7 +642,7 @@ const QuoteRequest = () => {
                                         id={`floating${label.replace(' ', '')}`}
                                         placeholder={placeholder}
                                         aria-label={label}
-                                        className="text-cleanar-color form-input rounded-pill"
+                                        className="text-cleanar-color form-input cleanarInput"
                                         name={name}
                                         value={formData[name]}
                                         onChange={handleChange}

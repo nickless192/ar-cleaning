@@ -274,7 +274,7 @@
 
 
 
-@keyframes pulse {
+@keyframes pulse-highlight {
     0% {
         box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7);
     }
@@ -723,22 +723,6 @@
    Account & Preferences (Portal)
    Targets classes used in portal-account section
    ========================== */
-
-#portal-account .form-input {
-  border-radius: 14px !important;
-  border: 1px solid rgba(17, 24, 39, 0.12) !important;
-  background: rgba(255, 255, 255, 0.98) !important;
-  padding: 12px 14px !important;
-  font-family: "Alata", sans-serif !important;
-  font-size: 0.95rem !important;
-  transition: all 0.18s ease !important;
-}
-
-#portal-account .form-input:focus {
-  border-color: rgba(22, 119, 255, 0.65) !important;
-  box-shadow: 0 0 0 4px rgba(22, 119, 255, 0.12) !important;
-  background: #ffffff !important;
-}
 
 /* Header row */
 .account-header {
@@ -1613,7 +1597,7 @@
 
 
 .feature-highlight {
-    animation: pulse 1.5s infinite;
+    animation: pulse-highlight 1.5s infinite;
     border-radius: 8px;
 }
 
@@ -1634,7 +1618,7 @@
     text-transform: uppercase;
 
     box-shadow: 0 2px 5px rgba(238, 90, 111, 0.4);
-    animation: pulse 2s infinite;
+    animation: pulse-badge 2s infinite;
 
     margin-left: 6px;
 
@@ -1643,7 +1627,7 @@
 }
 
 
-@keyframes pulse {
+@keyframes pulse-badge {
     0% {
         box-shadow: 0 2px 5px rgba(238, 90, 111, 0.5);
     }
@@ -1970,11 +1954,20 @@
 }
 
 .form-input {
-    /* border-radius: 5rem; */
-    border: 1px solid var(--primary-color) !important;
-    padding: 8px;
-    /* margin-bottom: 10px; */
+    border-radius: 14px !important;
+    border: 1px solid rgba(0, 0, 0, 0.10) !important;
+    background: rgba(0, 0, 0, 0.015) !important;
+    color: var(--text-cleanar-color) !important;
+    box-shadow: none !important;
+    padding: 12px 14px !important;
     width: 100%;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+}
+
+.form-input:focus {
+    border-color: rgba(13, 110, 253, 0.55) !important;
+    box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.12) !important;
+    background: #fff !important;
 }
 
 .service-selection,
