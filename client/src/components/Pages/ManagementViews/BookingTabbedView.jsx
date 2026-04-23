@@ -1,72 +1,83 @@
-import React, { useEffect, useState } from "react";
-import { Tabs, Tab, Container } from "react-bootstrap";
+import React, { useEffect, useMemo, useState } from "react";
+import { Container, Card, Form, Nav } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import BookingDashboard from "/src/components/Pages/Management/BookingDashboard";
 import InvoiceList from "/src/components/Pages/Booking/InvoiceList";
 import { useTranslation } from "react-i18next";
 
-const DEFAULT_TAB = "booking-dashboard-main";
+const DEFAULT_SECTION = "booking-dashboard-main";
 
 const BookingTabbedView = () => {
   const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [activeKey, setActiveKey] = useState(DEFAULT_TAB);
+  const sections = useMemo(
+    () => [
+      {
+        key: "booking-dashboard-main",
+        title: t("navbar.admin.booking_overview", "Booking Workflow Overview"),
+        component: <BookingDashboard />,
+      },
+      {
+        key: "invoices",
+        title: t("navbar.admin.invoices"),
+        component: <InvoiceList />,
+      },
+    ],
+    [t]
+  );
 
-  // ✅ If we navigated here with state.activeTab, switch to it.
+  const [activeSection, setActiveSection] = useState(DEFAULT_SECTION);
+
   useEffect(() => {
-    const next = location.state?.activeTab;
-    console.info('[BookingTabbedView] active route state', {
-      pathname: location.pathname,
-      requestedTab: next || null,
-    });
-    if (next) {
-      setActiveKey(next);
-
-      // ✅ clear state so refresh/back doesn't keep forcing tabs
+    const requestedSection = location.state?.activeTab;
+    if (requestedSection && sections.some((section) => section.key === requestedSection)) {
+      setActiveSection(requestedSection);
       navigate(location.pathname, { replace: true, state: {} });
     }
-  }, [location.state, location.pathname, navigate]);
+  }, [location.state, location.pathname, navigate, sections]);
+
+  const currentSection = sections.find((section) => section.key === activeSection) || sections[0];
 
   return (
-    <Container fluid className="py-3 sm:py-4">
-      <div className="rounded-2xl shadow-md bg-white">
-        <Tabs
-          activeKey={activeKey}
-          onSelect={(k) => setActiveKey(k || DEFAULT_TAB)}
-          id="booking-tabs"
-          className="flex flex-wrap gap-2 mb-3"
-          mountOnEnter
-          unmountOnExit
-        >
-          <Tab
-            eventKey="booking-dashboard-main"
-            title={
-              <span className="py-2 text-sm sm:text-base">
-                {t("navbar.admin.booking_overview", "Booking Workflow Overview")}
-              </span>
-            }
-          >
-            <div className="py-2 sm:py-4">
-              <BookingDashboard />
-            </div>
-          </Tab>
+    <Container fluid className="p-2 p-sm-3 p-lg-4">
+      <Card className="shadow-sm border-0">
+        <Card.Body className="p-2 p-sm-3 p-lg-4">
+          <div className="mb-3">
+            <Form.Label htmlFor="booking-section-select" className="fw-semibold d-md-none">
+              {t("navbar.admin.booking_management")}
+            </Form.Label>
+            <Form.Select
+              id="booking-section-select"
+              className="d-md-none"
+              value={activeSection}
+              onChange={(e) => setActiveSection(e.target.value)}
+            >
+              {sections.map((section) => (
+                <option key={section.key} value={section.key}>
+                  {section.title}
+                </option>
+              ))}
+            </Form.Select>
 
-          <Tab
-            eventKey="invoices"
-            title={
-              <span className="py-2 text-sm sm:text-base">
-                {t("navbar.admin.invoices")}
-              </span>
-            }
-          >
-            <div className="py-2 sm:py-4">
-              <InvoiceList />
-            </div>
-          </Tab>
-        </Tabs>
-      </div>
+            <Nav
+              className="d-none d-md-flex gap-2 flex-wrap"
+              variant="pills"
+              activeKey={activeSection}
+              onSelect={(key) => key && setActiveSection(key)}
+            >
+              {sections.map((section) => (
+                <Nav.Item key={section.key}>
+                  <Nav.Link eventKey={section.key}>{section.title}</Nav.Link>
+                </Nav.Item>
+              ))}
+            </Nav>
+          </div>
+
+          <div>{currentSection.component}</div>
+        </Card.Body>
+      </Card>
     </Container>
   );
 };

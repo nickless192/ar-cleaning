@@ -1,88 +1,98 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { Container, Card, Nav } from "react-bootstrap";
+import React, { useMemo, useState } from "react";
+import { Container, Card, Nav, Form } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import AccountingOverview from "/src/components/Pages/Dashboards/AccountingOverview";
 import ExpenseDashboard from "/src/components/Pages/Dashboards/ExpenseDashboard";
 import FinanceDashboard from "/src/components/Pages/Dashboards/FinanceDashboard";
-import InventoryManagementTabbedView from "/src/components/Pages/ManagementViews/InventoryManagementTabbedView"; // adjust path if needed
 import MonthlyProfitCompare from "/src/components/Pages/Dashboards/MonthlyProfitCompare";
 
 const AccountingTabbedView = () => {
   const { t } = useTranslation();
 
-  const tabs = useMemo(
+  const sections = useMemo(
     () => [
       {
         key: "overview",
-        title: "Overview",
+        title: t("navbar.admin.accounting_overview", "Overview"),
         component: <AccountingOverview />,
       },
       {
         key: "finance",
-        title: "Income & Finance Overview",
+        title: t("navbar.admin.finance_overview", "Income & Finance Overview"),
         component: <FinanceDashboard />,
       },
       {
         key: "expenses",
-        title: "Expense Management",
+        title: t("navbar.admin.expense_management", "Expense Management"),
         component: <ExpenseDashboard />,
       },
       {
-        key: "inventory",
-        title: "Services & Products Configuration",
-        component: <InventoryManagementTabbedView />, // see embedded note below
-      },
-      {
         key: "reports",
-        title: "Financial Reports",
+        title: t("navbar.admin.financial_reports", "Financial Reports"),
         component: <MonthlyProfitCompare />,
-      }
+      },
     ],
     [t]
   );
 
-  const [activeTab, setActiveTab] = useState("overview");
-
-  useEffect(() => {
-    console.info('[AccountingTabbedView] active tab changed', { activeTab });
-  }, [activeTab]);
-
-
-  const active = tabs.find((x) => x.key === activeTab) || tabs[0];
+  const [activeSection, setActiveSection] = useState("overview");
+  const currentSection = sections.find((section) => section.key === activeSection) || sections[0];
 
   return (
-    <Container fluid className="p-3 p-sm-4">
-      {/* Header */}
-      {/* <div className="mb-3">
-        <h3 className="mb-0">Accounting</h3>
-        <div className="text-muted small">
-          Finance, expenses, and inventory configuration in one place.
-        </div>
-      </div> */}
-
-      <Card className="shadow-sm">
-        <Card.Body className="p-0">
-          {/* Primary tabs */}
-          <div className="p-2 border-bottom">
-            <Nav
-              variant="pills"
-              activeKey={activeTab}
-              onSelect={(k) => k && setActiveTab(k)}
-              className="gap-2 flex-wrap"
+    <Container fluid className="p-2 p-sm-3 p-lg-4">
+      <Card className="shadow-sm border-0">
+        <Card.Body className="p-2 p-sm-3 p-lg-4">
+          <div className="mb-3">
+            <Form.Label htmlFor="accounting-section-select" className="fw-semibold d-md-none">
+              {t("navbar.admin.accounting_management", "Accounting Management")}
+            </Form.Label>
+            <Form.Select
+              id="accounting-section-select"
+              className="d-md-none"
+              value={activeSection}
+              onChange={(e) => setActiveSection(e.target.value)}
             >
-              {tabs.map((tab) => (
-                <Nav.Item key={tab.key}>
-                  <Nav.Link eventKey={tab.key} style={{ whiteSpace: "nowrap" }}>
-                    {tab.title}
-                  </Nav.Link>
+              {sections.map((section) => (
+                <option key={section.key} value={section.key}>
+                  {section.title}
+                </option>
+              ))}
+            </Form.Select>
+
+            <Nav
+              className="d-none d-md-flex gap-2 flex-wrap"
+              variant="pills"
+              activeKey={activeSection}
+              onSelect={(key) => key && setActiveSection(key)}
+            >
+              {sections.map((section) => (
+                <Nav.Item key={section.key}>
+                  <Nav.Link eventKey={section.key}>{section.title}</Nav.Link>
                 </Nav.Item>
               ))}
             </Nav>
           </div>
 
-          {/* Content */}
-          <div className="p-2 p-sm-4">{active.component}</div>
+          <Card className="mb-3 bg-light border">
+            <Card.Body className="py-2 px-3 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2">
+              <div>
+                <h6 className="mb-1">{t("navbar.admin.inventory_management", "Inventory Management")}</h6>
+                <small className="text-muted">
+                  {t(
+                    "navbar.admin.inventory_management_note",
+                    "Services, products, categories, and gift cards are now grouped in a dedicated inventory section."
+                  )}
+                </small>
+              </div>
+              <Link className="btn btn-outline-primary btn-sm" to="/admin/inventory">
+                {t("navbar.admin.go_inventory", "Open Inventory")}
+              </Link>
+            </Card.Body>
+          </Card>
+
+          <div>{currentSection.component}</div>
         </Card.Body>
       </Card>
     </Container>
