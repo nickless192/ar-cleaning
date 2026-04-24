@@ -574,54 +574,95 @@
     "power_pressure_washing_button": "Ajouter le nettoyage haute pression au devis"
   },
   "about": {
-    "welcome_heading": "Bienvenue chez CleanAR Solutions",
-    "welcome_text": "Chez CleanAR Solutions, nous offrons des services de nettoyage professionnels à Toronto et dans la région du Grand Toronto. Notre engagement envers l'excellence garantit que chaque projet respecte les normes les plus élevées, créant ainsi un environnement propre et sain. Que vous ayez besoin de services résidentiels, commerciaux ou de nettoyage de tapis, nous adaptons notre approche à vos besoins. Commencez en demandant un devis, ou contactez-nous pour plus d'informations.",
-    "partnership_text": "Nous ne sommes pas seulement des nettoyeurs, nous sommes des partenaires dans la création d'environnements plus sains et sans stress.",
-    "learn_more_services": "En savoir plus sur nos services",
-    "mission_title": "Notre Mission",
-    "mission_text": "Notre mission est de transformer les espaces en environnements plus propres, plus sains et plus accueillants. Nous y parvenons en offrant des services de nettoyage personnalisables et de haute qualité, adaptés aux besoins de nos clients tout en respectant notre engagement envers la durabilité et l'excellence.",
-    "vision_title": "Notre Vision",
-    "vision_text": "Notre vision est de devenir le fournisseur de services de nettoyage le plus fiable et innovant à Toronto, en établissant une norme d'excellence tout en contribuant à une communauté plus propre, plus verte et plus heureuse.",
-    "values_title": "Nos Valeurs",
-    "values_intro": "Chez CleanAR Solutions, nous sommes guidés par les valeurs suivantes :",
-    "values_list": [
-      "Intégrité: Nous menons nos activités avec honnêteté, transparence et responsabilité.",
-      "Qualité: Nous offrons des services de nettoyage de premier ordre avec souci du détail et excellence.",
-      "Orientation client: Nous mettons les besoins uniques de nos clients au premier plan, en bâtissant la confiance grâce à des solutions personnalisées.",
-      "Durabilité: Nous encourageons des pratiques de nettoyage respectueuses de l'environnement.",
-      "Travail d'équipe: Nous valorisons la collaboration, le respect et l'unité pour réussir ensemble."
-    ],
-    "industries_title": "Services de Nettoyage Professionnels pour Tous les Secteurs",
-    "industries": {
-      "residential": {
-        "title": "Propriétés Résidentielles et Multi-Familiales",
-        "items": [
-          "Nettoyage Complet des Espaces Communs: Entretien professionnel des halls d'entrée, couloirs, escaliers, ascenseurs et installations récréatives pour maintenir la valeur de la propriété et la satisfaction des locataires.",
-          "Entretien des Espaces Extérieurs: Nettoyage haute pression des trottoirs, entrées, cours, parkings et façades de bâtiments pour améliorer l'attrait et la sécurité.",
-          "Services de Gestion des Déchets: Collecte fiable des déchets, gestion du recyclage et élimination appropriée des déchets résidentiels avec des pratiques respectueuses de l'environnement."
-        ]
+    "hero": {
+      "eyebrow": "À propos de CleanAR Solutions",
+      "title": "Des services de nettoyage fondés sur la confiance, la qualité et le soin",
+      "subtitle": "CleanAR Solutions est une entreprise professionnelle de nettoyage à Toronto et dans le GTA, avec un service personnalisé pour les résidences et les entreprises.",
+      "ctaPrimary": "Demander un devis",
+      "ctaSecondary": "Découvrir nos services",
+      "trustLabel": "Éléments de confiance",
+      "trustChips": [
+        "Toronto et GTA",
+        "Résidentiel + commercial",
+        "Options écoresponsables",
+        "Horaires flexibles"
+      ]
+    },
+    "story": {
+      "title": "Qui nous sommes",
+      "body": "Fondée en 2024, CleanAR Solutions offre l'attention d'une petite entreprise avec des systèmes professionnels. Nous assurons une communication fiable, une exécution minutieuse et des plans sur mesure pour que chaque espace reste frais et impeccable."
+    },
+    "missionVision": {
+      "title": "Mission et vision",
+      "mission": {
+        "title": "Notre mission",
+        "body": "Offrir des services de nettoyage fiables et de haute qualité, adaptés aux besoins de chaque client, afin de créer des espaces frais et impeccables à chaque intervention."
       },
-      "offices": {
-        "title": "Bâtiments de Bureau et Espaces Commerciaux",
-        "items": [
-          "Services de Nettoyage Quotidien des Bureaux: Désinfection approfondie des postes de travail, salles de conférence, espaces de pause et zones d'accueil pour maintenir un environnement de travail sain et productif.",
-          "Entretien Professionnel des Sols: Services d'expertise en balayage, nettoyage humide, aspiration et polissage des sols pour tous les types de surfaces, y compris les moquettes, les parquets et les carrelages.",
-          "Désinfection des Sanitaires: Nettoyage en profondeur et désinfection des salles de bains de bureau, y compris le réapprovisionnement des fournitures et l'élimination des odeurs pour la santé et le confort des employés."
-        ]
-      },
-      "festivals": {
-        "title": "Services de Nettoyage pour Événements et Festivals",
-        "items": [
-          "Préparation du Site Avant l'Événement: Nettoyage complet et désinfection du lieu avant les événements, y compris le nettoyage des terrains, la préparation des zones de vendeurs et la mise en place des stations de déchets.",
-          "Maintenance Pendant l'Événement: Services de nettoyage continus tout au long des festivals, y compris l'entretien des toilettes, la désinfection des zones de restauration et la gestion des déchets en temps réel.",
-          "Restauration Après l'Événement: Nettoyage complet du lieu après les événements, y compris l'enlèvement des débris, la désinfection en profondeur et la restauration complète du site à son état d'origine."
-        ]
+      "vision": {
+        "title": "Notre vision",
+        "body": "Établir la norme des services de nettoyage à Toronto en combinant qualité, fiabilité et innovation, tout en bâtissant une communauté plus propre et durable."
       }
     },
-    "cta": {
-      "ready": "Prêt pour un espace plus propre et plus sain?",
-      "focus": "Laissez-nous nous occuper du désordre, concentrez-vous sur ce qui compte le plus.",
-      "quote": "Obtenez votre devis gratuit"
+    "values": {
+      "title": "Nos valeurs",
+      "cards": [
+        {
+          "title": "Intégrité",
+          "description": "Nous agissons avec honnêteté, transparence et responsabilité."
+        },
+        {
+          "title": "Qualité",
+          "description": "Nous visons l'excellence constante avec une grande attention aux détails."
+        },
+        {
+          "title": "Orientation client",
+          "description": "Nous adaptons nos solutions aux besoins de chaque client."
+        },
+        {
+          "title": "Durabilité",
+          "description": "Nous appliquons des pratiques écoresponsables pour protéger les clients et l'environnement."
+        },
+        {
+          "title": "Esprit d'équipe",
+          "description": "Nous collaborons avec respect et unité pour livrer des résultats fiables."
+        }
+      ]
+    },
+    "whyChoose": {
+      "title": "Pourquoi choisir CleanAR Solutions",
+      "points": [
+        "Plans de nettoyage personnalisés",
+        "Communication fiable",
+        "Service axé sur les détails",
+        "Équipement et produits professionnels",
+        "Approche écoresponsable",
+        "Flexibilité résidentielle et commerciale"
+      ]
+    },
+    "serviceArea": {
+      "title": "Service à Toronto et dans le GTA",
+      "intro": "Nous accompagnons nos clients à Toronto et dans les communautés voisines du GTA, notamment :",
+      "locations": [
+        "Downtown Toronto",
+        "East York",
+        "North York",
+        "Midtown",
+        "Scarborough",
+        "Etobicoke",
+        "Mississauga",
+        "Markham",
+        "Richmond Hill",
+        "Pickering",
+        "Vaughan",
+        "Oakville"
+      ]
+    },
+    "finalCta": {
+      "title": "Prêt pour un espace plus propre et plus frais ?",
+      "subtitle": "Nous créons le plan de nettoyage adapté à votre maison, bureau ou propriété.",
+      "ctaPrimary": "Demander un devis",
+      "ctaSecondary": "Découvrir nos services",
+      "contactHint": "Vous préférez parler à notre équipe d'abord ? Utilisez les options de contact dans le pied de page."
     }
   },
   "navbar": {

@@ -1,0 +1,102 @@
+.about-us-page {
+  background: var(--cleanar-surface);
+}
+
+.about-us-hero {
+  background: linear-gradient(180deg, rgba(0, 165, 206, 0.08) 0%, rgba(137, 201, 127, 0.08) 100%);
+}
+
+.about-us-eyebrow {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--primary-color);
+}
+
+.about-us-title {
+  color: var(--text-cleanar-color);
+  font-size: clamp(1.8rem, 5vw, 2.8rem);
+  line-height: 1.2;
+  font-weight: 800;
+}
+
+.about-us-subtitle,
+.about-us-body-copy {
+  color: var(--text-cleanar-color);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+.about-us-section-title {
+  color: var(--text-cleanar-color);
+  font-weight: 800;
+  font-size: clamp(1.35rem, 3vw, 2rem);
+}
+
+.about-us-card {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+}
+
+.about-us-trust-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.6rem;
+}
+
+.about-us-trust-list li {
+  background: rgba(0, 165, 206, 0.1);
+  border: 1px solid rgba(0, 165, 206, 0.18);
+  border-radius: 999px;
+  color: var(--text-cleanar-color);
+  font-weight: 600;
+  font-size: 0.92rem;
+  padding: 0.45rem 0.75rem;
+  text-align: center;
+}
+
+.about-us-icon-wrap,
+.about-us-icon-inline {
+  color: var(--primary-color);
+  font-size: 1.1rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 165, 206, 0.1);
+}
+
+.about-us-area-list {
+  margin: 0;
+  padding-left: 1rem;
+  columns: 1;
+}
+
+.about-us-area-list li {
+  margin-bottom: 0.35rem;
+  color: var(--text-cleanar-color);
+}
+
+.about-us-final-cta {
+  background: linear-gradient(180deg, rgba(0, 165, 206, 0.08) 0%, rgba(255, 255, 255, 0.9) 100%);
+}
+
+@media (min-width: 576px) {
+  .about-us-trust-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 992px) {
+  .about-us-area-list {
+    columns: 2;
+  }
+}
