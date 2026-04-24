@@ -575,54 +575,95 @@
     "power_pressure_washing_button": "Cotizar limpieza a presión"
   },
   "about": {
-    "welcome_heading": "Bienvenido a CleanAR Solutions",
-    "welcome_text": "En CleanAR Solutions ofrecemos servicios profesionales de limpieza en Toronto y el GTA. Nuestro enfoque en la excelencia garantiza que cada proyecto cumpla con los más altos estándares, creando un entorno limpio y saludable. Ya sea que necesite limpieza residencial, comercial o de alfombras, adaptamos nuestro enfoque para satisfacer sus necesidades. Solicite una cotización o contáctenos para más información.",
-    "partnership_text": "Más que limpiadores, somos socios en la creación de entornos más saludables y sin estrés.",
-    "learn_more_services": "Conozca más sobre nuestros servicios",
-    "mission_title": "Nuestra Misión",
-    "mission_text": "Nuestra misión es transformar espacios en entornos más limpios, saludables y acogedores. Lo logramos ofreciendo servicios de limpieza personalizables y de alta calidad, adaptados a las necesidades de nuestros clientes y comprometidos con la sostenibilidad y la excelencia.",
-    "vision_title": "Nuestra Visión",
-    "vision_text": "Nuestra visión es convertirnos en el proveedor de servicios de limpieza más confiable e innovador de Toronto, estableciendo el estándar de excelencia y contribuyendo a una comunidad más limpia, ecológica y feliz.",
-    "values_title": "Nuestros Valores",
-    "values_intro": "En CleanAR Solutions nos guiamos por los siguientes valores:",
-    "values_list": [
-      "Integridad: Actuamos con honestidad, transparencia y responsabilidad.",
-      "Calidad: Brindamos servicios de limpieza de alto nivel con atención al detalle y excelencia.",
-      "Enfoque en el cliente: Priorizamos las necesidades únicas de nuestros clientes con soluciones personalizadas.",
-      "Sostenibilidad: Promovemos prácticas de limpieza ecológicas para proteger el medio ambiente.",
-      "Trabajo en equipo: Valoramos la colaboración, el respeto y la unidad para lograr el éxito juntos."
-    ],
-    "industries_title": "Servicios Profesionales de Limpieza para cada Industrias",
-    "industries": {
-      "residential": {
-        "title": "Propiedades Residenciales y unidades multi-familiares",
-        "items": [
-          "Limpieza general de áreas comunes: Mantenimiento profesional de vestíbulos, pasillos, escaleras, ascensores y áreas recreativas de apartamentos para mantener el valor de la propiedad y la satisfacción de los inquilinos.",
-          "Mantenimiento exterior de la propiedad: Limpieza a presión de aceras, entradas, patios, áreas de estacionamiento y exteriores de edificios para mejorar el atractivo y la seguridad.",
-          "Servicios de gestión de residuos: Recolección confiable de basura, gestión de reciclaje y eliminación adecuada de desechos residenciales con prácticas ecológicas."
-        ]
+    "hero": {
+      "eyebrow": "Sobre CleanAR Solutions",
+      "title": "Servicios de limpieza basados en confianza, calidad y cuidado",
+      "subtitle": "CleanAR Solutions es una empresa profesional de limpieza en Toronto y GTA que ofrece servicios personalizados para hogares y negocios.",
+      "ctaPrimary": "Solicitar cotización",
+      "ctaSecondary": "Explorar servicios",
+      "trustLabel": "Puntos de confianza",
+      "trustChips": [
+        "Toronto y GTA",
+        "Residencial + comercial",
+        "Opciones ecológicas",
+        "Horarios flexibles"
+      ]
+    },
+    "story": {
+      "title": "Quiénes somos",
+      "body": "Fundada en 2024, CleanAR Solutions combina atención cercana de negocio local con sistemas profesionales. Ofrecemos comunicación confiable, ejecución detallada y planes personalizados para que cada espacio se vea fresco y impecable."
+    },
+    "missionVision": {
+      "title": "Misión y visión",
+      "mission": {
+        "title": "Nuestra misión",
+        "body": "Brindar servicios de limpieza confiables y de alta calidad, adaptados a las necesidades de cada cliente, creando espacios frescos e impecables en cada visita."
       },
-      "offices": {
-        "title": "Edificios de oficinas y espacios comerciales",
-        "items": [
-          "Servicios de limpieza de oficinas diarias: Desinfección completa de estaciones de trabajo, salas de conferencias, áreas de descanso y áreas de recepción para mantener un ambiente de trabajo saludable y productivo.",
-          "Cuidado profesional de suelos: Servicios expertos de barrido, fregado, aspirado y pulido de suelos para todo tipo de superficies, incluyendo alfombra, madera y baldosas.",
-          "Desinfección de baños: Desinfección completa y limpieza profunda de baños de oficina, incluyendo reposición de suministros y eliminación de olores para la salud y comodidad de los empleados."
-        ]
-      },
-      "festivals": {
-        "title": "Servicios de limpiezas de eventos y festivales",
-        "items": [
-          "Preparación del sitio antes del evento: Limpieza y desinfección completa del lugar antes de los eventos, incluyendo la limpieza de terrenos, la preparación de áreas para proveedores y la instalación de estaciones de residuos.",
-          "Mantenimiento durante el evento: Servicios de limpieza continua durante los festivales, incluyendo el mantenimiento de baños, la desinfección de áreas de servicio de alimentos y la gestión de residuos en tiempo real.",
-          "Restauración posterior al evento: Limpieza integral del lugar después de los eventos, incluyendo la eliminación de escombros, la desinfección profunda y la restauración completa del sitio a su estado original."
-        ]
+      "vision": {
+        "title": "Nuestra visión",
+        "body": "Ser el estándar de servicios de limpieza en Toronto, combinando calidad, confiabilidad e innovación para construir una comunidad más limpia y sostenible."
       }
     },
-    "cta": {
-      "ready": "Listo para un espacio más limpio y saludable?",
-      "focus": "Déjanos encargarnos del desorden, tú concéntrate en lo que más importa.",
-      "quote": "Obtén tu cotización gratuita"
+    "values": {
+      "title": "Nuestros valores",
+      "cards": [
+        {
+          "title": "Integridad",
+          "description": "Actuamos con honestidad, transparencia y responsabilidad."
+        },
+        {
+          "title": "Calidad",
+          "description": "Cuidamos cada detalle para mantener una excelencia constante."
+        },
+        {
+          "title": "Enfoque en el cliente",
+          "description": "Creamos soluciones personalizadas según las necesidades de cada cliente."
+        },
+        {
+          "title": "Sostenibilidad",
+          "description": "Aplicamos prácticas ecológicas para proteger a las personas y al entorno."
+        },
+        {
+          "title": "Trabajo en equipo",
+          "description": "Colaboramos con respeto y unidad para lograr resultados confiables."
+        }
+      ]
+    },
+    "whyChoose": {
+      "title": "Por qué elegir CleanAR Solutions",
+      "points": [
+        "Planes de limpieza personalizados",
+        "Comunicación confiable",
+        "Servicio orientado al detalle",
+        "Equipos e insumos profesionales",
+        "Enfoque ecológico",
+        "Flexibilidad residencial y comercial"
+      ]
+    },
+    "serviceArea": {
+      "title": "Servicio en Toronto y GTA",
+      "intro": "Atendemos clientes en Toronto y comunidades cercanas del GTA, incluyendo:",
+      "locations": [
+        "Downtown Toronto",
+        "East York",
+        "North York",
+        "Midtown",
+        "Scarborough",
+        "Etobicoke",
+        "Mississauga",
+        "Markham",
+        "Richmond Hill",
+        "Pickering",
+        "Vaughan",
+        "Oakville"
+      ]
+    },
+    "finalCta": {
+      "title": "¿Listo para un espacio más limpio y fresco?",
+      "subtitle": "Creamos el plan de limpieza ideal para su hogar, oficina o propiedad.",
+      "ctaPrimary": "Solicitar cotización",
+      "ctaSecondary": "Explorar servicios",
+      "contactHint": "¿Prefiere hablar primero con nuestro equipo? Use las opciones de contacto en el pie de página."
     }
   },
   "navbar": {

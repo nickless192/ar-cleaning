@@ -587,54 +587,95 @@
     "power_pressure_washing_button": "Get Quote for Power Washing"
   },
   "about": {
-    "welcome_heading": "Welcome to CleanAR Solutions",
-    "welcome_text": "At CleanAR Solutions, we provide professional cleaning services in Toronto and the GTA. Our focus on excellence ensures every project meets the highest standards, creating a clean and healthy environment. Whether you need residential, commercial, or carpet cleaning, we customize our approach to meet your needs. Get started by requesting a quote, or contact us for more information.",
-    "partnership_text": "We’re more than cleaners — we’re partners in creating healthier, stress-free environments.",
-    "learn_more_services": "Learn More About Our Services",
-    "mission_title": "Our Mission",
-    "mission_text": "Our mission is to transform spaces into cleaner, healthier, and more welcoming environments. We achieve this by offering customizable, high-quality cleaning services that are tailored to our clients’ needs while staying true to our commitment to sustainability and excellence.",
-    "vision_title": "Our Vision",
-    "vision_text": "Our vision is to become Toronto’s most trusted and innovative cleaning service provider, setting the standard for excellence while contributing to a cleaner, greener, and happier community.",
-    "values_title": "Our Values",
-    "values_intro": "At CleanAR Solutions, we are guided by the following values:",
-    "values_list": [
-      "Integrity: We conduct our business with honesty, transparency, and accountability.",
-      "Quality: We deliver top-tier cleaning services with attention to detail and excellence.",
-      "Customer Focus: We prioritize our clients’ unique needs, building trust through personalized solutions.",
-      "Sustainability: We promote eco-friendly cleaning practices to protect our environment.",
-      "Teamwork: We value collaboration, respect, and unity to achieve success together."
-    ],
-    "industries_title": "Professional Cleaning Services for Every Industry",
-    "industries": {
-      "residential": {
-        "title": "Residential & Multi-Family Properties",
-        "items": [
-          "Comprehensive Common Area Cleaning: Professional maintenance of apartment lobbies, hallways, stairwells, elevators, and recreational facilities to maintain property value and tenant satisfaction.",
-          "Exterior Property Maintenance: Power washing of sidewalks, entryways, courtyards, parking areas, and building exteriors to enhance curb appeal and safety.",
-          "Waste Management Services: Reliable trash collection, recycling management, and proper disposal of residential waste with eco-friendly practices."
-        ]
+    "hero": {
+      "eyebrow": "About CleanAR Solutions",
+      "title": "Cleaning Services Built on Trust, Quality, and Care",
+      "subtitle": "CleanAR Solutions is a Toronto and GTA professional cleaning company delivering personalized service for homes and businesses.",
+      "ctaPrimary": "Request a Quote",
+      "ctaSecondary": "Explore Our Services",
+      "trustLabel": "Trust highlights",
+      "trustChips": [
+        "Toronto & GTA",
+        "Residential + Commercial",
+        "Eco-conscious options",
+        "Flexible scheduling"
+      ]
+    },
+    "story": {
+      "title": "Who We Are",
+      "body": "Founded in 2024, CleanAR Solutions is built on small-business care backed by professional systems. We bring reliable communication, detailed execution, and customized plans to every client so each space feels fresh, spotless, and ready for what comes next."
+    },
+    "missionVision": {
+      "title": "Mission and Vision",
+      "mission": {
+        "title": "Our Mission",
+        "body": "To deliver reliable, high-quality cleaning services tailored to each client’s needs, creating fresh and spotless spaces every time."
       },
-      "offices": {
-        "title": "Office Buildings & Commercial Spaces",
-        "items": [
-          "Daily Office Cleaning Services: Thorough sanitization of workstations, conference rooms, break areas, and reception areas to maintain a healthy, productive workplace environment.",
-          "Professional Floor Care: Expert sweeping, mopping, vacuuming, and floor polishing services for all surface types including carpet, hardwood, and tile flooring.",
-          "Restroom Sanitization: Complete disinfection and deep cleaning of office bathrooms, including supply restocking and odor elimination for employee health and comfort."
-        ]
-      },
-      "festivals": {
-        "title": "Event & Festival Cleaning Services",
-        "items": [
-          "Pre-Event Site Preparation: Complete venue cleaning and sanitization before events, including grounds cleanup, vendor area preparation, and waste station setup.",
-          "During-Event Maintenance: Continuous cleaning services throughout festivals including restroom maintenance, food service area sanitization, and real-time waste management.",
-          "Post-Event Restoration: Comprehensive venue cleanup after events including debris removal, deep sanitization, and complete site restoration to original condition."
-        ]
+      "vision": {
+        "title": "Our Vision",
+        "body": "To set the standard for cleaning services in Toronto by combining quality, reliability, and innovation while building a cleaner and more sustainable community."
       }
     },
-    "cta": {
-      "ready": "Ready for a cleaner, healthier space?",
-      "focus": "Let us take care of the mess — you focus on what matters most.",
-      "quote": "Get Your Free Quote"
+    "values": {
+      "title": "Our Core Values",
+      "cards": [
+        {
+          "title": "Integrity",
+          "description": "We lead with honesty, transparency, and accountability in every interaction."
+        },
+        {
+          "title": "Quality",
+          "description": "We focus on details and consistent excellence in every service visit."
+        },
+        {
+          "title": "Customer Focus",
+          "description": "We build personalized cleaning solutions around each client’s priorities."
+        },
+        {
+          "title": "Sustainability",
+          "description": "We use eco-conscious practices that support healthy spaces and the environment."
+        },
+        {
+          "title": "Teamwork",
+          "description": "We work with collaboration, respect, and unity to deliver dependable results."
+        }
+      ]
+    },
+    "whyChoose": {
+      "title": "Why Choose CleanAR Solutions",
+      "points": [
+        "Customized cleaning plans for your schedule and priorities",
+        "Reliable communication from booking to follow-up",
+        "Detail-oriented service with consistent quality control",
+        "Professional equipment and trusted cleaning supplies",
+        "Eco-conscious options for healthier spaces",
+        "Flexible support for both residential and commercial needs"
+      ]
+    },
+    "serviceArea": {
+      "title": "Proudly Serving Toronto and the GTA",
+      "intro": "We support clients across Toronto and nearby GTA communities, including:",
+      "locations": [
+        "Downtown Toronto",
+        "East York",
+        "North York",
+        "Midtown",
+        "Scarborough",
+        "Etobicoke",
+        "Mississauga",
+        "Markham",
+        "Richmond Hill",
+        "Pickering",
+        "Vaughan",
+        "Oakville"
+      ]
+    },
+    "finalCta": {
+      "title": "Ready for a cleaner, fresher space?",
+      "subtitle": "Let our team build the right cleaning plan for your home, office, or property.",
+      "ctaPrimary": "Request a Quote",
+      "ctaSecondary": "Explore Our Services",
+      "contactHint": "Prefer to speak with our team first? Use our contact options in the footer."
     }
   },
   "navbar": {
