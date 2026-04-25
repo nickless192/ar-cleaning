@@ -44,6 +44,7 @@
     "dev": "vite",
     "build": "vite build && node ./scripts/prerender-marketing-routes.mjs",
     "preview": "vite preview",
+    "screenshot:services": "node ./scripts/capture-services-screenshots.mjs",
     "start": "vite",
     "media:bootstrap": "bash ./scripts/bootstrap-media-tooling.sh",
     "media:optimize": "bash ./scripts/optimize-images.sh",
