@@ -2978,7 +2978,7 @@ html {
   padding: 1.3rem;
 }
 
-.products-services-page .services-mobile-toggle {
+.products-services-page .services-mobile-section-toggle {
   width: 100%;
   border: 1px solid var(--cleanar-surface-border);
   background: color-mix(in srgb, var(--light-color) 45%, white);
@@ -3193,14 +3193,6 @@ html {
   .products-services-page .services-final-cta {
     padding: 1rem;
     border-radius: 0.85rem;
-  }
-
-  .products-services-page .services-collapsible-content {
-    display: none;
-  }
-
-  .products-services-page .services-collapsible-content.is-open {
-    display: block;
   }
 
   .products-services-page .services-final-cta-button {

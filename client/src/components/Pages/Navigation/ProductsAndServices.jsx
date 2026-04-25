@@ -44,14 +44,12 @@ const SERVICE_ROUTE_BY_KEY = {
   monthlyBuilding: '/services/monthly-building-amenities-cleaning'
 };
 
-const sectionKeys = ['core', 'packages', 'addons', 'carpetUpholstery', 'specialty', 'howItWorks'];
-
 const ProductsAndServices = () => {
   const { t, i18n } = useTranslation();
   const [activeCategory, setActiveCategory] = useState('core');
   const [isMobile, setIsMobile] = useState(false);
   const [headerOffset, setHeaderOffset] = useState(120);
-  const [mobileOpenSections, setMobileOpenSections] = useState({
+  const [openSections, setOpenSections] = useState({
     core: true,
     packages: false,
     addons: false,
@@ -124,22 +122,25 @@ const ProductsAndServices = () => {
 
   const getDisplayListItem = (item) => (item.includes('–') ? item.split('–')[1].trim() : item);
 
-  const handleSectionToggle = (sectionKey) => {
-    setMobileOpenSections((prev) => {
-      const nextState = sectionKeys.reduce((acc, key) => ({ ...acc, [key]: key === sectionKey ? !prev[sectionKey] : prev[key] }), {});
-      return nextState;
-    });
+  const toggleSection = (sectionKey) => {
+    setOpenSections((prev) => ({
+      ...prev,
+      [sectionKey]: !prev[sectionKey]
+    }));
   };
 
-  const isSectionExpanded = (sectionKey) => !isMobile || !!mobileOpenSections[sectionKey];
+  const isSectionVisible = (sectionKey) => !isMobile || !!openSections[sectionKey];
 
-  const openSectionAndScroll = (sectionKey, targetId) => {
-    if (isMobile && !isSectionExpanded(sectionKey)) {
-      setMobileOpenSections((prev) => ({ ...prev, [sectionKey]: true }));
-      window.setTimeout(() => scrollToSection(targetId), 110);
-      return;
+  const openAndScrollToSection = (sectionKey, targetId) => {
+    if (isMobile) {
+      setOpenSections((prev) => ({
+        ...prev,
+        [sectionKey]: true
+      }));
+      window.setTimeout(() => scrollToSection(targetId), 80);
+    } else {
+      scrollToSection(targetId);
     }
-    scrollToSection(targetId);
   };
 
   useEffect(() => {
@@ -203,7 +204,7 @@ const ProductsAndServices = () => {
               <Button as={Link} to={quoteLink()} className="btn-round secondary-bg-color services-hero-primary-cta">
                 {t('products_and_services.revamp.hero.primaryCta')}
               </Button>
-              <Button variant="outline-secondary" className="btn-round services-hero-secondary-cta" onClick={() => jumpToSection('services')}>
+              <Button variant="outline-secondary" className="btn-round services-hero-secondary-cta" onClick={() => scrollToSection('services')}>
                 {t('products_and_services.revamp.hero.secondaryCta')}
               </Button>
             </div>
@@ -217,7 +218,7 @@ const ProductsAndServices = () => {
                 className={`services-category-chip ${activeCategory === item.key ? 'is-active' : ''}`}
                 onClick={() => {
                   setActiveCategory(item.key);
-                  openSectionAndScroll(item.key, item.target);
+                  openAndScrollToSection(item.key, item.target);
                 }}
               >
                 {t(`products_and_services.revamp.categoryNav.${item.key}`)}
@@ -237,19 +238,19 @@ const ProductsAndServices = () => {
             {isMobile ? (
               <button
                 type="button"
-                className="services-mobile-toggle"
-                aria-expanded={isSectionExpanded('core')}
-                aria-controls="core-services-content"
-                onClick={() => handleSectionToggle('core')}
+                className="services-mobile-section-toggle"
+                aria-expanded={isSectionVisible('core')}
+                aria-controls="services-section-core"
+                onClick={() => toggleSection('core')}
               >
                 <span className="services-mobile-toggle-copy">
                   <span>{sectionMeta.core.summary}</span>
                   <small>{t('products_and_services.revamp.mobileSummaryCount', { count: sectionMeta.core.count })}</small>
                 </span>
-                <span>{isSectionExpanded('core') ? '−' : '+'}</span>
+                <span>{isSectionVisible('core') ? '−' : '+'}</span>
               </button>
             ) : null}
-            <div id="core-services-content" className={`services-collapsible-content ${isSectionExpanded('core') ? 'is-open' : ''}`}>
+            <div id="services-section-core" hidden={isMobile && !openSections.core} className="services-collapsible-content">
               <Row className="g-3">
                 {Object.entries(coreItems).map(([key, service]) => (
                   <Col xs={12} md={6} lg={4} key={key} id={key === 'residentialRegular' ? 'residential' : key === 'commercialRegular' ? 'commercial' : key === 'carpetCleaning' ? 'carpet' : undefined}>
@@ -287,19 +288,19 @@ const ProductsAndServices = () => {
             {isMobile ? (
               <button
                 type="button"
-                className="services-mobile-toggle"
-                aria-expanded={isSectionExpanded('packages')}
-                aria-controls="packages-content"
-                onClick={() => handleSectionToggle('packages')}
+                className="services-mobile-section-toggle"
+                aria-expanded={isSectionVisible('packages')}
+                aria-controls="services-section-packages"
+                onClick={() => toggleSection('packages')}
               >
                 <span className="services-mobile-toggle-copy">
                   <span>{sectionMeta.packages.summary}</span>
                   <small>{t('products_and_services.revamp.mobileSummaryCount', { count: sectionMeta.packages.count })}</small>
                 </span>
-                <span>{isSectionExpanded('packages') ? '−' : '+'}</span>
+                <span>{isSectionVisible('packages') ? '−' : '+'}</span>
               </button>
             ) : null}
-            <div id="packages-content" className={`services-collapsible-content ${isSectionExpanded('packages') ? 'is-open' : ''}`}>
+            <div id="services-section-packages" hidden={isMobile && !openSections.packages} className="services-collapsible-content">
               <p className="text-muted mb-3">{t('products_and_services.revamp.packages.description')}</p>
               <p className="services-subtle-note">{t('products_and_services.revamp.packages.customizedNote')}</p>
               <Row className="g-3">
@@ -329,19 +330,19 @@ const ProductsAndServices = () => {
             {isMobile ? (
               <button
                 type="button"
-                className="services-mobile-toggle"
-                aria-expanded={isSectionExpanded('addons')}
-                aria-controls="addons-content"
-                onClick={() => handleSectionToggle('addons')}
+                className="services-mobile-section-toggle"
+                aria-expanded={isSectionVisible('addons')}
+                aria-controls="services-section-addons"
+                onClick={() => toggleSection('addons')}
               >
                 <span className="services-mobile-toggle-copy">
                   <span>{sectionMeta.addons.summary}</span>
                   <small>{t('products_and_services.revamp.mobileSummaryCount', { count: sectionMeta.addons.count })}</small>
                 </span>
-                <span>{isSectionExpanded('addons') ? '−' : '+'}</span>
+                <span>{isSectionVisible('addons') ? '−' : '+'}</span>
               </button>
             ) : null}
-            <div id="addons-content" className={`services-collapsible-content ${isSectionExpanded('addons') ? 'is-open' : ''}`}>
+            <div id="services-section-addons" hidden={isMobile && !openSections.addons} className="services-collapsible-content">
               <p className="text-muted mb-3">{t('products_and_services.revamp.addons.description')}</p>
               <Row className="g-3">
                 {Object.values(addonGroups).map((group) => (
@@ -370,19 +371,19 @@ const ProductsAndServices = () => {
             {isMobile ? (
               <button
                 type="button"
-                className="services-mobile-toggle"
-                aria-expanded={isSectionExpanded('carpetUpholstery')}
-                aria-controls="carpet-upholstery-content"
-                onClick={() => handleSectionToggle('carpetUpholstery')}
+                className="services-mobile-section-toggle"
+                aria-expanded={isSectionVisible('carpetUpholstery')}
+                aria-controls="services-section-carpet-upholstery"
+                onClick={() => toggleSection('carpetUpholstery')}
               >
                 <span className="services-mobile-toggle-copy">
                   <span>{sectionMeta.carpetUpholstery.summary}</span>
                   <small>{t('products_and_services.revamp.mobileSummaryCount', { count: sectionMeta.carpetUpholstery.count })}</small>
                 </span>
-                <span>{isSectionExpanded('carpetUpholstery') ? '−' : '+'}</span>
+                <span>{isSectionVisible('carpetUpholstery') ? '−' : '+'}</span>
               </button>
             ) : null}
-            <div id="carpet-upholstery-content" className={`services-collapsible-content ${isSectionExpanded('carpetUpholstery') ? 'is-open' : ''}`}>
+            <div id="services-section-carpet-upholstery" hidden={isMobile && !openSections.carpetUpholstery} className="services-collapsible-content">
               <p className="text-muted mb-3">{t('products_and_services.revamp.carpetUpholstery.description')}</p>
               <Row className="g-3">
                 {Object.entries(carpetColumns).map(([key, column]) => (
@@ -420,19 +421,19 @@ const ProductsAndServices = () => {
             {isMobile ? (
               <button
                 type="button"
-                className="services-mobile-toggle"
-                aria-expanded={isSectionExpanded('specialty')}
-                aria-controls="specialty-content"
-                onClick={() => handleSectionToggle('specialty')}
+                className="services-mobile-section-toggle"
+                aria-expanded={isSectionVisible('specialty')}
+                aria-controls="services-section-specialty"
+                onClick={() => toggleSection('specialty')}
               >
                 <span className="services-mobile-toggle-copy">
                   <span>{sectionMeta.specialty.summary}</span>
                   <small>{t('products_and_services.revamp.mobileSummaryCount', { count: sectionMeta.specialty.count })}</small>
                 </span>
-                <span>{isSectionExpanded('specialty') ? '−' : '+'}</span>
+                <span>{isSectionVisible('specialty') ? '−' : '+'}</span>
               </button>
             ) : null}
-            <div id="specialty-content" className={`services-collapsible-content ${isSectionExpanded('specialty') ? 'is-open' : ''}`}>
+            <div id="services-section-specialty" hidden={isMobile && !openSections.specialty} className="services-collapsible-content">
               <Row className="g-3">
                 {Object.entries(specialtyItems).map(([key, item]) => (
                   <Col xs={12} md={4} key={key}>
@@ -469,19 +470,19 @@ const ProductsAndServices = () => {
             {isMobile ? (
               <button
                 type="button"
-                className="services-mobile-toggle"
-                aria-expanded={isSectionExpanded('howItWorks')}
-                aria-controls="how-it-works-content"
-                onClick={() => setMobileOpenSections((prev) => ({ ...prev, howItWorks: !prev.howItWorks }))}
+                className="services-mobile-section-toggle"
+                aria-expanded={isSectionVisible('howItWorks')}
+                aria-controls="services-section-how-it-works"
+                onClick={() => toggleSection('howItWorks')}
               >
                 <span className="services-mobile-toggle-copy">
                   <span>{sectionMeta.howItWorks.summary}</span>
                   <small>{t('products_and_services.revamp.mobileSummaryCount', { count: sectionMeta.howItWorks.count })}</small>
                 </span>
-                <span>{isSectionExpanded('howItWorks') ? '−' : '+'}</span>
+                <span>{isSectionVisible('howItWorks') ? '−' : '+'}</span>
               </button>
             ) : null}
-            <div id="how-it-works-content" className={`services-collapsible-content ${isSectionExpanded('howItWorks') ? 'is-open' : ''}`}>
+            <div id="services-section-how-it-works" hidden={isMobile && !openSections.howItWorks} className="services-collapsible-content">
               <Row className="g-2 g-md-3">
                 {howItWorksItems.map((step, index) => (
                   <Col xs={6} md={6} lg={3} key={step.title}>
