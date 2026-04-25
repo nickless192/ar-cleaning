@@ -3037,6 +3037,7 @@ html {
   align-items: flex-start;
   justify-content: space-between;
   gap: 0.75rem;
+  flex-wrap: wrap;
 }
 
 .products-services-page .services-back-to-top {
@@ -3050,6 +3051,8 @@ html {
   padding: 0.2rem 0.3rem;
   border-radius: 0.35rem;
   white-space: nowrap;
+  max-width: 100%;
+  flex: 0 0 auto;
 }
 
 .products-services-page .services-back-to-top:hover,
@@ -3334,6 +3337,18 @@ html {
 }
 
 @media (max-width: 575.98px) {
+  .products-services-page .services-section-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .products-services-page .services-back-to-top {
+    align-self: flex-start;
+    margin-left: 0;
+    white-space: normal;
+  }
+
   .products-services-page .services-revamp .service-selector > section {
     margin-bottom: 28px !important;
   }
