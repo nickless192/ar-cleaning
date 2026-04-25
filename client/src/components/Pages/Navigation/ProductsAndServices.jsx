@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import VisitorCounter from "/src/components/Pages/Management/VisitorCounter.jsx";
 import pageBg from "/src/assets/img/bg1.png";
 
-const MOBILE_MAX_WIDTH = 575;
+const MOBILE_MAX_WIDTH = 767;
 
 const categoryAnchors = [
   { key: 'core', target: 'core-services' },
@@ -44,18 +44,20 @@ const SERVICE_ROUTE_BY_KEY = {
   monthlyBuilding: '/services/monthly-building-amenities-cleaning'
 };
 
-const sectionKeys = ['core', 'packages', 'addons', 'carpetUpholstery', 'specialty'];
+const sectionKeys = ['core', 'packages', 'addons', 'carpetUpholstery', 'specialty', 'howItWorks'];
 
 const ProductsAndServices = () => {
   const { t, i18n } = useTranslation();
   const [activeCategory, setActiveCategory] = useState('core');
   const [isMobile, setIsMobile] = useState(false);
+  const [headerOffset, setHeaderOffset] = useState(120);
   const [mobileOpenSections, setMobileOpenSections] = useState({
     core: true,
     packages: false,
     addons: false,
     carpetUpholstery: false,
-    specialty: false
+    specialty: false,
+    howItWorks: false
   });
 
   const coreItems = t('products_and_services.revamp.core.items', { returnObjects: true });
@@ -71,23 +73,48 @@ const ProductsAndServices = () => {
     [howItWorksDescriptions, howItWorksSteps]
   );
 
-  const sectionSummaries = useMemo(() => {
+  const sectionMeta = useMemo(() => {
     const addonsCount = Object.values(addonGroups).reduce((total, group) => total + group.items.length, 0);
     const carpetCount = Object.values(carpetColumns).reduce((total, column) => total + column.items.length, 0);
 
     return {
-      core: t('products_and_services.revamp.mobileSummaries.core', { count: Object.keys(coreItems).length }),
-      packages: t('products_and_services.revamp.mobileSummaries.packages', { count: packageItems.length }),
-      addons: t('products_and_services.revamp.mobileSummaries.addons', { count: addonsCount }),
-      carpetUpholstery: t('products_and_services.revamp.mobileSummaries.carpetUpholstery', { count: carpetCount }),
-      specialty: t('products_and_services.revamp.mobileSummaries.specialty', { count: Object.keys(specialtyItems).length })
+      core: {
+        summary: t('products_and_services.revamp.mobileSectionDescriptions.core'),
+        count: Object.keys(coreItems).length
+      },
+      packages: {
+        summary: t('products_and_services.revamp.mobileSectionDescriptions.packages'),
+        count: packageItems.length
+      },
+      addons: {
+        summary: t('products_and_services.revamp.mobileSectionDescriptions.addons'),
+        count: addonsCount
+      },
+      carpetUpholstery: {
+        summary: t('products_and_services.revamp.mobileSectionDescriptions.carpetUpholstery'),
+        count: carpetCount
+      },
+      specialty: {
+        summary: t('products_and_services.revamp.mobileSectionDescriptions.specialty'),
+        count: Object.keys(specialtyItems).length
+      },
+      howItWorks: {
+        summary: t('products_and_services.revamp.mobileSectionDescriptions.howItWorks'),
+        count: howItWorksItems.length
+      }
     };
-  }, [addonGroups, carpetColumns, coreItems, packageItems.length, specialtyItems, t]);
+  }, [addonGroups, carpetColumns, coreItems, howItWorksItems.length, packageItems.length, specialtyItems, t]);
 
-  const jumpToSection = (targetId) => {
+  const getHeaderHeight = () => {
+    const header = document.querySelector('.fixed-top-container') || document.querySelector('.navbar');
+    return header ? header.getBoundingClientRect().height : 90;
+  };
+
+  const scrollToSection = (targetId) => {
     const section = document.getElementById(targetId);
     if (section) {
-      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const y = section.getBoundingClientRect().top + window.pageYOffset - getHeaderHeight() - 16;
+      window.scrollTo({ top: y, behavior: 'smooth' });
     }
   };
 
@@ -99,21 +126,26 @@ const ProductsAndServices = () => {
 
   const handleSectionToggle = (sectionKey) => {
     setMobileOpenSections((prev) => {
-      if (prev[sectionKey]) {
-        return prev;
-      }
-
-      const nextState = sectionKeys.reduce((acc, key) => ({ ...acc, [key]: false }), {});
-      nextState[sectionKey] = true;
+      const nextState = sectionKeys.reduce((acc, key) => ({ ...acc, [key]: key === sectionKey ? !prev[sectionKey] : prev[key] }), {});
       return nextState;
     });
   };
 
   const isSectionExpanded = (sectionKey) => !isMobile || !!mobileOpenSections[sectionKey];
 
+  const openSectionAndScroll = (sectionKey, targetId) => {
+    if (isMobile && !isSectionExpanded(sectionKey)) {
+      setMobileOpenSections((prev) => ({ ...prev, [sectionKey]: true }));
+      window.setTimeout(() => scrollToSection(targetId), 110);
+      return;
+    }
+    scrollToSection(targetId);
+  };
+
   useEffect(() => {
     const updateViewport = () => {
       setIsMobile(window.innerWidth <= MOBILE_MAX_WIDTH);
+      setHeaderOffset(getHeaderHeight() + 16);
     };
 
     updateViewport();
@@ -133,8 +165,22 @@ const ProductsAndServices = () => {
     };
   }, [i18n.language]);
 
+  useEffect(() => {
+    if (!window.location.hash) {
+      return;
+    }
+    const hashId = window.location.hash.replace('#', '');
+    window.setTimeout(() => scrollToSection(hashId), 80);
+  }, []);
+
   return (
-    <section className="section-background services-revamp" style={{ backgroundImage: `url(${pageBg})` }}>
+    <section
+      className="section-background services-revamp"
+      style={{
+        backgroundImage: `url(${pageBg})`,
+        '--services-scroll-offset': `${headerOffset}px`
+      }}
+    >
       <VisitorCounter page={'products-and-services'} />
 
       <Container className="services-page-shell">
@@ -171,7 +217,7 @@ const ProductsAndServices = () => {
                 className={`services-category-chip ${activeCategory === item.key ? 'is-active' : ''}`}
                 onClick={() => {
                   setActiveCategory(item.key);
-                  jumpToSection(item.target);
+                  openSectionAndScroll(item.key, item.target);
                 }}
               >
                 {t(`products_and_services.revamp.categoryNav.${item.key}`)}
@@ -184,7 +230,7 @@ const ProductsAndServices = () => {
               <h2 id="core-services" className="title secondary-color text-bold mb-3">
                 {t('products_and_services.revamp.core.title')}
               </h2>
-              <button type="button" className="services-back-to-top" onClick={() => jumpToSection('services-top')}>
+              <button type="button" className="services-back-to-top" onClick={() => scrollToSection('services-top')}>
                 {t('products_and_services.revamp.backToTop')}
               </button>
             </div>
@@ -196,7 +242,10 @@ const ProductsAndServices = () => {
                 aria-controls="core-services-content"
                 onClick={() => handleSectionToggle('core')}
               >
-                <span>{sectionSummaries.core}</span>
+                <span className="services-mobile-toggle-copy">
+                  <span>{sectionMeta.core.summary}</span>
+                  <small>{t('products_and_services.revamp.mobileSummaryCount', { count: sectionMeta.core.count })}</small>
+                </span>
                 <span>{isSectionExpanded('core') ? '−' : '+'}</span>
               </button>
             ) : null}
@@ -231,7 +280,7 @@ const ProductsAndServices = () => {
           <section id="cleaning-packages" className="mb-5 services-section-panel">
             <div className="services-section-head">
               <h2 className="title secondary-color text-bold mb-2">{t('products_and_services.revamp.packages.title')}</h2>
-              <button type="button" className="services-back-to-top" onClick={() => jumpToSection('services-top')}>
+              <button type="button" className="services-back-to-top" onClick={() => scrollToSection('services-top')}>
                 {t('products_and_services.revamp.backToTop')}
               </button>
             </div>
@@ -243,7 +292,10 @@ const ProductsAndServices = () => {
                 aria-controls="packages-content"
                 onClick={() => handleSectionToggle('packages')}
               >
-                <span>{sectionSummaries.packages}</span>
+                <span className="services-mobile-toggle-copy">
+                  <span>{sectionMeta.packages.summary}</span>
+                  <small>{t('products_and_services.revamp.mobileSummaryCount', { count: sectionMeta.packages.count })}</small>
+                </span>
                 <span>{isSectionExpanded('packages') ? '−' : '+'}</span>
               </button>
             ) : null}
@@ -270,7 +322,7 @@ const ProductsAndServices = () => {
           <section id="add-ons" className="mb-5 services-section-panel">
             <div className="services-section-head">
               <h2 className="title secondary-color text-bold mb-2">{t('products_and_services.revamp.addons.title')}</h2>
-              <button type="button" className="services-back-to-top" onClick={() => jumpToSection('services-top')}>
+              <button type="button" className="services-back-to-top" onClick={() => scrollToSection('services-top')}>
                 {t('products_and_services.revamp.backToTop')}
               </button>
             </div>
@@ -282,7 +334,10 @@ const ProductsAndServices = () => {
                 aria-controls="addons-content"
                 onClick={() => handleSectionToggle('addons')}
               >
-                <span>{sectionSummaries.addons}</span>
+                <span className="services-mobile-toggle-copy">
+                  <span>{sectionMeta.addons.summary}</span>
+                  <small>{t('products_and_services.revamp.mobileSummaryCount', { count: sectionMeta.addons.count })}</small>
+                </span>
                 <span>{isSectionExpanded('addons') ? '−' : '+'}</span>
               </button>
             ) : null}
@@ -308,7 +363,7 @@ const ProductsAndServices = () => {
           <section id="carpet-upholstery" className="mb-5 services-section-panel">
             <div className="services-section-head">
               <h2 className="title secondary-color text-bold mb-2">{t('products_and_services.revamp.carpetUpholstery.title')}</h2>
-              <button type="button" className="services-back-to-top" onClick={() => jumpToSection('services-top')}>
+              <button type="button" className="services-back-to-top" onClick={() => scrollToSection('services-top')}>
                 {t('products_and_services.revamp.backToTop')}
               </button>
             </div>
@@ -320,7 +375,10 @@ const ProductsAndServices = () => {
                 aria-controls="carpet-upholstery-content"
                 onClick={() => handleSectionToggle('carpetUpholstery')}
               >
-                <span>{sectionSummaries.carpetUpholstery}</span>
+                <span className="services-mobile-toggle-copy">
+                  <span>{sectionMeta.carpetUpholstery.summary}</span>
+                  <small>{t('products_and_services.revamp.mobileSummaryCount', { count: sectionMeta.carpetUpholstery.count })}</small>
+                </span>
                 <span>{isSectionExpanded('carpetUpholstery') ? '−' : '+'}</span>
               </button>
             ) : null}
@@ -355,7 +413,7 @@ const ProductsAndServices = () => {
           <section id="specialty-services" className="mb-5 services-section-panel services-section-panel-premium">
             <div className="services-section-head">
               <h2 className="title secondary-color text-bold mb-3">{t('products_and_services.revamp.specialty.title')}</h2>
-              <button type="button" className="services-back-to-top" onClick={() => jumpToSection('services-top')}>
+              <button type="button" className="services-back-to-top" onClick={() => scrollToSection('services-top')}>
                 {t('products_and_services.revamp.backToTop')}
               </button>
             </div>
@@ -367,7 +425,10 @@ const ProductsAndServices = () => {
                 aria-controls="specialty-content"
                 onClick={() => handleSectionToggle('specialty')}
               >
-                <span>{sectionSummaries.specialty}</span>
+                <span className="services-mobile-toggle-copy">
+                  <span>{sectionMeta.specialty.summary}</span>
+                  <small>{t('products_and_services.revamp.mobileSummaryCount', { count: sectionMeta.specialty.count })}</small>
+                </span>
                 <span>{isSectionExpanded('specialty') ? '−' : '+'}</span>
               </button>
             ) : null}
@@ -398,30 +459,47 @@ const ProductsAndServices = () => {
             </div>
           </section>
 
-          <section className="mb-4 services-section-panel services-how-compact">
+          <section id="how-it-works" className="mb-4 services-section-panel services-how-compact">
             <div className="services-section-head">
               <h2 className="title secondary-color text-bold mb-3">{t('products_and_services.revamp.howItWorks.title')}</h2>
-              <button type="button" className="services-back-to-top" onClick={() => jumpToSection('services-top')}>
+              <button type="button" className="services-back-to-top" onClick={() => scrollToSection('services-top')}>
                 {t('products_and_services.revamp.backToTop')}
               </button>
             </div>
-            <Row className="g-2 g-md-3">
-              {howItWorksItems.map((step, index) => (
-                <Col xs={6} md={6} lg={3} key={step.title}>
-                  <article className="services-process-card h-100">
-                    <span className="services-process-number">{index + 1}</span>
-                    <h3 className="h6 text-cleanar-color text-bold mt-2 mb-1">{step.title}</h3>
-                    <p className="mb-0 text-muted small">{step.description}</p>
-                  </article>
-                </Col>
-              ))}
-            </Row>
+            {isMobile ? (
+              <button
+                type="button"
+                className="services-mobile-toggle"
+                aria-expanded={isSectionExpanded('howItWorks')}
+                aria-controls="how-it-works-content"
+                onClick={() => setMobileOpenSections((prev) => ({ ...prev, howItWorks: !prev.howItWorks }))}
+              >
+                <span className="services-mobile-toggle-copy">
+                  <span>{sectionMeta.howItWorks.summary}</span>
+                  <small>{t('products_and_services.revamp.mobileSummaryCount', { count: sectionMeta.howItWorks.count })}</small>
+                </span>
+                <span>{isSectionExpanded('howItWorks') ? '−' : '+'}</span>
+              </button>
+            ) : null}
+            <div id="how-it-works-content" className={`services-collapsible-content ${isSectionExpanded('howItWorks') ? 'is-open' : ''}`}>
+              <Row className="g-2 g-md-3">
+                {howItWorksItems.map((step, index) => (
+                  <Col xs={6} md={6} lg={3} key={step.title}>
+                    <article className="services-process-card h-100">
+                      <span className="services-process-number">{index + 1}</span>
+                      <h3 className="h6 text-cleanar-color text-bold mt-2 mb-1">{step.title}</h3>
+                      <p className="mb-0 text-muted small">{step.description}</p>
+                    </article>
+                  </Col>
+                ))}
+              </Row>
+            </div>
           </section>
 
           <section className="services-final-cta">
             <div className="services-section-head">
               <h2 className="title secondary-color text-bold mb-2">{t('products_and_services.revamp.finalCta.title')}</h2>
-              <button type="button" className="services-back-to-top" onClick={() => jumpToSection('services-top')}>
+              <button type="button" className="services-back-to-top" onClick={() => scrollToSection('services-top')}>
                 {t('products_and_services.revamp.backToTop')}
               </button>
             </div>

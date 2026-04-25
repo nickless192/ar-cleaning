@@ -603,6 +603,15 @@
         "carpetUpholstery": "{{count}} carpet & upholstery options",
         "specialty": "{{count}} specialty services available"
       },
+      "mobileSectionDescriptions": {
+        "core": "Main cleaning services for homes, businesses, carpets, and upholstery.",
+        "packages": "Simple starting points for condos and homes.",
+        "addons": "Optional upgrades for kitchens, bathrooms, windows, laundry, and more.",
+        "carpetUpholstery": "Room, carpet, sofa, chair, and furniture cleaning options.",
+        "specialty": "Higher-scope projects for construction, clean-outs, and buildings.",
+        "howItWorks": "A simple quote process from details to service."
+      },
+      "mobileSummaryCount": "{{count}} options",
       "core": {
         "title": "Core Services",
         "bestForLabel": "Best for:",

@@ -2874,6 +2874,11 @@ html {
   padding-bottom: 4rem;
 }
 
+.products-services-page .services-revamp section[id],
+.products-services-page .services-revamp [id] {
+  scroll-margin-top: var(--services-scroll-offset, 120px);
+}
+
 .products-services-page .services-page-shell {
   max-width: 1180px;
   padding-left: 1rem;
@@ -2987,6 +2992,19 @@ html {
   align-items: center;
   justify-content: space-between;
   margin: 0.1rem 0 0.7rem;
+}
+
+.products-services-page .services-mobile-toggle-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  gap: 0.1rem;
+}
+
+.products-services-page .services-mobile-toggle-copy small {
+  font-size: 0.74rem;
+  opacity: 0.82;
 }
 
 .products-services-page .services-collapsible-content {
@@ -3177,7 +3195,14 @@ html {
     border-radius: 0.85rem;
   }
 
-  .products-services-page .services-hero-cta-wrap .btn,
+  .products-services-page .services-collapsible-content {
+    display: none;
+  }
+
+  .products-services-page .services-collapsible-content.is-open {
+    display: block;
+  }
+
   .products-services-page .services-final-cta-button {
     width: 100%;
   }
@@ -3188,62 +3213,6 @@ html {
 
   .products-services-page .services-back-to-top {
     font-size: 0.8rem;
-  }
-}
-
-@media (max-width: 575.98px) {
-  .products-services-page .services-revamp {
-    padding-bottom: 3rem;
-  }
-
-  .products-services-page .services-page-shell {
-    padding-left: 0.72rem;
-    padding-right: 0.72rem;
-  }
-
-  .products-services-page .services-hero {
-    padding: 0.95rem 0.9rem;
-  }
-
-  .products-services-page .services-hero h1 {
-    font-size: clamp(2rem, 9vw, 2.65rem);
-    line-height: 1.08;
-    margin-bottom: 0.7rem !important;
-  }
-
-  .products-services-page .services-hero-subtitle {
-    font-size: 0.93rem;
-    line-height: 1.5;
-    max-width: 100%;
-    margin-bottom: 0.75rem !important;
-  }
-
-  .products-services-page .services-trust-grid {
-    gap: 0.4rem !important;
-    margin-bottom: 0.75rem !important;
-    display: grid !important;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .products-services-page .services-trust-chip {
-    font-size: 0.75rem;
-    padding: 0.3rem 0.48rem;
-    text-align: center;
-    min-height: 38px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .products-services-page .services-hero-cta-wrap {
-    gap: 0.45rem !important;
-  }
-
-  .products-services-page .services-hero-cta-wrap .btn {
-    min-height: 42px;
-    padding-top: 0.55rem;
-    padding-bottom: 0.55rem;
-    font-size: 0.9rem;
   }
 
   .products-services-page .services-category-nav {
@@ -3260,14 +3229,6 @@ html {
   .products-services-page .services-section-panel {
     padding: 0.9rem;
     margin-bottom: 0.9rem !important;
-  }
-
-  .products-services-page .services-collapsible-content {
-    display: none;
-  }
-
-  .products-services-page .services-collapsible-content.is-open {
-    display: block;
   }
 
   .products-services-page .service-revamp-card .card-body,
@@ -3328,5 +3289,62 @@ html {
   .products-services-page .services-final-cta-support {
     font-size: 0.88rem;
     margin-bottom: 0.7rem !important;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .products-services-page .services-revamp {
+    padding-bottom: 3rem;
+  }
+
+  .products-services-page .services-page-shell {
+    padding-left: 0.72rem;
+    padding-right: 0.72rem;
+  }
+
+  .products-services-page .services-hero {
+    padding: 0.95rem 0.9rem;
+  }
+
+  .products-services-page .services-hero h1 {
+    font-size: clamp(2rem, 9vw, 2.65rem);
+    line-height: 1.08;
+    margin-bottom: 0.7rem !important;
+  }
+
+  .products-services-page .services-hero-subtitle {
+    font-size: 0.93rem;
+    line-height: 1.5;
+    max-width: 100%;
+    margin-bottom: 0.75rem !important;
+  }
+
+  .products-services-page .services-trust-grid {
+    gap: 0.4rem !important;
+    margin-bottom: 0.75rem !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .products-services-page .services-trust-chip {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.48rem;
+    text-align: center;
+    min-height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .products-services-page .services-hero-cta-wrap {
+    gap: 0.45rem !important;
+  }
+
+  .products-services-page .services-hero-cta-wrap .btn {
+    width: 100%;
+    min-height: 42px;
+    padding-top: 0.55rem;
+    padding-bottom: 0.55rem;
+    font-size: 0.9rem;
   }
 }
