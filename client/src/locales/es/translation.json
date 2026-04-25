@@ -597,6 +597,13 @@
       },
       "backToTop": "Back to top",
       "learnMore": "Learn more",
+      "mobileSummaries": {
+        "core": "{{count}} core services available",
+        "packages": "{{count}} package options available",
+        "addons": "{{count}} add-on options available",
+        "carpetUpholstery": "{{count}} carpet & upholstery options",
+        "specialty": "{{count}} specialty services available"
+      },
       "core": {
         "title": "Core Services",
         "bestForLabel": "Best for:",

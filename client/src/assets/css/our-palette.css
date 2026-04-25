@@ -2878,6 +2878,7 @@ html {
   max-width: 1180px;
   padding-left: 1rem;
   padding-right: 1rem;
+  overflow-x: clip;
 }
 
 .products-services-page .services-revamp .service-selector {
@@ -2930,6 +2931,12 @@ html {
   overflow-x: auto;
   padding: 0.25rem 0.1rem 0.4rem;
   scrollbar-width: thin;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+}
+
+.products-services-page .services-category-nav::-webkit-scrollbar {
+  display: none;
 }
 
 .products-services-page .services-category-chip {
@@ -2942,6 +2949,7 @@ html {
   font-size: 0.86rem;
   white-space: nowrap;
   transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  scroll-snap-align: start;
 }
 
 .products-services-page .services-category-chip:hover,
@@ -2963,6 +2971,26 @@ html {
   box-shadow: var(--cleanar-shadow-soft);
   border-radius: 1rem;
   padding: 1.3rem;
+}
+
+.products-services-page .services-mobile-toggle {
+  width: 100%;
+  border: 1px solid var(--cleanar-surface-border);
+  background: color-mix(in srgb, var(--light-color) 45%, white);
+  color: var(--text-cleanar-color);
+  border-radius: 0.75rem;
+  min-height: 44px;
+  padding: 0.55rem 0.7rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0.1rem 0 0.7rem;
+}
+
+.products-services-page .services-collapsible-content {
+  display: block;
 }
 
 .products-services-page .services-section-head {
@@ -3027,8 +3055,9 @@ html {
 
 .products-services-page .services-card-actions {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 0.55rem;
 }
 
@@ -3159,5 +3188,145 @@ html {
 
   .products-services-page .services-back-to-top {
     font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .products-services-page .services-revamp {
+    padding-bottom: 3rem;
+  }
+
+  .products-services-page .services-page-shell {
+    padding-left: 0.72rem;
+    padding-right: 0.72rem;
+  }
+
+  .products-services-page .services-hero {
+    padding: 0.95rem 0.9rem;
+  }
+
+  .products-services-page .services-hero h1 {
+    font-size: clamp(2rem, 9vw, 2.65rem);
+    line-height: 1.08;
+    margin-bottom: 0.7rem !important;
+  }
+
+  .products-services-page .services-hero-subtitle {
+    font-size: 0.93rem;
+    line-height: 1.5;
+    max-width: 100%;
+    margin-bottom: 0.75rem !important;
+  }
+
+  .products-services-page .services-trust-grid {
+    gap: 0.4rem !important;
+    margin-bottom: 0.75rem !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .products-services-page .services-trust-chip {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.48rem;
+    text-align: center;
+    min-height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .products-services-page .services-hero-cta-wrap {
+    gap: 0.45rem !important;
+  }
+
+  .products-services-page .services-hero-cta-wrap .btn {
+    min-height: 42px;
+    padding-top: 0.55rem;
+    padding-bottom: 0.55rem;
+    font-size: 0.9rem;
+  }
+
+  .products-services-page .services-category-nav {
+    gap: 0.4rem;
+    padding: 0.2rem 0.2rem 0.35rem;
+  }
+
+  .products-services-page .services-category-chip {
+    padding: 0.35rem 0.72rem;
+    font-size: 0.8rem;
+    min-height: 40px;
+  }
+
+  .products-services-page .services-section-panel {
+    padding: 0.9rem;
+    margin-bottom: 0.9rem !important;
+  }
+
+  .products-services-page .services-collapsible-content {
+    display: none;
+  }
+
+  .products-services-page .services-collapsible-content.is-open {
+    display: block;
+  }
+
+  .products-services-page .service-revamp-card .card-body,
+  .products-services-page .premium-service-card .card-body {
+    padding: 0.8rem;
+  }
+
+  .products-services-page .services-card-description {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+
+  .products-services-page .services-card-actions {
+    justify-content: space-between;
+  }
+
+  .products-services-page .services-card-actions .btn {
+    min-height: 40px;
+    padding: 0.45rem 0.75rem;
+    font-size: 0.82rem;
+  }
+
+  .products-services-page .services-inline-link {
+    font-size: 0.82rem;
+  }
+
+  .products-services-page .services-item-pill {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.56rem;
+  }
+
+  .products-services-page .services-process-card {
+    padding: 0.75rem;
+  }
+
+  .products-services-page .services-process-number {
+    width: 1.7rem;
+    height: 1.7rem;
+    font-size: 0.82rem;
+  }
+
+  .products-services-page .services-how-compact .h6 {
+    font-size: 0.88rem;
+  }
+
+  .products-services-page .services-final-cta {
+    padding: 0.95rem;
+    margin-bottom: 2.7rem;
+  }
+
+  .products-services-page .services-final-cta .title {
+    margin-bottom: 0.55rem !important;
+    font-size: 1.4rem;
+  }
+
+  .products-services-page .services-final-cta-support {
+    font-size: 0.88rem;
+    margin-bottom: 0.7rem !important;
   }
 }
