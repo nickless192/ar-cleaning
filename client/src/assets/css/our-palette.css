@@ -2965,6 +2965,31 @@ html {
   padding: 1.3rem;
 }
 
+.products-services-page .services-section-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.products-services-page .services-back-to-top {
+  border: 0;
+  background: transparent;
+  color: color-mix(in srgb, var(--text-cleanar-color) 82%, white);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.18rem;
+  padding: 0.2rem 0.3rem;
+  border-radius: 0.35rem;
+  white-space: nowrap;
+}
+
+.products-services-page .services-back-to-top:hover,
+.products-services-page .services-back-to-top:focus-visible {
+  background: color-mix(in srgb, var(--light-color) 50%, white);
+}
+
 .products-services-page .services-section-panel-premium {
   border-color: color-mix(in srgb, var(--accent-color) 45%, white);
   background: linear-gradient(145deg, color-mix(in srgb, var(--cleanar-surface-card) 97%, white), color-mix(in srgb, var(--light-blue-color) 35%, white));
@@ -2992,6 +3017,19 @@ html {
   letter-spacing: 0.06em;
   color: color-mix(in srgb, var(--text-cleanar-color) 75%, white);
   font-weight: 700;
+}
+
+.products-services-page .services-inline-link {
+  font-size: 0.9rem;
+  text-decoration: underline;
+  text-underline-offset: 0.2rem;
+}
+
+.products-services-page .services-card-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.55rem;
 }
 
 .products-services-page .service-package-card {
@@ -3090,6 +3128,12 @@ html {
   .products-services-page .services-hero-cta-wrap .btn {
     min-width: 185px;
   }
+
+  .products-services-page .services-card-actions {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
 }
 
 @media (max-width: 767.98px) {
@@ -3107,5 +3151,13 @@ html {
   .products-services-page .services-hero-cta-wrap .btn,
   .products-services-page .services-final-cta-button {
     width: 100%;
+  }
+
+  .products-services-page .services-section-head {
+    align-items: center;
+  }
+
+  .products-services-page .services-back-to-top {
+    font-size: 0.8rem;
   }
 }

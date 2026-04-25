@@ -64,10 +64,50 @@ export const ROUTE_META = {
     description:
       "Professional commercial cleaning for offices and facilities in Toronto and the GTA by CleanAR Solutions.",
   },
+  "/services/deep-cleaning": {
+    title: "Deep Cleaning Services in Toronto | CleanAR Solutions",
+    description:
+      "Book detailed deep cleaning services for homes and commercial spaces in Toronto and the GTA.",
+  },
+  "/services/move-in-move-out-cleaning": {
+    title: "Move-In / Move-Out Cleaning in Toronto | CleanAR Solutions",
+    description:
+      "Professional move-in and move-out cleaning in Toronto and the GTA for smooth property transitions.",
+  },
+  "/services/commercial-deep-cleaning": {
+    title: "Commercial Deep Cleaning Services in Toronto | CleanAR Solutions",
+    description:
+      "Targeted commercial deep cleaning for high-traffic facilities, offices, and shared spaces in Toronto and the GTA.",
+  },
   "/services/window-cleaning": {
     title: "Window Cleaning Services in Toronto | CleanAR Solutions",
     description:
       "Interior and exterior window cleaning services for homes and businesses across Toronto and the GTA.",
+  },
+  "/services/carpet-cleaning": {
+    title: "Carpet Cleaning Services in Toronto | CleanAR Solutions",
+    description:
+      "Steam and extraction carpet cleaning for homes and commercial spaces across Toronto and the GTA.",
+  },
+  "/services/upholstery-cleaning": {
+    title: "Upholstery Cleaning Services in Toronto | CleanAR Solutions",
+    description:
+      "Professional upholstery cleaning for sofas, chairs, and soft furniture across Toronto and the GTA.",
+  },
+  "/services/post-construction-cleaning": {
+    title: "Post-Construction Cleaning in Toronto | CleanAR Solutions",
+    description:
+      "Remove dust, debris, and construction residue with post-construction cleaning services in Toronto and the GTA.",
+  },
+  "/services/full-unit-clean-out": {
+    title: "Full Unit Clean-Out Services in Toronto | CleanAR Solutions",
+    description:
+      "Comprehensive full unit clean-out support for transitions and intensive reset projects in Toronto and the GTA.",
+  },
+  "/services/monthly-building-amenities-cleaning": {
+    title: "Monthly Building Amenities Cleaning in Toronto | CleanAR Solutions",
+    description:
+      "Recurring monthly cleaning for lobbies, amenities, and shared building spaces across Toronto and the GTA.",
   },
   "/services/carpet-and-upholstery-cleaning": {
     title: "Carpet & Upholstery Cleaning in Toronto | CleanAR Solutions",
@@ -204,6 +244,46 @@ export const MARKETING_PRERENDER_ROUTES = [
     h1: "Commercial Cleaning Services",
   },
   {
+    route: "/services/deep-cleaning",
+    output: "services/deep-cleaning/index.html",
+    h1: "Deep Cleaning Services",
+  },
+  {
+    route: "/services/move-in-move-out-cleaning",
+    output: "services/move-in-move-out-cleaning/index.html",
+    h1: "Move-In / Move-Out Cleaning Services",
+  },
+  {
+    route: "/services/commercial-deep-cleaning",
+    output: "services/commercial-deep-cleaning/index.html",
+    h1: "Commercial Deep Cleaning Services",
+  },
+  {
+    route: "/services/carpet-cleaning",
+    output: "services/carpet-cleaning/index.html",
+    h1: "Carpet Cleaning Services",
+  },
+  {
+    route: "/services/upholstery-cleaning",
+    output: "services/upholstery-cleaning/index.html",
+    h1: "Upholstery Cleaning Services",
+  },
+  {
+    route: "/services/post-construction-cleaning",
+    output: "services/post-construction-cleaning/index.html",
+    h1: "Post-Construction Cleaning Services",
+  },
+  {
+    route: "/services/full-unit-clean-out",
+    output: "services/full-unit-clean-out/index.html",
+    h1: "Full Unit Clean-Out Services",
+  },
+  {
+    route: "/services/monthly-building-amenities-cleaning",
+    output: "services/monthly-building-amenities-cleaning/index.html",
+    h1: "Monthly Building / Amenities Cleaning Services",
+  },
+  {
     route: "/services/window-cleaning",
     output: "services/window-cleaning/index.html",
     h1: "Window Cleaning Services",
@@ -233,6 +313,38 @@ const SERVICE_SCHEMA_CONFIG = {
   "/services/commercial-cleaning": {
     name: "Commercial Cleaning Services in Toronto & GTA",
     serviceType: "Commercial Cleaning",
+  },
+  "/services/deep-cleaning": {
+    name: "Deep Cleaning Services in Toronto & GTA",
+    serviceType: "Deep Cleaning",
+  },
+  "/services/move-in-move-out-cleaning": {
+    name: "Move-In and Move-Out Cleaning Services in Toronto & GTA",
+    serviceType: "Move-In Move-Out Cleaning",
+  },
+  "/services/commercial-deep-cleaning": {
+    name: "Commercial Deep Cleaning Services in Toronto & GTA",
+    serviceType: "Commercial Deep Cleaning",
+  },
+  "/services/carpet-cleaning": {
+    name: "Carpet Cleaning Services in Toronto & GTA",
+    serviceType: "Carpet Cleaning",
+  },
+  "/services/upholstery-cleaning": {
+    name: "Upholstery Cleaning Services in Toronto & GTA",
+    serviceType: "Upholstery Cleaning",
+  },
+  "/services/post-construction-cleaning": {
+    name: "Post-Construction Cleaning Services in Toronto & GTA",
+    serviceType: "Post-Construction Cleaning",
+  },
+  "/services/full-unit-clean-out": {
+    name: "Full Unit Clean-Out Services in Toronto & GTA",
+    serviceType: "Full Unit Clean-Out",
+  },
+  "/services/monthly-building-amenities-cleaning": {
+    name: "Monthly Building and Amenities Cleaning in Toronto & GTA",
+    serviceType: "Monthly Building Amenities Cleaning",
   },
   "/services/window-cleaning": {
     name: "Window Cleaning Services in Toronto & GTA",
@@ -282,6 +394,46 @@ const BREADCRUMB_CONFIG = {
     { name: "Home", path: "/" },
     { name: "Products and Services", path: "/products-and-services" },
     { name: "Commercial Cleaning", path: "/services/commercial-cleaning" },
+  ],
+  "/services/deep-cleaning": [
+    { name: "Home", path: "/" },
+    { name: "Products and Services", path: "/products-and-services" },
+    { name: "Deep Cleaning", path: "/services/deep-cleaning" },
+  ],
+  "/services/move-in-move-out-cleaning": [
+    { name: "Home", path: "/" },
+    { name: "Products and Services", path: "/products-and-services" },
+    { name: "Move-In / Move-Out Cleaning", path: "/services/move-in-move-out-cleaning" },
+  ],
+  "/services/commercial-deep-cleaning": [
+    { name: "Home", path: "/" },
+    { name: "Products and Services", path: "/products-and-services" },
+    { name: "Commercial Deep Cleaning", path: "/services/commercial-deep-cleaning" },
+  ],
+  "/services/carpet-cleaning": [
+    { name: "Home", path: "/" },
+    { name: "Products and Services", path: "/products-and-services" },
+    { name: "Carpet Cleaning", path: "/services/carpet-cleaning" },
+  ],
+  "/services/upholstery-cleaning": [
+    { name: "Home", path: "/" },
+    { name: "Products and Services", path: "/products-and-services" },
+    { name: "Upholstery Cleaning", path: "/services/upholstery-cleaning" },
+  ],
+  "/services/post-construction-cleaning": [
+    { name: "Home", path: "/" },
+    { name: "Products and Services", path: "/products-and-services" },
+    { name: "Post-Construction Cleaning", path: "/services/post-construction-cleaning" },
+  ],
+  "/services/full-unit-clean-out": [
+    { name: "Home", path: "/" },
+    { name: "Products and Services", path: "/products-and-services" },
+    { name: "Full Unit Clean-Out", path: "/services/full-unit-clean-out" },
+  ],
+  "/services/monthly-building-amenities-cleaning": [
+    { name: "Home", path: "/" },
+    { name: "Products and Services", path: "/products-and-services" },
+    { name: "Monthly Building / Amenities Cleaning", path: "/services/monthly-building-amenities-cleaning" },
   ],
   "/services/window-cleaning": [
     { name: "Home", path: "/" },

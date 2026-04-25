@@ -29,6 +29,19 @@ const SPECIALTY_QUERY = {
   monthlyBuilding: 'Commercial+Cleaning'
 };
 
+const SERVICE_ROUTE_BY_KEY = {
+  residentialRegular: '/services/residential-cleaning',
+  residentialDeep: '/services/deep-cleaning',
+  moveInOut: '/services/move-in-move-out-cleaning',
+  commercialRegular: '/services/commercial-cleaning',
+  commercialDeep: '/services/commercial-deep-cleaning',
+  carpetCleaning: '/services/carpet-cleaning',
+  upholsteryCleaning: '/services/upholstery-cleaning',
+  postConstruction: '/services/post-construction-cleaning',
+  fullUnitCleanOut: '/services/full-unit-clean-out',
+  monthlyBuilding: '/services/monthly-building-amenities-cleaning'
+};
+
 const ProductsAndServices = () => {
   const { t, i18n } = useTranslation();
   const [activeCategory, setActiveCategory] = useState('core');
@@ -51,6 +64,8 @@ const ProductsAndServices = () => {
     ? `/?service=${serviceQuery}&scrollToQuote=true`
     : '/?scrollToQuote=true');
 
+  const getDisplayListItem = (item) => (item.includes('–') ? item.split('–')[1].trim() : item);
+
   useEffect(() => {
     document.body.classList.add('products-services-page');
     document.body.classList.add('sidebar-collapse');
@@ -68,8 +83,8 @@ const ProductsAndServices = () => {
       <VisitorCounter page={'products-and-services'} />
 
       <Container className="services-page-shell">
-      <section className="service-selector pb-5">
-        <div className="services-hero pt-5 mb-4">
+        <section className="service-selector pb-5">
+          <div id="services-top" className="services-hero pt-5 mb-4">
           <h1 className="title primary-color text-bold mb-3">
             {t('products_and_services.revamp.hero.title')}
           </h1>
@@ -93,7 +108,7 @@ const ProductsAndServices = () => {
           </div>
         </div>
 
-        <nav className="services-category-nav mb-4" aria-label={t('products_and_services.revamp.categoryNav.ariaLabel')}>
+          <nav className="services-category-nav mb-4" aria-label={t('products_and_services.revamp.categoryNav.ariaLabel')}>
           {categoryAnchors.map((item) => (
             <button
               key={item.key}
@@ -107,12 +122,17 @@ const ProductsAndServices = () => {
               {t(`products_and_services.revamp.categoryNav.${item.key}`)}
             </button>
           ))}
-        </nav>
+          </nav>
 
-        <section id="services" className="mb-5 services-section-panel">
-          <h2 id="core-services" className="title secondary-color text-bold mb-3">
-            {t('products_and_services.revamp.core.title')}
-          </h2>
+          <section id="services" className="mb-5 services-section-panel">
+            <div className="services-section-head">
+              <h2 id="core-services" className="title secondary-color text-bold mb-3">
+                {t('products_and_services.revamp.core.title')}
+              </h2>
+            <button type="button" className="services-back-to-top" onClick={() => jumpToSection('services-top')}>
+              {t('products_and_services.revamp.backToTop')}
+            </button>
+            </div>
           <Row className="g-3">
             {Object.entries(t('products_and_services.revamp.core.items', { returnObjects: true })).map(([key, service]) => (
               <Col xs={12} md={6} lg={4} key={key} id={key === 'residentialRegular' ? 'residential' : key === 'commercialRegular' ? 'commercial' : key === 'carpetCleaning' ? 'carpet' : undefined}>
@@ -122,9 +142,16 @@ const ProductsAndServices = () => {
                     <Card.Title as="h3" className="h5 text-cleanar-color text-bold mb-2">{service.name}</Card.Title>
                     <Card.Text className="mb-2 text-muted">{service.description}</Card.Text>
                     <p className="small mb-3 text-cleanar-color"><strong>{t('products_and_services.revamp.core.bestForLabel')}</strong> {service.bestFor}</p>
-                    <Button as={Link} to={quoteLink(CORE_SERVICE_QUERY[key])} className="btn-round secondary-bg-color mt-auto">
-                      {t('products_and_services.revamp.core.cta')}
-                    </Button>
+                    <div className="services-card-actions mt-auto">
+                      {SERVICE_ROUTE_BY_KEY[key] ? (
+                        <Link to={SERVICE_ROUTE_BY_KEY[key]} className="services-inline-link text-cleanar-color text-bold">
+                          {t('products_and_services.revamp.learnMore')}
+                        </Link>
+                      ) : null}
+                      <Button as={Link} to={quoteLink(CORE_SERVICE_QUERY[key])} className="btn-round secondary-bg-color">
+                        {t('products_and_services.revamp.core.cta')}
+                      </Button>
+                    </div>
                   </Card.Body>
                 </Card>
               </Col>
@@ -132,8 +159,13 @@ const ProductsAndServices = () => {
           </Row>
         </section>
 
-        <section id="cleaning-packages" className="mb-5 services-section-panel">
-          <h2 className="title secondary-color text-bold mb-2">{t('products_and_services.revamp.packages.title')}</h2>
+          <section id="cleaning-packages" className="mb-5 services-section-panel">
+            <div className="services-section-head">
+              <h2 className="title secondary-color text-bold mb-2">{t('products_and_services.revamp.packages.title')}</h2>
+            <button type="button" className="services-back-to-top" onClick={() => jumpToSection('services-top')}>
+              {t('products_and_services.revamp.backToTop')}
+            </button>
+            </div>
           <p className="text-muted mb-3">{t('products_and_services.revamp.packages.description')}</p>
           <p className="services-subtle-note">{t('products_and_services.revamp.packages.customizedNote')}</p>
           <Row className="g-3">
@@ -152,8 +184,13 @@ const ProductsAndServices = () => {
           </Row>
         </section>
 
-        <section id="add-ons" className="mb-5 services-section-panel">
-          <h2 className="title secondary-color text-bold mb-2">{t('products_and_services.revamp.addons.title')}</h2>
+          <section id="add-ons" className="mb-5 services-section-panel">
+            <div className="services-section-head">
+              <h2 className="title secondary-color text-bold mb-2">{t('products_and_services.revamp.addons.title')}</h2>
+            <button type="button" className="services-back-to-top" onClick={() => jumpToSection('services-top')}>
+              {t('products_and_services.revamp.backToTop')}
+            </button>
+            </div>
           <p className="text-muted mb-3">{t('products_and_services.revamp.addons.description')}</p>
           <Row className="g-3">
             {Object.values(t('products_and_services.revamp.addons.groups', { returnObjects: true })).map((group) => (
@@ -171,38 +208,31 @@ const ProductsAndServices = () => {
           </Row>
         </section>
 
-        <section id="carpet-upholstery" className="mb-5 services-section-panel">
-          <h2 className="title secondary-color text-bold mb-2">{t('products_and_services.revamp.carpetUpholstery.title')}</h2>
+          <section id="carpet-upholstery" className="mb-5 services-section-panel">
+            <div className="services-section-head">
+              <h2 className="title secondary-color text-bold mb-2">{t('products_and_services.revamp.carpetUpholstery.title')}</h2>
+            <button type="button" className="services-back-to-top" onClick={() => jumpToSection('services-top')}>
+              {t('products_and_services.revamp.backToTop')}
+            </button>
+            </div>
           <p className="text-muted mb-3">{t('products_and_services.revamp.carpetUpholstery.description')}</p>
           <Row className="g-3">
-            {Object.values(t('products_and_services.revamp.carpetUpholstery.columns', { returnObjects: true })).map((column) => (
+            {Object.entries(t('products_and_services.revamp.carpetUpholstery.columns', { returnObjects: true })).map(([key, column]) => (
               <Col xs={12} md={6} key={column.title}>
                 <Card className="h-100 service-revamp-card service-split-card">
                   <Card.Body>
                     <span className="service-card-kicker">{t('products_and_services.revamp.categoryNav.carpetUpholstery')}</span>
                     <Card.Title as="h3" className="h5 text-cleanar-color text-bold">{column.title}</Card.Title>
+                    {SERVICE_ROUTE_BY_KEY[`${key}Cleaning`] ? (
+                      <Link to={SERVICE_ROUTE_BY_KEY[`${key}Cleaning`]} className="services-inline-link text-cleanar-color text-bold">
+                        {t('products_and_services.revamp.learnMore')}
+                      </Link>
+                    ) : null}
                     <div className="services-pills-list">
-                      {column.items.map((item) => <span key={item} className="services-item-pill">{item}</span>)}
+                      {column.items.map((item) => <span key={item} className="services-item-pill">{getDisplayListItem(item)}</span>)}
                     </div>
-                  </Card.Body>
-                </Card>
-              </Col>
-            ))}
-          </Row>
-        </section>
-
-        <section id="specialty-services" className="mb-5 services-section-panel services-section-panel-premium">
-          <h2 className="title secondary-color text-bold mb-3">{t('products_and_services.revamp.specialty.title')}</h2>
-          <Row className="g-3">
-            {Object.entries(t('products_and_services.revamp.specialty.items', { returnObjects: true })).map(([key, item]) => (
-              <Col xs={12} md={4} key={key}>
-                <Card className="h-100 premium-service-card">
-                  <Card.Body className="d-flex flex-column">
-                    <span className="service-card-kicker">{t('products_and_services.revamp.categoryNav.specialty')}</span>
-                    <Card.Title as="h3" className="h5 text-bold">{item.name}</Card.Title>
-                    <Card.Text className="text-muted mb-3">{item.description}</Card.Text>
-                    <Button as={Link} to={quoteLink(SPECIALTY_QUERY[key])} className="btn-round secondary-bg-color mt-auto">
-                      {t('products_and_services.revamp.specialty.cta')}
+                    <Button as={Link} to={quoteLink(key === 'carpet' ? CORE_SERVICE_QUERY.carpetCleaning : CORE_SERVICE_QUERY.upholsteryCleaning)} className="btn-round secondary-bg-color mt-3">
+                      {t('products_and_services.revamp.core.cta')}
                     </Button>
                   </Card.Body>
                 </Card>
@@ -211,8 +241,45 @@ const ProductsAndServices = () => {
           </Row>
         </section>
 
-        <section className="mb-5 services-section-panel">
-          <h2 className="title secondary-color text-bold mb-3">{t('products_and_services.revamp.howItWorks.title')}</h2>
+          <section id="specialty-services" className="mb-5 services-section-panel services-section-panel-premium">
+            <div className="services-section-head">
+              <h2 className="title secondary-color text-bold mb-3">{t('products_and_services.revamp.specialty.title')}</h2>
+            <button type="button" className="services-back-to-top" onClick={() => jumpToSection('services-top')}>
+              {t('products_and_services.revamp.backToTop')}
+            </button>
+            </div>
+          <Row className="g-3">
+            {Object.entries(t('products_and_services.revamp.specialty.items', { returnObjects: true })).map(([key, item]) => (
+              <Col xs={12} md={4} key={key}>
+                <Card className="h-100 premium-service-card">
+                  <Card.Body className="d-flex flex-column">
+                    <span className="service-card-kicker">{t('products_and_services.revamp.categoryNav.specialty')}</span>
+                    <Card.Title as="h3" className="h5 text-bold">{item.name}</Card.Title>
+                    <Card.Text className="text-muted mb-3">{item.description}</Card.Text>
+                    <div className="services-card-actions mt-auto">
+                      {SERVICE_ROUTE_BY_KEY[key] ? (
+                        <Link to={SERVICE_ROUTE_BY_KEY[key]} className="services-inline-link text-cleanar-color text-bold">
+                          {t('products_and_services.revamp.learnMore')}
+                        </Link>
+                      ) : null}
+                      <Button as={Link} to={quoteLink(SPECIALTY_QUERY[key])} className="btn-round secondary-bg-color">
+                        {t('products_and_services.revamp.specialty.cta')}
+                      </Button>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+        </section>
+
+          <section className="mb-5 services-section-panel">
+            <div className="services-section-head">
+              <h2 className="title secondary-color text-bold mb-3">{t('products_and_services.revamp.howItWorks.title')}</h2>
+            <button type="button" className="services-back-to-top" onClick={() => jumpToSection('services-top')}>
+              {t('products_and_services.revamp.backToTop')}
+            </button>
+            </div>
           <Row className="g-3">
             {howItWorksItems.map((step, index) => (
               <Col xs={12} md={6} lg={3} key={step.title}>
@@ -226,16 +293,21 @@ const ProductsAndServices = () => {
           </Row>
         </section>
 
-        <section className="services-final-cta">
-          <h2 className="title secondary-color text-bold mb-2">{t('products_and_services.revamp.finalCta.title')}</h2>
+          <section className="services-final-cta">
+            <div className="services-section-head">
+              <h2 className="title secondary-color text-bold mb-2">{t('products_and_services.revamp.finalCta.title')}</h2>
+            <button type="button" className="services-back-to-top" onClick={() => jumpToSection('services-top')}>
+              {t('products_and_services.revamp.backToTop')}
+            </button>
+            </div>
           <p className="mb-3 text-cleanar-color">{t('products_and_services.revamp.finalCta.description')}</p>
           <p className="services-final-cta-support text-muted mb-3">{t('products_and_services.revamp.finalCta.supportText')}</p>
           <Button as={Link} to={quoteLink()} className="btn-round secondary-bg-color services-final-cta-button">
             {t('products_and_services.revamp.finalCta.button')}
           </Button>
-        </section>
+          </section>
 
-      </section>
+        </section>
       </Container>
     </section>
   );
