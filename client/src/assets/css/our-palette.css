@@ -2989,8 +2989,6 @@ html {
 .products-services-page .services-revamp .row.g-3 {
   --bs-gutter-y: 20px;
   --bs-gutter-x: 16px;
-  row-gap: 20px !important;
-  column-gap: 16px !important;
 }
 
 .products-services-page .services-revamp .service-selector > section {
@@ -3069,6 +3067,8 @@ html {
   box-shadow: var(--cleanar-shadow-soft);
   border-radius: 0.9rem;
   background: color-mix(in srgb, var(--cleanar-surface-card) 96%, white);
+  width: 100%;
+  max-width: none;
   min-height: 100%;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   padding: 6px;
@@ -3159,6 +3159,8 @@ html {
   background: linear-gradient(145deg, color-mix(in srgb, var(--cleanar-surface-card) 98%, white), color-mix(in srgb, var(--light-blue-color) 40%, white));
   box-shadow: var(--cleanar-shadow-soft);
   border-radius: 0.95rem;
+  width: 100%;
+  max-width: none;
 }
 
 .products-services-page .services-process-card {
