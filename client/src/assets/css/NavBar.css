@@ -381,43 +381,7 @@ main,
   flex: none !important;
 }
 
-/* =========================================================
-   TABLET OVERRIDE (768-991)
-   Hide hamburger + show full nav (if you keep expand="lg")
-   If you change JSX to expand="md", you can remove this block.
-   ========================================================= */
-
-@media (min-width: 768px) and (max-width: 991.98px) {
-  .navbar-toggler {
-    display: none !important;
-  }
-
-  .navbar-collapse {
-    display: flex !important;
-    flex-basis: auto !important;
-  }
-
-  .navbar-collapse.collapse:not(.show) {
-    display: flex !important;
-  }
-
-
-  .nav-collapse {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    gap: 14px !important;
-  }
-
-  .nav-main {
-    flex-direction: row !important;
-    justify-content: center !important;
-  }
-
-  .nav-utils {
-    align-items: flex-end !important;
-  }
-}
+/* Tablet follows responsive collapse (expand="lg") to avoid crowding. */
 
 /* =========================================================
    MOBILE (COLLAPSE)
@@ -585,5 +549,147 @@ main,
     width: calc(100vw - 1rem);
     min-width: 0;
     max-width: calc(100vw - 1rem);
+  }
+}
+
+/* =========================================================
+   CLEANAR NAVBAR LAYOUT REFINEMENT
+   ========================================================= */
+
+.navbar-shell {
+  align-items: center;
+  gap: clamp(0.5rem, 1.2vw, 1rem);
+}
+
+.navbar-brand-zone,
+.navbar-main-links,
+.navbar-utilities,
+.navbar-user-menu,
+.navbar-language,
+.navbar-socials {
+  min-width: 0;
+}
+
+.navbar-main-links {
+  flex: 1 1 auto;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.navbar-main-links .nav-link {
+  white-space: nowrap;
+}
+
+.navbar-utilities {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+.navbar-user-menu .dropdown {
+  max-width: 220px;
+}
+
+.user-label {
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.navbar-language {
+  flex: 0 0 auto;
+}
+
+.navbar-socials {
+  flex: 0 0 auto;
+}
+
+.navbar-socials-compact {
+  display: none;
+}
+
+.connect-toggle.nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  padding: 6px 10px;
+}
+
+@media (min-width: 992px) and (max-width: 1279.98px) {
+  .navbar-socials-inline {
+    display: none;
+  }
+
+  .navbar-socials-compact {
+    display: block;
+  }
+
+  .user-label {
+    max-width: 110px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .navbar-socials-inline {
+    display: flex;
+  }
+
+  .navbar-socials-compact {
+    display: none;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .navbar-shell {
+    align-items: center !important;
+  }
+
+  .navbar-collapse.show .nav-collapse {
+    gap: 10px !important;
+  }
+
+  .navbar-collapse.show .navbar-main-links .nav-link {
+    white-space: normal;
+  }
+
+  .navbar-collapse.show .navbar-utilities {
+    width: 100%;
+    margin-left: 0 !important;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    padding-top: 8px;
+  }
+
+  .navbar-collapse.show .navbar-user-menu {
+    width: 100%;
+    display: flex !important;
+    justify-content: center !important;
+  }
+
+  .navbar-collapse.show .account-toggle.nav-link {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .navbar-collapse.show .navbar-language {
+    display: flex;
+    justify-content: center;
+  }
+
+  .navbar-collapse.show .navbar-socials-inline {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px !important;
+  }
+
+  .navbar-collapse.show .navbar-socials-compact {
+    display: none;
   }
 }
