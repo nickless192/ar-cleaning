@@ -229,7 +229,7 @@ function IndexNavbar() {
                     </NavbarBrand>
 
                     <button
-                        className={`navbar-toggler cleanar-toggler ${collapseOpen ? "is-open" : ""}`}
+                        className={`navbar-toggler cleanar-toggler mobile-menu-toggle ${collapseOpen ? "is-open" : ""}`}
                         type="button"
                         onClick={handleToggle}
                         aria-expanded={collapseOpen}
@@ -267,13 +267,13 @@ function IndexNavbar() {
                         <div className="nav-account navbar-user-menu">
                             {isLogged ? (
                                 <UncontrolledDropdown>
-                                    <DropdownToggle nav caret className="account-toggle">
+                                    <DropdownToggle nav caret className="account-toggle user-menu-trigger">
                                         <FaUser className="me-2" />
-                                        <span className="d-none d-lg-inline user-label" title={`${profile?.firstName || ""} ${profile?.lastName || ""}`.trim() || profile?.email || (t("navbar.log_in_signup") || "Account")}>
-                                            {`${profile?.firstName || ""} ${profile?.lastName || ""}`.trim() || profile?.email || (t("navbar.log_in_signup") || "Account")}
+                                        <span className="user-label user-menu-name" title={`${profile?.firstName || ""} ${profile?.lastName || ""}`.trim() || profile?.email || (t("navbar.log_in_signup") || "Account")}>
+                                            {profile?.firstName || profile?.email || (t("navbar.log_in_signup") || "Account")}
                                         </span>
                                     </DropdownToggle>
-                                    <DropdownMenu end>
+                                    <DropdownMenu end className="user-dropdown-menu">
                                         {isAdmin && (
                                             <DropdownItem href="/admin">
                                                 {t("navbar.admin.admin_management")}
@@ -300,13 +300,13 @@ function IndexNavbar() {
                             ) : (
                                 // keep your inline login dropdown if you want
                                 <UncontrolledDropdown>
-                                    <DropdownToggle nav caret className="account-toggle">
+                                    <DropdownToggle nav caret className="account-toggle user-menu-trigger">
                                         <FaUser className="me-2" />
-                                        <span className="d-none d-lg-inline user-label">
+                                        <span className="user-label user-menu-name">
                                             {t("login.title") || "Log in"}
                                         </span>
                                     </DropdownToggle>
-                                    <DropdownMenu end className="login-dropdown">
+                                    <DropdownMenu end className="login-dropdown user-dropdown-menu">
                                         <LoginPage />
                                         {/* <div className="px-3 py-2">
                                             <Form onSubmit={doInlineLogin}>
