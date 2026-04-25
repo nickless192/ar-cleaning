@@ -571,7 +571,190 @@
       "Transformez l'attrait de votre maison avec un nettoyage approfondi des allées, des trottoirs, des patios, des terrasses et des surfaces extérieures.",
       "Nettoyage des parkings, des façades de bâtiments, des quais de chargement et des vitrines pour maintenir une apparence professionnelle et des normes de sécurité."
     ],
-    "power_pressure_washing_button": "Ajouter le nettoyage haute pression au devis"
+    "power_pressure_washing_button": "Ajouter le nettoyage haute pression au devis",
+    "revamp": {
+      "hero": {
+        "title": "Professional Cleaning Services in Toronto & the GTA",
+        "subtitle": "From regular home cleaning to commercial deep cleans, carpet extraction, upholstery care, and move-in/move-out services, CleanAR Solutions delivers reliable cleaning tailored to your space.",
+        "primaryCta": "Request a Quote",
+        "secondaryCta": "View Services",
+        "trustLabel": "Service trust highlights",
+        "trustChips": [
+          "Residential & Commercial",
+          "Toronto & GTA",
+          "Flexible Scheduling",
+          "Eco-conscious Options"
+        ]
+      },
+      "categoryNav": {
+        "ariaLabel": "Service category navigation",
+        "core": "Core Services",
+        "packages": "Packages",
+        "addons": "Add-ons",
+        "carpetUpholstery": "Carpet & Upholstery",
+        "specialty": "Specialty"
+      },
+      "core": {
+        "title": "Core Services",
+        "bestForLabel": "Best for:",
+        "cta": "Request this service",
+        "items": {
+          "residentialRegular": {
+            "name": "Residential Regular Cleaning",
+            "description": "Routine cleaning for weekly, biweekly, or monthly maintenance.",
+            "bestFor": "Busy households that want a consistently clean home."
+          },
+          "residentialDeep": {
+            "name": "Residential Deep Cleaning",
+            "description": "Detailed cleaning for first-time, seasonal, or catch-up service.",
+            "bestFor": "Homes that need extra detail beyond regular maintenance."
+          },
+          "moveInOut": {
+            "name": "Move-In / Move-Out Cleaning",
+            "description": "Empty-unit cleaning to prepare a space for new occupants.",
+            "bestFor": "Tenants, homeowners, and landlords preparing for turnover."
+          },
+          "commercialRegular": {
+            "name": "Commercial Cleaning Service",
+            "description": "Recurring cleaning for offices, retail spaces, and businesses.",
+            "bestFor": "Teams that need dependable cleaning with flexible scheduling."
+          },
+          "commercialDeep": {
+            "name": "Commercial Deep Cleaning",
+            "description": "Detailed sanitation and high-traffic area cleaning for commercial spaces.",
+            "bestFor": "Facilities needing periodic reset cleans and stronger sanitization."
+          },
+          "carpetCleaning": {
+            "name": "Carpet Cleaning (Steam / Extraction)",
+            "description": "Steam/hot water extraction to refresh carpets and remove dirt, stains, and odours.",
+            "bestFor": "High-traffic areas, rentals, and homes with pets or kids."
+          },
+          "upholsteryCleaning": {
+            "name": "Upholstery Cleaning",
+            "description": "Deep cleaning for sofas, chairs, and upholstered furniture.",
+            "bestFor": "Furniture that needs a fresh reset and stain treatment."
+          }
+        }
+      },
+      "packages": {
+        "title": "Cleaning Packages",
+        "description": "Packages are customizable based on size, condition, frequency, and scope.",
+        "items": [
+          {
+            "name": "Condo Cleaning Package (1 Bed / 1 Bath)",
+            "pricing": "Starting from custom quote",
+            "note": "Tailored by layout, current condition, and requested frequency."
+          },
+          {
+            "name": "Condo Cleaning Package (2 Bed / 2 Bath)",
+            "pricing": "Starting from custom quote",
+            "note": "Ideal for recurring maintenance or first-time reset cleanings."
+          },
+          {
+            "name": "House Cleaning Package (3+ Bedrooms)",
+            "pricing": "Starting from custom quote",
+            "note": "Scope can be expanded with deep-clean and specialty add-ons."
+          }
+        ]
+      },
+      "addons": {
+        "title": "Add-ons",
+        "description": "Enhance your cleaning with optional add-ons.",
+        "groups": {
+          "kitchen": {
+            "title": "Kitchen",
+            "items": [
+              "Fridge Deep Cleaning",
+              "Oven Deep Cleaning",
+              "Dishwasher Deep Cleaning",
+              "Microwave Cleaning",
+              "Kitchen Cabinets Cleaning"
+            ]
+          },
+          "bathroom": {
+            "title": "Bathroom",
+            "items": [
+              "Bathroom Deep Cleaning",
+              "Bathroom Recaulking"
+            ]
+          },
+          "general": {
+            "title": "General",
+            "items": [
+              "Interior Window Cleaning",
+              "Bed Linen Service",
+              "Laundry Service",
+              "Organization & Styling"
+            ]
+          },
+          "exteriorSpecialty": {
+            "title": "Exterior / Specialty",
+            "items": [
+              "Balcony Deep Cleaning",
+              "Deck Cleaning",
+              "Curtain Steam Cleaning"
+            ]
+          }
+        }
+      },
+      "carpetUpholstery": {
+        "title": "Carpet & Upholstery",
+        "description": "Pricing depends on size, material, condition, stains, and access.",
+        "columns": {
+          "carpet": {
+            "title": "Carpet Cleaning",
+            "items": [
+              "Carpet Cleaning – Small Room",
+              "Carpet Cleaning – Medium Room",
+              "Carpet Cleaning – Large Area",
+              "Carpet Cleaning – Hallways/Common Areas"
+            ]
+          },
+          "upholstery": {
+            "title": "Upholstery Cleaning",
+            "items": [
+              "Upholstery Cleaning – Sofa",
+              "Upholstery Cleaning – Loveseat",
+              "Upholstery Cleaning – Armchair",
+              "Upholstery Cleaning – Dining Chair",
+              "Upholstery Cleaning – Full Set"
+            ]
+          }
+        }
+      },
+      "specialty": {
+        "title": "Specialty Services",
+        "cta": "Request this service",
+        "items": {
+          "postConstruction": {
+            "name": "Post-Construction Cleaning",
+            "description": "Detailed removal of fine dust, debris, and residue so the space is ready for use."
+          },
+          "fullUnitCleanOut": {
+            "name": "Full Unit Clean-Out",
+            "description": "Comprehensive interior clean-out support for turnovers, transitions, and heavy-reset projects."
+          },
+          "monthlyBuilding": {
+            "name": "Monthly Building / Amenities Cleaning",
+            "description": "Planned recurring cleaning for lobbies, shared spaces, and amenity areas."
+          }
+        }
+      },
+      "howItWorks": {
+        "title": "How it works",
+        "steps": [
+          "Tell us about your space",
+          "We recommend the right service",
+          "Receive a clear quote",
+          "Enjoy a fresh, professionally cleaned space"
+        ]
+      },
+      "finalCta": {
+        "title": "Not sure which service you need?",
+        "description": "Send us a few details and we’ll recommend the best option for your space, schedule, and budget.",
+        "button": "Request a Quote"
+      }
+    }
   },
   "about": {
     "welcome_heading": "Bienvenue chez CleanAR Solutions",

@@ -45,9 +45,9 @@ export const ROUTE_META = {
       "Learn about CleanAR Solutions, our mission, and our commitment to reliable, high-quality cleaning services across Toronto and the GTA.",
   },
   "/products-and-services": {
-    title: "Cleaning Services | Residential & Commercial | CleanAR Solutions",
+    title: "Cleaning Services in Toronto & GTA | CleanAR Solutions",
     description:
-      "Explore residential and commercial cleaning services from CleanAR Solutions in Toronto and the GTA.",
+      "Explore CleanAR Solutions’ residential, commercial, deep cleaning, move-in/move-out, carpet, upholstery, and specialty cleaning services across Toronto and the GTA.",
   },
   "/blog": {
     title: "CleanAR Blog | Cleaning Insights & Company Updates",

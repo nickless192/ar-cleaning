@@ -2866,3 +2866,93 @@ html {
   padding-bottom: 0.85rem;
   border-radius: 0.9rem;
 }
+
+/* Services page revamp */
+.products-services-page .services-revamp {
+  background-size: cover;
+  background-position: center;
+}
+
+.products-services-page .services-hero-subtitle {
+  max-width: 880px;
+  font-size: 1.05rem;
+}
+
+.products-services-page .services-trust-chip {
+  background: #ffffff;
+  border: 1px solid rgba(30, 58, 138, 0.12);
+  color: #0f766e;
+  border-radius: 999px;
+  padding: 0.35rem 0.8rem;
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.products-services-page .services-category-nav {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.products-services-page .services-category-chip {
+  border: 1px solid rgba(15, 118, 110, 0.35);
+  background: #fff;
+  color: #0f766e;
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+  font-weight: 600;
+  font-size: 0.86rem;
+}
+
+.products-services-page .services-category-chip:hover,
+.products-services-page .services-category-chip:focus-visible {
+  background: #e6fffa;
+}
+
+.products-services-page .service-revamp-card {
+  border: 1px solid rgba(15, 118, 110, 0.12);
+}
+
+.products-services-page .premium-service-card {
+  border: 1px solid rgba(30, 64, 175, 0.18);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(239, 246, 255, 0.88));
+}
+
+.products-services-page .services-compact-list {
+  padding-left: 1.1rem;
+  margin-bottom: 0;
+}
+
+.products-services-page .services-compact-list li {
+  margin-bottom: 0.35rem;
+}
+
+.products-services-page .services-steps-list {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.products-services-page .services-steps-list li {
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.products-services-page .services-final-cta {
+  border: 1px solid rgba(15, 118, 110, 0.18);
+  border-radius: 16px;
+  padding: 1.25rem;
+  background: rgba(255, 255, 255, 0.95);
+}
+
+@media (min-width: 768px) {
+  .products-services-page .services-category-nav {
+    position: sticky;
+    top: 88px;
+    z-index: 4;
+    padding: 0.6rem;
+    background: rgba(255, 255, 255, 0.92);
+    border-radius: 12px;
+    backdrop-filter: blur(6px);
+  }
+}
