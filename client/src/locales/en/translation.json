@@ -652,6 +652,7 @@
       "packages": {
         "title": "Cleaning Packages",
         "description": "Packages are customizable based on size, condition, frequency, and scope.",
+        "customizedNote": "Customized based on size, condition, and frequency.",
         "items": [
           {
             "name": "Condo Cleaning Package (1 Bed / 1 Bath)",
@@ -760,11 +761,18 @@
           "We recommend the right service",
           "Receive a clear quote",
           "Enjoy a fresh, professionally cleaned space"
+        ],
+        "stepDescriptions": [
+          "Share your home or business details, timing, and goals.",
+          "Our team matches your needs to the right service mix.",
+          "You get a transparent quote with scope and timing.",
+          "Our professionals deliver a reliable, high-quality clean."
         ]
       },
       "finalCta": {
         "title": "Not sure which service you need?",
         "description": "Send us a few details and we’ll recommend the best option for your space, schedule, and budget.",
+        "supportText": "We’ll recommend the best option based on your space, schedule, and budget.",
         "button": "Request a Quote"
       }
     }
