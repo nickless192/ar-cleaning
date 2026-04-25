@@ -253,7 +253,7 @@ const ProductsAndServices = () => {
             <div id="services-section-core" hidden={isMobile && !openSections.core} className="services-collapsible-content">
               <Row className="g-3">
                 {Object.entries(coreItems).map(([key, service]) => (
-                  <Col xs={12} md={6} lg={4} key={key} id={key === 'residentialRegular' ? 'residential' : key === 'commercialRegular' ? 'commercial' : key === 'carpetCleaning' ? 'carpet' : undefined}>
+                  <Col xs={12} sm={6} lg={4} key={key} id={key === 'residentialRegular' ? 'residential' : key === 'commercialRegular' ? 'commercial' : key === 'carpetCleaning' ? 'carpet' : undefined}>
                     <Card className="h-100 service-revamp-card">
                       <Card.Body className="d-flex flex-column">
                         <span className="service-card-kicker">{t('products_and_services.revamp.categoryNav.core')}</span>
@@ -305,7 +305,7 @@ const ProductsAndServices = () => {
               <p className="services-subtle-note">{t('products_and_services.revamp.packages.customizedNote')}</p>
               <Row className="g-3">
                 {packageItems.map((pkg) => (
-                  <Col xs={12} md={4} key={pkg.name}>
+                  <Col xs={12} sm={6} lg={4} key={pkg.name}>
                     <Card className="h-100 service-revamp-card service-package-card">
                       <Card.Body>
                         <span className="service-card-kicker">{t('products_and_services.revamp.categoryNav.packages')}</span>
@@ -346,7 +346,7 @@ const ProductsAndServices = () => {
               <p className="text-muted mb-3">{t('products_and_services.revamp.addons.description')}</p>
               <Row className="g-3">
                 {Object.values(addonGroups).map((group) => (
-                  <Col xs={12} md={6} key={group.title}>
+                  <Col xs={12} sm={6} key={group.title}>
                     <Card className="h-100 service-revamp-card">
                       <Card.Body>
                         <Card.Title as="h3" className="h6 text-cleanar-color text-bold">{group.title}</Card.Title>
@@ -436,7 +436,7 @@ const ProductsAndServices = () => {
             <div id="services-section-specialty" hidden={isMobile && !openSections.specialty} className="services-collapsible-content">
               <Row className="g-3">
                 {Object.entries(specialtyItems).map(([key, item]) => (
-                  <Col xs={12} md={4} key={key}>
+                  <Col xs={12} sm={6} lg={4} key={key}>
                     <Card className="h-100 premium-service-card">
                       <Card.Body className="d-flex flex-column">
                         <span className="service-card-kicker">{t('products_and_services.revamp.categoryNav.specialty')}</span>
