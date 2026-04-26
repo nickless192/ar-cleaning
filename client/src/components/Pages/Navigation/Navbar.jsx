@@ -23,9 +23,9 @@ import {
     FaFacebook,
     FaTiktok,
     FaRegEnvelope,
+    FaShareAlt,
     FaUser,
     FaSignOutAlt,
-    FaBell,
     FaTimes
 } from "react-icons/fa";
 
@@ -206,10 +206,10 @@ function IndexNavbar() {
                 />
             )}
 
-            <Navbar className={`mb-0 ${navbarColor}`} expand="md" role="navigation">
-                <Container fluid className="nav-shell">
+            <Navbar className={`mb-0 ${navbarColor}`} expand="sm" role="navigation">
+                <Container fluid className="nav-shell navbar-shell">
                     {/* LEFT: Brand */}
-                    <NavbarBrand href="/" className="brand" onClick={handleNavClick}>
+                    <NavbarBrand href="/" className="brand navbar-brand-zone" onClick={handleNavClick}>
                         {/* <img src={logo} alt="CleanAR Solutions" className="navbarlogo" /> */}
                         <picture>
                             <source srcSet={logoAvif} type="image/avif" />
@@ -229,7 +229,7 @@ function IndexNavbar() {
                     </NavbarBrand>
 
                     <button
-                        className={`navbar-toggler cleanar-toggler ${collapseOpen ? "is-open" : ""}`}
+                        className={`navbar-toggler cleanar-toggler mobile-menu-toggle ${collapseOpen ? "is-open" : ""}`}
                         type="button"
                         onClick={handleToggle}
                         aria-expanded={collapseOpen}
@@ -240,7 +240,7 @@ function IndexNavbar() {
 
                     <Collapse isOpen={collapseOpen} navbar className="nav-collapse">
                         {/* CENTER: primary navigation */}
-                        <Nav navbar className="nav-main" onClick={handleNavClick}>
+                        <Nav navbar className="nav-main navbar-main-links" onClick={handleNavClick}>
                             <NavItem>
                                 <NavLink href="/about-us">{t("navbar.about_us")}</NavLink>
                             </NavItem>
@@ -264,16 +264,16 @@ function IndexNavbar() {
 
                         {/* FAR RIGHT: Utilities (2 lines) */}
                         {/* Account/Login (NOT far right anymore) */}
-                        <div className="nav-account">
+                        <div className="nav-account navbar-user-menu">
                             {isLogged ? (
                                 <UncontrolledDropdown>
-                                    <DropdownToggle nav caret className="account-toggle">
+                                    <DropdownToggle nav caret className="account-toggle user-menu-trigger">
                                         <FaUser className="me-2" />
-                                        <span className="d-none d-lg-inline">
-                                            {t("navbar.log_in_signup") || "Account"}
+                                        <span className="user-label user-menu-name" title={`${profile?.firstName || ""} ${profile?.lastName || ""}`.trim() || profile?.email || (t("navbar.log_in_signup") || "Account")}>
+                                            {profile?.firstName || profile?.email || (t("navbar.log_in_signup") || "Account")}
                                         </span>
                                     </DropdownToggle>
-                                    <DropdownMenu end>
+                                    <DropdownMenu end className="user-dropdown-menu">
                                         {isAdmin && (
                                             <DropdownItem href="/admin">
                                                 {t("navbar.admin.admin_management")}
@@ -300,13 +300,13 @@ function IndexNavbar() {
                             ) : (
                                 // keep your inline login dropdown if you want
                                 <UncontrolledDropdown>
-                                    <DropdownToggle nav caret className="account-toggle">
+                                    <DropdownToggle nav caret className="account-toggle user-menu-trigger">
                                         <FaUser className="me-2" />
-                                        <span className="d-none d-lg-inline">
+                                        <span className="user-label user-menu-name">
                                             {t("login.title") || "Log in"}
                                         </span>
                                     </DropdownToggle>
-                                    <DropdownMenu end className="login-dropdown">
+                                    <DropdownMenu end className="login-dropdown user-dropdown-menu">
                                         <LoginPage />
                                         {/* <div className="px-3 py-2">
                                             <Form onSubmit={doInlineLogin}>
@@ -342,8 +342,13 @@ function IndexNavbar() {
                                 </UncontrolledDropdown>
                             )}
                         </div>
-                        <div className="nav-utils">
-                            <div className="utils-social">
+                        <div className="nav-utils navbar-utilities">
+                            <div className="utils-lang navbar-language">
+                                <LanguageSwitcher />
+                                {/* <NewIconAnimated /> */}
+                            </div>
+
+                            <div className="utils-social navbar-socials navbar-socials-inline">
                                 <NavLink
                                     href="https://www.instagram.com/cleanarsolutions/"
                                     target="_blank"
@@ -370,10 +375,42 @@ function IndexNavbar() {
                                 </NavLink>
                             </div>
 
-                            <div className="utils-lang">
-                                <LanguageSwitcher />
-                                {/* <NewIconAnimated /> */}
-                            </div>
+                            <UncontrolledDropdown className="navbar-socials navbar-socials-compact">
+                                <DropdownToggle nav caret className="connect-toggle" aria-label="Connect links">
+                                    <FaShareAlt className="me-2" />
+                                    <span>Connect</span>
+                                </DropdownToggle>
+                                <DropdownMenu end>
+                                    <DropdownItem
+                                        href="https://www.instagram.com/cleanarsolutions/"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <FaInstagram className="me-2" />
+                                        Instagram
+                                    </DropdownItem>
+                                    <DropdownItem
+                                        href="https://www.facebook.com/share/18X3sPR1vf/?mibextid=wwXIfr"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <FaFacebook className="me-2" />
+                                        Facebook
+                                    </DropdownItem>
+                                    <DropdownItem
+                                        href="https://www.tiktok.com/@cleanar.solutions"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <FaTiktok className="me-2" />
+                                        TikTok
+                                    </DropdownItem>
+                                    <DropdownItem href="mailto:info@cleanARsolutions.ca">
+                                        <FaRegEnvelope className="me-2" />
+                                        Email
+                                    </DropdownItem>
+                                </DropdownMenu>
+                            </UncontrolledDropdown>
                         </div>
                     </Collapse>
 
