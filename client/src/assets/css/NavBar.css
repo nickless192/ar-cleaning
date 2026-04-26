@@ -758,25 +758,75 @@ main,
   .navbar {
     padding: 0.5rem 1.125rem;
   }
+}
+
+@media (min-width: 576px) and (max-width: 991.98px) {
+  .nav-shell {
+    align-items: center;
+    gap: 8px;
+  }
+
+  .nav-collapse {
+    display: flex !important;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+    min-height: auto !important;
+    padding: 0;
+  }
 
   .navbarlogo,
   .navbar-logo {
-    height: 38px;
+    height: 36px;
   }
 
   .brand-text {
-    font-size: 0.95rem;
-  }
-
-  .navbar-collapse.show {
-    padding: 10px 14px 14px !important;
+    font-size: 0.9rem;
   }
 
   .navbar-main-links {
-    gap: 14px;
+    order: 1;
+    flex: 1 1 auto;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .navbar-main-links .nav-link {
+    padding: 6px 8px;
+    font-size: 0.92rem;
+    white-space: nowrap;
+  }
+
+  .navbar-user-menu {
+    order: 2;
+    margin-left: auto;
   }
 
   .navbar-utilities {
-    gap: 10px;
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    gap: 12px;
+    padding-top: 2px;
+    margin-left: 0;
+  }
+
+  .navbar-language {
+    margin: 0;
+  }
+
+  .navbar-socials-inline {
+    display: flex;
+    gap: 12px;
+  }
+
+  .navbar-socials-compact {
+    display: none;
+  }
+
+  .cleanar-toggler {
+    display: none !important;
   }
 }

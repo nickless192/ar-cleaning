@@ -206,7 +206,7 @@ function IndexNavbar() {
                 />
             )}
 
-            <Navbar className={`mb-0 ${navbarColor}`} expand="lg" role="navigation">
+            <Navbar className={`mb-0 ${navbarColor}`} expand="sm" role="navigation">
                 <Container fluid className="nav-shell navbar-shell">
                     {/* LEFT: Brand */}
                     <NavbarBrand href="/" className="brand navbar-brand-zone" onClick={handleNavClick}>
