@@ -68,6 +68,8 @@ function IndexNavbar() {
     }, [isLogged]);
 
     const isAdmin = !!profile?.adminFlag;
+    const roleNames = Array.isArray(profile?.roles) ? profile.roles : [];
+    const isEmployee = roleNames.includes('employee') || roleNames.includes('staff');
 
     const handleToggle = () => {
         document.documentElement.classList.toggle("nav-open");
@@ -280,6 +282,11 @@ function IndexNavbar() {
                                                 {unackCount > 0 && (
                                                     <Badge color="danger" pill className="ms-2">{unackCount}</Badge>
                                                 )}
+                                            </DropdownItem>
+                                        )}
+                                        {isEmployee && (
+                                            <DropdownItem href="/employee/appointments">
+                                                Employee Appointments
                                             </DropdownItem>
                                         )}
                                         <DropdownItem href="/profile-page">{t("navbar.profile")}</DropdownItem>

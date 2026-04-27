@@ -12,6 +12,7 @@ const { createBooking, getBookings, deleteBooking, completeBooking, hideBooking,
   updateBooking,
   submitNewBookingRequest
  } = require('../../controllers/bookingController');
+const { checkIn, checkOut } = require('../../controllers/timeEntryController');
 
 
 router.post('/', authRouteLimiter, authMiddleware, createBooking);
@@ -26,6 +27,9 @@ router.put('/:id/cancel', adminRouteLimiter, authMiddleware, requireAdminFlag, c
 router.put('/:id/pending', adminRouteLimiter, authMiddleware, requireAdminFlag, pendBookingById);
 router.put('/:id/request-change', authRouteLimiter, submitNewDateRequest);
 router.put('/:id/update', adminRouteLimiter, authMiddleware, requireAdminFlag, updateBooking);
+
+router.post('/:id/check-in', authRouteLimiter, authMiddleware, checkIn);
+router.post('/:id/check-out', authRouteLimiter, authMiddleware, checkOut);
 
 
 // Reminder Scheduler

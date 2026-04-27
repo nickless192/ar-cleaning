@@ -272,6 +272,8 @@ const bookingControllers = {
       services = [],  // NEW: array of service lines
       tax,
       discount,
+      serviceAddress,
+      assignedEmployees = [],
     } = req.body;
 
     if (!customerEmail || !date) {
@@ -354,6 +356,8 @@ const bookingControllers = {
         income: finalIncome,
         tax: typeof tax === 'number' ? tax : Number(tax) || 0,
         discount: typeof discount === 'number' ? discount : Number(discount) || 0,
+        serviceAddress: serviceAddress || '',
+        assignedEmployees: Array.isArray(assignedEmployees) ? assignedEmployees : [],
       });
 
       const savedBooking = await newBooking.save();
@@ -805,6 +809,8 @@ const bookingControllers = {
         'invoiceCreatedAt',
         'invoiceSentAt',
         'workflow',
+        'serviceAddress',
+        'assignedEmployees',
       ];
 
       for (const field of baseAllowedFields) {

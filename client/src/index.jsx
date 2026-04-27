@@ -44,6 +44,7 @@ const LandingSecret = lazy(() => import("/src/components/Pages/qrCodes/LandingSe
 const LandingStart = lazy(() => import("/src/components/Pages/qrCodes/LandingStart"));
 const LandingToronto = lazy(() => import("/src/components/Pages/qrCodes/LandingToronto"));
 const InvoiceDetail = lazy(() => import("/src/components/Pages/Booking/InvoiceDetail.jsx"));
+const EmployeeAppointmentsPage = lazy(() => import("/src/components/Pages/UserJourney/EmployeeAppointmentsPage.jsx"));
 const ResidentialCleaningTorontoPage = lazy(() => import("/src/components/Pages/Navigation/TorontoServicePage.jsx").then((module) => ({ default: module.ResidentialCleaningTorontoPage })));
 const CommercialCleaningTorontoPage = lazy(() => import("/src/components/Pages/Navigation/TorontoServicePage.jsx").then((module) => ({ default: module.CommercialCleaningTorontoPage })));
 const DeepCleaningTorontoPage = lazy(() => import("/src/components/Pages/Navigation/TorontoServicePage.jsx").then((module) => ({ default: module.DeepCleaningTorontoPage })));
@@ -130,6 +131,7 @@ const App = () => {
               <Route path="/" element={<Index />} />
               <Route path="/index" element={<IndexCompatibilityRedirect />} />
               <Route path="/profile-page" element={<ProtectedRoute element={<ProfilePage />} />} />
+              <Route path="/employee/appointments" element={<ProtectedRoute element={<EmployeeAppointmentsPage />} />} />
               <Route path="/notification-management" element={<ProtectedRoute requireAdmin element={<NotificationAdminPage />} />} />
               {/* <Route path="/manage-categories" element={<ProtectedRoute element={<ManageCategories />} />} /> */}
               {/* <Route path="/manage-service" element={<ProtectedRoute element={<ManageService />} />} /> */}

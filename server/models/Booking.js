@@ -31,6 +31,14 @@ const BookingSchema = new Schema({
 
   date: Date,
 
+
+  serviceAddress: { type: String, default: '' },
+
+  assignedEmployees: {
+    type: [{ type: Types.ObjectId, ref: 'User' }],
+    default: [],
+  },
+
   services: {
     type: [ServiceLineSchema],
     default: [],
@@ -168,6 +176,7 @@ BookingSchema.index({ completedAt: 1 });
 BookingSchema.index({ paidAt: 1 });
 BookingSchema.index({ customerId: 1 });
 BookingSchema.index({ customerEmail: 1 });
+BookingSchema.index({ assignedEmployees: 1, date: 1 });
 
 
 const Booking = model('Booking', BookingSchema);

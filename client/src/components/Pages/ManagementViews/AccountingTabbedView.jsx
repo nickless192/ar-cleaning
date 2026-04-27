@@ -7,6 +7,7 @@ import ExpenseDashboard from "/src/components/Pages/Dashboards/ExpenseDashboard"
 import FinanceDashboard from "/src/components/Pages/Dashboards/FinanceDashboard";
 import InventoryManagementTabbedView from "/src/components/Pages/ManagementViews/InventoryManagementTabbedView"; // adjust path if needed
 import MonthlyProfitCompare from "/src/components/Pages/Dashboards/MonthlyProfitCompare";
+import TimeClockAttendance from "/src/components/Pages/Dashboards/TimeClockAttendance";
 
 const AccountingTabbedView = () => {
   const { t } = useTranslation();
@@ -37,7 +38,12 @@ const AccountingTabbedView = () => {
         key: "reports",
         title: "Financial Reports",
         component: <MonthlyProfitCompare />,
-      }
+      },
+      {
+        key: "attendance",
+        title: "Time Clock / Attendance",
+        component: <TimeClockAttendance />,
+      },
     ],
     [t]
   );
