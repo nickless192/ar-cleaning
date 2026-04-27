@@ -19,6 +19,8 @@ const notificationRoutes = require('./notificationRoutes');
 const adminUserRoutes = require('./adminUserRoutes');
 const i18nRoutes = require('./i18nRoutes');
 const adminReportsRoutes = require('./adminReportsRoutes');
+const employeeRoutes = require('./employeeRoutes');
+const adminTimeEntryRoutes = require('./timeEntryRoutes');
 
 // Mount admin reports routes
 router.use('/admin-reports', adminReportsRoutes);
@@ -41,6 +43,8 @@ router.use('/contactForm', contactFormRoutes);
 router.use('/invoices', invoiceRoutes);
 router.use('/notifications', notificationRoutes);
 router.use('/admin', adminUserRoutes);
+router.use('/admin', adminTimeEntryRoutes);
+router.use('/employee', employeeRoutes);
 router.use('/i18n', i18nRoutes);
 
 module.exports = router;
